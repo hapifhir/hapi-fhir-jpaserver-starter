@@ -14,6 +14,7 @@
         <version>3.6.0</version>
     </parent>
 
+    <groupId>ca.uhn.hapi.fhir.demo</groupId>
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
     <packaging>war</packaging>
 
@@ -251,15 +252,6 @@
                         </overlay>
                     </overlays>
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-                </configuration>
-            </plugin>
-
-            <!-- This plugin is just a part of the HAPI internal build process, you do not need to incude it in your own projects -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
                 </configuration>
             </plugin>
 
