@@ -6,12 +6,11 @@ import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
-import ca.uhn.fhir.jpa.provider.SubscriptionRetriggeringProvider;
+import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaSystemProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.TerminologyUploaderProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
-import ca.uhn.fhir.jpa.subscription.email.SubscriptionEmailInterceptor;
 import ca.uhn.fhir.jpa.subscription.resthook.SubscriptionRestHookInterceptor;
 import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
@@ -20,19 +19,21 @@ import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.RestfulServer;
-import ca.uhn.fhir.rest.server.interceptor.IServerInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Meta;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.ServletException;
-import java.util.Collection;
 import java.util.List;
 
 public class JpaServerDemo extends RestfulServer {
 
     private static final long serialVersionUID = 1L;
+    private static final Logger ourLog = LoggerFactory.getLogger(JpaServerDemo.class);
 
     private WebApplicationContext myAppCtx;
 
@@ -131,12 +132,12 @@ public class JpaServerDemo extends RestfulServer {
         setPagingProvider(myAppCtx.getBean(DatabaseBackedPagingProvider.class));
 
         /*
-         * Load interceptors for the server from Spring (these are defined in FhirServerConfig.java)
+         * This interceptor formats the output using nice colourful
+         * HTML output when the request is detected to come from a
+         * browser.
          */
-        Collection<IServerInterceptor> interceptorBeans = myAppCtx.getBeansOfType(IServerInterceptor.class).values();
-        for (IServerInterceptor interceptor : interceptorBeans) {
-            this.registerInterceptor(interceptor);
-        }
+        ResponseHighlighterInterceptor responseHighlighterInterceptor = myAppCtx.getBean(ResponseHighlighterInterceptor.class);
+        this.registerInterceptor(responseHighlighterInterceptor);
 
         /*
          * If you are hosting this server at a specific DNS name, the server will try to
@@ -166,13 +167,18 @@ public class JpaServerDemo extends RestfulServer {
          * any type of subscriptions you want to support.
          */
         boolean subscriptionsEnabled = false;
-        if (subscriptionsEnabled) {
+        if (subscriptionsEnabled) { // <-- DISABLED RIGHT NOW
             SubscriptionRestHookInterceptor restHookInterceptor = myAppCtx.getBean(SubscriptionRestHookInterceptor.class);
             registerInterceptor(restHookInterceptor);
 
-            // If you want to enable the $retrigger-subscription operation to allow
-            // re-triggering a subscription delivery, enable this provider
-            SubscriptionRetriggeringProvider retriggeringProvider = myAppCtx.getBean(SubscriptionRetriggeringProvider.class);
+            // You might alo want to enable other subscription interceptors too
+            // eg...
+            // myAppCtx.getBean(SubscriptionWebsocketInterceptor.class);
+            // myAppCtx.getBean(SubscriptionEmailInterceptor.class);
+
+            // If you want to enable the $trigger-subscription operation to allow
+            // manual triggering of a subscription delivery, enable this provider
+            SubscriptionTriggeringProvider retriggeringProvider = myAppCtx.getBean(SubscriptionTriggeringProvider.class);
             registerProvider(retriggeringProvider);
         }
 
