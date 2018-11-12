@@ -6,10 +6,12 @@ import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
+import ca.uhn.fhir.jpa.provider.SubscriptionRetriggeringProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaSystemProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.TerminologyUploaderProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import ca.uhn.fhir.jpa.subscription.email.SubscriptionEmailInterceptor;
 import ca.uhn.fhir.jpa.subscription.resthook.SubscriptionRestHookInterceptor;
 import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
@@ -163,9 +165,15 @@ public class JpaServerDemo extends RestfulServer {
          * If you want to support subscriptions, you will want to register interceptors for
          * any type of subscriptions you want to support.
          */
-        if (false) { // <-- DISABLED RIGHT NOW
+        boolean subscriptionsEnabled = false;
+        if (subscriptionsEnabled) {
             SubscriptionRestHookInterceptor restHookInterceptor = myAppCtx.getBean(SubscriptionRestHookInterceptor.class);
             registerInterceptor(restHookInterceptor);
+
+            // If you want to enable the $retrigger-subscription operation to allow
+            // re-triggering a subscription delivery, enable this provider
+            SubscriptionRetriggeringProvider retriggeringProvider = myAppCtx.getBean(SubscriptionRetriggeringProvider.class);
+            registerProvider(retriggeringProvider);
         }
 
     }
