@@ -5,6 +5,7 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import ca.uhn.fhir.jpa.model.entity.ModelConfig;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory;
 import ca.uhn.fhir.jpa.util.DerbyTenSevenHapiFhirDialect;
@@ -40,6 +41,11 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 		DaoConfig retVal = new DaoConfig();
 		retVal.setAllowMultipleDelete(true);
 		return retVal;
+	}
+
+	@Bean
+	public ModelConfig modelConfig() {
+		return daoConfig().getModelConfig();
 	}
 
 	/**

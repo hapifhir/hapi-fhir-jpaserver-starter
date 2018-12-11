@@ -11,7 +11,7 @@ import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaSystemProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.TerminologyUploaderProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
-import ca.uhn.fhir.jpa.subscription.resthook.SubscriptionRestHookInterceptor;
+import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
 import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -22,6 +22,7 @@ import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Meta;
+import org.hl7.fhir.instance.model.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
@@ -53,6 +54,9 @@ public class JpaServerDemo extends RestfulServer {
 
         // Get the spring context from the web container (it's declared in web.xml)
         myAppCtx = ContextLoaderListener.getCurrentWebApplicationContext();
+
+        // Get our JPA Server Configuration
+        DaoConfig daoConfig = myAppCtx.getBean(DaoConfig.class);
 
         /*
          * The BaseJavaConfigDstu2.java class is a spring configuration
@@ -92,13 +96,13 @@ public class JpaServerDemo extends RestfulServer {
         if (fhirVersion == FhirVersionEnum.DSTU2) {
             IFhirSystemDao<ca.uhn.fhir.model.dstu2.resource.Bundle, MetaDt> systemDao = myAppCtx.getBean("mySystemDaoDstu2", IFhirSystemDao.class);
             JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, systemDao,
-                    myAppCtx.getBean(DaoConfig.class));
+                    daoConfig);
             confProvider.setImplementationDescription("Example Server");
             setServerConformanceProvider(confProvider);
         } else if (fhirVersion == FhirVersionEnum.DSTU3) {
             IFhirSystemDao<Bundle, Meta> systemDao = myAppCtx.getBean("mySystemDaoDstu3", IFhirSystemDao.class);
             JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, systemDao,
-                    myAppCtx.getBean(DaoConfig.class));
+                    daoConfig);
             confProvider.setImplementationDescription("Example Server");
             setServerConformanceProvider(confProvider);
         } else {
@@ -163,18 +167,23 @@ public class JpaServerDemo extends RestfulServer {
         }
 
         /*
-         * If you want to support subscriptions, you will want to register interceptors for
-         * any type of subscriptions you want to support.
+         * If you want to support subscriptions, you will want to configure DaoConfig for the types
+         * of subscriptions you want to support.
          */
         boolean subscriptionsEnabled = false;
-        if (subscriptionsEnabled) { // <-- DISABLED RIGHT NOW
-            SubscriptionRestHookInterceptor restHookInterceptor = myAppCtx.getBean(SubscriptionRestHookInterceptor.class);
-            registerInterceptor(restHookInterceptor);
 
+
+        if (subscriptionsEnabled) { // <-- DISABLED RIGHT NOW
+            // Add the types of subscription you would like to support
             // You might alo want to enable other subscription interceptors too
             // eg...
-            // myAppCtx.getBean(SubscriptionWebsocketInterceptor.class);
-            // myAppCtx.getBean(SubscriptionEmailInterceptor.class);
+            // daoConfig.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
+            // daoConfig.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.WEBSOCKET);
+            daoConfig.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.RESTHOOK);
+
+            // Register the subscription interceptors
+            SubscriptionInterceptorLoader subscriptionInterceptorLoader = myAppCtx.getBean(SubscriptionInterceptorLoader.class);
+            subscriptionInterceptorLoader.registerInterceptors(this);
 
             // If you want to enable the $trigger-subscription operation to allow
             // manual triggering of a subscription delivery, enable this provider
