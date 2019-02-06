@@ -5,11 +5,13 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import ca.uhn.fhir.jpa.model.entity.ModelConfig;
 import ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory;
 import ca.uhn.fhir.jpa.util.DerbyTenSevenHapiFhirDialect;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.hl7.fhir.instance.model.Subscription;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +40,21 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 	public DaoConfig daoConfig() {
 		DaoConfig retVal = new DaoConfig();
 		retVal.setAllowMultipleDelete(true);
+
+		// You can enable these if you want to support Subscriptions from your server
+		if (false) {
+			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.RESTHOOK);
+		}
+		if (false) {
+			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
+		}
+
 		return retVal;
+	}
+
+	@Bean
+	public ModelConfig modelConfig() {
+		return new ModelConfig();
 	}
 
 	/**
