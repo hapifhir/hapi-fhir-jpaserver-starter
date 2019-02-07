@@ -6,6 +6,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
+import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory;
 import ca.uhn.fhir.jpa.util.DerbyTenSevenHapiFhirDialect;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -58,13 +59,26 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 	}
 
 	/**
+	 * We override the paging provider definition so that we can customize
+	 * the default/max page sizes for search results. You can set these however
+	 * you want, although very large page sizes will require a lot of RAM.
+	 */
+	@Override
+	public DatabaseBackedPagingProvider databaseBackedPagingProvider() {
+		DatabaseBackedPagingProvider pagingProvider = super.databaseBackedPagingProvider();
+		pagingProvider.setDefaultPageSize(20);
+		pagingProvider.setMaximumPageSize(200);
+		return pagingProvider;
+	}
+
+	/**
 	 * The following bean configures the database connection. The 'url' property value of "jdbc:derby:directory:jpaserver_derby_files;create=true" indicates that the server should save resources in a
 	 * directory called "jpaserver_derby_files".
 	 * 
 	 * A URL to a remote database could also be placed here, along with login credentials and other properties supported by BasicDataSource.
 	 */
 	@Bean(destroyMethod = "close")
-	public DataSource dataSource() {
+	public BasicDataSource dataSource() {
 		BasicDataSource retVal = new BasicDataSource();
 		retVal.setDriver(new org.apache.derby.jdbc.EmbeddedDriver());
 		retVal.setUrl("jdbc:derby:directory:target/jpaserver_derby_files;create=true");
@@ -86,7 +100,7 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 	private Properties jpaProperties() {
 		Properties extraProperties = new Properties();
 		extraProperties.put("hibernate.dialect", DerbyTenSevenHapiFhirDialect.class.getName());
-		extraProperties.put("hibernate.format_sql", "true");
+		extraProperties.put("hibernate.format_sql", "false");
 		extraProperties.put("hibernate.show_sql", "false");
 		extraProperties.put("hibernate.hbm2ddl.auto", "update");
 		extraProperties.put("hibernate.jdbc.batch_size", "20");
