@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory;
 import ca.uhn.fhir.jpa.util.DerbyTenSevenHapiFhirDialect;
@@ -82,16 +83,8 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 
 		try {
 			retVal.setDataSource(dataSource());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
 		}
 
 		retVal.setJpaProperties(jpaProperties());

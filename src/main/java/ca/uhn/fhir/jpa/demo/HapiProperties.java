@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.demo;
 
+import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
@@ -45,10 +46,8 @@ public class HapiProperties {
                 HapiProperties.properties = new Properties();
                 HapiProperties.properties.load(in);
                 in.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                throw new ConfigurationException("Could not load HAPI properties", e);
             }
         }
 
