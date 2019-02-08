@@ -1,10 +1,13 @@
 package ca.uhn.fhir.jpa.demo;
 
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Driver;
 import java.util.Properties;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory;
@@ -40,7 +43,9 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 	@Bean()
 	public DaoConfig daoConfig() {
 		DaoConfig retVal = new DaoConfig();
-		retVal.setAllowMultipleDelete(true);
+		retVal.setAllowMultipleDelete(HapiProperties.getAllowMultipleDelete());
+		retVal.setAllowExternalReferences(HapiProperties.getAllowExternalReferences());
+		retVal.setExpungeEnabled(HapiProperties.getExpungeEnabled());
 
 		// You can enable these if you want to support Subscriptions from your server
 		if (false) {
@@ -50,7 +55,7 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
 		}
 
-		return retVal;
+    return retVal;
 	}
 
 	@Bean
@@ -66,8 +71,8 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 	@Override
 	public DatabaseBackedPagingProvider databaseBackedPagingProvider() {
 		DatabaseBackedPagingProvider pagingProvider = super.databaseBackedPagingProvider();
-		pagingProvider.setDefaultPageSize(20);
-		pagingProvider.setMaximumPageSize(200);
+		pagingProvider.setDefaultPageSize(HapiProperties.getDefaultPageSize());
+		pagingProvider.setMaximumPageSize(HapiProperties.getMaximumPageSize());
 		return pagingProvider;
 	}
 
@@ -78,12 +83,13 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 	 * A URL to a remote database could also be placed here, along with login credentials and other properties supported by BasicDataSource.
 	 */
 	@Bean(destroyMethod = "close")
-	public BasicDataSource dataSource() {
+	public BasicDataSource dataSource() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 		BasicDataSource retVal = new BasicDataSource();
-		retVal.setDriver(new org.apache.derby.jdbc.EmbeddedDriver());
-		retVal.setUrl("jdbc:derby:directory:target/jpaserver_derby_files;create=true");
-		retVal.setUsername("");
-		retVal.setPassword("");
+		Driver driver = (Driver) Class.forName(HapiProperties.getDataSourceDriver()).getConstructor().newInstance();
+		retVal.setDriver(driver);
+		retVal.setUrl(HapiProperties.getDataSourceUrl());
+		retVal.setUsername(HapiProperties.getDataSourceUsername());
+		retVal.setPassword(HapiProperties.getDataSourcePassword());
 		return retVal;
 	}
 
@@ -91,28 +97,25 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 	@Bean()
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory();
-		retVal.setPersistenceUnitName("HAPI_PU");
-		retVal.setDataSource(dataSource());
+		retVal.setPersistenceUnitName(HapiProperties.getPersistenceUnitName());
+
+		try {
+			retVal.setDataSource(dataSource());
+		} catch (Exception e) {
+			throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
+		}
+
 		retVal.setJpaProperties(jpaProperties());
 		return retVal;
 	}
 
 	private Properties jpaProperties() {
-		Properties extraProperties = new Properties();
-		extraProperties.put("hibernate.dialect", DerbyTenSevenHapiFhirDialect.class.getName());
-		extraProperties.put("hibernate.format_sql", "false");
-		extraProperties.put("hibernate.show_sql", "false");
-		extraProperties.put("hibernate.hbm2ddl.auto", "update");
-		extraProperties.put("hibernate.jdbc.batch_size", "20");
-		extraProperties.put("hibernate.cache.use_query_cache", "false");
-		extraProperties.put("hibernate.cache.use_second_level_cache", "false");
-		extraProperties.put("hibernate.cache.use_structured_entries", "false");
-		extraProperties.put("hibernate.cache.use_minimal_puts", "false");
-		extraProperties.put("hibernate.search.model_mapping", LuceneSearchMappingFactory.class.getName());
-		extraProperties.put("hibernate.search.default.directory_provider", "filesystem");
-		extraProperties.put("hibernate.search.default.indexBase", "target/lucenefiles");
-		extraProperties.put("hibernate.search.lucene_version", "LUCENE_CURRENT");
-//		extraProperties.put("hibernate.search.default.worker.execution", "async");
+		Properties extraProperties = HapiProperties.getProperties();
+
+		if (extraProperties == null) {
+			extraProperties = new Properties();
+		}
+
 		return extraProperties;
 	}
 
@@ -121,11 +124,10 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 	 */
 	public IServerInterceptor loggingInterceptor() {
 		LoggingInterceptor retVal = new LoggingInterceptor();
-		retVal.setLoggerName("fhirtest.access");
-		retVal.setMessageFormat(
-				"Path[${servletPath}] Source[${requestHeader.x-forwarded-for}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}]");
-		retVal.setLogExceptions(true);
-		retVal.setErrorMessageFormat("ERROR - ${requestVerb} ${requestUrl}");
+		retVal.setLoggerName(HapiProperties.getLoggerName());
+		retVal.setMessageFormat(HapiProperties.getLoggerFormat());
+		retVal.setErrorMessageFormat(HapiProperties.getLoggerErrorFormat());
+		retVal.setLogExceptions(HapiProperties.getLoggerLogExceptions());
 		return retVal;
 	}
 
@@ -150,5 +152,4 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 		retVal.setEntityManagerFactory(entityManagerFactory);
 		return retVal;
 	}
-
 }

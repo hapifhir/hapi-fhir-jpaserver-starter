@@ -10,11 +10,11 @@ import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaSystemProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.TerminologyUploaderProviderDstu3;
+import ca.uhn.fhir.jpa.provider.r4.JpaSystemProviderR4;
+import ca.uhn.fhir.jpa.provider.r4.TerminologyUploaderProviderR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
-import ca.uhn.fhir.rest.api.EncodingEnum;
-import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.RestfulServer;
@@ -48,7 +48,7 @@ public class JpaServerDemo extends RestfulServer {
          *
          * If you want to use DSTU1 instead, change the following line, and change the 2 occurrences of dstu2 in web.xml to dstu1
          */
-        FhirVersionEnum fhirVersion = FhirVersionEnum.DSTU3;
+        FhirVersionEnum fhirVersion = HapiProperties.getFhirVersion();
         setFhirContext(new FhirContext(fhirVersion));
 
         // Get the spring context from the web container (it's declared in web.xml)
@@ -64,6 +64,8 @@ public class JpaServerDemo extends RestfulServer {
             resourceProviderBeanName = "myResourceProvidersDstu2";
         } else if (fhirVersion == FhirVersionEnum.DSTU3) {
             resourceProviderBeanName = "myResourceProvidersDstu3";
+        } else if (fhirVersion == FhirVersionEnum.R4) {
+            resourceProviderBeanName = "myResourceProviderR4";
         } else {
             throw new IllegalStateException();
         }
@@ -79,6 +81,8 @@ public class JpaServerDemo extends RestfulServer {
             systemProvider = myAppCtx.getBean("mySystemProviderDstu2", JpaSystemProviderDstu2.class);
         } else if (fhirVersion == FhirVersionEnum.DSTU3) {
             systemProvider = myAppCtx.getBean("mySystemProviderDstu3", JpaSystemProviderDstu3.class);
+        } else if (fhirVersion == FhirVersionEnum.R4) {
+            systemProvider = myAppCtx.getBean("mySystemProviderR4", JpaSystemProviderR4.class);
         } else {
             throw new IllegalStateException();
         }
@@ -91,24 +95,27 @@ public class JpaServerDemo extends RestfulServer {
          */
         if (fhirVersion == FhirVersionEnum.DSTU2) {
             IFhirSystemDao<ca.uhn.fhir.model.dstu2.resource.Bundle, MetaDt> systemDao = myAppCtx.getBean("mySystemDaoDstu2", IFhirSystemDao.class);
-            JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, systemDao,
-                    myAppCtx.getBean(DaoConfig.class));
-            confProvider.setImplementationDescription("Example Server");
+            JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, systemDao, myAppCtx.getBean(DaoConfig.class));
+            confProvider.setImplementationDescription("HAPI FHIR DSTU2 Server");
             setServerConformanceProvider(confProvider);
         } else if (fhirVersion == FhirVersionEnum.DSTU3) {
             IFhirSystemDao<Bundle, Meta> systemDao = myAppCtx.getBean("mySystemDaoDstu3", IFhirSystemDao.class);
-            JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, systemDao,
-                    myAppCtx.getBean(DaoConfig.class));
-            confProvider.setImplementationDescription("Example Server");
+            JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, systemDao, myAppCtx.getBean(DaoConfig.class));
+            confProvider.setImplementationDescription("HAPI FHIR DSTU3 Server");
+            setServerConformanceProvider(confProvider);
+        } else if (fhirVersion == FhirVersionEnum.R4) {
+            IFhirSystemDao<Bundle, Meta> systemDao = myAppCtx.getBean("mySystemDaoR4", IFhirSystemDao.class);
+            JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, systemDao, myAppCtx.getBean(DaoConfig.class));
+            confProvider.setImplementationDescription("HAPI FHIR R4 Server");
             setServerConformanceProvider(confProvider);
         } else {
             throw new IllegalStateException();
         }
 
         /*
-         * Enable ETag Support (this is already the default)
+         * ETag Support
          */
-        setETagSupport(ETagSupportEnum.ENABLED);
+        setETagSupport(HapiProperties.getEtagSupport());
 
         /*
          * This server tries to dynamically generate narratives
@@ -119,8 +126,12 @@ public class JpaServerDemo extends RestfulServer {
         /*
          * Default to JSON and pretty printing
          */
-        setDefaultPrettyPrint(true);
-        setDefaultResponseEncoding(EncodingEnum.JSON);
+        setDefaultPrettyPrint(HapiProperties.getDefaultPrettyPrint());
+
+        /*
+         * Default encoding
+         */
+        setDefaultResponseEncoding(HapiProperties.getDefaultEncoding());
 
         /*
          * -- New in HAPI FHIR 1.5 --
@@ -145,8 +156,9 @@ public class JpaServerDemo extends RestfulServer {
          * this doesn't always work. If you are setting links in your search bundles that
          * just refer to "localhost", you might want to use a server address strategy:
          */
-        if (false) { // <-- DISABLED RIGHT NOW
-            setServerAddressStrategy(new HardcodedServerAddressStrategy("http://mydomain.com/fhir/baseDstu3"));
+        String serverAddress = HapiProperties.getServerAddress();
+        if (serverAddress != null && serverAddress.length() > 0) {
+            setServerAddressStrategy(new HardcodedServerAddressStrategy(serverAddress));
         }
 
         /*
@@ -159,6 +171,8 @@ public class JpaServerDemo extends RestfulServer {
         if (false) { // <-- DISABLED RIGHT NOW
             if (fhirVersion == FhirVersionEnum.DSTU3) {
                 registerProvider(myAppCtx.getBean(TerminologyUploaderProviderDstu3.class));
+            } else if (fhirVersion == FhirVersionEnum.R4) {
+                registerProvider(myAppCtx.getBean(TerminologyUploaderProviderR4.class));
             }
         }
 

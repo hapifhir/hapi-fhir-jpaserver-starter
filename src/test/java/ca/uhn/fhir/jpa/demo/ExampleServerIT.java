@@ -20,15 +20,29 @@ public class ExampleServerIT {
 
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerIT.class);
 	private static IGenericClient ourClient;
-	private static FhirContext ourCtx = FhirContext.forDstu3();
+	private static FhirContext ourCtx;
 	private static int ourPort;
 
 	private static Server ourServer;
 	private static String ourServerBase;
 
+	static {
+		switch (HapiProperties.getFhirVersion()) {
+			case DSTU2:
+				ourCtx = FhirContext.forDstu2();
+			case R4:
+				ourCtx = FhirContext.forR4();
+			case DSTU3:
+			default:
+				ourCtx = FhirContext.forDstu3();
+		}
+
+		ourPort = HapiProperties.getTestPort();
+	}
+
 	@Test
 	public void testCreateAndRead() throws IOException {
-		ourLog.info("Base URL is: http://localhost:" + ourPort + "/baseDstu3");
+		ourLog.info("Base URL is: http://localhost:" + ourPort + HapiProperties.getServerBase());
 		String methodName = "testCreateResourceConditional";
 
 		Patient pt = new Patient();
@@ -72,16 +86,13 @@ public class ExampleServerIT {
 
 		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
 		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-		ourServerBase = "http://localhost:" + ourPort + "/baseDstu3";
+		ourServerBase = "http://localhost:" + ourPort + HapiProperties.getServerBase();
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
 		ourClient.registerInterceptor(new LoggingInterceptor(true));
-
 	}
 
 	public static void main(String[] theArgs) throws Exception {
 		ourPort = 8080;
 		beforeClass();
 	}
-
-
 }

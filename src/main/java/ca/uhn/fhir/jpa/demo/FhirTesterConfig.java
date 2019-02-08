@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.to.FhirTesterMvcConfig;
 import ca.uhn.fhir.to.TesterConfig;
 
@@ -40,10 +39,10 @@ public class FhirTesterConfig {
 		TesterConfig retVal = new TesterConfig();
 		retVal
 			.addServer()
-				.withId("home")
-				.withFhirVersion(FhirVersionEnum.DSTU3)
-				.withBaseUrl("${serverBase}/baseDstu3")
-				.withName("Local Tester");
+				.withId(HapiProperties.getServerId())
+				.withFhirVersion(HapiProperties.getFhirVersion())
+				.withBaseUrl("${serverBase}" + HapiProperties.getServerBase())
+				.withName(HapiProperties.getServerName());
 		return retVal;
 	}
 
