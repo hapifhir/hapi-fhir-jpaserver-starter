@@ -13,7 +13,6 @@ import ca.uhn.fhir.jpa.provider.dstu3.TerminologyUploaderProviderDstu3;
 import ca.uhn.fhir.jpa.provider.r4.JpaSystemProviderR4;
 import ca.uhn.fhir.jpa.provider.r4.TerminologyUploaderProviderR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
-//import ca.uhn.fhir.jpa.subscription.resthook.SubscriptionRestHookInterceptor;
 import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
@@ -22,6 +21,7 @@ import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Meta;
+import org.hl7.fhir.instance.model.Subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;
@@ -176,26 +176,12 @@ public class JpaServerDemo extends RestfulServer {
             }
         }
 
-        /*
-         * If you want to support subscriptions, you will want to register interceptors for
-         * any type of subscriptions you want to support.
-         */
-        boolean subscriptionsEnabled = false;
-        if (subscriptionsEnabled) { // <-- DISABLED RIGHT NOW
-            //SubscriptionRestHookInterceptor restHookInterceptor = myAppCtx.getBean(SubscriptionRestHookInterceptor.class);
-            //registerInterceptor(restHookInterceptor);
-
-            // You might alo want to enable other subscription interceptors too
-            // eg...
-            // myAppCtx.getBean(SubscriptionWebsocketInterceptor.class);
-            // myAppCtx.getBean(SubscriptionEmailInterceptor.class);
-
-            // If you want to enable the $trigger-subscription operation to allow
-            // manual triggering of a subscription delivery, enable this provider
+        // If you want to enable the $trigger-subscription operation to allow
+        // manual triggering of a subscription delivery, enable this provider
+        if (false) { // <-- DISABLED RIGHT NOW
             SubscriptionTriggeringProvider retriggeringProvider = myAppCtx.getBean(SubscriptionTriggeringProvider.class);
             registerProvider(retriggeringProvider);
         }
-
     }
 
 }

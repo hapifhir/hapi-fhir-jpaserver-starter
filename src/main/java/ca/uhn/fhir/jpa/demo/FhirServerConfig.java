@@ -8,10 +8,14 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import ca.uhn.fhir.context.ConfigurationException;
+import ca.uhn.fhir.jpa.model.entity.ModelConfig;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory;
 import ca.uhn.fhir.jpa.util.DerbyTenSevenHapiFhirDialect;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.lang3.time.DateUtils;
+import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.hl7.fhir.instance.model.Subscription;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +46,21 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 		retVal.setAllowMultipleDelete(HapiProperties.getAllowMultipleDelete());
 		retVal.setAllowExternalReferences(HapiProperties.getAllowExternalReferences());
 		retVal.setExpungeEnabled(HapiProperties.getExpungeEnabled());
-		return retVal;
+
+		// You can enable these if you want to support Subscriptions from your server
+		if (false) {
+			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.RESTHOOK);
+		}
+		if (false) {
+			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
+		}
+
+    return retVal;
+	}
+
+	@Bean
+	public ModelConfig modelConfig() {
+		return new ModelConfig();
 	}
 
 	/**
@@ -65,7 +83,7 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 	 * A URL to a remote database could also be placed here, along with login credentials and other properties supported by BasicDataSource.
 	 */
 	@Bean(destroyMethod = "close")
-	public DataSource dataSource() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+	public BasicDataSource dataSource() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 		BasicDataSource retVal = new BasicDataSource();
 		Driver driver = (Driver) Class.forName(HapiProperties.getDataSourceDriver()).getConstructor().newInstance();
 		retVal.setDriver(driver);
