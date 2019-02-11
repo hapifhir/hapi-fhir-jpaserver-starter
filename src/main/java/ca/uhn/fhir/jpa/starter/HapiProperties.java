@@ -1,12 +1,11 @@
-package ca.uhn.fhir.jpa.demo;
+package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
+import com.google.common.annotations.VisibleForTesting;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -30,22 +29,35 @@ public class HapiProperties {
     public static final String TEST_PORT = "test.port";
     public static final String SERVER_NAME = "server.name";
     public static final String SERVER_ID = "server.id";
-    private static Properties properties;
     private static final String HAPI_PROPERTIES = "hapi.properties";
-    private static final String FHIR_VERSION = "fhir_version";
+    static final String FHIR_VERSION = "fhir_version";
     private static final String DEFAULT_ENCODING = "default_encoding";
     private static final String ETAG_SUPPORT = "etag_support";
+    private static Properties properties;
+
+    /**
+     * Force the configuration to be reloaded
+     */
+    public static void forceReload() {
+        properties = null;
+        getProperties();
+    }
+
+    /**
+     * This is mostly here for unit tests. Use the actual properties file
+     * to set values
+     */
+    @VisibleForTesting
+    public static void setProperty(String theKey, String theValue) {
+        getProperties().setProperty(theKey, theValue);
+    }
 
     public static Properties getProperties() {
         if (properties == null) {
             // Load the configurable properties file
-            InputStream in = null;
-
-            try {
-                in = HapiProperties.class.getClassLoader().getResourceAsStream(HAPI_PROPERTIES);
+            try (InputStream in = HapiProperties.class.getClassLoader().getResourceAsStream(HAPI_PROPERTIES)){
                 HapiProperties.properties = new Properties();
                 HapiProperties.properties.load(in);
-                in.close();
             } catch (Exception e) {
                 throw new ConfigurationException("Could not load HAPI properties", e);
             }
@@ -197,7 +209,7 @@ public class HapiProperties {
     }
 
     public static String getServerBase() {
-        return HapiProperties.getProperty(SERVER_BASE, "/baseDstu3");
+        return HapiProperties.getProperty(SERVER_BASE, "/fhir");
     }
 
     public static String getServerName() {

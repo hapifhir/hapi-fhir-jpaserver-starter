@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.demo;
+package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
@@ -10,6 +10,7 @@ import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaSystemProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.TerminologyUploaderProviderDstu3;
+import ca.uhn.fhir.jpa.provider.r4.JpaConformanceProviderR4;
 import ca.uhn.fhir.jpa.provider.r4.JpaSystemProviderR4;
 import ca.uhn.fhir.jpa.provider.r4.TerminologyUploaderProviderR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
@@ -21,21 +22,20 @@ import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Meta;
-import org.hl7.fhir.instance.model.Subscription;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.servlet.ServletException;
 import java.util.List;
 
-public class JpaServerDemo extends RestfulServer {
+public class JpaRestfulServer extends RestfulServer {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger ourLog = LoggerFactory.getLogger(JpaServerDemo.class);
+    private AnnotationConfigApplicationContext appCtx;
 
-    private WebApplicationContext myAppCtx;
+    @Override
+    public void destroy() {
+        appCtx.close();
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -43,69 +43,61 @@ public class JpaServerDemo extends RestfulServer {
         super.initialize();
 
         /*
-         * We want to support FHIR DSTU2 format. This means that the server
-         * will use the DSTU2 bundle format and other DSTU2 encoding changes.
-         *
-         * If you want to use DSTU1 instead, change the following line, and change the 2 occurrences of dstu2 in web.xml to dstu1
+         * Create a FhirContext object that uses the version of FHIR
+         * specified in the properties file.
          */
         FhirVersionEnum fhirVersion = HapiProperties.getFhirVersion();
         setFhirContext(new FhirContext(fhirVersion));
 
-        // Get the spring context from the web container (it's declared in web.xml)
-        myAppCtx = ContextLoaderListener.getCurrentWebApplicationContext();
+        appCtx = new AnnotationConfigApplicationContext();
 
         /*
-         * The BaseJavaConfigDstu2.java class is a spring configuration
-         * file which is automatically generated as a part of hapi-fhir-jpaserver-base and
-         * contains bean definitions for a resource provider for each resource type
+         * ResourceProviders are fetched from the Spring context
          */
-        String resourceProviderBeanName;
-        if (fhirVersion == FhirVersionEnum.DSTU2) {
-            resourceProviderBeanName = "myResourceProvidersDstu2";
-        } else if (fhirVersion == FhirVersionEnum.DSTU3) {
-            resourceProviderBeanName = "myResourceProvidersDstu3";
-        } else if (fhirVersion == FhirVersionEnum.R4) {
-            resourceProviderBeanName = "myResourceProviderR4";
-        } else {
-            throw new IllegalStateException();
-        }
-        List<IResourceProvider> beans = myAppCtx.getBean(resourceProviderBeanName, List.class);
-        setResourceProviders(beans);
-
-        /*
-         * The system provider implements non-resource-type methods, such as
-         * transaction, and global history.
-         */
+        List<IResourceProvider> resourceProviders;
         Object systemProvider;
         if (fhirVersion == FhirVersionEnum.DSTU2) {
-            systemProvider = myAppCtx.getBean("mySystemProviderDstu2", JpaSystemProviderDstu2.class);
+            appCtx.register(FhirServerConfigDstu2.class, FhirServerConfigCommon.class);
+            appCtx.refresh();
+            resourceProviders = appCtx.getBean("myResourceProvidersDstu2", List.class);
+            systemProvider = appCtx.getBean("mySystemProviderDstu2", JpaSystemProviderDstu2.class);
         } else if (fhirVersion == FhirVersionEnum.DSTU3) {
-            systemProvider = myAppCtx.getBean("mySystemProviderDstu3", JpaSystemProviderDstu3.class);
+            appCtx.register(FhirServerConfigDstu3.class, FhirServerConfigCommon.class);
+            appCtx.refresh();
+            resourceProviders = appCtx.getBean("myResourceProvidersDstu3", List.class);
+            systemProvider = appCtx.getBean("mySystemProviderDstu3", JpaSystemProviderDstu3.class);
         } else if (fhirVersion == FhirVersionEnum.R4) {
-            systemProvider = myAppCtx.getBean("mySystemProviderR4", JpaSystemProviderR4.class);
+            appCtx.register(FhirServerConfigR4.class, FhirServerConfigCommon.class);
+            appCtx.refresh();
+            resourceProviders = appCtx.getBean("myResourceProvidersR4", List.class);
+            systemProvider = appCtx.getBean("mySystemProviderR4", JpaSystemProviderR4.class);
         } else {
             throw new IllegalStateException();
         }
-        setPlainProviders(systemProvider);
+        registerProviders(resourceProviders);
+        registerProvider(systemProvider);
 
         /*
          * The conformance provider exports the supported resources, search parameters, etc for
-         * this server. The JPA version adds resource counts to the exported statement, so it
+         * this server. The JPA version adds resourceProviders counts to the exported statement, so it
          * is a nice addition.
+         *
+         * You can also create your own subclass of the conformance provider if you need to
+         * provide further customization of your server's CapabilityStatement
          */
         if (fhirVersion == FhirVersionEnum.DSTU2) {
-            IFhirSystemDao<ca.uhn.fhir.model.dstu2.resource.Bundle, MetaDt> systemDao = myAppCtx.getBean("mySystemDaoDstu2", IFhirSystemDao.class);
-            JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, systemDao, myAppCtx.getBean(DaoConfig.class));
+            IFhirSystemDao<ca.uhn.fhir.model.dstu2.resource.Bundle, MetaDt> systemDao = appCtx.getBean("mySystemDaoDstu2", IFhirSystemDao.class);
+            JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, systemDao, appCtx.getBean(DaoConfig.class));
             confProvider.setImplementationDescription("HAPI FHIR DSTU2 Server");
             setServerConformanceProvider(confProvider);
         } else if (fhirVersion == FhirVersionEnum.DSTU3) {
-            IFhirSystemDao<Bundle, Meta> systemDao = myAppCtx.getBean("mySystemDaoDstu3", IFhirSystemDao.class);
-            JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, systemDao, myAppCtx.getBean(DaoConfig.class));
+            IFhirSystemDao<Bundle, Meta> systemDao = appCtx.getBean("mySystemDaoDstu3", IFhirSystemDao.class);
+            JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, systemDao, appCtx.getBean(DaoConfig.class));
             confProvider.setImplementationDescription("HAPI FHIR DSTU3 Server");
             setServerConformanceProvider(confProvider);
         } else if (fhirVersion == FhirVersionEnum.R4) {
-            IFhirSystemDao<Bundle, Meta> systemDao = myAppCtx.getBean("mySystemDaoR4", IFhirSystemDao.class);
-            JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, systemDao, myAppCtx.getBean(DaoConfig.class));
+            IFhirSystemDao<org.hl7.fhir.r4.model.Bundle, org.hl7.fhir.r4.model.Meta> systemDao = appCtx.getBean("mySystemDaoR4", IFhirSystemDao.class);
+            JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, systemDao, appCtx.getBean(DaoConfig.class));
             confProvider.setImplementationDescription("HAPI FHIR R4 Server");
             setServerConformanceProvider(confProvider);
         } else {
@@ -134,20 +126,19 @@ public class JpaServerDemo extends RestfulServer {
         setDefaultResponseEncoding(HapiProperties.getDefaultEncoding());
 
         /*
-         * -- New in HAPI FHIR 1.5 --
          * This configures the server to page search results to and from
          * the database, instead of only paging them to memory. This may mean
          * a performance hit when performing searches that return lots of results,
          * but makes the server much more scalable.
          */
-        setPagingProvider(myAppCtx.getBean(DatabaseBackedPagingProvider.class));
+        setPagingProvider(appCtx.getBean(DatabaseBackedPagingProvider.class));
 
         /*
          * This interceptor formats the output using nice colourful
          * HTML output when the request is detected to come from a
          * browser.
          */
-        ResponseHighlighterInterceptor responseHighlighterInterceptor = myAppCtx.getBean(ResponseHighlighterInterceptor.class);
+        ResponseHighlighterInterceptor responseHighlighterInterceptor = appCtx.getBean(ResponseHighlighterInterceptor.class);
         this.registerInterceptor(responseHighlighterInterceptor);
 
         /*
@@ -170,16 +161,16 @@ public class JpaServerDemo extends RestfulServer {
          */
         if (false) { // <-- DISABLED RIGHT NOW
             if (fhirVersion == FhirVersionEnum.DSTU3) {
-                registerProvider(myAppCtx.getBean(TerminologyUploaderProviderDstu3.class));
+                registerProvider(appCtx.getBean(TerminologyUploaderProviderDstu3.class));
             } else if (fhirVersion == FhirVersionEnum.R4) {
-                registerProvider(myAppCtx.getBean(TerminologyUploaderProviderR4.class));
+                registerProvider(appCtx.getBean(TerminologyUploaderProviderR4.class));
             }
         }
 
         // If you want to enable the $trigger-subscription operation to allow
         // manual triggering of a subscription delivery, enable this provider
         if (false) { // <-- DISABLED RIGHT NOW
-            SubscriptionTriggeringProvider retriggeringProvider = myAppCtx.getBean(SubscriptionTriggeringProvider.class);
+            SubscriptionTriggeringProvider retriggeringProvider = appCtx.getBean(SubscriptionTriggeringProvider.class);
             registerProvider(retriggeringProvider);
         }
     }
