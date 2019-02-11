@@ -1,10 +1,11 @@
-package ca.uhn.fhir.jpa.demo;
+package ca.uhn.fhir.jpa.starter;
 
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
 
+import ca.uhn.fhir.util.PortUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -16,9 +17,9 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 
-public class ExampleServerIT {
+public class ExampleServerDstu3IT {
 
-	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerIT.class);
+	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu3IT.class);
 	private static IGenericClient ourClient;
 	private static FhirContext ourCtx;
 	private static int ourPort;
@@ -27,16 +28,10 @@ public class ExampleServerIT {
 	private static String ourServerBase;
 
 	static {
-		switch (HapiProperties.getFhirVersion()) {
-			case DSTU2:
-				ourCtx = FhirContext.forDstu2();
-			case R4:
-				ourCtx = FhirContext.forR4();
-			case DSTU3:
-			default:
-				ourCtx = FhirContext.forDstu3();
-		}
-
+		HapiProperties.forceReload();
+		HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "DSTU3");
+		HapiProperties.setProperty(HapiProperties.TEST_PORT, Integer.toString(PortUtil.findFreePort()));
+		ourCtx = FhirContext.forDstu3();
 		ourPort = HapiProperties.getTestPort();
 	}
 
@@ -63,7 +58,7 @@ public class ExampleServerIT {
 		/*
 		 * This runs under maven, and I'm not sure how else to figure out the target directory from code..
 		 */
-		String path = ExampleServerIT.class.getClassLoader().getResource(".keep_hapi-fhir-jpaserver-starter").getPath();
+		String path = ExampleServerDstu3IT.class.getClassLoader().getResource(".keep_hapi-fhir-jpaserver-starter").getPath();
 		path = new File(path).getParent();
 		path = new File(path).getParent();
 		path = new File(path).getParent();
