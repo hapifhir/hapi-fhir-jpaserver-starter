@@ -8,12 +8,14 @@ import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.FileInputStream;
 import java.util.Properties;
 
 public class HapiProperties {
     public static final String SERVER_ADDRESS = "server_address";
     public static final String DEFAULT_PRETTY_PRINT = "default_pretty_print";
     public static final String MAX_PAGE_SIZE = "max_page_size";
+    public static final String MAX_FETCH_SIZE = "max_fetch_size";
     public static final String DEFAULT_PAGE_SIZE = "default_page_size";
     public static final String LOGGER_NAME = "logger.name";
     public static final String LOGGER_FORMAT = "logger.format";
@@ -23,6 +25,7 @@ public class HapiProperties {
     public static final String DATASOURCE_USERNAME = "datasource.username";
     public static final String DATASOURCE_URL = "datasource.url";
     public static final String DATASOURCE_DRIVER = "datasource.driver";
+    public static final String DATASOURCE_MAX_POOL_SIZE = "datasource.max_pool_size";
     public static final String LOGGER_LOG_EXCEPTIONS = "logger.log_exceptions";
     public static final String LOGGER_ERROR_FORMAT = "logger.error_format";
     public static final String PERSISTENCE_UNIT_NAME = "persistence_unit_name";
@@ -49,9 +52,35 @@ public class HapiProperties {
             } catch (Exception e) {
                 throw new ConfigurationException("Could not load HAPI properties", e);
             }
+
+            Properties overrideProps = loadOverrideProperties();
+            if(overrideProps != null) {
+              properties.putAll(overrideProps);
+            }
         }
 
         return properties;
+    }
+
+    /**
+     * If a configuration file path is explicitly specified via -Dhapi.properties=<path>, the properties there will
+     * be used to override the entries in the default hapi.properties file (currently under WEB-INF/classes)
+     * @return properties loaded from the explicitly specified configuraiton file if there is one, or null otherwise.
+     */
+    private static Properties loadOverrideProperties() {
+        String confFile = System.getProperty(HAPI_PROPERTIES);
+        if(confFile != null) {
+            try {
+                Properties props = new Properties();
+                props.load(new FileInputStream(confFile));
+                return props;
+            }
+            catch (Exception e) {
+                throw new ConfigurationException("Could not load HAPI properties file: " + confFile, e);
+            }
+        }
+
+        return null;
     }
 
     private static String getProperty(String propertyName) {
@@ -144,6 +173,10 @@ public class HapiProperties {
         return HapiProperties.getIntegerProperty(MAX_PAGE_SIZE, 200);
     }
 
+    public static Integer getMaximumFetchSize() {
+        return HapiProperties.getIntegerProperty(MAX_FETCH_SIZE, Integer.MAX_VALUE);
+    }
+
     public static String getPersistenceUnitName() {
         return HapiProperties.getProperty(PERSISTENCE_UNIT_NAME, "HAPI_PU");
     }
@@ -166,6 +199,10 @@ public class HapiProperties {
 
     public static String getDataSourceDriver() {
         return HapiProperties.getProperty(DATASOURCE_DRIVER, "org.apache.derby.jdbc.EmbeddedDriver");
+    }
+
+    public static Integer getDataSourceMaxPoolSize() {
+        return HapiProperties.getIntegerProperty(DATASOURCE_MAX_POOL_SIZE, 10);
     }
 
     public static String getDataSourceUrl() {

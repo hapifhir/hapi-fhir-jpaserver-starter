@@ -44,6 +44,7 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 	public DaoConfig daoConfig() {
 		DaoConfig retVal = new DaoConfig();
 		retVal.setAllowMultipleDelete(HapiProperties.getAllowMultipleDelete());
+                retVal.setFetchSizeDefaultMaximum(HapiProperties.getMaximumFetchSize());
 		retVal.setAllowExternalReferences(HapiProperties.getAllowExternalReferences());
 		retVal.setExpungeEnabled(HapiProperties.getExpungeEnabled());
 
@@ -90,6 +91,7 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 		retVal.setUrl(HapiProperties.getDataSourceUrl());
 		retVal.setUsername(HapiProperties.getDataSourceUsername());
 		retVal.setPassword(HapiProperties.getDataSourcePassword());
+    retVal.setMaxTotal(HapiProperties.getDataSourceMaxPoolSize());
 		return retVal;
 	}
 
