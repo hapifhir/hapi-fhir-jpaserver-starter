@@ -46,16 +46,17 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 		retVal.setAllowMultipleDelete(HapiProperties.getAllowMultipleDelete());
 		retVal.setAllowExternalReferences(HapiProperties.getAllowExternalReferences());
 		retVal.setExpungeEnabled(HapiProperties.getExpungeEnabled());
-
+		retVal.setAutoCreatePlaceholderReferenceTargets(HapiProperties.getAllowPlaceholderReferences());
+		
 		// You can enable these if you want to support Subscriptions from your server
-		if (false) {
+		if (HapiProperties.getSubscriptionRestHookEnabled()) {
 			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.RESTHOOK);
 		}
-		if (false) {
+		if (HapiProperties.getSubscriptionEmailEnabled()) {
 			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
 		}
 
-    return retVal;
+    	return retVal;
 	}
 
 	@Bean
