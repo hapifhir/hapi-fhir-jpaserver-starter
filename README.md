@@ -50,3 +50,16 @@ The UI is customized using [Thymeleaf](https://www.thymeleaf.org/) template file
 
 Several template files that can be customized are found in the following directory: [https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates)
 
+# Configuration
+
+Much of this HAPI starter project can be configured using the properties file in *src/main/resources/hapi.properties*. By default, this starter project is configured to use Derby as the database.
+
+## MySql
+
+To configure the starter app to use MySQL, instead of the default Derby, update the hapi.properties file to have the following:
+
+* datasource.driver=com.mysql.jdbc.Driver
+* datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
+* hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+
+It is important to use MySQL5Dialect when using MySQL version 5+.

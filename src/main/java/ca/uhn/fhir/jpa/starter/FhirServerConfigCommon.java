@@ -24,25 +24,43 @@ import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 @EnableTransactionManagement()
 public class FhirServerConfigCommon {
 
+	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
+
 	/**
 	 * Configure FHIR properties around the the JPA server via this bean
 	 */
 	@Bean()
 	public DaoConfig daoConfig() {
 		DaoConfig retVal = new DaoConfig();
-		retVal.setAllowMultipleDelete(HapiProperties.getAllowMultipleDelete());
-		retVal.setAllowExternalReferences(HapiProperties.getAllowExternalReferences());
-		retVal.setExpungeEnabled(HapiProperties.getExpungeEnabled());
 
+		Boolean allowMultipleDelete = HapiProperties.getAllowMultipleDelete();
+		retVal.setAllowMultipleDelete(allowMultipleDelete);
+		ourLog.info("Server configured to " + (allowMultipleDelete ? "allow" : "deny") + " multiple deletes");
+
+		Boolean allowExternalReferences = HapiProperties.getAllowExternalReferences();
+		retVal.setAllowExternalReferences(allowExternalReferences);
+		ourLog.info("Server configured to " + (allowExternalReferences ? "allow" : "deny") + " external references");
+
+		Boolean expungeEnabled = HapiProperties.getExpungeEnabled();
+		retVal.setExpungeEnabled(expungeEnabled);
+		ourLog.info("Server configured to " + (expungeEnabled ? "enable" : "disable") + " expunges");
+
+		Boolean allowPlaceholderReferences = HapiProperties.getAllowPlaceholderReferences();
+		retVal.setAutoCreatePlaceholderReferenceTargets(allowPlaceholderReferences);
+		ourLog.info("Server configured to " + (allowPlaceholderReferences ? "allow" : "deny") + " placeholder references");
+		
 		// You can enable these if you want to support Subscriptions from your server
-		if (false) {
+		if (HapiProperties.getSubscriptionRestHookEnabled()) {
+			ourLog.info("Enabling REST-hook subscriptions");
 			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.RESTHOOK);
 		}
-		if (false) {
+
+		if (HapiProperties.getSubscriptionEmailEnabled()) {
+			ourLog.info("Enabling email subscriptions");
 			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
 		}
 
-    return retVal;
+    	return retVal;
 	}
 
 	@Bean
