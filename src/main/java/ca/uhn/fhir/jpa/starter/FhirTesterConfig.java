@@ -41,7 +41,7 @@ public class FhirTesterConfig {
 			.addServer()
 				.withId(HapiProperties.getServerId())
 				.withFhirVersion(HapiProperties.getFhirVersion())
-				.withBaseUrl("${serverBase}" + HapiProperties.getServerBase())
+				.withBaseUrl(HapiProperties.getServerAddress())
 				.withName(HapiProperties.getServerName());
 		return retVal;
 	}
