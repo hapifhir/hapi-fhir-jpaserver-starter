@@ -85,6 +85,10 @@ public class FhirServerConfigCommon {
 		retVal.setExpungeEnabled(this.expungeEnabled);
 		retVal.setAutoCreatePlaceholderReferenceTargets(this.allowPlaceholderReferences);
 		retVal.setEmailFromAddress(this.emailFrom);
+
+		Integer maxFetchSize = HapiProperties.getMaximumFetchSize();
+		retVal.setFetchSizeDefaultMaximum(maxFetchSize);
+		ourLog.info("Server configured to have a maximum fetch size of " + (maxFetchSize == Integer.MAX_VALUE? "'unlimited'": maxFetchSize));
 		
 		// You can enable these if you want to support Subscriptions from your server
 		if (this.subscriptionRestHookEnabled) {
@@ -132,6 +136,7 @@ public class FhirServerConfigCommon {
 		retVal.setUrl(HapiProperties.getDataSourceUrl());
 		retVal.setUsername(HapiProperties.getDataSourceUsername());
 		retVal.setPassword(HapiProperties.getDataSourcePassword());
+		retVal.setMaxTotal(HapiProperties.getDataSourceMaxPoolSize());
 		return retVal;
 	}
 
