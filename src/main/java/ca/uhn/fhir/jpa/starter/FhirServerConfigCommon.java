@@ -48,6 +48,10 @@ public class FhirServerConfigCommon {
 		Boolean allowPlaceholderReferences = HapiProperties.getAllowPlaceholderReferences();
 		retVal.setAutoCreatePlaceholderReferenceTargets(allowPlaceholderReferences);
 		ourLog.info("Server configured to " + (allowPlaceholderReferences ? "allow" : "deny") + " placeholder references");
+
+		Integer maxFetchSize = HapiProperties.getMaximumFetchSize();
+		retVal.setFetchSizeDefaultMaximum(maxFetchSize);
+		ourLog.info("Server configured to have a maximum fetch size of " + (maxFetchSize == Integer.MAX_VALUE? "'unlimited'": maxFetchSize));
 		
 		// You can enable these if you want to support Subscriptions from your server
 		if (HapiProperties.getSubscriptionRestHookEnabled()) {
@@ -82,6 +86,7 @@ public class FhirServerConfigCommon {
 		retVal.setUrl(HapiProperties.getDataSourceUrl());
 		retVal.setUsername(HapiProperties.getDataSourceUsername());
 		retVal.setPassword(HapiProperties.getDataSourcePassword());
+		retVal.setMaxTotal(HapiProperties.getDataSourceMaxPoolSize());
 		return retVal;
 	}
 
