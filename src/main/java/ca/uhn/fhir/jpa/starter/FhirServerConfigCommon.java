@@ -1,29 +1,16 @@
-package ca.uhn.fhir.jpa.demo;
+package ca.uhn.fhir.jpa.starter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Driver;
-import java.util.Properties;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
-import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
-import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
-import ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory;
-import ca.uhn.fhir.jpa.util.DerbyTenSevenHapiFhirDialect;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.apache.commons.lang3.time.DateUtils;
-import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.hl7.fhir.instance.model.Subscription;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import ca.uhn.fhir.jpa.config.BaseJavaConfigDstu3;
 import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.util.SubscriptionsRequireManualActivationInterceptorDstu3;
 import ca.uhn.fhir.rest.server.interceptor.IServerInterceptor;
@@ -35,7 +22,9 @@ import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
  */
 @Configuration
 @EnableTransactionManagement()
-public class FhirServerConfig extends BaseJavaConfigDstu3 {
+public class FhirServerConfigCommon {
+
+	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
 
 	/**
 	 * Configure FHIR properties around the the JPA server via this bean
@@ -43,38 +32,40 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 	@Bean()
 	public DaoConfig daoConfig() {
 		DaoConfig retVal = new DaoConfig();
-		retVal.setAllowMultipleDelete(HapiProperties.getAllowMultipleDelete());
-                retVal.setFetchSizeDefaultMaximum(HapiProperties.getMaximumFetchSize());
-		retVal.setAllowExternalReferences(HapiProperties.getAllowExternalReferences());
-		retVal.setExpungeEnabled(HapiProperties.getExpungeEnabled());
 
+		Boolean allowMultipleDelete = HapiProperties.getAllowMultipleDelete();
+		retVal.setAllowMultipleDelete(allowMultipleDelete);
+		ourLog.info("Server configured to " + (allowMultipleDelete ? "allow" : "deny") + " multiple deletes");
+
+		Boolean allowExternalReferences = HapiProperties.getAllowExternalReferences();
+		retVal.setAllowExternalReferences(allowExternalReferences);
+		ourLog.info("Server configured to " + (allowExternalReferences ? "allow" : "deny") + " external references");
+
+		Boolean expungeEnabled = HapiProperties.getExpungeEnabled();
+		retVal.setExpungeEnabled(expungeEnabled);
+		ourLog.info("Server configured to " + (expungeEnabled ? "enable" : "disable") + " expunges");
+
+		Boolean allowPlaceholderReferences = HapiProperties.getAllowPlaceholderReferences();
+		retVal.setAutoCreatePlaceholderReferenceTargets(allowPlaceholderReferences);
+		ourLog.info("Server configured to " + (allowPlaceholderReferences ? "allow" : "deny") + " placeholder references");
+		
 		// You can enable these if you want to support Subscriptions from your server
-		if (false) {
+		if (HapiProperties.getSubscriptionRestHookEnabled()) {
+			ourLog.info("Enabling REST-hook subscriptions");
 			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.RESTHOOK);
 		}
-		if (false) {
+
+		if (HapiProperties.getSubscriptionEmailEnabled()) {
+			ourLog.info("Enabling email subscriptions");
 			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
 		}
 
-    return retVal;
+    	return retVal;
 	}
 
 	@Bean
 	public ModelConfig modelConfig() {
 		return new ModelConfig();
-	}
-
-	/**
-	 * We override the paging provider definition so that we can customize
-	 * the default/max page sizes for search results. You can set these however
-	 * you want, although very large page sizes will require a lot of RAM.
-	 */
-	@Override
-	public DatabaseBackedPagingProvider databaseBackedPagingProvider() {
-		DatabaseBackedPagingProvider pagingProvider = super.databaseBackedPagingProvider();
-		pagingProvider.setDefaultPageSize(HapiProperties.getDefaultPageSize());
-		pagingProvider.setMaximumPageSize(HapiProperties.getMaximumPageSize());
-		return pagingProvider;
 	}
 
 	/**
@@ -95,31 +86,6 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 		return retVal;
 	}
 
-	@Override
-	@Bean()
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-		LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory();
-		retVal.setPersistenceUnitName(HapiProperties.getPersistenceUnitName());
-
-		try {
-			retVal.setDataSource(dataSource());
-		} catch (Exception e) {
-			throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
-		}
-
-		retVal.setJpaProperties(jpaProperties());
-		return retVal;
-	}
-
-	private Properties jpaProperties() {
-		Properties extraProperties = HapiProperties.getProperties();
-
-		if (extraProperties == null) {
-			extraProperties = new Properties();
-		}
-
-		return extraProperties;
-	}
 
 	/**
 	 * Do some fancy logging to create a nice access log that has details about each incoming request.
@@ -142,16 +108,4 @@ public class FhirServerConfig extends BaseJavaConfigDstu3 {
 		return retVal;
 	}
 
-	@Bean(autowire = Autowire.BY_TYPE)
-	public IServerInterceptor subscriptionSecurityInterceptor() {
-		SubscriptionsRequireManualActivationInterceptorDstu3 retVal = new SubscriptionsRequireManualActivationInterceptorDstu3();
-		return retVal;
-	}
-
-	@Bean()
-	public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-		JpaTransactionManager retVal = new JpaTransactionManager();
-		retVal.setEntityManagerFactory(entityManagerFactory);
-		return retVal;
-	}
 }

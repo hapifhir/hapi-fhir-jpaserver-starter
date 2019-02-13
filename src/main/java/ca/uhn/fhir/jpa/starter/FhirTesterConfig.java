@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.demo;
+package ca.uhn.fhir.jpa.starter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +41,7 @@ public class FhirTesterConfig {
 			.addServer()
 				.withId(HapiProperties.getServerId())
 				.withFhirVersion(HapiProperties.getFhirVersion())
-				.withBaseUrl("${serverBase}" + HapiProperties.getServerBase())
+				.withBaseUrl(HapiProperties.getServerAddress())
 				.withName(HapiProperties.getServerName());
 		return retVal;
 	}

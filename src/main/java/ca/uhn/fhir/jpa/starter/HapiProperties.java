@@ -1,54 +1,70 @@
-package ca.uhn.fhir.jpa.demo;
+package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
+import com.google.common.annotations.VisibleForTesting;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.util.Properties;
 
 public class HapiProperties {
-    public static final String SERVER_ADDRESS = "server_address";
-    public static final String DEFAULT_PRETTY_PRINT = "default_pretty_print";
-    public static final String MAX_PAGE_SIZE = "max_page_size";
-    public static final String MAX_FETCH_SIZE = "max_fetch_size";
-    public static final String DEFAULT_PAGE_SIZE = "default_page_size";
-    public static final String LOGGER_NAME = "logger.name";
-    public static final String LOGGER_FORMAT = "logger.format";
-    public static final String ALLOW_EXTERNAL_REFERENCES = "allow_external_references";
-    public static final String ALLOW_MULTIPLE_DELETE = "allow_multiple_delete";
-    public static final String DATASOURCE_PASSWORD = "datasource.password";
-    public static final String DATASOURCE_USERNAME = "datasource.username";
-    public static final String DATASOURCE_URL = "datasource.url";
-    public static final String DATASOURCE_DRIVER = "datasource.driver";
-    public static final String DATASOURCE_MAX_POOL_SIZE = "datasource.max_pool_size";
-    public static final String LOGGER_LOG_EXCEPTIONS = "logger.log_exceptions";
-    public static final String LOGGER_ERROR_FORMAT = "logger.error_format";
-    public static final String PERSISTENCE_UNIT_NAME = "persistence_unit_name";
-    public static final String SERVER_BASE = "server.base";
-    public static final String TEST_PORT = "test.port";
-    public static final String SERVER_NAME = "server.name";
-    public static final String SERVER_ID = "server.id";
+    static final String ALLOW_EXTERNAL_REFERENCES = "allow_external_references";
+    static final String ALLOW_MULTIPLE_DELETE = "allow_multiple_delete";
+    static final String ALLOW_PLACEHOLDER_REFERENCES = "allow_placeholder_references";
+    static final String DATASOURCE_DRIVER = "datasource.driver";
+    static final String DATASOURCE_MAX_POOL_SIZE = "datasource.max_pool_size";
+    static final String DATASOURCE_PASSWORD = "datasource.password";
+    static final String DATASOURCE_URL = "datasource.url";
+    static final String DATASOURCE_USERNAME = "datasource.username";
+    static final String DEFAULT_ENCODING = "default_encoding";
+    static final String DEFAULT_PAGE_SIZE = "default_page_size";
+    static final String DEFAULT_PRETTY_PRINT = "default_pretty_print";
+    static final String ETAG_SUPPORT = "etag_support";
+    static final String FHIR_VERSION = "fhir_version";
+    static final String HAPI_PROPERTIES = "hapi.properties";
+    static final String LOGGER_ERROR_FORMAT = "logger.error_format";
+    static final String LOGGER_FORMAT = "logger.format";
+    static final String LOGGER_LOG_EXCEPTIONS = "logger.log_exceptions";
+    static final String LOGGER_NAME = "logger.name";
+    static final String MAX_FETCH_SIZE = "max_fetch_size";
+    static final String MAX_PAGE_SIZE = "max_page_size";
+    static final String PERSISTENCE_UNIT_NAME = "persistence_unit_name";
+    static final String SERVER_ADDRESS = "server_address";
+    static final String SERVER_BASE = "server.base";
+    static final String SERVER_ID = "server.id";
+    static final String SERVER_NAME = "server.name";
+    static final String SUBSCRIPTION_EMAIL_ENABLED = "subscription.email.enabled";
+    static final String SUBSCRIPTION_RESTHOOK_ENABLED = "subscription.resthook.enabled";
+    static final String TEST_PORT = "test.port";
+
     private static Properties properties;
-    private static final String HAPI_PROPERTIES = "hapi.properties";
-    private static final String FHIR_VERSION = "fhir_version";
-    private static final String DEFAULT_ENCODING = "default_encoding";
-    private static final String ETAG_SUPPORT = "etag_support";
+
+    /*
+     * Force the configuration to be reloaded
+     */
+    public static void forceReload() {
+        properties = null;
+        getProperties();
+    }
+
+    /**
+     * This is mostly here for unit tests. Use the actual properties file
+     * to set values
+     */
+    @VisibleForTesting
+    public static void setProperty(String theKey, String theValue) {
+        getProperties().setProperty(theKey, theValue);
+    }
 
     public static Properties getProperties() {
         if (properties == null) {
             // Load the configurable properties file
-            InputStream in = null;
-
-            try {
-                in = HapiProperties.class.getClassLoader().getResourceAsStream(HAPI_PROPERTIES);
+            try (InputStream in = HapiProperties.class.getClassLoader().getResourceAsStream(HAPI_PROPERTIES)){
                 HapiProperties.properties = new Properties();
                 HapiProperties.properties.load(in);
-                in.close();
             } catch (Exception e) {
                 throw new ConfigurationException("Could not load HAPI properties", e);
             }
@@ -234,7 +250,7 @@ public class HapiProperties {
     }
 
     public static String getServerBase() {
-        return HapiProperties.getProperty(SERVER_BASE, "/baseDstu3");
+        return HapiProperties.getProperty(SERVER_BASE, "/fhir");
     }
 
     public static String getServerName() {
@@ -243,5 +259,17 @@ public class HapiProperties {
 
     public static String getServerId() {
         return HapiProperties.getProperty(SERVER_ID, "home");
+    }
+
+    public static Boolean getAllowPlaceholderReferences() {
+        return HapiProperties.getBooleanProperty(ALLOW_PLACEHOLDER_REFERENCES, true);
+    }
+
+    public static Boolean getSubscriptionEmailEnabled() {
+        return HapiProperties.getBooleanProperty(SUBSCRIPTION_EMAIL_ENABLED, true);
+    }
+
+    public static Boolean getSubscriptionRestHookEnabled() {
+        return HapiProperties.getBooleanProperty(SUBSCRIPTION_RESTHOOK_ENABLED, true);
     }
 }
