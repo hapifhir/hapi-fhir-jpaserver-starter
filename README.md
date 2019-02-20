@@ -20,7 +20,7 @@ mvn jetty:run
 
 Then, browse to the following link to use the server:
 
-[http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
+[http://localhost:8080/](http://localhost:8080/)
 
 # Deploying to a Container
 
@@ -40,7 +40,7 @@ This will create a file called `hapi-fhir-jpaserver.war` in your `target` direct
 
 Again, browse to the following link to use the server (note that the port 8080 may not be correct depending on how your server is configured).
 
-[http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
+[http://localhost:8080/](http://localhost:8080/)
 
 # Customizing The Web Testpage UI
 
