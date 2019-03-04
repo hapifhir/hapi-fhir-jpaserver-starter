@@ -14,6 +14,7 @@ public class HapiProperties {
     static final String ALLOW_EXTERNAL_REFERENCES = "allow_external_references";
     static final String ALLOW_MULTIPLE_DELETE = "allow_multiple_delete";
     static final String ALLOW_PLACEHOLDER_REFERENCES = "allow_placeholder_references";
+    static final String REUSE_CACHED_SEARCH_RESULTS_MILLIS = "reuse_cached_search_results_millis";
     static final String DATASOURCE_DRIVER = "datasource.driver";
     static final String DATASOURCE_MAX_POOL_SIZE = "datasource.max_pool_size";
     static final String DATASOURCE_PASSWORD = "datasource.password";
@@ -311,5 +312,10 @@ public class HapiProperties {
 
     public static String getEmailPassword() {
         return HapiProperties.getProperty("email.password");
+    }
+
+    public static Long getReuseCachedSearchResultsMillis() {
+        String value = HapiProperties.getProperty(REUSE_CACHED_SEARCH_RESULTS_MILLIS, "-1");
+        return Long.valueOf(value);
     }
 }
