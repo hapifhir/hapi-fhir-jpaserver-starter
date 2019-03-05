@@ -47,8 +47,6 @@ public class JpaRestfulServer extends RestfulServer {
          * specified in the properties file.
          */
         FhirVersionEnum fhirVersion = HapiProperties.getFhirVersion();
-        setFhirContext(new FhirContext(fhirVersion));
-
         appCtx = new AnnotationConfigApplicationContext();
 
         /*
@@ -74,6 +72,9 @@ public class JpaRestfulServer extends RestfulServer {
         } else {
             throw new IllegalStateException();
         }
+
+        setFhirContext(appCtx.getBean(FhirContext.class));
+
         registerProviders(resourceProviders);
         registerProvider(systemProvider);
 
