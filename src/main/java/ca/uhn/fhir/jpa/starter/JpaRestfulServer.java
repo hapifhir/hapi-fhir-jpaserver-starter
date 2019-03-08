@@ -4,6 +4,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
+import ca.uhn.fhir.jpa.model.interceptor.executor.InterceptorService;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
 import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
@@ -14,17 +15,22 @@ import ca.uhn.fhir.jpa.provider.r4.JpaConformanceProviderR4;
 import ca.uhn.fhir.jpa.provider.r4.JpaSystemProviderR4;
 import ca.uhn.fhir.jpa.provider.r4.TerminologyUploaderProviderR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
+import ca.uhn.fhir.jpa.subscription.module.interceptor.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.RestfulServer;
+import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Meta;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.web.cors.CorsConfiguration;
 
 import javax.servlet.ServletException;
+import java.util.Arrays;
 import java.util.List;
 
 public class JpaRestfulServer extends RestfulServer {
@@ -173,6 +179,33 @@ public class JpaRestfulServer extends RestfulServer {
             SubscriptionTriggeringProvider retriggeringProvider = appCtx.getBean(SubscriptionTriggeringProvider.class);
             registerProvider(retriggeringProvider);
         }
+
+        // Define your CORS configuration. This is an example
+        // showing a typical setup. You should customize this
+        // to your specific needs
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedHeader("x-fhir-starter");
+        config.addAllowedHeader("Origin");
+        config.addAllowedHeader("Accept");
+        config.addAllowedHeader("X-Requested-With");
+        config.addAllowedHeader("Content-Type");
+
+        config.addAllowedOrigin("*");
+
+        config.addExposedHeader("Location");
+        config.addExposedHeader("Content-Location");
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+
+        // Create the interceptor and register it
+        CorsInterceptor interceptor = new CorsInterceptor(config);
+        registerInterceptor(interceptor);
+
+        // Enable the use of subscriptions
+        SubscriptionInterceptorLoader subscriptionInterceptorLoader = appCtx.getBean(SubscriptionInterceptorLoader.class);
+        subscriptionInterceptorLoader.registerInterceptors();
+        // Subscription debug logging
+        InterceptorService interceptorService = (InterceptorService) appCtx.getBean("interceptorService");
+        interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
     }
 
 }

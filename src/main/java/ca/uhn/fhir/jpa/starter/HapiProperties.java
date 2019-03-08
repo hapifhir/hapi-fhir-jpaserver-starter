@@ -39,6 +39,7 @@ public class HapiProperties {
     static final String SUBSCRIPTION_EMAIL_ENABLED = "subscription.email.enabled";
     static final String SUBSCRIPTION_RESTHOOK_ENABLED = "subscription.resthook.enabled";
     static final String TEST_PORT = "test.port";
+    static final String TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS = "tester.config.refuse_to_fetch_third_party_urls";
 
     private static Properties properties;
 
@@ -247,6 +248,10 @@ public class HapiProperties {
 
     public static Integer getTestPort() {
         return HapiProperties.getIntegerProperty(TEST_PORT, 0);
+    }
+
+    public static Boolean getTesterConfigRefustToFetchThirdPartyUrls() {
+        return HapiProperties.getBooleanProperty(TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS, false);
     }
 
     public static String getServerBase() {

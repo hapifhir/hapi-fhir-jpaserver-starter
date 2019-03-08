@@ -24,7 +24,7 @@
         <repository>
             <id>oss-snapshots</id>
             <snapshots>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </snapshots>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
@@ -111,16 +111,11 @@
         </dependency>
 
         <!-- Used for CORS support -->
-        <dependency>
-            <groupId>org.ebaysf.web</groupId>
-            <artifactId>cors-filter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>servlet-api</artifactId>
-                    <groupId>javax.servlet</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.eclipse.jetty</groupId>-->
+            <!--<artifactId>jetty-servlets</artifactId>-->
+            <!--<version>9.4.12.v20180830</version>-->
+        <!--</dependency>-->
 
         <!-- Spring Web is used to deploy the server to a web container. -->
         <dependency>
@@ -207,24 +202,20 @@
         <!-- Tells Maven to name the generated WAR file as hapi-fhir-jpaserver.war -->
         <finalName>hapi-fhir-jpaserver</finalName>
 
-        <!-- The following is not required for the application to build, but allows you to test it by issuing "mvn jetty:run" from the command line. -->
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-maven-plugin</artifactId>
-                    <version>9.4.8.v20180619</version>
-                    <configuration>
-                        <webApp>
-                            <contextPath>/</contextPath>
-                            <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
-                        </webApp>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
         <plugins>
+            <!-- The following is not required for the application to build, but allows you to test it by issuing "mvn jetty:run" from the command line. -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.4.8.v20180619</version>
+                <configuration>
+                    <webApp>
+                        <contextPath>/</contextPath>
+                        <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
+                    </webApp>
+                </configuration>
+            </plugin>
+
             <!-- Tell Maven which Java source version you want to use -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

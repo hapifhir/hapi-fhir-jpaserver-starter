@@ -37,69 +37,65 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+	<servlet-mapping>
+		<servlet-name>spring</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>fhirServlet</servlet-name>
 		<servlet-class>ca.uhn.fhir.jpa.starter.JpaRestfulServer</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>fhirServlet</servlet-name>
 		<url-pattern>/fhir/*</url-pattern>
 	</servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>spring</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
-
-
-
 	<!-- This filters provide support for Cross Origin Resource Sharing (CORS) -->
-	<filter>
-		<filter-name>CORS Filter</filter-name>
-		<filter-class>org.ebaysf.web.cors.CORSFilter</filter-class>
-		<init-param>
-			<description>A comma separated list of allowed origins. Note: An '*' cannot be used for an allowed origin when using credentials.</description>
-			<param-name>cors.allowed.origins</param-name>
-			<param-value>*</param-value>
-		</init-param>
-		<init-param>
-			<description>A comma separated list of HTTP verbs, using which a CORS request can be made.</description>
-			<param-name>cors.allowed.methods</param-name>
-			<param-value>GET,POST,PUT,DELETE,OPTIONS</param-value>
-		</init-param>
-		<init-param>
-			<description>A comma separated list of allowed headers when making a non simple CORS request.</description>
-			<param-name>cors.allowed.headers</param-name>
-			<param-value>Accept,Access-Control-Request-Headers,Access-Control-Request-Method,Cache-Control,Content-Type,Origin,Prefer,X-FHIR-Starter,X-Requested-With</param-value>
-		</init-param>
-		<init-param>
-			<description>A comma separated list non-standard response headers that will be exposed to XHR2 object.</description>
-			<param-name>cors.exposed.headers</param-name>
-			<param-value>Location,Content-Location</param-value>
-		</init-param>
-		<init-param>
-			<description>A flag that suggests if CORS is supported with cookies</description>
-			<param-name>cors.support.credentials</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<description>A flag to control logging</description>
-			<param-name>cors.logging.enabled</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<description>Indicates how long (in seconds) the results of a preflight request can be cached in a preflight result cache.</description>
-			<param-name>cors.preflight.maxage</param-name>
-			<param-value>300</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>CORS Filter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+	<!--<filter>-->
+		<!--<filter-name>CORS Filter</filter-name>-->
+		<!--<filter-class>org.eclipse.jetty.servlets.CrossOriginFilter</filter-class>-->
+		<!--<init-param>-->
+			<!--<description>A comma separated list of allowed origins. Note: An '*' cannot be used for an allowed origin when using credentials.</description>-->
+			<!--<param-name>cors.allowed.origins</param-name>-->
+			<!--<param-value>*</param-value>-->
+		<!--</init-param>-->
+		<!--<init-param>-->
+			<!--<description>A comma separated list of HTTP verbs, using which a CORS request can be made.</description>-->
+			<!--<param-name>cors.allowed.methods</param-name>-->
+			<!--<param-value>GET,POST,PUT,DELETE,OPTIONS</param-value>-->
+		<!--</init-param>-->
+		<!--<init-param>-->
+			<!--<description>A comma separated list of allowed headers when making a non simple CORS request.</description>-->
+			<!--<param-name>cors.allowed.headers</param-name>-->
+			<!--<param-value>Accept,Access-Control-Request-Headers,Access-Control-Request-Method,Cache-Control,Content-Type,Origin,Prefer,X-FHIR-Starter,X-Requested-With</param-value>-->
+		<!--</init-param>-->
+		<!--<init-param>-->
+			<!--<description>A comma separated list non-standard response headers that will be exposed to XHR2 object.</description>-->
+			<!--<param-name>cors.exposed.headers</param-name>-->
+			<!--<param-value>Location,Content-Location</param-value>-->
+		<!--</init-param>-->
+		<!--<init-param>-->
+			<!--<description>A flag that suggests if CORS is supported with cookies</description>-->
+			<!--<param-name>cors.support.credentials</param-name>-->
+			<!--<param-value>true</param-value>-->
+		<!--</init-param>-->
+		<!--<init-param>-->
+			<!--<description>A flag to control logging</description>-->
+			<!--<param-name>cors.logging.enabled</param-name>-->
+			<!--<param-value>true</param-value>-->
+		<!--</init-param>-->
+		<!--<init-param>-->
+			<!--<description>Indicates how long (in seconds) the results of a preflight request can be cached in a preflight result cache.</description>-->
+			<!--<param-name>cors.preflight.maxage</param-name>-->
+			<!--<param-value>300</param-value>-->
+		<!--</init-param>-->
+	<!--</filter>-->
+	<!--<filter-mapping>-->
+		<!--<filter-name>CORS Filter</filter-name>-->
+		<!--<url-pattern>/*</url-pattern>-->
+	<!--</filter-mapping>-->
 
 
 </web-app>

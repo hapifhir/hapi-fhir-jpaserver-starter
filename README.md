@@ -56,10 +56,13 @@ Much of this HAPI starter project can be configured using the properties file in
 
 ## MySql
 
-To configure the starter app to use MySQL, instead of the default Derby, update the hapi.properties file to have the following:
+To configure the starter app to with MySQL, use the commands below to add user and database:
 
-* datasource.driver=com.mysql.jdbc.Driver
-* datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
-* hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+```
+CREATE USER 'fhirUser'@'localhost' IDENTIFIED BY 'fhirPass';
+CREATE DATABASE fhir_r4;
+GRANT ALL PRIVILEGES ON fhir_r4.* to 'fhirUser'@'localhost';
+FLUSH PRIVILEGES;
+```
 
 It is important to use MySQL5Dialect when using MySQL version 5+.
