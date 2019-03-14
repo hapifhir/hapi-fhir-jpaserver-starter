@@ -1,94 +1,170 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.api.CacheControlDirective;
+import ca.uhn.fhir.rest.api.EncodingEnum;
+import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.util.PortUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.hl7.fhir.r4.model.Patient;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Observation;
+import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Subscription;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+import static ca.uhn.fhir.util.TestUtil.waitForSize;
 import static org.junit.Assert.assertEquals;
 
 public class ExampleServerR4IT {
 
-	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
-	private static IGenericClient ourClient;
-	private static FhirContext ourCtx;
-	private static int ourPort;
+    private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
+    private static IGenericClient ourClient;
+    private static FhirContext ourCtx;
+    private static int ourPort;
 
-	private static Server ourServer;
-	private static String ourServerBase;
+    private static Server ourServer;
+    private static String ourServerBase;
 
-	static {
-		HapiProperties.forceReload();
-		HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "R4");
-		HapiProperties.setProperty(HapiProperties.TEST_PORT, Integer.toString(PortUtil.findFreePort()));
-		ourCtx = FhirContext.forR4();
-		ourPort = HapiProperties.getTestPort();
-	}
+    static {
+        HapiProperties.forceReload();
+        HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:derby:memory:dbr4;create=true");
+        HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "R4");
+        HapiProperties.setProperty(HapiProperties.TEST_PORT, Integer.toString(PortUtil.findFreePort()));
+        HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
+        ourCtx = FhirContext.forR4();
+        ourPort = HapiProperties.getTestPort();
+    }
 
-	@Test
-	public void testCreateAndRead() throws IOException {
-		ourLog.info("Base URL is: http://localhost:" + ourPort + HapiProperties.getServerBase());
-		String methodName = "testCreateResourceConditional";
+    @Test
+    public void testCreateAndRead() throws IOException {
+        ourLog.info("Base URL is: http://localhost:" + ourPort + HapiProperties.getServerBase());
+        String methodName = "testCreateResourceConditional";
 
-		Patient pt = new Patient();
-		pt.addName().setFamily(methodName);
-		IIdType id = ourClient.create().resource(pt).execute().getId();
+        Patient pt = new Patient();
+        pt.addName().setFamily(methodName);
+        IIdType id = ourClient.create().resource(pt).execute().getId();
 
-		Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
-		assertEquals(methodName, pt2.getName().get(0).getFamily());
-	}
+        Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
+        assertEquals(methodName, pt2.getName().get(0).getFamily());
+    }
 
-	@AfterClass
-	public static void afterClass() throws Exception {
-		ourServer.stop();
-	}
 
-	@BeforeClass
-	public static void beforeClass() throws Exception {
-		/*
-		 * This runs under maven, and I'm not sure how else to figure out the target directory from code..
-		 */
-		String path = ExampleServerR4IT.class.getClassLoader().getResource(".keep_hapi-fhir-jpaserver-starter").getPath();
-		path = new File(path).getParent();
-		path = new File(path).getParent();
-		path = new File(path).getParent();
+    @Test
+    public void testWebsocketSubscription() throws Exception {
+        /*
+         * Create subscription
+         */
+        Subscription subscription = new Subscription();
+        subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
+        subscription.setStatus(Subscription.SubscriptionStatus.REQUESTED);
+        subscription.setCriteria("Observation?status=final");
 
-		ourLog.info("Project base path is: {}", path);
+        Subscription.SubscriptionChannelComponent channel = new Subscription.SubscriptionChannelComponent();
+        channel.setType(Subscription.SubscriptionChannelType.WEBSOCKET);
+        channel.setPayload("application/json");
+        subscription.setChannel(channel);
 
-		if (ourPort == 0) {
-			ourPort = RandomServerPortProvider.findFreePort();
-		}
-		ourServer = new Server(ourPort);
+        MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
+        IIdType mySubscriptionId = methodOutcome.getId();
 
-		WebAppContext webAppContext = new WebAppContext();
-		webAppContext.setContextPath("/");
-		webAppContext.setDescriptor(path + "/src/main/webapp/WEB-INF/web.xml");
-		webAppContext.setResourceBase(path + "/target/hapi-fhir-jpaserver-starter");
-		webAppContext.setParentLoaderPriority(true);
+        // Wait for the subscription to be activated
+        waitForSize(1, () -> ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size());
 
-		ourServer.setHandler(webAppContext);
-		ourServer.start();
+        /*
+         * Attach websocket
+         */
 
-		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-		ourServerBase = "http://localhost:" + ourPort + HapiProperties.getServerBase();
-		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-		ourClient.registerInterceptor(new LoggingInterceptor(true));
-	}
+        WebSocketClient myWebSocketClient = new WebSocketClient();
+        SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
 
-	public static void main(String[] theArgs) throws Exception {
-		ourPort = 8080;
-		beforeClass();
-	}
+        myWebSocketClient.start();
+        URI echoUri = new URI("ws://localhost:" + ourPort + "/websocket");
+        ClientUpgradeRequest request = new ClientUpgradeRequest();
+        ourLog.info("Connecting to : {}", echoUri);
+        Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
+        Session session = connection.get(2, TimeUnit.SECONDS);
+
+        ourLog.info("Connected to WS: {}", session.isOpen());
+
+        /*
+         * Create a matching resource
+         */
+        Observation obs = new Observation();
+        obs.setStatus(Observation.ObservationStatus.FINAL);
+        ourClient.create().resource(obs).execute();
+
+        // Give some time for the subscription to deliver
+        Thread.sleep(2000);
+
+        /*
+         * Ensure that we receive a ping on the websocket
+         */
+        waitForSize(1, () -> mySocketImplementation.myPingCount);
+
+        /*
+         * Clean up
+         */
+        ourClient.delete().resourceById(mySubscriptionId).execute();
+    }
+
+
+    @AfterClass
+    public static void afterClass() throws Exception {
+        ourServer.stop();
+    }
+
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        /*
+         * This runs under maven, and I'm not sure how else to figure out the target directory from code..
+         */
+        String path = ExampleServerR4IT.class.getClassLoader().getResource(".keep_hapi-fhir-jpaserver-starter").getPath();
+        path = new File(path).getParent();
+        path = new File(path).getParent();
+        path = new File(path).getParent();
+
+        ourLog.info("Project base path is: {}", path);
+
+        if (ourPort == 0) {
+            ourPort = RandomServerPortProvider.findFreePort();
+        }
+        ourServer = new Server(ourPort);
+
+        WebAppContext webAppContext = new WebAppContext();
+        webAppContext.setContextPath("/");
+        webAppContext.setDisplayName("HAPI FHIR");
+        webAppContext.setDescriptor(path + "/src/main/webapp/WEB-INF/web.xml");
+        webAppContext.setResourceBase(path + "/target/hapi-fhir-jpaserver-starter");
+        webAppContext.setParentLoaderPriority(true);
+
+        ourServer.setHandler(webAppContext);
+        ourServer.start();
+
+        ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+        ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
+        ourServerBase = "http://localhost:" + ourPort + HapiProperties.getServerBase();
+        ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
+        ourClient.registerInterceptor(new LoggingInterceptor(true));
+    }
+
+    public static void main(String[] theArgs) throws Exception {
+        ourPort = 8080;
+        beforeClass();
+    }
 }
