@@ -111,12 +111,6 @@
         </dependency>
 
         <!-- Used for CORS support -->
-        <!--<dependency>-->
-            <!--<groupId>org.eclipse.jetty</groupId>-->
-            <!--<artifactId>jetty-servlets</artifactId>-->
-            <!--<version>9.4.12.v20180830</version>-->
-        <!--</dependency>-->
-
         <!-- Spring Web is used to deploy the server to a web container. -->
         <dependency>
             <groupId>org.springframework</groupId>
