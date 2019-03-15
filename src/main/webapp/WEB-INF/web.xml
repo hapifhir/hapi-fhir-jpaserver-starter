@@ -5,23 +5,20 @@
 		metadata-complete="false"
 		version="3.1">
 
-	<!--
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 	<context-param>
 		<param-name>contextClass</param-name>
 		<param-value>
-			org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+			ca.uhn.fhir.jpa.starter.ApplicationContext
 		</param-value>
 	</context-param>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			ca.uhn.fhir.jpa.starter.FhirServerConfig
 		</param-value>
 	</context-param>
-	-->
 
 	<!-- Servlets -->
 	<servlet>
@@ -33,7 +30,9 @@
 		</init-param>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>ca.uhn.fhir.jpa.starter.FhirTesterConfig</param-value>
+			<param-value>
+				ca.uhn.fhir.jpa.starter.FhirTesterConfig,
+			</param-value>
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>

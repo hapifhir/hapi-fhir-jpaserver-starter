@@ -5,6 +5,7 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.model.interceptor.executor.InterceptorService;
+import ca.uhn.fhir.jpa.model.interceptor.api.IInterceptorRegistry;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
 import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
@@ -17,6 +18,8 @@ import ca.uhn.fhir.jpa.provider.r4.TerminologyUploaderProviderR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
 import ca.uhn.fhir.jpa.subscription.module.interceptor.SubscriptionDebugLogInterceptor;
+import ca.uhn.fhir.jpa.subscription.SubscriptionActivatingInterceptor;
+import ca.uhn.fhir.jpa.subscription.SubscriptionMatcherInterceptor;
 import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
@@ -26,8 +29,8 @@ import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Meta;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletException;
 import java.util.Arrays;
@@ -36,12 +39,6 @@ import java.util.List;
 public class JpaRestfulServer extends RestfulServer {
 
     private static final long serialVersionUID = 1L;
-    private AnnotationConfigApplicationContext appCtx;
-
-    @Override
-    public void destroy() {
-        appCtx.close();
-    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -52,34 +49,29 @@ public class JpaRestfulServer extends RestfulServer {
          * Create a FhirContext object that uses the version of FHIR
          * specified in the properties file.
          */
-        FhirVersionEnum fhirVersion = HapiProperties.getFhirVersion();
-        setFhirContext(new FhirContext(fhirVersion));
-
-        appCtx = new AnnotationConfigApplicationContext();
+        ApplicationContext appCtx = (ApplicationContext) getServletContext().getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
 
         /*
          * ResourceProviders are fetched from the Spring context
          */
+        FhirVersionEnum fhirVersion = HapiProperties.getFhirVersion();
         List<IResourceProvider> resourceProviders;
         Object systemProvider;
         if (fhirVersion == FhirVersionEnum.DSTU2) {
-            appCtx.register(FhirServerConfigDstu2.class, FhirServerConfigCommon.class);
-            appCtx.refresh();
             resourceProviders = appCtx.getBean("myResourceProvidersDstu2", List.class);
             systemProvider = appCtx.getBean("mySystemProviderDstu2", JpaSystemProviderDstu2.class);
         } else if (fhirVersion == FhirVersionEnum.DSTU3) {
-            appCtx.register(FhirServerConfigDstu3.class, FhirServerConfigCommon.class);
-            appCtx.refresh();
             resourceProviders = appCtx.getBean("myResourceProvidersDstu3", List.class);
             systemProvider = appCtx.getBean("mySystemProviderDstu3", JpaSystemProviderDstu3.class);
         } else if (fhirVersion == FhirVersionEnum.R4) {
-            appCtx.register(FhirServerConfigR4.class, FhirServerConfigCommon.class);
-            appCtx.refresh();
             resourceProviders = appCtx.getBean("myResourceProvidersR4", List.class);
             systemProvider = appCtx.getBean("mySystemProviderR4", JpaSystemProviderR4.class);
         } else {
             throw new IllegalStateException();
         }
+
+        setFhirContext(appCtx.getBean(FhirContext.class));
+
         registerProviders(resourceProviders);
         registerProvider(systemProvider);
 
@@ -200,12 +192,23 @@ public class JpaRestfulServer extends RestfulServer {
         CorsInterceptor interceptor = new CorsInterceptor(config);
         registerInterceptor(interceptor);
 
-        // Enable the use of subscriptions
-        SubscriptionInterceptorLoader subscriptionInterceptorLoader = appCtx.getBean(SubscriptionInterceptorLoader.class);
-        subscriptionInterceptorLoader.registerInterceptors();
-        // Subscription debug logging
-        InterceptorService interceptorService = (InterceptorService) appCtx.getBean("interceptorService");
-        interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
+        // If subscriptions are enabled, we want to register the interceptor that
+        // will activate them and match results against them
+        if (HapiProperties.getSubscriptionWebsocketEnabled() ||
+                HapiProperties.getSubscriptionEmailEnabled() ||
+                HapiProperties.getSubscriptionRestHookEnabled()) {
+
+            // Loads subscription interceptors (SubscriptionActivatingInterceptor, SubscriptionMatcherInterceptor)
+            // with activation of scheduled subscription
+            SubscriptionInterceptorLoader subscriptionInterceptorLoader = appCtx.getBean(SubscriptionInterceptorLoader.class);
+            subscriptionInterceptorLoader.registerInterceptors();
+
+            // Subscription debug logging
+            InterceptorService interceptorService = (InterceptorService) appCtx.getBean("interceptorService");
+            interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
+
+        }
+
     }
 
 }

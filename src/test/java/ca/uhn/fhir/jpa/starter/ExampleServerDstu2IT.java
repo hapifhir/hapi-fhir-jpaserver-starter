@@ -32,6 +32,7 @@ public class ExampleServerDstu2IT {
 	static {
 		HapiProperties.forceReload();
 		HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "DSTU2");
+		HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:derby:memory:dbr2;create=true");
 		HapiProperties.setProperty(HapiProperties.TEST_PORT, Integer.toString(PortUtil.findFreePort()));
 		ourCtx = FhirContext.forDstu2();
 		ourPort = HapiProperties.getTestPort();
