@@ -90,16 +90,21 @@ public class FhirServerConfigCommon {
 		retVal.setFetchSizeDefaultMaximum(maxFetchSize);
 		ourLog.info("Server configured to have a maximum fetch size of " + (maxFetchSize == Integer.MAX_VALUE? "'unlimited'": maxFetchSize));
 		
-		// You can enable these if you want to support Subscriptions from your server
-		if (this.subscriptionRestHookEnabled) {
+		// Subscriptions are enabled by channel type
+		if (HapiProperties.getSubscriptionRestHookEnabled()) {
+			ourLog.info("Enabling REST-hook subscriptions");
 			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.RESTHOOK);
 		}
-
-		if (this.subscriptionEmailEnabled) {
+		if (HapiProperties.getSubscriptionEmailEnabled()) {
+			ourLog.info("Enabling email subscriptions");
 			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
 		}
+		if (HapiProperties.getSubscriptionWebsocketEnabled()) {
+			ourLog.info("Enabling websocket subscriptions");
+			retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.WEBSOCKET);
+		}
 
-    	return retVal;
+		return retVal;
 	}
 
 	@Bean

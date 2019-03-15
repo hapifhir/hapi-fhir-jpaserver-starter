@@ -38,6 +38,7 @@ public class HapiProperties {
     static final String SERVER_NAME = "server.name";
     static final String SUBSCRIPTION_EMAIL_ENABLED = "subscription.email.enabled";
     static final String SUBSCRIPTION_RESTHOOK_ENABLED = "subscription.resthook.enabled";
+    static final String SUBSCRIPTION_WEBSOCKET_ENABLED = "subscription.websocket.enabled";
     static final String TEST_PORT = "test.port";
     static final String ALLOW_CONTAINS_SEARCHES = "allow_contains_searches";
     static final String ALLOW_OVERRIDE_DEFAULT_SEARCH_PARAMS = "allow_override_default_search_params";
@@ -237,11 +238,11 @@ public class HapiProperties {
     }
 
     public static Boolean getAllowMultipleDelete() {
-        return HapiProperties.getBooleanProperty(ALLOW_MULTIPLE_DELETE, true);
+        return HapiProperties.getBooleanProperty(ALLOW_MULTIPLE_DELETE, false);
     }
 
     public static Boolean getAllowExternalReferences() {
-        return HapiProperties.getBooleanProperty(ALLOW_EXTERNAL_REFERENCES, true);
+        return HapiProperties.getBooleanProperty(ALLOW_EXTERNAL_REFERENCES, false);
     }
 
     public static Boolean getExpungeEnabled() {
@@ -269,11 +270,15 @@ public class HapiProperties {
     }
 
     public static Boolean getSubscriptionEmailEnabled() {
-        return HapiProperties.getBooleanProperty(SUBSCRIPTION_EMAIL_ENABLED, true);
+        return HapiProperties.getBooleanProperty(SUBSCRIPTION_EMAIL_ENABLED, false);
     }
 
     public static Boolean getSubscriptionRestHookEnabled() {
-        return HapiProperties.getBooleanProperty(SUBSCRIPTION_RESTHOOK_ENABLED, true);
+        return HapiProperties.getBooleanProperty(SUBSCRIPTION_RESTHOOK_ENABLED, false);
+    }
+
+    public static Boolean getSubscriptionWebsocketEnabled() {
+        return HapiProperties.getBooleanProperty(SUBSCRIPTION_WEBSOCKET_ENABLED, false);
     }
 
     public static Boolean getAllowContainsSearches() {

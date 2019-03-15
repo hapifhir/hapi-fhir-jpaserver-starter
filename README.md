@@ -12,7 +12,7 @@ In order to use this sample, you should have:
 
 # Running Locally
 
-The easiest way to run this server is to run it directly in Maven using a built-in Jetty server. To do this, execute the following command:
+The easiest way to run this server is to run it directly in Maven using a built-in Jetty server. To do this, change `src/main/resources/hapi.properties` `server_address` and `server.base` with the values commented out as *For Jetty, use this* and then execute the following command:
 
 ```
 mvn jetty:run
