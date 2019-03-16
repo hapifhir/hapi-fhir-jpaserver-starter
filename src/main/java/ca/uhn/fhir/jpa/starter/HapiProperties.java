@@ -43,6 +43,9 @@ public class HapiProperties {
     static final String TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS = "tester.config.refuse_to_fetch_third_party_urls";
     static final String CORS_ENABLED = "cors.enabled";
     static final String CORS_ALLOWED_ORIGIN = "cors.allowed_origin";
+    static final String ALLOW_CONTAINS_SEARCHES = "allow_contains_searches";
+    static final String ALLOW_OVERRIDE_DEFAULT_SEARCH_PARAMS = "allow_override_default_search_params";
+    static final String EMAIL_FROM = "email.from";
 
     private static Properties properties;
 
@@ -291,5 +294,37 @@ public class HapiProperties {
 
     public static Boolean getSubscriptionWebsocketEnabled() {
         return HapiProperties.getBooleanProperty(SUBSCRIPTION_WEBSOCKET_ENABLED, false);
+    }
+
+    public static Boolean getAllowContainsSearches() {
+        return HapiProperties.getBooleanProperty(ALLOW_CONTAINS_SEARCHES, true);
+    }
+
+    public static Boolean getAllowOverrideDefaultSearchParams() {
+        return HapiProperties.getBooleanProperty(ALLOW_OVERRIDE_DEFAULT_SEARCH_PARAMS, true);
+    }
+
+    public static String getEmailFrom() {
+        return HapiProperties.getProperty(EMAIL_FROM, "some@test.com");
+    }
+
+    public static Boolean getEmailEnabled() {
+        return HapiProperties.getBooleanProperty("email.enabled", false);
+    }
+
+    public static String getEmailHost() {
+        return HapiProperties.getProperty("email.host");
+    }
+
+    public static Integer getEmailPort() {
+        return HapiProperties.getIntegerProperty("email.port", 0);
+    }
+
+    public static String getEmailUsername() {
+        return HapiProperties.getProperty("email.username");
+    }
+
+    public static String getEmailPassword() {
+        return HapiProperties.getProperty("email.password");
     }
 }
