@@ -64,7 +64,6 @@ public class ExampleServerR4IT {
         assertEquals(methodName, pt2.getName().get(0).getFamily());
     }
 
-
     @Test
     public void testWebsocketSubscription() throws Exception {
         /*
@@ -122,7 +121,6 @@ public class ExampleServerR4IT {
          */
         ourClient.delete().resourceById(mySubscriptionId).execute();
     }
-
 
     @AfterClass
     public static void afterClass() throws Exception {

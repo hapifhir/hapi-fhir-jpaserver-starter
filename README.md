@@ -20,7 +20,7 @@ mvn jetty:run
 
 Then, browse to the following link to use the server:
 
-[http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
+[http://localhost:8080/](http://localhost:8080/)
 
 # Deploying to a Container
 
@@ -40,7 +40,7 @@ This will create a file called `hapi-fhir-jpaserver.war` in your `target` direct
 
 Again, browse to the following link to use the server (note that the port 8080 may not be correct depending on how your server is configured).
 
-[http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
+[http://localhost:8080/](http://localhost:8080/)
 
 # Customizing The Web Testpage UI
 
@@ -67,10 +67,10 @@ FLUSH PRIVILEGES;
 ```
 
 > Update hapi.properties file to have the following
-* @line34 datasource.driver=com.mysql.cj.jdbc.Driver
-* @line35 datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
-* @line36 datasource.username=hapiDbUser
-* @line37 datasource.password=hapiDbPass
-* @line41 hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+* datasource.driver=com.mysql.cj.jdbc.Driver
+* datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
+* datasource.username=hapiDbUser
+* datasource.password=hapiDbPass
+* hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
 
 It is important to use MySQL5Dialect when using MySQL version 5+.

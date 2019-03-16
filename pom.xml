@@ -204,7 +204,7 @@
                 <version>9.4.8.v20180619</version>
                 <configuration>
                     <webApp>
-                        <contextPath>/hapi-fhir-jpaserver</contextPath>
+                        <contextPath>/</contextPath>
                         <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
                     </webApp>
                 </configuration>
