@@ -12,7 +12,7 @@ In order to use this sample, you should have:
 
 # Running Locally
 
-The easiest way to run this server is to run it directly in Maven using a built-in Jetty server. To do this, execute the following command:
+The easiest way to run this server is to run it directly in Maven using a built-in Jetty server. To do this, change `src/main/resources/hapi.properties` `server_address` and `server.base` with the values commented out as *For Jetty, use this* and then execute the following command:
 
 ```
 mvn jetty:run
@@ -20,7 +20,7 @@ mvn jetty:run
 
 Then, browse to the following link to use the server:
 
-[http://localhost:8080/](http://localhost:8080/)
+[http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
 
 # Deploying to a Container
 
@@ -40,7 +40,7 @@ This will create a file called `hapi-fhir-jpaserver.war` in your `target` direct
 
 Again, browse to the following link to use the server (note that the port 8080 may not be correct depending on how your server is configured).
 
-[http://localhost:8080/](http://localhost:8080/)
+[http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
 
 # Customizing The Web Testpage UI
 
@@ -56,13 +56,21 @@ Much of this HAPI starter project can be configured using the properties file in
 
 ## MySql
 
-To configure the starter app to with MySQL, use the commands below to add user and database:
+To configure the starter app to use MySQL, instead of the default Derby:
 
+> Add user and database on your mysql server via mysql cli
 ```
-CREATE USER 'fhirUser'@'localhost' IDENTIFIED BY 'fhirPass';
-CREATE DATABASE fhir_r4;
-GRANT ALL PRIVILEGES ON fhir_r4.* to 'fhirUser'@'localhost';
+CREATE USER 'hapiDbUser'@'localhost' IDENTIFIED BY 'hapiDbPass';
+CREATE DATABASE hapi_dstu3;
+GRANT ALL PRIVILEGES ON hapi_dstu3.* to 'hapiDbUser'@'localhost';
 FLUSH PRIVILEGES;
 ```
+
+> Update hapi.properties file to have the following
+* @line34 datasource.driver=com.mysql.cj.jdbc.Driver
+* @line35 datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
+* @line36 datasource.username=hapiDbUser
+* @line37 datasource.password=hapiDbPass
+* @line41 hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
 
 It is important to use MySQL5Dialect when using MySQL version 5+.

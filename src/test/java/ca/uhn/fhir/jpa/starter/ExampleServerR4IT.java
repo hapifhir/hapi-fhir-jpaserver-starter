@@ -22,9 +22,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Paths;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -131,13 +131,7 @@ public class ExampleServerR4IT {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        /*
-         * This runs under maven, and I'm not sure how else to figure out the target directory from code..
-         */
-        String path = ExampleServerR4IT.class.getClassLoader().getResource(".keep_hapi-fhir-jpaserver-starter").getPath();
-        path = new File(path).getParent();
-        path = new File(path).getParent();
-        path = new File(path).getParent();
+        String path = Paths.get("").toAbsolutePath().toString();
 
         ourLog.info("Project base path is: {}", path);
 

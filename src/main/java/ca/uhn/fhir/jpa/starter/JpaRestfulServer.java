@@ -5,7 +5,6 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.model.interceptor.executor.InterceptorService;
-import ca.uhn.fhir.jpa.model.interceptor.api.IInterceptorRegistry;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
 import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
@@ -18,8 +17,6 @@ import ca.uhn.fhir.jpa.provider.r4.TerminologyUploaderProviderR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
 import ca.uhn.fhir.jpa.subscription.module.interceptor.SubscriptionDebugLogInterceptor;
-import ca.uhn.fhir.jpa.subscription.SubscriptionActivatingInterceptor;
-import ca.uhn.fhir.jpa.subscription.SubscriptionMatcherInterceptor;
 import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
@@ -175,29 +172,30 @@ public class JpaRestfulServer extends RestfulServer {
         // Define your CORS configuration. This is an example
         // showing a typical setup. You should customize this
         // to your specific needs
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedHeader("x-fhir-starter");
-        config.addAllowedHeader("Origin");
-        config.addAllowedHeader("Accept");
-        config.addAllowedHeader("X-Requested-With");
-        config.addAllowedHeader("Content-Type");
+        if(HapiProperties.getCorsEnabled()) {
+            CorsConfiguration config = new CorsConfiguration();
+            config.addAllowedHeader("x-fhir-starter");
+            config.addAllowedHeader("Origin");
+            config.addAllowedHeader("Accept");
+            config.addAllowedHeader("X-Requested-With");
+            config.addAllowedHeader("Content-Type");
 
-        config.addAllowedOrigin("*");
+            config.addAllowedOrigin(HapiProperties.getCorsAllowedOrigin());
 
-        config.addExposedHeader("Location");
-        config.addExposedHeader("Content-Location");
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+            config.addExposedHeader("Location");
+            config.addExposedHeader("Content-Location");
+            config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 
-        // Create the interceptor and register it
-        CorsInterceptor interceptor = new CorsInterceptor(config);
-        registerInterceptor(interceptor);
+            // Create the interceptor and register it
+            CorsInterceptor interceptor = new CorsInterceptor(config);
+            registerInterceptor(interceptor);
+        }
 
         // If subscriptions are enabled, we want to register the interceptor that
         // will activate them and match results against them
         if (HapiProperties.getSubscriptionWebsocketEnabled() ||
                 HapiProperties.getSubscriptionEmailEnabled() ||
                 HapiProperties.getSubscriptionRestHookEnabled()) {
-
             // Loads subscription interceptors (SubscriptionActivatingInterceptor, SubscriptionMatcherInterceptor)
             // with activation of scheduled subscription
             SubscriptionInterceptorLoader subscriptionInterceptorLoader = appCtx.getBean(SubscriptionInterceptorLoader.class);
@@ -206,7 +204,6 @@ public class JpaRestfulServer extends RestfulServer {
             // Subscription debug logging
             InterceptorService interceptorService = (InterceptorService) appCtx.getBean("interceptorService");
             interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
-
         }
 
     }

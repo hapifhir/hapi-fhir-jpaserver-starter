@@ -41,6 +41,8 @@ public class HapiProperties {
     static final String SUBSCRIPTION_WEBSOCKET_ENABLED = "subscription.websocket.enabled";
     static final String TEST_PORT = "test.port";
     static final String TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS = "tester.config.refuse_to_fetch_third_party_urls";
+    static final String CORS_ENABLED = "cors.enabled";
+    static final String CORS_ALLOWED_ORIGIN = "cors.allowed_origin";
 
     private static Properties properties;
 
@@ -253,6 +255,14 @@ public class HapiProperties {
 
     public static Boolean getTesterConfigRefustToFetchThirdPartyUrls() {
         return HapiProperties.getBooleanProperty(TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS, false);
+    }
+
+    public static Boolean getCorsEnabled() {
+        return HapiProperties.getBooleanProperty(CORS_ENABLED, true);
+    }
+
+    public static String getCorsAllowedOrigin() {
+        return HapiProperties.getProperty(CORS_ALLOWED_ORIGIN, "*");
     }
 
     public static String getServerBase() {
