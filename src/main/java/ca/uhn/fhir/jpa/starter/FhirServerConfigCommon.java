@@ -89,6 +89,10 @@ public class FhirServerConfigCommon {
 		Integer maxFetchSize = HapiProperties.getMaximumFetchSize();
 		retVal.setFetchSizeDefaultMaximum(maxFetchSize);
 		ourLog.info("Server configured to have a maximum fetch size of " + (maxFetchSize == Integer.MAX_VALUE? "'unlimited'": maxFetchSize));
+
+		Long reuseCachedSearchResultsMillis = HapiProperties.getReuseCachedSearchResultsMillis();
+		retVal.setReuseCachedSearchResultsForMillis(reuseCachedSearchResultsMillis );
+		ourLog.info("Server configured to cache search results for {} milliseconds", reuseCachedSearchResultsMillis);
 		
 		// Subscriptions are enabled by channel type
 		if (HapiProperties.getSubscriptionRestHookEnabled()) {
