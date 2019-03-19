@@ -1,11 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Driver;
 
-import ca.uhn.fhir.jpa.model.entity.ModelConfig;
-import ca.uhn.fhir.jpa.subscription.module.subscriber.email.IEmailSender;
-import ca.uhn.fhir.jpa.subscription.module.subscriber.email.JavaMailEmailSender;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hl7.fhir.instance.model.Subscription;
 import org.springframework.beans.factory.annotation.Autowire;
@@ -14,6 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import ca.uhn.fhir.jpa.dao.DaoConfig;
+import ca.uhn.fhir.jpa.model.entity.ModelConfig;
+import ca.uhn.fhir.jpa.subscription.module.subscriber.email.IEmailSender;
+import ca.uhn.fhir.jpa.subscription.module.subscriber.email.JavaMailEmailSender;
 import ca.uhn.fhir.rest.server.interceptor.IServerInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
@@ -135,14 +134,7 @@ public class FhirServerConfigCommon {
 	 */
 	@Bean(destroyMethod = "close")
 	public BasicDataSource dataSource() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-		BasicDataSource retVal = new BasicDataSource();
-		Driver driver = (Driver) Class.forName(HapiProperties.getDataSourceDriver()).getConstructor().newInstance();
-		retVal.setDriver(driver);
-		retVal.setUrl(HapiProperties.getDataSourceUrl());
-		retVal.setUsername(HapiProperties.getDataSourceUsername());
-		retVal.setPassword(HapiProperties.getDataSourcePassword());
-		retVal.setMaxTotal(HapiProperties.getDataSourceMaxPoolSize());
-		return retVal;
+		return DataSourceHolder.INSTANCE.getDataSource();
 	}
 
 

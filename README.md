@@ -63,3 +63,25 @@ To configure the starter app to use MySQL, instead of the default Derby, update 
 * hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
 
 It is important to use MySQL5Dialect when using MySQL version 5+.
+
+## Multi-Tenancy
+
+To enable schema-based multi-tenancy, change the following settings:
+
+* Switch to MySQL service, as described above, and create a database `hapi_test` (the default database)
+* For each tenant to use, create an additional database `hapi_tenantid`
+* Import the following [schema](https://bitbucket.org/hspconsortium/reference-api/src/d5d7eb46d2399213633e9f6de0415774871321f3/reference-api-mysql/src/main/resources/db/mysql/hspc_8_schema_empty.sql?at=develop "hspc_8_schema_empty.sql") to each of the `hapi_*` databases
+* In `hapi.properties` enable and configure all elements in the `Multi-Tenancy` section
+* In order to perform a query on specific tenant, add the HTTP-Header `X-TenantID` to your request.
+
+Relevant discussions on this topic:
+
+* https://groups.google.com/forum/#!topic/hapi-fhir/F37kfAHYXnc
+* https://groups.google.com/forum/#!topic/hapi-fhir/IWyd29s_slU
+
+Todo/Caveat/Remarks:
+
+* Database schemas are not dynamically created, support for this should be implemented
+* Problems concerning Lucene are mentioned on the google groups - what is the state on this?
+* The TenantFilter should probably be a TenantInterceptor - does this matter?
+* Is there a better way to handle the DataSource, than to have a specific DataSourceHolder class?
