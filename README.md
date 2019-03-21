@@ -74,3 +74,25 @@ FLUSH PRIVILEGES;
 * hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
 
 It is important to use MySQL5Dialect when using MySQL version 5+.
+
+## Synthea<sup>TM</sup> Patient Generator 
+
+To generate synthetic patient data, please follow the following:
+
+> Clone synthea project and please take note of the location
+```
+git clone https://github.com/synthetichealth/synthea
+```
+
+> Update *./etc/synthea/clean_generate_install_fhir.sh* based on your synthea project location
+* SYNTHEA_PROJECT_ROOT="/home/mobile/IdeaProjects/github/synthea"
+
+> Make the file executable
+```
+chmod +x ./etc/synthea/clean_generate_install_fhir.sh
+```
+
+> Execute to generate synthetic patient data
+ ```
+./etc/synthea/clean_generate_install_fhir.sh
+ ```
