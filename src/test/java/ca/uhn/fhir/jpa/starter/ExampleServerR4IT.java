@@ -22,7 +22,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.concurrent.Future;
@@ -151,6 +150,8 @@ public class ExampleServerR4IT {
         ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
         ourServerBase = HapiProperties.getServerAddress();
         ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
+
+        ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
         ourClient.registerInterceptor(new LoggingInterceptor(true));
     }
 
