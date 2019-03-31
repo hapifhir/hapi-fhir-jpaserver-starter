@@ -32,9 +32,7 @@ public class HapiProperties {
     static final String LOGGER_NAME = "logger.name";
     static final String MAX_FETCH_SIZE = "max_fetch_size";
     static final String MAX_PAGE_SIZE = "max_page_size";
-    static final String PERSISTENCE_UNIT_NAME = "persistence_unit_name";
     static final String SERVER_ADDRESS = "server_address";
-    static final String SERVER_BASE = "server.base";
     static final String SERVER_ID = "server.id";
     static final String SERVER_NAME = "server.name";
     static final String SUBSCRIPTION_EMAIL_ENABLED = "subscription.email.enabled";
@@ -201,10 +199,6 @@ public class HapiProperties {
         return HapiProperties.getIntegerProperty(MAX_FETCH_SIZE, Integer.MAX_VALUE);
     }
 
-    public static String getPersistenceUnitName() {
-        return HapiProperties.getProperty(PERSISTENCE_UNIT_NAME, "HAPI_PU");
-    }
-
     public static String getLoggerName() {
         return HapiProperties.getProperty(LOGGER_NAME, "fhirtest.access");
     }
@@ -267,10 +261,6 @@ public class HapiProperties {
 
     public static String getCorsAllowedOrigin() {
         return HapiProperties.getProperty(CORS_ALLOWED_ORIGIN, "*");
-    }
-
-    public static String getServerBase() {
-        return HapiProperties.getProperty(SERVER_BASE, "/fhir");
     }
 
     public static String getServerName() {

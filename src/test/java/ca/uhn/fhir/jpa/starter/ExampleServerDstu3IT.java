@@ -44,15 +44,14 @@ public class ExampleServerDstu3IT {
 		HapiProperties.forceReload();
 		HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "DSTU3");
 		HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:derby:memory:dbr3;create=true");
-		HapiProperties.setProperty(HapiProperties.TEST_PORT, Integer.toString(PortUtil.findFreePort()));
 		HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
 		ourCtx = FhirContext.forDstu3();
-		ourPort = HapiProperties.getTestPort();
+		ourPort = PortUtil.findFreePort();
 	}
 
 	@Test
-	public void testCreateAndRead() throws IOException {
-		ourLog.info("Base URL is: http://localhost:" + ourPort + HapiProperties.getServerBase());
+	public void testCreateAndRead() {
+		ourLog.info("Base URL is: " +  HapiProperties.getServerAddress());
 		String methodName = "testCreateResourceConditional";
 
 		Patient pt = new Patient();
@@ -92,7 +91,7 @@ public class ExampleServerDstu3IT {
 		SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
 
 		myWebSocketClient.start();
-		URI echoUri = new URI("ws://localhost:" + ourPort + "/websocket");
+		URI echoUri = new URI("ws://localhost:" + ourPort + "/hapi-fhir-jpaserver/websocket");
 		ClientUpgradeRequest request = new ClientUpgradeRequest();
 		ourLog.info("Connecting to : {}", echoUri);
 		Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
@@ -138,7 +137,7 @@ public class ExampleServerDstu3IT {
 		ourServer = new Server(ourPort);
 
 		WebAppContext webAppContext = new WebAppContext();
-		webAppContext.setContextPath("/");
+		webAppContext.setContextPath("/hapi-fhir-jpaserver");
 		webAppContext.setDescriptor(path + "/src/main/webapp/WEB-INF/web.xml");
 		webAppContext.setResourceBase(path + "/target/hapi-fhir-jpaserver-starter");
 		webAppContext.setParentLoaderPriority(true);
@@ -148,7 +147,7 @@ public class ExampleServerDstu3IT {
 
 		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
 		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-		ourServerBase = "http://localhost:" + ourPort + HapiProperties.getServerBase();
+		ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
 		ourClient.registerInterceptor(new LoggingInterceptor(true));
 	}
