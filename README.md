@@ -20,7 +20,7 @@ mvn jetty:run
 
 Then, browse to the following link to use the server:
 
-[http://localhost:8080/](http://localhost:8080/)
+[http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
 
 # Deploying to a Container
 
@@ -74,3 +74,14 @@ FLUSH PRIVILEGES;
 * hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
 
 It is important to use MySQL5Dialect when using MySQL version 5+.
+
+# Enabling Subscriptions
+
+The server may be configured with subscription support by enabling properties in the [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties) file: 
+
+* `subscription.resthook.enabled` - Enables REST Hook subscriptions, where the server will make an outgoing connection to a remote REST server
+
+* `subscription.email.enabled` - Enables email subscriptions. Note that you must also provide the connection details for a usable SMTP server.
+
+* `subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/hapi-fhir-jpaserver/websocket](ws://localhost:8080/hapi-fhir-jpaserver/websocket)
+
