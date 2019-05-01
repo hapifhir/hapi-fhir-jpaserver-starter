@@ -11,7 +11,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>3.7.0-SNAPSHOT</version>
+        <version>3.7.0</version>
     </parent>
 
     <groupId>ca.uhn.hapi.fhir.demo</groupId>
