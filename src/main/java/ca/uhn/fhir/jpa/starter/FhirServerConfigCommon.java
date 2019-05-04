@@ -4,11 +4,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Driver;
 
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
+import ca.uhn.fhir.jpa.subscription.module.cache.SubscriptionDeliveryHandlerFactory;
 import ca.uhn.fhir.jpa.subscription.module.subscriber.email.IEmailSender;
 import ca.uhn.fhir.jpa.subscription.module.subscriber.email.JavaMailEmailSender;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hl7.fhir.instance.model.Subscription;
 import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -17,6 +19,7 @@ import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.rest.server.interceptor.IServerInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
+import org.thymeleaf.util.Validate;
 
 /**
  * This is the primary configuration file for the example server
@@ -171,6 +174,10 @@ public class FhirServerConfigCommon {
 		return retVal;
 	}
 
+
+	@Autowired
+	private SubscriptionDeliveryHandlerFactory mySubscriptionDeliveryHandlerFactory;
+
 	@Bean()
 	public IEmailSender emailSender() {
 		if (this.emailEnabled) {
@@ -180,6 +187,10 @@ public class FhirServerConfigCommon {
 			retVal.setSmtpServerPort(this.emailPort);
 			retVal.setSmtpServerUsername(this.emailUsername);
 			retVal.setSmtpServerPassword(this.emailPassword);
+
+			Validate.notNull(mySubscriptionDeliveryHandlerFactory, "No subscription delivery handler");
+			mySubscriptionDeliveryHandlerFactory.setEmailSender(retVal);
+
 
 			return retVal;
 		}
