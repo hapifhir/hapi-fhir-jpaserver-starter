@@ -186,6 +186,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Needed for Email subscriptions -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
