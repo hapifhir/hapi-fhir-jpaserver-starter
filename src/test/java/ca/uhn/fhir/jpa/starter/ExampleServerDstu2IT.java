@@ -13,8 +13,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
@@ -33,14 +31,13 @@ public class ExampleServerDstu2IT {
 		HapiProperties.forceReload();
 		HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "DSTU2");
 		HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:derby:memory:dbr2;create=true");
-		HapiProperties.setProperty(HapiProperties.TEST_PORT, Integer.toString(PortUtil.findFreePort()));
 		ourCtx = FhirContext.forDstu2();
-		ourPort = HapiProperties.getTestPort();
+		ourPort = PortUtil.findFreePort();
 	}
 
 	@Test
-	public void testCreateAndRead() throws IOException {
-		ourLog.info("Base URL is: http://localhost:" + ourPort + HapiProperties.getServerBase());
+	public void testCreateAndRead() {
+		ourLog.info("Base URL is: " +  HapiProperties.getServerAddress());
 		String methodName = "testCreateResourceConditional";
 
 		Patient pt = new Patient();
@@ -62,13 +59,10 @@ public class ExampleServerDstu2IT {
 
 		ourLog.info("Project base path is: {}", path);
 
-		if (ourPort == 0) {
-			ourPort = RandomServerPortProvider.findFreePort();
-		}
 		ourServer = new Server(ourPort);
 
 		WebAppContext webAppContext = new WebAppContext();
-		webAppContext.setContextPath("/");
+		webAppContext.setContextPath("/hapi-fhir-jpaserver");
 		webAppContext.setDescriptor(path + "/src/main/webapp/WEB-INF/web.xml");
 		webAppContext.setResourceBase(path + "/target/hapi-fhir-jpaserver-starter");
 		webAppContext.setParentLoaderPriority(true);
@@ -78,7 +72,7 @@ public class ExampleServerDstu2IT {
 
 		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
 		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-		ourServerBase = "http://localhost:" + ourPort + HapiProperties.getServerBase();
+		ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
 		ourClient.registerInterceptor(new LoggingInterceptor(true));
 	}
