@@ -22,6 +22,28 @@ Then, browse to the following link to use the server:
 
 [http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
 
+# Configuration
+
+Much of this HAPI starter project can be configured using the properties file in *src/main/resources/hapi.properties*. By default, this starter project is configured to use Derby as the database.
+
+## MySql
+
+To configure the starter app to use MySQL, instead of the default Derby, update the hapi.properties file to have the following:
+
+* datasource.driver=com.mysql.jdbc.Driver
+* datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
+* hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+
+It is important to use MySQL5Dialect when using MySQL version 5+.
+
+# Customizing The Web Testpage UI
+
+The UI that comes with this server is an exact clone of the server available at [http://hapi.fhir.org](http://hapi.fhir.org). You may skin this UI if you'd like. For example, you might change the introductory text or replace the logo with your own.
+
+The UI is customized using [Thymeleaf](https://www.thymeleaf.org/) template files. You might want to learn more about Thymeleaf, but you don't necessarily need to: they are quite easy to figure out.
+
+Several template files that can be customized are found in the following directory: [https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates)
+
 # Deploying to a Container
 
 Using the Maven-Embedded Jetty method above is convenient, but it is not a good solution if you want to leave the server running in the background.
@@ -40,38 +62,39 @@ This will create a file called `hapi-fhir-jpaserver.war` in your `target` direct
 
 Again, browse to the following link to use the server (note that the port 8080 may not be correct depending on how your server is configured).
 
-[http://localhost:8080/](http://localhost:8080/)
+[http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
 
-# Customizing The Web Testpage UI
+# Running hapi-fhir-jpaserver-example in Tomcat from IntelliJ
 
-The UI that comes with this server is an exact clone of the server available at [http://hapi.fhir.org](http://hapi.fhir.org). You may skin this UI if you'd like. For example, you might change the introductory text or replace the logo with your own.
+Install Tomcat.
 
-The UI is customized using [Thymeleaf](https://www.thymeleaf.org/) template files. You might want to learn more about Thymeleaf, but you don't necessarily need to: they are quite easy to figure out.
+Make sure you have Tomcat set up in IntelliJ.
 
-Several template files that can be customized are found in the following directory: [https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates)
+- File->Settings->Build, Execution, Deployment->Application Servers
+- Click +
+- Select "Tomcat Server"
+- Enter the path to your tomcat deployment for both Tomcat Home (IntelliJ will fill in base directory for you)
 
-# Configuration
+Add a Run Configuration for running hapi-fhir-jpaserver-example under Tomcat
 
-Much of this HAPI starter project can be configured using the properties file in *src/main/resources/hapi.properties*. By default, this starter project is configured to use Derby as the database.
+- Run->Edit Configurations
+- Click the green +
+- Select Tomcat Server, Local
+- Change the name to whatever you wish
+- Uncheck the "After launch" checkbox
+- On the "Deployment" tab, click the green +
+- Select "Artifact"
+- Select "hapi-fhir-jpaserver-example:war" 
+- In "Application context" type /hapi
 
-## MySql
+Run the configuration.
 
-To configure the starter app to use MySQL, instead of the default Derby:
+- You should now have an "Application Servers" in the list of windows at the bottom.
+- Click it.
+- Select your server, and click the green triangle (or the bug if you want to debug)
+- Wait for the console output to stop
 
-> Add user and database on your mysql server via mysql cli
-```
-CREATE USER 'hapiDbUser'@'localhost' IDENTIFIED BY 'hapiDbPass';
-CREATE DATABASE hapi_dstu3;
-GRANT ALL PRIVILEGES ON hapi_dstu3.* to 'hapiDbUser'@'localhost';
-FLUSH PRIVILEGES;
-```
-
-> Update hapi.properties file to have the following
-* datasource.driver=com.mysql.cj.jdbc.Driver
-* datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
-* datasource.username=hapiDbUser
-* datasource.password=hapiDbPass
-* hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+Point your browser (or fiddler, or what have you) to `http://localhost:8080/hapi/baseDstu3/Patient`
 
 It is important to use MySQL5Dialect when using MySQL version 5+.
 
@@ -84,4 +107,3 @@ The server may be configured with subscription support by enabling properties in
 * `subscription.email.enabled` - Enables email subscriptions. Note that you must also provide the connection details for a usable SMTP server.
 
 * `subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/hapi-fhir-jpaserver/websocket](ws://localhost:8080/hapi-fhir-jpaserver/websocket)
-
