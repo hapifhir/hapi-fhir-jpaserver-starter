@@ -32,7 +32,7 @@ To configure the starter app to use MySQL, instead of the default Derby, update 
 
 * datasource.driver=com.mysql.jdbc.Driver
 * datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
-* hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+* hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
 
 It is important to use MySQL5Dialect when using MySQL version 5+.
 
