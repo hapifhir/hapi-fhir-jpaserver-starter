@@ -34,6 +34,8 @@ To configure the starter app to use MySQL, instead of the default Derby, update 
 * datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
 * hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
 
+Because the integration tests within the project rely on the default Derby database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured MySQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
+
 It is important to use MySQL5Dialect when using MySQL version 5+.
 
 # Customizing The Web Testpage UI
