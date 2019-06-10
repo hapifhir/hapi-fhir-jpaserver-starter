@@ -190,6 +190,7 @@ public class JpaRestfulServer extends RestfulServer {
             config.addAllowedHeader("Accept");
             config.addAllowedHeader("X-Requested-With");
             config.addAllowedHeader("Content-Type");
+            config.addAllowedHeader("Prefer");
 
             config.addAllowedOrigin(HapiProperties.getCorsAllowedOrigin());
 
