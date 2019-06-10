@@ -2,9 +2,9 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
-import ca.uhn.fhir.jpa.model.interceptor.executor.InterceptorService;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
 import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
@@ -17,21 +17,21 @@ import ca.uhn.fhir.jpa.provider.r4.TerminologyUploaderProviderR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
 import ca.uhn.fhir.jpa.subscription.module.interceptor.SubscriptionDebugLogInterceptor;
+import ca.uhn.fhir.jpa.util.ResourceProviderFactory;
 import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
-import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Meta;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.cors.CorsConfiguration;
 
 import javax.servlet.ServletException;
 import java.util.Arrays;
-import java.util.List;
 
 public class JpaRestfulServer extends RestfulServer {
 
@@ -52,16 +52,16 @@ public class JpaRestfulServer extends RestfulServer {
          * ResourceProviders are fetched from the Spring context
          */
         FhirVersionEnum fhirVersion = HapiProperties.getFhirVersion();
-        List<IResourceProvider> resourceProviders;
+        ResourceProviderFactory resourceProviders;
         Object systemProvider;
         if (fhirVersion == FhirVersionEnum.DSTU2) {
-            resourceProviders = appCtx.getBean("myResourceProvidersDstu2", List.class);
+            resourceProviders = appCtx.getBean("myResourceProvidersDstu2", ResourceProviderFactory.class);
             systemProvider = appCtx.getBean("mySystemProviderDstu2", JpaSystemProviderDstu2.class);
         } else if (fhirVersion == FhirVersionEnum.DSTU3) {
-            resourceProviders = appCtx.getBean("myResourceProvidersDstu3", List.class);
+            resourceProviders = appCtx.getBean("myResourceProvidersDstu3", ResourceProviderFactory.class);
             systemProvider = appCtx.getBean("mySystemProviderDstu3", JpaSystemProviderDstu3.class);
         } else if (fhirVersion == FhirVersionEnum.R4) {
-            resourceProviders = appCtx.getBean("myResourceProvidersR4", List.class);
+            resourceProviders = appCtx.getBean("myResourceProvidersR4", ResourceProviderFactory.class);
             systemProvider = appCtx.getBean("mySystemProviderR4", JpaSystemProviderR4.class);
         } else {
             throw new IllegalStateException();
@@ -69,7 +69,7 @@ public class JpaRestfulServer extends RestfulServer {
 
         setFhirContext(appCtx.getBean(FhirContext.class));
 
-        registerProviders(resourceProviders);
+        registerProviders(resourceProviders.createProviders());
         registerProvider(systemProvider);
 
         /*
@@ -133,8 +133,19 @@ public class JpaRestfulServer extends RestfulServer {
          * HTML output when the request is detected to come from a
          * browser.
          */
-        ResponseHighlighterInterceptor responseHighlighterInterceptor = appCtx.getBean(ResponseHighlighterInterceptor.class);
+        ResponseHighlighterInterceptor responseHighlighterInterceptor = new ResponseHighlighterInterceptor();
+        ;
         this.registerInterceptor(responseHighlighterInterceptor);
+
+        /*
+         * Add some logging for each request
+         */
+        LoggingInterceptor loggingInterceptor = new LoggingInterceptor();
+        loggingInterceptor.setLoggerName(HapiProperties.getLoggerName());
+        loggingInterceptor.setMessageFormat(HapiProperties.getLoggerFormat());
+        loggingInterceptor.setErrorMessageFormat(HapiProperties.getLoggerErrorFormat());
+        loggingInterceptor.setLogExceptions(HapiProperties.getLoggerLogExceptions());
+        this.registerInterceptor(loggingInterceptor);
 
         /*
          * If you are hosting this server at a specific DNS name, the server will try to
@@ -172,7 +183,7 @@ public class JpaRestfulServer extends RestfulServer {
         // Define your CORS configuration. This is an example
         // showing a typical setup. You should customize this
         // to your specific needs
-        if(HapiProperties.getCorsEnabled()) {
+        if (HapiProperties.getCorsEnabled()) {
             CorsConfiguration config = new CorsConfiguration();
             config.addAllowedHeader("x-fhir-starter");
             config.addAllowedHeader("Origin");
@@ -202,7 +213,7 @@ public class JpaRestfulServer extends RestfulServer {
             subscriptionInterceptorLoader.registerInterceptors();
 
             // Subscription debug logging
-            InterceptorService interceptorService = (InterceptorService) appCtx.getBean("interceptorService");
+            IInterceptorService interceptorService = appCtx.getBean(IInterceptorService.class);
             interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
         }
 
