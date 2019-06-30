@@ -2,9 +2,12 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.dao.DaoConfig;
+import ca.uhn.fhir.jpa.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
+import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
 import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
@@ -216,6 +219,14 @@ public class JpaRestfulServer extends RestfulServer {
             // Subscription debug logging
             IInterceptorService interceptorService = appCtx.getBean(IInterceptorService.class);
             interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
+        }
+
+        // Cascading deletes
+        DaoRegistry daoRegistry = appCtx.getBean(DaoRegistry.class);
+        IInterceptorBroadcaster interceptorBroadcaster = appCtx.getBean(IInterceptorBroadcaster.class);
+        if (HapiProperties.getAllowCascadingDeletes()) {
+            CascadingDeleteInterceptor cascadingDeleteInterceptor = new CascadingDeleteInterceptor(daoRegistry, interceptorBroadcaster);
+            getInterceptorService().registerInterceptor(cascadingDeleteInterceptor);
         }
 
     }

@@ -25,6 +25,7 @@ public class HapiProperties {
     static final String DEFAULT_PRETTY_PRINT = "default_pretty_print";
     static final String ETAG_SUPPORT = "etag_support";
     static final String FHIR_VERSION = "fhir_version";
+    static final String ALLOW_CASCADING_DELETES = "allow_cascading_deletes";
     static final String HAPI_PROPERTIES = "hapi.properties";
     static final String LOGGER_ERROR_FORMAT = "logger.error_format";
     static final String LOGGER_FORMAT = "logger.format";
@@ -237,6 +238,10 @@ public class HapiProperties {
 
     public static Boolean getAllowMultipleDelete() {
         return HapiProperties.getBooleanProperty(ALLOW_MULTIPLE_DELETE, false);
+    }
+
+    public static Boolean getAllowCascadingDeletes() {
+        return HapiProperties.getBooleanProperty(ALLOW_CASCADING_DELETES, false);
     }
 
     public static Boolean getAllowExternalReferences() {
