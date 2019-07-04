@@ -8,7 +8,12 @@ import com.google.common.annotations.VisibleForTesting;
 
 import java.io.InputStream;
 import java.io.FileInputStream;
+import java.util.Arrays;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class HapiProperties {
     static final String ALLOW_EXTERNAL_REFERENCES = "allow_external_references";
@@ -266,6 +271,14 @@ public class HapiProperties {
 
     public static String getCorsAllowedOrigin() {
         return HapiProperties.getProperty(CORS_ALLOWED_ORIGIN, "*");
+    }
+
+    public static Set<String> getSupportedResourceTypes() {
+        String[] types = defaultString(getProperty("supported_resource_types")).split(",");
+        return Arrays.stream(types)
+                .map(t->trim(t))
+                .filter(t->isNotBlank(t))
+                .collect(Collectors.toSet());
     }
 
     public static String getServerName() {

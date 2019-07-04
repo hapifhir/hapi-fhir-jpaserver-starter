@@ -35,6 +35,7 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import javax.servlet.ServletException;
 import java.util.Arrays;
+import java.util.Set;
 
 public class JpaRestfulServer extends RestfulServer {
 
@@ -50,6 +51,13 @@ public class JpaRestfulServer extends RestfulServer {
          * specified in the properties file.
          */
         ApplicationContext appCtx = (ApplicationContext) getServletContext().getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
+
+        // Customize supported resource types
+        Set<String> supportedResourceTypes = HapiProperties.getSupportedResourceTypes();
+        if (!supportedResourceTypes.isEmpty()) {
+            DaoRegistry daoRegistry = appCtx.getBean(DaoRegistry.class);
+            daoRegistry.setSupportedResourceTypes(supportedResourceTypes);
+        }
 
         /*
          * ResourceProviders are fetched from the Spring context
