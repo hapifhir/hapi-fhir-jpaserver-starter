@@ -22,6 +22,12 @@ Then, browse to the following link to use the server:
 
 [http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
 
+If you need to run this server on a different port (using Maven), you can change the port in the run command as follows:
+```
+mvn -Djetty.port=8888 jetty:run
+```
+And replacing 8888 with the port of your choice.
+
 # Configuration
 
 Much of this HAPI starter project can be configured using the properties file in *src/main/resources/hapi.properties*. By default, this starter project is configured to use Derby as the database.
