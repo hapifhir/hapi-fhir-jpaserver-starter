@@ -1,15 +1,18 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.jpa.binstore.DatabaseBlobBinaryStorageSvcImpl;
+import ca.uhn.fhir.jpa.binstore.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
 import ca.uhn.fhir.jpa.subscription.module.cache.SubscriptionDeliveryHandlerFactory;
 import ca.uhn.fhir.jpa.subscription.module.subscriber.email.IEmailSender;
 import ca.uhn.fhir.jpa.subscription.module.subscriber.email.JavaMailEmailSender;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.hl7.fhir.instance.model.Subscription;
+import org.hl7.fhir.dstu2.model.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.thymeleaf.util.Validate;
 
@@ -147,6 +150,12 @@ public class FhirServerConfigCommon {
         retVal.setPassword(HapiProperties.getDataSourcePassword());
         retVal.setMaxTotal(HapiProperties.getDataSourceMaxPoolSize());
         return retVal;
+    }
+
+    @Lazy
+    @Bean
+    public IBinaryStorageSvc binaryStorageSvc() {
+        return new DatabaseBlobBinaryStorageSvcImpl();
     }
 
     @Bean()

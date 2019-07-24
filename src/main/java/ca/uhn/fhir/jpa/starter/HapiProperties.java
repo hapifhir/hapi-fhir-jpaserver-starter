@@ -51,6 +51,7 @@ public class HapiProperties {
     static final String ALLOW_CONTAINS_SEARCHES = "allow_contains_searches";
     static final String ALLOW_OVERRIDE_DEFAULT_SEARCH_PARAMS = "allow_override_default_search_params";
     static final String EMAIL_FROM = "email.from";
+    public static final String BINARY_STORAGE_ENABLED = "binary_storage.enabled";
 
     private static Properties properties;
 
@@ -163,6 +164,10 @@ public class HapiProperties {
         }
 
         return FhirVersionEnum.DSTU3;
+    }
+
+    public static boolean isBinaryStorageEnabled() {
+        return HapiProperties.getBooleanProperty(BINARY_STORAGE_ENABLED, true);
     }
 
     public static ETagSupportEnum getEtagSupport() {

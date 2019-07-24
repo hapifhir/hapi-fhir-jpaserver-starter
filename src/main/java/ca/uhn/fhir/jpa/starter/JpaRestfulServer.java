@@ -4,6 +4,8 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.interceptor.api.IInterceptorService;
+import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
+import ca.uhn.fhir.jpa.binstore.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
@@ -237,6 +239,11 @@ public class JpaRestfulServer extends RestfulServer {
             getInterceptorService().registerInterceptor(cascadingDeleteInterceptor);
         }
 
+        // Binary Storage
+        if (HapiProperties.isBinaryStorageEnabled()) {
+            BinaryStorageInterceptor binaryStorageInterceptor = appCtx.getBean(BinaryStorageInterceptor.class);
+            getInterceptorService().registerInterceptor(binaryStorageInterceptor);
+        }
     }
 
 }
