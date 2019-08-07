@@ -42,7 +42,7 @@ public class HapiProperties {
     static final String TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS = "tester.config.refuse_to_fetch_third_party_urls";
     static final String CORS_ENABLED = "cors.enabled";
     static final String CORS_ALLOWED_ORIGIN = "cors.allowed_origin";
-    static final String CORS_ALLOWED_CREDENTIALS = "hapi.properties";
+    static final String CORS_ALLOW_CREDENTIALS = "cors.allowCredentials";
     static final String ALLOW_CONTAINS_SEARCHES = "allow_contains_searches";
     static final String ALLOW_OVERRIDE_DEFAULT_SEARCH_PARAMS = "allow_override_default_search_params";
     static final String EMAIL_FROM = "email.from";
@@ -326,6 +326,6 @@ public class HapiProperties {
     }
 
     public static Boolean getCorsAllowedCredentials() {
-        return HapiProperties.getBooleanProperty(CORS_ALLOWED_CREDENTIALS, false);
+        return HapiProperties.getBooleanProperty(CORS_ALLOW_CREDENTIALS, false);
     }
 }
