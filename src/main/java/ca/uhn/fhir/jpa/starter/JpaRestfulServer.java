@@ -28,6 +28,7 @@ import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Meta;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
 
 import javax.servlet.ServletException;
@@ -185,18 +186,25 @@ public class JpaRestfulServer extends RestfulServer {
         // to your specific needs
         if (HapiProperties.getCorsEnabled()) {
             CorsConfiguration config = new CorsConfiguration();
+            config.addAllowedHeader(HttpHeaders.ORIGIN);
+            config.addAllowedHeader(HttpHeaders.ACCEPT);
+            config.addAllowedHeader(HttpHeaders.CONTENT_TYPE);
+            config.addAllowedHeader(HttpHeaders.AUTHORIZATION);
+            config.addAllowedHeader(HttpHeaders.CACHE_CONTROL);
             config.addAllowedHeader("x-fhir-starter");
-            config.addAllowedHeader("Origin");
-            config.addAllowedHeader("Accept");
             config.addAllowedHeader("X-Requested-With");
-            config.addAllowedHeader("Content-Type");
             config.addAllowedHeader("Prefer");
-
+            String allAllowedCORSOrigins = HapiProperties.getCorsAllowedOrigin();
+            Arrays.stream(allAllowedCORSOrigins.split(",")).forEach(o -> {
+                config.addAllowedOrigin(o);
+            });
             config.addAllowedOrigin(HapiProperties.getCorsAllowedOrigin());
 
             config.addExposedHeader("Location");
             config.addExposedHeader("Content-Location");
-            config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+            config.setAllowedMethods(
+                Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
+            config.setAllowCredentials(HapiProperties.getCorsAllowedCredentials());
 
             // Create the interceptor and register it
             CorsInterceptor interceptor = new CorsInterceptor(config);
