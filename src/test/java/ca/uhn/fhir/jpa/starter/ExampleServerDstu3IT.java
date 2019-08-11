@@ -1,18 +1,13 @@
 package ca.uhn.fhir.jpa.starter;
 
-import static ca.uhn.fhir.util.TestUtil.waitForSize;
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Paths;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
+import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
-import ca.uhn.fhir.util.PortUtil;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
+import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
+import ca.uhn.fhir.test.utilities.JettyUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.websocket.api.Session;
@@ -23,12 +18,17 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Subscription;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
-import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
+import java.net.URI;
+import java.nio.file.Paths;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import static ca.uhn.fhir.util.TestUtil.waitForSize;
+import static org.junit.Assert.assertEquals;
 
 public class ExampleServerDstu3IT {
 
@@ -36,17 +36,14 @@ public class ExampleServerDstu3IT {
 	private static IGenericClient ourClient;
 	private static FhirContext ourCtx;
 	private static int ourPort;
-
 	private static Server ourServer;
-	private static String ourServerBase;
 
 	static {
 		HapiProperties.forceReload();
 		HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "DSTU3");
-		HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:derby:memory:dbr3;create=true");
+		HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr3");
 		HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
 		ourCtx = FhirContext.forDstu3();
-		ourPort = PortUtil.findFreePort();
 	}
 
 	@Test
@@ -131,10 +128,7 @@ public class ExampleServerDstu3IT {
 
 		ourLog.info("Project base path is: {}", path);
 
-		if (ourPort == 0) {
-			ourPort = RandomServerPortProvider.findFreePort();
-		}
-		ourServer = new Server(ourPort);
+		ourServer = new Server(0);
 
 		WebAppContext webAppContext = new WebAppContext();
 		webAppContext.setContextPath("/hapi-fhir-jpaserver");
@@ -145,9 +139,11 @@ public class ExampleServerDstu3IT {
 		ourServer.setHandler(webAppContext);
 		ourServer.start();
 
+		ourPort = JettyUtil.getPortForStartedServer(ourServer);
+
 		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
 		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-		ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
+		String ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
 		ourClient.registerInterceptor(new LoggingInterceptor(true));
 	}

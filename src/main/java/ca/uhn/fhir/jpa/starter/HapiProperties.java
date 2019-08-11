@@ -52,6 +52,8 @@ public class HapiProperties {
     static final String ALLOW_OVERRIDE_DEFAULT_SEARCH_PARAMS = "allow_override_default_search_params";
     static final String EMAIL_FROM = "email.from";
     public static final String BINARY_STORAGE_ENABLED = "binary_storage.enabled";
+    private static final String VALIDATE_REQUESTS_ENABLED = "validation.requests.enabled";
+    private static final String VALIDATE_RESPONSES_ENABLED = "validation.responses.enabled";
 
     private static Properties properties;
 
@@ -144,6 +146,10 @@ public class HapiProperties {
         }
 
         return Boolean.parseBoolean(value);
+    }
+
+    private static boolean getBooleanProperty(String propertyName, boolean defaultValue) {
+        return getBooleanProperty(propertyName, Boolean.valueOf(defaultValue));
     }
 
     private static Integer getIntegerProperty(String propertyName, Integer defaultValue) {
@@ -346,4 +352,13 @@ public class HapiProperties {
         String value = HapiProperties.getProperty(REUSE_CACHED_SEARCH_RESULTS_MILLIS, "-1");
         return Long.valueOf(value);
     }
+
+    public static boolean getValidateRequestsEnabled() {
+        return HapiProperties.getBooleanProperty(VALIDATE_REQUESTS_ENABLED, false);
+    }
+
+    public static boolean getValidateResponsesEnabled() {
+        return HapiProperties.getBooleanProperty(VALIDATE_REQUESTS_ENABLED, false);
+    }
+
 }

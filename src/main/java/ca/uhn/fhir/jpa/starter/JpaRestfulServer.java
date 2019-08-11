@@ -5,7 +5,6 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
-import ca.uhn.fhir.jpa.binstore.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
@@ -13,12 +12,13 @@ import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
 import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
+import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaSystemProviderDstu3;
-import ca.uhn.fhir.jpa.provider.dstu3.TerminologyUploaderProviderDstu3;
 import ca.uhn.fhir.jpa.provider.r4.JpaConformanceProviderR4;
 import ca.uhn.fhir.jpa.provider.r4.JpaSystemProviderR4;
-import ca.uhn.fhir.jpa.provider.r4.TerminologyUploaderProviderR4;
+import ca.uhn.fhir.jpa.provider.r5.JpaConformanceProviderR5;
+import ca.uhn.fhir.jpa.provider.r5.JpaSystemProviderR5;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
 import ca.uhn.fhir.jpa.subscription.module.interceptor.SubscriptionDebugLogInterceptor;
@@ -27,9 +27,9 @@ import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
 import ca.uhn.fhir.rest.server.RestfulServer;
-import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.*;
+import ca.uhn.fhir.validation.IValidatorModule;
+import ca.uhn.fhir.validation.ResultSeverityEnum;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Meta;
 import org.springframework.context.ApplicationContext;
@@ -37,6 +37,7 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import javax.servlet.ServletException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 
 public class JpaRestfulServer extends RestfulServer {
@@ -76,6 +77,9 @@ public class JpaRestfulServer extends RestfulServer {
         } else if (fhirVersion == FhirVersionEnum.R4) {
             resourceProviders = appCtx.getBean("myResourceProvidersR4", ResourceProviderFactory.class);
             systemProvider = appCtx.getBean("mySystemProviderR4", JpaSystemProviderR4.class);
+        } else if (fhirVersion == FhirVersionEnum.R5) {
+            resourceProviders = appCtx.getBean("myResourceProvidersR5", ResourceProviderFactory.class);
+            systemProvider = appCtx.getBean("mySystemProviderR5", JpaSystemProviderR5.class);
         } else {
             throw new IllegalStateException();
         }
@@ -107,6 +111,11 @@ public class JpaRestfulServer extends RestfulServer {
             IFhirSystemDao<org.hl7.fhir.r4.model.Bundle, org.hl7.fhir.r4.model.Meta> systemDao = appCtx.getBean("mySystemDaoR4", IFhirSystemDao.class);
             JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, systemDao, appCtx.getBean(DaoConfig.class));
             confProvider.setImplementationDescription("HAPI FHIR R4 Server");
+            setServerConformanceProvider(confProvider);
+        } else if (fhirVersion == FhirVersionEnum.R5) {
+            IFhirSystemDao<org.hl7.fhir.r5.model.Bundle, org.hl7.fhir.r5.model.Meta> systemDao = appCtx.getBean("mySystemDaoR5", IFhirSystemDao.class);
+            JpaConformanceProviderR5 confProvider = new JpaConformanceProviderR5(this, systemDao, appCtx.getBean(DaoConfig.class));
+            confProvider.setImplementationDescription("HAPI FHIR R5 Server");
             setServerConformanceProvider(confProvider);
         } else {
             throw new IllegalStateException();
@@ -179,11 +188,7 @@ public class JpaRestfulServer extends RestfulServer {
          * with this feature.
          */
         if (false) { // <-- DISABLED RIGHT NOW
-            if (fhirVersion == FhirVersionEnum.DSTU3) {
-                registerProvider(appCtx.getBean(TerminologyUploaderProviderDstu3.class));
-            } else if (fhirVersion == FhirVersionEnum.R4) {
-                registerProvider(appCtx.getBean(TerminologyUploaderProviderR4.class));
-            }
+            registerProvider(appCtx.getBean(TerminologyUploaderProvider.class));
         }
 
         // If you want to enable the $trigger-subscription operation to allow
@@ -244,6 +249,38 @@ public class JpaRestfulServer extends RestfulServer {
             BinaryStorageInterceptor binaryStorageInterceptor = appCtx.getBean(BinaryStorageInterceptor.class);
             getInterceptorService().registerInterceptor(binaryStorageInterceptor);
         }
+
+        // Validation
+        IValidatorModule validatorModule;
+        switch (fhirVersion) {
+            case DSTU3:
+                validatorModule = appCtx.getBean("myInstanceValidatorDstu3", IValidatorModule.class);
+                break;
+            case R4:
+                validatorModule = appCtx.getBean("myInstanceValidatorR4", IValidatorModule.class);
+                break;
+            case R5:
+                validatorModule = appCtx.getBean("myInstanceValidatorR5", IValidatorModule.class);
+                break;
+            default:
+                validatorModule = null;
+                break;
+        }
+        if (validatorModule != null) {
+            if (HapiProperties.getValidateRequestsEnabled()) {
+                RequestValidatingInterceptor interceptor = new RequestValidatingInterceptor();
+                interceptor.setFailOnSeverity(ResultSeverityEnum.ERROR);
+                interceptor.setValidatorModules(Collections.singletonList(validatorModule));
+                registerInterceptor(interceptor);
+            }
+            if (HapiProperties.getValidateResponsesEnabled()) {
+                ResponseValidatingInterceptor interceptor = new ResponseValidatingInterceptor();
+                interceptor.setFailOnSeverity(ResultSeverityEnum.ERROR);
+                interceptor.setValidatorModules(Collections.singletonList(validatorModule));
+                registerInterceptor(interceptor);
+            }
+        }
+
     }
 
 }

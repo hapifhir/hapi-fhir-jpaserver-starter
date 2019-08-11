@@ -13,6 +13,8 @@ public class ApplicationContext extends AnnotationConfigWebApplicationContext {
             register(FhirServerConfigDstu3.class, FhirServerConfigCommon.class);
         } else if (fhirVersion == FhirVersionEnum.R4) {
             register(FhirServerConfigR4.class, FhirServerConfigCommon.class);
+        } else if (fhirVersion == FhirVersionEnum.R5) {
+            register(FhirServerConfigR5.class, FhirServerConfigCommon.class);
         } else {
             throw new IllegalStateException();
         }
