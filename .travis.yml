@@ -29,4 +29,7 @@ before_script:
   - sudo chown -R travis:travis "$HOME/.m2/repository";
 
 script:
-  - mvn install
+  - mvn -U install
+
+
+
