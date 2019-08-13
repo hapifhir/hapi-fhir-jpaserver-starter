@@ -9,10 +9,7 @@ import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
-import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
-import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
-import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
-import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
+import ca.uhn.fhir.jpa.provider.*;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaSystemProviderDstu3;
 import ca.uhn.fhir.jpa.provider.r4.JpaConformanceProviderR4;
@@ -54,7 +51,6 @@ public class JpaRestfulServer extends RestfulServer {
          * specified in the properties file.
          */
         ApplicationContext appCtx = (ApplicationContext) getServletContext().getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
-
         // Customize supported resource types
         Set<String> supportedResourceTypes = HapiProperties.getSupportedResourceTypes();
         if (!supportedResourceTypes.isEmpty()) {
@@ -278,6 +274,13 @@ public class JpaRestfulServer extends RestfulServer {
                 interceptor.setFailOnSeverity(ResultSeverityEnum.ERROR);
                 interceptor.setValidatorModules(Collections.singletonList(validatorModule));
                 registerInterceptor(interceptor);
+            }
+        }
+
+        // GraphQL
+        if (HapiProperties.getGraphqlEnabled()) {
+            if (fhirVersion.isEqualOrNewerThan(FhirVersionEnum.DSTU3)) {
+                registerProvider(appCtx.getBean(GraphQLProvider.class));
             }
         }
 

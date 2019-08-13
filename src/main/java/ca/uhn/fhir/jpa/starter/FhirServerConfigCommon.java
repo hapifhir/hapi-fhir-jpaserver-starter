@@ -111,6 +111,8 @@ public class FhirServerConfigCommon {
             retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.WEBSOCKET);
         }
 
+        retVal.setFilterParameterEnabled(HapiProperties.getFilterSearchEnabled());
+
         return retVal;
     }
 
