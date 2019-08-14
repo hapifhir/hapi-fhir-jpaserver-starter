@@ -1,6 +1,7 @@
 target/
 .idea/
 *.iml
+*.orig
 
 # Compiled class file
 *.class
