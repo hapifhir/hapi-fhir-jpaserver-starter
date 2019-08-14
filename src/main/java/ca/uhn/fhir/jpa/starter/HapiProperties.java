@@ -6,11 +6,17 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import com.google.common.annotations.VisibleForTesting;
 
-import java.io.InputStream;
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 public class HapiProperties {
+    public static final String BINARY_STORAGE_ENABLED = "binary_storage.enabled";
     static final String ALLOW_EXTERNAL_REFERENCES = "allow_external_references";
     static final String ALLOW_MULTIPLE_DELETE = "allow_multiple_delete";
     static final String ALLOW_PLACEHOLDER_REFERENCES = "allow_placeholder_references";
@@ -25,6 +31,7 @@ public class HapiProperties {
     static final String DEFAULT_PRETTY_PRINT = "default_pretty_print";
     static final String ETAG_SUPPORT = "etag_support";
     static final String FHIR_VERSION = "fhir_version";
+    static final String ALLOW_CASCADING_DELETES = "allow_cascading_deletes";
     static final String HAPI_PROPERTIES = "hapi.properties";
     static final String LOGGER_ERROR_FORMAT = "logger.error_format";
     static final String LOGGER_FORMAT = "logger.format";
@@ -46,7 +53,10 @@ public class HapiProperties {
     static final String ALLOW_CONTAINS_SEARCHES = "allow_contains_searches";
     static final String ALLOW_OVERRIDE_DEFAULT_SEARCH_PARAMS = "allow_override_default_search_params";
     static final String EMAIL_FROM = "email.from";
-
+    private static final String VALIDATE_REQUESTS_ENABLED = "validation.requests.enabled";
+    private static final String VALIDATE_RESPONSES_ENABLED = "validation.responses.enabled";
+    private static final String FILTER_SEARCH_ENABLED = "filter_search.enabled";
+    private static final String GRAPHQL_ENABLED = "graphql.enabled";
     private static Properties properties;
 
     /*
@@ -69,7 +79,7 @@ public class HapiProperties {
     public static Properties getProperties() {
         if (properties == null) {
             // Load the configurable properties file
-            try (InputStream in = HapiProperties.class.getClassLoader().getResourceAsStream(HAPI_PROPERTIES)){
+            try (InputStream in = HapiProperties.class.getClassLoader().getResourceAsStream(HAPI_PROPERTIES)) {
                 HapiProperties.properties = new Properties();
                 HapiProperties.properties.load(in);
             } catch (Exception e) {
@@ -77,8 +87,8 @@ public class HapiProperties {
             }
 
             Properties overrideProps = loadOverrideProperties();
-            if(overrideProps != null) {
-              properties.putAll(overrideProps);
+            if (overrideProps != null) {
+                properties.putAll(overrideProps);
             }
         }
 
@@ -88,17 +98,17 @@ public class HapiProperties {
     /**
      * If a configuration file path is explicitly specified via -Dhapi.properties=<path>, the properties there will
      * be used to override the entries in the default hapi.properties file (currently under WEB-INF/classes)
+     *
      * @return properties loaded from the explicitly specified configuraiton file if there is one, or null otherwise.
      */
     private static Properties loadOverrideProperties() {
         String confFile = System.getProperty(HAPI_PROPERTIES);
-        if(confFile != null) {
+        if (confFile != null) {
             try {
                 Properties props = new Properties();
                 props.load(new FileInputStream(confFile));
                 return props;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new ConfigurationException("Could not load HAPI properties file: " + confFile, e);
             }
         }
@@ -140,6 +150,10 @@ public class HapiProperties {
         return Boolean.parseBoolean(value);
     }
 
+    private static boolean getBooleanProperty(String propertyName, boolean defaultValue) {
+        return getBooleanProperty(propertyName, Boolean.valueOf(defaultValue));
+    }
+
     private static Integer getIntegerProperty(String propertyName, Integer defaultValue) {
         String value = HapiProperties.getProperty(propertyName);
 
@@ -158,6 +172,10 @@ public class HapiProperties {
         }
 
         return FhirVersionEnum.DSTU3;
+    }
+
+    public static boolean isBinaryStorageEnabled() {
+        return HapiProperties.getBooleanProperty(BINARY_STORAGE_ENABLED, true);
     }
 
     public static ETagSupportEnum getEtagSupport() {
@@ -240,6 +258,10 @@ public class HapiProperties {
         return HapiProperties.getBooleanProperty(ALLOW_MULTIPLE_DELETE, false);
     }
 
+    public static Boolean getAllowCascadingDeletes() {
+        return HapiProperties.getBooleanProperty(ALLOW_CASCADING_DELETES, false);
+    }
+
     public static Boolean getAllowExternalReferences() {
         return HapiProperties.getBooleanProperty(ALLOW_EXTERNAL_REFERENCES, false);
     }
@@ -262,6 +284,14 @@ public class HapiProperties {
 
     public static String getCorsAllowedOrigin() {
         return HapiProperties.getProperty(CORS_ALLOWED_ORIGIN, "*");
+    }
+
+    public static Set<String> getSupportedResourceTypes() {
+        String[] types = defaultString(getProperty("supported_resource_types")).split(",");
+        return Arrays.stream(types)
+                .map(t -> trim(t))
+                .filter(t -> isNotBlank(t))
+                .collect(Collectors.toSet());
     }
 
     public static String getServerName() {
@@ -328,4 +358,22 @@ public class HapiProperties {
     public static Boolean getCorsAllowedCredentials() {
         return HapiProperties.getBooleanProperty(CORS_ALLOW_CREDENTIALS, false);
     }
+
+    public static boolean getValidateRequestsEnabled() {
+        return HapiProperties.getBooleanProperty(VALIDATE_REQUESTS_ENABLED, false);
+    }
+
+    public static boolean getValidateResponsesEnabled() {
+        return HapiProperties.getBooleanProperty(VALIDATE_RESPONSES_ENABLED, false);
+    }
+
+    public static boolean getFilterSearchEnabled() {
+        return HapiProperties.getBooleanProperty(FILTER_SEARCH_ENABLED, true);
+    }
+
+    public static boolean getGraphqlEnabled() {
+        return HapiProperties.getBooleanProperty(GRAPHQL_ENABLED, true);
+    }
+
 }
+

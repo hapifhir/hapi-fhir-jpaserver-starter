@@ -30,9 +30,9 @@ import java.util.concurrent.TimeUnit;
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
 import static org.junit.Assert.assertEquals;
 
-public class ExampleServerR4IT {
+public class ExampleServerR5IT {
 
-    private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
+    private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR5IT.class);
     private static IGenericClient ourClient;
     private static FhirContext ourCtx;
     private static int ourPort;
@@ -40,8 +40,8 @@ public class ExampleServerR4IT {
 
     static {
         HapiProperties.forceReload();
-        HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr4");
-        HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "R4");
+        HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr5");
+        HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "R5");
         HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
         ourCtx = FhirContext.forR4();
     }
@@ -144,8 +144,7 @@ public class ExampleServerR4IT {
 
         ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
         ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-        String ourServerBase = HapiProperties.getServerAddress();
-        ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
+        String ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
 
         ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
         ourClient.registerInterceptor(new LoggingInterceptor(true));
