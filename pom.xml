@@ -14,7 +14,7 @@
         <version>4.0.0</version>
     </parent>
 
-    <groupId>ca.uhn.hapi.fhir.demo</groupId>
+    <groupId>ca.uhn.hapi.fhir</groupId>
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
     <dependencies>
         <dependency>
