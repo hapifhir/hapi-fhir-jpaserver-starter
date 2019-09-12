@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="vitu-hapi:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>vitu-hapi</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="vitu-hapi.war">
+      <element id="artifact" artifact-name="vitu-hapi:war exploded" />
+    </root>
+  </artifact>
+</component>
