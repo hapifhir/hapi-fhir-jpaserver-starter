@@ -1,7 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.ConfigurationException;
-import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigR5;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,7 @@ public class FhirServerConfigR5 extends BaseJavaConfigR5 {
             throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
         }
 
-        retVal.setJpaProperties(HapiProperties.getProperties());
+        retVal.setJpaProperties(HapiProperties.getJpaProperties());
         return retVal;
     }
 

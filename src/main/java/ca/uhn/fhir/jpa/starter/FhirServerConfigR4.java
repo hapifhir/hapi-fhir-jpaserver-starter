@@ -43,7 +43,7 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
             throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
         }
 
-        retVal.setJpaProperties(HapiProperties.getProperties());
+        retVal.setJpaProperties(HapiProperties.getJpaProperties());
         return retVal;
     }
 
