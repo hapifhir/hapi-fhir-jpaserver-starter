@@ -28,6 +28,9 @@ public class FhirServerConfigCommon {
 
     private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
 
+    private Boolean autoCreatePlaceholderReferenceTargets = HapiProperties.getAutoCreatePlaceholderReferenceTargets();
+    private Boolean enforceReferentialIntegrityOnWrite = HapiProperties.getEnforceReferentialIntegrityOnWrite();
+    private Boolean enforceReferentialIntegrityOnDelete = HapiProperties.getEnforceReferentialIntegrityOnDelete();
     private Boolean allowContainsSearches = HapiProperties.getAllowContainsSearches();
     private Boolean allowMultipleDelete = HapiProperties.getAllowMultipleDelete();
     private Boolean allowExternalReferences = HapiProperties.getAllowExternalReferences();
@@ -82,6 +85,9 @@ public class FhirServerConfigCommon {
     public DaoConfig daoConfig() {
         DaoConfig retVal = new DaoConfig();
 
+        retVal.setAutoCreatePlaceholderReferenceTargets(this.autoCreatePlaceholderReferenceTargets);
+        retVal.setEnforceReferentialIntegrityOnWrite(this.enforceReferentialIntegrityOnWrite);
+        retVal.setEnforceReferentialIntegrityOnDelete(this.enforceReferentialIntegrityOnDelete);
         retVal.setAllowContainsSearches(this.allowContainsSearches);
         retVal.setAllowMultipleDelete(this.allowMultipleDelete);
         retVal.setAllowExternalReferences(this.allowExternalReferences);
