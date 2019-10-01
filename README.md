@@ -39,6 +39,8 @@ To configure the starter app to use MySQL, instead of the default Derby, update 
 * datasource.driver=com.mysql.jdbc.Driver
 * datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
 * hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+* datasource.username=admin
+* datasource.password=admin
 
 Because the integration tests within the project rely on the default Derby database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured MySQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
 
@@ -71,6 +73,24 @@ This will create a file called `hapi-fhir-jpaserver.war` in your `target` direct
 Again, browse to the following link to use the server (note that the port 8080 may not be correct depending on how your server is configured).
 
 [http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
+
+# Deploy with docker compose
+
+Docker compose is a simple option to build and deploy container. To deploy with docker compose, you should build the project
+with ```mvn clean install``` and then bring up the container with ```docker-compose up -d --build```. The container can be 
+reached at http://localhost:8080/hapi-fhir-jpaserver/. 
+
+In order to use another port, change the `ports` parameter 
+inside ``docker-compose.yml`` to ```8888:8080```, where 8888 is a port of your choice.
+
+The docker compose set also includes my MySQL database, if you choose to use MySQL instead of derby,  change the following 
+properties in hapi.properties:
+
+* datasource.driver=com.mysql.jdbc.Driver
+* datasource.url=jdbc:mysql://hapi-fhir-mysql:3306/hapi
+* hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+* datasource.username=admin
+* datasource.password=admin
 
 # Running hapi-fhir-jpaserver-example in Tomcat from IntelliJ
 
