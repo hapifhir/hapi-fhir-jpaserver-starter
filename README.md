@@ -37,14 +37,27 @@ Much of this HAPI starter project can be configured using the properties file in
 To configure the starter app to use MySQL, instead of the default Derby, update the hapi.properties file to have the following:
 
 * datasource.driver=com.mysql.jdbc.Driver
-* datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
+* datasource.url=jdbc:mysql://localhost:3306/hapi_r5
 * hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
 * datasource.username=admin
 * datasource.password=admin
 
-Because the integration tests within the project rely on the default Derby database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured MySQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
+Because the integration tests within the project rely on the default Derby database configuration, it is important to either explicitly skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured MySQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
 
 It is important to use MySQL5Dialect when using MySQL version 5+.
+
+## PostgreSQL
+
+If you prefer Postgres, update the hapi.properties file to the following properties.
+
+* datasource.driver=org.postgres.Driver
+* datasource.url=jdbc:postgresql://localhost:5432/hapi_r5
+* hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
+* datasource.username=postgres
+* datasource.password=postgres
+
+For PostgreSQL later than 9.5 it is recommended to use PostgreSQL95Dialect as default SQL dialect. More information can be obtained 
+at the latest [documentation](https://docs.jboss.org/hibernate/orm/current/javadocs/org/hibernate/dialect/package-summary.html).
 
 # Customizing The Web Testpage UI
 
@@ -58,7 +71,7 @@ Several template files that can be customized are found in the following directo
 
 Using the Maven-Embedded Jetty method above is convenient, but it is not a good solution if you want to leave the server running in the background.
 
-Most people who are using HAPI FHIR JPA as a server that is accessible to other people (whether internally on your network or publically hosted) will do so using an Application Server, such as [Apache Tomcat](http://tomcat.apache.org/) or [Jetty](https://www.eclipse.org/jetty/). Note that any Servlet 3.0+ compatible Web Container will work (e.g Wildfly, Websphere, etc.).
+Most people who are using HAPI FHIR JPA as a server that is accessible to other people (whether internally on your network or publicly hosted) will do so using an Application Server, such as [Apache Tomcat](http://tomcat.apache.org/) or [Jetty](https://www.eclipse.org/jetty/). Note that any Servlet 3.0+ compatible Web Container will work (e.g Wildfly, Websphere, etc.).
 
 Tomcat is very popular, so it is a good choice simply because you will be able to find many tutorials online. Jetty is a great alternative due to its fast startup time and good overall performance.
 
@@ -83,7 +96,7 @@ reached at http://localhost:8080/hapi-fhir-jpaserver/.
 In order to use another port, change the `ports` parameter 
 inside ``docker-compose.yml`` to ```8888:8080```, where 8888 is a port of your choice.
 
-The docker compose set also includes my MySQL database, if you choose to use MySQL instead of derby,  change the following 
+The docker compose set also includes a MySQL database and a PostgreSQL database, if you choose to use MySQL instead of Derby,  change the following 
 properties in hapi.properties:
 
 * datasource.driver=com.mysql.jdbc.Driver
@@ -91,6 +104,14 @@ properties in hapi.properties:
 * hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
 * datasource.username=admin
 * datasource.password=admin
+
+If you want another option, you can choose to go with PostgreSQL:
+
+* datasource.driver=org.postgres.Driver
+* datasource.url=jdbc:postgresql://hapi-fhir-postgres:5432/hapi
+* hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
+* datasource.username=postgres
+* datasource.password=postgres
 
 # Running hapi-fhir-jpaserver-example in Tomcat from IntelliJ
 

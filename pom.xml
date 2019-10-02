@@ -18,6 +18,11 @@
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
     <dependencies>
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.8</version>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-api</artifactId>
             <version>${jetty_version}</version>
@@ -175,19 +180,19 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
             <scope>test</scope>
-			</dependency>
-			<!--
-        <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-schematron</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>Saxon-HE</artifactId>
-                    <groupId>net.sf.saxon</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
-			-->
+        <!--
+    <dependency>
+        <groupId>com.helger</groupId>
+        <artifactId>ph-schematron</artifactId>
+        <exclusions>
+            <exclusion>
+                <artifactId>Saxon-HE</artifactId>
+                <groupId>net.sf.saxon</groupId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+        -->
 
         <!--
         For some reason JavaDoc crashed during site generation unless we have this dependency
