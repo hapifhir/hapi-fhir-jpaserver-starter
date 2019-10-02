@@ -36,11 +36,13 @@ Much of this HAPI starter project can be configured using the properties file in
 
 To configure the starter app to use MySQL, instead of the default Derby, update the hapi.properties file to have the following:
 
-* datasource.driver=com.mysql.jdbc.Driver
-* datasource.url=jdbc:mysql://localhost:3306/hapi_r5
-* hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
-* datasource.username=admin
-* datasource.password=admin
+```
+datasource.driver=com.mysql.jdbc.Driver
+datasource.url=jdbc:mysql://localhost:3306/hapi_r5
+hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+datasource.username=admin
+datasource.password=admin
+```
 
 Because the integration tests within the project rely on the default Derby database configuration, it is important to either explicitly skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured MySQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
 
@@ -50,11 +52,13 @@ It is important to use MySQL5Dialect when using MySQL version 5+.
 
 If you prefer Postgres, update the hapi.properties file to the following properties.
 
-* datasource.driver=org.postgres.Driver
-* datasource.url=jdbc:postgresql://localhost:5432/hapi_r5
-* hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
-* datasource.username=postgres
-* datasource.password=postgres
+```
+datasource.driver=org.postgres.Driver
+datasource.url=jdbc:postgresql://localhost:5432/hapi_r5
+hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
+datasource.username=postgres
+datasource.password=postgres
+```
 
 For PostgreSQL later than 9.5 it is recommended to use PostgreSQL95Dialect as default SQL dialect. More information can be obtained 
 at the latest [documentation](https://docs.jboss.org/hibernate/orm/current/javadocs/org/hibernate/dialect/package-summary.html).
@@ -99,19 +103,23 @@ inside ``docker-compose.yml`` to ```8888:8080```, where 8888 is a port of your c
 The docker compose set also includes a MySQL database and a PostgreSQL database, if you choose to use MySQL instead of Derby,  change the following 
 properties in hapi.properties:
 
-* datasource.driver=com.mysql.jdbc.Driver
-* datasource.url=jdbc:mysql://hapi-fhir-mysql:3306/hapi
-* hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
-* datasource.username=admin
-* datasource.password=admin
+```
+datasource.driver=com.mysql.jdbc.Driver
+datasource.url=jdbc:mysql://hapi-fhir-mysql:3306/hapi
+hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+datasource.username=admin
+datasource.password=admin
+```
 
 If you want another option, you can choose to go with PostgreSQL:
 
-* datasource.driver=org.postgres.Driver
-* datasource.url=jdbc:postgresql://hapi-fhir-postgres:5432/hapi
-* hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
-* datasource.username=postgres
-* datasource.password=postgres
+```
+datasource.driver=org.postgres.Driver
+datasource.url=jdbc:postgresql://hapi-fhir-postgres:5432/hapi
+hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
+datasource.username=postgres
+datasource.password=postgres
+```
 
 # Running hapi-fhir-jpaserver-example in Tomcat from IntelliJ
 
@@ -119,22 +127,22 @@ Install Tomcat.
 
 Make sure you have Tomcat set up in IntelliJ.
 
-- File->Settings->Build, Execution, Deployment->Application Servers
+- File -> Settings -> Build, Execution, Deployment -> Application Servers
 - Click +
 - Select "Tomcat Server"
 - Enter the path to your tomcat deployment for both Tomcat Home (IntelliJ will fill in base directory for you)
 
-Add a Run Configuration for running hapi-fhir-jpaserver-example under Tomcat
+Add a Run Configuration for running `hapi-fhir-jpaserver-starter` under Tomcat
 
-- Run->Edit Configurations
+- Run -> Edit Configurations
 - Click the green +
 - Select Tomcat Server, Local
 - Change the name to whatever you wish
 - Uncheck the "After launch" checkbox
 - On the "Deployment" tab, click the green +
 - Select "Artifact"
-- Select "hapi-fhir-jpaserver-example:war" 
-- In "Application context" type /hapi
+- Select "hapi-fhir-jpaserver-starter:war" 
+- In "Application context" type `/hapi`
 
 Run the configuration.
 
@@ -143,7 +151,7 @@ Run the configuration.
 - Select your server, and click the green triangle (or the bug if you want to debug)
 - Wait for the console output to stop
 
-Point your browser (or fiddler, or what have you) to `http://localhost:8080/hapi/baseDstu3/Patient`
+Point your browser (or fiddler, or what have you) to `http://localhost:8080/hapi`
 
 It is important to use MySQL5Dialect when using MySQL version 5+.
 
