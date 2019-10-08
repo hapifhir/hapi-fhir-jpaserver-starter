@@ -16,6 +16,11 @@
 
     <groupId>ca.uhn.hapi.fhir</groupId>
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
+
+    <prerequisites>
+        <maven>3.5.0</maven>
+    </prerequisites>
+
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
