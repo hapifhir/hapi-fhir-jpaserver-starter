@@ -5,11 +5,16 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
+import ca.uhn.fhir.jpa.bulk.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
-import ca.uhn.fhir.jpa.provider.*;
+import ca.uhn.fhir.jpa.provider.GraphQLProvider;
+import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
+import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
+import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
+import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaSystemProviderDstu3;
 import ca.uhn.fhir.jpa.provider.r4.JpaConformanceProviderR4;
@@ -24,7 +29,11 @@ import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
 import ca.uhn.fhir.rest.server.RestfulServer;
-import ca.uhn.fhir.rest.server.interceptor.*;
+import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import java.util.HashSet;
@@ -273,6 +282,9 @@ public class JpaRestfulServer extends RestfulServer {
     // Validation
     IValidatorModule validatorModule;
     switch (fhirVersion) {
+            case DSTU2:
+                validatorModule = appCtx.getBean("myInstanceValidatorDstu2", IValidatorModule.class);
+                break;
       case DSTU3:
         validatorModule = appCtx.getBean("myInstanceValidatorDstu3", IValidatorModule.class);
         break;
@@ -282,6 +294,9 @@ public class JpaRestfulServer extends RestfulServer {
       case R5:
         validatorModule = appCtx.getBean("myInstanceValidatorR5", IValidatorModule.class);
         break;
+            // These versions are not supported by HAPI FHIR JPA
+            case DSTU2_HL7ORG:
+            case DSTU2_1:
       default:
         validatorModule = null;
         break;
@@ -319,5 +334,12 @@ public class JpaRestfulServer extends RestfulServer {
       config.setBundleTypesAllowedForStorage(
           Collections.unmodifiableSet(new TreeSet<>(allowedBundleTypes)));
     }
-  }
+  
+        // Bulk Export
+        if (HapiProperties.getBulkExportEnabled()) {
+            registerProvider(appCtx.getBean(BulkDataExportProvider.class));
+        }
+
+    }
+
 }

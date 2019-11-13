@@ -137,3 +137,18 @@ The server may be configured with subscription support by enabling properties in
 * `subscription.email.enabled` - Enables email subscriptions. Note that you must also provide the connection details for a usable SMTP server.
 
 * `subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/hapi-fhir-jpaserver/websocket](ws://localhost:8080/hapi-fhir-jpaserver/websocket)
+
+# Using ElasticSearch
+
+By default, the server will use embedded lucene indexes for terminology and fulltext indexing purposes. You can switch this to using lucene by editing the properties in [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties)
+
+For example:
+
+```properties
+elasticsearch.enabled=true
+elasticsearch.rest_url=http://localhost:9200
+elasticsearch.username=SomeUsername
+elasticsearch.password=SomePassword
+elasticsearch.required_index_status=YELLOW
+elasticsearch.schema_management_strategy=CREATE
+```

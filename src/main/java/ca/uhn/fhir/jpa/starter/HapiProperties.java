@@ -2,9 +2,13 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import com.google.common.annotations.VisibleForTesting;
+import org.hibernate.search.elasticsearch.cfg.ElasticsearchIndexStatus;
+import org.hibernate.search.elasticsearch.cfg.IndexSchemaManagementStrategy;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -62,13 +66,18 @@ public class HapiProperties {
     private static final String VALIDATE_RESPONSES_ENABLED = "validation.responses.enabled";
     private static final String FILTER_SEARCH_ENABLED = "filter_search.enabled";
     private static final String GRAPHQL_ENABLED = "graphql.enabled";
-    private static Properties properties;
+    private static final String BULK_EXPORT_ENABLED = "bulk.export.enabled";
+    private static Properties ourProperties;
+
+    public static boolean isElasticSearchEnabled() {
+        return HapiProperties.getPropertyBoolean("elasticsearch.enabled", false);
+    }
 
     /*
      * Force the configuration to be reloaded
      */
     public static void forceReload() {
-        properties = null;
+        ourProperties = null;
         getProperties();
     }
 
@@ -81,12 +90,40 @@ public class HapiProperties {
         getProperties().setProperty(theKey, theValue);
     }
 
-    public static Properties getProperties() {
-        if (properties == null) {
+    public static Properties getJpaProperties() {
+        Properties retVal = loadProperties();
+
+        if (isElasticSearchEnabled()) {
+            ElasticsearchHibernatePropertiesBuilder builder = new ElasticsearchHibernatePropertiesBuilder();
+            builder.setRequiredIndexStatus(getPropertyEnum("elasticsearch.required_index_status", ElasticsearchIndexStatus.class, ElasticsearchIndexStatus.YELLOW));
+            builder.setRestUrl(getProperty("elasticsearch.rest_url"));
+            builder.setUsername(getProperty("elasticsearch.username"));
+            builder.setPassword(getProperty("elasticsearch.password"));
+            builder.setIndexSchemaManagementStrategy(getPropertyEnum("elasticsearch.schema_management_strateg", IndexSchemaManagementStrategy.class, IndexSchemaManagementStrategy.CREATE));
+            builder.setDebugRefreshAfterWrite(getPropertyBoolean("elasticsearch.debug.refresh_after_write", false));
+            builder.setDebugPrettyPrintJsonLog(getPropertyBoolean("elasticsearch.debug.pretty_print_json_log", false));
+            builder.apply(retVal);
+        }
+
+        return retVal;
+    }
+
+    private static Properties getProperties() {
+        if (ourProperties == null) {
+            Properties properties = loadProperties();
+            HapiProperties.ourProperties = properties;
+        }
+
+        return ourProperties;
+    }
+
+    @NotNull
+    private static Properties loadProperties() {
             // Load the configurable properties file
+        Properties properties;
             try (InputStream in = HapiProperties.class.getClassLoader().getResourceAsStream(HAPI_PROPERTIES)) {
-                HapiProperties.properties = new Properties();
-                HapiProperties.properties.load(in);
+            properties = new Properties();
+            properties.load(in);
             } catch (Exception e) {
                 throw new ConfigurationException("Could not load HAPI properties", e);
             }
@@ -95,8 +132,6 @@ public class HapiProperties {
             if (overrideProps != null) {
                 properties.putAll(overrideProps);
             }
-        }
-
         return properties;
     }
 
@@ -398,6 +433,19 @@ public class HapiProperties {
 
     public static boolean getEnableIndexMissingFields() {
       return HapiProperties.getBooleanProperty(ENABLE_INDEX_MISSING_FIELDS, false);
+    }
+    private static boolean getPropertyBoolean(String thePropertyName, boolean theDefaultValue) {
+        String value = getProperty(thePropertyName, Boolean.toString(theDefaultValue));
+        return Boolean.parseBoolean(value);
+    }
+
+    private static <T extends Enum> T getPropertyEnum(String thePropertyName, Class<T> theEnumType, T theDefaultValue) {
+        String value = getProperty(thePropertyName, theDefaultValue.name());
+        return (T) Enum.valueOf(theEnumType, value);
+    }
+
+    public static boolean getBulkExportEnabled() {
+        return HapiProperties.getBooleanProperty(BULK_EXPORT_ENABLED, true);
     }
 }
 
