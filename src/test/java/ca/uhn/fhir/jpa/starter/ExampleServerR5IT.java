@@ -14,10 +14,12 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Observation;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Subscription;
+import org.hl7.fhir.r5.model.Bundle;
+import org.hl7.fhir.r5.model.Observation;
+import org.hl7.fhir.r5.model.Patient;
+import org.hl7.fhir.r5.model.Subscription;
+import org.hl7.fhir.r5.model.Topic;
+import org.hl7.fhir.r5.model.codesystems.SubscriptionChannelType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,7 +45,7 @@ public class ExampleServerR5IT {
         HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr5");
         HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "R5");
         HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
-        ourCtx = FhirContext.forR4();
+        ourCtx = FhirContext.forR5();
     }
 
     @Test
@@ -61,17 +63,26 @@ public class ExampleServerR5IT {
 
     @Test
     public void testWebsocketSubscription() throws Exception {
+
+        /*
+         * Create topic
+         */
+        Topic topic = new Topic();
+        topic.getResourceTrigger().getQueryCriteria().setCurrent("Observation?status=final");
+
         /*
          * Create subscription
          */
         Subscription subscription = new Subscription();
+        subscription.getTopic().setResource(topic);
         subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
         subscription.setStatus(Subscription.SubscriptionStatus.REQUESTED);
-        subscription.setCriteria("Observation?status=final");
 
         Subscription.SubscriptionChannelComponent channel = new Subscription.SubscriptionChannelComponent();
-        channel.setType(Subscription.SubscriptionChannelType.WEBSOCKET);
-        channel.setPayload("application/json");
+        channel.getType().addCoding()
+                .setSystem(SubscriptionChannelType.WEBSOCKET.getSystem())
+                .setCode(SubscriptionChannelType.WEBSOCKET.toCode());
+        channel.getPayload().setContentType("application/json");
         subscription.setChannel(channel);
 
         MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
