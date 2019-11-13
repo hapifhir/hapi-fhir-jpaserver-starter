@@ -61,6 +61,7 @@ public class HapiProperties {
     private static final String VALIDATE_RESPONSES_ENABLED = "validation.responses.enabled";
     private static final String FILTER_SEARCH_ENABLED = "filter_search.enabled";
     private static final String GRAPHQL_ENABLED = "graphql.enabled";
+    private static final String BULK_EXPORT_ENABLED = "bulk.export.enabled";
     private static Properties ourProperties;
 
     public static boolean isElasticSearchEnabled() {
@@ -419,5 +420,8 @@ public class HapiProperties {
         return (T) Enum.valueOf(theEnumType, value);
     }
 
+    public static boolean getBulkExportEnabled() {
+        return HapiProperties.getBooleanProperty(BULK_EXPORT_ENABLED, true);
+    }
 }
 

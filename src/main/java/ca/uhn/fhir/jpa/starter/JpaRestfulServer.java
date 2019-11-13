@@ -292,6 +292,11 @@ public class JpaRestfulServer extends RestfulServer {
             }
         }
 
+        // Bulk Export
+        if (HapiProperties.getBulkExportEnabled()) {
+            registerProvider(appCtx.getBean(BulkDataExportProvider.class));
+        }
+
     }
 
 }
