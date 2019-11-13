@@ -20,7 +20,11 @@ import java.util.stream.Collectors;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public class HapiProperties {
-    public static final String BINARY_STORAGE_ENABLED = "binary_storage.enabled";
+    static final String ENABLE_INDEX_MISSING_FIELDS = "enable_index_missing_fields";
+    static final String AUTO_CREATE_PLACEHOLDER_REFERENCE_TARGETS = "auto_create_placeholder_reference_targets";
+    static final String ENFORCE_REFERENTIAL_INTEGRITY_ON_WRITE = "enforce_referential_integrity_on_write";
+    static final String ENFORCE_REFERENTIAL_INTEGRITY_ON_DELETE = "enforce_referential_integrity_on_delete";
+    static final String BINARY_STORAGE_ENABLED = "binary_storage.enabled";
     static final String ALLOW_EXTERNAL_REFERENCES = "allow_external_references";
     static final String ALLOW_MULTIPLE_DELETE = "allow_multiple_delete";
     static final String ALLOW_PLACEHOLDER_REFERENCES = "allow_placeholder_references";
@@ -49,6 +53,7 @@ public class HapiProperties {
     static final String SUBSCRIPTION_EMAIL_ENABLED = "subscription.email.enabled";
     static final String SUBSCRIPTION_RESTHOOK_ENABLED = "subscription.resthook.enabled";
     static final String SUBSCRIPTION_WEBSOCKET_ENABLED = "subscription.websocket.enabled";
+    static final String ALLOWED_BUNDLE_TYPES = "allowed_bundle_types";
     static final String TEST_PORT = "test.port";
     static final String TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS = "tester.config.refuse_to_fetch_third_party_urls";
     static final String CORS_ENABLED = "cors.enabled";
@@ -114,19 +119,19 @@ public class HapiProperties {
 
     @NotNull
     private static Properties loadProperties() {
-        // Load the configurable properties file
+            // Load the configurable properties file
         Properties properties;
-        try (InputStream in = HapiProperties.class.getClassLoader().getResourceAsStream(HAPI_PROPERTIES)) {
+            try (InputStream in = HapiProperties.class.getClassLoader().getResourceAsStream(HAPI_PROPERTIES)) {
             properties = new Properties();
             properties.load(in);
-        } catch (Exception e) {
-            throw new ConfigurationException("Could not load HAPI properties", e);
-        }
+            } catch (Exception e) {
+                throw new ConfigurationException("Could not load HAPI properties", e);
+            }
 
-        Properties overrideProps = loadOverrideProperties();
-        if (overrideProps != null) {
-            properties.putAll(overrideProps);
-        }
+            Properties overrideProps = loadOverrideProperties();
+            if (overrideProps != null) {
+                properties.putAll(overrideProps);
+            }
         return properties;
     }
 
@@ -321,6 +326,10 @@ public class HapiProperties {
         return HapiProperties.getProperty(CORS_ALLOWED_ORIGIN, "*");
     }
 
+    public static  String getAllowedBundleTypes() {
+        return HapiProperties.getProperty(ALLOWED_BUNDLE_TYPES, "");
+    }
+
     public static Set<String> getSupportedResourceTypes() {
         String[] types = defaultString(getProperty("supported_resource_types")).split(",");
         return Arrays.stream(types)
@@ -407,9 +416,24 @@ public class HapiProperties {
     }
 
     public static boolean getGraphqlEnabled() {
-        return HapiProperties.getBooleanProperty(GRAPHQL_ENABLED, true);
+      return HapiProperties.getBooleanProperty(GRAPHQL_ENABLED, true);
     }
 
+    public static boolean getEnforceReferentialIntegrityOnDelete() {
+      return HapiProperties.getBooleanProperty(ENFORCE_REFERENTIAL_INTEGRITY_ON_DELETE, true);
+    }
+
+    public static boolean getEnforceReferentialIntegrityOnWrite() {
+      return HapiProperties.getBooleanProperty(ENFORCE_REFERENTIAL_INTEGRITY_ON_WRITE, true);
+    }
+
+    public static boolean getAutoCreatePlaceholderReferenceTargets() {
+      return HapiProperties.getBooleanProperty(AUTO_CREATE_PLACEHOLDER_REFERENCE_TARGETS, true);
+    }
+
+    public static boolean getEnableIndexMissingFields() {
+      return HapiProperties.getBooleanProperty(ENABLE_INDEX_MISSING_FIELDS, false);
+    }
     private static boolean getPropertyBoolean(String thePropertyName, boolean theDefaultValue) {
         String value = getProperty(thePropertyName, Boolean.toString(theDefaultValue));
         return Boolean.parseBoolean(value);

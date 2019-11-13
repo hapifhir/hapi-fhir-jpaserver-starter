@@ -15,6 +15,11 @@
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
+
+    <prerequisites>
+        <maven>3.5.0</maven>
+    </prerequisites>
+
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
@@ -29,7 +34,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>6.0.5</version>
+            <version>8.0.11</version>
         </dependency>
 
         <!-- Needed for Email subscriptions -->
@@ -208,7 +213,7 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
             <scope>test</scope>
-        </dependency>
+			</dependency>
 			<!--
         <dependency>
             <groupId>com.helger</groupId>
