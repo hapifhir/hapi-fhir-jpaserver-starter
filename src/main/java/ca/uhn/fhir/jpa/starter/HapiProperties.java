@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public class HapiProperties {
-    static final String ENABLE_INDEX_MISSING_FIELDS = "enable_index_missing_fields";
+  static final String ENABLE_INDEX_MISSING_FIELDS = "enable_index_missing_fields";
     static final String AUTO_CREATE_PLACEHOLDER_REFERENCE_TARGETS = "auto_create_placeholder_reference_targets";
     static final String ENFORCE_REFERENTIAL_INTEGRITY_ON_WRITE = "enforce_referential_integrity_on_write";
     static final String ENFORCE_REFERENTIAL_INTEGRITY_ON_DELETE = "enforce_referential_integrity_on_delete";
@@ -67,7 +67,8 @@ public class HapiProperties {
     private static final String FILTER_SEARCH_ENABLED = "filter_search.enabled";
     private static final String GRAPHQL_ENABLED = "graphql.enabled";
     private static final String BULK_EXPORT_ENABLED = "bulk.export.enabled";
-    private static Properties ourProperties;
+  public static final String EXPIRE_SEARCH_RESULTS_AFTER_MINS = "retain_cached_searches_mins";
+  private static Properties ourProperties;
 
     public static boolean isElasticSearchEnabled() {
         return HapiProperties.getPropertyBoolean("elasticsearch.enabled", false);
@@ -395,8 +396,13 @@ public class HapiProperties {
     }
 
     public static Long getReuseCachedSearchResultsMillis() {
-        String value = HapiProperties.getProperty(REUSE_CACHED_SEARCH_RESULTS_MILLIS, "-1");
+        String value = HapiProperties.getProperty(REUSE_CACHED_SEARCH_RESULTS_MILLIS, "60000");
         return Long.valueOf(value);
+    }
+
+    public static Long getExpireSearchResultsAfterMins() {
+      String value = HapiProperties.getProperty(EXPIRE_SEARCH_RESULTS_AFTER_MINS, "60");
+      return Long.valueOf(value);
     }
 
     public static Boolean getCorsAllowedCredentials() {

@@ -105,6 +105,9 @@ public class FhirServerConfigCommon {
         retVal.setReuseCachedSearchResultsForMillis(reuseCachedSearchResultsMillis);
         ourLog.info("Server configured to cache search results for {} milliseconds", reuseCachedSearchResultsMillis);
 
+        Long retainCachedSearchesMinutes = HapiProperties.getExpireSearchResultsAfterMins();
+        retVal.setExpireSearchResultsAfterMillis(retainCachedSearchesMinutes * 60 * 1000);
+
         // Subscriptions are enabled by channel type
         if (HapiProperties.getSubscriptionRestHookEnabled()) {
             ourLog.info("Enabling REST-hook subscriptions");
