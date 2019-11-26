@@ -67,8 +67,8 @@ public class JpaRestfulServer extends RestfulServer {
         .getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
     // Customize supported resource types
     Set<String> supportedResourceTypes = HapiProperties.getSupportedResourceTypes();
-    
-    if (!supportedResourceTypes.contains("SearchParameter")) {
+
+    if (!supportedResourceTypes.isEmpty() && !supportedResourceTypes.contains("SearchParameter")) {
         supportedResourceTypes.add("SearchParameter");
     }
 

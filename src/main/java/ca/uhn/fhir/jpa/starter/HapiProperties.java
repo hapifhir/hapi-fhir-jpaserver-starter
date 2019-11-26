@@ -10,6 +10,7 @@ import org.hibernate.search.elasticsearch.cfg.ElasticsearchIndexStatus;
 import org.hibernate.search.elasticsearch.cfg.IndexSchemaManagementStrategy;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -331,6 +332,7 @@ public class HapiProperties {
         return HapiProperties.getProperty(ALLOWED_BUNDLE_TYPES, "");
     }
 
+    @Nonnull
     public static Set<String> getSupportedResourceTypes() {
         String[] types = defaultString(getProperty("supported_resource_types")).split(",");
         return Arrays.stream(types)
