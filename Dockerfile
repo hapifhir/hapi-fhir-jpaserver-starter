@@ -1,23 +1,26 @@
-# Using maven with JDK 8
-FROM maven:3.6.1-jdk-8 AS build
+FROM hapiproject/hapi:base as build-hapi
 
-# Copy pom and download dependencies. This is done here
-# so that docker caches the dependencies and they don't have to be
-# re-downloaded on the next run, unless the pom file changes.
-COPY pom.xml .
-RUN /usr/local/bin/mvn-entrypoint.sh mvn verify clean --fail-never
+ARG HAPI_FHIR_URL=https://github.com/jamesagnew/hapi-fhir/
+ARG HAPI_FHIR_BRANCH=master
+ARG HAPI_FHIR_STARTER_URL=https://github.com/hapifhir/hapi-fhir-jpaserver-starter/
+ARG HAPI_FHIR_STARTER_BRANCH=master
 
-# Copy all of the source code to the image and build it
-COPY . .
-RUN mvn package
+RUN git clone --branch ${HAPI_FHIR_BRANCH} ${HAPI_FHIR_URL}
+WORKDIR /tmp/hapi-fhir/
+RUN /tmp/apache-maven-3.6.2/bin/mvn dependency:resolve
+RUN /tmp/apache-maven-3.6.2/bin/mvn install -DskipTests
 
-FROM jetty:9-jre8-alpine
+WORKDIR /tmp
+RUN git clone --branch ${HAPI_FHIR_STARTER_BRANCH} ${HAPI_FHIR_STARTER_URL}
 
-COPY --from=build ./target/hapi-fhir-jpaserver.war /var/lib/jetty/webapps/hapi-fhir-jpaserver.war
+WORKDIR /tmp/hapi-fhir-jpaserver-starter
+RUN /tmp/apache-maven-3.6.2/bin/mvn clean install -DskipTests
 
-# Copy the default config file to the config directory location. It might be overridden by the docker host.
-COPY --from=build ./src/main/resources/hapi.properties /hapi-config/hapi.properties
+FROM tomcat:9-jre11
 
-USER jetty:jetty
+RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles
+COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/*.war /usr/local/tomcat/webapps/
+
 EXPOSE 8080
-CMD ["java","-Dhapi.properties=/hapi-config/hapi.properties","-jar","/usr/local/jetty/start.jar"]
+
+CMD ["catalina.sh", "run"]
