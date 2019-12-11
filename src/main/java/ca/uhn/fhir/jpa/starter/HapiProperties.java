@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -159,13 +160,21 @@ public class HapiProperties {
     }
 
     private static String getProperty(String propertyName) {
-        Properties properties = HapiProperties.getProperties();
+        String env = "HAPI_" + propertyName.toUpperCase(Locale.US);
+        env = env.replace(".", "_");
+        env = env.replace("-", "_");
 
-        if (properties != null) {
-            return properties.getProperty(propertyName);
+        String propertyValue = System.getenv(env);
+        if (propertyValue != null) {
+            return propertyValue;
         }
 
-        return null;
+        Properties properties = HapiProperties.getProperties();
+        if (properties != null) {
+            propertyValue = properties.getProperty(propertyName);
+        }
+
+        return propertyValue;
     }
 
     private static String getProperty(String propertyName, String defaultValue) {
