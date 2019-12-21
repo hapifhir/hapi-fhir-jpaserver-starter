@@ -32,11 +32,11 @@ And replacing 8888 with the port of your choice.
 
 # Configuration
 
-Much of this HAPI starter project can be configured using the properties file in *src/main/resources/hapi.properties*. By default, this starter project is configured to use Derby as the database.
+Much of this HAPI starter project can be configured using the properties file in *src/main/resources/hapi.properties*. By default, this starter project is configured to use H2 as the database.
 
 ## MySql
 
-To configure the starter app to use MySQL, instead of the default Derby, update the hapi.properties file to have the following:
+To configure the starter app to use MySQL, instead of the default H2, update the hapi.properties file to have the following:
 
 * datasource.driver=com.mysql.jdbc.Driver
 * datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
@@ -44,7 +44,7 @@ To configure the starter app to use MySQL, instead of the default Derby, update 
 * datasource.username=admin
 * datasource.password=admin
 
-Because the integration tests within the project rely on the default Derby database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured MySQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
+Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured MySQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
 
 It is important to use MySQL5Dialect when using MySQL version 5+.
 
@@ -85,7 +85,7 @@ reached at http://localhost:8080/hapi-fhir-jpaserver/.
 In order to use another port, change the `ports` parameter 
 inside ``docker-compose.yml`` to ```8888:8080```, where 8888 is a port of your choice.
 
-The docker compose set also includes my MySQL database, if you choose to use MySQL instead of derby,  change the following 
+The docker compose set also includes my MySQL database, if you choose to use MySQL instead of H2,  change the following 
 properties in hapi.properties:
 
 * datasource.driver=com.mysql.jdbc.Driver
