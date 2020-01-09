@@ -60,6 +60,14 @@ Because the integration tests within the project rely on the default Derby datab
 
 It is important to use PostgreSQL95Dialect when using PostgreSQL version 10+.
 
+## Overriding Properties
+
+You can override the properties that are loaded into the compiled web app (.war file) making a copy of the hapi.properties file on the file system, making changes to it, and then setting the JAVA_OPTS environment variable on the tomcat server to tell hapi-jpaserver-starter where the overriding properties file is. For example:
+
+`-Dhapi.properties=/some/custom/directory/hapi.properties`
+
+Note: This property name and the path is case-sensitive. "-DHAPI.PROPERTIES=XXX" will not work.
+
 # Customizing The Web Testpage UI
 
 The UI that comes with this server is an exact clone of the server available at [http://hapi.fhir.org](http://hapi.fhir.org). You may skin this UI if you'd like. For example, you might change the introductory text or replace the logo with your own.
