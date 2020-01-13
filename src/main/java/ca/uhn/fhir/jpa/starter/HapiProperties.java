@@ -406,6 +406,12 @@ public class HapiProperties {
         return HapiProperties.getProperty("email.password");
     }
 
+    // Defaults from https://javaee.github.io/javamail/docs/api/com/sun/mail/smtp/package-summary.html
+    public static Boolean getEmailAuth() { return HapiProperties.getBooleanProperty("email.auth", false); }
+    public static Boolean getEmailStartTlsEnable() { return HapiProperties.getBooleanProperty("email.starttls.enable", false); }
+    public static Boolean getEmailStartTlsRequired() { return HapiProperties.getBooleanProperty("email.starttls.required", false); }
+    public static Boolean getEmailQuitWait() { return HapiProperties.getBooleanProperty("email.quitwait", true); }
+
     public static Long getReuseCachedSearchResultsMillis() {
         String value = HapiProperties.getProperty(REUSE_CACHED_SEARCH_RESULTS_MILLIS, "60000");
         return Long.valueOf(value);
