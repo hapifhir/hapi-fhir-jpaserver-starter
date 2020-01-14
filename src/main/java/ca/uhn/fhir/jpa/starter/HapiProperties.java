@@ -10,9 +10,11 @@ import org.hibernate.search.elasticsearch.cfg.ElasticsearchIndexStatus;
 import org.hibernate.search.elasticsearch.cfg.IndexSchemaManagementStrategy;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public class HapiProperties {
-    static final String ENABLE_INDEX_MISSING_FIELDS = "enable_index_missing_fields";
+  static final String ENABLE_INDEX_MISSING_FIELDS = "enable_index_missing_fields";
     static final String AUTO_CREATE_PLACEHOLDER_REFERENCE_TARGETS = "auto_create_placeholder_reference_targets";
     static final String ENFORCE_REFERENTIAL_INTEGRITY_ON_WRITE = "enforce_referential_integrity_on_write";
     static final String ENFORCE_REFERENTIAL_INTEGRITY_ON_DELETE = "enforce_referential_integrity_on_delete";
@@ -67,7 +69,8 @@ public class HapiProperties {
     private static final String FILTER_SEARCH_ENABLED = "filter_search.enabled";
     private static final String GRAPHQL_ENABLED = "graphql.enabled";
     private static final String BULK_EXPORT_ENABLED = "bulk.export.enabled";
-    private static Properties ourProperties;
+  public static final String EXPIRE_SEARCH_RESULTS_AFTER_MINS = "retain_cached_searches_mins";
+  private static Properties ourProperties;
 
     public static boolean isElasticSearchEnabled() {
         return HapiProperties.getPropertyBoolean("elasticsearch.enabled", false);
@@ -157,13 +160,21 @@ public class HapiProperties {
     }
 
     private static String getProperty(String propertyName) {
-        Properties properties = HapiProperties.getProperties();
+        String env = "HAPI_" + propertyName.toUpperCase(Locale.US);
+        env = env.replace(".", "_");
+        env = env.replace("-", "_");
 
-        if (properties != null) {
-            return properties.getProperty(propertyName);
+        String propertyValue = System.getenv(env);
+        if (propertyValue != null) {
+            return propertyValue;
         }
 
-        return null;
+        Properties properties = HapiProperties.getProperties();
+        if (properties != null) {
+            propertyValue = properties.getProperty(propertyName);
+        }
+
+        return propertyValue;
     }
 
     private static String getProperty(String propertyName, String defaultValue) {
@@ -330,6 +341,7 @@ public class HapiProperties {
         return HapiProperties.getProperty(ALLOWED_BUNDLE_TYPES, "");
     }
 
+    @Nonnull
     public static Set<String> getSupportedResourceTypes() {
         String[] types = defaultString(getProperty("supported_resource_types")).split(",");
         return Arrays.stream(types)
@@ -394,9 +406,20 @@ public class HapiProperties {
         return HapiProperties.getProperty("email.password");
     }
 
+    // Defaults from https://javaee.github.io/javamail/docs/api/com/sun/mail/smtp/package-summary.html
+    public static Boolean getEmailAuth() { return HapiProperties.getBooleanProperty("email.auth", false); }
+    public static Boolean getEmailStartTlsEnable() { return HapiProperties.getBooleanProperty("email.starttls.enable", false); }
+    public static Boolean getEmailStartTlsRequired() { return HapiProperties.getBooleanProperty("email.starttls.required", false); }
+    public static Boolean getEmailQuitWait() { return HapiProperties.getBooleanProperty("email.quitwait", true); }
+
     public static Long getReuseCachedSearchResultsMillis() {
-        String value = HapiProperties.getProperty(REUSE_CACHED_SEARCH_RESULTS_MILLIS, "-1");
+        String value = HapiProperties.getProperty(REUSE_CACHED_SEARCH_RESULTS_MILLIS, "60000");
         return Long.valueOf(value);
+    }
+
+    public static Long getExpireSearchResultsAfterMins() {
+      String value = HapiProperties.getProperty(EXPIRE_SEARCH_RESULTS_AFTER_MINS, "60");
+      return Long.valueOf(value);
     }
 
     public static Boolean getCorsAllowedCredentials() {

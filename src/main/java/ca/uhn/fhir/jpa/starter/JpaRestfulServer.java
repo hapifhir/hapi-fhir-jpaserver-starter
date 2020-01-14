@@ -67,6 +67,11 @@ public class JpaRestfulServer extends RestfulServer {
         .getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
     // Customize supported resource types
     Set<String> supportedResourceTypes = HapiProperties.getSupportedResourceTypes();
+
+    if (!supportedResourceTypes.isEmpty() && !supportedResourceTypes.contains("SearchParameter")) {
+        supportedResourceTypes.add("SearchParameter");
+    }
+
     if (!supportedResourceTypes.isEmpty()) {
       DaoRegistry daoRegistry = appCtx.getBean(DaoRegistry.class);
       daoRegistry.setSupportedResourceTypes(supportedResourceTypes);
