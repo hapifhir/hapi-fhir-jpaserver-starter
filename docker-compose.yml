@@ -2,20 +2,17 @@ version: "3"
 services:
   hapi-fhir-jpaserver-start:
     build: .
+    depends_on:
+      - hapi-fhir-psql
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
     ports:
       - "8080:8080"
-  hapi-fhir-mysql:
-    image: mysql:latest
-    container_name: hapi-fhir-mysql
+  hapi-fhir-psql:
+    image: postgres:latest
+    container_name: hapi-fhir-psql
     restart: always
     environment:
-      MYSQL_DATABASE: 'hapi'
-      MYSQL_USER: 'admin'
-      MYSQL_PASSWORD: 'admin'
-      MYSQL_ROOT_PASSWORD: 'admin'
-    volumes:
-      - hapi-fhir-mysql:/var/lib/mysql
-volumes:
-  hapi-fhir-mysql:
+      POSTGRES_DB: 'hf_psql'
+      PGUSER: 'postgres'
+      PGPASSWORD: ''

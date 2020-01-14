@@ -11,7 +11,7 @@ RUN /tmp/apache-maven-3.6.2/bin/mvn dependency:resolve
 RUN /tmp/apache-maven-3.6.2/bin/mvn install -DskipTests
 
 WORKDIR /tmp
-RUN git clone --branch ${HAPI_FHIR_STARTER_BRANCH} ${HAPI_FHIR_STARTER_URL}
+COPY . /tmp/hapi-fhir-jpaserver-starter
 
 WORKDIR /tmp/hapi-fhir-jpaserver-starter
 RUN /tmp/apache-maven-3.6.2/bin/mvn clean install -DskipTests
