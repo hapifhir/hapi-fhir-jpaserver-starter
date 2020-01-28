@@ -178,14 +178,10 @@ public class HapiProperties {
     }
 
     private static String getProperty(String propertyName, String defaultValue) {
-        Properties properties = HapiProperties.getProperties();
+        String value = getProperty(propertyName);
 
-        if (properties != null) {
-            String value = properties.getProperty(propertyName);
-
-            if (value != null && value.length() > 0) {
-                return value;
-            }
+        if (value != null && value.length() > 0) {
+            return value;
         }
 
         return defaultValue;
