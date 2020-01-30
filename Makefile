@@ -15,4 +15,4 @@ build: _mvn_install ## Build the docker containers and run them. Server should a
 	docker-compose up -d --build
 
 ps: ## List hapi-fhir-jpaserver-start and psql containers
-	docker-compose ps --filter "name=psql|hapi-fhir"
+	docker-compose ps
