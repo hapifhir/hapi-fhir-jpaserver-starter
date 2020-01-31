@@ -1,8 +1,15 @@
 .SILENT:
-.PHONY: help _mvn_install build ps
+.PHONY: help _install_deps _mvn_install build ps
 
 # Set shell to Bash
 SHELL := /usr/bin/env bash
+
+DOCKER_COMPOSE_INSTALLED := $(shell command -v docker-compose 2> /dev/null)
+
+_install_deps:
+ifndef DOCKER_COMPOSE_INSTALLED
+	pip install docker-compose
+endif
 
 help:
 	echo Available recipes:
@@ -11,8 +18,8 @@ help:
 _mvn_install:
 	mvn clean install -DskipTests
 
-build: _mvn_install ## Build the docker containers and run them. Server should appear at http://localhost:8080/hapi-fhir-jpaserver/
+build: _install_deps _mvn_install ## Build the docker containers and run them. Server should appear at http://localhost:8080/hapi-fhir-jpaserver/
 	docker-compose up -d --build
 
-ps: ## List hapi-fhir-jpaserver-start and psql containers
+ps: _install_deps ## List hapi-fhir-jpaserver-start and psql containers if running
 	docker-compose ps
