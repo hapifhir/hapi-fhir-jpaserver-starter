@@ -31,5 +31,4 @@ before_script:
 script:
   # We do not run the tests from hapifhir's travis config b/c they only work with the derby DB
   - mvn clean install -DskipTests
-  # There are full solutions to testing a server if we want to go this route: https://touchstone.aegis.net/touchstone/
-  # We should add our own tests when we have some examples
+  - ./src/test/bash/hapifhir_postgres/test_all.sh run_server
