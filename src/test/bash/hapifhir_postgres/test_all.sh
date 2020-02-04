@@ -9,6 +9,34 @@ if [ "$1" == "run_server" ]; then
     sleep 2
 fi
 
+###############################################################################
+# Test 1
+# This test isn't strictly needed for our eventual production build since we'll
+# use Google Cloud SQL, but this does show that in our test setup, the postgres
+# container is up and we can connect to it.
+
+testName='Verify connection to hf_psql database in running psql instance in a docker container'
+
+# Quoting this properly to use test_cmd is difficult, so do this manually instead.
+# Also, we want to check the result.
+
+docker_container=`docker container ls --filter "name=psql" --format "{{.ID}}"`
+echo "docker exec -i $docker_container psql -c '\\c hf_psql;'"
+result=`docker exec -i $docker_container psql -c '\c hf_psql;'`
+save_status=$?
+# echo \$result is $result
+
+if [ "$result" == 'You are now connected to database "hf_psql" as user "postgres".' ]; then
+    echo Test \"$testName\" PASSED
+else
+    echo Test \"$testName\" FAILED
+    exit $save_status
+fi
+echo
+
+###############################################################################
+# Test 2
+
 ee () {
     echo $*
     eval $*
@@ -18,10 +46,10 @@ test_cmd () {
     testName=$1
     if ee "${@:2}"
     then
-        echo Test \"$testName\" passed
+        echo Test \"$testName\" PASSED
     else
         save_status=$?
-        echo Test \"$testName\" failed
+        echo Test \"$testName\" FAILED
         exit $save_status
     fi
     echo
@@ -33,37 +61,6 @@ test_cmd () {
 test_cmd 'Sever is running' "curl 'http://localhost:8080/hapi-fhir-jpaserver'"
 
 ###############################################################################
-
-testName='Verify hf_psql is a table in a running psql instance in a docker container'
-
-# Quoting this properly to use test_cmd too difficult, so do this manually instead.
-# Also, we want to check the result.
-
-# This test automates this manual command:
-# You should be able to run this on the command line:
-#
-# [bash]
-# echo 'psql -c '\''\\c hf_psql;'\' | docker exec -i 9ce5591fb88f bash
-# [bash end]
-#
-# and get this result:
-# [output]
-# You are now connected to database "hf_psql" as user "postgres".
-# [output end]
-
-
-docker_container=`docker container ls --filter "name=psql" --format "{{.ID}}"`
-echo "echo 'psql -c '\''\\\c hf_psql;'\' | docker exec -i $docker_container bash"
-result=`echo 'psql -c '\''\\c hf_psql;'\' | docker exec -i $docker_container bash`
-save_status=$?
-# echo \$result is $result
-
-if [ "$result" == 'You are now connected to database "hf_psql" as user "postgres".' ]; then
-    echo Test \"$testName\" passed
-else
-    echo Test \"$testName\" failed
-    exit $save_status
-fi
-echo
-
-###############################################################################
+# Test 3
+# TODO: write something to the DB through hapifhir and verify the right thing
+# shows up in the DB (postgres for now, Google Cloud SQL later)
