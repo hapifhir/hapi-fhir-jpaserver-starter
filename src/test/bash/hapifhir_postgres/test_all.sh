@@ -13,7 +13,8 @@ fi
 # Test 1
 # This test isn't strictly needed for our eventual production build since we'll
 # use Google Cloud SQL, but this does show that in our test setup, the postgres
-# container is up and we can connect to it.
+# container is up and we can connect to it. We run it first so we can eliminate
+# it as a reason for failure that would cause the hapi-fhir-jpaserver to fail.
 
 testName='Verify connection to hf_psql database in running psql instance in a docker container'
 
@@ -24,7 +25,7 @@ docker_container=`docker container ls --filter "name=psql" --format "{{.ID}}"`
 echo "docker exec -i $docker_container psql -c '\\c hf_psql;'"
 result=`docker exec -i $docker_container psql -c '\c hf_psql;'`
 save_status=$?
-# echo \$result is $result
+echo \$result is $result
 
 if [ "$result" == 'You are now connected to database "hf_psql" as user "postgres".' ]; then
     echo Test \"$testName\" PASSED
