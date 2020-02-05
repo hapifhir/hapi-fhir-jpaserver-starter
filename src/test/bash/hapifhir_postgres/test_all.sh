@@ -68,7 +68,7 @@ retry() {
     local failures=0
     while ! "$@"; do
         failures=$(( $failures + 1 ))
-        (( $failures <= $retries )) || return 1
+        (( $failures <= $retries )) || exit 1
         echo "$@" >&2
         echo " * $failures failure(s), retrying..." >&2
         sleep 1
@@ -76,7 +76,7 @@ retry() {
 }
 
 echo curl http://localhost:8080/hapi-fhir-jpaserver
-retry 10 curl http://localhost:8080/hapi-fhir-jpaserver 2> /dev/null
+retry 10 curl http://localhost:8080/hapi-fhir-jpaserver
 echo Test \"Sever is running\" PASSED
 
 ###############################################################################
