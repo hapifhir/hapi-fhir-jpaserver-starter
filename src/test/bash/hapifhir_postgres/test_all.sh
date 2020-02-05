@@ -29,7 +29,6 @@ if [ "$1" == "run_server" ]; then
     make run
 
     loop_until_bool_or_timeout 'docker inspect -f {{.State.Running}} hapi-fhir-jpaserver-start'
-
     loop_until_bool_or_timeout 'docker inspect -f {{.State.Running}} psql_container'
 
     echo Containers have started.
@@ -46,10 +45,7 @@ title Running Tests
 
 testName='Verify connection to hf_psql database in running psql instance in a docker container'
 
-# Quoting this properly to use test_cmd is difficult, so do this manually instead.
-# Also, we want to check the result.
-
-# oddly this failes when using exactly as is but with docker-compose
+# Oddly this fails when using exactly as is but with docker-compose
 echo "docker exec psql_container psql -c '\\c hf_psql;'"
 result=`docker exec psql_container psql -c '\c hf_psql;'`
 save_status=$?
@@ -68,30 +64,22 @@ echo
 ###############################################################################
 # Test 2
 
-# Echo and evaluate. That is, print and run the command
-ee () {
-    echo $*
-    eval $*
+retry() {
+    local retries=$1
+    shift
+    local failures=0
+    while ! "$@"; do
+        failures=$(( $failures + 1 ))
+        (( $failures <= $retries )) || return 1
+        echo "$@" >&2
+        echo " * $failures failure(s), retrying..." >&2
+        sleep 1
+    done
 }
 
-test_cmd () {
-    testName=$1
-    if ee "${@:2}"
-    then
-        echo Test \"$testName\" PASSED
-    else
-        save_status=$?
-        echo Test \"$testName\" FAILED
-        exit $save_status
-    fi
-    echo
-}
-
-# test_cmd 'dir foo exists' 'ls -l foo' # should fail from root repo dir
-# test_cmd 'dir src exists' 'ls -l src' # should pass from root repo dir
-
-sleep 1 # this seems to be needed when we add the until loops for run_server
-test_cmd 'Sever is running' 'curl http://localhost:8080/hapi-fhir-jpaserver'
+echo curl http://localhost:8080/hapi-fhir-jpaserver
+retry 10 curl http://localhost:8080/hapi-fhir-jpaserver 2> /dev/null
+echo Test \"Sever is running\" PASSED
 
 ###############################################################################
 # Test 3
