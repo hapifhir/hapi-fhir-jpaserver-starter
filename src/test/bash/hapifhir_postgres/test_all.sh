@@ -8,6 +8,19 @@ title () {
     echo
 }
 
+loop_until_success_or_timeout () {
+    boolean_command=$1
+
+    START_SECONDS=$SECONDS
+    until [ "`$boolean_command`" = "true" ]; do
+        sleep 0.1;
+        if [[ $(($SECONDS - $START_SECONDS)) -gt $TIMEOUT_SECONDS ]]; then
+            echo Too much time taken waiting for: $boolean_command
+            exit 1
+        fi
+    done;
+}
+
 if [ "$1" == "run_server" ]; then
     # run the server, then we'll test if it's working
 
@@ -15,23 +28,10 @@ if [ "$1" == "run_server" ]; then
 
     make run
 
-    START_SECONDS=$SECONDS
-    until [ "`docker inspect -f {{.State.Running}} hapi-fhir-jpaserver-start`" = "true" ]; do
-        sleep 0.1;
-        if [[ $(($SECONDS - $START_SECONDS)) -gt $TIMEOUT_SECONDS ]]; then
-            echo Too much time taken waiting for hapi-fhir-jpaserver-start container
-            exit 1
-        fi
-    done;
+    loop_until_success_or_timeout 'docker inspect -f {{.State.Running}} hapi-fhir-jpaserver-start'
 
-    START_SECONDS=$SECONDS
-    until [ "`docker inspect -f {{.State.Running}} psql_container`" = "true" ]; do
-        sleep 0.1;
-        if [[ $(($SECONDS - $START_SECONDS)) -gt $TIMEOUT_SECONDS ]]; then
-            echo Too much time taken waiting for psql_container
-            exit 1
-        fi
-    done;
+    loop_until_success_or_timeout 'docker inspect -f {{.State.Running}} psql_container'
+
     echo Containers have started.
 fi
 
