@@ -1,31 +1,61 @@
 #! /usr/bin/env bash
 
+TIMEOUT_SECONDS=2
+
+title () {
+    echo
+    echo ===== $* =====
+    echo
+}
+
 if [ "$1" == "run_server" ]; then
     # run the server, then we'll test if it's working
+
+    title Starting containers, will wait $TIMEOUT_SECONDS seconds for each of them to launch
+
     make run
-    echo
-    echo Containers running, taking a small nap before tests...
-    echo
-    sleep 2
+
+    START_SECONDS=$SECONDS
+    until [ "`docker inspect -f {{.State.Running}} hapi-fhir-jpaserver-start`" = "true" ]; do
+        sleep 0.1;
+        if [[ $(($SECONDS - $START_SECONDS)) -gt $TIMEOUT_SECONDS ]]; then
+            echo Too much time taken waiting for hapi-fhir-jpaserver-start container
+            exit 1
+        fi
+    done;
+
+    START_SECONDS=$SECONDS
+    until [ "`docker inspect -f {{.State.Running}} psql_container`" = "true" ]; do
+        sleep 0.1;
+        if [[ $(($SECONDS - $START_SECONDS)) -gt $TIMEOUT_SECONDS ]]; then
+            echo Too much time taken waiting for psql_container
+            exit 1
+        fi
+    done;
+    echo Containers have started.
 fi
+
+title Running Tests
 
 ###############################################################################
 # Test 1
 # This test isn't strictly needed for our eventual production build since we'll
 # use Google Cloud SQL, but this does show that in our test setup, the postgres
 # container is up and we can connect to it. We run it first so we can eliminate
-# it as a reason for failure that would cause the hapi-fhir-jpaserver to fail.
+# it as a failure case for hapi-fhir-jpaserver.
 
 testName='Verify connection to hf_psql database in running psql instance in a docker container'
 
 # Quoting this properly to use test_cmd is difficult, so do this manually instead.
 # Also, we want to check the result.
 
-docker_container=`docker container ls --filter "name=psql" --format "{{.ID}}"`
-echo "docker exec -i $docker_container psql -c '\\c hf_psql;'"
-result=`docker exec -i $docker_container psql -c '\c hf_psql;'`
+# oddly this failes when using exactly as is but with docker-compose
+echo "docker exec psql_container psql -c '\\c hf_psql;'"
+result=`docker exec psql_container psql -c '\c hf_psql;'`
 save_status=$?
-echo \$result is $result
+echo Result is: $result
+
+# this is now failing for some reason after changing to docker-compose
 
 if [ "$result" == 'You are now connected to database "hf_psql" as user "postgres".' ]; then
     echo Test \"$testName\" PASSED
@@ -38,6 +68,7 @@ echo
 ###############################################################################
 # Test 2
 
+# Echo and evaluate. That is, print and run the command
 ee () {
     echo $*
     eval $*
@@ -59,7 +90,8 @@ test_cmd () {
 # test_cmd 'dir foo exists' 'ls -l foo' # should fail from root repo dir
 # test_cmd 'dir src exists' 'ls -l src' # should pass from root repo dir
 
-test_cmd 'Sever is running' "curl 'http://localhost:8080/hapi-fhir-jpaserver'"
+sleep 1 # this seems to be needed when we add the until loops for run_server
+test_cmd 'Sever is running' 'curl http://localhost:8080/hapi-fhir-jpaserver'
 
 ###############################################################################
 # Test 3
