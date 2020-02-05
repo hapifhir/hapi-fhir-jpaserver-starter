@@ -51,8 +51,6 @@ result=`docker exec psql_container psql -c '\c hf_psql;'`
 save_status=$?
 echo Result is: $result
 
-# this is now failing for some reason after changing to docker-compose
-
 if [ "$result" == 'You are now connected to database "hf_psql" as user "postgres".' ]; then
     echo Test \"$testName\" PASSED
 else
