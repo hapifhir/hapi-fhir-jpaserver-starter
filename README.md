@@ -1,4 +1,16 @@
-# HAPI-FHIR Starter Project
+# Our local build using postgres
+
+`make help` will show you all the commands available.
+
+> Available recipes: <br>
+> **run** Build the docker containers and run them. Server should appear at http://localhost:8080/hapi-fhir-jpaserver/ <br>
+> **ps** List hapi-fhir-jpaserver-start and psql containers if running
+
+Use `make run` to build and launch the containers for hapi-fhir and postgres.
+The postgres container is only being used temporarily for testing until we
+configure hapi-fhir to use Google Cloud SQL.
+
+# HAPI-FHIR Starter Project (Original repo README from this point forward)
 
 This project is a complete starter project you can use to deploy a FHIR server using HAPI FHIR JPA.
 

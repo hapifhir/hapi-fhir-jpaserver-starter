@@ -3,14 +3,14 @@ services:
   hapi-fhir-jpaserver-start:
     build: .
     depends_on:
-      - psql
+      - psql_container
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
     ports:
       - "8080:8080"
-  psql:
+  psql_container:
     image: postgres:12.1
-    container_name: psql
+    container_name: psql_container
     restart: always
     environment:
       POSTGRES_DB: "hf_psql"
