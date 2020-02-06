@@ -31,4 +31,4 @@ before_script:
 script:
   # We do not run the tests from hapifhir's travis config b/c they only work with the derby DB
   - mvn clean install -DskipTests
-  - ./travis/test run_server
+  - .travis/test run_server
