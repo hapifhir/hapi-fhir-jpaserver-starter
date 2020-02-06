@@ -8,14 +8,15 @@ title () {
     echo
 }
 
-loop_until_bool_or_timeout () {
-    boolean_command=$1
+retry_until_timeout () {
+    local success_result="$1"
+    local commannd="$2"
 
     START_SECONDS=$SECONDS
-    until [ "`$boolean_command`" = "true" ]; do
+    until [ "`$commannd`" = "$success_result" ]; do
         sleep 0.1;
         if [[ $(($SECONDS - $START_SECONDS)) -ge $TIMEOUT_SECONDS ]]; then
-            echo Too much time taken waiting for: $boolean_command
+            echo Too much time taken waiting for: $commannd
             exit 1
         fi
     done;
@@ -28,8 +29,8 @@ if [ "$1" == "run_server" ]; then
 
     make run
 
-    loop_until_bool_or_timeout 'docker inspect -f {{.State.Running}} hapi-fhir-jpaserver-start'
-    loop_until_bool_or_timeout 'docker inspect -f {{.State.Running}} psql_container'
+    retry_until_timeout true 'docker inspect -f {{.State.Running}} hapi-fhir-jpaserver-start'
+    retry_until_timeout true 'docker inspect -f {{.State.Running}} psql_container'
 
     echo Containers have started.
 fi
@@ -45,7 +46,7 @@ title Running Tests
 
 testName='Verify connection to hf_psql database in running psql instance in a docker container'
 
-retry_until() {
+retry_times_until() {
     local retries="$1"
     local success_result="$2"
     local command="$3"
@@ -65,7 +66,7 @@ retry_until() {
 command="docker exec psql_container psql -c '\\c hf_psql;'"
 echo $command
 success_result='You are now connected to database "hf_psql" as user "postgres".'
-retry_until 10 "$success_result" "$command"
+retry_times_until 10 "$success_result" "$command"
 echo Test \"$testName\" PASSED
 echo
 
