@@ -45,22 +45,45 @@ title Running Tests
 
 testName='Verify connection to hf_psql database in running psql instance in a docker container'
 
-# Oddly this fails when using exactly as is but with docker-compose
-echo "docker exec psql_container psql -c '\\c hf_psql;'"
-result=`docker exec psql_container psql -c '\c hf_psql;'`
-save_status=$?
-echo Result is: $result
+retry_until() {
+    local retries="$1"
+    # echo DEBUG retries = $retries
+    success_result="$2"
+    # echo DEBUG success_result = "$success_result"
+    command="$3"
+    # echo DEBUG command = "$command"
+    local failures=0
+    local result=`eval $command`
+    while [ "$result" != "$success_result" ]; do
+        failures=$(( $failures + 1 ))
+        (( $failures <= $retries )) || exit 1
+        echo "$command" >&2
+        echo " * $failures failure(s); failed with $retries; retrying..." >&2
+        sleep 1
+        result=`eval $command`
+    done
+}
 
-if [ "$result" == 'You are now connected to database "hf_psql" as user "postgres".' ]; then
-    echo Test \"$testName\" PASSED
-else
-    echo Test \"$testName\" FAILED
-    exit $save_status
-fi
+# Oddly this fails when using exactly as is but with docker-compose
+command="docker exec psql_container psql -c '\\c hf_psql;'"
+echo $command
+success_result='You are now connected to database "hf_psql" as user "postgres".'
+retry_until 10 "$success_result" "$command"
+echo Test \"$testName\" PASSED
 echo
+
+# if [ "$result" == 'You are now connected to database "hf_psql" as user "postgres".' ]; then
+#     echo Test \"$testName\" PASSED
+# else
+#     echo Test \"$testName\" FAILED
+#     exit $save_status
+# fi
+# echo
 
 ###############################################################################
 # Test 2
+
+testName='Sever is running'
 
 retry() {
     local retries=$1
@@ -77,7 +100,8 @@ retry() {
 
 echo curl http://localhost:8080/hapi-fhir-jpaserver
 retry 10 curl http://localhost:8080/hapi-fhir-jpaserver
-echo Test \"Sever is running\" PASSED
+echo Test \"$testName\" PASSED
+echo
 
 ###############################################################################
 # Test 3
