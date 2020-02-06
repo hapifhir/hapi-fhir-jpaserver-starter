@@ -22,7 +22,7 @@ retry_until_timeout () {
     done;
 }
 
-if [ "$1" == "run_server" ]; then
+if [ "$1" = "run_server" ]; then
     # run the server, then we'll test if it's working
 
     title Starting containers, will wait $TIMEOUT_SECONDS seconds for each of them to launch
@@ -62,7 +62,7 @@ retry_times_until() {
     done
 }
 
-# Oddly this fails when using exactly as is but with docker-compose
+# Oddly this fails when using docker-compose instead of docker
 command="docker exec psql_container psql -c '\\c hf_psql;'"
 echo $command
 success_result='You are now connected to database "hf_psql" as user "postgres".'
