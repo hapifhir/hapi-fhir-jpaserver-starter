@@ -47,18 +47,15 @@ testName='Verify connection to hf_psql database in running psql instance in a do
 
 retry_until() {
     local retries="$1"
-    # echo DEBUG retries = $retries
-    success_result="$2"
-    # echo DEBUG success_result = "$success_result"
-    command="$3"
-    # echo DEBUG command = "$command"
+    local success_result="$2"
+    local command="$3"
     local failures=0
-    local result=`eval $command`
+    local result=`eval $command` # eval consumes quoting properly
     while [ "$result" != "$success_result" ]; do
         failures=$(( $failures + 1 ))
         (( $failures <= $retries )) || exit 1
         echo "$command" >&2
-        echo " * $failures failure(s); failed with $retries; retrying..." >&2
+        echo " * $failures failure(s); will retry ... command returned: $result" >&2
         sleep 1
         result=`eval $command`
     done
@@ -71,14 +68,6 @@ success_result='You are now connected to database "hf_psql" as user "postgres".'
 retry_until 10 "$success_result" "$command"
 echo Test \"$testName\" PASSED
 echo
-
-# if [ "$result" == 'You are now connected to database "hf_psql" as user "postgres".' ]; then
-#     echo Test \"$testName\" PASSED
-# else
-#     echo Test \"$testName\" FAILED
-#     exit $save_status
-# fi
-# echo
 
 ###############################################################################
 # Test 2
