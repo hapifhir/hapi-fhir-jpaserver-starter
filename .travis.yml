@@ -1,34 +1,29 @@
-# Use docker-based build environment (instead of openvz)
-#sudo: false
-#dist: trusty
-
-# Use VM based build environment
 sudo: required
 dist: trusty
-
 language: java
 jdk:
-    - openjdk11
-   #- oraclejdk9
-
-env:
-  global:
-    - MAVEN_OPTS="-Xmx10244M -Xss128M -XX:MetaspaceSize=512M -XX:MaxMetaspaceSize=1024M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC"
-
+- openjdk11
+before_install:
+- openssl aes-256-cbc -K $encrypted_768cddeffb19_key -iv $encrypted_768cddeffb19_iv
+  -in .travis/sa.json.enc -d | docker login -u _json_key --password-stdin https://gcr.io
+install: "/bin/true"
+before_script:
+- export MAVEN_SKIP_RC=true
+- sudo chmod -R 777 "$HOME/.m2/repository";
+- sudo chown -R travis:travis "$HOME/.m2/repository";
+script:
+- mvn clean install -DskipTests
+- ".travis/test run_server"
 cache:
   directories:
-      - '$HOME/.m2/repository'
-
-install: /bin/true
-
-before_script:
-# This seems to be required to get travis to set Xmx4g, per https://github.com/travis-ci/travis-ci/issues/3893
-  - export MAVEN_SKIP_RC=true
-# Sometimes things get restored from the cache with bad permissions. See https://github.com/travis-ci/travis-ci/issues/9630
-  - sudo chmod -R 777 "$HOME/.m2/repository";
-  - sudo chown -R travis:travis "$HOME/.m2/repository";
-
-script:
-  # We do not run the tests from hapifhir's travis config b/c they only work with the derby DB
-  - mvn clean install -DskipTests
-  - .travis/test run_server
+  - "$HOME/.m2/repository"
+env:
+  global:
+  - RELEASE_IMAGE_NAME=gcr.io/freenome-build/hapifhir
+  - MAVEN_OPTS="-Xmx10244M -Xss128M -XX:MetaspaceSize=512M -XX:MaxMetaspaceSize=1024M
+    -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC"
+deploy:
+- provider: script
+  script: .travis/release
+  on:
+    branch: master

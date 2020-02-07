@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -eu
+
+# Sanity check that Travis is running this script
+[[ $TRAVIS == true ]] || (>&2 echo "This script is only intended to be run from Travis!" && exit 1)
+
+# Build and push
+RELEASE_IMAGE_TAG="$($(dirname $0)/gitcalver)"
+RELEASE_IMAGE="$RELEASE_IMAGE_NAME:$RELEASE_IMAGE_TAG"
+docker build -t $RELEASE_IMAGE .
+docker push $RELEASE_IMAGE
