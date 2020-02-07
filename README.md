@@ -12,7 +12,9 @@ You'll also need `docker`. On mac, you should download [Docker Desktop](https://
 
 `make help` will show you all the commands available.
 
-> Available recipes: <br> > **run** Build the docker containers and run them. Server should appear at http://localhost:8080/hapi-fhir-jpaserver/ <br> > **ps** List hapi-fhir-jpaserver-start and psql containers if running
+> Available recipes: <br>
+> **run** Build the docker containers and run them. Server should appear at http://localhost:8080/hapi-fhir-jpaserver/ <br>
+> **ps** List hapi-fhir-jpaserver-start and psql containers if running
 
 Use `make run` to build and launch the containers for hapi-fhir and postgres.
 The postgres container is only being used temporarily for testing until we
