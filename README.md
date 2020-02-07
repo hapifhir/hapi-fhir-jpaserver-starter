@@ -1,10 +1,18 @@
 # Our local build using postgres
 
+## Requirements
+
+To run the containers in this project, you'll need `maven`, java's build automation tool. If you don't have it, you can install it on mac on the command line with:
+
+`brew install maven`
+
+You'll also need `docker`. On mac, you should download [Docker Desktop](https://docs.docker.com/docker-for-mac/install/) and run the Docker Desktop app before continuing.
+
+## Makefile
+
 `make help` will show you all the commands available.
 
-> Available recipes: <br>
-> **run** Build the docker containers and run them. Server should appear at http://localhost:8080/hapi-fhir-jpaserver/ <br>
-> **ps** List hapi-fhir-jpaserver-start and psql containers if running
+> Available recipes: <br> > **run** Build the docker containers and run them. Server should appear at http://localhost:8080/hapi-fhir-jpaserver/ <br> > **ps** List hapi-fhir-jpaserver-start and psql containers if running
 
 Use `make run` to build and launch the containers for hapi-fhir and postgres.
 The postgres container is only being used temporarily for testing until we

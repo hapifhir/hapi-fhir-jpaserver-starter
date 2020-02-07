@@ -27,3 +27,4 @@ deploy:
   script: .travis/release
   on:
     branch: master
+g
