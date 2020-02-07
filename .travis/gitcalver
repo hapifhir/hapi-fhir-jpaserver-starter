@@ -1,0 +1,32 @@
+#!/bin/sh
+
+set -e
+
+export TZ=UTC
+
+# Verify that the working directory is clean.
+if [ -n "$(git status --porcelain=v1 2>&1)" ]; then
+    git status --short 1>&2
+    exit 1
+fi
+
+# Verify that at least one commit exists on master.
+if ! git rev-parse --quiet --verify master > /dev/null; then
+    echo "master does not exist" 1>&2
+    exit 1
+fi
+
+# Verify that we are on master or an equivalent. It is not important
+# that the "current" branch, as reported by "git status", be master,
+# because that only matters for future commits, and we only care about
+# past commits.
+if [ "$(git rev-parse --verify HEAD)" != "$(git rev-parse --verify master)" ]; then
+    echo "HEAD is $(git rev-parse --short HEAD) but master is $(git rev-parse --short master)" 1>&2
+    exit 1
+fi
+
+# Generate a version number. Note that we want to use "format-local" to convert
+# commit times to *our* local time, which is UTC. "format-local" does not format
+# in the local time of the committer; it does the opposite.
+git log --full-history --pretty="format:%cd" --date="format-local:%Y%m%d" master -- \
+    | uniq -c | awk 'NR == 1 { print $2 "." $1 }'
