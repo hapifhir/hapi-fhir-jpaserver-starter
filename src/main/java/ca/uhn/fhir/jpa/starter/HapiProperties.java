@@ -102,7 +102,7 @@ public class HapiProperties {
             builder.setRestUrl(getProperty("elasticsearch.rest_url"));
             builder.setUsername(getProperty("elasticsearch.username"));
             builder.setPassword(getProperty("elasticsearch.password"));
-            builder.setIndexSchemaManagementStrategy(getPropertyEnum("elasticsearch.schema_management_strateg", IndexSchemaManagementStrategy.class, IndexSchemaManagementStrategy.CREATE));
+            builder.setIndexSchemaManagementStrategy(getPropertyEnum("elasticsearch.schema_management_strategy", IndexSchemaManagementStrategy.class, IndexSchemaManagementStrategy.CREATE));
             builder.setDebugRefreshAfterWrite(getPropertyBoolean("elasticsearch.debug.refresh_after_write", false));
             builder.setDebugPrettyPrintJsonLog(getPropertyBoolean("elasticsearch.debug.pretty_print_json_log", false));
             builder.apply(retVal);
