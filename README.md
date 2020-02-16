@@ -4,19 +4,19 @@ This project is a complete starter project you can use to deploy a FHIR server u
 
 Note that this project is specifically intended for end users of the HAPI FHIR JPA server module (in other words, it helps you implement HAPI FHIR, it is not the source of the library itself). If you are looking for the main HAPI FHIR project, see here: https://github.com/jamesagnew/hapi-fhir
 
-# Prerequisites
+## Prerequisites
 
 In order to use this sample, you should have:
 
-* [This project](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
-* Oracle Java (JDK) installed: Minimum JDK8 or newer.
-* Apache Maven build tool (newest version)
+- [This project](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
+- Oracle Java (JDK) installed: Minimum JDK8 or newer.
+- Apache Maven build tool (newest version)
 
-# Running Locally
+## Running locally
 
-The easiest way to run this server is to run it directly in Maven using a built-in Jetty server. To do this, change `src/main/resources/hapi.properties` `server_address` and `server.base` with the values commented out as *For Jetty, use this* and then execute the following command:
+The easiest way to run this server is to run it directly in Maven using a built-in Jetty server. To do this, change `src/main/resources/hapi.properties` `server_address` and `server.base` with the values commented out as _For Jetty, use this_ and then execute the following command:
 
-```
+```bash
 mvn jetty:run
 ```
 
@@ -25,30 +25,50 @@ Then, browse to the following link to use the server:
 [http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
 
 If you need to run this server on a different port (using Maven), you can change the port in the run command as follows:
-```
+
+```bash
 mvn -Djetty.port=8888 jetty:run
 ```
+
 And replacing 8888 with the port of your choice.
 
-# Configuration
+## Configurations
 
-Much of this HAPI starter project can be configured using the properties file in *src/main/resources/hapi.properties*. By default, this starter project is configured to use Derby as the database.
+Much of this HAPI starter project can be configured using the properties file in _src/main/resources/hapi.properties_. By default, this starter project is configured to use Derby as the database.
 
-## MySql
+### MySql configuration
 
 To configure the starter app to use MySQL, instead of the default Derby, update the hapi.properties file to have the following:
 
-* datasource.driver=com.mysql.jdbc.Driver
-* datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
-* hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
-* datasource.username=admin
-* datasource.password=admin
+- datasource.driver=com.mysql.jdbc.Driver
+- datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
+- hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+- datasource.username=admin
+- datasource.password=admin
 
-Because the integration tests within the project rely on the default Derby database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured MySQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
+### PostgreSQL configuration
 
-It is important to use MySQL5Dialect when using MySQL version 5+.
+To configure the starter app to use PostgreSQL, instead of the default Derby, update the hapi.properties file to have the following:
 
-# Customizing The Web Testpage UI
+- datasource.driver=org.postgresql.Driver
+- datasource.url=jdbc:postgresql://localhost:5432/hapi_dstu3
+- hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
+- datasource.username=admin
+- datasource.password=admin
+
+Because the integration tests within the project rely on the default Derby database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
+
+It is important to use PostgreSQL95Dialect when using PostgreSQL version 10+.
+
+## Overriding application properties
+
+You can override the properties that are loaded into the compiled web app (.war file) making a copy of the hapi.properties file on the file system, making changes to it, and then setting the JAVA_OPTS environment variable on the tomcat server to tell hapi-jpaserver-starter where the overriding properties file is. For example:
+
+`-Dhapi.properties=/some/custom/directory/hapi.properties`
+
+Note: This property name and the path is case-sensitive. "-DHAPI.PROPERTIES=XXX" will not work.
+
+## Customizing The Web Testpage UI
 
 The UI that comes with this server is an exact clone of the server available at [http://hapi.fhir.org](http://hapi.fhir.org). You may skin this UI if you'd like. For example, you might change the introductory text or replace the logo with your own.
 
@@ -56,7 +76,7 @@ The UI is customized using [Thymeleaf](https://www.thymeleaf.org/) template file
 
 Several template files that can be customized are found in the following directory: [https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates)
 
-# Deploying to a Container
+## Deploying to a Container
 
 Using the Maven-Embedded Jetty method above is convenient, but it is not a good solution if you want to leave the server running in the background.
 
@@ -66,7 +86,7 @@ Tomcat is very popular, so it is a good choice simply because you will be able t
 
 To deploy to a container, you should first build the project:
 
-```
+```bash
 mvn clean install
 ```
 
@@ -76,25 +96,25 @@ Again, browse to the following link to use the server (note that the port 8080 m
 
 [http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
 
-# Deploy with docker compose
+## Deploy with docker compose
 
 Docker compose is a simple option to build and deploy container. To deploy with docker compose, you should build the project
-with ```mvn clean install``` and then bring up the containers with ```docker-compose up -d --build```. The server can be 
-reached at http://localhost:8080/hapi-fhir-jpaserver/. 
+with `mvn clean install` and then bring up the containers with `docker-compose up -d --build`. The server can be
+reached at http://localhost:8080/hapi-fhir-jpaserver/.
 
-In order to use another port, change the `ports` parameter 
-inside ``docker-compose.yml`` to ```8888:8080```, where 8888 is a port of your choice.
+In order to use another port, change the `ports` parameter
+inside `docker-compose.yml` to `8888:8080`, where 8888 is a port of your choice.
 
-The docker compose set also includes my MySQL database, if you choose to use MySQL instead of derby,  change the following 
+The docker compose set also includes my MySQL database, if you choose to use MySQL instead of derby, change the following
 properties in hapi.properties:
 
-* datasource.driver=com.mysql.jdbc.Driver
-* datasource.url=jdbc:mysql://hapi-fhir-mysql:3306/hapi
-* hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
-* datasource.username=admin
-* datasource.password=admin
+- datasource.driver=com.mysql.jdbc.Driver
+- datasource.url=jdbc:mysql://hapi-fhir-mysql:3306/hapi
+- hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+- datasource.username=admin
+- datasource.password=admin
 
-# Running hapi-fhir-jpaserver-example in Tomcat from IntelliJ
+## Running hapi-fhir-jpaserver-example in Tomcat from IntelliJ
 
 Install Tomcat.
 
@@ -114,7 +134,7 @@ Add a Run Configuration for running hapi-fhir-jpaserver-example under Tomcat
 - Uncheck the "After launch" checkbox
 - On the "Deployment" tab, click the green +
 - Select "Artifact"
-- Select "hapi-fhir-jpaserver-example:war" 
+- Select "hapi-fhir-jpaserver-example:war"
 - In "Application context" type /hapi
 
 Run the configuration.
@@ -128,17 +148,17 @@ Point your browser (or fiddler, or what have you) to `http://localhost:8080/hapi
 
 It is important to use MySQL5Dialect when using MySQL version 5+.
 
-# Enabling Subscriptions
+## Enabling Subscriptions
 
-The server may be configured with subscription support by enabling properties in the [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties) file: 
+The server may be configured with subscription support by enabling properties in the [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties) file:
 
-* `subscription.resthook.enabled` - Enables REST Hook subscriptions, where the server will make an outgoing connection to a remote REST server
+- `subscription.resthook.enabled` - Enables REST Hook subscriptions, where the server will make an outgoing connection to a remote REST server
 
-* `subscription.email.enabled` - Enables email subscriptions. Note that you must also provide the connection details for a usable SMTP server.
+- `subscription.email.enabled` - Enables email subscriptions. Note that you must also provide the connection details for a usable SMTP server.
 
-* `subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/hapi-fhir-jpaserver/websocket](ws://localhost:8080/hapi-fhir-jpaserver/websocket)
+- `subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/hapi-fhir-jpaserver/websocket](ws://localhost:8080/hapi-fhir-jpaserver/websocket)
 
-# Using ElasticSearch
+## Using Elasticsearch
 
 By default, the server will use embedded lucene indexes for terminology and fulltext indexing purposes. You can switch this to using lucene by editing the properties in [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties)
 

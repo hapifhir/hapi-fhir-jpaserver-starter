@@ -14,11 +14,14 @@ import javax.annotation.Nonnull;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.defaultString;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.trim;
 
 public class HapiProperties {
   static final String ENABLE_INDEX_MISSING_FIELDS = "enable_index_missing_fields";
@@ -102,7 +105,7 @@ public class HapiProperties {
       builder.setRestUrl(getProperty("elasticsearch.rest_url"));
       builder.setUsername(getProperty("elasticsearch.username"));
       builder.setPassword(getProperty("elasticsearch.password"));
-      builder.setIndexSchemaManagementStrategy(getPropertyEnum("elasticsearch.schema_management_strateg", IndexSchemaManagementStrategy.class, IndexSchemaManagementStrategy.CREATE));
+      builder.setIndexSchemaManagementStrategy(getPropertyEnum("elasticsearch.schema_management_strategy", IndexSchemaManagementStrategy.class, IndexSchemaManagementStrategy.CREATE));
       builder.setDebugRefreshAfterWrite(getPropertyBoolean("elasticsearch.debug.refresh_after_write", false));
       builder.setDebugPrettyPrintJsonLog(getPropertyBoolean("elasticsearch.debug.pretty_print_json_log", false));
       builder.apply(retVal);
@@ -160,24 +163,28 @@ public class HapiProperties {
   }
 
   private static String getProperty(String propertyName) {
-    Properties properties = HapiProperties.getProperties();
+    String env = "HAPI_" + propertyName.toUpperCase(Locale.US);
+    env = env.replace(".", "_");
+    env = env.replace("-", "_");
 
-    if (properties != null) {
-      return properties.getProperty(propertyName);
+    String propertyValue = System.getenv(env);
+    if (propertyValue != null) {
+      return propertyValue;
     }
 
-    return null;
+    Properties properties = HapiProperties.getProperties();
+    if (properties != null) {
+      propertyValue = properties.getProperty(propertyName);
+    }
+
+    return propertyValue;
   }
 
   private static String getProperty(String propertyName, String defaultValue) {
-    Properties properties = HapiProperties.getProperties();
+    String value = getProperty(propertyName);
 
-    if (properties != null) {
-      String value = properties.getProperty(propertyName);
-
-      if (value != null && value.length() > 0) {
-        return value;
-      }
+    if (value != null && value.length() > 0) {
+      return value;
     }
 
     return defaultValue;
@@ -396,6 +403,23 @@ public class HapiProperties {
 
   public static String getEmailPassword() {
     return HapiProperties.getProperty("email.password");
+  }
+
+  // Defaults from https://javaee.github.io/javamail/docs/api/com/sun/mail/smtp/package-summary.html
+  public static Boolean getEmailAuth() {
+    return HapiProperties.getBooleanProperty("email.auth", false);
+  }
+
+  public static Boolean getEmailStartTlsEnable() {
+    return HapiProperties.getBooleanProperty("email.starttls.enable", false);
+  }
+
+  public static Boolean getEmailStartTlsRequired() {
+    return HapiProperties.getBooleanProperty("email.starttls.required", false);
+  }
+
+  public static Boolean getEmailQuitWait() {
+    return HapiProperties.getBooleanProperty("email.quitwait", true);
   }
 
   public static Long getReuseCachedSearchResultsMillis() {
