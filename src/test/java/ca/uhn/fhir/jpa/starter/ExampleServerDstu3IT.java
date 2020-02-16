@@ -43,6 +43,8 @@ public class ExampleServerDstu3IT {
 		HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "DSTU3");
 		HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr3");
 		HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
+		HapiProperties.setProperty(HapiProperties.ALLOW_EXTERNAL_REFERENCES, "true");
+		HapiProperties.setProperty(HapiProperties.ALLOW_PLACEHOLDER_REFERENCES, "true");
 		ourCtx = FhirContext.forDstu3();
 	}
 

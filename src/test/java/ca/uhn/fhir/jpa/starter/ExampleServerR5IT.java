@@ -14,12 +14,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r5.model.Bundle;
-import org.hl7.fhir.r5.model.Observation;
-import org.hl7.fhir.r5.model.Patient;
-import org.hl7.fhir.r5.model.Subscription;
-import org.hl7.fhir.r5.model.Topic;
-import org.hl7.fhir.r5.model.codesystems.SubscriptionChannelType;
+import org.hl7.fhir.r5.model.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -80,8 +75,8 @@ public class ExampleServerR5IT {
 
         Subscription.SubscriptionChannelComponent channel = new Subscription.SubscriptionChannelComponent();
         channel.getType().addCoding()
-                .setSystem(SubscriptionChannelType.WEBSOCKET.getSystem())
-                .setCode(SubscriptionChannelType.WEBSOCKET.toCode());
+                .setSystem("http://terminology.hl7.org/CodeSystem/subscription-channel-type")
+                .setCode("websocket");
         channel.getPayload().setContentType("application/json");
         subscription.setChannel(channel);
 
@@ -111,7 +106,7 @@ public class ExampleServerR5IT {
          * Create a matching resource
          */
         Observation obs = new Observation();
-        obs.setStatus(Observation.ObservationStatus.FINAL);
+        obs.setStatus(Enumerations.ObservationStatus.FINAL);
         ourClient.create().resource(obs).execute();
 
         // Give some time for the subscription to deliver

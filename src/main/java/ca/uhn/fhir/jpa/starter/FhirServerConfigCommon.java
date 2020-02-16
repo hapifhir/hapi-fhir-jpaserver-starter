@@ -173,7 +173,13 @@ public class FhirServerConfigCommon {
   @Lazy
   @Bean
   public IBinaryStorageSvc binaryStorageSvc() {
-    return new DatabaseBlobBinaryStorageSvcImpl();
+    DatabaseBlobBinaryStorageSvcImpl binaryStorageSvc = new DatabaseBlobBinaryStorageSvcImpl();
+
+    if (HapiProperties.getMaxBinarySize() != null) {
+      binaryStorageSvc.setMaximumBinarySize(HapiProperties.getMaxBinarySize());
+    }
+
+    return binaryStorageSvc;
   }
 
   @Bean()
