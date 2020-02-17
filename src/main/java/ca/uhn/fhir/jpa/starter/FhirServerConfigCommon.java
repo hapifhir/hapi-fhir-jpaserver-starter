@@ -15,6 +15,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.thymeleaf.util.Validate;
+import ca.uhn.fhir.rest.server.interceptor.auth.AuthorizationInterceptor;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Driver;
@@ -181,6 +184,13 @@ public class FhirServerConfigCommon {
 
     return binaryStorageSvc;
   }
+  
+  @Bean(autowire = Autowire.BY_TYPE)
+      public AuthorizationInterceptor authorizationInterceptor() {
+          System.out.println("\n\n\n\n\n\n\nn\n\n YESS");
+          //  logger.info("FhirServerConfig::authorizationInterceptor");
+              return new ClientAuthorizationInterceptor();
+      }
 
   @Bean()
   public IEmailSender emailSender() {

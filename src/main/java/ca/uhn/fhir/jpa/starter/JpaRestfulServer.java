@@ -44,6 +44,7 @@ import org.hl7.fhir.dstu3.model.Meta;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
+import ca.uhn.fhir.jpa.starter.ClientAuthorizationInterceptor;
 
 import javax.servlet.ServletException;
 import java.util.Arrays;
@@ -181,6 +182,9 @@ public class JpaRestfulServer extends RestfulServer {
     ResponseHighlighterInterceptor responseHighlighterInterceptor = new ResponseHighlighterInterceptor();
     ;
     this.registerInterceptor(responseHighlighterInterceptor);
+    
+    ClientAuthorizationInterceptor authInterceptor =  appCtx.getBean(ClientAuthorizationInterceptor.class);
+    this.registerInterceptor(authInterceptor);
 
     /*
      * Add some logging for each request
@@ -244,7 +248,7 @@ public class JpaRestfulServer extends RestfulServer {
       config.addExposedHeader("Location");
       config.addExposedHeader("Content-Location");
       config.setAllowedMethods(
-          Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
+          Arrays.asList("Authorization","GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
       config.setAllowCredentials(HapiProperties.getCorsAllowedCredentials());
 
       // Create the interceptor and register it

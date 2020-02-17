@@ -50,5 +50,26 @@
 		<servlet-name>fhirServlet</servlet-name>
 		<url-pattern>/fhir/*</url-pattern>
 	</servlet-mapping>
+	<filter>
+       <filter-name>cross-origin</filter-name>
+       <filter-class>org.eclipse.jetty.servlets.CrossOriginFilter</filter-class>
+       <init-param>
+           <param-name>allowedOrigins</param-name>
+           <param-value>*</param-value>
+       </init-param>
+       <init-param>
+           <param-name>allowedMethods</param-name>
+           <param-value>GET,POST,PUT,DELETE,OPTIONS</param-value>
+       </init-param>
+       <init-param>
+           <param-name>allowedHeaders</param-name>
+           <param-value>Authorization,Accept,Access-Control-Allow-Origin,Access-Control-Request-Headers,Access-Control-Request-Method,Cache-Control,Content-Type,Origin,Prefer,X-FHIR-Starter,X-Requested-With</param-value>
+       </init-param>
+     </filter>
+
+     <filter-mapping>
+          <filter-name>cross-origin</filter-name>
+          <url-pattern>/*</url-pattern>
+      </filter-mapping>
 
 </web-app>
