@@ -14,6 +14,7 @@ before_script:
 script:
   - mvn clean install -DskipTests
   - ".travis/test run_server"
+  - "make test"
 cache:
   directories:
     - "$HOME/.m2/repository"

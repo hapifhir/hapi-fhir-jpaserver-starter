@@ -1,5 +1,5 @@
 .SILENT:
-.PHONY: help _install_deps _mvn_install run ps
+.PHONY: help _install_deps _mvn_install run ps test
 
 # Set shell to Bash
 SHELL := /usr/bin/env bash
@@ -23,3 +23,6 @@ run: _install_deps _mvn_install ## Build the docker containers and run them. Ser
 
 ps: _install_deps ## List hapi-fhir-jpaserver-start and psql containers if running
 	docker-compose ps
+
+test: ## execute tests which rely on server locally running on http://localhost:8080/hapi-fhir-jpaserver/
+	python -m pytest --durations=0 tests
