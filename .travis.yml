@@ -6,7 +6,8 @@ jdk:
 before_install:
   - openssl aes-256-cbc -K $encrypted_768cddeffb19_key -iv $encrypted_768cddeffb19_iv
     -in .travis/sa.json.enc -d | docker login -u _json_key --password-stdin https://gcr.io
-install: "/bin/true"
+install:
+  - "pip install pytest"
 before_script:
   - export MAVEN_SKIP_RC=true
   - sudo chmod -R 777 "$HOME/.m2/repository";
