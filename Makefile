@@ -5,14 +5,10 @@
 SHELL := /usr/bin/env bash
 
 DOCKER_COMPOSE_INSTALLED := $(shell command -v docker-compose 2> /dev/null)
-PYTEST_INSTALLED := $(shell pip show pytest 2> /dev/null)
 
 _install_deps:
 ifndef DOCKER_COMPOSE_INSTALLED
 	pip install docker-compose
-endif
-ifndef PYTEST_INSTALLED
-	pip install pytest
 endif
 
 help:
@@ -28,5 +24,5 @@ run: _install_deps _mvn_install ## Build the docker containers and run them. Ser
 ps: _install_deps ## List hapi-fhir-jpaserver-start and psql containers if running
 	docker-compose ps
 
-test: _install_deps ## execute tests which rely on server locally running on http://localhost:8080/hapi-fhir-jpaserver/
+test: ## execute tests which rely on server locally running on http://localhost:8080/hapi-fhir-jpaserver/
 	python -m pytest --durations=0 tests
