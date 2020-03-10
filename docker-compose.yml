@@ -6,16 +6,29 @@ services:
     restart: on-failure
     ports:
       - "8080:8080"
+      
   hapi-fhir-mysql:
     image: mysql:latest
     container_name: hapi-fhir-mysql
     restart: always
     environment:
-      MYSQL_DATABASE: 'hapi'
-      MYSQL_USER: 'admin'
-      MYSQL_PASSWORD: 'admin'
-      MYSQL_ROOT_PASSWORD: 'admin'
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - hapi-fhir-mysql:/var/lib/mysql
+      
+  hapi-fhir-mariadb:
+    image: mariadb/server:10.4
+    container_name: hapi-fhir-mariadb
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - hapi-fhir-mysql:/var/lib/mysql
+      
 volumes:
   hapi-fhir-mysql:
