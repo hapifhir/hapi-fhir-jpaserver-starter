@@ -46,6 +46,17 @@ To configure the starter app to use MySQL, instead of the default Derby, update 
 - datasource.username=admin
 - datasource.password=admin
 
+
+### MariaDB configuration
+
+To configure the starter app to use MariaDB, instead of the default Derby, update the hapi.properties file to have the following:
+
+- datasource.driver=org.mariadb.jdbc.Driver
+- datasource.url=jdbc:mariadb://localhost:3306/hapi_dstu3
+- hibernate.dialect=org.hibernate.dialect.MariaDB103Dialect
+- datasource.username=admin
+- datasource.password=admin
+
 ### PostgreSQL configuration
 
 To configure the starter app to use PostgreSQL, instead of the default Derby, update the hapi.properties file to have the following:
@@ -105,14 +116,24 @@ reached at http://localhost:8080/hapi-fhir-jpaserver/.
 In order to use another port, change the `ports` parameter
 inside `docker-compose.yml` to `8888:8080`, where 8888 is a port of your choice.
 
-The docker compose set also includes my MySQL database, if you choose to use MySQL instead of derby, change the following
-properties in hapi.properties:
+The docker compose set also includes my MySQL and MariaDB database, if you choose to use MySQL instead of derby, change the following properties in hapi.properties. Database parameters can also be configured also in `.env` environment file:
+
+**MySQL**
 
 - datasource.driver=com.mysql.jdbc.Driver
 - datasource.url=jdbc:mysql://hapi-fhir-mysql:3306/hapi
 - hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
 - datasource.username=admin
 - datasource.password=admin
+
+**MariaDB**
+
+- datasource.driver=org.mariadb.jdbc.Driver
+- datasource.url=jdbc:mariadb://localhost:3306/hapi
+- hibernate.dialect=org.hibernate.dialect.MariaDB103Dialect
+- datasource.username=admin
+- datasource.password=admin
+
 
 ## Running hapi-fhir-jpaserver-example in Tomcat from IntelliJ
 
