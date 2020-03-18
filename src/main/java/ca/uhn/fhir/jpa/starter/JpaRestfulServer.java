@@ -285,27 +285,7 @@ public class JpaRestfulServer extends RestfulServer {
     }
 
     // Validation
-    IValidatorModule validatorModule;
-    switch (fhirVersion) {
-            case DSTU2:
-                validatorModule = appCtx.getBean("myInstanceValidatorDstu2", IValidatorModule.class);
-                break;
-      case DSTU3:
-        validatorModule = appCtx.getBean("myInstanceValidatorDstu3", IValidatorModule.class);
-        break;
-      case R4:
-        validatorModule = appCtx.getBean("myInstanceValidatorR4", IValidatorModule.class);
-        break;
-      case R5:
-        validatorModule = appCtx.getBean("myInstanceValidatorR5", IValidatorModule.class);
-        break;
-            // These versions are not supported by HAPI FHIR JPA
-            case DSTU2_HL7ORG:
-            case DSTU2_1:
-      default:
-        validatorModule = null;
-        break;
-    }
+    IValidatorModule validatorModule = appCtx.getBean(IValidatorModule.class);
     if (validatorModule != null) {
       if (HapiProperties.getValidateRequestsEnabled()) {
         RequestValidatingInterceptor interceptor = new RequestValidatingInterceptor();
