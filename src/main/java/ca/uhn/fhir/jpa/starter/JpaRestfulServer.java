@@ -8,6 +8,7 @@ import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.dao.DaoRegistry;
+import ca.uhn.fhir.jpa.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.provider.GraphQLProvider;
@@ -21,6 +22,7 @@ import ca.uhn.fhir.jpa.provider.r4.JpaConformanceProviderR4;
 import ca.uhn.fhir.jpa.provider.r4.JpaSystemProviderR4;
 import ca.uhn.fhir.jpa.provider.r5.JpaConformanceProviderR5;
 import ca.uhn.fhir.jpa.provider.r5.JpaSystemProviderR5;
+import ca.uhn.fhir.jpa.rp.r4.PatientResourceProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
 import ca.uhn.fhir.jpa.subscription.module.interceptor.SubscriptionDebugLogInterceptor;
@@ -40,6 +42,8 @@ import java.util.HashSet;
 import java.util.TreeSet;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
+import org.hl7.fhir.r4.model.Claim;
+import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.dstu3.model.Meta;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
@@ -113,6 +117,7 @@ public class JpaRestfulServer extends RestfulServer {
      * You can also create your own subclass of the conformance provider if you need to
      * provide further customization of your server's CapabilityStatement
      */
+    
     if (fhirVersion == FhirVersionEnum.DSTU2) {
       IFhirSystemDao<ca.uhn.fhir.model.dstu2.resource.Bundle, MetaDt> systemDao = appCtx
           .getBean("mySystemDaoDstu2", IFhirSystemDao.class);
@@ -218,6 +223,17 @@ public class JpaRestfulServer extends RestfulServer {
       registerProvider(appCtx.getBean(TerminologyUploaderProvider.class));
     }
 
+    // Custom resource operations providers
+    IFhirResourceDao<Patient> patientDao = (IFhirResourceDao<Patient>) appCtx.getBean("myPatientDaoR4", IFhirResourceDao.class);
+    PatientProvider patientRp = new PatientProvider();
+    patientRp.setDao(patientDao);
+	registerProvider(patientRp);
+
+    IFhirResourceDao<Claim> claimDao = (IFhirResourceDao<Claim>) appCtx.getBean("myClaimDaoR4", IFhirResourceDao.class);
+    ClaimProvider claimRp = new ClaimProvider(appCtx);
+    claimRp.setDao(claimDao);
+	registerProvider(claimRp);
+	
     // If you want to enable the $trigger-subscription operation to allow
     // manual triggering of a subscription delivery, enable this provider
     if (false) { // <-- DISABLED RIGHT NOW

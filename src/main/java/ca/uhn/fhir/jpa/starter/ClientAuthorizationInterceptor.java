@@ -33,7 +33,7 @@ public class ClientAuthorizationInterceptor extends AuthorizationInterceptor {
 
   @Override
   public List<IAuthRule> buildRuleList(RequestDetails theRequestDetails) {
-    String useOauth = "true";
+    String useOauth = "false";
     System.out.println("\n\n\n\n\n\n\n Boolean.parseBoolean(useOauth)");
     System.out.println(Boolean.parseBoolean(useOauth));
 //    ourLog.info("\n\n\n 111111111 boolean Parseeeses","testt");
