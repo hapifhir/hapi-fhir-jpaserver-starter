@@ -43,6 +43,7 @@ import java.util.TreeSet;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.hl7.fhir.r4.model.Claim;
+import org.hl7.fhir.r4.model.Coverage;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.dstu3.model.Meta;
 import org.springframework.context.ApplicationContext;
@@ -135,6 +136,19 @@ public class JpaRestfulServer extends RestfulServer {
     } else if (fhirVersion == FhirVersionEnum.R4) {
       IFhirSystemDao<org.hl7.fhir.r4.model.Bundle, org.hl7.fhir.r4.model.Meta> systemDao = appCtx
           .getBean("mySystemDaoR4", IFhirSystemDao.class);
+   // Custom resource operations providers
+      IFhirResourceDao<Patient> patientDao = (IFhirResourceDao<Patient>) appCtx.getBean("myPatientDaoR4", IFhirResourceDao.class);
+      IFhirResourceDao<Coverage> coverageDao  = (IFhirResourceDao<Coverage>) appCtx.getBean("myCoverageDaoR4", IFhirResourceDao.class);
+
+      PatientProvider patientRp = new PatientProvider(systemDao,coverageDao);
+      patientRp.setDao(patientDao);
+  	  registerProvider(patientRp);
+
+      IFhirResourceDao<Claim> claimDao = (IFhirResourceDao<Claim>) appCtx.getBean("myClaimDaoR4", IFhirResourceDao.class);
+      ClaimProvider claimRp = new ClaimProvider(appCtx);
+      claimRp.setDao(claimDao);
+  	  registerProvider(claimRp);
+  	
       JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, systemDao,
           appCtx.getBean(DaoConfig.class));
       confProvider.setImplementationDescription("HAPI FHIR R4 Server");
@@ -223,17 +237,7 @@ public class JpaRestfulServer extends RestfulServer {
       registerProvider(appCtx.getBean(TerminologyUploaderProvider.class));
     }
 
-    // Custom resource operations providers
-    IFhirResourceDao<Patient> patientDao = (IFhirResourceDao<Patient>) appCtx.getBean("myPatientDaoR4", IFhirResourceDao.class);
-    PatientProvider patientRp = new PatientProvider();
-    patientRp.setDao(patientDao);
-	registerProvider(patientRp);
-
-    IFhirResourceDao<Claim> claimDao = (IFhirResourceDao<Claim>) appCtx.getBean("myClaimDaoR4", IFhirResourceDao.class);
-    ClaimProvider claimRp = new ClaimProvider(appCtx);
-    claimRp.setDao(claimDao);
-	registerProvider(claimRp);
-	
+    
     // If you want to enable the $trigger-subscription operation to allow
     // manual triggering of a subscription delivery, enable this provider
     if (false) { // <-- DISABLED RIGHT NOW
