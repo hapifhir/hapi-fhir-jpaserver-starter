@@ -70,28 +70,34 @@ public class PatientProvider extends PatientResourceProvider{
 				Coverage oldPlan =  (Coverage)entry.getResource();
 				System.out.println(oldPlan.getIdentifier()+"--"+oldPlan.getIdentifier().size());
 				if(oldPlan.getIdentifier().size() > 0) {
-					SearchParameterMap map = new SearchParameterMap();
-					map.add("identifier", new TokenParam(oldPlan.getIdentifier().get(0).getValue()));
-					IBundleProvider coveragesFound = this.coverageDao.search(map);
-					if(coveragesFound.size() > 0) {
-						for(IBaseResource coverageItem:coveragesFound.getResources(0, 1)) {
-							Coverage coverage = (Coverage) coverageItem;
-							String patientId = coverage.getBeneficiary().getReference();
-							System.out.println("SubjID: "+patientId);
-							Patient patient = this.getDao().read(new IdType(patientId));
-							System.out.println("Subj: "+patient);
-				            BundleEntryComponent patientEntry = new BundleEntryComponent().setResource(patient);
-				            BundleEntryComponent coverageEntry = new BundleEntryComponent().setResource(coverage);
-				            responseBundle.addEntry(patientEntry);
-				            responseBundle.addEntry(coverageEntry);
-				            responseBundle.setType(Bundle.BundleType.TRANSACTION);
-				            return responseBundle;
-				            
+					boolean found = false;
+					for(int j=0; j<oldPlan.getIdentifier().size();j++) {
+						SearchParameterMap map = new SearchParameterMap();
+						map.add("identifier", new TokenParam(oldPlan.getIdentifier().get(j).getValue()));
+						IBundleProvider coveragesFound = this.coverageDao.search(map);
+						if(coveragesFound.size() > 0) {
+							found = true;
+							for(IBaseResource coverageItem:coveragesFound.getResources(0, 1)) {
+								Coverage coverage = (Coverage) coverageItem;
+								String patientId = coverage.getBeneficiary().getReference();
+								System.out.println("SubjID: "+patientId);
+								Patient patient = this.getDao().read(new IdType(patientId));
+								System.out.println("Subj: "+patient);
+					            BundleEntryComponent patientEntry = new BundleEntryComponent().setResource(patient);
+					            BundleEntryComponent coverageEntry = new BundleEntryComponent().setResource(coverage);
+					            responseBundle.addEntry(patientEntry);
+					            responseBundle.addEntry(coverageEntry);
+					            responseBundle.setType(Bundle.BundleType.TRANSACTION);
+					            return responseBundle;
+					            
+							}
 						}
 					}
-					else {
+					if(!found) {
 						throw new CustomException(404,"Coverage with given identifier was not found");
+
 					}
+					
 					
 				}
 				else {
