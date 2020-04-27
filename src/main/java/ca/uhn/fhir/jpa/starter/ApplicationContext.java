@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 public class ApplicationContext extends AnnotationConfigWebApplicationContext {
@@ -20,7 +21,7 @@ public class ApplicationContext extends AnnotationConfigWebApplicationContext {
         }
 
         if (HapiProperties.getSubscriptionWebsocketEnabled()) {
-            register(ca.uhn.fhir.jpa.config.WebsocketDispatcherConfig.class);
+            register(WebsocketDispatcherConfig.class);
         }
 
     }

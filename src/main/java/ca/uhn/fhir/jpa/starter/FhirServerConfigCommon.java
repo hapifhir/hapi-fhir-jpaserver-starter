@@ -1,17 +1,18 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.binstore.DatabaseBlobBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.binstore.IBinaryStorageSvc;
-import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
-import ca.uhn.fhir.jpa.subscription.module.channel.SubscriptionDeliveryHandlerFactory;
-import ca.uhn.fhir.jpa.subscription.module.subscriber.email.IEmailSender;
-import ca.uhn.fhir.jpa.subscription.module.subscriber.email.JavaMailEmailSender;
+import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory;
+import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
+import ca.uhn.fhir.jpa.subscription.match.deliver.email.JavaMailEmailSender;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hl7.fhir.dstu2.model.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.thymeleaf.util.Validate;
@@ -23,7 +24,8 @@ import java.sql.Driver;
  * This is the primary configuration file for the example server
  */
 @Configuration
-@EnableTransactionManagement()
+@EnableTransactionManagement
+@Import(EmpiConfig.class)
 public class FhirServerConfigCommon {
 
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
@@ -191,7 +193,7 @@ public class FhirServerConfigCommon {
       retVal.setSmtpServerPort(this.emailPort);
       retVal.setSmtpServerUsername(this.emailUsername);
       retVal.setSmtpServerPassword(this.emailPassword);
-      // TODO KHS add these when HAPI 4.2.0 is released
+      // FIXME KHS add these once this has merged in hapi
 //      retVal.setAuth(this.emailAuth);
 //      retVal.setStartTlsEnable(this.emailStartTlsEnable);
 //      retVal.setStartTlsRequired(this.emailStartTlsRequired);

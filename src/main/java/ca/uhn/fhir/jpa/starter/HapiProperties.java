@@ -57,6 +57,7 @@ public class HapiProperties {
   static final String SUBSCRIPTION_EMAIL_ENABLED = "subscription.email.enabled";
   static final String SUBSCRIPTION_RESTHOOK_ENABLED = "subscription.resthook.enabled";
   static final String SUBSCRIPTION_WEBSOCKET_ENABLED = "subscription.websocket.enabled";
+  static final String EMPI_ENABLED = "empi.enabled";
   static final String ALLOWED_BUNDLE_TYPES = "allowed_bundle_types";
   static final String TEST_PORT = "test.port";
   static final String TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS = "tester.config.refuse_to_fetch_third_party_urls";
@@ -371,6 +372,10 @@ public class HapiProperties {
 
   public static Boolean getSubscriptionWebsocketEnabled() {
     return HapiProperties.getBooleanProperty(SUBSCRIPTION_WEBSOCKET_ENABLED, false);
+  }
+
+  public static Boolean getEmpiEnabled() {
+    return HapiProperties.getBooleanProperty(EMPI_ENABLED, false);
   }
 
   public static Boolean getAllowContainsSearches() {
