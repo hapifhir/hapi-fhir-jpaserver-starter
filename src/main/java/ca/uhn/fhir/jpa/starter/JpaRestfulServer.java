@@ -288,6 +288,8 @@ public class JpaRestfulServer extends RestfulServer {
 
     // Validation
     IValidatorModule validatorModule;
+    // FIXME KHS
+    /*
     switch (fhirVersion) {
             case DSTU2:
                 validatorModule = appCtx.getBean("myInstanceValidatorDstu2", IValidatorModule.class);
@@ -308,6 +310,8 @@ public class JpaRestfulServer extends RestfulServer {
         validatorModule = null;
         break;
     }
+    */
+    validatorModule = appCtx.getBean(IValidatorModule.class);
     if (validatorModule != null) {
       if (HapiProperties.getValidateRequestsEnabled()) {
         RequestValidatingInterceptor interceptor = new RequestValidatingInterceptor();
