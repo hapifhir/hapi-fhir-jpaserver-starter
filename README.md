@@ -158,6 +158,10 @@ The server may be configured with subscription support by enabling properties in
 
 - `subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/hapi-fhir-jpaserver/websocket](ws://localhost:8080/hapi-fhir-jpaserver/websocket)
 
+## Enabling EMPI
+
+Set `empi.enabled=true` in the [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties) file to enable EMPI on this server.  The EMPI matching rules are configured in [empi-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/empi-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data.
+
 ## Using Elasticsearch
 
 By default, the server will use embedded lucene indexes for terminology and fulltext indexing purposes. You can switch this to using lucene by editing the properties in [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties)
