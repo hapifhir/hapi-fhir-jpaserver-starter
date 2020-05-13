@@ -1,5 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
+import java.util.Random;
+
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.Bundle;
@@ -60,6 +62,20 @@ public class PatientProvider extends PatientResourceProvider{
 		return bundle;
 		
 	}
+	
+	
+	public String getSaltString() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 16) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
+
+    }
 	
 	@Operation(name = "$payer-match")
 	public  Bundle payerMatch(RequestDetails theRequestDetails,
@@ -149,9 +165,18 @@ public class PatientProvider extends PatientResourceProvider{
 						Identifier identifier = new Identifier();
 						CodeableConcept coding = new CodeableConcept();
 						coding.addCoding().setSystem("http://hl7.davinci.org").setCode("UMB");
+						String identifierValue = "";
 						if(patient.getIdentifier().size() > 0) {
-							identifier.setValue(patient.getIdentifierFirstRep().getValue());
+							for(Identifier identifierEntry : patient.getIdentifier()) {
+								if(identifierEntry.getSystem().equals("urn:oid:3.111.757.111.21")) {
+									identifierValue = identifierEntry.getValue();
+								}
+							}
+							
 						}
+						
+						
+						identifier.setValue(identifierValue);
 						identifier.setType(coding);
 						if(coverage.getIdentifier().size() > 0) {
 //							coverage.getIdentifier().get(0).getSystem();
@@ -163,7 +188,7 @@ public class PatientProvider extends PatientResourceProvider{
 						}
 						patient.addIdentifier(identifier);
 						response.addParameter().setName("MemberPatient").setResource(patient);
-						response.addParameter().setName("OldCoverage").setResource(coverage);
+						response.addParameter().setName("NewCoverage").setResource(newCoverage);
 						return response;
 					}
 				
