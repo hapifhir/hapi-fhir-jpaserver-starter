@@ -1,10 +1,13 @@
 package ca.uhn.fhir.jpa.starter;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
+import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coverage;
 import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.jpa.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
@@ -23,6 +26,7 @@ import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 
 import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Parameters;
 
 
@@ -112,6 +116,76 @@ public class PatientProvider extends PatientResourceProvider{
 		return responseBundle;
 		
 	}
+	
+	@Operation(name = "$member-match")
+	public  Parameters memberMatch(RequestDetails theRequestDetails,
+			@OperationParam(name = "MemberPatient", min = 1, max = 1, type = Patient.class) Patient patientResource,
+			@OperationParam(name = "OldCoverage", min = 1, max = 1, type = Coverage.class) Coverage oldCoverage,
+			@OperationParam(name = "NewCoverage", min = 1, max = 1, type = Coverage.class) Coverage newCoverage,
+			@OperationParam(name = "exact", min = 1, max = 1,type = BooleanType.class) BooleanType exact
+			
+			
+			) {
+		Parameters response = new Parameters();
+		response.addParameter().setName("exact").setValue(exact);
+//		System.out.println("MP: "+patientResource);
+//		System.out.println("c1: "+oldCoverage);
+//		System.out.println("c2: "+newCoverage);
+//		System.out.println(exact);
+		if(oldCoverage.getIdentifier().size() > 0) {
+			boolean found = false;
+			for(int j=0; j<oldCoverage.getIdentifier().size();j++) {
+				SearchParameterMap map = new SearchParameterMap();
+				map.add("identifier", new TokenParam(oldCoverage.getIdentifier().get(j).getValue()));
+				IBundleProvider coveragesFound = this.coverageDao.search(map);
+				if(coveragesFound.size() > 0) {
+					found = true;
+					for(IBaseResource coverageItem:coveragesFound.getResources(0, 1)) {
+						Coverage coverage = (Coverage) coverageItem;
+						String patientId = coverage.getBeneficiary().getReference();
+//						System.out.println("SubjID: "+patientId);
+						Patient patient = this.getDao().read(new IdType(patientId));
+						
+						Identifier identifier = new Identifier();
+						CodeableConcept coding = new CodeableConcept();
+						coding.addCoding().setSystem("http://hl7.davinci.org").setCode("UMB");
+						if(patient.getIdentifier().size() > 0) {
+							identifier.setValue(patient.getIdentifierFirstRep().getValue());
+						}
+						identifier.setType(coding);
+						if(coverage.getIdentifier().size() > 0) {
+//							coverage.getIdentifier().get(0).getSystem();
+							identifier.setSystem(coverage.getIdentifier().get(0).getSystem());
+							if(coverage.getPayor().size()>0) {
+								identifier.setAssigner(new Reference().setReference(coverage.getPayor().get(0).getReference()));
+							}
+							
+						}
+						patient.addIdentifier(identifier);
+						response.addParameter().setName("MemberPatient").setResource(patient);
+						response.addParameter().setName("OldCoverage").setResource(coverage);
+						return response;
+					}
+				
+				}
+			}
+			if(!found) {
+				throw new CustomException(404,"Coverage with given identifier was not found");
+
+			}
+		}
+		else {
+			throw new CustomException(404,"Identifier is mandatory in OldCoverage");
+		}
+		
+		
+		
+		
+		return response;
+	
+	
+	}
+	
 	
 	
 
