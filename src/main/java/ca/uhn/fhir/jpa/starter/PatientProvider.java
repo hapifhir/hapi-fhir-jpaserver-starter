@@ -168,14 +168,19 @@ public class PatientProvider extends PatientResourceProvider{
 						String identifierValue = "";
 						if(patient.getIdentifier().size() > 0) {
 							for(Identifier identifierEntry : patient.getIdentifier()) {
-								if(identifierEntry.getSystem().equals("urn:oid:3.111.757.111.21")) {
-									identifierValue = identifierEntry.getValue();
+//								if(identifierEntry.getSystem().equals("urn:oid:3.111.757.111.21")) {
+//									identifierValue = identifierEntry.getValue();
+//								}
+								if(identifierEntry.getType().hasCoding()) {
+									if(identifierEntry.getType().getCodingFirstRep().getCode().equals("UMB")) {
+										patientResource.addIdentifier(identifierEntry);
+									}
 								}
 							}
 							
 						}
 						
-						
+						/*
 						identifier.setValue(identifierValue);
 						identifier.setType(coding);
 						if(coverage.getIdentifier().size() > 0) {
@@ -187,7 +192,8 @@ public class PatientProvider extends PatientResourceProvider{
 							
 						}
 						patient.addIdentifier(identifier);
-						response.addParameter().setName("MemberPatient").setResource(patient);
+						*/
+						response.addParameter().setName("MemberPatient").setResource(patientResource);
 						response.addParameter().setName("NewCoverage").setResource(newCoverage);
 						return response;
 					}
