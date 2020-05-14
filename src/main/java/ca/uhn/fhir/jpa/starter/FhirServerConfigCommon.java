@@ -1,14 +1,16 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.binstore.DatabaseBlobBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.binstore.IBinaryStorageSvc;
-import ca.uhn.fhir.jpa.dao.DaoConfig;
+import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
-import ca.uhn.fhir.jpa.subscription.module.channel.SubscriptionDeliveryHandlerFactory;
-import ca.uhn.fhir.jpa.subscription.module.subscriber.email.IEmailSender;
-import ca.uhn.fhir.jpa.subscription.module.subscriber.email.JavaMailEmailSender;
+import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory;
+import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
+import ca.uhn.fhir.jpa.subscription.match.deliver.email.JavaMailEmailSender;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hl7.fhir.dstu2.model.Subscription;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,9 +52,8 @@ public class FhirServerConfigCommon {
   private Boolean emailStartTlsEnable = HapiProperties.getEmailStartTlsEnable();
   private Boolean emailStartTlsRequired = HapiProperties.getEmailStartTlsRequired();
   private Boolean emailQuitWait = HapiProperties.getEmailQuitWait();
-
   @Autowired
-  private SubscriptionDeliveryHandlerFactory mySubscriptionDeliveryHandlerFactory;
+  private ApplicationContext myAppCtx;
 
   public FhirServerConfigCommon() {
     ourLog.info("Server configured to " + (this.allowContainsSearches ? "allow" : "deny") + " contains searches");
@@ -116,21 +117,27 @@ public class FhirServerConfigCommon {
     // Subscriptions are enabled by channel type
     if (HapiProperties.getSubscriptionRestHookEnabled()) {
       ourLog.info("Enabling REST-hook subscriptions");
-      retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.RESTHOOK);
+      retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
     }
     if (HapiProperties.getSubscriptionEmailEnabled()) {
       ourLog.info("Enabling email subscriptions");
-      retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
+      retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
     }
     if (HapiProperties.getSubscriptionWebsocketEnabled()) {
       ourLog.info("Enabling websocket subscriptions");
-      retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.WEBSOCKET);
+      retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
     }
 
     retVal.setFilterParameterEnabled(HapiProperties.getFilterSearchEnabled());
 
     return retVal;
   }
+
+  @Bean
+  public PartitionSettings partitionSettings() {
+    return new PartitionSettings();
+  }
+
 
   @Bean
   public ModelConfig modelConfig() {
@@ -197,8 +204,9 @@ public class FhirServerConfigCommon {
 //      retVal.setStartTlsRequired(this.emailStartTlsRequired);
 //      retVal.setQuitWait(this.emailQuitWait);
 
-      Validate.notNull(mySubscriptionDeliveryHandlerFactory, "No subscription delivery handler");
-      mySubscriptionDeliveryHandlerFactory.setEmailSender(retVal);
+      SubscriptionDeliveryHandlerFactory subscriptionDeliveryHandlerFactory = myAppCtx.getBean(SubscriptionDeliveryHandlerFactory.class);
+      Validate.notNull(subscriptionDeliveryHandlerFactory, "No subscription delivery handler");
+      subscriptionDeliveryHandlerFactory.setEmailSender(retVal);
 
 
       return retVal;
