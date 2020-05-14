@@ -150,7 +150,7 @@ public class PatientProvider extends PatientResourceProvider{
 //		System.out.println(exact);
 		if(oldCoverage.getIdentifier().size() > 0) {
 			boolean found = false;
-			boolean umbFound = false;
+			boolean umbNotFound = true;
 			for(int j=0; j<oldCoverage.getIdentifier().size();j++) {
 				SearchParameterMap map = new SearchParameterMap();
 				map.add("identifier", new TokenParam(oldCoverage.getIdentifier().get(j).getValue()));
@@ -175,13 +175,14 @@ public class PatientProvider extends PatientResourceProvider{
 //								}
 								if(identifierEntry.getType().hasCoding()) {
 									if(identifierEntry.getType().getCodingFirstRep().getCode().equals("UMB")) {
-										umbFound = true;
+										umbNotFound = false;
 										patientResource.addIdentifier(identifierEntry);
 									}
 								}
 							}
 							
 						}
+						
 						
 						/*
 						identifier.setValue(identifierValue);
@@ -208,7 +209,7 @@ public class PatientProvider extends PatientResourceProvider{
 				throw new CustomException(404,"Coverage with given identifier was not found");
 
 			}
-			if(!umbFound) {
+			if(!umbNotFound) {
 				throw new CustomException(404,"No Patient found with an UMB Identifier for given Coverage");
 			}
 		}
