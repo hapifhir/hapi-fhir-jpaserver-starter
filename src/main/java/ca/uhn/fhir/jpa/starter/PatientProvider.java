@@ -167,12 +167,13 @@ public class PatientProvider extends PatientResourceProvider{
 						CodeableConcept coding = new CodeableConcept();
 						coding.addCoding().setSystem("http://hl7.davinci.org").setCode("UMB");
 						String identifierValue = "";
-						
+						System.out.println("0ID:"+patient.getId()+" -- " +coverage.getId());
 						if(patient.getIdentifier().size() > 0) {
 							for(Identifier identifierEntry : patient.getIdentifier()) {
 //								if(identifierEntry.getSystem().equals("urn:oid:3.111.757.111.21")) {
 //									identifierValue = identifierEntry.getValue();
 //								}
+								System.out.println("--ID:"+patient.getId()+" -- " +identifierEntry.getType().getCodingFirstRep().getCode()+" "+coverage.getId());
 								if(identifierEntry.getType().hasCoding()) {
 									if(identifierEntry.getType().getCodingFirstRep().getCode().equals("UMB")) {
 										umbNotFound = false;
