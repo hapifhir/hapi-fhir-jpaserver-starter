@@ -200,7 +200,7 @@ public class PatientProvider extends PatientResourceProvider{
 						*/
 						response.addParameter().setName("MemberPatient").setResource(patientResource);
 						response.addParameter().setName("NewCoverage").setResource(newCoverage);
-						return response;
+						
 					}
 				
 				}
@@ -213,6 +213,7 @@ public class PatientProvider extends PatientResourceProvider{
 			if(umbNotFound) {
 				throw new CustomException(404,"No Patient found with an UMB Identifier for given Coverage");
 			}
+			return response;
 		}
 		else {
 			throw new CustomException(404,"Identifier is mandatory in OldCoverage");
