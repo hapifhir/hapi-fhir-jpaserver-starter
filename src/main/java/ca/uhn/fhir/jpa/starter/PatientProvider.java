@@ -150,6 +150,7 @@ public class PatientProvider extends PatientResourceProvider{
 //		System.out.println(exact);
 		if(oldCoverage.getIdentifier().size() > 0) {
 			boolean found = false;
+			boolean umbFound = false;
 			for(int j=0; j<oldCoverage.getIdentifier().size();j++) {
 				SearchParameterMap map = new SearchParameterMap();
 				map.add("identifier", new TokenParam(oldCoverage.getIdentifier().get(j).getValue()));
@@ -166,6 +167,7 @@ public class PatientProvider extends PatientResourceProvider{
 						CodeableConcept coding = new CodeableConcept();
 						coding.addCoding().setSystem("http://hl7.davinci.org").setCode("UMB");
 						String identifierValue = "";
+						
 						if(patient.getIdentifier().size() > 0) {
 							for(Identifier identifierEntry : patient.getIdentifier()) {
 //								if(identifierEntry.getSystem().equals("urn:oid:3.111.757.111.21")) {
@@ -173,6 +175,7 @@ public class PatientProvider extends PatientResourceProvider{
 //								}
 								if(identifierEntry.getType().hasCoding()) {
 									if(identifierEntry.getType().getCodingFirstRep().getCode().equals("UMB")) {
+										umbFound = true;
 										patientResource.addIdentifier(identifierEntry);
 									}
 								}
@@ -200,9 +203,13 @@ public class PatientProvider extends PatientResourceProvider{
 				
 				}
 			}
+			
 			if(!found) {
 				throw new CustomException(404,"Coverage with given identifier was not found");
 
+			}
+			if(!umbFound) {
+				throw new CustomException(404,"No Patient found with an UMB Identifier for given Coverage");
 			}
 		}
 		else {
