@@ -151,9 +151,24 @@ public class PatientProvider extends PatientResourceProvider{
 		if(oldCoverage.getIdentifier().size() > 0) {
 			boolean found = false;
 			boolean umbNotFound = true;
+			boolean covMbFound = false;
 			for(int j=0; j<oldCoverage.getIdentifier().size();j++) {
+				boolean mbFound = false;
 				SearchParameterMap map = new SearchParameterMap();
-				map.add("identifier", new TokenParam(oldCoverage.getIdentifier().get(j).getValue()));
+				Identifier covIdentifier = oldCoverage.getIdentifier().get(j);
+				if(covIdentifier.hasType()) {
+					if(covIdentifier.getType().hasCoding()) {
+						if(covIdentifier.getType().getCodingFirstRep().getCode().equals("MB")) {
+							mbFound = true;
+							covMbFound = true;
+						}
+					}
+				}
+				if(!mbFound) {
+					continue;
+				}
+				
+				map.add("identifier", new TokenParam(covIdentifier.getValue()));
 				IBundleProvider coveragesFound = this.coverageDao.search(map);
 				if(coveragesFound.size() > 0) {
 					found = true;
@@ -173,11 +188,13 @@ public class PatientProvider extends PatientResourceProvider{
 //								if(identifierEntry.getSystem().equals("urn:oid:3.111.757.111.21")) {
 //									identifierValue = identifierEntry.getValue();
 //								}
-								System.out.println("--ID:"+patient.getId()+" -- " +identifierEntry.getType().getCodingFirstRep().getCode()+" "+coverage.getId());
-								if(identifierEntry.getType().hasCoding()) {
-									if(identifierEntry.getType().getCodingFirstRep().getCode().equals("UMB")) {
-										umbNotFound = false;
-										patientResource.addIdentifier(identifierEntry);
+								if(identifierEntry.hasType()) {
+									if(identifierEntry.getType().hasCoding()) {
+										System.out.println("--ID:"+patient.getId()+" -- " +identifierEntry.getType().getCodingFirstRep().getCode()+" "+coverage.getId());
+										if(identifierEntry.getType().getCodingFirstRep().getCode().equals("UMB")) {
+											umbNotFound = false;
+											patientResource.addIdentifier(identifierEntry);
+										}
 									}
 								}
 							}
@@ -205,6 +222,9 @@ public class PatientProvider extends PatientResourceProvider{
 					}
 				
 				}
+			}
+			if(!covMbFound) {
+				throw new CustomException(404,"Please provide Coverage with a MB type Identifier ");
 			}
 			
 			if(!found) {
