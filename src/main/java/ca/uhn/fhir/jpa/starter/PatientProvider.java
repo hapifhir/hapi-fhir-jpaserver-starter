@@ -209,7 +209,7 @@ public class PatientProvider extends PatientResourceProvider{
 				throw new CustomException(404,"Coverage with given identifier was not found");
 
 			}
-			if(!umbNotFound) {
+			if(umbNotFound) {
 				throw new CustomException(404,"No Patient found with an UMB Identifier for given Coverage");
 			}
 		}
