@@ -138,6 +138,7 @@ public class HapiProperties {
     if (overrideProps != null) {
       properties.putAll(overrideProps);
     }
+    properties.putAll(System.getenv());
     return properties;
   }
 
