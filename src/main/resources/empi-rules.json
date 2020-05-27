@@ -1,30 +1,33 @@
 {
-	"resourceSearchParams" : [ {
+	"candidateSearchParams" : [ {
 		"resourceType" : "Patient",
 		"searchParam" : "birthdate"
 	}, {
-		"resourceType" : "All",
+		"resourceType" : "*",
 		"searchParam" : "identifier"
+	},{
+		"resourceType" : "Patient",
+		"searchParam" : "general-practitioner"
 	} ],
-	"filterSearchParams" : [ {
-		"resourceType" : "All",
+	"candidateFilterSearchParams" : [ {
+		"resourceType" : "*",
 		"searchParam" : "active",
 		"fixedValue" : "true"
 	} ],
 	"matchFields" : [ {
 		"name" : "given-name",
-		"resourceType" : "All",
+		"resourceType" : "*",
 		"resourcePath" : "name.given",
 		"metric" : "COSINE",
 		"matchThreshold" : 0.8
 	}, {
 		"name" : "last-name",
-		"resourceType" : "All",
+		"resourceType" : "*",
 		"resourcePath" : "name.family",
 		"metric" : "JARO_WINKLER",
 		"matchThreshold" : 0.8
 	}],
-	"weightMap" : {
+	"matchResultMap" : {
 		"given-name" : "POSSIBLE_MATCH",
 		"given-name,last-name" : "MATCH"
 	},

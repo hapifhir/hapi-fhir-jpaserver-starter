@@ -201,11 +201,10 @@ public class FhirServerConfigCommon {
       retVal.setSmtpServerPort(this.emailPort);
       retVal.setSmtpServerUsername(this.emailUsername);
       retVal.setSmtpServerPassword(this.emailPassword);
-      // FIXME KHS add these once this has merged in hapi
-//      retVal.setAuth(this.emailAuth);
-//      retVal.setStartTlsEnable(this.emailStartTlsEnable);
-//      retVal.setStartTlsRequired(this.emailStartTlsRequired);
-//      retVal.setQuitWait(this.emailQuitWait);
+      retVal.setAuth(this.emailAuth);
+      retVal.setStartTlsEnable(this.emailStartTlsEnable);
+      retVal.setStartTlsRequired(this.emailStartTlsRequired);
+      retVal.setQuitWait(this.emailQuitWait);
 
       Validate.notNull(mySubscriptionDeliveryHandlerFactory, "No subscription delivery handler");
       mySubscriptionDeliveryHandlerFactory.setEmailSender(retVal);

@@ -1,7 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.empi.api.IEmpiSettings;
-import ca.uhn.fhir.empi.rules.config.EmpiSettingsImpl;
+import ca.uhn.fhir.empi.rules.config.EmpiSettings;
 import ca.uhn.fhir.jpa.empi.config.EmpiConsumerConfig;
 import ca.uhn.fhir.jpa.empi.config.EmpiSubmitterConfig;
 import com.google.common.base.Charsets;
@@ -22,6 +22,6 @@ public class EmpiConfig {
     DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
     Resource resource = resourceLoader.getResource("empi-rules.json");
     String json = IOUtils.toString(resource.getInputStream(), Charsets.UTF_8);
-    return new EmpiSettingsImpl().setEnabled(HapiProperties.getEmpiEnabled()).setScriptText(json);
+    return new EmpiSettings().setEnabled(HapiProperties.getEmpiEnabled()).setScriptText(json);
   }
 }
