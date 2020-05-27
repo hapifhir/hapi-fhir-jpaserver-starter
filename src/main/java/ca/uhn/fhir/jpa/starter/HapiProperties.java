@@ -506,5 +506,9 @@ public class HapiProperties {
   public static boolean getBulkExportEnabled() {
     return HapiProperties.getBooleanProperty(BULK_EXPORT_ENABLED, true);
   }
+
+  public static boolean isFhirPathFilterInterceptorEnabled() {
+    return HapiProperties.getBooleanProperty("fhirpath_interceptor.enabled", false);
+  }
 }
 

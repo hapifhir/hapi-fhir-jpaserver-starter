@@ -67,7 +67,6 @@ public class ExampleServerR4IT {
         Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
         assertEquals(methodName, pt2.getName().get(0).getFamily());
 
-
         // Test EMPI
 
         // Wait until the EMPI message has been processed

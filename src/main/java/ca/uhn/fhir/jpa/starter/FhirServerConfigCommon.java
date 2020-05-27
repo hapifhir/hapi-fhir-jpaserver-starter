@@ -5,18 +5,14 @@ import ca.uhn.fhir.jpa.binstore.DatabaseBlobBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.binstore.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
-import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory;
-import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.JavaMailEmailSender;
-import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hl7.fhir.dstu2.model.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.thymeleaf.util.Validate;
@@ -29,11 +25,6 @@ import java.sql.Driver;
  */
 @Configuration
 @EnableTransactionManagement
-@Import({EmpiConfig.class,
-  SubscriptionSubmitterConfig.class,
-  SubscriptionProcessorConfig.class,
-  SubscriptionChannelConfig.class
-})
 public class FhirServerConfigCommon {
 
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
@@ -60,9 +51,8 @@ public class FhirServerConfigCommon {
   private Boolean emailStartTlsEnable = HapiProperties.getEmailStartTlsEnable();
   private Boolean emailStartTlsRequired = HapiProperties.getEmailStartTlsRequired();
   private Boolean emailQuitWait = HapiProperties.getEmailQuitWait();
-
   @Autowired
-  private SubscriptionDeliveryHandlerFactory mySubscriptionDeliveryHandlerFactory;
+  private ApplicationContext myAppCtx;
 
   public FhirServerConfigCommon() {
     ourLog.info("Server configured to " + (this.allowContainsSearches ? "allow" : "deny") + " contains searches");
@@ -143,6 +133,12 @@ public class FhirServerConfigCommon {
   }
 
   @Bean
+  public PartitionSettings partitionSettings() {
+    return new PartitionSettings();
+  }
+
+
+  @Bean
   public ModelConfig modelConfig() {
     ModelConfig modelConfig = new ModelConfig();
     modelConfig.setAllowContainsSearches(this.allowContainsSearches);
@@ -206,18 +202,14 @@ public class FhirServerConfigCommon {
       retVal.setStartTlsRequired(this.emailStartTlsRequired);
       retVal.setQuitWait(this.emailQuitWait);
 
-      Validate.notNull(mySubscriptionDeliveryHandlerFactory, "No subscription delivery handler");
-      mySubscriptionDeliveryHandlerFactory.setEmailSender(retVal);
+      SubscriptionDeliveryHandlerFactory subscriptionDeliveryHandlerFactory = myAppCtx.getBean(SubscriptionDeliveryHandlerFactory.class);
+      Validate.notNull(subscriptionDeliveryHandlerFactory, "No subscription delivery handler");
+      subscriptionDeliveryHandlerFactory.setEmailSender(retVal);
 
 
       return retVal;
     }
 
     return null;
-  }
-
-  @Bean
-  public PartitionSettings partitionSettings() {
-    return new PartitionSettings();
   }
 }
