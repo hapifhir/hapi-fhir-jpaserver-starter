@@ -126,21 +126,21 @@ public class JpaRestfulServer extends RestfulServer {
       if (fhirVersion == FhirVersionEnum.DSTU3) {
         IFhirSystemDao<Bundle, Meta> systemDao = appCtx.getBean("mySystemDaoDstu3", IFhirSystemDao.class);
         JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, systemDao, daoConfig, searchParamRegistry);
-      confProvider.setImplementationDescription("HAPI FHIR DSTU3 Server");
-      setServerConformanceProvider(confProvider);
-    } else if (fhirVersion == FhirVersionEnum.R4) {
+        confProvider.setImplementationDescription("HAPI FHIR DSTU3 Server");
+        setServerConformanceProvider(confProvider);
+      } else if (fhirVersion == FhirVersionEnum.R4) {
         IFhirSystemDao<org.hl7.fhir.r4.model.Bundle, org.hl7.fhir.r4.model.Meta> systemDao = appCtx.getBean("mySystemDaoR4", IFhirSystemDao.class);
         JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, systemDao, daoConfig, searchParamRegistry);
-      confProvider.setImplementationDescription("HAPI FHIR R4 Server");
-      setServerConformanceProvider(confProvider);
-    } else if (fhirVersion == FhirVersionEnum.R5) {
+        confProvider.setImplementationDescription("HAPI FHIR R4 Server");
+        setServerConformanceProvider(confProvider);
+      } else if (fhirVersion == FhirVersionEnum.R5) {
         IFhirSystemDao<org.hl7.fhir.r5.model.Bundle, org.hl7.fhir.r5.model.Meta> systemDao = appCtx.getBean("mySystemDaoR5", IFhirSystemDao.class);
         JpaConformanceProviderR5 confProvider = new JpaConformanceProviderR5(this, systemDao, daoConfig, searchParamRegistry);
-      confProvider.setImplementationDescription("HAPI FHIR R5 Server");
-      setServerConformanceProvider(confProvider);
-    } else {
-      throw new IllegalStateException();
-    }
+        confProvider.setImplementationDescription("HAPI FHIR R5 Server");
+        setServerConformanceProvider(confProvider);
+      } else {
+        throw new IllegalStateException();
+      }
     }
 
     /*
@@ -327,6 +327,6 @@ public class JpaRestfulServer extends RestfulServer {
       partitionSettings.setAllowReferencesAcrossPartitions(mode);
       partitionSettings.setIncludePartitionInSearchHashes(HapiProperties.getIncludePartitionInSearchHashes());
       registerProvider(appCtx.getBean(PartitionManagementProvider.class));
-    }
+  }
   }
 }

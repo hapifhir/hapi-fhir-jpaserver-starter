@@ -116,15 +116,15 @@ public class FhirServerConfigCommon {
     // Subscriptions are enabled by channel type
     if (HapiProperties.getSubscriptionRestHookEnabled()) {
       ourLog.info("Enabling REST-hook subscriptions");
-      retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.RESTHOOK);
+      retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
     }
     if (HapiProperties.getSubscriptionEmailEnabled()) {
       ourLog.info("Enabling email subscriptions");
-      retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
+      retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
     }
     if (HapiProperties.getSubscriptionWebsocketEnabled()) {
       ourLog.info("Enabling websocket subscriptions");
-      retVal.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.WEBSOCKET);
+      retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
     }
 
     retVal.setFilterParameterEnabled(HapiProperties.getFilterSearchEnabled());
