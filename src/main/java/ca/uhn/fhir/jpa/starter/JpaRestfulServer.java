@@ -7,11 +7,10 @@ import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
+import ca.uhn.fhir.jpa.api.rp.ResourceProviderFactory;
 import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
-import ca.uhn.fhir.jpa.model.config.PartitionSettings;
-import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.GraphQLProvider;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
@@ -36,7 +35,6 @@ import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
-import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import org.hl7.fhir.dstu3.model.Bundle;
@@ -320,13 +318,6 @@ public class JpaRestfulServer extends RestfulServer {
       registerProvider(appCtx.getBean(BulkDataExportProvider.class));
     }
 
-    if (HapiProperties.getPartitioningEnabled()) {
-      PartitionSettings partitionSettings = appCtx.getBean(PartitionSettings.class);
-      partitionSettings.setPartitioningEnabled(true);
-      PartitionSettings.CrossPartitionReferenceMode mode = PartitionSettings.CrossPartitionReferenceMode.valueOf(HapiProperties.getPartitioningCrossPartitionReferenceMode());
-      partitionSettings.setAllowReferencesAcrossPartitions(mode);
-      partitionSettings.setIncludePartitionInSearchHashes(HapiProperties.getIncludePartitionInSearchHashes());
-      registerProvider(appCtx.getBean(PartitionManagementProvider.class));
   }
-  }
+
 }
