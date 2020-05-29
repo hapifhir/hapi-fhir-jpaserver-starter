@@ -57,11 +57,6 @@ public class HapiProperties {
   static final String SUBSCRIPTION_EMAIL_ENABLED = "subscription.email.enabled";
   static final String SUBSCRIPTION_RESTHOOK_ENABLED = "subscription.resthook.enabled";
   static final String SUBSCRIPTION_WEBSOCKET_ENABLED = "subscription.websocket.enabled";
-  static final String EMPI_ENABLED = "empi.enabled";
-  static final String PARTITIONING_ENABLED = "partitioning.enabled";
-  static final String PARTITIONING_CROSS_PARTITION_REFERENCE_MODE = "partitioning.cross_partition_reference_mode";
-  private static final String PARTITIONING_INCLUDE_PARTITION_IN_SEARCH_HASHES = "partitioning.partitioning_include_in_search_hashes";
-
   static final String ALLOWED_BUNDLE_TYPES = "allowed_bundle_types";
   static final String TEST_PORT = "test.port";
   static final String TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS = "tester.config.refuse_to_fetch_third_party_urls";
@@ -376,22 +371,6 @@ public class HapiProperties {
 
   public static Boolean getSubscriptionWebsocketEnabled() {
     return HapiProperties.getBooleanProperty(SUBSCRIPTION_WEBSOCKET_ENABLED, false);
-  }
-
-  public static Boolean getEmpiEnabled() {
-    return HapiProperties.getBooleanProperty(EMPI_ENABLED, false);
-  }
-
-  public static Boolean getPartitioningEnabled() {
-    return HapiProperties.getBooleanProperty(PARTITIONING_ENABLED, false);
-  }
-
-  public static String getPartitioningCrossPartitionReferenceMode() {
-    return HapiProperties.getProperty(PARTITIONING_CROSS_PARTITION_REFERENCE_MODE, "NOT_ALLOWED");
-  }
-
-  public static Boolean getIncludePartitionInSearchHashes() {
-    return HapiProperties.getBooleanProperty(PARTITIONING_INCLUDE_PARTITION_IN_SEARCH_HASHES, true);
   }
 
   public static Boolean getAllowContainsSearches() {
