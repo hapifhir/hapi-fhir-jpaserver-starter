@@ -8,6 +8,7 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.test.utilities.JettyUtil;
+import ca.uhn.fhir.util.BundleUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.websocket.api.Session;
@@ -17,6 +18,8 @@ import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Person;
+import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Subscription;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -24,11 +27,16 @@ import org.junit.Test;
 
 import java.net.URI;
 import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
+import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ExampleServerR4IT {
 
@@ -43,6 +51,7 @@ public class ExampleServerR4IT {
         HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr4");
         HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "R4");
         HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
+        HapiProperties.setProperty(HapiProperties.EMPI_ENABLED, "true");
         ourCtx = FhirContext.forR4();
     }
 
@@ -57,9 +66,30 @@ public class ExampleServerR4IT {
 
         Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
         assertEquals(methodName, pt2.getName().get(0).getFamily());
+
+        // Test EMPI
+
+        // Wait until the EMPI message has been processed
+        await().until(() -> getPeople().size() > 0);
+        List<Person> persons = getPeople();
+
+        // Verify a Person was created that links to our Patient
+        Optional<String> personLinkToCreatedPatient = persons.stream()
+          .map(Person::getLink)
+          .flatMap(Collection::stream)
+          .map(Person.PersonLinkComponent::getTarget)
+          .map(Reference::getReference)
+          .filter(pid -> id.toUnqualifiedVersionless().getValue().equals(pid))
+          .findAny();
+        assertTrue(personLinkToCreatedPatient.isPresent());
     }
 
-    @Test
+  private List<Person> getPeople() {
+    Bundle bundle = ourClient.search().forResource(Person.class).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute();
+    return BundleUtil.toListOfResourcesOfType(ourCtx, bundle, Person.class);
+  }
+
+  @Test
     public void testWebsocketSubscription() throws Exception {
         /*
          * Create subscription
@@ -78,7 +108,7 @@ public class ExampleServerR4IT {
         IIdType mySubscriptionId = methodOutcome.getId();
 
         // Wait for the subscription to be activated
-        waitForSize(1, () -> ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size());
+        await().until(() -> activeSubscriptionCount() == 3);
 
         /*
          * Attach websocket
@@ -117,7 +147,11 @@ public class ExampleServerR4IT {
         ourClient.delete().resourceById(mySubscriptionId).execute();
     }
 
-    @AfterClass
+  private int activeSubscriptionCount() {
+    return ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size();
+  }
+
+  @AfterClass
     public static void afterClass() throws Exception {
         ourServer.stop();
     }

@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,7 +11,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>5.0.0</version>
+        <version>5.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -84,7 +84,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        <!-- This dependency includes the JPA EMPI Server -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-jpaserver-empi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- This dependency is used for the "FHIR Tester" web app overlay -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
@@ -249,7 +254,12 @@
             <scope>test</scope>
         </dependency>
 
-
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>4.0.0-rc1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <packaging>war</packaging>
@@ -276,7 +286,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-					 <version>${jetty_version}</version>
+                <version>${jetty_version}</version>
                 <configuration>
                     <webApp>
                         <contextPath>/hapi-fhir-jpaserver</contextPath>
