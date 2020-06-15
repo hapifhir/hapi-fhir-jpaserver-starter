@@ -134,7 +134,14 @@ public class FhirServerConfigCommon {
 
   @Bean
   public PartitionSettings partitionSettings() {
-    return new PartitionSettings();
+    PartitionSettings retVal = new PartitionSettings();
+
+    // Partitioning
+    if (HapiProperties.getPartitioningMultitenancyEnabled()) {
+      retVal.setPartitioningEnabled(true);
+    }
+
+    return retVal;
   }
 
 

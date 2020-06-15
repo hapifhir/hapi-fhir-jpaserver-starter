@@ -37,6 +37,8 @@ import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
+import ca.uhn.fhir.rest.server.interceptor.partition.RequestTenantPartitionInterceptor;
+import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import org.hl7.fhir.dstu3.model.Bundle;
@@ -327,6 +329,12 @@ public class JpaRestfulServer extends RestfulServer {
       partitionSettings.setAllowReferencesAcrossPartitions(mode);
       partitionSettings.setIncludePartitionInSearchHashes(HapiProperties.getIncludePartitionInSearchHashes());
       registerProvider(appCtx.getBean(PartitionManagementProvider.class));
-  }
+
+if (HapiProperties.getPartitioningMultitenancyEnabled()) {
+      registerInterceptor(new RequestTenantPartitionInterceptor());
+      setTenantIdentificationStrategy(new UrlBaseTenantIdentificationStrategy());
+      registerProviders(appCtx.getBean(PartitionManagementProvider.class));
+    }
+
   }
 }
