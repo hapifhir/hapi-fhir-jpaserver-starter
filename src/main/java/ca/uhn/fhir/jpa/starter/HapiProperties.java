@@ -60,8 +60,6 @@ public class HapiProperties {
   static final String EMPI_ENABLED = "empi.enabled";
   static final String PARTITIONING_ENABLED = "partitioning.enabled";
   static final String PARTITIONING_CROSS_PARTITION_REFERENCE_MODE = "partitioning.cross_partition_reference_mode";
-  private static final String PARTITIONING_INCLUDE_PARTITION_IN_SEARCH_HASHES = "partitioning.partitioning_include_in_search_hashes";
-
   static final String ALLOWED_BUNDLE_TYPES = "allowed_bundle_types";
   static final String TEST_PORT = "test.port";
   static final String TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS = "tester.config.refuse_to_fetch_third_party_urls";
@@ -79,7 +77,7 @@ public class HapiProperties {
   static final String EXPIRE_SEARCH_RESULTS_AFTER_MINS = "retain_cached_searches_mins";
   static final String MAX_BINARY_SIZE = "max_binary_size";
   static final String PARTITIONING_MULTITENANCY_ENABLED = "partitioning.multitenancy.enabled";
-
+  private static final String PARTITIONING_INCLUDE_PARTITION_IN_SEARCH_HASHES = "partitioning.partitioning_include_in_search_hashes";
   private static Properties ourProperties;
 
   public static boolean isElasticSearchEnabled() {
@@ -388,6 +386,10 @@ public class HapiProperties {
     return HapiProperties.getBooleanProperty(PARTITIONING_ENABLED, false);
   }
 
+  public static boolean getPartitioningMultitenancyEnabled() {
+    return HapiProperties.getBooleanProperty(PARTITIONING_MULTITENANCY_ENABLED, false);
+  }
+
   public static String getPartitioningCrossPartitionReferenceMode() {
     return HapiProperties.getProperty(PARTITIONING_CROSS_PARTITION_REFERENCE_MODE, "NOT_ALLOWED");
   }
@@ -513,8 +515,5 @@ public class HapiProperties {
     return HapiProperties.getBooleanProperty("fhirpath_interceptor.enabled", false);
   }
 
-  public static boolean getPartitioningMultitenancyEnabled() {
-    return HapiProperties.getBooleanProperty(PARTITIONING_MULTITENANCY_ENABLED, false);
-  }
 }
 

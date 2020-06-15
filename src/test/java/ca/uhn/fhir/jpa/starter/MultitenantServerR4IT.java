@@ -1,16 +1,15 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.model.util.ProviderConstants;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.client.interceptor.UrlTenantSelectionInterceptor;
+import ca.uhn.fhir.rest.server.provider.ProviderConstants;
 import ca.uhn.fhir.test.utilities.JettyUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.IntegerType;
@@ -39,6 +38,7 @@ public class MultitenantServerR4IT {
     HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr4-mt");
     HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "R4");
     HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
+    HapiProperties.setProperty(HapiProperties.PARTITIONING_ENABLED, "true");
     HapiProperties.setProperty(HapiProperties.PARTITIONING_MULTITENANCY_ENABLED, "true");
     ourCtx = FhirContext.forR4();
   }
@@ -70,7 +70,6 @@ public class MultitenantServerR4IT {
   }
 
   @Test
-  @Ignore
   public void testCreateAndReadInTenantB() {
     ourLog.info("Base URL is: " + HapiProperties.getServerAddress());
 
@@ -80,7 +79,7 @@ public class MultitenantServerR4IT {
       .operation()
       .onServer()
       .named(ProviderConstants.PARTITION_MANAGEMENT_CREATE_PARTITION)
-      .withParameter(Parameters.class, ProviderConstants.PARTITION_MANAGEMENT_PARTITION_ID, new IntegerType(1))
+      .withParameter(Parameters.class, ProviderConstants.PARTITION_MANAGEMENT_PARTITION_ID, new IntegerType(2))
       .andParameter(ProviderConstants.PARTITION_MANAGEMENT_PARTITION_NAME, new CodeType("TENANT-B"))
       .execute();
 

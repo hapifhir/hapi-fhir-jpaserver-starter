@@ -13,11 +13,13 @@ import java.io.IOException;
 
 @Configuration
 public class EmpiConfig {
+
   @Bean
   IEmpiSettings empiSettings() throws IOException {
     DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
     Resource resource = resourceLoader.getResource("empi-rules.json");
     String json = IOUtils.toString(resource.getInputStream(), Charsets.UTF_8);
-    return new EmpiSettings().setEnabled(HapiProperties.getEmpiEnabled()).setScriptText(json);
+    return null; // new EmpiSettings().setEnabled(HapiProperties.getEmpiEnabled()).setScriptText(json);
   }
+
 }
