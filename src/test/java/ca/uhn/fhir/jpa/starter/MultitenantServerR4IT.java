@@ -10,7 +10,6 @@ import ca.uhn.fhir.rest.client.interceptor.UrlTenantSelectionInterceptor;
 import ca.uhn.fhir.test.utilities.JettyUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.IntegerType;
@@ -18,7 +17,6 @@ import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.Patient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Paths;
@@ -70,7 +68,6 @@ public class MultitenantServerR4IT {
   }
 
   @Test
-  @Ignore
   public void testCreateAndReadInTenantB() {
     ourLog.info("Base URL is: " + HapiProperties.getServerAddress());
 
@@ -80,7 +77,7 @@ public class MultitenantServerR4IT {
       .operation()
       .onServer()
       .named(ProviderConstants.PARTITION_MANAGEMENT_CREATE_PARTITION)
-      .withParameter(Parameters.class, ProviderConstants.PARTITION_MANAGEMENT_PARTITION_ID, new IntegerType(1))
+      .withParameter(Parameters.class, ProviderConstants.PARTITION_MANAGEMENT_PARTITION_ID, new IntegerType(2))
       .andParameter(ProviderConstants.PARTITION_MANAGEMENT_PARTITION_NAME, new CodeType("TENANT-B"))
       .execute();
 
