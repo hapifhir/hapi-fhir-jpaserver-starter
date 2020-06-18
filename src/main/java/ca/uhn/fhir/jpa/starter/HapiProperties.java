@@ -73,6 +73,8 @@ public class HapiProperties {
   static final String BULK_EXPORT_ENABLED = "bulk.export.enabled";
   static final String EXPIRE_SEARCH_RESULTS_AFTER_MINS = "retain_cached_searches_mins";
   static final String MAX_BINARY_SIZE = "max_binary_size";
+  static final String PARTITIONING_MULTITENANCY_ENABLED = "partitioning.multitenancy.enabled";
+
   private static Properties ourProperties;
 
   public static boolean isElasticSearchEnabled() {
@@ -484,6 +486,14 @@ public class HapiProperties {
 
   public static boolean getBulkExportEnabled() {
     return HapiProperties.getBooleanProperty(BULK_EXPORT_ENABLED, true);
+  }
+
+  public static boolean isFhirPathFilterInterceptorEnabled() {
+    return HapiProperties.getBooleanProperty("fhirpath_interceptor.enabled", false);
+  }
+
+  public static boolean getPartitioningMultitenancyEnabled() {
+    return HapiProperties.getBooleanProperty(PARTITIONING_MULTITENANCY_ENABLED, false);
   }
 }
 

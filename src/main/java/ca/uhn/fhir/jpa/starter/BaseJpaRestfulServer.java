@@ -4,13 +4,14 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.interceptor.api.IInterceptorService;
+import ca.uhn.fhir.jpa.api.config.DaoConfig;
+import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
+import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
+import ca.uhn.fhir.jpa.api.rp.ResourceProviderFactory;
 import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.BulkDataExportProvider;
-import ca.uhn.fhir.jpa.dao.DaoConfig;
-import ca.uhn.fhir.jpa.dao.DaoRegistry;
-import ca.uhn.fhir.jpa.dao.IFhirResourceDao;
-import ca.uhn.fhir.jpa.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
+import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.GraphQLProvider;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
@@ -22,41 +23,42 @@ import ca.uhn.fhir.jpa.provider.r4.JpaConformanceProviderR4;
 import ca.uhn.fhir.jpa.provider.r4.JpaSystemProviderR4;
 import ca.uhn.fhir.jpa.provider.r5.JpaConformanceProviderR5;
 import ca.uhn.fhir.jpa.provider.r5.JpaSystemProviderR5;
-import ca.uhn.fhir.jpa.rp.r4.PatientResourceProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
-import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
-import ca.uhn.fhir.jpa.subscription.module.interceptor.SubscriptionDebugLogInterceptor;
-import ca.uhn.fhir.jpa.util.ResourceProviderFactory;
+import ca.uhn.fhir.jpa.searchparam.registry.ISearchParamRegistry;
+import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.FhirPathFilterInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.partition.RequestTenantPartitionInterceptor;
+import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
-import java.util.HashSet;
-import java.util.TreeSet;
 import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.r4.model.Bundle.BundleType;
-import org.hl7.fhir.r4.model.Claim;
-import org.hl7.fhir.r4.model.Coverage;
-import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.dstu3.model.Meta;
+import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
-import ca.uhn.fhir.jpa.starter.ClientAuthorizationInterceptor;
 
 import javax.servlet.ServletException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
-public class JpaRestfulServer extends BaseJpaRestfulServer {
+public class BaseJpaRestfulServer extends RestfulServer {
 
   private static final long serialVersionUID = 1L;
 
+  @SuppressWarnings("unchecked")
   @Override
   protected void initialize() throws ServletException {
     super.initialize();
@@ -66,12 +68,12 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
      * specified in the properties file.
      */
     ApplicationContext appCtx = (ApplicationContext) getServletContext()
-        .getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
+      .getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
     // Customize supported resource types
     Set<String> supportedResourceTypes = HapiProperties.getSupportedResourceTypes();
 
     if (!supportedResourceTypes.isEmpty() && !supportedResourceTypes.contains("SearchParameter")) {
-        supportedResourceTypes.add("SearchParameter");
+      supportedResourceTypes.add("SearchParameter");
     }
 
     if (!supportedResourceTypes.isEmpty()) {
@@ -114,50 +116,32 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
      * You can also create your own subclass of the conformance provider if you need to
      * provide further customization of your server's CapabilityStatement
      */
-    
+    DaoConfig daoConfig = appCtx.getBean(DaoConfig.class);
+    ISearchParamRegistry searchParamRegistry = appCtx.getBean(ISearchParamRegistry.class);
     if (fhirVersion == FhirVersionEnum.DSTU2) {
-      IFhirSystemDao<ca.uhn.fhir.model.dstu2.resource.Bundle, MetaDt> systemDao = appCtx
-          .getBean("mySystemDaoDstu2", IFhirSystemDao.class);
-      JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, systemDao,
-          appCtx.getBean(DaoConfig.class));
+      IFhirSystemDao<ca.uhn.fhir.model.dstu2.resource.Bundle, MetaDt> systemDao = appCtx.getBean("mySystemDaoDstu2", IFhirSystemDao.class);
+      JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, systemDao, daoConfig);
       confProvider.setImplementationDescription("HAPI FHIR DSTU2 Server");
       setServerConformanceProvider(confProvider);
-    } else if (fhirVersion == FhirVersionEnum.DSTU3) {
-      IFhirSystemDao<Bundle, Meta> systemDao = appCtx
-          .getBean("mySystemDaoDstu3", IFhirSystemDao.class);
-      JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, systemDao,
-          appCtx.getBean(DaoConfig.class));
-      confProvider.setImplementationDescription("HAPI FHIR DSTU3 Server");
-      setServerConformanceProvider(confProvider);
-    } else if (fhirVersion == FhirVersionEnum.R4) {
-      IFhirSystemDao<org.hl7.fhir.r4.model.Bundle, org.hl7.fhir.r4.model.Meta> systemDao = appCtx
-          .getBean("mySystemDaoR4", IFhirSystemDao.class);
-   // Custom resource operations providers
-      IFhirResourceDao<Patient> patientDao = (IFhirResourceDao<Patient>) appCtx.getBean("myPatientDaoR4", IFhirResourceDao.class);
-      IFhirResourceDao<Coverage> coverageDao  = (IFhirResourceDao<Coverage>) appCtx.getBean("myCoverageDaoR4", IFhirResourceDao.class);
-
-      PatientProvider patientRp = new PatientProvider(systemDao,coverageDao);
-      patientRp.setDao(patientDao);
-  	  registerProvider(patientRp);
-
-      IFhirResourceDao<Claim> claimDao = (IFhirResourceDao<Claim>) appCtx.getBean("myClaimDaoR4", IFhirResourceDao.class);
-      ClaimProvider claimRp = new ClaimProvider(appCtx);
-      claimRp.setDao(claimDao);
-  	  registerProvider(claimRp);
-  	
-      JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, systemDao,
-          appCtx.getBean(DaoConfig.class));
-      confProvider.setImplementationDescription("HAPI FHIR R4 Server");
-      setServerConformanceProvider(confProvider);
-    } else if (fhirVersion == FhirVersionEnum.R5) {
-      IFhirSystemDao<org.hl7.fhir.r5.model.Bundle, org.hl7.fhir.r5.model.Meta> systemDao = appCtx
-          .getBean("mySystemDaoR5", IFhirSystemDao.class);
-      JpaConformanceProviderR5 confProvider = new JpaConformanceProviderR5(this, systemDao,
-          appCtx.getBean(DaoConfig.class));
-      confProvider.setImplementationDescription("HAPI FHIR R5 Server");
-      setServerConformanceProvider(confProvider);
     } else {
-      throw new IllegalStateException();
+      if (fhirVersion == FhirVersionEnum.DSTU3) {
+        IFhirSystemDao<Bundle, Meta> systemDao = appCtx.getBean("mySystemDaoDstu3", IFhirSystemDao.class);
+        JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, systemDao, daoConfig, searchParamRegistry);
+        confProvider.setImplementationDescription("HAPI FHIR DSTU3 Server");
+        setServerConformanceProvider(confProvider);
+      } else if (fhirVersion == FhirVersionEnum.R4) {
+        IFhirSystemDao<org.hl7.fhir.r4.model.Bundle, org.hl7.fhir.r4.model.Meta> systemDao = appCtx.getBean("mySystemDaoR4", IFhirSystemDao.class);
+        JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, systemDao, daoConfig, searchParamRegistry);
+        confProvider.setImplementationDescription("HAPI FHIR R4 Server");
+        setServerConformanceProvider(confProvider);
+      } else if (fhirVersion == FhirVersionEnum.R5) {
+        IFhirSystemDao<org.hl7.fhir.r5.model.Bundle, org.hl7.fhir.r5.model.Meta> systemDao = appCtx.getBean("mySystemDaoR5", IFhirSystemDao.class);
+        JpaConformanceProviderR5 confProvider = new JpaConformanceProviderR5(this, systemDao, daoConfig, searchParamRegistry);
+        confProvider.setImplementationDescription("HAPI FHIR R5 Server");
+        setServerConformanceProvider(confProvider);
+      } else {
+        throw new IllegalStateException();
+      }
     }
 
     /*
@@ -195,11 +179,11 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
      * browser.
      */
     ResponseHighlighterInterceptor responseHighlighterInterceptor = new ResponseHighlighterInterceptor();
-    ;
     this.registerInterceptor(responseHighlighterInterceptor);
-    
-    ClientAuthorizationInterceptor authInterceptor =  appCtx.getBean(ClientAuthorizationInterceptor.class);
-    this.registerInterceptor(authInterceptor);
+
+    if (HapiProperties.isFhirPathFilterInterceptorEnabled()) {
+      registerInterceptor(new FhirPathFilterInterceptor());
+    }
 
     /*
      * Add some logging for each request
@@ -233,12 +217,11 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
       registerProvider(appCtx.getBean(TerminologyUploaderProvider.class));
     }
 
-    
     // If you want to enable the $trigger-subscription operation to allow
     // manual triggering of a subscription delivery, enable this provider
     if (false) { // <-- DISABLED RIGHT NOW
       SubscriptionTriggeringProvider retriggeringProvider = appCtx
-          .getBean(SubscriptionTriggeringProvider.class);
+        .getBean(SubscriptionTriggeringProvider.class);
       registerProvider(retriggeringProvider);
     }
 
@@ -264,7 +247,7 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
       config.addExposedHeader("Location");
       config.addExposedHeader("Content-Location");
       config.setAllowedMethods(
-          Arrays.asList("Authorization","GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
       config.setAllowCredentials(HapiProperties.getCorsAllowedCredentials());
 
       // Create the interceptor and register it
@@ -275,14 +258,8 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     // If subscriptions are enabled, we want to register the interceptor that
     // will activate them and match results against them
     if (HapiProperties.getSubscriptionWebsocketEnabled() ||
-        HapiProperties.getSubscriptionEmailEnabled() ||
-        HapiProperties.getSubscriptionRestHookEnabled()) {
-      // Loads subscription interceptors (SubscriptionActivatingInterceptor, SubscriptionMatcherInterceptor)
-      // with activation of scheduled subscription
-      SubscriptionInterceptorLoader subscriptionInterceptorLoader = appCtx
-          .getBean(SubscriptionInterceptorLoader.class);
-      subscriptionInterceptorLoader.registerInterceptors();
-
+      HapiProperties.getSubscriptionEmailEnabled() ||
+      HapiProperties.getSubscriptionRestHookEnabled()) {
       // Subscription debug logging
       IInterceptorService interceptorService = appCtx.getBean(IInterceptorService.class);
       interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
@@ -292,40 +269,19 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     DaoRegistry daoRegistry = appCtx.getBean(DaoRegistry.class);
     IInterceptorBroadcaster interceptorBroadcaster = appCtx.getBean(IInterceptorBroadcaster.class);
     if (HapiProperties.getAllowCascadingDeletes()) {
-      CascadingDeleteInterceptor cascadingDeleteInterceptor = new CascadingDeleteInterceptor(
-          daoRegistry, interceptorBroadcaster);
+      CascadingDeleteInterceptor cascadingDeleteInterceptor = new CascadingDeleteInterceptor(ctx, daoRegistry, interceptorBroadcaster);
       getInterceptorService().registerInterceptor(cascadingDeleteInterceptor);
     }
 
     // Binary Storage
     if (HapiProperties.isBinaryStorageEnabled()) {
       BinaryStorageInterceptor binaryStorageInterceptor = appCtx
-          .getBean(BinaryStorageInterceptor.class);
+        .getBean(BinaryStorageInterceptor.class);
       getInterceptorService().registerInterceptor(binaryStorageInterceptor);
     }
 
     // Validation
-    IValidatorModule validatorModule;
-    switch (fhirVersion) {
-            case DSTU2:
-                validatorModule = appCtx.getBean("myInstanceValidatorDstu2", IValidatorModule.class);
-                break;
-      case DSTU3:
-        validatorModule = appCtx.getBean("myInstanceValidatorDstu3", IValidatorModule.class);
-        break;
-      case R4:
-        validatorModule = appCtx.getBean("myInstanceValidatorR4", IValidatorModule.class);
-        break;
-      case R5:
-        validatorModule = appCtx.getBean("myInstanceValidatorR5", IValidatorModule.class);
-        break;
-            // These versions are not supported by HAPI FHIR JPA
-            case DSTU2_HL7ORG:
-            case DSTU2_1:
-      default:
-        validatorModule = null;
-        break;
-    }
+    IValidatorModule validatorModule = appCtx.getBean(IValidatorModule.class);
     if (validatorModule != null) {
       if (HapiProperties.getValidateRequestsEnabled()) {
         RequestValidatingInterceptor interceptor = new RequestValidatingInterceptor();
@@ -355,17 +311,22 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
         BundleType type = BundleType.valueOf(o);
         allowedBundleTypes.add(type.toCode());
       });
-      DaoConfig config = appCtx.getBean(DaoConfig.class);
+      DaoConfig config = (DaoConfig) daoConfig;
       config.setBundleTypesAllowedForStorage(
-          Collections.unmodifiableSet(new TreeSet<>(allowedBundleTypes)));
+        Collections.unmodifiableSet(new TreeSet<>(allowedBundleTypes)));
     }
-  
-        // Bulk Export
-        if (HapiProperties.getBulkExportEnabled()) {
-            registerProvider(appCtx.getBean(BulkDataExportProvider.class));
-        }
-    
-    // Add your own customization here
+
+    // Bulk Export
+    if (HapiProperties.getBulkExportEnabled()) {
+      registerProvider(appCtx.getBean(BulkDataExportProvider.class));
+    }
+
+    // Partitioning
+    if (HapiProperties.getPartitioningMultitenancyEnabled()) {
+      registerInterceptor(new RequestTenantPartitionInterceptor());
+      setTenantIdentificationStrategy(new UrlBaseTenantIdentificationStrategy());
+      registerProviders(appCtx.getBean(PartitionManagementProvider.class));
+    }
 
   }
 
