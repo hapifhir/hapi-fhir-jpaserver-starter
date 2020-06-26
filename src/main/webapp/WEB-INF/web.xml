@@ -35,6 +35,7 @@
 			</param-value>
 		</init-param>
 		<load-on-startup>2</load-on-startup>
+		<enabled>${enable_web}</enabled>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>spring</servlet-name>
