@@ -311,7 +311,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
         BundleType type = BundleType.valueOf(o);
         allowedBundleTypes.add(type.toCode());
       });
-      DaoConfig config = (DaoConfig) daoConfig;
+      DaoConfig config = daoConfig;
       config.setBundleTypesAllowedForStorage(
         Collections.unmodifiableSet(new TreeSet<>(allowedBundleTypes)));
     }
@@ -328,6 +328,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
       registerProviders(appCtx.getBean(PartitionManagementProvider.class));
     }
 
+    if (HapiProperties.getClientIdStrategy() == DaoConfig.ClientIdStrategyEnum.ANY) {
+      daoConfig.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
+      daoConfig.setResourceClientIdStrategy(HapiProperties.getClientIdStrategy());
+    }
   }
 
 }
