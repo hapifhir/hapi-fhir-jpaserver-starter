@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
@@ -142,6 +143,10 @@ public class HapiProperties {
     if (overrideProps != null) {
       properties.putAll(overrideProps);
     }
+    properties.putAll(System.getenv().entrySet()
+                                     .stream()
+                                     .filter(e -> e.getValue() != null && properties.containsKey(e.getKey()))
+                                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     return properties;
   }
 
