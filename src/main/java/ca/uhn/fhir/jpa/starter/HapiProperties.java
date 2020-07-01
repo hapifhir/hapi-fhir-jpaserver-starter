@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
@@ -74,6 +75,7 @@ public class HapiProperties {
   static final String EXPIRE_SEARCH_RESULTS_AFTER_MINS = "retain_cached_searches_mins";
   static final String MAX_BINARY_SIZE = "max_binary_size";
   static final String PARTITIONING_MULTITENANCY_ENABLED = "partitioning.multitenancy.enabled";
+  static final String CLIENT_ID_STRATEGY = "daoconfig.client_id_strategy";
 
   private static Properties ourProperties;
 
@@ -238,6 +240,16 @@ public class HapiProperties {
     }
 
     return ETagSupportEnum.ENABLED;
+  }
+
+  public static DaoConfig.ClientIdStrategyEnum getClientIdStrategy() {
+    String idStrategy = HapiProperties.getProperty(CLIENT_ID_STRATEGY);
+
+    if (idStrategy != null && idStrategy.length() > 0) {
+      return DaoConfig.ClientIdStrategyEnum.valueOf(idStrategy);
+    }
+
+    return DaoConfig.ClientIdStrategyEnum.ALPHANUMERIC;
   }
 
   public static EncodingEnum getDefaultEncoding() {
