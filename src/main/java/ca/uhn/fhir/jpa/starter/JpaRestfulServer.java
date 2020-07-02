@@ -8,7 +8,7 @@ import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
-import ca.uhn.fhir.jpa.bulk.BulkDataExportProvider;
+import ca.uhn.fhir.jpa.bulk.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
@@ -312,7 +312,7 @@ public class JpaRestfulServer extends RestfulServer {
         BundleType type = BundleType.valueOf(o);
         allowedBundleTypes.add(type.toCode());
       });
-      DaoConfig config = (DaoConfig) daoConfig;
+      DaoConfig config = daoConfig;
       config.setBundleTypesAllowedForStorage(
         Collections.unmodifiableSet(new TreeSet<>(allowedBundleTypes)));
     }

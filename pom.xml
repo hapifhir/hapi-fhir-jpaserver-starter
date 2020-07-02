@@ -20,6 +20,10 @@
         <maven>3.5.0</maven>
     </prerequisites>
 
+    <packaging>war</packaging>
+
+    <name>HAPI FHIR JPA Server - Starter Project</name>
+
     <repositories>
         <repository>
             <id>oss-snapshots</id>
@@ -270,21 +274,16 @@
             <version>4.0.0-rc1</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- TODO: remove this and migrate to JU5 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
-
-    <packaging>war</packaging>
-
-    <name>HAPI FHIR JPA Server - Starter Project</name>
-
-    <repositories>
-        <repository>
-            <id>oss-snapshots</id>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
 
     <build>
 
@@ -441,6 +440,7 @@
                     <ignoredResourcePatterns>
                         <ignoredResourcePattern>.*\.txt$</ignoredResourcePattern>
                         <ignoredResourcePattern>.*\.html$</ignoredResourcePattern>
+                        <ignoredResourcePattern>config/favicon.ico</ignoredResourcePattern>
                     </ignoredResourcePatterns>
                 </configuration>
             </plugin>
