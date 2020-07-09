@@ -21,11 +21,11 @@ import java.io.IOException;
 public class EmpiConfig {
 
   @Bean
-  public IEmpiSettings empiSettings(EmpiRuleValidator theEmpiRuleValidator) throws IOException {
+  IEmpiSettings empiSettings(EmpiRuleValidator theEmpiRuleValidator) throws IOException {
     DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
     Resource resource = resourceLoader.getResource("empi-rules.json");
     String json = IOUtils.toString(resource.getInputStream(), Charsets.UTF_8);
-    return  new EmpiSettings(theEmpiRuleValidator).setEnabled(HapiProperties.getEmpiEnabled()).setScriptText(json);
+    return new EmpiSettings(theEmpiRuleValidator).setEnabled(HapiProperties.getEmpiEnabled()).setScriptText(json);
   }
 
 }
