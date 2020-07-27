@@ -38,7 +38,6 @@ public class FhirServerConfigCommon {
   private Boolean allowMultipleDelete = HapiProperties.getAllowMultipleDelete();
   private Boolean allowExternalReferences = HapiProperties.getAllowExternalReferences();
   private Boolean expungeEnabled = HapiProperties.getExpungeEnabled();
-  private Boolean allowPlaceholderReferences = HapiProperties.getAllowPlaceholderReferences();
   private Boolean subscriptionRestHookEnabled = HapiProperties.getSubscriptionRestHookEnabled();
   private Boolean subscriptionEmailEnabled = HapiProperties.getSubscriptionEmailEnabled();
   private Boolean allowOverrideDefaultSearchParams = HapiProperties.getAllowOverrideDefaultSearchParams();
@@ -60,7 +59,7 @@ public class FhirServerConfigCommon {
     ourLog.info("Server configured to " + (this.allowMultipleDelete ? "allow" : "deny") + " multiple deletes");
     ourLog.info("Server configured to " + (this.allowExternalReferences ? "allow" : "deny") + " external references");
     ourLog.info("Server configured to " + (this.expungeEnabled ? "enable" : "disable") + " expunges");
-    ourLog.info("Server configured to " + (this.allowPlaceholderReferences ? "allow" : "deny") + " placeholder references");
+    ourLog.info("Server configured to " + (this.autoCreatePlaceholderReferenceTargets ? "allow" : "deny") + " placeholder references");
     ourLog.info("Server configured to " + (this.allowOverrideDefaultSearchParams ? "allow" : "deny") + " overriding default search params");
 
     if (this.emailEnabled) {
@@ -100,7 +99,6 @@ public class FhirServerConfigCommon {
     retVal.setAllowMultipleDelete(this.allowMultipleDelete);
     retVal.setAllowExternalReferences(this.allowExternalReferences);
     retVal.setExpungeEnabled(this.expungeEnabled);
-    retVal.setAutoCreatePlaceholderReferenceTargets(this.allowPlaceholderReferences);
     retVal.setEmailFromAddress(this.emailFrom);
 
     Integer maxFetchSize = HapiProperties.getMaximumFetchSize();

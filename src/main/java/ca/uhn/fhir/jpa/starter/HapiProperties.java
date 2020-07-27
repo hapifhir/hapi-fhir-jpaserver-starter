@@ -376,10 +376,6 @@ public class HapiProperties {
     return HapiProperties.getProperty(SERVER_ID, "home");
   }
 
-  public static Boolean getAllowPlaceholderReferences() {
-    return HapiProperties.getBooleanProperty(ALLOW_PLACEHOLDER_REFERENCES, true);
-  }
-
   public static Boolean getSubscriptionEmailEnabled() {
     return HapiProperties.getBooleanProperty(SUBSCRIPTION_EMAIL_ENABLED, false);
   }
