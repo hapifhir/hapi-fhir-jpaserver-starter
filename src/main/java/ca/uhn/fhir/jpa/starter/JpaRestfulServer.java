@@ -35,6 +35,7 @@ import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.auth.AuthorizationInterceptor;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import org.hl7.fhir.dstu3.model.Bundle;
@@ -191,6 +192,9 @@ public class JpaRestfulServer extends RestfulServer {
     loggingInterceptor.setErrorMessageFormat(HapiProperties.getLoggerErrorFormat());
     loggingInterceptor.setLogExceptions(HapiProperties.getLoggerLogExceptions());
     this.registerInterceptor(loggingInterceptor);
+    
+    AuthorizationInterceptor authorizationInterceptor = new CustomAuthorizationInterceptor();
+    this.registerInterceptor(authorizationInterceptor);
 
     /*
      * If you are hosting this server at a specific DNS name, the server will try to
