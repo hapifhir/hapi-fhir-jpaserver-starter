@@ -7,6 +7,7 @@ import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.elasticsearch.cfg.ElasticsearchIndexStatus;
 import org.hibernate.search.elasticsearch.cfg.IndexSchemaManagementStrategy;
 import org.jetbrains.annotations.NotNull;
@@ -342,10 +343,6 @@ public class HapiProperties {
     return HapiProperties.getBooleanProperty("expunge_enabled", true);
   }
 
-  public static Integer getTestPort() {
-    return HapiProperties.getIntegerProperty(TEST_PORT, 0);
-  }
-
   public static Boolean getTesterConfigRefustToFetchThirdPartyUrls() {
     return HapiProperties.getBooleanProperty(TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS, false);
   }
@@ -366,8 +363,8 @@ public class HapiProperties {
   public static Set<String> getSupportedResourceTypes() {
     String[] types = defaultString(getProperty("supported_resource_types")).split(",");
     return Arrays.stream(types)
-      .map(t -> trim(t))
-      .filter(t -> isNotBlank(t))
+      .map(StringUtils::trim)
+      .filter(StringUtils::isNotBlank)
       .collect(Collectors.toSet());
   }
 
@@ -403,9 +400,6 @@ public class HapiProperties {
     return HapiProperties.getBooleanProperty(PARTITIONING_ENABLED, false);
   }
 
-  public static boolean getPartitioningMultitenancyEnabled() {
-    return HapiProperties.getBooleanProperty(PARTITIONING_MULTITENANCY_ENABLED, false);
-  }
 
   public static String getPartitioningCrossPartitionReferenceMode() {
     return HapiProperties.getProperty(PARTITIONING_CROSS_PARTITION_REFERENCE_MODE, "NOT_ALLOWED");
@@ -535,5 +529,7 @@ public class HapiProperties {
   public static boolean getPartitioningMultitenancyEnabled() {
     return HapiProperties.getBooleanProperty(PARTITIONING_MULTITENANCY_ENABLED, false);
   }
+
+
 }
 
