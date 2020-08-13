@@ -10,7 +10,6 @@ import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.JavaMailEmailSender;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hl7.fhir.dstu2.model.Subscription;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +24,7 @@ import java.sql.Driver;
  * This is the primary configuration file for the example server
  */
 @Configuration
-@EnableTransactionManagement()
+@EnableTransactionManagement
 public class FhirServerConfigCommon {
 
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
@@ -205,11 +204,10 @@ public class FhirServerConfigCommon {
       retVal.setSmtpServerPort(this.emailPort);
       retVal.setSmtpServerUsername(this.emailUsername);
       retVal.setSmtpServerPassword(this.emailPassword);
-      // TODO KHS add these when HAPI 4.2.0 is released
-//      retVal.setAuth(this.emailAuth);
-//      retVal.setStartTlsEnable(this.emailStartTlsEnable);
-//      retVal.setStartTlsRequired(this.emailStartTlsRequired);
-//      retVal.setQuitWait(this.emailQuitWait);
+      retVal.setAuth(this.emailAuth);
+      retVal.setStartTlsEnable(this.emailStartTlsEnable);
+      retVal.setStartTlsRequired(this.emailStartTlsRequired);
+      retVal.setQuitWait(this.emailQuitWait);
 
       SubscriptionDeliveryHandlerFactory subscriptionDeliveryHandlerFactory = myAppCtx.getBean(SubscriptionDeliveryHandlerFactory.class);
       Validate.notNull(subscriptionDeliveryHandlerFactory, "No subscription delivery handler");

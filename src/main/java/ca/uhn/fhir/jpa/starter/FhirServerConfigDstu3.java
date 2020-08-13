@@ -6,6 +6,7 @@ import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
@@ -32,7 +33,7 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
     }
 
     @Override
-    @Bean()
+    @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory();
         retVal.setPersistenceUnitName("HAPI_PU");
@@ -47,8 +48,9 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
         return retVal;
     }
 
-    @Bean()
-    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    @Bean
+    @Primary
+    public JpaTransactionManager hapiTransactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager retVal = new JpaTransactionManager();
         retVal.setEntityManagerFactory(entityManagerFactory);
         return retVal;
