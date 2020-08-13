@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
@@ -78,6 +80,7 @@ public class HapiProperties {
   static final String MAX_BINARY_SIZE = "max_binary_size";
   static final String PARTITIONING_MULTITENANCY_ENABLED = "partitioning.multitenancy.enabled";
   private static final String PARTITIONING_INCLUDE_PARTITION_IN_SEARCH_HASHES = "partitioning.partitioning_include_in_search_hashes";
+  static final String CLIENT_ID_STRATEGY = "daoconfig.client_id_strategy";
   private static Properties ourProperties;
 
   public static boolean isElasticSearchEnabled() {
@@ -143,6 +146,10 @@ public class HapiProperties {
     if (overrideProps != null) {
       properties.putAll(overrideProps);
     }
+    properties.putAll(System.getenv().entrySet()
+                                     .stream()
+                                     .filter(e -> e.getValue() != null && properties.containsKey(e.getKey()))
+                                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     return properties;
   }
 
@@ -241,6 +248,16 @@ public class HapiProperties {
     }
 
     return ETagSupportEnum.ENABLED;
+  }
+
+  public static DaoConfig.ClientIdStrategyEnum getClientIdStrategy() {
+    String idStrategy = HapiProperties.getProperty(CLIENT_ID_STRATEGY);
+
+    if (idStrategy != null && idStrategy.length() > 0) {
+      return DaoConfig.ClientIdStrategyEnum.valueOf(idStrategy);
+    }
+
+    return DaoConfig.ClientIdStrategyEnum.ALPHANUMERIC;
   }
 
   public static EncodingEnum getDefaultEncoding() {
@@ -515,5 +532,8 @@ public class HapiProperties {
     return HapiProperties.getBooleanProperty("fhirpath_interceptor.enabled", false);
   }
 
+  public static boolean getPartitioningMultitenancyEnabled() {
+    return HapiProperties.getBooleanProperty(PARTITIONING_MULTITENANCY_ENABLED, false);
+  }
 }
 
