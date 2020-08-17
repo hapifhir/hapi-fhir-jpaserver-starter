@@ -11,8 +11,12 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 
 public class ApplicationContext extends AnnotationConfigWebApplicationContext {
 
+
   public ApplicationContext() {
     FhirVersionEnum fhirVersion = HapiProperties.getFhirVersion();
+    this.getEnvironment().setActiveProfiles(fhirVersion.toString().toLowerCase());
+
+
     if (fhirVersion == FhirVersionEnum.DSTU2) {
       register(FhirServerConfigDstu2.class, FhirServerConfigCommon.class);
     } else if (fhirVersion == FhirVersionEnum.DSTU3) {

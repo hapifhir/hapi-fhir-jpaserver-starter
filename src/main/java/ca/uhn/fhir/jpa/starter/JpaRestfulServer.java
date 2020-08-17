@@ -1,7 +1,9 @@
 package ca.uhn.fhir.jpa.starter;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 
+@WebServlet
 public class JpaRestfulServer extends BaseJpaRestfulServer {
 
   private static final long serialVersionUID = 1L;
