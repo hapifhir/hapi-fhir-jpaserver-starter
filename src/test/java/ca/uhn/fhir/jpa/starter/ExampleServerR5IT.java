@@ -20,9 +20,9 @@ import org.hl7.fhir.r5.model.Observation;
 import org.hl7.fhir.r5.model.Patient;
 import org.hl7.fhir.r5.model.Subscription;
 import org.hl7.fhir.r5.model.SubscriptionTopic;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.nio.file.Paths;
@@ -30,7 +30,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
-import static org.junit.Assert.assertEquals;
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ExampleServerR5IT {
 
@@ -77,9 +78,9 @@ public class ExampleServerR5IT {
     subscription.getTopic().setResource(topic);
     subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
     subscription.setStatus(Enumerations.SubscriptionState.REQUESTED);
-        subscription.getChannelType()
-                .setSystem("http://terminology.hl7.org/CodeSystem/subscription-channel-type")
-                .setCode("websocket");
+    subscription.getChannelType()
+      .setSystem("http://terminology.hl7.org/CodeSystem/subscription-channel-type")
+      .setCode("websocket");
     subscription.setContentType("application/json");
 
     MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
@@ -111,13 +112,10 @@ public class ExampleServerR5IT {
     obs.setStatus(Enumerations.ObservationStatus.FINAL);
     ourClient.create().resource(obs).execute();
 
-    // Give some time for the subscription to deliver
-    Thread.sleep(2000);
-
     /*
      * Ensure that we receive a ping on the websocket
      */
-    waitForSize(1, () -> mySocketImplementation.myPingCount);
+    await().until(()->mySocketImplementation.myPingCount > 0);
 
     /*
      * Clean up
@@ -125,12 +123,12 @@ public class ExampleServerR5IT {
     ourClient.delete().resourceById(mySubscriptionId).execute();
   }
 
-  @AfterClass
+  @AfterAll
   public static void afterClass() throws Exception {
     ourServer.stop();
   }
 
-  @BeforeClass
+  @BeforeAll
   public static void beforeClass() throws Exception {
     String path = Paths.get("").toAbsolutePath().toString();
 
