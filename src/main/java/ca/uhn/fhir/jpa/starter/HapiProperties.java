@@ -81,6 +81,7 @@ public class HapiProperties {
   static final String IMPLEMENTATION_GUIDE_URL = "implementation.guide.url";
   static final String IMPLEMENTATION_GUIDE_NAME = "implementation.guide.name";
   static final String IMPLEMENTATION_GUIDE_VERSION = "implementation.guide.version";
+  static final String DEFER_INDEXING_FOR_CODESYSTEMS_OF_SIZE = "deferIndexingForCodesystemsOfSize";
   private static final String PARTITIONING_INCLUDE_PARTITION_IN_SEARCH_HASHES = "partitioning.partitioning_include_in_search_hashes";
   static final String CLIENT_ID_STRATEGY = "daoconfig.client_id_strategy";
   private static Properties ourProperties;
@@ -542,6 +543,10 @@ public class HapiProperties {
 
   public static String getImplementationGuideVersion() {
     return HapiProperties.getProperty(IMPLEMENTATION_GUIDE_VERSION);
+  }
+
+  public static Integer getDeferIndexingForCodeSystemOfSize() {
+    return HapiProperties.getIntegerProperty(DEFER_INDEXING_FOR_CODESYSTEMS_OF_SIZE, 100);
   }
 
 }

@@ -123,6 +123,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * provide further customization of your server's CapabilityStatement
      */
     DaoConfig daoConfig = appCtx.getBean(DaoConfig.class);
+
+    daoConfig.setDeferIndexingForCodesystemsOfSize(HapiProperties.getDeferIndexingForCodeSystemOfSize());
+
+
     ISearchParamRegistry searchParamRegistry = appCtx.getBean(ISearchParamRegistry.class);
     if (fhirVersion == FhirVersionEnum.DSTU2) {
       IFhirSystemDao<ca.uhn.fhir.model.dstu2.resource.Bundle, MetaDt> systemDao = appCtx.getBean("mySystemDaoDstu2", IFhirSystemDao.class);
@@ -339,7 +343,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setResourceClientIdStrategy(HapiProperties.getClientIdStrategy());
     }
 
-    if (HapiProperties.getImplementationGuideURL() != null && HapiProperties.getImplementationGuideName() != null && HapiProperties.getImplementationGuideVersion() != null) {
+    if (HapiProperties.getImplementationGuideName() != null && HapiProperties.getImplementationGuideVersion() != null) {
       String url = HapiProperties.getImplementationGuideURL();
       String name = HapiProperties.getImplementationGuideName();
       String ver = HapiProperties.getImplementationGuideVersion();
