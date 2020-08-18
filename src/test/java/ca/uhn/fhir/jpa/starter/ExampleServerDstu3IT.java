@@ -18,9 +18,9 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Subscription;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.nio.file.Paths;
@@ -28,130 +28,130 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ExampleServerDstu3IT {
 
-	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu3IT.class);
-	private static IGenericClient ourClient;
-	private static FhirContext ourCtx;
-	private static int ourPort;
-	private static Server ourServer;
+  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu3IT.class);
+  private static IGenericClient ourClient;
+  private static FhirContext ourCtx;
+  private static int ourPort;
+  private static Server ourServer;
 
-	static {
-		HapiProperties.forceReload();
-		HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "DSTU3");
-		HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr3");
-		HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
-		HapiProperties.setProperty(HapiProperties.ALLOW_EXTERNAL_REFERENCES, "true");
-		HapiProperties.setProperty(HapiProperties.ALLOW_PLACEHOLDER_REFERENCES, "true");
-		ourCtx = FhirContext.forDstu3();
-	}
+  static {
+    HapiProperties.forceReload();
+    HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "DSTU3");
+    HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr3");
+    HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
+    HapiProperties.setProperty(HapiProperties.ALLOW_EXTERNAL_REFERENCES, "true");
+    HapiProperties.setProperty(HapiProperties.ALLOW_PLACEHOLDER_REFERENCES, "true");
+    ourCtx = FhirContext.forDstu3();
+  }
 
-	@Test
-	public void testCreateAndRead() {
-		ourLog.info("Base URL is: " +  HapiProperties.getServerAddress());
-		String methodName = "testCreateResourceConditional";
+  @Test
+  public void testCreateAndRead() {
+    ourLog.info("Base URL is: " + HapiProperties.getServerAddress());
+    String methodName = "testCreateResourceConditional";
 
-		Patient pt = new Patient();
-		pt.addName().setFamily(methodName);
-		IIdType id = ourClient.create().resource(pt).execute().getId();
+    Patient pt = new Patient();
+    pt.addName().setFamily(methodName);
+    IIdType id = ourClient.create().resource(pt).execute().getId();
 
-		Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
-		assertEquals(methodName, pt2.getName().get(0).getFamily());
-	}
+    Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
+    assertEquals(methodName, pt2.getName().get(0).getFamily());
+  }
 
-	@Test
-	public void testWebsocketSubscription() throws Exception {
-		/*
-		 * Create subscription
-		 */
-		Subscription subscription = new Subscription();
-		subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
-		subscription.setStatus(Subscription.SubscriptionStatus.REQUESTED);
-		subscription.setCriteria("Observation?status=final");
+  @Test
+  public void testWebsocketSubscription() throws Exception {
+    /*
+     * Create subscription
+     */
+    Subscription subscription = new Subscription();
+    subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
+    subscription.setStatus(Subscription.SubscriptionStatus.REQUESTED);
+    subscription.setCriteria("Observation?status=final");
 
-		Subscription.SubscriptionChannelComponent channel = new Subscription.SubscriptionChannelComponent();
-		channel.setType(Subscription.SubscriptionChannelType.WEBSOCKET);
-		channel.setPayload("application/json");
-		subscription.setChannel(channel);
+    Subscription.SubscriptionChannelComponent channel = new Subscription.SubscriptionChannelComponent();
+    channel.setType(Subscription.SubscriptionChannelType.WEBSOCKET);
+    channel.setPayload("application/json");
+    subscription.setChannel(channel);
 
-		MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
-		IIdType mySubscriptionId = methodOutcome.getId();
+    MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
+    IIdType mySubscriptionId = methodOutcome.getId();
 
-		// Wait for the subscription to be activated
-		waitForSize(1, () -> ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size());
+    // Wait for the subscription to be activated
+    waitForSize(1, () -> ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size());
 
-		/*
-		 * Attach websocket
-		 */
+    /*
+     * Attach websocket
+     */
 
-		WebSocketClient myWebSocketClient = new WebSocketClient();
-		SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
+    WebSocketClient myWebSocketClient = new WebSocketClient();
+    SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
 
-		myWebSocketClient.start();
-		URI echoUri = new URI("ws://localhost:" + ourPort + "/hapi-fhir-jpaserver/websocket");
-		ClientUpgradeRequest request = new ClientUpgradeRequest();
-		ourLog.info("Connecting to : {}", echoUri);
-		Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
-		Session session = connection.get(2, TimeUnit.SECONDS);
+    myWebSocketClient.start();
+    URI echoUri = new URI("ws://localhost:" + ourPort + "/hapi-fhir-jpaserver/websocket");
+    ClientUpgradeRequest request = new ClientUpgradeRequest();
+    ourLog.info("Connecting to : {}", echoUri);
+    Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
+    Session session = connection.get(2, TimeUnit.SECONDS);
 
-		ourLog.info("Connected to WS: {}", session.isOpen());
+    ourLog.info("Connected to WS: {}", session.isOpen());
 
-		/*
-		 * Create a matching resource
-		 */
-		Observation obs = new Observation();
-		obs.setStatus(Observation.ObservationStatus.FINAL);
-		ourClient.create().resource(obs).execute();
+    /*
+     * Create a matching resource
+     */
+    Observation obs = new Observation();
+    obs.setStatus(Observation.ObservationStatus.FINAL);
+    ourClient.create().resource(obs).execute();
 
-		// Give some time for the subscription to deliver
-		Thread.sleep(2000);
+    // Give some time for the subscription to deliver
+    Thread.sleep(2000);
 
-		/*
-		 * Ensure that we receive a ping on the websocket
-		 */
-		waitForSize(1, () -> mySocketImplementation.myPingCount);
+    /*
+     * Ensure that we receive a ping on the websocket
+     */
+    waitForSize(1, () -> mySocketImplementation.myPingCount);
 
-		/*
-		 * Clean up
-		 */
-		ourClient.delete().resourceById(mySubscriptionId).execute();
-	}
+    /*
+     * Clean up
+     */
+    ourClient.delete().resourceById(mySubscriptionId).execute();
+  }
 
-	@AfterClass
-	public static void afterClass() throws Exception {
-		ourServer.stop();
-	}
+  @AfterAll
+  public static void afterClass() throws Exception {
+    ourServer.stop();
+  }
 
-	@BeforeClass
-	public static void beforeClass() throws Exception {
-		String path = Paths.get("").toAbsolutePath().toString();
+  @BeforeAll
+  public static void beforeClass() throws Exception {
+    String path = Paths.get("").toAbsolutePath().toString();
 
-		ourLog.info("Project base path is: {}", path);
+    ourLog.info("Project base path is: {}", path);
 
-		ourServer = new Server(0);
+    ourServer = new Server(0);
 
-		WebAppContext webAppContext = new WebAppContext();
-		webAppContext.setContextPath("/hapi-fhir-jpaserver");
-		webAppContext.setDescriptor(path + "/src/main/webapp/WEB-INF/web.xml");
-		webAppContext.setResourceBase(path + "/target/hapi-fhir-jpaserver-starter");
-		webAppContext.setParentLoaderPriority(true);
+    WebAppContext webAppContext = new WebAppContext();
+    webAppContext.setContextPath("/hapi-fhir-jpaserver");
+    webAppContext.setDescriptor(path + "/src/main/webapp/WEB-INF/web.xml");
+    webAppContext.setResourceBase(path + "/target/hapi-fhir-jpaserver-starter");
+    webAppContext.setParentLoaderPriority(true);
 
-		ourServer.setHandler(webAppContext);
-		ourServer.start();
+    ourServer.setHandler(webAppContext);
+    ourServer.start();
 
-		ourPort = JettyUtil.getPortForStartedServer(ourServer);
+    ourPort = JettyUtil.getPortForStartedServer(ourServer);
 
-		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-		String ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
-		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-		ourClient.registerInterceptor(new LoggingInterceptor(true));
-	}
+    ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+    ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
+    String ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
+    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
+    ourClient.registerInterceptor(new LoggingInterceptor(true));
+  }
 
-	public static void main(String[] theArgs) throws Exception {
-		ourPort = 8080;
-		beforeClass();
-	}
+  public static void main(String[] theArgs) throws Exception {
+    ourPort = 8080;
+    beforeClass();
+  }
 }

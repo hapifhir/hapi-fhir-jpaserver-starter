@@ -15,13 +15,13 @@ import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.Patient;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MultitenantServerR4IT {
 
@@ -94,12 +94,12 @@ public class MultitenantServerR4IT {
     assertEquals("Family B", pt2.getName().get(0).getFamily());
   }
 
-  @AfterClass
+  @AfterAll
   public static void afterClass() throws Exception {
     ourServer.stop();
   }
 
-  @BeforeClass
+  @BeforeAll
   public static void beforeClass() throws Exception {
     String path = Paths.get("").toAbsolutePath().toString();
 
