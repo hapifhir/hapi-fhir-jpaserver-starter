@@ -38,12 +38,12 @@ public class ApplicationContext extends AnnotationConfigWebApplicationContext {
       register(SubscriptionChannelConfig.class);
     }
 
-    /*
+
     if (HapiProperties.getEmpiEnabled()) {
       register(EmpiSubmitterConfig.class);
       register(EmpiConsumerConfig.class);
       register(EmpiConfig.class);
-    }*/
+    }
 
   }
 
