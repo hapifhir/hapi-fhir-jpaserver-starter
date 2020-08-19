@@ -537,12 +537,33 @@ public class HapiProperties {
     return HapiProperties.getProperty(IMPLEMENTATION_GUIDE_URL);
   }
 
+  public static String getImplementationGuideURL(int index) {
+    if (index>0) {
+      return HapiProperties.getProperty(IMPLEMENTATION_GUIDE_URL+"."+index);
+    }
+    return getImplementationGuideURL();
+  }
+
   public static String getImplementationGuideName() {
     return HapiProperties.getProperty(IMPLEMENTATION_GUIDE_NAME);
   }
 
+  public static String getImplementationGuideName(int index) {
+    if (index>0) {
+      return HapiProperties.getProperty(IMPLEMENTATION_GUIDE_NAME+"."+index);
+    }
+    return getImplementationGuideName();
+  }
+
   public static String getImplementationGuideVersion() {
     return HapiProperties.getProperty(IMPLEMENTATION_GUIDE_VERSION);
+  }
+
+  public static String getImplementationGuideVersion(int index) {
+    if (index>0) {
+      return HapiProperties.getProperty(IMPLEMENTATION_GUIDE_VERSION+"."+index);
+    }
+    return getImplementationGuideVersion();
   }
 
   public static Integer getDeferIndexingForCodeSystemOfSize() {

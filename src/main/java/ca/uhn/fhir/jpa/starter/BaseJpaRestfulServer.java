@@ -1,5 +1,22 @@
 package ca.uhn.fhir.jpa.starter;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.servlet.ServletException;
+
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.Meta;
+import org.hl7.fhir.r4.model.Bundle.BundleType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.cors.CorsConfiguration;
+
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
@@ -42,21 +59,6 @@ import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
-import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.Meta;
-import org.hl7.fhir.r4.model.Bundle.BundleType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.cors.CorsConfiguration;
-
-import javax.servlet.ServletException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class BaseJpaRestfulServer extends RestfulServer {
 
@@ -343,21 +345,21 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setResourceClientIdStrategy(HapiProperties.getClientIdStrategy());
     }
 
-    if (HapiProperties.getImplementationGuideName() != null && HapiProperties.getImplementationGuideVersion() != null) {
-      String url = HapiProperties.getImplementationGuideURL();
-      String name = HapiProperties.getImplementationGuideName();
-      String ver = HapiProperties.getImplementationGuideVersion();
-
+    int implementationGuide = 0;
+    while (HapiProperties.getImplementationGuideName(implementationGuide) != null && HapiProperties.getImplementationGuideVersion(implementationGuide) != null) {
+      String url = HapiProperties.getImplementationGuideURL(implementationGuide);
+      String name = HapiProperties.getImplementationGuideName(implementationGuide);
+      String ver = HapiProperties.getImplementationGuideVersion(implementationGuide);
+      
       ourLog.info("Installing IG: {}, {}, {}", url, name, ver);
-
       appCtx.getBean(IPackageInstallerSvc.class).install(new PackageInstallationSpec()
         .setPackageUrl(url)
         .setName(name)
         .setVersion(ver)
         .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL)
       );
+      ++implementationGuide;
     }
-
   }
 
 }
