@@ -10,6 +10,8 @@ import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
+import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
+import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.GraphQLProvider;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
@@ -43,6 +45,8 @@ import ca.uhn.fhir.validation.ResultSeverityEnum;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Meta;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
@@ -57,6 +61,8 @@ import java.util.TreeSet;
 public class BaseJpaRestfulServer extends RestfulServer {
 
   private static final long serialVersionUID = 1L;
+
+  private static final Logger ourLog = LoggerFactory.getLogger(BaseJpaRestfulServer.class);
 
   @SuppressWarnings("unchecked")
   @Override
@@ -117,6 +123,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * provide further customization of your server's CapabilityStatement
      */
     DaoConfig daoConfig = appCtx.getBean(DaoConfig.class);
+
+    daoConfig.setDeferIndexingForCodesystemsOfSize(HapiProperties.getDeferIndexingForCodeSystemOfSize());
+
+
     ISearchParamRegistry searchParamRegistry = appCtx.getBean(ISearchParamRegistry.class);
     if (fhirVersion == FhirVersionEnum.DSTU2) {
       IFhirSystemDao<ca.uhn.fhir.model.dstu2.resource.Bundle, MetaDt> systemDao = appCtx.getBean("mySystemDaoDstu2", IFhirSystemDao.class);
@@ -332,6 +342,22 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
       daoConfig.setResourceClientIdStrategy(HapiProperties.getClientIdStrategy());
     }
+
+    if (HapiProperties.getImplementationGuideName() != null && HapiProperties.getImplementationGuideVersion() != null) {
+      String url = HapiProperties.getImplementationGuideURL();
+      String name = HapiProperties.getImplementationGuideName();
+      String ver = HapiProperties.getImplementationGuideVersion();
+
+      ourLog.info("Installing IG: {}, {}, {}", url, name, ver);
+
+      appCtx.getBean(IPackageInstallerSvc.class).install(new PackageInstallationSpec()
+        .setPackageUrl(url)
+        .setName(name)
+        .setVersion(ver)
+        .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL)
+      );
+    }
+
   }
 
 }

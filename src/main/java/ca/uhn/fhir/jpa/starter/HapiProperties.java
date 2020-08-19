@@ -23,8 +23,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.trim;
 
 public class HapiProperties {
   static final String ENABLE_INDEX_MISSING_FIELDS = "enable_index_missing_fields";
@@ -80,9 +78,14 @@ public class HapiProperties {
   static final String EXPIRE_SEARCH_RESULTS_AFTER_MINS = "retain_cached_searches_mins";
   static final String MAX_BINARY_SIZE = "max_binary_size";
   static final String PARTITIONING_MULTITENANCY_ENABLED = "partitioning.multitenancy.enabled";
+  static final String IMPLEMENTATION_GUIDE_URL = "implementation.guide.url";
+  static final String IMPLEMENTATION_GUIDE_NAME = "implementation.guide.name";
+  static final String IMPLEMENTATION_GUIDE_VERSION = "implementation.guide.version";
+  static final String DEFER_INDEXING_FOR_CODESYSTEMS_OF_SIZE = "deferIndexingForCodesystemsOfSize";
   private static final String PARTITIONING_INCLUDE_PARTITION_IN_SEARCH_HASHES = "partitioning.partitioning_include_in_search_hashes";
   static final String CLIENT_ID_STRATEGY = "daoconfig.client_id_strategy";
   private static Properties ourProperties;
+
 
   public static boolean isElasticSearchEnabled() {
     return HapiProperties.getPropertyBoolean("elasticsearch.enabled", false);
@@ -530,6 +533,21 @@ public class HapiProperties {
     return HapiProperties.getBooleanProperty(PARTITIONING_MULTITENANCY_ENABLED, false);
   }
 
+  public static String getImplementationGuideURL() {
+    return HapiProperties.getProperty(IMPLEMENTATION_GUIDE_URL);
+  }
+
+  public static String getImplementationGuideName() {
+    return HapiProperties.getProperty(IMPLEMENTATION_GUIDE_NAME);
+  }
+
+  public static String getImplementationGuideVersion() {
+    return HapiProperties.getProperty(IMPLEMENTATION_GUIDE_VERSION);
+  }
+
+  public static Integer getDeferIndexingForCodeSystemOfSize() {
+    return HapiProperties.getIntegerProperty(DEFER_INDEXING_FOR_CODESYSTEMS_OF_SIZE, 100);
+  }
 
 }
 
