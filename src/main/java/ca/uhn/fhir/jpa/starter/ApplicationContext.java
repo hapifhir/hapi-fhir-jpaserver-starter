@@ -9,6 +9,9 @@ import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
 import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
+/**
+ * The class is unused for Spring Boot
+ */
 public class ApplicationContext extends AnnotationConfigWebApplicationContext {
 
 

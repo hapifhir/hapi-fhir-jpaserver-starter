@@ -11,6 +11,7 @@ import ca.uhn.fhir.jpa.subscription.match.deliver.email.JavaMailEmailSender;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hl7.fhir.dstu2.model.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -51,8 +52,10 @@ public class FhirServerConfigCommon {
   private Boolean emailStartTlsEnable = HapiProperties.getEmailStartTlsEnable();
   private Boolean emailStartTlsRequired = HapiProperties.getEmailStartTlsRequired();
   private Boolean emailQuitWait = HapiProperties.getEmailQuitWait();
+
+
   @Autowired
-  private ApplicationContext myAppCtx;
+  private ApplicationContext appContext;
 
   public FhirServerConfigCommon() {
     ourLog.info("Server configured to " + (this.allowContainsSearches ? "allow" : "deny") + " contains searches");
@@ -209,7 +212,7 @@ public class FhirServerConfigCommon {
       retVal.setStartTlsRequired(this.emailStartTlsRequired);
       retVal.setQuitWait(this.emailQuitWait);
 
-      SubscriptionDeliveryHandlerFactory subscriptionDeliveryHandlerFactory = myAppCtx.getBean(SubscriptionDeliveryHandlerFactory.class);
+      SubscriptionDeliveryHandlerFactory subscriptionDeliveryHandlerFactory = appContext.getBean(SubscriptionDeliveryHandlerFactory.class);
       Validate.notNull(subscriptionDeliveryHandlerFactory, "No subscription delivery handler");
       subscriptionDeliveryHandlerFactory.setEmailSender(retVal);
 

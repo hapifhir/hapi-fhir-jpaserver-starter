@@ -15,16 +15,10 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.Set;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.trim;
 
 public class HapiProperties {
   static final String ENABLE_INDEX_MISSING_FIELDS = "enable_index_missing_fields";
