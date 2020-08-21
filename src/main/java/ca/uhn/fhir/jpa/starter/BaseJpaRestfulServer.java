@@ -59,6 +59,7 @@ import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
+import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 
 public class BaseJpaRestfulServer extends RestfulServer {
 
@@ -126,7 +127,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
      */
     DaoConfig daoConfig = appCtx.getBean(DaoConfig.class);
 
-    daoConfig.setDeferIndexingForCodesystemsOfSize(HapiProperties.getDeferIndexingForCodeSystemOfSize());
+//  OE: Not seting it that it deferred  daoConfig.setDeferIndexingForCodesystemsOfSize(HapiProperties.getDeferIndexingForCodeSystemOfSize());
 
 
     ISearchParamRegistry searchParamRegistry = appCtx.getBean(ISearchParamRegistry.class);
@@ -294,6 +295,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     // Validation
     IValidatorModule validatorModule = appCtx.getBean(IValidatorModule.class);
+    
     if (validatorModule != null) {
       if (HapiProperties.getValidateRequestsEnabled()) {
         RequestValidatingInterceptor interceptor = new RequestValidatingInterceptor();
@@ -360,6 +362,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
       );
       ++implementationGuide;
     }
+    
+    registerProviders(appCtx.getBean(ValidationProvider.class));
   }
 
 }

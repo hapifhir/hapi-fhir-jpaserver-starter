@@ -1,8 +1,9 @@
 package ca.uhn.fhir.jpa.starter;
 
-import ca.uhn.fhir.context.ConfigurationException;
-import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
-import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +11,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
+import ca.uhn.fhir.context.ConfigurationException;
+import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
+import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import ca.uhn.fhir.jpa.term.api.ITermReadSvcR4;
+import ch.ahdis.fhir.hapi.jpa.validation.ExtTermReadSvcR4;
+import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 
 @Configuration
 public class FhirServerConfigR4 extends BaseJavaConfigR4 {
@@ -55,5 +60,16 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
         retVal.setEntityManagerFactory(entityManagerFactory);
         return retVal;
     }
+  
+  @Override
+  @Bean(autowire = Autowire.BY_TYPE)
+  public ITermReadSvcR4 terminologyService() {
+    return new ExtTermReadSvcR4();
+  }
+  
+  @Bean(autowire = Autowire.BY_TYPE)
+  public ValidationProvider validationProvider() {
+    return new ValidationProvider();
+  }
 
 }
