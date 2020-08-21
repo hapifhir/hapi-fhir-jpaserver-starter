@@ -1,4 +1,4 @@
-@host = http://localhost:8080/hapi-fhir-jpaserver/fhir
+@host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
 ### @host = http://localhost:8080/r4
 
 ### CH-Core Franz Muster
@@ -54,8 +54,8 @@ Content-Type: application/fhir+xml
 
 
 
-### CH-EMED bundle
-POST {{host}}/Composition/$validate HTTP/1.1
+### Error mesages
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-composition-epr HTTP/1.1
 Content-Type: application/fhir+xml
 
 < ./composition_confcode.xml

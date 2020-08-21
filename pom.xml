@@ -15,7 +15,7 @@
         <version>5.1.0</version>
     </parent>
 
-    <artifactId>hapi-fhir-jpaserver-starter</artifactId>
+    <artifactId>hapi-fhir-jpavalidator-starter</artifactId>
 
     <prerequisites>
         <maven>3.5.0</maven>
@@ -280,8 +280,8 @@
 
     <build>
 
-        <!-- Tells Maven to name the generated WAR file as hapi-fhir-jpaserver.war -->
-        <finalName>hapi-fhir-jpaserver</finalName>
+        <!-- Tells Maven to name the generated WAR file as hapi-fhir-jpavalidator.war -->
+        <finalName>hapi-fhir-jpavalidator</finalName>
 
         <plugins>
             <!-- The following is not required for the application to build, but allows you to test it by issuing "mvn jetty:run" from the command line. -->
@@ -291,7 +291,7 @@
                 <version>${jetty_version}</version>
                 <configuration>
                     <webApp>
-                        <contextPath>/hapi-fhir-jpaserver</contextPath>
+                        <contextPath>/hapi-fhir-jpavalidator</contextPath>
                         <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
                     </webApp>
                 </configuration>
