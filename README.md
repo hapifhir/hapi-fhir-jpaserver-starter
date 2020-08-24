@@ -8,7 +8,7 @@ This project is a  starter project you can use to deploy a FHIR server using HAP
   - ch.fhir.ig.ch-core#1.0.0
   - ch.fhir.ig.ch-emed#0.1.0
   - ch.fhir.ig.ch-atc#3.1.0
-  - ch.fhir.ig.ch-epr-mhealth#0.1.0
+  - ch.fhir.ig.ch-epr-mhealth#0.1.1
 
 - The server offers a $validate operation on the root with a profile parameter, eg you can do:
 
@@ -50,12 +50,14 @@ mvn -Djetty.port=8888 jetty:run
 
 ```bash
 docker build -t hapi-fhir-jpavalidator-starter .
+docker run -d --name hapi-fhir-jpavalidator-starter -p 8080:8080 hapi-fhir-jpavalidator-starter
 ```
+
 
 making container available
 ```
-docker tag hapi-fhir-jpavalidator-starter eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-starter:v010
-docker push eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-starter:v010
+docker tag hapi-fhir-jpavalidator-starter eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-starter:v020
+docker push eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-starter:v020
 ```
 
 ## Configurations

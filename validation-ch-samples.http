@@ -1,5 +1,5 @@
-@host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
-### @host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
+### @host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
+@host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
 ### @host = http://localhost:8080/r4
 
 
@@ -81,6 +81,12 @@ Content-Type: application/fhir+json
 
 < ./examples/DocumentReference-2-7-DocRefMedicationCard.json
 
+
+### ch-emed
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/2-7-MedicationCard.xml
 
 ###
 
