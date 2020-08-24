@@ -45,7 +45,18 @@ If you need to run this server on a different port (using Maven), you can change
 mvn -Djetty.port=8888 jetty:run
 ```
 
-And replacing 8888 with the port of your choice.
+
+## building with Docker
+
+```bash
+docker build -t hapi-fhir-jpavalidator-starter .
+```
+
+making container available
+```
+docker tag hapi-fhir-jpavalidator-starter eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-starter:v010
+docker push eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-starter:v010
+```
 
 ## Configurations
 
