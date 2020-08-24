@@ -8,8 +8,8 @@
       <valueCodeableConcept>
         <coding>
           <system value="http://snomed.info/sct"/>
-          <code value="17621005"/>
-          <display value="Normal2"/>
+          <code value="abc"/>
+          <display value="Normal"/>
         </coding>
       </valueCodeableConcept>
     </extension>
