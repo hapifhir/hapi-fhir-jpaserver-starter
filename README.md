@@ -28,7 +28,7 @@ docker pull hapiproject/hapi:latest
 docker run -p 8080:8080 -e "spring.batch.job.enabled=false" hapiproject/hapi:latest
 ```
 
-This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/hapi-fhir-jpaserver/` in the browser to access the HAPI FHIR server's UI.
+This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/hapi-fhir-jpaserver/` in the browser to access the HAPI FHIR server's UI or use `http://localhost:8080/hapi-fhir-jpaserver/fhir/` as the base URL for your REST requests.
 
 If you change the mapped port, you need to change the configuration used by HAPI to have the correct `hapi.fhir.tester` property/value.
 
