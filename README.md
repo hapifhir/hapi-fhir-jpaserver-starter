@@ -25,7 +25,7 @@ Each tagged/released version of `hapi-fhir-jpaserver` is built as a Docker image
 
 ```
 docker pull hapiproject/hapi:latest
-docker run -p 8080:8080 -e "spring.batch.job.enabled=false" hapiproject/hapi:tagname
+docker run -p 8080:8080 -e "spring.batch.job.enabled=false" hapiproject/hapi:latest
 ```
 
 This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/hapi-fhir-jpaserver/` in the browser to access the HAPI FHIR server's UI.
@@ -36,7 +36,9 @@ If you change the mapped port, you need to change the configuration used by HAPI
 
 You can customize HAPI directly from the `run` command using environment variables. For example:
 
-`docker run -p 8080:8080 -e hapi.fhir.default_encoding=xml hapiproject/hapi:tagname`
+```
+docker run -p 8080:8080 -e hapi.fhir.default_encoding=xml hapiproject/hapi:latest
+```
 
 HAPI looks in the environment variables for properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file for defaults.
 
@@ -44,7 +46,9 @@ HAPI looks in the environment variables for properties in the [application.yaml]
 
 You can customize HAPI by telling HAPI to look for the configuration file in a different location, eg.:
 
-`docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.application.yaml" hapiproject/hapi:tagname`
+```
+docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.application.yaml" hapiproject/hapi:latest
+```
 
 ### Example docker-compose.yml
 
@@ -52,7 +56,7 @@ You can customize HAPI by telling HAPI to look for the configuration file in a d
 version: '3.7'
 services:
   web:
-    image: "hapiproject/hapi:tagname"
+    image: "hapiproject/hapi:latest"
     ports:
       - "8090:8080"
     configs:
