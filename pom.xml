@@ -2,6 +2,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- mvn clean package spring-boot:repackage && java -jar target/hapi-fhir-jpaserver.war -->
     <!--
     Note: HAPI projects use the "hapi-fhir" POM as their base to provide easy management.
     You do not need to use this in your own projects, so the "parent" tag and it's
@@ -117,7 +118,7 @@
             <artifactId>hapi-fhir-testpage-overlay</artifactId>
             <version>${project.version}</version>
             <classifier>classes</classifier>
-            <scope>provided</scope>
+
         </dependency>
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
@@ -275,33 +276,19 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <version>2.3.3.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>2.3.3.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-tomcat -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <version>2.3.3.RELEASE</version>
-            <scope>test</scope>
+
 
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <version>2.3.3.RELEASE</version>
-            <scope>test</scope>
+
         </dependency>
 
 
@@ -332,6 +319,20 @@
         <finalName>hapi-fhir-jpaserver</finalName>
 
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>ca.uhn.fhir.jpa.starter.Application</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- The following is not required for the application to build, but allows you to test it by issuing "mvn jetty:run" from the command line. -->
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
