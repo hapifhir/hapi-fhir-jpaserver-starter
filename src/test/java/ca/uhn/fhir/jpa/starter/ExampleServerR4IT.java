@@ -21,9 +21,9 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Person;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Subscription;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.nio.file.Paths;
@@ -35,8 +35,8 @@ import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
 import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ExampleServerR4IT {
 
@@ -61,6 +61,9 @@ public class ExampleServerR4IT {
         String methodName = "testCreateResourceConditional";
 
         Patient pt = new Patient();
+        pt.setActive(true);
+        pt.getBirthDateElement().setValueAsString("2020-01-01");
+        pt.addIdentifier().setSystem("http://foo").setValue("12345");
         pt.addName().setFamily(methodName);
         IIdType id = ourClient.create().resource(pt).execute().getId();
 
@@ -151,12 +154,12 @@ public class ExampleServerR4IT {
     return ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size();
   }
 
-  @AfterClass
+  @AfterAll
     public static void afterClass() throws Exception {
         ourServer.stop();
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() throws Exception {
         String path = Paths.get("").toAbsolutePath().toString();
 

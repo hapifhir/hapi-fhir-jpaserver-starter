@@ -20,20 +20,20 @@ public class Application {
     SpringApplication.run(Application.class, args);
 
     //Server is now accessible at eg. http://localhost:8080/fhir/metadata
+    //UI is now accessible at http://localhost:8080/
   }
 
   @Bean
   public ServletRegistrationBean servletRegistrationBean() {
 
-    AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
+    AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
+    annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
+    DispatcherServlet dispatcherServlet = new DispatcherServlet(annotationConfigWebApplicationContext);
+    dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
+    dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
 
-    ctx.register(FhirTesterConfig.class);
-
-    DispatcherServlet api = new DispatcherServlet(ctx);
-    api.setContextClass(AnnotationConfigWebApplicationContext.class);
-    api.setContextConfigLocation(FhirTesterConfig.class.getName());
     ServletRegistrationBean registrationBean = new ServletRegistrationBean();
-    registrationBean.setServlet(api);
+    registrationBean.setServlet(dispatcherServlet);
     registrationBean.addUrlMappings("/*");
     registrationBean.setLoadOnStartup(1);
     return registrationBean;
