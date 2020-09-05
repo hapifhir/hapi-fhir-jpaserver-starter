@@ -1,0 +1,62 @@
+spring:
+  datasource:
+    url: 'jdbc:h2:file:./target/database/h2'
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+    max-active: 15
+hapi:
+  fhir:
+    allow_cascading_deletes: true
+    allow_contains_searches: true
+    allow_external_references: true
+    allow_multiple_delete: true
+    allow_override_default_search_params: true
+    allow_placeholder_references: true
+    auto_create_placeholder_reference_targets: false
+    default_encoding: JSON
+    default_page_size: 20
+    enable_index_missing_fields: false
+    enforce_referential_integrity_on_delete: false
+    enforce_referential_integrity_on_write: false
+    etag_support_enabled: true
+    expunge_enabled: true
+    fhir_version: DSTU3
+    daoconfig_client_id_strategy:
+    fhirpath_interceptor_enabled: false
+    filter_search_enabled: true
+    graphql_enabled: true
+    logger:
+      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
+      format: >-
+        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
+        Operation[${operationType} ${operationName} ${idOrResourceName}]
+        UA[${requestHeader.user-agent}] Params[${requestParameters}]
+        ResponseEncoding[${responseEncodingNoDefault}]
+      log_exceptions: true
+      name: fhirtest.access
+    max_binary_size: 104857600
+    max_page_size: 200
+    retain_cached_searches_mins: 60
+    reuse_cached_search_results_millis: 60000
+    server:
+      id: home
+      name: Local Tester
+      server_address: 'http://localhost:8080/fhir'
+      refuse_to_fetch_third_party_urls: false
+    validation:
+      requests_enabled: false
+      responses_enabled: false
+
+    binary_storage_enabled: true
+    bulk_export_enabled: true
+elasticsearch:
+  debug:
+    pretty_print_json_log: false
+    refresh_after_write: false
+  enabled: false
+  password: SomePassword
+  required_index_status: YELLOW
+  rest_url: 'http://localhost:9200'
+  schema_management_strategy: CREATE
+  username: SomeUsername

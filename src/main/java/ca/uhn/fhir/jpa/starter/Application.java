@@ -1,16 +1,20 @@
 package ca.uhn.fhir.jpa.starter;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-@ServletComponentScan(basePackageClasses = {JpaRestfulServer.class})
+@ServletComponentScan(basePackageClasses = {JpaRestfulServer.class}, basePackages = "ca.uhn.fhir.jpa.starter")
 @SpringBootApplication(exclude = ElasticsearchRestClientAutoConfiguration.class)
+@EnableConfigurationProperties
+@EnableAutoConfiguration
 public class Application {
 
   public static void main(String[] args) {
