@@ -1,8 +1,11 @@
 package ca.uhn.fhir.jpa.starter;
 
+
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.api.config.DaoConfig.ClientIdStrategyEnum;
 import ca.uhn.fhir.rest.api.EncodingEnum;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -41,8 +44,17 @@ public class AppProperties {
   private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
 
   private Validation validation = new Validation();
-  private Tester tester = new Tester();
+  private List<Tester> tester = new ArrayList<>();
   private Logger logger = new Logger();
+  private Subscription subscription = new Subscription();
+
+  public Subscription getSubscription() {
+    return subscription;
+  }
+
+  public void setSubscription(Subscription subscription) {
+    this.subscription = subscription;
+  }
 
   public Validation getValidation() {
     return validation;
@@ -52,13 +64,6 @@ public class AppProperties {
     this.validation = validation;
   }
 
-  public Tester getTester() {
-    return tester;
-  }
-
-  public void setTester(Tester tester) {
-    this.tester = tester;
-  }
 
   public Logger getLogger() {
     return logger;
@@ -273,6 +278,14 @@ public class AppProperties {
     this.reuse_cached_search_results_millis = reuse_cached_search_results_millis;
   }
 
+  public List<Tester> getTester() {
+    return tester;
+  }
+
+  public void setTester(List<Tester> tester) {
+    this.tester = tester;
+  }
+
   public static class Logger {
 
     private String name = "fhirtest.access";
@@ -318,8 +331,17 @@ public class AppProperties {
 
     private String id = "home";
     private String name = "Local Tester";
-    private String address = "http://localhost:8080/fhir";
+    private String server_address = "http://localhost:8080/fhir";
     private Boolean refuse_to_fetch_third_party_urls = true;
+    private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
+
+    public FhirVersionEnum getFhir_version() {
+      return fhir_version;
+    }
+
+    public void setFhir_version(FhirVersionEnum fhir_version) {
+      this.fhir_version = fhir_version;
+    }
 
     public String getId() {
       return id;
@@ -337,12 +359,12 @@ public class AppProperties {
       this.name = name;
     }
 
-    public String getAddress() {
-      return address;
+    public String getServer_address() {
+      return server_address;
     }
 
-    public void setAddress(String address) {
-      this.address = address;
+    public void setServer_address(String server_address) {
+      this.server_address = server_address;
     }
 
     public Boolean getRefuse_to_fetch_third_party_urls() {
@@ -374,5 +396,36 @@ public class AppProperties {
     public void setResponses_enabled(Boolean responses_enabled) {
       this.responses_enabled = responses_enabled;
     }
+  }
+
+  public static class Subscription {
+
+    public Boolean getEmail_enabled() {
+      return email_enabled;
+    }
+
+    public void setEmail_enabled(Boolean email_enabled) {
+      this.email_enabled = email_enabled;
+    }
+
+    public Boolean getResthook_enabled() {
+      return resthook_enabled;
+    }
+
+    public void setResthook_enabled(Boolean resthook_enabled) {
+      this.resthook_enabled = resthook_enabled;
+    }
+
+    public Boolean getWebsocket_enabled() {
+      return websocket_enabled;
+    }
+
+    public void setWebsocket_enabled(Boolean websocket_enabled) {
+      this.websocket_enabled = websocket_enabled;
+    }
+
+    private Boolean email_enabled = false;
+    private Boolean resthook_enabled = false;
+    private Boolean websocket_enabled = false;
   }
 }

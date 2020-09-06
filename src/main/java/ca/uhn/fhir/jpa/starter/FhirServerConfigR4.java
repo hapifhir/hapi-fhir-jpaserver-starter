@@ -17,7 +17,6 @@ import javax.sql.DataSource;
 
 @Configuration
 @Profile("r4")
-@ConditionalOnClass(DataSource.class)
 public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 
     @Autowired

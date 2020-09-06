@@ -31,18 +31,10 @@ public class FhirServerConfigCommon {
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
 
 
-  private Boolean enableIndexMissingFields = HapiProperties.getEnableIndexMissingFields();
-  private Boolean autoCreatePlaceholderReferenceTargets = HapiProperties.getAutoCreatePlaceholderReferenceTargets();
-  private Boolean enforceReferentialIntegrityOnWrite = HapiProperties.getEnforceReferentialIntegrityOnWrite();
-  private Boolean enforceReferentialIntegrityOnDelete = HapiProperties.getEnforceReferentialIntegrityOnDelete();
-  private Boolean allowContainsSearches = HapiProperties.getAllowContainsSearches();
-  private Boolean allowMultipleDelete = HapiProperties.getAllowMultipleDelete();
-  private Boolean allowExternalReferences = HapiProperties.getAllowExternalReferences();
-  private Boolean expungeEnabled = HapiProperties.getExpungeEnabled();
-  private Boolean allowPlaceholderReferences = HapiProperties.getAllowPlaceholderReferences();
+
   private Boolean subscriptionRestHookEnabled = HapiProperties.getSubscriptionRestHookEnabled();
   private Boolean subscriptionEmailEnabled = HapiProperties.getSubscriptionEmailEnabled();
-  private Boolean allowOverrideDefaultSearchParams = HapiProperties.getAllowOverrideDefaultSearchParams();
+
   private String emailFrom = HapiProperties.getEmailFrom();
   private Boolean emailEnabled = HapiProperties.getEmailEnabled();
   private String emailHost = HapiProperties.getEmailHost();
@@ -118,26 +110,26 @@ public class FhirServerConfigCommon {
     retVal.setExpireSearchResultsAfterMillis(retainCachedSearchesMinutes * 60 * 1000);
 
     // Subscriptions are enabled by channel type
-    if (HapiProperties.getSubscriptionRestHookEnabled()) {
+    if (appProperties.getSubscription().getResthook_enabled()) {
       ourLog.info("Enabling REST-hook subscriptions");
       retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
     }
-    if (HapiProperties.getSubscriptionEmailEnabled()) {
+    if (appProperties.getSubscription().getEmail_enabled()) {
       ourLog.info("Enabling email subscriptions");
       retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
     }
-    if (HapiProperties.getSubscriptionWebsocketEnabled()) {
+    if (appProperties.getSubscription().getWebsocket_enabled()) {
       ourLog.info("Enabling websocket subscriptions");
       retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
     }
 
-    retVal.setFilterParameterEnabled(HapiProperties.getFilterSearchEnabled());
+    retVal.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
 
     return retVal;
   }
 
   @Bean
-  public PartitionSettings partitionSettings() {
+  public PartitionSettings partitionSettings(AppProperties appProperties) {
     PartitionSettings retVal = new PartitionSettings();
 
     // Partitioning

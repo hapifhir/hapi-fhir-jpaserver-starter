@@ -16,7 +16,6 @@ public class Application {
 
   public static void main(String[] args) {
 
-    System.setProperty("spring.profiles.active", "r4");
     System.setProperty("spring.batch.job.enabled", "false");
     SpringApplication.run(Application.class, args);
 

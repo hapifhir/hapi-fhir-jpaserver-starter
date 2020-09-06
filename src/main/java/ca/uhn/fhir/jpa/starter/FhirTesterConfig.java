@@ -33,18 +33,22 @@ public class FhirTesterConfig {
 	 * deploying your server to a place with a fully qualified domain name,
 	 * you might want to use that instead of using the variable.
 	 */
-	@Bean
-	public TesterConfig testerConfig(AppProperties appProperties) {
-		TesterConfig retVal = new TesterConfig();
-		retVal
-			.addServer()
-				.withId(appProperties.getTester().getId())
-				.withFhirVersion(appProperties.getFhir_version())
-				.withBaseUrl(appProperties.getTester().getAddress())
-				.withName(appProperties.getTester().getName());
-		retVal.setRefuseToFetchThirdPartyUrls(appProperties.getTester().getRefuse_to_fetch_third_party_urls());
-		return retVal;
-	}
+  @Bean
+  public TesterConfig testerConfig(AppProperties appProperties) {
+    TesterConfig retVal = new TesterConfig();
+    appProperties.getTester().stream().forEach(t -> {
+      retVal
+        .addServer()
+        .withId(t.getId())
+        .withFhirVersion(t.getFhir_version())
+        .withBaseUrl(t.getServer_address())
+        .withName(t.getName());
+      retVal.setRefuseToFetchThirdPartyUrls(
+        t.getRefuse_to_fetch_third_party_urls());
+
+    });
+    return retVal;
+  }
 
 }
 //@formatter:on

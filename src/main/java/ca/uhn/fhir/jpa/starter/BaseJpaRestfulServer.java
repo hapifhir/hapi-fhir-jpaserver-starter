@@ -4,6 +4,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.interceptor.api.IInterceptorService;
+import ca.uhn.fhir.jpa.api.IDaoRegistry;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
@@ -12,6 +13,7 @@ import ca.uhn.fhir.jpa.bulk.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.GraphQLProvider;
+import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
 import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
@@ -49,6 +51,9 @@ import javax.servlet.ServletException;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Meta;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
+import org.springframework.aop.framework.Advised;
+import org.springframework.aop.support.AopUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
@@ -57,6 +62,24 @@ import org.springframework.web.cors.CorsConfiguration;
 public class BaseJpaRestfulServer extends RestfulServer {
 
   AppProperties hapiProperties;
+
+  @Autowired
+  DaoRegistry daoRegistry;
+
+  @Autowired
+  DaoConfig daoConfig;
+
+  @Autowired
+  ISearchParamRegistry searchParamRegistry;
+
+  @Autowired
+  IFhirSystemDao fhirSystemDao;
+
+  @Autowired
+  ResourceProviderFactory resourceProviders;
+
+  @Autowired
+  IJpaSystemProvider jpaSystemProvider;
 
   public BaseJpaRestfulServer(AppProperties appProperties) {
     this.hapiProperties = appProperties;
@@ -69,12 +92,13 @@ public class BaseJpaRestfulServer extends RestfulServer {
   protected void initialize() throws ServletException {
     super.initialize();
 
+    ApplicationContext appCtx = (ApplicationContext) getServletContext()
+      .getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
+
     /*
      * Create a FhirContext object that uses the version of FHIR
      * specified in the properties file.
      */
-    ApplicationContext appCtx = (ApplicationContext) getServletContext()
-      .getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
     // Customize supported resource types
     Set<String> supportedResourceTypes = HapiProperties.getSupportedResourceTypes();
 
@@ -83,37 +107,16 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     if (!supportedResourceTypes.isEmpty()) {
-      DaoRegistry daoRegistry = appCtx.getBean(DaoRegistry.class);
       daoRegistry.setSupportedResourceTypes(supportedResourceTypes);
     }
 
-    /*
-     * ResourceProviders are fetched from the Spring context
-     */
-    FhirVersionEnum fhirVersion = HapiProperties.getFhirVersion();
-    ResourceProviderFactory resourceProviders;
-    Object systemProvider;
-    if (fhirVersion == FhirVersionEnum.DSTU2) {
-      resourceProviders = appCtx.getBean("myResourceProvidersDstu2", ResourceProviderFactory.class);
-      systemProvider = appCtx.getBean("mySystemProviderDstu2", JpaSystemProviderDstu2.class);
-    } else if (fhirVersion == FhirVersionEnum.DSTU3) {
-      resourceProviders = appCtx.getBean("myResourceProvidersDstu3", ResourceProviderFactory.class);
-      systemProvider = appCtx.getBean("mySystemProviderDstu3", JpaSystemProviderDstu3.class);
-    } else if (fhirVersion == FhirVersionEnum.R4) {
-      resourceProviders = appCtx.getBean("myResourceProvidersR4", ResourceProviderFactory.class);
-      systemProvider = appCtx.getBean("mySystemProviderR4", JpaSystemProviderR4.class);
-    } else if (fhirVersion == FhirVersionEnum.R5) {
-      resourceProviders = appCtx.getBean("myResourceProvidersR5", ResourceProviderFactory.class);
-      systemProvider = appCtx.getBean("mySystemProviderR5", JpaSystemProviderR5.class);
-    } else {
-      throw new IllegalStateException();
-    }
 
-    setFhirContext(appCtx.getBean(FhirContext.class));
 
+    setFhirContext(fhirSystemDao.getContext());
     registerProviders(resourceProviders.createProviders());
-    registerProvider(systemProvider);
+    registerProvider(jpaSystemProvider);
 
+    FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
     /*
      * The conformance provider exports the supported resources, search parameters, etc for
      * this server. The JPA version adds resourceProviders counts to the exported statement, so it
@@ -122,34 +125,30 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * You can also create your own subclass of the conformance provider if you need to
      * provide further customization of your server's CapabilityStatement
      */
-    DaoConfig daoConfig = appCtx.getBean(DaoConfig.class);
-    ISearchParamRegistry searchParamRegistry = appCtx.getBean(ISearchParamRegistry.class);
+
+
     if (fhirVersion == FhirVersionEnum.DSTU2) {
-      IFhirSystemDao<ca.uhn.fhir.model.dstu2.resource.Bundle, MetaDt> systemDao = appCtx
-        .getBean("mySystemDaoDstu2", IFhirSystemDao.class);
-      JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, systemDao,
+
+      JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, fhirSystemDao,
         daoConfig);
       confProvider.setImplementationDescription("HAPI FHIR DSTU2 Server");
       setServerConformanceProvider(confProvider);
     } else {
       if (fhirVersion == FhirVersionEnum.DSTU3) {
-        IFhirSystemDao<Bundle, Meta> systemDao = appCtx
-          .getBean("mySystemDaoDstu3", IFhirSystemDao.class);
-        JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, systemDao,
+
+        JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, fhirSystemDao,
           daoConfig, searchParamRegistry);
         confProvider.setImplementationDescription("HAPI FHIR DSTU3 Server");
         setServerConformanceProvider(confProvider);
       } else if (fhirVersion == FhirVersionEnum.R4) {
-        IFhirSystemDao<org.hl7.fhir.r4.model.Bundle, org.hl7.fhir.r4.model.Meta> systemDao = appCtx
-          .getBean("mySystemDaoR4", IFhirSystemDao.class);
-        JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, systemDao,
+
+        JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, fhirSystemDao,
           daoConfig, searchParamRegistry);
         confProvider.setImplementationDescription("HAPI FHIR R4 Server");
         setServerConformanceProvider(confProvider);
       } else if (fhirVersion == FhirVersionEnum.R5) {
-        IFhirSystemDao<org.hl7.fhir.r5.model.Bundle, org.hl7.fhir.r5.model.Meta> systemDao = appCtx
-          .getBean("mySystemDaoR5", IFhirSystemDao.class);
-        JpaConformanceProviderR5 confProvider = new JpaConformanceProviderR5(this, systemDao,
+
+        JpaConformanceProviderR5 confProvider = new JpaConformanceProviderR5(this, fhirSystemDao,
           daoConfig, searchParamRegistry);
         confProvider.setImplementationDescription("HAPI FHIR R5 Server");
         setServerConformanceProvider(confProvider);
@@ -185,6 +184,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * a performance hit when performing searches that return lots of results,
      * but makes the server much more scalable.
      */
+
     setPagingProvider(appCtx.getBean(DatabaseBackedPagingProvider.class));
 
     /*
@@ -347,6 +347,18 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
       daoConfig.setResourceClientIdStrategy(HapiProperties.getClientIdStrategy());
     }
+  }
+
+  protected <T> T getBeanWithoutProxy(Object bean) {
+
+    if (AopUtils.isAopProxy(bean) && bean instanceof Advised) {
+      try {
+        return (T) ((Advised) bean).getTargetSource().getTarget();
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return (T)bean;
   }
 
 }
