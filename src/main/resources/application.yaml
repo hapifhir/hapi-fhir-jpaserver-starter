@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
+    url: 'jdbc:h2:file:./target/database/h2dflkjglkj'
     username: sa
     password:
     driverClassName: org.h2.Driver
@@ -39,14 +39,14 @@ hapi:
     max_page_size: 200
     retain_cached_searches_mins: 60
     reuse_cached_search_results_millis: 60000
-    server:
+    tester:
       id: home
       name: Local Tester
       server_address: 'http://localhost:8080/fhir'
       refuse_to_fetch_third_party_urls: false
     validation:
-      requests_enabled: false
-      responses_enabled: false
+      requests_enabled: true
+      responses_enabled: true
 
     binary_storage_enabled: true
     bulk_export_enabled: true

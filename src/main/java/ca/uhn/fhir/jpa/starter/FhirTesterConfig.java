@@ -1,11 +1,10 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.to.FhirTesterMvcConfig;
+import ca.uhn.fhir.to.TesterConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-
-import ca.uhn.fhir.to.FhirTesterMvcConfig;
-import ca.uhn.fhir.to.TesterConfig;
 
 //@formatter:off
 /**
@@ -35,15 +34,15 @@ public class FhirTesterConfig {
 	 * you might want to use that instead of using the variable.
 	 */
 	@Bean
-	public TesterConfig testerConfig() {
+	public TesterConfig testerConfig(AppProperties appProperties) {
 		TesterConfig retVal = new TesterConfig();
 		retVal
 			.addServer()
-				.withId(HapiProperties.getServerId())
-				.withFhirVersion(HapiProperties.getFhirVersion())
-				.withBaseUrl(HapiProperties.getServerAddress())
-				.withName(HapiProperties.getServerName());
-		retVal.setRefuseToFetchThirdPartyUrls(HapiProperties.getTesterConfigRefustToFetchThirdPartyUrls());
+				.withId(appProperties.getTester().getId())
+				.withFhirVersion(appProperties.getFhir_version())
+				.withBaseUrl(appProperties.getTester().getAddress())
+				.withName(appProperties.getTester().getName());
+		retVal.setRefuseToFetchThirdPartyUrls(appProperties.getTester().getRefuse_to_fetch_third_party_urls());
 		return retVal;
 	}
 

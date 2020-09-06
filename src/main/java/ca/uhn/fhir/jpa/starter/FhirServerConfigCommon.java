@@ -30,6 +30,7 @@ public class FhirServerConfigCommon {
 
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
 
+
   private Boolean enableIndexMissingFields = HapiProperties.getEnableIndexMissingFields();
   private Boolean autoCreatePlaceholderReferenceTargets = HapiProperties.getAutoCreatePlaceholderReferenceTargets();
   private Boolean enforceReferentialIntegrityOnWrite = HapiProperties.getEnforceReferentialIntegrityOnWrite();
@@ -57,13 +58,13 @@ public class FhirServerConfigCommon {
   @Autowired
   private ApplicationContext appContext;
 
-  public FhirServerConfigCommon() {
-    ourLog.info("Server configured to " + (this.allowContainsSearches ? "allow" : "deny") + " contains searches");
-    ourLog.info("Server configured to " + (this.allowMultipleDelete ? "allow" : "deny") + " multiple deletes");
-    ourLog.info("Server configured to " + (this.allowExternalReferences ? "allow" : "deny") + " external references");
-    ourLog.info("Server configured to " + (this.expungeEnabled ? "enable" : "disable") + " expunges");
-    ourLog.info("Server configured to " + (this.allowPlaceholderReferences ? "allow" : "deny") + " placeholder references");
-    ourLog.info("Server configured to " + (this.allowOverrideDefaultSearchParams ? "allow" : "deny") + " overriding default search params");
+  public FhirServerConfigCommon(AppProperties appProperties) {
+    ourLog.info("Server configured to " + (appProperties.getAllow_contains_searches() ? "allow" : "deny") + " contains searches");
+    ourLog.info("Server configured to " + (appProperties.getAllow_multiple_delete() ? "allow" : "deny") + " multiple deletes");
+    ourLog.info("Server configured to " + (appProperties.getAllow_external_references() ? "allow" : "deny") + " external references");
+    ourLog.info("Server configured to " + (appProperties.getExpunge_enabled() ? "enable" : "disable") + " expunges");
+    ourLog.info("Server configured to " + (appProperties.getAllow_placeholder_references() ? "allow" : "deny") + " placeholder references");
+    ourLog.info("Server configured to " + (appProperties.getAllow_override_default_search_params() ? "allow" : "deny") + " overriding default search params");
 
     if (this.emailEnabled) {
       ourLog.info("Server is configured to enable email with host '" + this.emailHost + "' and port " + this.emailPort.toString());
@@ -91,25 +92,25 @@ public class FhirServerConfigCommon {
    * Configure FHIR properties around the the JPA server via this bean
    */
   @Bean()
-  public DaoConfig daoConfig() {
+  public DaoConfig daoConfig(AppProperties appProperties) {
     DaoConfig retVal = new DaoConfig();
 
-    retVal.setIndexMissingFields(this.enableIndexMissingFields ? DaoConfig.IndexEnabledEnum.ENABLED : DaoConfig.IndexEnabledEnum.DISABLED);
-    retVal.setAutoCreatePlaceholderReferenceTargets(this.autoCreatePlaceholderReferenceTargets);
-    retVal.setEnforceReferentialIntegrityOnWrite(this.enforceReferentialIntegrityOnWrite);
-    retVal.setEnforceReferentialIntegrityOnDelete(this.enforceReferentialIntegrityOnDelete);
-    retVal.setAllowContainsSearches(this.allowContainsSearches);
-    retVal.setAllowMultipleDelete(this.allowMultipleDelete);
-    retVal.setAllowExternalReferences(this.allowExternalReferences);
-    retVal.setExpungeEnabled(this.expungeEnabled);
-    retVal.setAutoCreatePlaceholderReferenceTargets(this.allowPlaceholderReferences);
+    retVal.setIndexMissingFields(appProperties.getEnable_index_missing_fields() ? DaoConfig.IndexEnabledEnum.ENABLED : DaoConfig.IndexEnabledEnum.DISABLED);
+    retVal.setAutoCreatePlaceholderReferenceTargets(appProperties.getAuto_create_placeholder_reference_targets());
+    retVal.setEnforceReferentialIntegrityOnWrite(appProperties.getEnforce_referential_integrity_on_write());
+    retVal.setEnforceReferentialIntegrityOnDelete(appProperties.getEnforce_referential_integrity_on_delete());
+    retVal.setAllowContainsSearches(appProperties.getAllow_contains_searches());
+    retVal.setAllowMultipleDelete(appProperties.getAllow_multiple_delete());
+    retVal.setAllowExternalReferences(appProperties.getAllow_external_references());
+    retVal.setExpungeEnabled(appProperties.getExpunge_enabled());
+    retVal.setAutoCreatePlaceholderReferenceTargets(appProperties.getAllow_placeholder_references());
     retVal.setEmailFromAddress(this.emailFrom);
 
-    Integer maxFetchSize = HapiProperties.getMaximumFetchSize();
+    Integer maxFetchSize =  appProperties.getMax_page_size();
     retVal.setFetchSizeDefaultMaximum(maxFetchSize);
     ourLog.info("Server configured to have a maximum fetch size of " + (maxFetchSize == Integer.MAX_VALUE ? "'unlimited'" : maxFetchSize));
 
-    Long reuseCachedSearchResultsMillis = HapiProperties.getReuseCachedSearchResultsMillis();
+    Long reuseCachedSearchResultsMillis = appProperties.getReuse_cached_search_results_millis();
     retVal.setReuseCachedSearchResultsForMillis(reuseCachedSearchResultsMillis);
     ourLog.info("Server configured to cache search results for {} milliseconds", reuseCachedSearchResultsMillis);
 
@@ -149,11 +150,11 @@ public class FhirServerConfigCommon {
 
 
   @Bean
-  public ModelConfig modelConfig() {
+  public ModelConfig modelConfig(AppProperties appProperties) {
     ModelConfig modelConfig = new ModelConfig();
-    modelConfig.setAllowContainsSearches(this.allowContainsSearches);
-    modelConfig.setAllowExternalReferences(this.allowExternalReferences);
-    modelConfig.setDefaultSearchParamsCanBeOverridden(this.allowOverrideDefaultSearchParams);
+    modelConfig.setAllowContainsSearches(appProperties.getAllow_contains_searches());
+    modelConfig.setAllowExternalReferences(appProperties.getAllow_external_references());
+    modelConfig.setDefaultSearchParamsCanBeOverridden(appProperties.getAllow_override_default_search_params());
     modelConfig.setEmailFromAddress(this.emailFrom);
 
     // You can enable these if you want to support Subscriptions from your server
@@ -174,7 +175,7 @@ public class FhirServerConfigCommon {
    * <p>
    * A URL to a remote database could also be placed here, along with login credentials and other properties supported by BasicDataSource.
    */
-  @Bean(destroyMethod = "close")
+  /*@Bean(destroyMethod = "close")
   public BasicDataSource dataSource() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
     BasicDataSource retVal = new BasicDataSource();
     Driver driver = (Driver) Class.forName(HapiProperties.getDataSourceDriver()).getConstructor().newInstance();
@@ -184,7 +185,7 @@ public class FhirServerConfigCommon {
     retVal.setPassword(HapiProperties.getDataSourcePassword());
     retVal.setMaxTotal(HapiProperties.getDataSourceMaxPoolSize());
     return retVal;
-  }
+  }*/
 
   @Lazy
   @Bean

@@ -32,18 +32,17 @@ public class AppProperties {
   private Boolean graphql_enabled = true;
   private Boolean binary_storage_enabled = true;
   private Boolean bulk_export_enabled = true;
+  private Integer max_binary_size = 104857600;
+  private Integer max_page_size = Integer.MAX_VALUE;
+  private Integer retain_cached_searches_mins = 60;
+  private Long reuse_cached_search_results_millis = 60000L;
   private EncodingEnum default_encoding = EncodingEnum.JSON;
   private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
-  private Integer max_binary_size = 104857600;
-  private Integer max_page_size = 200;
-  private Integer retain_cached_searches_mins = 60;
-  private Integer reuse_cached_search_results_millis = 60000;
   private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
 
-
-  private Validation validation;
-  private Server server;
-  private Logger logger;
+  private Validation validation = new Validation();
+  private Tester tester = new Tester();
+  private Logger logger = new Logger();
 
   public Validation getValidation() {
     return validation;
@@ -53,12 +52,12 @@ public class AppProperties {
     this.validation = validation;
   }
 
-  public Server getServer() {
-    return server;
+  public Tester getTester() {
+    return tester;
   }
 
-  public void setServer(Server server) {
-    this.server = server;
+  public void setTester(Tester tester) {
+    this.tester = tester;
   }
 
   public Logger getLogger() {
@@ -266,11 +265,11 @@ public class AppProperties {
     this.retain_cached_searches_mins = retain_cached_searches_mins;
   }
 
-  public Integer getReuse_cached_search_results_millis() {
+  public Long getReuse_cached_search_results_millis() {
     return reuse_cached_search_results_millis;
   }
 
-  public void setReuse_cached_search_results_millis(Integer reuse_cached_search_results_millis) {
+  public void setReuse_cached_search_results_millis(Long reuse_cached_search_results_millis) {
     this.reuse_cached_search_results_millis = reuse_cached_search_results_millis;
   }
 
@@ -315,7 +314,7 @@ public class AppProperties {
   }
 
 
-  public static class Server {
+  public static class Tester {
 
     private String id = "home";
     private String name = "Local Tester";
