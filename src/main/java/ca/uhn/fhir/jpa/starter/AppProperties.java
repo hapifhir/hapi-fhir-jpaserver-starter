@@ -8,6 +8,7 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import org.hl7.fhir.r4.model.Bundle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -51,7 +52,7 @@ public class AppProperties {
   private List<Bundle.BundleType> allowed_bundle_types = null;
 
   private Validation validation = new Validation();
-  private List<Tester> tester = new ArrayList<>();
+  private List<Tester> tester = ImmutableList.of(new Tester());
   private Logger logger = new Logger();
   private Subscription subscription = new Subscription();
   private Cors cors = null;
@@ -353,7 +354,7 @@ public class AppProperties {
 
   public static class Cors {
     private Boolean allow_Credentials = true;
-    private List<String> allowed_origin = new ArrayList<>();//List.of("*");
+    private List<String> allowed_origin = ImmutableList.of("*");
 
     public List<String> getAllowed_origin() {
       return allowed_origin;

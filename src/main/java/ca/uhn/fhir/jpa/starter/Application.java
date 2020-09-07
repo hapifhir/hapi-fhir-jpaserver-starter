@@ -6,15 +6,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
-
-import java.util.Arrays;
 
 @ServletComponentScan(basePackageClasses = {JpaRestfulServer.class}, basePackages = "ca.uhn.fhir.jpa.starter")
 @SpringBootApplication(exclude = ElasticsearchRestClientAutoConfiguration.class)
@@ -25,8 +22,8 @@ public class Application extends SpringBootServletInitializer {
     System.setProperty("spring.batch.job.enabled", "false");
     SpringApplication.run(Application.class, args);
 
-    //Server is now accessible at eg. http://localhost:8080/fhir/metadata
-    //UI is now accessible at http://localhost:8080/
+    //Server is now accessible at eg. http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata
+    //UI is now accessible at http://localhost:8080/hapi-fhir-jpaserver/
   }
 
   @Override
@@ -34,7 +31,6 @@ public class Application extends SpringBootServletInitializer {
     SpringApplicationBuilder builder) {
     return builder.sources(Application.class);
   }
-
 
   @Autowired
   AutowireCapableBeanFactory beanFactory;
@@ -51,7 +47,7 @@ public class Application extends SpringBootServletInitializer {
   }
 
   @Bean
-  public ServletRegistrationBean servletRegistrationBean() {
+  public ServletRegistrationBean overlayRegistrationBean() {
 
     AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
     annotationConfigWebApplicationContext.register(FhirTesterConfig.class);

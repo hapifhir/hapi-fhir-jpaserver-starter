@@ -1,12 +1,10 @@
 package ca.uhn.fhir.jpa.starter;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
-//@WebServlet(urlPatterns = {"/hapi-fhir-jpaserver/fhir/*"})
+import javax.servlet.ServletException;
+
 @Import(AppProperties.class)
 public class JpaRestfulServer extends BaseJpaRestfulServer {
 

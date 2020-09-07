@@ -9,18 +9,12 @@ import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHan
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.JavaMailEmailSender;
 import com.google.common.base.Strings;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.hl7.fhir.dstu2.model.Subscription;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.thymeleaf.util.Validate;
 
-import java.lang.reflect.InvocationTargetException;
-import java.sql.Driver;
 import java.util.Optional;
 
 /**
@@ -32,8 +26,6 @@ public class FhirServerConfigCommon {
 
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
 
-  @Autowired
-  private ApplicationContext appContext;
 
   public FhirServerConfigCommon(AppProperties appProperties) {
     ourLog.info("Server configured to " + (appProperties.getAllow_contains_searches() ? "allow" : "deny") + " contains searches");
