@@ -4,8 +4,11 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.api.config.DaoConfig.ClientIdStrategyEnum;
 import ca.uhn.fhir.rest.api.EncodingEnum;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hl7.fhir.r4.model.Bundle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties
 public class AppProperties {
 
-
+  private Boolean empi_enabled = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
   private Boolean allow_external_references = false;
@@ -24,7 +27,6 @@ public class AppProperties {
   private Boolean allow_override_default_search_params = true;
   private Boolean allow_placeholder_references = true;
   private Boolean auto_create_placeholder_reference_targets = true;
-  private Integer default_page_size = 20;
   private Boolean enable_index_missing_fields = false;
   private Boolean enforce_referential_integrity_on_delete = true;
   private Boolean enforce_referential_integrity_on_write = true;
@@ -35,21 +37,77 @@ public class AppProperties {
   private Boolean graphql_enabled = true;
   private Boolean binary_storage_enabled = true;
   private Boolean bulk_export_enabled = true;
-  private Integer max_binary_size = 104857600;
+  private Boolean default_pretty_print = true;
+  private Integer default_page_size = 20;
+  private Integer max_binary_size = null;
   private Integer max_page_size = Integer.MAX_VALUE;
-  private Integer retain_cached_searches_mins = 60;
+  private Long retain_cached_searches_mins = 60L;
   private Long reuse_cached_search_results_millis = 60000L;
+  private String server_address = null;
   private EncodingEnum default_encoding = EncodingEnum.JSON;
   private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
   private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
+  private List<String> supported_resource_types = new ArrayList<>();
+  private List<Bundle.BundleType> allowed_bundle_types = null;
 
   private Validation validation = new Validation();
   private List<Tester> tester = new ArrayList<>();
   private Logger logger = new Logger();
   private Subscription subscription = new Subscription();
+  private Cors cors = null;
+  private Partitioning partitioning = null;
+
+  public Partitioning getPartitioning() {
+    return partitioning;
+  }
+
+  public void setPartitioning(Partitioning partitioning) {
+    this.partitioning = partitioning;
+  }
+
+  public Boolean getEmpi_enabled() {
+    return empi_enabled;
+  }
+
+  public void setEmpi_enabled(Boolean empi_enabled) {
+    this.empi_enabled = empi_enabled;
+  }
+
+
+  public Cors getCors() {
+    return cors;
+  }
+
+  public void setCors(Cors cors) {
+    this.cors = cors;
+  }
+
+  public List<Bundle.BundleType> getAllowed_bundle_types() {
+    return allowed_bundle_types;
+  }
+
+  public void setAllowed_bundle_types(List<Bundle.BundleType> allowed_bundle_types) {
+    this.allowed_bundle_types = allowed_bundle_types;
+  }
+
+  public String getServer_address() {
+    return server_address;
+  }
+
+  public void setServer_address(String server_address) {
+    this.server_address = server_address;
+  }
 
   public Subscription getSubscription() {
     return subscription;
+  }
+
+  public Boolean getDefault_pretty_print() {
+    return default_pretty_print;
+  }
+
+  public void setDefault_pretty_print(Boolean default_pretty_print) {
+    this.default_pretty_print = default_pretty_print;
   }
 
   public void setSubscription(Subscription subscription) {
@@ -64,6 +122,13 @@ public class AppProperties {
     this.validation = validation;
   }
 
+  public List<String> getSupported_resource_types() {
+    return supported_resource_types;
+  }
+
+  public void setSupported_resource_types(List<String> supported_resource_types) {
+    this.supported_resource_types = supported_resource_types;
+  }
 
   public Logger getLogger() {
     return logger;
@@ -262,11 +327,11 @@ public class AppProperties {
     this.max_page_size = max_page_size;
   }
 
-  public Integer getRetain_cached_searches_mins() {
+  public Long getRetain_cached_searches_mins() {
     return retain_cached_searches_mins;
   }
 
-  public void setRetain_cached_searches_mins(Integer retain_cached_searches_mins) {
+  public void setRetain_cached_searches_mins(Long retain_cached_searches_mins) {
     this.retain_cached_searches_mins = retain_cached_searches_mins;
   }
 
@@ -284,6 +349,29 @@ public class AppProperties {
 
   public void setTester(List<Tester> tester) {
     this.tester = tester;
+  }
+
+  public static class Cors {
+    private Boolean allow_Credentials = true;
+    private List<String> allowed_origin = new ArrayList<>();//List.of("*");
+
+    public List<String> getAllowed_origin() {
+      return allowed_origin;
+    }
+
+    public void setAllowed_origin(List<String> allowed_origin) {
+      this.allowed_origin = allowed_origin;
+    }
+
+    public Boolean getAllow_Credentials() {
+      return allow_Credentials;
+    }
+
+    public void setAllow_Credentials(Boolean allow_Credentials) {
+      this.allow_Credentials = allow_Credentials;
+    }
+
+
   }
 
   public static class Logger {
@@ -398,15 +486,21 @@ public class AppProperties {
     }
   }
 
+  public static class Partitioning {
+
+    private Boolean partitioning_include_in_search_hashes = false;
+
+
+    public Boolean getPartitioning_include_in_search_hashes() {
+      return partitioning_include_in_search_hashes;
+    }
+
+    public void setPartitioning_include_in_search_hashes(Boolean partitioning_include_in_search_hashes) {
+      this.partitioning_include_in_search_hashes = partitioning_include_in_search_hashes;
+    }
+  }
+
   public static class Subscription {
-
-    public Boolean getEmail_enabled() {
-      return email_enabled;
-    }
-
-    public void setEmail_enabled(Boolean email_enabled) {
-      this.email_enabled = email_enabled;
-    }
 
     public Boolean getResthook_enabled() {
       return resthook_enabled;
@@ -424,8 +518,101 @@ public class AppProperties {
       this.websocket_enabled = websocket_enabled;
     }
 
-    private Boolean email_enabled = false;
     private Boolean resthook_enabled = false;
     private Boolean websocket_enabled = false;
+    private Email email = null;
+
+    public Email getEmail() {
+      return email;
+    }
+
+    public void setEmail(Email email) {
+      this.email = email;
+    }
+
+
+    public static class Email {
+      public String getFrom() {
+        return from;
+      }
+
+      public void setFrom(String from) {
+        this.from = from;
+      }
+
+      public String getHost() {
+        return host;
+      }
+
+      public void setHost(String host) {
+        this.host = host;
+      }
+
+      public Integer getPort() {
+        return port;
+      }
+
+      public void setPort(Integer port) {
+        this.port = port;
+      }
+
+      public String getUsername() {
+        return username;
+      }
+
+      public void setUsername(String username) {
+        this.username = username;
+      }
+
+      public String getPassword() {
+        return password;
+      }
+
+      public void setPassword(String password) {
+        this.password = password;
+      }
+
+      public Boolean getAuth() {
+        return auth;
+      }
+
+      public void setAuth(Boolean auth) {
+        this.auth = auth;
+      }
+
+      public Boolean getStartTlsEnable() {
+        return startTlsEnable;
+      }
+
+      public void setStartTlsEnable(Boolean startTlsEnable) {
+        this.startTlsEnable = startTlsEnable;
+      }
+
+      public Boolean getStartTlsRequired() {
+        return startTlsRequired;
+      }
+
+      public void setStartTlsRequired(Boolean startTlsRequired) {
+        this.startTlsRequired = startTlsRequired;
+      }
+
+      public Boolean getQuitWait() {
+        return quitWait;
+      }
+
+      public void setQuitWait(Boolean quitWait) {
+        this.quitWait = quitWait;
+      }
+
+      private String from;
+      private String host;
+      private Integer port = 25;
+      private String username;
+      private String password;
+      private Boolean auth = false;
+      private Boolean startTlsEnable = false;
+      private Boolean startTlsRequired = false;
+      private Boolean quitWait = false;
+    }
   }
 }

@@ -26,10 +26,10 @@ public class ExampleServerDstu2IT {
 	private static Server ourServer;
 
 	static {
-		HapiProperties.forceReload();
-		HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "DSTU2");
-		HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr2");
 		ourCtx = FhirContext.forDstu2();
+    System.setProperty("spring.profiles.active", "dstu2");
+    System.setProperty("spring.batch.job.enabled", "false");
+    System.setProperty("spring.datasource.url", "jdbc:h2:mem:dbr2");
 	}
 
 	@Test
@@ -60,7 +60,8 @@ public class ExampleServerDstu2IT {
 
 		WebAppContext webAppContext = new WebAppContext();
 		webAppContext.setContextPath("/hapi-fhir-jpaserver");
-		webAppContext.setDescriptor(path + "/src/main/webapp/WEB-INF/web.xml");
+
+
 		webAppContext.setResourceBase(path + "/target/hapi-fhir-jpaserver-starter");
 		webAppContext.setParentLoaderPriority(true);
 

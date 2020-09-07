@@ -4,7 +4,6 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.interceptor.api.IInterceptorService;
-import ca.uhn.fhir.jpa.api.IDaoRegistry;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
@@ -12,56 +11,36 @@ import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
-import ca.uhn.fhir.jpa.provider.GraphQLProvider;
-import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
-import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
-import ca.uhn.fhir.jpa.provider.JpaSystemProviderDstu2;
-import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
-import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
+import ca.uhn.fhir.jpa.provider.*;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
-import ca.uhn.fhir.jpa.provider.dstu3.JpaSystemProviderDstu3;
 import ca.uhn.fhir.jpa.provider.r4.JpaConformanceProviderR4;
-import ca.uhn.fhir.jpa.provider.r4.JpaSystemProviderR4;
 import ca.uhn.fhir.jpa.provider.r5.JpaConformanceProviderR5;
-import ca.uhn.fhir.jpa.provider.r5.JpaSystemProviderR5;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.searchparam.registry.ISearchParamRegistry;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
-import ca.uhn.fhir.model.dstu2.composite.MetaDt;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
+import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
 import ca.uhn.fhir.rest.server.RestfulServer;
-import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.FhirPathFilterInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.*;
 import ca.uhn.fhir.rest.server.interceptor.partition.RequestTenantPartitionInterceptor;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
-import javax.servlet.ServletException;
-import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.Meta;
+import com.google.common.base.Strings;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
-import org.springframework.aop.framework.Advised;
-import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
+
+import javax.servlet.ServletException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class BaseJpaRestfulServer extends RestfulServer {
 
-  AppProperties hapiProperties;
 
   @Autowired
   DaoRegistry daoRegistry;
@@ -81,8 +60,35 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   IJpaSystemProvider jpaSystemProvider;
 
-  public BaseJpaRestfulServer(AppProperties appProperties) {
-    this.hapiProperties = appProperties;
+  @Autowired
+  IInterceptorBroadcaster interceptorBroadcaster;
+
+  @Autowired
+  DatabaseBackedPagingProvider databaseBackedPagingProvider;
+
+  @Autowired
+  IInterceptorService interceptorService;
+
+  @Autowired
+  IValidatorModule validatorModule;
+
+  @Autowired
+  Optional<GraphQLProvider> graphQLProvider;
+
+  @Autowired
+  BulkDataExportProvider bulkDataExportProvider;
+
+  @Autowired
+  PartitionManagementProvider partitionManagementProvider;
+
+  @Autowired
+  BinaryStorageInterceptor binaryStorageInterceptor;
+
+  @Autowired
+  AppProperties appProperties;
+
+  public BaseJpaRestfulServer() {
+
   }
 
   private static final long serialVersionUID = 1L;
@@ -92,25 +98,17 @@ public class BaseJpaRestfulServer extends RestfulServer {
   protected void initialize() throws ServletException {
     super.initialize();
 
-    ApplicationContext appCtx = (ApplicationContext) getServletContext()
-      .getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
-
     /*
      * Create a FhirContext object that uses the version of FHIR
      * specified in the properties file.
      */
     // Customize supported resource types
-    Set<String> supportedResourceTypes = HapiProperties.getSupportedResourceTypes();
+    List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
 
     if (!supportedResourceTypes.isEmpty() && !supportedResourceTypes.contains("SearchParameter")) {
       supportedResourceTypes.add("SearchParameter");
-    }
-
-    if (!supportedResourceTypes.isEmpty()) {
       daoRegistry.setSupportedResourceTypes(supportedResourceTypes);
     }
-
-
 
     setFhirContext(fhirSystemDao.getContext());
     registerProviders(resourceProviders.createProviders());
@@ -160,7 +158,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
     /*
      * ETag Support
      */
-    setETagSupport(HapiProperties.getEtagSupport());
+
+    if(appProperties.getEtag_support_enabled() == false)
+      setETagSupport(ETagSupportEnum.DISABLED);
+
 
     /*
      * This server tries to dynamically generate narratives
@@ -171,12 +172,12 @@ public class BaseJpaRestfulServer extends RestfulServer {
     /*
      * Default to JSON and pretty printing
      */
-    setDefaultPrettyPrint(HapiProperties.getDefaultPrettyPrint());
+    setDefaultPrettyPrint(appProperties.getDefault_pretty_print());
 
     /*
      * Default encoding
      */
-    setDefaultResponseEncoding(HapiProperties.getDefaultEncoding());
+    setDefaultResponseEncoding(appProperties.getDefault_encoding());
 
     /*
      * This configures the server to page search results to and from
@@ -185,7 +186,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * but makes the server much more scalable.
      */
 
-    setPagingProvider(appCtx.getBean(DatabaseBackedPagingProvider.class));
+    setPagingProvider(databaseBackedPagingProvider);
 
     /*
      * This interceptor formats the output using nice colourful
@@ -195,7 +196,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
     ResponseHighlighterInterceptor responseHighlighterInterceptor = new ResponseHighlighterInterceptor();
     this.registerInterceptor(responseHighlighterInterceptor);
 
-    if (HapiProperties.isFhirPathFilterInterceptorEnabled()) {
+    if (appProperties.getFhirpath_interceptor_enabled()) {
       registerInterceptor(new FhirPathFilterInterceptor());
     }
 
@@ -203,10 +204,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * Add some logging for each request
      */
     LoggingInterceptor loggingInterceptor = new LoggingInterceptor();
-    loggingInterceptor.setLoggerName(HapiProperties.getLoggerName());
-    loggingInterceptor.setMessageFormat(HapiProperties.getLoggerFormat());
-    loggingInterceptor.setErrorMessageFormat(HapiProperties.getLoggerErrorFormat());
-    loggingInterceptor.setLogExceptions(HapiProperties.getLoggerLogExceptions());
+    loggingInterceptor.setLoggerName(appProperties.getLogger().getName());
+    loggingInterceptor.setMessageFormat(appProperties.getLogger().getFormat());
+    loggingInterceptor.setErrorMessageFormat(appProperties.getLogger().getError_format());
+    loggingInterceptor.setLogExceptions(appProperties.getLogger().getLog_exceptions());
     this.registerInterceptor(loggingInterceptor);
 
     /*
@@ -215,8 +216,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * this doesn't always work. If you are setting links in your search bundles that
      * just refer to "localhost", you might want to use a server address strategy:
      */
-    String serverAddress = HapiProperties.getServerAddress();
-    if (serverAddress != null && serverAddress.length() > 0) {
+    String serverAddress = appProperties.getServer_address();
+    if (!Strings.isNullOrEmpty(serverAddress)) {
       setServerAddressStrategy(new HardcodedServerAddressStrategy(serverAddress));
     }
 
@@ -228,21 +229,21 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * with this feature.
      */
     if (false) { // <-- DISABLED RIGHT NOW
-      registerProvider(appCtx.getBean(TerminologyUploaderProvider.class));
+      //registerProvider(appCtx.getBean(TerminologyUploaderProvider.class));
     }
 
     // If you want to enable the $trigger-subscription operation to allow
     // manual triggering of a subscription delivery, enable this provider
     if (false) { // <-- DISABLED RIGHT NOW
-      SubscriptionTriggeringProvider retriggeringProvider = appCtx
+     /* SubscriptionTriggeringProvider retriggeringProvider = appCtx
         .getBean(SubscriptionTriggeringProvider.class);
-      registerProvider(retriggeringProvider);
+      registerProvider(retriggeringProvider);*/
     }
 
     // Define your CORS configuration. This is an example
     // showing a typical setup. You should customize this
     // to your specific needs
-    if (HapiProperties.getCorsEnabled()) {
+    if (appProperties.getCors() != null) {
       CorsConfiguration config = new CorsConfiguration();
       config.addAllowedHeader(HttpHeaders.ORIGIN);
       config.addAllowedHeader(HttpHeaders.ACCEPT);
@@ -252,17 +253,15 @@ public class BaseJpaRestfulServer extends RestfulServer {
       config.addAllowedHeader("x-fhir-starter");
       config.addAllowedHeader("X-Requested-With");
       config.addAllowedHeader("Prefer");
-      String allAllowedCORSOrigins = HapiProperties.getCorsAllowedOrigin();
-      Arrays.stream(allAllowedCORSOrigins.split(",")).forEach(o -> {
-        config.addAllowedOrigin(o);
-      });
-      config.addAllowedOrigin(HapiProperties.getCorsAllowedOrigin());
+      List<String> allAllowedCORSOrigins = appProperties.getCors().getAllowed_origin();
+      allAllowedCORSOrigins.forEach(config::addAllowedOrigin);
+
 
       config.addExposedHeader("Location");
       config.addExposedHeader("Content-Location");
       config.setAllowedMethods(
         Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
-      config.setAllowCredentials(HapiProperties.getCorsAllowedCredentials());
+      config.setAllowCredentials(appProperties.getCors().getAllow_Credentials());
 
       // Create the interceptor and register it
       CorsInterceptor interceptor = new CorsInterceptor(config);
@@ -271,40 +270,35 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     // If subscriptions are enabled, we want to register the interceptor that
     // will activate them and match results against them
-    if (HapiProperties.getSubscriptionWebsocketEnabled() ||
-      HapiProperties.getSubscriptionEmailEnabled() ||
-      HapiProperties.getSubscriptionRestHookEnabled()) {
+    if (appProperties.getSubscription() != null) {
       // Subscription debug logging
-      IInterceptorService interceptorService = appCtx.getBean(IInterceptorService.class);
       interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
     }
 
     // Cascading deletes
-    DaoRegistry daoRegistry = appCtx.getBean(DaoRegistry.class);
-    IInterceptorBroadcaster interceptorBroadcaster = appCtx.getBean(IInterceptorBroadcaster.class);
-    if (HapiProperties.getAllowCascadingDeletes()) {
+
+
+    if (appProperties.getAllow_cascading_deletes()) {
       CascadingDeleteInterceptor cascadingDeleteInterceptor = new CascadingDeleteInterceptor(ctx,
         daoRegistry, interceptorBroadcaster);
       getInterceptorService().registerInterceptor(cascadingDeleteInterceptor);
     }
 
     // Binary Storage
-    if (HapiProperties.isBinaryStorageEnabled()) {
-      BinaryStorageInterceptor binaryStorageInterceptor = appCtx
-        .getBean(BinaryStorageInterceptor.class);
+    if (appProperties.getBinary_storage_enabled()) {
       getInterceptorService().registerInterceptor(binaryStorageInterceptor);
     }
 
     // Validation
-    IValidatorModule validatorModule = appCtx.getBean(IValidatorModule.class);
+
     if (validatorModule != null) {
-      if (HapiProperties.getValidateRequestsEnabled()) {
+      if (appProperties.getValidation().getRequests_enabled()) {
         RequestValidatingInterceptor interceptor = new RequestValidatingInterceptor();
         interceptor.setFailOnSeverity(ResultSeverityEnum.ERROR);
         interceptor.setValidatorModules(Collections.singletonList(validatorModule));
         registerInterceptor(interceptor);
       }
-      if (HapiProperties.getValidateResponsesEnabled()) {
+      if (appProperties.getValidation().getResponses_enabled()) {
         ResponseValidatingInterceptor interceptor = new ResponseValidatingInterceptor();
         interceptor.setFailOnSeverity(ResultSeverityEnum.ERROR);
         interceptor.setValidatorModules(Collections.singletonList(validatorModule));
@@ -313,52 +307,33 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     // GraphQL
-    if (HapiProperties.getGraphqlEnabled()) {
+    if (appProperties.getGraphql_enabled()) {
       if (fhirVersion.isEqualOrNewerThan(FhirVersionEnum.DSTU3)) {
-        registerProvider(appCtx.getBean(GraphQLProvider.class));
+        registerProvider(graphQLProvider.get());
       }
     }
 
-    if (!HapiProperties.getAllowedBundleTypes().isEmpty()) {
-      String allowedBundleTypesString = HapiProperties.getAllowedBundleTypes();
-      Set<String> allowedBundleTypes = new HashSet<>();
-      Arrays.stream(allowedBundleTypesString.split(",")).forEach(o -> {
-        BundleType type = BundleType.valueOf(o);
-        allowedBundleTypes.add(type.toCode());
-      });
-      DaoConfig config = daoConfig;
-      config.setBundleTypesAllowedForStorage(
-        Collections.unmodifiableSet(new TreeSet<>(allowedBundleTypes)));
+    if (appProperties.getAllowed_bundle_types() != null) {
+      daoConfig.setBundleTypesAllowedForStorage(appProperties.getAllowed_bundle_types().stream().map(BundleType::toCode).collect(Collectors.toSet()));
     }
 
     // Bulk Export
-    if (HapiProperties.getBulkExportEnabled()) {
-      registerProvider(appCtx.getBean(BulkDataExportProvider.class));
+    if (appProperties.getBulk_export_enabled()) {
+      registerProvider(bulkDataExportProvider);
     }
 
     // Partitioning
-    if (HapiProperties.getPartitioningMultitenancyEnabled()) {
+    if (appProperties.getPartitioning() != null) {
       registerInterceptor(new RequestTenantPartitionInterceptor());
       setTenantIdentificationStrategy(new UrlBaseTenantIdentificationStrategy());
-      registerProviders(appCtx.getBean(PartitionManagementProvider.class));
+      registerProviders(partitionManagementProvider);
     }
 
-    if (HapiProperties.getClientIdStrategy() == DaoConfig.ClientIdStrategyEnum.ANY) {
+    if (appProperties.getClient_id_strategy() == DaoConfig.ClientIdStrategyEnum.ANY) {
       daoConfig.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
-      daoConfig.setResourceClientIdStrategy(HapiProperties.getClientIdStrategy());
+      daoConfig.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
     }
   }
 
-  protected <T> T getBeanWithoutProxy(Object bean) {
-
-    if (AopUtils.isAopProxy(bean) && bean instanceof Advised) {
-      try {
-        return (T) ((Advised) bean).getTargetSource().getTarget();
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }
-    return (T)bean;
-  }
 
 }

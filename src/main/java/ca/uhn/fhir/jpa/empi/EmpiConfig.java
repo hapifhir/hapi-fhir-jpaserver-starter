@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.empi;
 import ca.uhn.fhir.empi.api.IEmpiSettings;
 import ca.uhn.fhir.empi.rules.config.EmpiRuleValidator;
 import ca.uhn.fhir.empi.rules.config.EmpiSettings;
+import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.HapiProperties;
 import com.google.common.base.Charsets;
 import org.apache.commons.io.IOUtils;
@@ -21,11 +22,11 @@ import java.io.IOException;
 public class EmpiConfig {
 
   @Bean
-  IEmpiSettings empiSettings(EmpiRuleValidator theEmpiRuleValidator) throws IOException {
+  IEmpiSettings empiSettings(EmpiRuleValidator theEmpiRuleValidator, AppProperties appProperties) throws IOException {
     DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
     Resource resource = resourceLoader.getResource("empi-rules.json");
     String json = IOUtils.toString(resource.getInputStream(), Charsets.UTF_8);
-    return new EmpiSettings(theEmpiRuleValidator).setEnabled(HapiProperties.getEmpiEnabled()).setScriptText(json);
+    return new EmpiSettings(theEmpiRuleValidator).setEnabled(appProperties.getEmpi_enabled()).setScriptText(json);
   }
 
 }

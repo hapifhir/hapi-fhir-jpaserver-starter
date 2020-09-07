@@ -8,6 +8,7 @@ import ca.uhn.fhir.jpa.model.entity.ModelConfig;
 import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.JavaMailEmailSender;
+import com.google.common.base.Strings;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hl7.fhir.dstu2.model.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.thymeleaf.util.Validate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Driver;
+import java.util.Optional;
 
 /**
  * This is the primary configuration file for the example server
@@ -29,23 +31,6 @@ import java.sql.Driver;
 public class FhirServerConfigCommon {
 
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
-
-
-
-  private Boolean subscriptionRestHookEnabled = HapiProperties.getSubscriptionRestHookEnabled();
-  private Boolean subscriptionEmailEnabled = HapiProperties.getSubscriptionEmailEnabled();
-
-  private String emailFrom = HapiProperties.getEmailFrom();
-  private Boolean emailEnabled = HapiProperties.getEmailEnabled();
-  private String emailHost = HapiProperties.getEmailHost();
-  private Integer emailPort = HapiProperties.getEmailPort();
-  private String emailUsername = HapiProperties.getEmailUsername();
-  private String emailPassword = HapiProperties.getEmailPassword();
-  private Boolean emailAuth = HapiProperties.getEmailAuth();
-  private Boolean emailStartTlsEnable = HapiProperties.getEmailStartTlsEnable();
-  private Boolean emailStartTlsRequired = HapiProperties.getEmailStartTlsRequired();
-  private Boolean emailQuitWait = HapiProperties.getEmailQuitWait();
-
 
   @Autowired
   private ApplicationContext appContext;
@@ -58,24 +43,25 @@ public class FhirServerConfigCommon {
     ourLog.info("Server configured to " + (appProperties.getAllow_placeholder_references() ? "allow" : "deny") + " placeholder references");
     ourLog.info("Server configured to " + (appProperties.getAllow_override_default_search_params() ? "allow" : "deny") + " overriding default search params");
 
-    if (this.emailEnabled) {
-      ourLog.info("Server is configured to enable email with host '" + this.emailHost + "' and port " + this.emailPort.toString());
-      ourLog.info("Server will use '" + this.emailFrom + "' as the from email address");
+    if (appProperties.getSubscription().getEmail() != null) {
+      AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
+      ourLog.info("Server is configured to enable email with host '" + email.getHost() + "' and port " + email.getPort());
+      ourLog.info("Server will use '" + email.getFrom() + "' as the from email address");
 
-      if (this.emailUsername != null && this.emailUsername.length() > 0) {
-        ourLog.info("Server is configured to use username '" + this.emailUsername + "' for email");
+      if (!Strings.isNullOrEmpty(email.getUsername())) {
+        ourLog.info("Server is configured to use username '" + email.getUsername() + "' for email");
       }
 
-      if (this.emailPassword != null && this.emailPassword.length() > 0) {
+      if (!Strings.isNullOrEmpty(email.getPassword())) {
         ourLog.info("Server is configured to use a password for email");
       }
     }
 
-    if (this.subscriptionRestHookEnabled) {
+    if (appProperties.getSubscription().getResthook_enabled()) {
       ourLog.info("REST-hook subscriptions enabled");
     }
 
-    if (this.subscriptionEmailEnabled) {
+    if (appProperties.getSubscription().getEmail() != null) {
       ourLog.info("Email subscriptions enabled");
     }
   }
@@ -96,7 +82,8 @@ public class FhirServerConfigCommon {
     retVal.setAllowExternalReferences(appProperties.getAllow_external_references());
     retVal.setExpungeEnabled(appProperties.getExpunge_enabled());
     retVal.setAutoCreatePlaceholderReferenceTargets(appProperties.getAllow_placeholder_references());
-    retVal.setEmailFromAddress(this.emailFrom);
+    if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
+      retVal.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
 
     Integer maxFetchSize =  appProperties.getMax_page_size();
     retVal.setFetchSizeDefaultMaximum(maxFetchSize);
@@ -106,21 +93,24 @@ public class FhirServerConfigCommon {
     retVal.setReuseCachedSearchResultsForMillis(reuseCachedSearchResultsMillis);
     ourLog.info("Server configured to cache search results for {} milliseconds", reuseCachedSearchResultsMillis);
 
-    Long retainCachedSearchesMinutes = HapiProperties.getExpireSearchResultsAfterMins();
+
+    Long retainCachedSearchesMinutes = appProperties.getRetain_cached_searches_mins();
     retVal.setExpireSearchResultsAfterMillis(retainCachedSearchesMinutes * 60 * 1000);
 
-    // Subscriptions are enabled by channel type
-    if (appProperties.getSubscription().getResthook_enabled()) {
-      ourLog.info("Enabling REST-hook subscriptions");
-      retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
-    }
-    if (appProperties.getSubscription().getEmail_enabled()) {
-      ourLog.info("Enabling email subscriptions");
-      retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
-    }
-    if (appProperties.getSubscription().getWebsocket_enabled()) {
-      ourLog.info("Enabling websocket subscriptions");
-      retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
+    if(appProperties.getSubscription() != null) {
+      // Subscriptions are enabled by channel type
+      if (appProperties.getSubscription().getResthook_enabled()) {
+        ourLog.info("Enabling REST-hook subscriptions");
+        retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
+      }
+      if (appProperties.getSubscription().getEmail() != null) {
+        ourLog.info("Enabling email subscriptions");
+        retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
+      }
+      if (appProperties.getSubscription().getWebsocket_enabled()) {
+        ourLog.info("Enabling websocket subscriptions");
+        retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
+      }
     }
 
     retVal.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
@@ -133,7 +123,7 @@ public class FhirServerConfigCommon {
     PartitionSettings retVal = new PartitionSettings();
 
     // Partitioning
-    if (HapiProperties.getPartitioningMultitenancyEnabled()) {
+    if (appProperties.getPartitioning() != null) {
       retVal.setPartitioningEnabled(true);
     }
 
@@ -147,14 +137,15 @@ public class FhirServerConfigCommon {
     modelConfig.setAllowContainsSearches(appProperties.getAllow_contains_searches());
     modelConfig.setAllowExternalReferences(appProperties.getAllow_external_references());
     modelConfig.setDefaultSearchParamsCanBeOverridden(appProperties.getAllow_override_default_search_params());
-    modelConfig.setEmailFromAddress(this.emailFrom);
+    if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
+      modelConfig.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
 
     // You can enable these if you want to support Subscriptions from your server
-    if (this.subscriptionRestHookEnabled) {
+    if (appProperties.getSubscription() != null && appProperties.getSubscription().getResthook_enabled() != null) {
       modelConfig.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.RESTHOOK);
     }
 
-    if (this.subscriptionEmailEnabled) {
+    if (appProperties.getSubscription()  != null && appProperties.getSubscription().getEmail() != null) {
       modelConfig.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
     }
 
@@ -181,34 +172,33 @@ public class FhirServerConfigCommon {
 
   @Lazy
   @Bean
-  public IBinaryStorageSvc binaryStorageSvc() {
+  public IBinaryStorageSvc binaryStorageSvc(AppProperties appProperties) {
     DatabaseBlobBinaryStorageSvcImpl binaryStorageSvc = new DatabaseBlobBinaryStorageSvcImpl();
 
-    if (HapiProperties.getMaxBinarySize() != null) {
-      binaryStorageSvc.setMaximumBinarySize(HapiProperties.getMaxBinarySize());
+    if (appProperties.getMax_binary_size() != null) {
+      binaryStorageSvc.setMaximumBinarySize(appProperties.getMax_binary_size());
     }
 
     return binaryStorageSvc;
   }
 
   @Bean()
-  public IEmailSender emailSender() {
-    if (this.emailEnabled) {
+  public IEmailSender emailSender(AppProperties appProperties, Optional<SubscriptionDeliveryHandlerFactory> subscriptionDeliveryHandlerFactory) {
+    if (appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null) {
       JavaMailEmailSender retVal = new JavaMailEmailSender();
 
-      retVal.setSmtpServerHostname(this.emailHost);
-      retVal.setSmtpServerPort(this.emailPort);
-      retVal.setSmtpServerUsername(this.emailUsername);
-      retVal.setSmtpServerPassword(this.emailPassword);
-      retVal.setAuth(this.emailAuth);
-      retVal.setStartTlsEnable(this.emailStartTlsEnable);
-      retVal.setStartTlsRequired(this.emailStartTlsRequired);
-      retVal.setQuitWait(this.emailQuitWait);
+      AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
+      retVal.setSmtpServerHostname(email.getHost());
+      retVal.setSmtpServerPort(email.getPort());
+      retVal.setSmtpServerUsername(email.getUsername());
+      retVal.setSmtpServerPassword(email.getPassword());
+      retVal.setAuth(email.getAuth());
+      retVal.setStartTlsEnable(email.getStartTlsEnable());
+      retVal.setStartTlsRequired(email.getStartTlsRequired());
+      retVal.setQuitWait(email.getQuitWait());
 
-      SubscriptionDeliveryHandlerFactory subscriptionDeliveryHandlerFactory = appContext.getBean(SubscriptionDeliveryHandlerFactory.class);
-      Validate.notNull(subscriptionDeliveryHandlerFactory, "No subscription delivery handler");
-      subscriptionDeliveryHandlerFactory.setEmailSender(retVal);
-
+      if(subscriptionDeliveryHandlerFactory.isPresent())
+       subscriptionDeliveryHandlerFactory.get().setEmailSender(retVal);
 
       return retVal;
     }

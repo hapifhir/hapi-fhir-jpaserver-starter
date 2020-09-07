@@ -18,6 +18,12 @@
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
 
+    <properties>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+    </properties>
+
     <prerequisites>
         <maven>3.6.0</maven>
     </prerequisites>
@@ -293,8 +299,6 @@
         </dependency>
 
 
-
-
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-logging -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -374,6 +378,9 @@
                         </overlay>
                     </overlays>
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+
                 </configuration>
             </plugin>
 

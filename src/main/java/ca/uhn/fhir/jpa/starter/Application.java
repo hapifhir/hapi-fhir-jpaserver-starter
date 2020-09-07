@@ -34,7 +34,7 @@ public class Application {
 
     ServletRegistrationBean registrationBean = new ServletRegistrationBean();
     registrationBean.setServlet(dispatcherServlet);
-    registrationBean.addUrlMappings("/*");
+    registrationBean.addUrlMappings("/hapi-fhir-jpaserver/*", "/*");
     registrationBean.setLoadOnStartup(1);
     return registrationBean;
 
