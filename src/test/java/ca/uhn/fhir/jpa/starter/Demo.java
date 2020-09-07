@@ -7,13 +7,13 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 
 @ServletComponentScan(basePackageClasses = {JpaRestfulServer.class})
 @SpringBootApplication(exclude = ElasticsearchRestClientAutoConfiguration.class)
-public class Application {
+public class Demo {
 
   public static void main(String[] args) {
 
     System.setProperty("spring.profiles.active", "r4");
     System.setProperty("spring.batch.job.enabled", "false");
-    SpringApplication.run(Application.class, args);
+    SpringApplication.run(Demo.class, args);
 
     //Server is now accessible at eg. http://localhost:8080/metadata
   }

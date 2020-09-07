@@ -7,26 +7,20 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
-import ca.uhn.fhir.test.utilities.JettyUtil;
 import ca.uhn.fhir.util.BundleUtil;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Observation;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Person;
-import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.Subscription;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.hl7.fhir.r4.model.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.net.URI;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -38,26 +32,28 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
+  {
+    "spring.batch.job.enabled=false",
+    "spring.profiles.active=r5",
+    "spring.datasource.url=jdbc:h2:mem:dbr5",
+    "hapi.fhir.subscription.websocket_enabled=true",
+    "hapi.fhir.empi_enabled=true"
+  })
 public class ExampleServerR4IT {
 
-    private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
-    private static IGenericClient ourClient;
-    private static FhirContext ourCtx;
-    private static int ourPort;
-    private static Server ourServer;
+  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
+  private IGenericClient ourClient;
+  private FhirContext ourCtx;
 
-    static {
-        HapiProperties.forceReload();
-        HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr4");
-        HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "R4");
-        HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
-        HapiProperties.setProperty(HapiProperties.EMPI_ENABLED, "true");
-        ourCtx = FhirContext.forR4();
-    }
+  @LocalServerPort
+  private int port;
+
 
     @Test
-    public void testCreateAndRead() {
-        ourLog.info("Base URL is: " + HapiProperties.getServerAddress());
+    void testCreateAndRead() {
+
         String methodName = "testCreateResourceConditional";
 
         Patient pt = new Patient();
@@ -121,7 +117,7 @@ public class ExampleServerR4IT {
         SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
 
         myWebSocketClient.start();
-        URI echoUri = new URI("ws://localhost:" + ourPort + "/hapi-fhir-jpaserver/websocket");
+        URI echoUri = new URI("ws://localhost:" + port + "/hapi-fhir-jpaserver/websocket");
         ClientUpgradeRequest request = new ClientUpgradeRequest();
         ourLog.info("Connecting to : {}", echoUri);
         Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
@@ -154,42 +150,16 @@ public class ExampleServerR4IT {
     return ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size();
   }
 
-  @AfterAll
-    public static void afterClass() throws Exception {
-        ourServer.stop();
-    }
 
-    @BeforeAll
-    public static void beforeClass() throws Exception {
-        String path = Paths.get("").toAbsolutePath().toString();
 
-        ourLog.info("Project base path is: {}", path);
+  @BeforeEach
+  void beforeEach() {
 
-        ourServer = new Server(0);
-
-        WebAppContext webAppContext = new WebAppContext();
-        webAppContext.setContextPath("/hapi-fhir-jpaserver");
-        webAppContext.setDisplayName("HAPI FHIR");
-        webAppContext.setDescriptor(path + "/src/main/webapp/WEB-INF/web.xml");
-        webAppContext.setResourceBase(path + "/target/hapi-fhir-jpaserver-starter");
-        webAppContext.setParentLoaderPriority(true);
-
-        ourServer.setHandler(webAppContext);
-        ourServer.start();
-
-        ourPort = JettyUtil.getPortForStartedServer(ourServer);
-
-        ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-        ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-        String ourServerBase = HapiProperties.getServerAddress();
-        ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
-
-        ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-        ourClient.registerInterceptor(new LoggingInterceptor(true));
-    }
-
-    public static void main(String[] theArgs) throws Exception {
-        ourPort = 8080;
-        beforeClass();
-    }
+    ourCtx = FhirContext.forR4();
+    ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+    ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
+    String ourServerBase = "http://localhost:" + port + "/hapi-fhir-jpaserver/fhir/";
+    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
+    ourClient.registerInterceptor(new LoggingInterceptor(true));
+  }
 }

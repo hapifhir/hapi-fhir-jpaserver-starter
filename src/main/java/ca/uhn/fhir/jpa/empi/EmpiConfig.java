@@ -4,7 +4,6 @@ import ca.uhn.fhir.empi.api.IEmpiSettings;
 import ca.uhn.fhir.empi.rules.config.EmpiRuleValidator;
 import ca.uhn.fhir.empi.rules.config.EmpiSettings;
 import ca.uhn.fhir.jpa.starter.AppProperties;
-import ca.uhn.fhir.jpa.starter.HapiProperties;
 import com.google.common.base.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.springframework.context.annotation.Bean;

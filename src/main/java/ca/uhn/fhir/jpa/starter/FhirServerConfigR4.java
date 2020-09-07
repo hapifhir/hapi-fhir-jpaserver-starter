@@ -26,13 +26,16 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
      * the default/max page sizes for search results. You can set these however
      * you want, although very large page sizes will require a lot of RAM.
      */
-    @Override
-    public DatabaseBackedPagingProvider databaseBackedPagingProvider() {
-        DatabaseBackedPagingProvider pagingProvider = super.databaseBackedPagingProvider();
-        pagingProvider.setDefaultPageSize(HapiProperties.getDefaultPageSize());
-        pagingProvider.setMaximumPageSize(HapiProperties.getMaximumPageSize());
-        return pagingProvider;
-    }
+    @Autowired
+    AppProperties appProperties;
+
+  @Override
+  public DatabaseBackedPagingProvider databaseBackedPagingProvider() {
+    DatabaseBackedPagingProvider pagingProvider = super.databaseBackedPagingProvider();
+    pagingProvider.setDefaultPageSize(appProperties.getDefault_page_size());
+    pagingProvider.setMaximumPageSize(appProperties.getMax_page_size());
+    return pagingProvider;
+  }
 
     @Override
     @Bean()
@@ -46,7 +49,7 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
             throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
         }
 
-        retVal.setJpaProperties(HapiProperties.getJpaProperties());
+
         return retVal;
     }
 
