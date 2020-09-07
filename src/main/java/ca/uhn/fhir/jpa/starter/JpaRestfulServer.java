@@ -6,7 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
-@WebServlet(urlPatterns = {"/hapi-fhir-jpaserver/fhir/*"})
+//@WebServlet(urlPatterns = {"/hapi-fhir-jpaserver/fhir/*"})
 @Import(AppProperties.class)
 public class JpaRestfulServer extends BaseJpaRestfulServer {
 
