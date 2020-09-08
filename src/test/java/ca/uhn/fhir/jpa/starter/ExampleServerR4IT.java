@@ -51,37 +51,37 @@ public class ExampleServerR4IT {
   private int port;
 
 
-    @Test
-    void testCreateAndRead() {
+  @Test
+  void testCreateAndRead() {
 
-        String methodName = "testCreateResourceConditional";
+    String methodName = "testCreateResourceConditional";
 
-        Patient pt = new Patient();
-        pt.setActive(true);
-        pt.getBirthDateElement().setValueAsString("2020-01-01");
-        pt.addIdentifier().setSystem("http://foo").setValue("12345");
-        pt.addName().setFamily(methodName);
-        IIdType id = ourClient.create().resource(pt).execute().getId();
+    Patient pt = new Patient();
+    pt.setActive(true);
+    pt.getBirthDateElement().setValueAsString("2020-01-01");
+    pt.addIdentifier().setSystem("http://foo").setValue("12345");
+    pt.addName().setFamily(methodName);
+    IIdType id = ourClient.create().resource(pt).execute().getId();
 
-        Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
-        assertEquals(methodName, pt2.getName().get(0).getFamily());
+    Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
+    assertEquals(methodName, pt2.getName().get(0).getFamily());
 
-        // Test EMPI
+    // Test EMPI
 
-        // Wait until the EMPI message has been processed
-        await().until(() -> getPeople().size() > 0);
-        List<Person> persons = getPeople();
+    // Wait until the EMPI message has been processed
+    await().until(() -> getPeople().size() > 0);
+    List<Person> persons = getPeople();
 
-        // Verify a Person was created that links to our Patient
-        Optional<String> personLinkToCreatedPatient = persons.stream()
-          .map(Person::getLink)
-          .flatMap(Collection::stream)
-          .map(Person.PersonLinkComponent::getTarget)
-          .map(Reference::getReference)
-          .filter(pid -> id.toUnqualifiedVersionless().getValue().equals(pid))
-          .findAny();
-        assertTrue(personLinkToCreatedPatient.isPresent());
-    }
+    // Verify a Person was created that links to our Patient
+    Optional<String> personLinkToCreatedPatient = persons.stream()
+      .map(Person::getLink)
+      .flatMap(Collection::stream)
+      .map(Person.PersonLinkComponent::getTarget)
+      .map(Reference::getReference)
+      .filter(pid -> id.toUnqualifiedVersionless().getValue().equals(pid))
+      .findAny();
+    assertTrue(personLinkToCreatedPatient.isPresent());
+  }
 
   private List<Person> getPeople() {
     Bundle bundle = ourClient.search().forResource(Person.class).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute();
@@ -89,67 +89,66 @@ public class ExampleServerR4IT {
   }
 
   @Test
-    public void testWebsocketSubscription() throws Exception {
-        /*
-         * Create subscription
-         */
-        Subscription subscription = new Subscription();
-        subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
-        subscription.setStatus(Subscription.SubscriptionStatus.REQUESTED);
-        subscription.setCriteria("Observation?status=final");
+  public void testWebsocketSubscription() throws Exception {
+    /*
+     * Create subscription
+     */
+    Subscription subscription = new Subscription();
+    subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
+    subscription.setStatus(Subscription.SubscriptionStatus.REQUESTED);
+    subscription.setCriteria("Observation?status=final");
 
-        Subscription.SubscriptionChannelComponent channel = new Subscription.SubscriptionChannelComponent();
-        channel.setType(Subscription.SubscriptionChannelType.WEBSOCKET);
-        channel.setPayload("application/json");
-        subscription.setChannel(channel);
+    Subscription.SubscriptionChannelComponent channel = new Subscription.SubscriptionChannelComponent();
+    channel.setType(Subscription.SubscriptionChannelType.WEBSOCKET);
+    channel.setPayload("application/json");
+    subscription.setChannel(channel);
 
-        MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
-        IIdType mySubscriptionId = methodOutcome.getId();
+    MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
+    IIdType mySubscriptionId = methodOutcome.getId();
 
-        // Wait for the subscription to be activated
-        await().until(() -> activeSubscriptionCount() == 3);
+    // Wait for the subscription to be activated
+    await().until(() -> activeSubscriptionCount() == 3);
 
-        /*
-         * Attach websocket
-         */
+    /*
+     * Attach websocket
+     */
 
-        WebSocketClient myWebSocketClient = new WebSocketClient();
-        SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
+    WebSocketClient myWebSocketClient = new WebSocketClient();
+    SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
 
-        myWebSocketClient.start();
-        URI echoUri = new URI("ws://localhost:" + port + "/hapi-fhir-jpaserver/websocket");
-        ClientUpgradeRequest request = new ClientUpgradeRequest();
-        ourLog.info("Connecting to : {}", echoUri);
-        Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
-        Session session = connection.get(2, TimeUnit.SECONDS);
+    myWebSocketClient.start();
+    URI echoUri = new URI("ws://localhost:" + port + "/hapi-fhir-jpaserver/websocket");
+    ClientUpgradeRequest request = new ClientUpgradeRequest();
+    ourLog.info("Connecting to : {}", echoUri);
+    Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
+    Session session = connection.get(2, TimeUnit.SECONDS);
 
-        ourLog.info("Connected to WS: {}", session.isOpen());
+    ourLog.info("Connected to WS: {}", session.isOpen());
 
-        /*
-         * Create a matching resource
-         */
-        Observation obs = new Observation();
-        obs.setStatus(Observation.ObservationStatus.FINAL);
-        ourClient.create().resource(obs).execute();
+    /*
+     * Create a matching resource
+     */
+    Observation obs = new Observation();
+    obs.setStatus(Observation.ObservationStatus.FINAL);
+    ourClient.create().resource(obs).execute();
 
-        // Give some time for the subscription to deliver
-        Thread.sleep(2000);
+    // Give some time for the subscription to deliver
+    Thread.sleep(2000);
 
-        /*
-         * Ensure that we receive a ping on the websocket
-         */
-        waitForSize(1, () -> mySocketImplementation.myPingCount);
+    /*
+     * Ensure that we receive a ping on the websocket
+     */
+    waitForSize(1, () -> mySocketImplementation.myPingCount);
 
-        /*
-         * Clean up
-         */
-        ourClient.delete().resourceById(mySubscriptionId).execute();
-    }
+    /*
+     * Clean up
+     */
+    ourClient.delete().resourceById(mySubscriptionId).execute();
+  }
 
   private int activeSubscriptionCount() {
     return ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size();
   }
-
 
 
   @BeforeEach

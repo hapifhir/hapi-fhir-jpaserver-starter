@@ -122,7 +122,7 @@ public class ExampleServerR5IT {
     /*
      * Ensure that we receive a ping on the websocket
      */
-    await().until(()->mySocketImplementation.myPingCount > 0);
+    await().until(() -> mySocketImplementation.myPingCount > 0);
 
     /*
      * Clean up
