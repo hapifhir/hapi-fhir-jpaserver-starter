@@ -14,12 +14,14 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
 @ServletComponentScan(basePackageClasses = {
   JpaRestfulServer.class}, basePackages = "ca.uhn.fhir.jpa.starter")
 @SpringBootApplication(exclude = ElasticsearchRestClientAutoConfiguration.class)
+@Import({SubscriptionSubmitterConfig.class, SubscriptionProcessorConfig.class, SubscriptionChannelConfig.class,WebsocketDispatcherConfig.class })
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
@@ -52,17 +54,11 @@ public class Application extends SpringBootServletInitializer {
     return servletRegistrationBean;
   }
 
-
   @Bean
   public ServletRegistrationBean overlayRegistrationBean() {
 
     AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
     annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
-
-    annotationConfigWebApplicationContext.register(SubscriptionSubmitterConfig.class);
-    annotationConfigWebApplicationContext.register(SubscriptionProcessorConfig.class);
-    annotationConfigWebApplicationContext.register(SubscriptionChannelConfig.class);
-    annotationConfigWebApplicationContext.register(WebsocketDispatcherConfig.class);
 
     DispatcherServlet dispatcherServlet = new DispatcherServlet(
       annotationConfigWebApplicationContext);
