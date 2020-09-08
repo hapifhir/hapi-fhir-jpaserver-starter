@@ -24,8 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     "spring.profiles.active=r4",
     "spring.datasource.url=jdbc:h2:mem:dbr4-mt",
     "hapi.fhir.subscription.websocket_enabled=true",
-    "hapi.fhir.subscription.websocket_enabled=true",
-    "hapi.fhir.partitioning_multitenancy_enabled"
+    "hapi.fhir.partitioning.partitioning_include_in_search_hashes=false"
 
   })
 public class MultitenantServerR4IT {
@@ -96,6 +95,7 @@ public class MultitenantServerR4IT {
   @BeforeEach
   void beforeEach() {
 
+    ourClientTenantInterceptor = new UrlTenantSelectionInterceptor();
     ourCtx = FhirContext.forR4();
     ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
     ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);

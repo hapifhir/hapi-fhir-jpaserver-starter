@@ -1,5 +1,9 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
+import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
+import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
+import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -13,7 +17,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-@ServletComponentScan(basePackageClasses = {JpaRestfulServer.class}, basePackages = "ca.uhn.fhir.jpa.starter")
+@ServletComponentScan(basePackageClasses = {
+  JpaRestfulServer.class}, basePackages = "ca.uhn.fhir.jpa.starter")
 @SpringBootApplication(exclude = ElasticsearchRestClientAutoConfiguration.class)
 public class Application extends SpringBootServletInitializer {
 
@@ -43,15 +48,24 @@ public class Application extends SpringBootServletInitializer {
     servletRegistrationBean.setServlet(jpaRestfulServer);
     servletRegistrationBean.addUrlMappings("/hapi-fhir-jpaserver/fhir/*");
     servletRegistrationBean.setLoadOnStartup(1);
+
     return servletRegistrationBean;
   }
+
 
   @Bean
   public ServletRegistrationBean overlayRegistrationBean() {
 
     AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
     annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
-    DispatcherServlet dispatcherServlet = new DispatcherServlet(annotationConfigWebApplicationContext);
+
+    annotationConfigWebApplicationContext.register(SubscriptionSubmitterConfig.class);
+    annotationConfigWebApplicationContext.register(SubscriptionProcessorConfig.class);
+    annotationConfigWebApplicationContext.register(SubscriptionChannelConfig.class);
+    annotationConfigWebApplicationContext.register(WebsocketDispatcherConfig.class);
+
+    DispatcherServlet dispatcherServlet = new DispatcherServlet(
+      annotationConfigWebApplicationContext);
     dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
     dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
 

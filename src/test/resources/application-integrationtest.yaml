@@ -7,7 +7,7 @@ spring:
     max-active: 15
   profiles:
     ### This is the FHIR version. Choose between, dstu2, dstu3, r4 or r5
-    active: dstu2
+    active: r4
 
 hapi:
   fhir:

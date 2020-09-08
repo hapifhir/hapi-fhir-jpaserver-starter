@@ -36,8 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
   {
     "spring.batch.job.enabled=false",
-    "spring.profiles.active=r5",
-    "spring.datasource.url=jdbc:h2:mem:dbr5",
+    "spring.profiles.active=r4",
+    "spring.datasource.url=jdbc:h2:mem:dbr4",
     "hapi.fhir.subscription.websocket_enabled=true",
     "hapi.fhir.empi_enabled=true"
   })
