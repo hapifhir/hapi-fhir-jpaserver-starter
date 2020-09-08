@@ -3,6 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
+    <!-- 'mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 -e spring.batch.job.enabled=false distroless-hapi' -->
     <!--
     Note: HAPI projects use the "hapi-fhir" POM as their base to provide easy management.
     You do not need to use this in your own projects, so the "parent" tag and it's
