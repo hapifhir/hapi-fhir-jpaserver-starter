@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import org.hl7.fhir.r4.model.Bundle;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,7 @@ public class AppProperties {
   private Integer default_page_size = 20;
   private Integer max_binary_size = null;
   private Integer max_page_size = Integer.MAX_VALUE;
+  private Integer defer_indexing_for_codesystems_of_size = 100;
   private Long retain_cached_searches_mins = 60L;
   private Long reuse_cached_search_results_millis = 60000L;
   private String server_address = null;
@@ -57,6 +59,23 @@ public class AppProperties {
   private Subscription subscription = new Subscription();
   private Cors cors = null;
   private Partitioning partitioning = null;
+  private List<ImplementationGuide> implementationGuides = null;
+
+  public Integer getDefer_indexing_for_codesystems_of_size() {
+    return defer_indexing_for_codesystems_of_size;
+  }
+
+  public void setDefer_indexing_for_codesystems_of_size(Integer defer_indexing_for_codesystems_of_size) {
+    this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
+  }
+
+  public List<ImplementationGuide> getImplementationGuides() {
+    return implementationGuides;
+  }
+
+  public void setImplementationGuides(List<ImplementationGuide> implementationGuides) {
+    this.implementationGuides = implementationGuides;
+  }
 
   public Partitioning getPartitioning() {
     return partitioning;
@@ -462,6 +481,37 @@ public class AppProperties {
 
     public void setRefuse_to_fetch_third_party_urls(Boolean refuse_to_fetch_third_party_urls) {
       this.refuse_to_fetch_third_party_urls = refuse_to_fetch_third_party_urls;
+    }
+  }
+
+  public static class ImplementationGuide
+  {
+    private String url;
+    private String name;
+    private String version;
+
+    public String getUrl() {
+      return url;
+    }
+
+    public void setUrl(String url) {
+      this.url = url;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public String getVersion() {
+      return version;
+    }
+
+    public void setVersion(String version) {
+      this.version = version;
     }
   }
 

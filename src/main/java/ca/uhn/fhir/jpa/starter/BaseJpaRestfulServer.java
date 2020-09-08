@@ -10,6 +10,8 @@ import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
+import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
+import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.GraphQLProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
@@ -88,6 +90,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
   BinaryStorageInterceptor binaryStorageInterceptor;
 
   @Autowired
+  IPackageInstallerSvc packageInstallerSvc;
+
+  @Autowired
   AppProperties appProperties;
 
   public BaseJpaRestfulServer() {
@@ -162,7 +167,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * ETag Support
      */
 
-    if(appProperties.getEtag_support_enabled() == false)
+    if (appProperties.getEtag_support_enabled() == false)
       setETagSupport(ETagSupportEnum.DISABLED);
 
 
@@ -320,6 +325,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setBundleTypesAllowedForStorage(appProperties.getAllowed_bundle_types().stream().map(BundleType::toCode).collect(Collectors.toSet()));
     }
 
+    daoConfig.setDeferIndexingForCodesystemsOfSize(appProperties.getDefer_indexing_for_codesystems_of_size());
+
     // Bulk Export
     if (appProperties.getBulk_export_enabled()) {
       registerProvider(bulkDataExportProvider);
@@ -335,6 +342,17 @@ public class BaseJpaRestfulServer extends RestfulServer {
     if (appProperties.getClient_id_strategy() == DaoConfig.ClientIdStrategyEnum.ANY) {
       daoConfig.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
       daoConfig.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
+    }
+
+    if (appProperties.getImplementationGuides() != null) {
+      List<AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
+      for (AppProperties.ImplementationGuide guide : guides) {
+        packageInstallerSvc.install(new PackageInstallationSpec()
+          .setPackageUrl(guide.getUrl())
+          .setName(guide.getName())
+          .setVersion(guide.getVersion())
+          .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
+      }
     }
   }
 

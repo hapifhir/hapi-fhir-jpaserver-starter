@@ -487,6 +487,8 @@
 
         <!-- example of how to start the server using spring boot-->
         <!-- mvn clean package spring-boot:repackage -Pboot && java -jar target/hapi-fhir-jpaserver.war -->
+
+        <!-- Use the boot profile for development and debugging options when using your IDE -->
         <profile>
             <id>boot</id>
             <dependencies>

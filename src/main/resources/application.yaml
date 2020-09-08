@@ -7,7 +7,7 @@ spring:
     max-active: 15
   profiles:
     ### This is the FHIR version. Choose between, dstu2, dstu3, r4 or r5
-    active: dstu2
+    active: r4
   jpa:
     properties:
       hibernate.dialect: org.hibernate.dialect.H2Dialect
@@ -26,6 +26,16 @@ spring:
 
 hapi:
   fhir:
+    defer_indexing_for_codesystems_of_size: 101
+    implementationguides:
+      -
+        url: https://build.fhir.org/ig/hl7dk/dk-medcom/branches/corrections/package.tgz
+        name: dk.fhir.ig.medcom-core
+        version: 0.8.0
+      -
+        name: hl7.fhir.uv.ips
+        version: 0.3.0
+
     #supported_resource_types:
     #  - Patient
     #  - Observation
