@@ -8,26 +8,30 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.Properties;
 
 @Configuration
 @Profile("r4")
 public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 
-    @Autowired
-    private DataSource myDataSource;
+  @Autowired
+  private DataSource myDataSource;
 
-    /**
-     * We override the paging provider definition so that we can customize
-     * the default/max page sizes for search results. You can set these however
-     * you want, although very large page sizes will require a lot of RAM.
-     */
-    @Autowired
-    AppProperties appProperties;
+  /**
+   * We override the paging provider definition so that we can customize
+   * the default/max page sizes for search results. You can set these however
+   * you want, although very large page sizes will require a lot of RAM.
+   */
+  @Autowired
+  AppProperties appProperties;
 
   @Override
   public DatabaseBackedPagingProvider databaseBackedPagingProvider() {
@@ -37,28 +41,31 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
     return pagingProvider;
   }
 
-    @Override
-    @Bean()
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory();
-        retVal.setPersistenceUnitName("HAPI_PU");
+  @Autowired
+  private ConfigurableEnvironment configurableEnvironment;
 
-        try {
-            retVal.setDataSource(myDataSource);
-        } catch (Exception e) {
-            throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
-        }
+  @Override
+  @Bean()
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory();
+    retVal.setPersistenceUnitName("HAPI_PU");
 
-
-        return retVal;
+    try {
+      retVal.setDataSource(myDataSource);
+    } catch (Exception e) {
+      throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
     }
+
+    retVal.setJpaProperties(EnvironmentHelper.getHibernateProperties(configurableEnvironment));
+    return retVal;
+  }
 
   @Bean
   @Primary
   public JpaTransactionManager hapiTransactionManager(EntityManagerFactory entityManagerFactory) {
-        JpaTransactionManager retVal = new JpaTransactionManager();
-        retVal.setEntityManagerFactory(entityManagerFactory);
-        return retVal;
-    }
+    JpaTransactionManager retVal = new JpaTransactionManager();
+    retVal.setEntityManagerFactory(entityManagerFactory);
+    return retVal;
+  }
 
 }
