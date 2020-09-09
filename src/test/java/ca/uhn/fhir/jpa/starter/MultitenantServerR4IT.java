@@ -102,5 +102,6 @@ public class MultitenantServerR4IT {
     String ourServerBase = "http://localhost:" + port + "/hapi-fhir-jpaserver/fhir/";
     ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
     ourClient.registerInterceptor(new LoggingInterceptor(true));
+    ourClient.registerInterceptor(ourClientTenantInterceptor);
   }
 }

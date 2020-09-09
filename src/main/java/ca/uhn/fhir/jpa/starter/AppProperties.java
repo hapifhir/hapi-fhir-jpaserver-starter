@@ -36,9 +36,9 @@ public class AppProperties {
   private Boolean expunge_enabled = true;
   private Boolean fhirpath_interceptor_enabled = false;
   private Boolean filter_search_enabled = true;
-  private Boolean graphql_enabled = true;
-  private Boolean binary_storage_enabled = true;
-  private Boolean bulk_export_enabled = true;
+  private Boolean graphql_enabled = false;
+  private Boolean binary_storage_enabled = false;
+  private Boolean bulk_export_enabled = false;
   private Boolean default_pretty_print = true;
   private Integer default_page_size = 20;
   private Integer max_binary_size = null;

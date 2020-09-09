@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.jpa.empi.EmpiConfig;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
@@ -21,7 +22,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 @ServletComponentScan(basePackageClasses = {
   JpaRestfulServer.class}, basePackages = "ca.uhn.fhir.jpa.starter")
 @SpringBootApplication(exclude = ElasticsearchRestClientAutoConfiguration.class)
-@Import({SubscriptionSubmitterConfig.class, SubscriptionProcessorConfig.class, SubscriptionChannelConfig.class,WebsocketDispatcherConfig.class })
+@Import({SubscriptionSubmitterConfig.class, SubscriptionProcessorConfig.class, SubscriptionChannelConfig.class, WebsocketDispatcherConfig.class, EmpiConfig.class})
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
