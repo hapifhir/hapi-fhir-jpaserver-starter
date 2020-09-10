@@ -20,9 +20,9 @@ import org.hl7.fhir.r5.model.Observation;
 import org.hl7.fhir.r5.model.Patient;
 import org.hl7.fhir.r5.model.Subscription;
 import org.hl7.fhir.r5.model.SubscriptionTopic;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.nio.file.Paths;
@@ -30,136 +30,134 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
-import static org.junit.Assert.assertEquals;
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ExampleServerR5IT {
 
-    private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR5IT.class);
-    private static IGenericClient ourClient;
-    private static FhirContext ourCtx;
-    private static int ourPort;
-    private static Server ourServer;
+  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR5IT.class);
+  private static IGenericClient ourClient;
+  private static FhirContext ourCtx;
+  private static int ourPort;
+  private static Server ourServer;
 
-    static {
-        HapiProperties.forceReload();
-        HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr5");
-        HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "R5");
-        HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
-        ourCtx = FhirContext.forR5();
-    }
+  static {
+    HapiProperties.forceReload();
+    HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr5");
+    HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "R5");
+    HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
+    ourCtx = FhirContext.forR5();
+  }
 
-    @Test
-    public void testCreateAndRead() {
-        ourLog.info("Base URL is: " + HapiProperties.getServerAddress());
-        String methodName = "testCreateResourceConditional";
+  @Test
+  public void testCreateAndRead() {
+    ourLog.info("Base URL is: " + HapiProperties.getServerAddress());
+    String methodName = "testCreateResourceConditional";
 
-        Patient pt = new Patient();
-        pt.addName().setFamily(methodName);
-        IIdType id = ourClient.create().resource(pt).execute().getId();
+    Patient pt = new Patient();
+    pt.addName().setFamily(methodName);
+    IIdType id = ourClient.create().resource(pt).execute().getId();
 
-        Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
-        assertEquals(methodName, pt2.getName().get(0).getFamily());
-    }
+    Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
+    assertEquals(methodName, pt2.getName().get(0).getFamily());
+  }
 
-    @Test
-    public void testWebsocketSubscription() throws Exception {
+  @Test
+  public void testWebsocketSubscription() throws Exception {
 
-        /*
-         * Create topic
-         */
-        SubscriptionTopic topic = new SubscriptionTopic();
-        topic.getResourceTrigger().getQueryCriteria().setCurrent("Observation?status=final");
+    /*
+     * Create topic
+     */
+    SubscriptionTopic topic = new SubscriptionTopic();
+    topic.getResourceTrigger().getQueryCriteria().setCurrent("Observation?status=final");
 
-        /*
-         * Create subscription
-         */
-        Subscription subscription = new Subscription();
-        subscription.getTopic().setResource(topic);
-        subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
-        subscription.setStatus(Enumerations.SubscriptionState.REQUESTED);
-        subscription.getChannelType()
-                .setSystem("http://terminology.hl7.org/CodeSystem/subscription-channel-type")
-                .setCode("websocket");
-        subscription.setContentType("application/json");
+    /*
+     * Create subscription
+     */
+    Subscription subscription = new Subscription();
+    subscription.getTopic().setResource(topic);
+    subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
+    subscription.setStatus(Enumerations.SubscriptionState.REQUESTED);
+    subscription.getChannelType()
+      .setSystem("http://terminology.hl7.org/CodeSystem/subscription-channel-type")
+      .setCode("websocket");
+    subscription.setContentType("application/json");
 
-        MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
-        IIdType mySubscriptionId = methodOutcome.getId();
+    MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
+    IIdType mySubscriptionId = methodOutcome.getId();
 
-        // Wait for the subscription to be activated
-        waitForSize(1, () -> ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size());
+    // Wait for the subscription to be activated
+    waitForSize(1, () -> ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size());
 
-        /*
-         * Attach websocket
-         */
+    /*
+     * Attach websocket
+     */
 
-        WebSocketClient myWebSocketClient = new WebSocketClient();
-        SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
+    WebSocketClient myWebSocketClient = new WebSocketClient();
+    SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
 
-        myWebSocketClient.start();
-        URI echoUri = new URI("ws://localhost:" + ourPort + "/hapi-fhir-jpaserver/websocket");
-        ClientUpgradeRequest request = new ClientUpgradeRequest();
-        ourLog.info("Connecting to : {}", echoUri);
-        Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
-        Session session = connection.get(2, TimeUnit.SECONDS);
+    myWebSocketClient.start();
+    URI echoUri = new URI("ws://localhost:" + ourPort + "/hapi-fhir-jpaserver/websocket");
+    ClientUpgradeRequest request = new ClientUpgradeRequest();
+    ourLog.info("Connecting to : {}", echoUri);
+    Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
+    Session session = connection.get(2, TimeUnit.SECONDS);
 
-        ourLog.info("Connected to WS: {}", session.isOpen());
+    ourLog.info("Connected to WS: {}", session.isOpen());
 
-        /*
-         * Create a matching resource
-         */
-        Observation obs = new Observation();
-        obs.setStatus(Enumerations.ObservationStatus.FINAL);
-        ourClient.create().resource(obs).execute();
+    /*
+     * Create a matching resource
+     */
+    Observation obs = new Observation();
+    obs.setStatus(Enumerations.ObservationStatus.FINAL);
+    ourClient.create().resource(obs).execute();
 
-        // Give some time for the subscription to deliver
-        Thread.sleep(2000);
+    /*
+     * Ensure that we receive a ping on the websocket
+     */
+    await().until(()->mySocketImplementation.myPingCount > 0);
 
-        /*
-         * Ensure that we receive a ping on the websocket
-         */
-        waitForSize(1, () -> mySocketImplementation.myPingCount);
+    /*
+     * Clean up
+     */
+    ourClient.delete().resourceById(mySubscriptionId).execute();
+  }
 
-        /*
-         * Clean up
-         */
-        ourClient.delete().resourceById(mySubscriptionId).execute();
-    }
+  @AfterAll
+  public static void afterClass() throws Exception {
+    ourServer.stop();
+  }
 
-    @AfterClass
-    public static void afterClass() throws Exception {
-        ourServer.stop();
-    }
+  @BeforeAll
+  public static void beforeClass() throws Exception {
+    String path = Paths.get("").toAbsolutePath().toString();
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        String path = Paths.get("").toAbsolutePath().toString();
+    ourLog.info("Project base path is: {}", path);
 
-        ourLog.info("Project base path is: {}", path);
+    ourServer = new Server(0);
 
-        ourServer = new Server(0);
+    WebAppContext webAppContext = new WebAppContext();
+    webAppContext.setContextPath("/hapi-fhir-jpaserver");
+    webAppContext.setDisplayName("HAPI FHIR");
+    webAppContext.setDescriptor(path + "/src/main/webapp/WEB-INF/web.xml");
+    webAppContext.setResourceBase(path + "/target/hapi-fhir-jpaserver-starter");
+    webAppContext.setParentLoaderPriority(true);
 
-        WebAppContext webAppContext = new WebAppContext();
-        webAppContext.setContextPath("/hapi-fhir-jpaserver");
-        webAppContext.setDisplayName("HAPI FHIR");
-        webAppContext.setDescriptor(path + "/src/main/webapp/WEB-INF/web.xml");
-        webAppContext.setResourceBase(path + "/target/hapi-fhir-jpaserver-starter");
-        webAppContext.setParentLoaderPriority(true);
+    ourServer.setHandler(webAppContext);
+    ourServer.start();
 
-        ourServer.setHandler(webAppContext);
-        ourServer.start();
+    ourPort = JettyUtil.getPortForStartedServer(ourServer);
 
-        ourPort = JettyUtil.getPortForStartedServer(ourServer);
+    ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+    ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
+    String ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
 
-        ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-        ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-        String ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
+    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
+    ourClient.registerInterceptor(new LoggingInterceptor(true));
+  }
 
-        ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-        ourClient.registerInterceptor(new LoggingInterceptor(true));
-    }
-
-    public static void main(String[] theArgs) throws Exception {
-        ourPort = 8080;
-        beforeClass();
-    }
+  public static void main(String[] theArgs) throws Exception {
+    ourPort = 8080;
+    beforeClass();
+  }
 }

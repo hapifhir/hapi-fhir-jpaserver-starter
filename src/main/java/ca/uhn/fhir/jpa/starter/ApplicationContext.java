@@ -1,6 +1,9 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.empi.EmpiConfig;
+import ca.uhn.fhir.jpa.empi.config.EmpiConsumerConfig;
+import ca.uhn.fhir.jpa.empi.config.EmpiSubmitterConfig;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
@@ -28,11 +31,17 @@ public class ApplicationContext extends AnnotationConfigWebApplicationContext {
     }
 
     if (HapiProperties.getSubscriptionEmailEnabled()
-    || HapiProperties.getSubscriptionRestHookEnabled()
-    || HapiProperties.getSubscriptionWebsocketEnabled()) {
+      || HapiProperties.getSubscriptionRestHookEnabled()
+      || HapiProperties.getSubscriptionWebsocketEnabled()) {
       register(SubscriptionSubmitterConfig.class);
       register(SubscriptionProcessorConfig.class);
       register(SubscriptionChannelConfig.class);
+    }
+
+    if (HapiProperties.getEmpiEnabled()) {
+      register(EmpiSubmitterConfig.class);
+      register(EmpiConsumerConfig.class);
+      register(EmpiConfig.class);
     }
 
   }

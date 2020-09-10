@@ -2,10 +2,12 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.elasticsearch.cfg.ElasticsearchIndexStatus;
 import org.hibernate.search.elasticsearch.cfg.IndexSchemaManagementStrategy;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +19,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
@@ -57,6 +60,9 @@ public class HapiProperties {
   static final String SUBSCRIPTION_EMAIL_ENABLED = "subscription.email.enabled";
   static final String SUBSCRIPTION_RESTHOOK_ENABLED = "subscription.resthook.enabled";
   static final String SUBSCRIPTION_WEBSOCKET_ENABLED = "subscription.websocket.enabled";
+  static final String EMPI_ENABLED = "empi.enabled";
+  static final String PARTITIONING_ENABLED = "partitioning.enabled";
+  static final String PARTITIONING_CROSS_PARTITION_REFERENCE_MODE = "partitioning.cross_partition_reference_mode";
   static final String ALLOWED_BUNDLE_TYPES = "allowed_bundle_types";
   static final String TEST_PORT = "test.port";
   static final String TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS = "tester.config.refuse_to_fetch_third_party_urls";
@@ -73,6 +79,9 @@ public class HapiProperties {
   static final String BULK_EXPORT_ENABLED = "bulk.export.enabled";
   static final String EXPIRE_SEARCH_RESULTS_AFTER_MINS = "retain_cached_searches_mins";
   static final String MAX_BINARY_SIZE = "max_binary_size";
+  static final String PARTITIONING_MULTITENANCY_ENABLED = "partitioning.multitenancy.enabled";
+  private static final String PARTITIONING_INCLUDE_PARTITION_IN_SEARCH_HASHES = "partitioning.partitioning_include_in_search_hashes";
+  static final String CLIENT_ID_STRATEGY = "daoconfig.client_id_strategy";
   private static Properties ourProperties;
 
   public static boolean isElasticSearchEnabled() {
@@ -138,6 +147,10 @@ public class HapiProperties {
     if (overrideProps != null) {
       properties.putAll(overrideProps);
     }
+    properties.putAll(System.getenv().entrySet()
+                                     .stream()
+                                     .filter(e -> e.getValue() != null && properties.containsKey(e.getKey()))
+                                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     return properties;
   }
 
@@ -238,6 +251,16 @@ public class HapiProperties {
     return ETagSupportEnum.ENABLED;
   }
 
+  public static DaoConfig.ClientIdStrategyEnum getClientIdStrategy() {
+    String idStrategy = HapiProperties.getProperty(CLIENT_ID_STRATEGY);
+
+    if (idStrategy != null && idStrategy.length() > 0) {
+      return DaoConfig.ClientIdStrategyEnum.valueOf(idStrategy);
+    }
+
+    return DaoConfig.ClientIdStrategyEnum.ALPHANUMERIC;
+  }
+
   public static EncodingEnum getDefaultEncoding() {
     String defaultEncodingString = HapiProperties.getProperty(DEFAULT_ENCODING);
 
@@ -320,10 +343,6 @@ public class HapiProperties {
     return HapiProperties.getBooleanProperty("expunge_enabled", true);
   }
 
-  public static Integer getTestPort() {
-    return HapiProperties.getIntegerProperty(TEST_PORT, 0);
-  }
-
   public static Boolean getTesterConfigRefustToFetchThirdPartyUrls() {
     return HapiProperties.getBooleanProperty(TESTER_CONFIG_REFUSE_TO_FETCH_THIRD_PARTY_URLS, false);
   }
@@ -344,8 +363,8 @@ public class HapiProperties {
   public static Set<String> getSupportedResourceTypes() {
     String[] types = defaultString(getProperty("supported_resource_types")).split(",");
     return Arrays.stream(types)
-      .map(t -> trim(t))
-      .filter(t -> isNotBlank(t))
+      .map(StringUtils::trim)
+      .filter(StringUtils::isNotBlank)
       .collect(Collectors.toSet());
   }
 
@@ -371,6 +390,23 @@ public class HapiProperties {
 
   public static Boolean getSubscriptionWebsocketEnabled() {
     return HapiProperties.getBooleanProperty(SUBSCRIPTION_WEBSOCKET_ENABLED, false);
+  }
+
+  public static Boolean getEmpiEnabled() {
+    return HapiProperties.getBooleanProperty(EMPI_ENABLED, false);
+  }
+
+  public static Boolean getPartitioningEnabled() {
+    return HapiProperties.getBooleanProperty(PARTITIONING_ENABLED, false);
+  }
+
+
+  public static String getPartitioningCrossPartitionReferenceMode() {
+    return HapiProperties.getProperty(PARTITIONING_CROSS_PARTITION_REFERENCE_MODE, "NOT_ALLOWED");
+  }
+
+  public static Boolean getIncludePartitionInSearchHashes() {
+    return HapiProperties.getBooleanProperty(PARTITIONING_INCLUDE_PARTITION_IN_SEARCH_HASHES, true);
   }
 
   public static Boolean getAllowContainsSearches() {
@@ -489,5 +525,11 @@ public class HapiProperties {
   public static boolean isFhirPathFilterInterceptorEnabled() {
     return HapiProperties.getBooleanProperty("fhirpath_interceptor.enabled", false);
   }
+
+  public static boolean getPartitioningMultitenancyEnabled() {
+    return HapiProperties.getBooleanProperty(PARTITIONING_MULTITENANCY_ENABLED, false);
+  }
+
+
 }
 
