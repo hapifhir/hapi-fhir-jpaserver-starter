@@ -82,6 +82,57 @@ volumes:
         external: true
 ```
 
+## Running via [Docker Hub](https://hub.docker.com/repository/docker/hapiproject/hapi)
+
+Each tagged/released version of `hapi-fhir-jpaserver` is built as a Docker image and published to Docker hub. To run the published Docker image from DockerHub:
+
+```
+docker pull hapiproject/hapi:latest
+docker run -p 8080:8080 hapiproject/hapi:tagname
+```
+
+This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/hapi-fhir-jpaserver/fhir` in the browser to access the HAPI FHIR server's UI.
+
+If you change the mapped port, you need to change the configuration used by HAPI to have the correct `server_address` property/value.
+
+### Configuration via environment variables
+
+You can customize HAPI directly from the `run` command using environment variables. For example:
+
+`docker run -p 8090:8080 -e server_address=http://localhost:8090/hapi-fhir-jpaserver/fhir hapiproject/hapi:tagname`
+
+HAPI looks in the environment variables for properties in the [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties) file.
+
+### Configuration via overridden hapi.properties file
+
+You can customize HAPI by telling HAPI to look for the `hapi.properties` file in a different location:
+
+`docker run -p 8090:8080 -e hapi.properties=/some/directory/with/hapi.properties hapiproject/hapi:tagname`
+
+### Example docker-compose.yml
+
+```
+version: '3.7'
+services:
+  web:
+    image: "hapiproject/hapi:tagname"
+    ports:
+      - "8090:8080"
+    configs:
+      - source: hapi
+        target: /data/hapi/hapi.properties
+    volumes:
+      - hapi-data:/data/hapi
+    environment:
+      JAVA_OPTS: '-Dhapi.properties=/data/hapi/hapi.properties'
+configs:
+  hapi:
+     external: true
+volumes:
+    hapi-data:
+        external: true
+```
+
 ## Running locally
 
 The easiest way to run this server entirely depends on your environment requirements. At least, the following 4 ways are supported:
@@ -319,6 +370,10 @@ The server may be configured with subscription support by enabling properties in
 ## Enabling EMPI
 
 Set `hapi.fhir.empi_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable EMPI on this server.  The EMPI matching rules are configured in [empi-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/empi-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that EMPI relies on subscriptions, so for EMPI to work, subscriptions must be enabled. 
+
+## Enabling EMPI
+
+Set `empi.enabled=true` in the [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties) file to enable EMPI on this server.  The EMPI matching rules are configured in [empi-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/empi-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that EMPI relies on subscriptions, so for EMPI to work, subscriptions must be enabled. 
 
 ## Using Elasticsearch
 
