@@ -21,7 +21,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 @ServletComponentScan(basePackageClasses = {
   JpaRestfulServer.class}, basePackages = "ca.uhn.fhir.jpa.starter")
-@SpringBootApplication(exclude = ElasticsearchRestClientAutoConfiguration.class)
+@SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class}, scanBasePackages = {"ca.uhn.fhir.jpa.starter"})
 @Import({SubscriptionSubmitterConfig.class, SubscriptionProcessorConfig.class, SubscriptionChannelConfig.class, WebsocketDispatcherConfig.class, EmpiConfig.class})
 public class Application extends SpringBootServletInitializer {
 

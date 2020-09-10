@@ -4,17 +4,17 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.empi.api.IEmpiSettings;
 import ca.uhn.fhir.empi.rules.config.EmpiRuleValidator;
 import ca.uhn.fhir.empi.rules.config.EmpiSettings;
-import ca.uhn.fhir.jpa.empi.svc.EmpiSearchParamSvc;
+import ca.uhn.fhir.jpa.empi.config.EmpiConsumerConfig;
+import ca.uhn.fhir.jpa.empi.config.EmpiSubmitterConfig;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.rest.server.util.ISearchParamRetriever;
 import com.google.common.base.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
@@ -26,18 +26,13 @@ import java.io.IOException;
  */
 @Configuration
 @Conditional(EmpiConfigCondition.class)
+@Import({EmpiConsumerConfig.class, EmpiSubmitterConfig.class})
 public class EmpiConfig {
 
   @Bean
   EmpiRuleValidator empiRuleValidator(FhirContext theFhirContext, ISearchParamRetriever theSearchParamRetriever) {
     return new EmpiRuleValidator(theFhirContext, theSearchParamRetriever);
   }
-
-  @Bean
-  EmpiSearchParamSvc empiSearchParamSvc() {
-    return new EmpiSearchParamSvc();
-  }
-
 
   @Bean
   IEmpiSettings empiSettings(@Autowired EmpiRuleValidator theEmpiRuleValidator, AppProperties appProperties) throws IOException {
