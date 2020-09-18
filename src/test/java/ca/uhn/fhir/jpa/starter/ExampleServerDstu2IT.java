@@ -50,7 +50,7 @@ public class ExampleServerDstu2IT {
     ourCtx = FhirContext.forDstu2();
 		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
 		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-		String ourServerBase = "http://localhost:" + port + "/hapi-fhir-jpaserver/fhir/";
+		String ourServerBase = "http://localhost:" + port + "/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
 		ourClient.registerInterceptor(new LoggingInterceptor(true));
 	}

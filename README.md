@@ -11,8 +11,13 @@ Need Help? Please see: https://github.com/jamesagnew/hapi-fhir/wiki/Getting-Help
 In order to use this sample, you should have:
 
 - [This project](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
-- Oracle Java (JDK) installed: Minimum JDK8 or newer.
-- Apache Maven build tool (newest version)
+
+### and either
+ - Oracle Java (JDK) installed: Minimum JDK8 or newer.
+ - Apache Maven build tool (newest version)
+
+### or
+ - Docker, as the entire project can be built using multistage docker (with both JDK and maven wrapped in docker) orr used directly from [Docker Hub](https://hub.docker.com/repository/docker/hapiproject/hapi)
 
 ## Running via [Docker Hub](https://hub.docker.com/repository/docker/hapiproject/hapi)
 
@@ -20,26 +25,26 @@ Each tagged/released version of `hapi-fhir-jpaserver` is built as a Docker image
 
 ```
 docker pull hapiproject/hapi:latest
-docker run -p 8080:8080 hapiproject/hapi:tagname
+docker run -p 8080:8080 -e "spring.batch.job.enabled=false" hapiproject/hapi:tagname
 ```
 
-This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/hapi-fhir-jpaserver/fhir` in the browser to access the HAPI FHIR server's UI.
+This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/hapi-fhir-jpaserver/` in the browser to access the HAPI FHIR server's UI.
 
-If you change the mapped port, you need to change the configuration used by HAPI to have the correct `server_address` property/value.
+If you change the mapped port, you need to change the configuration used by HAPI to have the correct `hapi.fhir.tester` property/value.
 
 ### Configuration via environment variables
 
 You can customize HAPI directly from the `run` command using environment variables. For example:
 
-`docker run -p 8090:8080 -e server_address=http://localhost:8090/hapi-fhir-jpaserver/fhir hapiproject/hapi:tagname`
+`docker run -p 8080:8080 -e hapi.fhir.default_encoding=xml hapiproject/hapi:tagname`
 
-HAPI looks in the environment variables for properties in the [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties) file.
+HAPI looks in the environment variables for properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file for defaults.
 
-### Configuration via overridden hapi.properties file
+### Configuration via overridden application.yaml file
 
-You can customize HAPI by telling HAPI to look for the `hapi.properties` file in a different location:
+You can customize HAPI by telling HAPI to look for the configuration file in a different location, eg.:
 
-`docker run -p 8090:8080 -e hapi.properties=/some/directory/with/hapi.properties hapiproject/hapi:tagname`
+`docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.application.yaml" hapiproject/hapi:tagname`
 
 ### Example docker-compose.yml
 
@@ -52,11 +57,11 @@ services:
       - "8090:8080"
     configs:
       - source: hapi
-        target: /data/hapi/hapi.properties
+        target: /data/hapi/application.yaml
     volumes:
       - hapi-data:/data/hapi
     environment:
-      JAVA_OPTS: '-Dhapi.properties=/data/hapi/hapi.properties'
+      JAVA_OPTS: '-Dhapi.properties=/data/hapi/application.yaml'
 configs:
   hapi:
      external: true
@@ -67,15 +72,13 @@ volumes:
 
 ## Running locally
 
-The easiest way to run this server is to run it directly in Maven using a built-in Jetty server. To do this, change `src/main/resources/hapi.properties` `server_address` and `server.base` with the values commented out as _For Jetty, use this_ and then execute the following command:
+The easiest way to run this server entirely depends on your environment requirements. At least, the following 4 ways are supported:
 
+### Using jetty
 ```bash
-mvn jetty:run
+mvn jetty:run -Dspring.batch.job.enabled=false
 ```
 
-Then, browse to the following link to use the server:
-
-[http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
 
 If you need to run this server on a different port (using Maven), you can change the port in the run command as follows:
 
@@ -83,43 +86,98 @@ If you need to run this server on a different port (using Maven), you can change
 mvn -Djetty.port=8888 jetty:run
 ```
 
-And replacing 8888 with the port of your choice.
+Server will then be accessible at http://localhost:8888/ and eg. http://localhost:8888/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+
+```yaml
+    tester:
+      -
+          id: home
+          name: Local Tester
+          server_address: 'http://localhost:8888/fhir'
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+```
+
+
+
+### Using Spring Boot
+```bash
+mvn clean package spring-boot:repackage -Pboot && java -jar target/hapi-fhir-jpaserver.war
+```
+Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+
+```yaml
+    tester:
+      -
+          id: home
+          name: Local Tester
+          server_address: 'http://localhost:8080/fhir'
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+```
+### Using Spring Boot and Google distroless
+```bash
+mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 -e spring.batch.job.enabled=false distroless-hapi
+```
+Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+
+```yaml
+    tester:
+      -
+          id: home
+          name: Local Tester
+          server_address: 'http://localhost:8080/fhir'
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+```
+
+### Using the Dockerfile and multistage build
+```bash
+./build-docker-image.sh && docker run -p 8080:8080 -e "spring.batch.job.enabled=false" hapi-fhir/hapi-fhir-jpaserver-starter:latest
+```
+Server will then be accessible at http://localhost:8080/hapi-fhir-jpaserver and eg. http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+
+```yaml
+    tester:
+      -
+          id: home
+          name: Local Tester
+          server_address: 'http://localhost:8080/hapi-fhir-jpaserver/fhir'
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+```
 
 ## Configurations
 
-Much of this HAPI starter project can be configured using the properties file in _src/main/resources/hapi.properties_. By default, this starter project is configured to use Derby as the database.
+Much of this HAPI starter project can be configured using the yaml file in _src/main/resources/application.yaml_. By default, this starter project is configured to use H2 as the database.
 
 ### MySql configuration
 
-To configure the starter app to use MySQL, instead of the default Derby, update the hapi.properties file to have the following:
+To configure the starter app to use MySQL, instead of the default H2, update the application.yaml file to have the following:
 
-- datasource.driver=com.mysql.jdbc.Driver
-- datasource.url=jdbc:mysql://localhost:3306/hapi_dstu3
-- hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
-- datasource.username=admin
-- datasource.password=admin
+```yaml
+spring:
+  datasource:
+    url: 'jdbc:mysql://localhost:3306/hapi_dstu3'
+    username: admin
+    password: admin
+    driverClassName: com.mysql.jdbc.Driver
+```
 
 ### PostgreSQL configuration
 
-To configure the starter app to use PostgreSQL, instead of the default Derby, update the hapi.properties file to have the following:
+To configure the starter app to use PostgreSQL, instead of the default H2, update the application.yaml file to have the following:
 
-- datasource.driver=org.postgresql.Driver
-- datasource.url=jdbc:postgresql://localhost:5432/hapi_dstu3
-- hibernate.dialect=org.hibernate.dialect.PostgreSQL95Dialect
-- datasource.username=admin
-- datasource.password=admin
+```yaml
+spring:
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/hapi_dstu3'
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
+```
 
-Because the integration tests within the project rely on the default Derby database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
-
-It is important to use PostgreSQL95Dialect when using PostgreSQL version 10+.
-
-## Overriding application properties
-
-You can override the properties that are loaded into the compiled web app (.war file) making a copy of the hapi.properties file on the file system, making changes to it, and then setting the JAVA_OPTS environment variable on the tomcat server to tell hapi-jpaserver-starter where the overriding properties file is. For example:
-
-`-Dhapi.properties=/some/custom/directory/hapi.properties`
-
-Note: This property name and the path is case-sensitive. "-DHAPI.PROPERTIES=XXX" will not work.
+Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
 
 ## Customizing The Web Testpage UI
 
@@ -129,7 +187,7 @@ The UI is customized using [Thymeleaf](https://www.thymeleaf.org/) template file
 
 Several template files that can be customized are found in the following directory: [https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates)
 
-## Deploying to a Container
+## Deploying to an Application Server
 
 Using the Maven-Embedded Jetty method above is convenient, but it is not a good solution if you want to leave the server running in the background.
 
@@ -149,6 +207,8 @@ Again, browse to the following link to use the server (note that the port 8080 m
 
 [http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
 
+If you would like it to be hosted at the root, eg. http://localhost:8080/ - then rename the WAR file to ```ROOT.war```.
+
 ## Deploy with docker compose
 
 Docker compose is a simple option to build and deploy container. To deploy with docker compose, you should build the project
@@ -158,14 +218,20 @@ reached at http://localhost:8080/hapi-fhir-jpaserver/.
 In order to use another port, change the `ports` parameter
 inside `docker-compose.yml` to `8888:8080`, where 8888 is a port of your choice.
 
-The docker compose set also includes my MySQL database, if you choose to use MySQL instead of derby, change the following
-properties in hapi.properties:
+The docker compose set also includes my MySQL database, if you choose to use MySQL instead of H2, change the following
+properties in application.yaml:
 
-- datasource.driver=com.mysql.jdbc.Driver
-- datasource.url=jdbc:mysql://hapi-fhir-mysql:3306/hapi
-- hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
-- datasource.username=admin
-- datasource.password=admin
+```yaml
+spring:
+  datasource:
+    url: 'jdbc:mysql://hapi-fhir-mysql:3306/hapi'
+    username: admin
+    password: admin
+    driverClassName: com.mysql.jdbc.Driver
+```
+
+## Running hapi-fhir-jpaserver direclty from IntelliJ as Spring Boot
+Make sure you run with the maven profile called ```boot``` and NOT also ```jetty```. Then you are ready to press debug the project directly without any extra Application Servers.
 
 ## Running hapi-fhir-jpaserver-example in Tomcat from IntelliJ
 
@@ -203,21 +269,21 @@ It is important to use MySQL5Dialect when using MySQL version 5+.
 
 ## Enabling Subscriptions
 
-The server may be configured with subscription support by enabling properties in the [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties) file:
+The server may be configured with subscription support by enabling properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file:
 
-- `subscription.resthook.enabled` - Enables REST Hook subscriptions, where the server will make an outgoing connection to a remote REST server
+- `hapi.fhir.subscription.resthook.enabled` - Enables REST Hook subscriptions, where the server will make an outgoing connection to a remote REST server
 
-- `subscription.email.enabled` - Enables email subscriptions. Note that you must also provide the connection details for a usable SMTP server.
+- `hapi.fhir.subscription.email.*` - Enables email subscriptions. Note that you must also provide the connection details for a usable SMTP server.
 
-- `subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/hapi-fhir-jpaserver/websocket](ws://localhost:8080/hapi-fhir-jpaserver/websocket)
+- `hapi.fhir.subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/hapi-fhir-jpaserver/websocket](ws://localhost:8080/hapi-fhir-jpaserver/websocket)
 
 ## Enabling EMPI
 
-Set `empi.enabled=true` in the [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties) file to enable EMPI on this server.  The EMPI matching rules are configured in [empi-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/empi-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that EMPI relies on subscriptions, so for EMPI to work, subscriptions must be enabled. 
+Set `hapi.fhir.empi_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable EMPI on this server.  The EMPI matching rules are configured in [empi-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/empi-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that EMPI relies on subscriptions, so for EMPI to work, subscriptions must be enabled. 
 
 ## Using Elasticsearch
 
-By default, the server will use embedded lucene indexes for terminology and fulltext indexing purposes. You can switch this to using lucene by editing the properties in [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties)
+By default, the server will use embedded lucene indexes for terminology and fulltext indexing purposes. You can switch this to using lucene by editing the properties in [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml)
 
 For example:
 
