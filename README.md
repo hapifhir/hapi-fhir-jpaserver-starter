@@ -17,7 +17,7 @@ In order to use this sample, you should have:
  - Apache Maven build tool (newest version)
 
 ### or
- - Docker, as the entire project can be built using multistage docker (with both JDK and maven wrapped in docker) orr used directly from [Docker Hub](https://hub.docker.com/repository/docker/hapiproject/hapi)
+ - Docker, as the entire project can be built using multistage docker (with both JDK and maven wrapped in docker) or used directly from [Docker Hub](https://hub.docker.com/repository/docker/hapiproject/hapi)
 
 ## Running via [Docker Hub](https://hub.docker.com/repository/docker/hapiproject/hapi)
 
