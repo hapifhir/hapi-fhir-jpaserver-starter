@@ -20,8 +20,8 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 
 @ServletComponentScan(basePackageClasses = {
-  JpaRestfulServer.class}, basePackages = "ca.uhn.fhir.jpa.starter")
-@SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class}, scanBasePackages = {"ca.uhn.fhir.jpa.starter"})
+  JpaRestfulServer.class})
+@SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
 @Import({SubscriptionSubmitterConfig.class, SubscriptionProcessorConfig.class, SubscriptionChannelConfig.class, WebsocketDispatcherConfig.class, EmpiConfig.class})
 public class Application extends SpringBootServletInitializer {
 
@@ -49,7 +49,7 @@ public class Application extends SpringBootServletInitializer {
     JpaRestfulServer jpaRestfulServer = new JpaRestfulServer();
     beanFactory.autowireBean(jpaRestfulServer);
     servletRegistrationBean.setServlet(jpaRestfulServer);
-    servletRegistrationBean.addUrlMappings("/hapi-fhir-jpaserver/fhir/*");
+    servletRegistrationBean.addUrlMappings("/fhir/*");
     servletRegistrationBean.setLoadOnStartup(1);
 
     return servletRegistrationBean;
@@ -68,7 +68,7 @@ public class Application extends SpringBootServletInitializer {
 
     ServletRegistrationBean registrationBean = new ServletRegistrationBean();
     registrationBean.setServlet(dispatcherServlet);
-    registrationBean.addUrlMappings("/hapi-fhir-jpaserver/*", "/*");
+    registrationBean.addUrlMappings("/*");
     registrationBean.setLoadOnStartup(1);
     return registrationBean;
 

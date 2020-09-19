@@ -97,7 +97,7 @@ public class ExampleServerR5IT {
     SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
 
     myWebSocketClient.start();
-    URI echoUri = new URI("ws://localhost:" + port + "/hapi-fhir-jpaserver/websocket");
+    URI echoUri = new URI("ws://localhost:" + port + "/websocket");
     ClientUpgradeRequest request = new ClientUpgradeRequest();
     ourLog.info("Connecting to : {}", echoUri);
     Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
@@ -129,7 +129,7 @@ public class ExampleServerR5IT {
     ourCtx = FhirContext.forR5();
     ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
     ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-    String ourServerBase = "http://localhost:" + port + "/hapi-fhir-jpaserver/fhir/";
+    String ourServerBase = "http://localhost:" + port + "/fhir/";
     ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
     ourClient.registerInterceptor(new LoggingInterceptor(true));
   }
