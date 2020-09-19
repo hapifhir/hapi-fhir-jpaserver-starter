@@ -86,7 +86,7 @@ hapi:
       -
           id: home
           name: Local Tester
-          server_address: 'http://localhost:8080/hapi-fhir-jpaserver/fhir'
+          server_address: 'http://localhost:8080/fhir'
           refuse_to_fetch_third_party_urls: false
           fhir_version: R4
       -
