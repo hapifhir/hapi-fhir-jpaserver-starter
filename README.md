@@ -135,14 +135,14 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 ```bash
 ./build-docker-image.sh && docker run -p 8080:8080 -e "spring.batch.job.enabled=false" hapi-fhir/hapi-fhir-jpaserver-starter:latest
 ```
-Server will then be accessible at http://localhost:8080/hapi-fhir-jpaserver and eg. http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
 
 ```yaml
     tester:
       -
           id: home
           name: Local Tester
-          server_address: 'http://localhost:8080/hapi-fhir-jpaserver/fhir'
+          server_address: 'http://localhost:8080/fhir'
           refuse_to_fetch_third_party_urls: false
           fhir_version: R4
 ```
