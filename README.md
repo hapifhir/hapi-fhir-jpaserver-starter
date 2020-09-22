@@ -61,7 +61,7 @@ services:
     volumes:
       - hapi-data:/data/hapi
     environment:
-      JAVA_OPTS: '-Dhapi.properties=/data/hapi/application.yaml'
+      SPRING_CONFIG_LOCATION: 'file:///data/hapi/application.yaml'
 configs:
   hapi:
      external: true

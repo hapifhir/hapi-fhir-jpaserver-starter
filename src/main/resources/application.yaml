@@ -24,6 +24,10 @@ spring:
       hibernate.search.default.indexBase: target/lucenefiles
       hibernate.search.lucene_version: LUCENE_CURRENT
 
+  batch:
+    job:
+      enabled: false
+
 hapi:
   fhir:
     defer_indexing_for_codesystems_of_size: 101
