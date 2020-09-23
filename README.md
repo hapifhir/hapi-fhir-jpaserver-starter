@@ -25,7 +25,7 @@ Each tagged/released version of `hapi-fhir-jpaserver` is built as a Docker image
 
 ```
 docker pull hapiproject/hapi:latest
-docker run -p 8080:8080 -e "spring.batch.job.enabled=false" hapiproject/hapi:tagname
+docker run -p 8080:8080 hapiproject/hapi:tagname
 ```
 
 This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/hapi-fhir-jpaserver/` in the browser to access the HAPI FHIR server's UI.
@@ -76,7 +76,7 @@ The easiest way to run this server entirely depends on your environment requirem
 
 ### Using jetty
 ```bash
-mvn jetty:run -Dspring.batch.job.enabled=false
+mvn jetty:run
 ```
 
 
@@ -117,7 +117,7 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 ```
 ### Using Spring Boot and Google distroless
 ```bash
-mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 -e spring.batch.job.enabled=false distroless-hapi
+mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 distroless-hapi
 ```
 Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
 
@@ -133,7 +133,7 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 
 ### Using the Dockerfile and multistage build
 ```bash
-./build-docker-image.sh && docker run -p 8080:8080 -e "spring.batch.job.enabled=false" hapi-fhir/hapi-fhir-jpaserver-starter:latest
+./build-docker-image.sh && docker run -p 8080:8080 hapi-fhir/hapi-fhir-jpaserver-starter:latest
 ```
 Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
 

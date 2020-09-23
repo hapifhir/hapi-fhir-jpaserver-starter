@@ -1,4 +1,6 @@
 spring:
+  batch:
+    job.enabled: false
   datasource:
     url: 'jdbc:h2:file:./target/database/h2'
     username: sa
