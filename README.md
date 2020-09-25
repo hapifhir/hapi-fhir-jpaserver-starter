@@ -28,7 +28,7 @@ docker pull hapiproject/hapi:latest
 docker run -p 8080:8080 -e "spring.batch.job.enabled=false" hapiproject/hapi:latest
 ```
 
-This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/hapi-fhir-jpaserver/` in the browser to access the HAPI FHIR server's UI or use `http://localhost:8080/hapi-fhir-jpaserver/fhir/` as the base URL for your REST requests.
+This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/` in the browser to access the HAPI FHIR server's UI or use `http://localhost:8080/fhir/` as the base URL for your REST requests.
 
 If you change the mapped port, you need to change the configuration used by HAPI to have the correct `hapi.fhir.tester` property/value.
 
@@ -205,19 +205,17 @@ To deploy to a container, you should first build the project:
 mvn clean install
 ```
 
-This will create a file called `hapi-fhir-jpaserver.war` in your `target` directory. This should be installed in your Web Container according to the instructions for your particular container. For example, if you are using Tomcat, you will want to copy this file to the `webapps/` directory.
+This will create a file called `ROOT.war` in your `target` directory. This should be installed in your Web Container according to the instructions for your particular container. For example, if you are using Tomcat, you will want to copy this file to the `webapps/` directory.
 
 Again, browse to the following link to use the server (note that the port 8080 may not be correct depending on how your server is configured).
 
-[http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
-
-If you would like it to be hosted at the root, eg. http://localhost:8080/ - then rename the WAR file to ```ROOT.war```.
+[http://localhost:8080/](http://localhost:8080/)
 
 ## Deploy with docker compose
 
 Docker compose is a simple option to build and deploy container. To deploy with docker compose, you should build the project
 with `mvn clean install` and then bring up the containers with `docker-compose up -d --build`. The server can be
-reached at http://localhost:8080/hapi-fhir-jpaserver/.
+reached at http://localhost:8080/.
 
 In order to use another port, change the `ports` parameter
 inside `docker-compose.yml` to `8888:8080`, where 8888 is a port of your choice.
@@ -234,7 +232,7 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
 ```
 
-## Running hapi-fhir-jpaserver direclty from IntelliJ as Spring Boot
+## Running hapi-fhir-jpaserver directly from IntelliJ as Spring Boot
 Make sure you run with the maven profile called ```boot``` and NOT also ```jetty```. Then you are ready to press debug the project directly without any extra Application Servers.
 
 ## Running hapi-fhir-jpaserver-example in Tomcat from IntelliJ
@@ -279,7 +277,7 @@ The server may be configured with subscription support by enabling properties in
 
 - `hapi.fhir.subscription.email.*` - Enables email subscriptions. Note that you must also provide the connection details for a usable SMTP server.
 
-- `hapi.fhir.subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/hapi-fhir-jpaserver/websocket](ws://localhost:8080/hapi-fhir-jpaserver/websocket)
+- `hapi.fhir.subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/websocket](ws://localhost:8080/websocket)
 
 ## Enabling EMPI
 
