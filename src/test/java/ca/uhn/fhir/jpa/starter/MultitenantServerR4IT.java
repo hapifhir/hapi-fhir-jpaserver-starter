@@ -111,7 +111,7 @@ public class MultitenantServerR4IT {
     webAppContext.setContextPath("/hapi-fhir-jpaserver");
     webAppContext.setDisplayName("HAPI FHIR");
     webAppContext.setDescriptor(path + "/src/main/webapp/WEB-INF/web.xml");
-    webAppContext.setResourceBase(path + "/target/hapi-fhir-jpaserver-starter");
+    webAppContext.setResourceBase(path + "/target/hapi-fhir-jpavalidator-starter");
     webAppContext.setParentLoaderPriority(true);
 
     ourServer.setHandler(webAppContext);

@@ -1,5 +1,5 @@
-### @host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
-@host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
+@host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
+### @host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
 ### @host = http://localhost:8080/r4
 
 
