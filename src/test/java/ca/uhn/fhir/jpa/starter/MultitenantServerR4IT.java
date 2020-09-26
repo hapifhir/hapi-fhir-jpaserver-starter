@@ -7,44 +7,42 @@ import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.client.interceptor.UrlTenantSelectionInterceptor;
 import ca.uhn.fhir.rest.server.provider.ProviderConstants;
-import ca.uhn.fhir.test.utilities.JettyUtil;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.webapp.WebAppContext;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.CodeType;
-import org.hl7.fhir.r4.model.IntegerType;
-import org.hl7.fhir.r4.model.Parameters;
-import org.hl7.fhir.r4.model.Patient;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.hl7.fhir.r4.model.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.nio.file.Paths;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
+  {
+    "spring.batch.job.enabled=false",
+    "spring.profiles.active=r4",
+    "spring.datasource.url=jdbc:h2:mem:dbr4-mt",
+    "hapi.fhir.subscription.websocket_enabled=true",
+    "hapi.fhir.partitioning.partitioning_include_in_search_hashes=false"
+
+  })
 public class MultitenantServerR4IT {
 
-  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(MultitenantServerR4IT.class);
-  private static IGenericClient ourClient;
-  private static FhirContext ourCtx;
-  private static int ourPort;
-  private static Server ourServer;
+
+  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
+  private IGenericClient ourClient;
+  private FhirContext ourCtx;
+
+  @LocalServerPort
+  private int port;
+
   private static UrlTenantSelectionInterceptor ourClientTenantInterceptor;
 
-  static {
-    HapiProperties.forceReload();
-    HapiProperties.setProperty(HapiProperties.DATASOURCE_URL, "jdbc:h2:mem:dbr4-mt");
-    HapiProperties.setProperty(HapiProperties.FHIR_VERSION, "R4");
-    HapiProperties.setProperty(HapiProperties.SUBSCRIPTION_WEBSOCKET_ENABLED, "true");
-    HapiProperties.setProperty(HapiProperties.PARTITIONING_ENABLED, "true");
-    HapiProperties.setProperty(HapiProperties.PARTITIONING_MULTITENANCY_ENABLED, "true");
-    ourCtx = FhirContext.forR4();
-  }
 
   @Test
   public void testCreateAndReadInTenantA() {
-    ourLog.info("Base URL is: " + HapiProperties.getServerAddress());
+
 
     // Create tenant A
     ourClientTenantInterceptor.setTenantId("DEFAULT");
@@ -70,7 +68,7 @@ public class MultitenantServerR4IT {
 
   @Test
   public void testCreateAndReadInTenantB() {
-    ourLog.info("Base URL is: " + HapiProperties.getServerAddress());
+
 
     // Create tenant A
     ourClientTenantInterceptor.setTenantId("DEFAULT");
@@ -94,45 +92,16 @@ public class MultitenantServerR4IT {
     assertEquals("Family B", pt2.getName().get(0).getFamily());
   }
 
-  @AfterAll
-  public static void afterClass() throws Exception {
-    ourServer.stop();
-  }
-
-  @BeforeAll
-  public static void beforeClass() throws Exception {
-    String path = Paths.get("").toAbsolutePath().toString();
-
-    ourLog.info("Project base path is: {}", path);
-
-    ourServer = new Server(0);
-
-    WebAppContext webAppContext = new WebAppContext();
-    webAppContext.setContextPath("/hapi-fhir-jpaserver");
-    webAppContext.setDisplayName("HAPI FHIR");
-    webAppContext.setDescriptor(path + "/src/main/webapp/WEB-INF/web.xml");
-    webAppContext.setResourceBase(path + "/target/hapi-fhir-jpavalidator-starter");
-    webAppContext.setParentLoaderPriority(true);
-
-    ourServer.setHandler(webAppContext);
-    ourServer.start();
-
-    ourPort = JettyUtil.getPortForStartedServer(ourServer);
-
-    ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-    ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-    String ourServerBase = HapiProperties.getServerAddress();
-    ourServerBase = "http://localhost:" + ourPort + "/hapi-fhir-jpaserver/fhir/";
-
-    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-    ourClient.registerInterceptor(new LoggingInterceptor(true));
+  @BeforeEach
+  void beforeEach() {
 
     ourClientTenantInterceptor = new UrlTenantSelectionInterceptor();
+    ourCtx = FhirContext.forR4();
+    ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+    ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
+    String ourServerBase = "http://localhost:" + port + "/fhir/";
+    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
+    ourClient.registerInterceptor(new LoggingInterceptor(true));
     ourClient.registerInterceptor(ourClientTenantInterceptor);
-  }
-
-  public static void main(String[] theArgs) throws Exception {
-    ourPort = 8080;
-    beforeClass();
   }
 }

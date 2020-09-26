@@ -19,6 +19,8 @@ This project is a  starter project you can use to deploy a FHIR server using HAP
   < ./composition_confcode.xml
   ```   
 
+Need Help? Please see: https://github.com/jamesagnew/hapi-fhir/wiki/Getting-Help
+
 ## Prerequisites
 
 In order to use this sample, you should have:
@@ -29,8 +31,9 @@ In order to use this sample, you should have:
 
 ## Running locally
 
-The easiest way to run this server is to run it directly in Maven using a built-in Jetty server. To do this, change `src/main/resources/hapi.properties` `server_address` and `server.base` with the values commented out as _For Jetty, use this_ and then execute the following command:
+The easiest way to run this server entirely depends on your environment requirements. At least, the following 4 ways are supported:
 
+### Using jetty
 ```bash
 mvn jetty:run
 ```
@@ -52,6 +55,97 @@ mvn -Djetty.port=8888 jetty:run
 docker build -t hapi-fhir-jpavalidator-starter .
 docker run -d --name hapi-fhir-jpavalidator-starter -p 8080:8080 hapi-fhir-jpavalidator-starter
 ```
+Server will then be accessible at http://localhost:8888/ and eg. http://localhost:8888/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+
+```yaml
+    tester:
+      -
+          id: home
+          name: Local Tester
+          server_address: 'http://localhost:8888/fhir'
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+```
+
+
+### Using Spring Boot
+```bash
+mvn clean package spring-boot:repackage -Pboot && java -jar target/hapi-fhir-jpavalidator.war
+```
+Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+
+```yaml
+    tester:
+      -
+          id: home
+          name: Local Tester
+          server_address: 'http://localhost:8080/fhir'
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+```
+### Using Spring Boot and Google distroless
+```bash
+mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 distroless-hapi
+```
+Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+
+```yaml
+    tester:
+      -
+          id: home
+          name: Local Tester
+          server_address: 'http://localhost:8080/fhir'
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+```
+
+### Using the Dockerfile and multistage build
+```bash
+./build-docker-image.sh && docker run -p 8080:8080 hapi-fhir/hapi-fhir-jpaserver-starter:latest
+```
+Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+
+```yaml
+    tester:
+      -
+          id: home
+          name: Local Tester
+          server_address: 'http://localhost:8080/fhir'
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+```
+
+## Configurations
+
+Much of this HAPI starter project can be configured using the yaml file in _src/main/resources/application.yaml_. By default, this starter project is configured to use H2 as the database.
+
+### MySql configuration
+
+To configure the starter app to use MySQL, instead of the default H2, update the application.yaml file to have the following:
+
+```yaml
+spring:
+  datasource:
+    url: 'jdbc:mysql://localhost:3306/hapi_dstu3'
+    username: admin
+    password: admin
+    driverClassName: com.mysql.jdbc.Driver
+```
+
+### PostgreSQL configuration
+
+To configure the starter app to use PostgreSQL, instead of the default H2, update the application.yaml file to have the following:
+
+```yaml
+spring:
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/hapi_dstu3'
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
+```
+
+Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
 
 
 making container available
@@ -64,7 +158,7 @@ docker push eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-starter:v020
 
 Much of this HAPI starter project can be configured using the properties file in _src/main/resources/hapi.properties_. By default, this starter project is configured to use Derby as the database.
 
-## Deploying to a Container
+## Deploying to an Application Server
 
 Using the Maven-Embedded Jetty method above is convenient, but it is not a good solution if you want to leave the server running in the background.
 
