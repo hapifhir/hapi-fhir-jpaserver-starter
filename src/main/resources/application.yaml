@@ -27,8 +27,13 @@ spring:
       hibernate.search.default.directory_provider: filesystem
       hibernate.search.default.indexBase: target/lucenefiles
       hibernate.search.lucene_version: LUCENE_CURRENT
+server:
+  servlet:
+    context-path: /hapi-fhir-jpavalidator
 hapi:
   fhir:
+    server:
+      path: /hapi-fhir-jpavalidator/*
     defer_indexing_for_codesystems_of_size: 101
     implementationguides:
       -

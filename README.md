@@ -55,7 +55,7 @@ mvn -Djetty.port=8888 jetty:run
 docker build -t hapi-fhir-jpavalidator-starter .
 docker run -d --name hapi-fhir-jpavalidator-starter -p 8080:8080 hapi-fhir-jpavalidator-starter
 ```
-Server will then be accessible at http://localhost:8888/ and eg. http://localhost:8888/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+Server will then be accessible at http://localhost:8888/hapi-fhir-jpavalidator-starter and eg. http://localhost:8888/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
 
 ```yaml
     tester:
@@ -176,4 +176,4 @@ This will create a file called `hapi-fhir-jpavalidator.war` in your `target` dir
 
 Again, browse to the following link to use the server (note that the port 8080 may not be correct depending on how your server is configured).
 
-[http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
+[http://localhost:8080/hapi-fhir-jpavalidator](http://localhost:8080/hapi-fhir-jpavalidator)

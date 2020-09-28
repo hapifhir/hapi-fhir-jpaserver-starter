@@ -1,5 +1,6 @@
 package ch.ahdis.fhir.hapi.jpa.validation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /*
@@ -23,6 +24,7 @@ import java.util.ArrayList;
  */
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -61,20 +63,19 @@ public class ValidationProvider {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ValidationProvider.class);
 
-  @Operation(name = "$validate", idempotent = true, returnParameters = {
-      @OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
-  public IBaseResource validate(@OperationParam(name = "resource", min = 1, max = 1) final IBaseResource content,
-      @OperationParam(name = "code", min = 0, max = 1) final String code,
-      @OperationParam(name = "profile", min = 0, max = 1) final String profileUrl, HttpServletRequest theRequest) {
+  @Operation(name = "$validate", manualRequest=true, idempotent = true, returnParameters = {
+    @OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
+    public IBaseResource validate(HttpServletRequest theRequest) {
     log.debug("$validate");
+    ArrayList<SingleValidationMessage> addedValidationMessages = new ArrayList<>();
     
     StopWatch sw = new StopWatch();
     sw.startTask("Total");
 
-    String profile = profileUrl;
+    String profile = null;
 
     ValidationOptions validationOptions = new ValidationOptions();
-    if (profileUrl == null  && theRequest.getParameter("profile")!=null) {
+    if (theRequest.getParameter("profile")!=null) {
       // oe: @OperationParam(name = "profile" is not working in 5.1.0 JPA (was working before with 5.0.o Plain server)
       profile= theRequest.getParameter("profile");
     }
@@ -87,23 +88,40 @@ public class ValidationProvider {
         m.setMessage("Validation for profile "+ profile + " not supported by this server, but additional ig's could be configured.");
         m.setLocationCol(0);
         m.setLocationLine(0);
-        ArrayList<SingleValidationMessage> addedValidationMessages = new ArrayList<>();
         addedValidationMessages.add(m);
         return (new ValidationResult(myFhirCtx, addedValidationMessages)).toOperationOutcome();
       }
       validationOptions.addProfileIfNotBlank(profile);
     }
 
+    byte[] bytes = null;
+    String contentString = "";
+    try {
+      bytes = IOUtils.toByteArray(theRequest.getInputStream());
+      contentString = new String(bytes);
+    } catch (IOException e) {
+    }
+    // ValidationResult result = 
+    
+    if (contentString.length()==0) {
+      SingleValidationMessage m = new SingleValidationMessage();
+      m.setSeverity(ResultSeverityEnum.ERROR);
+      m.setMessage("No resource provided in http body");
+      m.setLocationCol(0);
+      m.setLocationLine(0);
+      addedValidationMessages.add(m);
+      return new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages).toOperationOutcome();
+    }
+
+
     FhirValidator validatorModule = myFhirCtx.newValidator();
     FhirInstanceValidator instanceValidator = new FhirInstanceValidator(myValidationSupport);
     instanceValidator.setBestPracticeWarningLevel(BestPracticeWarningLevel.Ignore);
     validatorModule.registerValidatorModule(instanceValidator);
-    ValidationResult result = validatorModule.validateWithResult(content, validationOptions);
-    
+    ValidationResult result = validatorModule.validateWithResult(contentString, validationOptions);
     sw.endCurrentTask();
 
     if (profile != null) {
-      ArrayList<SingleValidationMessage> addedValidationMessages = new ArrayList<>();
       SingleValidationMessage m = new SingleValidationMessage();
       m.setSeverity(ResultSeverityEnum.INFORMATION);
       m.setMessage("Validation for profile "+ profile +" " + (result.getMessages().size()==0 ? "No Issues detected. " : "") + sw.formatTaskDurations());
@@ -111,10 +129,9 @@ public class ValidationProvider {
       m.setLocationLine(0);
       addedValidationMessages.add(m);
       addedValidationMessages.addAll(result.getMessages());
-      result = new ValidationResult(myFhirCtx, addedValidationMessages);
     }
 
-    return result.toOperationOutcome();
+    return new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages).toOperationOutcome();
   }
 
 }
