@@ -201,19 +201,19 @@ To deploy to a container, you should first build the project:
 mvn clean install
 ```
 
-This will create a file called `hapi-fhir-jpaserver.war` in your `target` directory. This should be installed in your Web Container according to the instructions for your particular container. For example, if you are using Tomcat, you will want to copy this file to the `webapps/` directory.
+This will create a file called `ROOT.war` in your `target` directory. This should be installed in your Web Container according to the instructions for your particular container. For example, if you are using Tomcat, you will want to copy this file to the `webapps/` directory.
 
 Again, browse to the following link to use the server (note that the port 8080 may not be correct depending on how your server is configured).
 
-[http://localhost:8080/hapi-fhir-jpaserver/](http://localhost:8080/hapi-fhir-jpaserver/)
+[http://localhost:8080/](http://localhost:8080/hapi-fhir-jpaserver/)
 
-If you would like it to be hosted at the root, eg. http://localhost:8080/ - then rename the WAR file to ```ROOT.war```.
+If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localhost:8080/hapi-fhir-jpaserver/ - then rename the WAR file to ```hapi-fhir-jpaserver.war```.
 
 ## Deploy with docker compose
 
 Docker compose is a simple option to build and deploy container. To deploy with docker compose, you should build the project
 with `mvn clean install` and then bring up the containers with `docker-compose up -d --build`. The server can be
-reached at http://localhost:8080/hapi-fhir-jpaserver/.
+reached at http://localhost:8080/.
 
 In order to use another port, change the `ports` parameter
 inside `docker-compose.yml` to `8888:8080`, where 8888 is a port of your choice.
