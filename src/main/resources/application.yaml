@@ -34,7 +34,6 @@ hapi:
   fhir:
     server:
       path: /hapi-fhir-jpavalidator/*
-    defer_indexing_for_codesystems_of_size: 101
     implementationguides:
       -
         name: ch.fhir.ig.ch-epr-term

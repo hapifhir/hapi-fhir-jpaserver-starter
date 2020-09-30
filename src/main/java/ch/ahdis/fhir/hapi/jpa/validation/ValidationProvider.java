@@ -27,7 +27,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.hl7.fhir.instance.model.api.IBase;
+import org.hl7.fhir.instance.model.api.IBaseParameters;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.Parameters;
+import org.hl7.fhir.r4.model.Parameters.ParametersParameterComponent;
+import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r5.utils.IResourceValidator.BestPracticeWarningLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,6 +41,8 @@ import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.jpa.packages.NpmJpaValidationSupport;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
+import ca.uhn.fhir.rest.api.EncodingEnum;
+import ca.uhn.fhir.util.ParametersUtil;
 import ca.uhn.fhir.util.StopWatch;
 import ca.uhn.fhir.validation.FhirValidator;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
@@ -76,20 +82,13 @@ public class ValidationProvider {
 
     ValidationOptions validationOptions = new ValidationOptions();
     if (theRequest.getParameter("profile")!=null) {
-      // oe: @OperationParam(name = "profile" is not working in 5.1.0 JPA (was working before with 5.0.o Plain server)
       profile= theRequest.getParameter("profile");
     }
     
     if (profile != null) {
       if (npmJpaValidationSuport.fetchStructureDefinition(profile)==null && 
           defaultProfileValidationSuport.fetchStructureDefinition(profile) == null) {
-        SingleValidationMessage m = new SingleValidationMessage();
-        m.setSeverity(ResultSeverityEnum.ERROR);
-        m.setMessage("Validation for profile "+ profile + " not supported by this server, but additional ig's could be configured.");
-        m.setLocationCol(0);
-        m.setLocationLine(0);
-        addedValidationMessages.add(m);
-        return (new ValidationResult(myFhirCtx, addedValidationMessages)).toOperationOutcome();
+        return getValidationMessageProfileNotSupported(profile);
       }
       validationOptions.addProfileIfNotBlank(profile);
     }
@@ -113,12 +112,69 @@ public class ValidationProvider {
       return new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages).toOperationOutcome();
     }
 
+    EncodingEnum encoding = EncodingEnum.forContentType(theRequest.getContentType());
+    if (encoding == null) {
+      encoding = EncodingEnum.detectEncoding(contentString);
+    }
 
+    
     FhirValidator validatorModule = myFhirCtx.newValidator();
     FhirInstanceValidator instanceValidator = new FhirInstanceValidator(myValidationSupport);
     instanceValidator.setBestPracticeWarningLevel(BestPracticeWarningLevel.Ignore);
     validatorModule.registerValidatorModule(instanceValidator);
     ValidationResult result = validatorModule.validateWithResult(contentString, validationOptions);
+    
+    
+    // the $validate operation can be called in different ways, see https://www.hl7.org/fhir/resource-operation-validate.html 
+    // HTTP Body ---- HTTP Header Paramet 
+    // Resource       profile = specified --> handled above
+    // Parameters     profile = specified --> handled above
+    // Resource       profile not specified --> handled above 
+    // Parameters     profile not specified
+    //   has one resource and 0..1  profile and 0..1 mode
+    //       -->  extract resource and same value as above  
+    if (result.isSuccessful() && contentString.contains("Parameters")) {
+      IBaseResource resource = encoding.newParser(myFhirCtx).parseResource(contentString);
+      if ("Parameters".equals(resource.fhirType())) {
+        profile = null;
+        Parameters parameters = (Parameters) resource;
+        Resource resourceInParam = null;
+        boolean hasMetaProfile = parameters.getMeta()!=null && parameters.getMeta().getProfile()!=null && parameters.getMeta().getProfile().size()>0; 
+        if (!hasMetaProfile && parameters.getParameter()!=null && parameters.getParameter().size()<3) {
+          for (ParametersParameterComponent parameterComponent : parameters.getParameter()) {
+            if ("profile".equals(parameterComponent.getName())) {
+              profile = parameterComponent.getValue().primitiveValue();
+            }
+            if ("resource".equals(parameterComponent.getName())) {
+              resourceInParam = parameterComponent.getResource();
+            }
+            
+          }
+          if (resourceInParam!=null) {
+            validationOptions = new ValidationOptions();
+            if (profile != null) {
+              if (npmJpaValidationSuport.fetchStructureDefinition(profile)==null && 
+                  defaultProfileValidationSuport.fetchStructureDefinition(profile) == null) {
+                return getValidationMessageProfileNotSupported(profile);
+              }
+              validationOptions.addProfileIfNotBlank(profile);
+            }
+            result = validatorModule.validateWithResult(resourceInParam, validationOptions);
+            
+            IBaseResource operationOutcome = getOperationOutcome(addedValidationMessages, sw, profile, result);
+            
+            IBaseParameters returnParameters = ParametersUtil.newInstance(myFhirCtx);
+            ParametersUtil.addParameterToParameters(myFhirCtx, returnParameters, "return", operationOutcome);
+            return returnParameters;
+          }
+        }
+      }
+    }
+    return getOperationOutcome(addedValidationMessages, sw, profile, result);
+  }
+
+  private IBaseResource getOperationOutcome(ArrayList<SingleValidationMessage> addedValidationMessages, StopWatch sw,
+      String profile, ValidationResult result) {
     sw.endCurrentTask();
 
     if (profile != null) {
@@ -128,10 +184,21 @@ public class ValidationProvider {
       m.setLocationCol(0);
       m.setLocationLine(0);
       addedValidationMessages.add(m);
-      addedValidationMessages.addAll(result.getMessages());
     }
+    addedValidationMessages.addAll(result.getMessages());
 
     return new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages).toOperationOutcome();
+  }
+
+  private IBaseResource getValidationMessageProfileNotSupported(String profile) {
+    SingleValidationMessage m = new SingleValidationMessage();
+    m.setSeverity(ResultSeverityEnum.ERROR);
+    m.setMessage("Validation for profile "+ profile + " not supported by this server, but additional ig's could be configured.");
+    m.setLocationCol(0);
+    m.setLocationLine(0);
+    ArrayList<SingleValidationMessage> newValidationMessages = new ArrayList<>();
+    newValidationMessages.add(m);
+    return (new ValidationResult(myFhirCtx, newValidationMessages)).toOperationOutcome();
   }
 
 }
