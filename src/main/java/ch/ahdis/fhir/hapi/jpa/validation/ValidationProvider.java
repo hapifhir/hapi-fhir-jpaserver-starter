@@ -2,6 +2,7 @@ package ch.ahdis.fhir.hapi.jpa.validation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /*
  * #%L
@@ -29,12 +30,11 @@ import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseParameters;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.Parameters;
-import org.hl7.fhir.r4.model.Parameters.ParametersParameterComponent;
-import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r5.utils.IResourceValidator.BestPracticeWarningLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
+import ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.context.support.IValidationSupport;
@@ -137,36 +137,38 @@ public class ValidationProvider {
       IBaseResource resource = encoding.newParser(myFhirCtx).parseResource(contentString);
       if ("Parameters".equals(resource.fhirType())) {
         profile = null;
-        Parameters parameters = (Parameters) resource;
-        Resource resourceInParam = null;
-        boolean hasMetaProfile = parameters.getMeta()!=null && parameters.getMeta().getProfile()!=null && parameters.getMeta().getProfile().size()>0; 
-        if (!hasMetaProfile && parameters.getParameter()!=null && parameters.getParameter().size()<3) {
-          for (ParametersParameterComponent parameterComponent : parameters.getParameter()) {
-            if ("profile".equals(parameterComponent.getName())) {
-              profile = parameterComponent.getValue().primitiveValue();
-            }
-            if ("resource".equals(parameterComponent.getName())) {
-              resourceInParam = parameterComponent.getResource();
-            }
-            
+        IBaseParameters parameters = (IBaseParameters) resource;
+        IBaseResource resourceInParam = null;
+        List<String> profiles = ParametersUtil.getNamedParameterValuesAsString(myFhirCtx, parameters, "profile");
+        if (profiles!=null && profiles.size()==1) {
+          profile = profiles.get(0);
+        }
+        List<IBase> paramChildElems = ParametersUtil.getNamedParameters(myFhirCtx, parameters, "resource");
+        if (paramChildElems!=null && paramChildElems.size()==1) {
+          IBase param = paramChildElems.get(0);
+          BaseRuntimeElementCompositeDefinition<?> nextParameterDef = (BaseRuntimeElementCompositeDefinition<?>) myFhirCtx.getElementDefinition(param.getClass());
+          BaseRuntimeChildDefinition nameChild = nextParameterDef.getChildByName("resource");
+          List<IBase> resourceValues = nameChild.getAccessor().getValues(param);
+          if (resourceValues!=null && resourceValues.size()==1) {
+            resourceInParam = (IBaseResource) resourceValues.get(0);
           }
-          if (resourceInParam!=null) {
-            validationOptions = new ValidationOptions();
-            if (profile != null) {
-              if (npmJpaValidationSuport.fetchStructureDefinition(profile)==null && 
-                  defaultProfileValidationSuport.fetchStructureDefinition(profile) == null) {
-                return getValidationMessageProfileNotSupported(profile);
-              }
-              validationOptions.addProfileIfNotBlank(profile);
+        }
+        if (resourceInParam!=null) {
+          validationOptions = new ValidationOptions();
+          if (profile != null) {
+            if (npmJpaValidationSuport.fetchStructureDefinition(profile)==null && 
+                defaultProfileValidationSuport.fetchStructureDefinition(profile) == null) {
+              return getValidationMessageProfileNotSupported(profile);
             }
-            result = validatorModule.validateWithResult(resourceInParam, validationOptions);
-            
-            IBaseResource operationOutcome = getOperationOutcome(addedValidationMessages, sw, profile, result);
-            
-            IBaseParameters returnParameters = ParametersUtil.newInstance(myFhirCtx);
-            ParametersUtil.addParameterToParameters(myFhirCtx, returnParameters, "return", operationOutcome);
-            return returnParameters;
+            validationOptions.addProfileIfNotBlank(profile);
           }
+          result = validatorModule.validateWithResult(resourceInParam, validationOptions);
+          
+          IBaseResource operationOutcome = getOperationOutcome(addedValidationMessages, sw, profile, result);
+          
+          IBaseParameters returnParameters = ParametersUtil.newInstance(myFhirCtx);
+          ParametersUtil.addParameterToParameters(myFhirCtx, returnParameters, "return", operationOutcome);
+          return returnParameters;
         }
       }
     }
