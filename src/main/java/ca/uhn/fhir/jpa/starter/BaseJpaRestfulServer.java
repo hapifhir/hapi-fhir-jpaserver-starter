@@ -383,6 +383,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
           System.exit(-1); 
         }
       }
+      if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages().booleanValue()) {
+        System.exit(0);
+      }
     }
     registerProviders(validationProvider);
   }

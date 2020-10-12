@@ -39,6 +39,8 @@ public class AppProperties {
   private Boolean graphql_enabled = false;
   private Boolean binary_storage_enabled = false;
   private Boolean bulk_export_enabled = false;
+  private Boolean only_install_packages = false;
+
   private Boolean default_pretty_print = true;
   private Integer default_page_size = 20;
   private Integer max_binary_size = null;
@@ -313,6 +315,14 @@ public class AppProperties {
 
   public void setBulk_export_enabled(Boolean bulk_export_enabled) {
     this.bulk_export_enabled = bulk_export_enabled;
+  }
+  
+  public Boolean getOnly_install_packages() {
+    return only_install_packages;
+  }
+
+  public void setOnly_install_packages(Boolean only_install_packages) {
+    this.only_install_packages = only_install_packages;
   }
 
   public EncodingEnum getDefault_encoding() {
