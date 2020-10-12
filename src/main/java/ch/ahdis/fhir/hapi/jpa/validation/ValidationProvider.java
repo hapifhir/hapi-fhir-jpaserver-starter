@@ -116,27 +116,24 @@ public class ValidationProvider {
     if (encoding == null) {
       encoding = EncodingEnum.detectEncoding(contentString);
     }
-
     
     FhirValidator validatorModule = myFhirCtx.newValidator();
+    
     FhirInstanceValidator instanceValidator = new FhirInstanceValidator(myValidationSupport);
     instanceValidator.setBestPracticeWarningLevel(BestPracticeWarningLevel.Ignore);
     validatorModule.registerValidatorModule(instanceValidator);
-    ValidationResult result = validatorModule.validateWithResult(contentString, validationOptions);
     
     
     // the $validate operation can be called in different ways, see https://www.hl7.org/fhir/resource-operation-validate.html 
     // HTTP Body ---- HTTP Header Paramet 
-    // Resource       profile = specified --> handled above
-    // Parameters     profile = specified --> handled above
-    // Resource       profile not specified --> handled above 
-    // Parameters     profile not specified
-    //   has one resource and 0..1  profile and 0..1 mode
-    //       -->  extract resource and same value as above  
-    if (result.isSuccessful() && contentString.contains("Parameters")) {
+    // Resource       profile = specified --> return OperationOutcome
+    // Parameters     profile = specified --> return OperationOutcome
+    // Resource       profile not specified --> return OperationOutcome
+    // Parameters     profile not specified --> return Parameters/OperationOutcome
+
       IBaseResource resource = encoding.newParser(myFhirCtx).parseResource(contentString);
-      if ("Parameters".equals(resource.fhirType())) {
-        profile = null;
+      ValidationResult result = null;
+      if ("Parameters".equals(resource.fhirType()) && profile==null) {
         IBaseParameters parameters = (IBaseParameters) resource;
         IBaseResource resourceInParam = null;
         List<String> profiles = ParametersUtil.getNamedParameterValuesAsString(myFhirCtx, parameters, "profile");
@@ -170,8 +167,9 @@ public class ValidationProvider {
           ParametersUtil.addParameterToParameters(myFhirCtx, returnParameters, "return", operationOutcome);
           return returnParameters;
         }
+      } else {
+         result = validatorModule.validateWithResult(contentString, validationOptions);
       }
-    }
     return getOperationOutcome(addedValidationMessages, sw, profile, result);
   }
 

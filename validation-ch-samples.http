@@ -1,17 +1,73 @@
 ### 
-### @host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
-@host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
+@host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
+### @host = http://test.ahdis.ch/r4
+### @host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
 ### @host = http://localhost:8080/fhir
 
 
 GET {{host}}/metadata HTTP/1.1
 Accept: application/fhir+json
 
-### CH-Core Franz Muster (expected warning: None of the codes provided are in the value set)
+### Validate parameter file
 POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Parameters HTTP/.1
 Content-Type: application/fhir+xml
 
 < ./examples/parameters.xml
+
+
+### Validate parameter file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+xml
+
+< ./examples/patienthtmllang.xml
+
+### Validate parameter file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+xml
+
+< ./examples/parampatienthtmllang.xml
+
+
+### Validate parameter file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+json
+Accept: application/fhir+xml
+
+< ./examples/patienthtmllang.json
+
+### Validate parameter file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+json
+Accept: application/fhir+xml
+
+< ./examples/parampatienthtmllang.json
+
+### Validate parameter file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+xml
+
+< ./examples/ParametersSent.xml
+
+### Validate parameter file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+xml
+
+< ./examples/ParametersBroenni.xml
+
+
+### Validate parameter file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+json
+Accept: application/fhir+xml
+
+< ./examples/cdaig.json
+
+### Validate parameter file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+xml
+Accept: application/fhir+xml
+
+< ./examples/cdaig.xml
 
 
 ### CH-Core Franz Muster (expected warning: None of the codes provided are in the value set)
@@ -40,7 +96,7 @@ Content-Type: application/fhir+xml
 < ./examples/PatientUnknownGender.xml
 
 
-### CH-Core Franz Muster (expected warning: None of the codes provided are in the value set)
+### CH-Core Franz Muster validate with profile inside
 POST {{host}}/$validate HTTP/.1
 Content-Type: application/fhir+xml
 
@@ -92,7 +148,7 @@ Accept: application/fhir+xml
 ### ch-epr-mhealth
 POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-epr-mhealth/StructureDefinition/ch-mhd-comprehensive-documentmanifest HTTP/1.1
 Content-Type: application/fhir+json
-Accept: application/fhir+xml
+Accept: application/fhir+json
 
 < ./examples/DocumentManifest-2-7-DocManMedicationCard.json
 
