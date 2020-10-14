@@ -2,10 +2,6 @@
   xmlns="http://hl7.org/fhir">
   <!--<id value="56562bcf-2a5a-48d4-9a83-0f0dbbef74cc"/>-->
   <id value="ch-atc-iti-81-response-sample"/>
-  <meta>
-    <lastUpdated value="2020-03-11T22:25:25.507+00:00"/>
-    <profile value="http://fhir.ch/ig/ch-atc/StructureDefinition/CH-ATC.ITI-81.Response" />
-  </meta>
   <type value="searchset"/>
   <total value="3"/>
   <link>
@@ -13,17 +9,10 @@
     <url value="/r4/*/AuditEvent"/>
   </link>
   <entry>
-    <fullUrl value="/r4/*/AuditEvent/1"/>
+    <fullUrl value="http://test.fhir.ch/r4/AuditEvent/1"/>
     <resource>
-      <AuditEvent 
-        xmlns="http://hl7.org/fhir">
+      <AuditEvent>
         <id value="1"/>
-        <meta>
-          <versionId value="1"/>
-          <lastUpdated value="2020-03-11T22:23:48.511+00:00"/>
-          <source value="#7FDh4yxxyvETdamP"/>
-          <profile value="http://fhir.ch/ig/ch-atc/StructureDefinition/DocumentAuditEvent"/>
-        </meta>
         <text>
           <status value="generated"/>
           <div 
@@ -152,187 +141,4 @@
       <mode value="match"/>
     </search>
   </entry>
-  <entry>
-    <fullUrl value="/r4/*/AuditEvent/2"/>
-    <resource>
-      <AuditEvent 
-        xmlns="http://hl7.org/fhir">
-        <id value="2"/>
-        <meta>
-          <versionId value="1"/>
-          <lastUpdated value="2020-03-11T22:24:23.670+00:00"/>
-          <source value="#qP0MBxruH7EoT2Wk"/>
-          <profile value="http://fhir.ch/ig/ch-atc/StructureDefinition/AccessAuditTrailEvent"/>
-        </meta>
-        <text>
-          <status value="generated"/>
-          <div 
-            xmlns="http://www.w3.org/1999/xhtml">Jakob Wieder-Gesund has viewed the audit trail 22.09.2020 10:47 
-          </div>
-        </text>
-        <type>
-          <system value="http://dicom.nema.org/resources/ontology/DCM"/>
-          <code value="110106"/>
-          <display value="Export"/>
-        </type>
-        <subtype>
-          <system value="urn:oid:2.16.756.5.30.1.127.3.10.7"/>
-          <code value="ATC_LOG_READ"/>
-          <display value="Accessing the Patient Audit Record Repository"/>
-        </subtype>
-        <action value="C"/>
-        <recorded value="2020-09-22T08:47:00Z"/>
-        <outcome value="0"/>
-        <agent>
-          <role>
-            <coding>
-              <system value="urn:oid:2.16.756.5.30.1.127.3.10.6"/>
-              <code value="PAT"/>
-              <display value="Patient"/>
-            </coding>
-          </role>
-          <name value="Jakob Wieder-Gesund"/>
-          <requestor value="true"/>
-        </agent>
-        <source>
-          <observer>
-            <identifier>
-              <system value="urn:ietf:rfc:3986"/>
-              <!-- oid of system generating this audit event -->
-              <value value="urn:oid:7.8.9.10.11"/>
-            </identifier>
-          </observer>
-        </source>
-        <entity>
-          <what>
-            <!-- Patient -->
-            <identifier>
-              <system value="urn:oid:2.16.756.5.30.1.127.3.10.3"/>
-              <value value="761337610469261945"/>
-            </identifier>
-          </what>
-          <type>
-            <system value="http://terminology.hl7.org/CodeSystem/audit-entity-type"/>
-            <code value="1"/>
-            <display value="Person"/>
-          </type>
-          <role>
-            <system value="http://terminology.hl7.org/CodeSystem/object-role"/>
-            <code value="1"/>
-            <display value="Patient"/>
-          </role>
-        </entity>
-      </AuditEvent>
-    </resource>
-    <search>
-      <mode value="match"/>
-    </search>
-  </entry>
-  <entry>
-    <fullUrl value="/r4/*/AuditEvent/3"/>
-    <resource>
-      <AuditEvent 
-        xmlns="http://hl7.org/fhir">
-        <id value="3"/>
-        <meta>
-          <versionId value="1"/>
-          <lastUpdated value="2020-03-11T22:24:45.116+00:00"/>
-          <source value="#0nwVbjxxC0ZrSG2w"/>
-          <profile value="http://fhir.ch/ig/ch-atc/StructureDefinition/PolicyAuditEvent"/>
-        </meta>
-        <text>
-          <status value="generated"/>
-          <div 
-            xmlns="http://www.w3.org/1999/xhtml">22.09.2020 09:47: Jakob Wieder-Gesund created Access Level delegation-and-restricted till 31.12.2020 08:00 to Dr. med. Hans Allzeitbereit 
-          </div>
-        </text>
-        <type>
-          <system value="http://dicom.nema.org/resources/ontology/DCM"/>
-          <code value="110106"/>
-          <display value="Export"/>
-        </type>
-        <subtype>
-          <system value="urn:oid:2.16.756.5.30.1.127.3.10.7"/>
-          <code value="ATC_POL_CREATE_AUT_PART_AL"/>
-          <display value="Authorize participants to access level/date"/>
-        </subtype>
-        <action value="C"/>
-        <recorded value="2020-10-09T07:47:00Z"/>
-        <outcome value="0"/>
-        <agent>
-          <role>
-            <coding>
-              <system value="urn:oid:2.16.756.5.30.1.127.3.10.6"/>
-              <code value="PAT"/>
-              <display value="Patient"/>
-            </coding>
-          </role>
-          <name value="Jakob Wieder-Gesund"/>
-          <requestor value="true"/>
-        </agent>
-        <source>
-          <observer>
-            <identifier>
-              <system value="urn:ietf:rfc:3986"/>
-              <!-- oid of system generating this audit event -->
-              <value value="urn:oid:7.8.9.10.12"/>
-            </identifier>
-          </observer>
-        </source>
-        <entity>
-          <what>
-            <identifier>
-              <system value="urn:oid:2.16.756.5.30.1.127.3.10.3"/>
-              <value value="761337610469261945"/>
-            </identifier>
-          </what>
-          <type>
-            <system value="http://terminology.hl7.org/CodeSystem/audit-entity-type"/>
-            <code value="1"/>
-            <display value="Person"/>
-          </type>
-          <role>
-            <system value="http://terminology.hl7.org/CodeSystem/object-role"/>
-            <code value="1"/>
-            <display value="Patient"/>
-          </role>
-        </entity>
-        <entity>
-          <!-- Resource -->
-          <what>
-            <identifier>
-              <system value="urn:oid:2.51.1.3"/>
-              <value value="7601000234438"/>
-            </identifier>
-          </what>
-          <type>
-            <system value="http://terminology.hl7.org/CodeSystem/audit-entity-type"/>
-            <code value="2"/>
-            <display value="System Object"/>
-          </type>
-          <role>
-            <system value="urn:oid:2.16.756.5.30.1.127.3.10.6"/>
-            <code value="HCP"/>
-            <display value="Healthcare professional"/>
-          </role>
-          <name value="Dr. med. Hans Allzeitbereit"/>
-          <detail>
-            <type value="AccessLevel"/>
-            <!-- base64 of urn:e-health-suisse:2015:policies:access-level:delegation-and-restricted -->
-            <valueBase64Binary value="dXJuOmUtaGVhbHRoLXN1aXNzZToyMDE1OnBvbGljaWVzOmFjY2Vzcy1sZXZlbDpkZWxlZ2F0aW9uLWFuZC1yZXN0cmljdGVk"/>
-          </detail>
-          <detail>
-            <type value="AccessLimitedToDate"/>
-            <!-- base64 of 2020-12-31 -->
-            <valueBase64Binary value="MjAyMC0xMi0zMQ=="/>
-          </detail>
-        </entity>
-      </AuditEvent>
-    </resource>
-    <search>
-      <mode value="match"/>
-    </search>
-  </entry>
 </Bundle>
-
-

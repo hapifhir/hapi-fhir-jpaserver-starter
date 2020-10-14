@@ -53,7 +53,7 @@ public class ValidationClient extends GenericClient{
    * @return
    */
   public IBaseOperationOutcome validate(String theContents, String theProfile) {
-    HttpPostClientInvocation clientInvoke = new HttpPostClientInvocation(getFhirContext(), theContents, false, "/$validate");
+    HttpPostClientInvocation clientInvoke = new HttpPostClientInvocation(getFhirContext(), theContents, false, "$validate");
     Map<String, List<String>> theExtraParams = null;
     if (theProfile!=null) {
       theExtraParams = new HashMap<String, List<String>>();

@@ -26,8 +26,9 @@ import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
-import org.hl7.fhir.utilities.npm.NpmPackage;
+import org.hl7.fhir.utilities.cache.NpmPackage;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -47,12 +48,13 @@ import ch.ahdis.matchbox.util.PackageCacheInitializer;
  * @author oliveregger
  */
 @RunWith(Parameterized.class)
+@Ignore
 public class IgValidateR4TestStandalone {
 
   static private Set<String> loadedIgs = new HashSet<String>();
 
   private String targetServer = "http://localhost:8080/hapi-fhir-jpavalidator/fhir";
-  private Resource resource;
+    private Resource resource;
   private String name;
 
   @Parameters(name = "{index}: file {0}")
@@ -200,7 +202,7 @@ public class IgValidateR4TestStandalone {
     OperationOutcome outcome = validate(resource, targetServer);
     int fails = getValidationFailures(outcome);
     if (fails > 0) {
-      assertEquals("success", outcome);
+      assertEquals("success", outcome.toString());
     }
   }
 

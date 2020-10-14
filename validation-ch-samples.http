@@ -1,7 +1,7 @@
 ### 
-@host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
+### @host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
 ### @host = http://test.ahdis.ch/r4
-### @host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
+@host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
 ### @host = http://localhost:8080/fhir
 
 
@@ -116,6 +116,12 @@ Content-Type: application/fhir+xml
 
 < ./examples/atc-doc-create-rep-pat.xml
 
+
+### CH-ATC one warning: None of the codes provided are in the value set http://hl7.org/fhir/ValueSet/identifier-type (http://hl7.org/fhir/ValueSet/identifier-type), and a code should come from this value set unless it has no suitable code) (codes = urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab#IHE XDS Metadata)"/>
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/ch-atc-iti-81-response-sample.xml
 
 ### CH-ATC one warning: None of the codes provided are in the value set http://hl7.org/fhir/ValueSet/identifier-type (http://hl7.org/fhir/ValueSet/identifier-type), and a code should come from this value set unless it has no suitable code) (codes = urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab#IHE XDS Metadata)"/>
 POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-atc/StructureDefinition/CH-ATC.ITI-81.Response HTTP/1.1

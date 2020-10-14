@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.Resource;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,7 +16,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.Application;
+import ca.uhn.fhir.rest.api.EncodingEnum;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 
 
@@ -36,7 +41,6 @@ public class IgValidateR4Test extends IgValidateR4TestStandalone{
   public final SpringMethodRule smr = new SpringMethodRule();
   
   
-  
   private String targetServer = "http://localhost:8080/hapi-fhir-jpavalidator/fhir";
   private Resource resource;
   private String name;
@@ -49,13 +53,18 @@ public class IgValidateR4Test extends IgValidateR4TestStandalone{
     this.resource = resource;
     this.name = name;
   }
-  
+
   @Test
-  public void validate() throws Exception {
+  public void validate() throws Exception {    
     OperationOutcome outcome = validate(resource,targetServer); 
     int fails = getValidationFailures(outcome);
     if (fails>0) {
-      assertEquals("success", outcome);
+      FhirContext contextR4 = FhirVersionEnum.R4.newContext();
+      log.error("failing "+this.name);
+      log.debug(contextR4.newJsonParser().encodeResourceToString(resource));
+      String outcomeError = this.name+":"+contextR4.newJsonParser().encodeResourceToString(outcome);
+      log.debug(contextR4.newJsonParser().encodeResourceToString(outcome));
+      assertEquals("failed", outcomeError);
     }
   }
 
