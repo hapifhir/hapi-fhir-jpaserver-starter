@@ -206,7 +206,7 @@ public class IgValidateR4TestStandalone {
     }
   }
 
-  public int getValidationFailures(OperationOutcome outcome) {
+  static public int getValidationFailures(OperationOutcome outcome) {
     int fails = 0;
     if (outcome != null && outcome.getIssue() != null) {
       for (OperationOutcomeIssueComponent issue : outcome.getIssue()) {

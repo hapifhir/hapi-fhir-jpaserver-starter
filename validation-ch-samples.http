@@ -173,6 +173,15 @@ Accept: application/fhir+xml
 
 < ./examples/2-7-MedicationCard.xml
 
+
+### ch-emed
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+< ./src/test/resources/ehs-431.json
+
+
 ###
 
 ### Get the example files for validation, you can use "Save Response Body" and store them into the examples folder

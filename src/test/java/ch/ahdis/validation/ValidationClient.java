@@ -9,11 +9,14 @@ import java.util.Map;
 import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.client.impl.BaseHttpClientInvocation;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.client.method.HttpPostClientInvocation;
 import ca.uhn.fhir.rest.client.method.IClientResponseHandler;
 import ca.uhn.fhir.rest.client.method.MethodUtil;
+import ca.uhn.fhir.rest.client.method.OperationMethodBinding;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 
 
@@ -45,15 +48,28 @@ public class ValidationClient extends GenericClient{
     }
   }
 
+  public static BaseHttpClientInvocation createValidationInvocation(FhirContext theContext, String theOperationName, String theInput, Map<String, List<String>> urlParams) {
+		StringBuilder b = new StringBuilder();
+		if (b.length() > 0) {
+			b.append('/');
+		}
+		if (!theOperationName.startsWith("$")) {
+			b.append("$");
+		}
+		b.append(theOperationName);
+		BaseHttpClientInvocation.appendExtraParamsWithQuestionMark(urlParams, b, b.indexOf("?") == -1);
+		return new HttpPostClientInvocation(theContext, theInput, false, b.toString());
+	}
+
   /**
    * Performs the $validate operation with a direct POST (see http://hl7.org/fhir/resource-operation-validate.html#examples)
    * and the profile specified as a parameter (not the Parameters syntact).
    * @param theContents content to validate
-   * @param theProfile optional: profile to validate agaignst
+   * @param theProfile optional: profile to validate against
    * @return
    */
   public IBaseOperationOutcome validate(String theContents, String theProfile) {
-    HttpPostClientInvocation clientInvoke = new HttpPostClientInvocation(getFhirContext(), theContents, false, "$validate");
+    setEncoding(EncodingEnum.detectEncoding(theContents));
     Map<String, List<String>> theExtraParams = null;
     if (theProfile!=null) {
       theExtraParams = new HashMap<String, List<String>>();
@@ -62,7 +78,8 @@ public class ValidationClient extends GenericClient{
       theExtraParams.put("profile", profiles);
     }
     OutcomeResponseHandler binding = new OutcomeResponseHandler();
-    MethodOutcome resp = invokeClient(getFhirContext(), binding, clientInvoke, null, null, false, null, null, null, null, theExtraParams);
+    BaseHttpClientInvocation clientInvoke = createValidationInvocation(getFhirContext(), "$validate", theContents, theExtraParams);
+    MethodOutcome resp = invokeClient(getFhirContext(), binding, clientInvoke, null, null, false, null, null, null, null, null);
     return resp.getOperationOutcome();
   }
   

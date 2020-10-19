@@ -39,6 +39,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.jpa.packages.NpmJpaValidationSupport;
+import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -131,7 +132,12 @@ public class ValidationProvider {
     // Resource       profile not specified --> return OperationOutcome
     // Parameters     profile not specified --> return Parameters/OperationOutcome
 
-      IBaseResource resource = encoding.newParser(myFhirCtx).parseResource(contentString);
+      IBaseResource resource = null;
+      try {
+        resource = encoding.newParser(myFhirCtx).parseResource(contentString);
+      } catch(DataFormatException e) {
+        return getValidationMessageDataFormatException(e);
+      }
       ValidationResult result = null;
       if ("Parameters".equals(resource.fhirType()) && profile==null) {
         IBaseParameters parameters = (IBaseParameters) resource;
@@ -194,6 +200,17 @@ public class ValidationProvider {
     SingleValidationMessage m = new SingleValidationMessage();
     m.setSeverity(ResultSeverityEnum.ERROR);
     m.setMessage("Validation for profile "+ profile + " not supported by this server, but additional ig's could be configured.");
+    m.setLocationCol(0);
+    m.setLocationLine(0);
+    ArrayList<SingleValidationMessage> newValidationMessages = new ArrayList<>();
+    newValidationMessages.add(m);
+    return (new ValidationResult(myFhirCtx, newValidationMessages)).toOperationOutcome();
+  }
+
+  private IBaseResource getValidationMessageDataFormatException(DataFormatException e) {
+    SingleValidationMessage m = new SingleValidationMessage();
+    m.setSeverity(ResultSeverityEnum.FATAL);
+    m.setMessage(e.getMessage());
     m.setLocationCol(0);
     m.setLocationLine(0);
     ArrayList<SingleValidationMessage> newValidationMessages = new ArrayList<>();
