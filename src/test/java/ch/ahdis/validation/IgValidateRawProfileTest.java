@@ -74,6 +74,18 @@ public class IgValidateRawProfileTest {
     assertEquals(1, IgValidateR4TestStandalone.getValidationFailures((OperationOutcome) operationOutcome));
   }
 
+  @Test
+  //  https://gazelle.ihe.net/jira/browse/EHS-419
+  public void validateEhs419() throws IOException {
+    // 
+    FhirContext contextR4 = FhirVersionEnum.R4.newContext();
+    ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);
+
+    IBaseOperationOutcome operationOutcome = validationClient.validate(getContent("ehs-419.json"),
+        "http://hl7.org/fhir/StructureDefinition/Patient");
+    log.debug(contextR4.newJsonParser().encodeResourceToString(operationOutcome));
+    assertEquals(0, IgValidateR4TestStandalone.getValidationFailures((OperationOutcome) operationOutcome));
+  }
 
  
   private String getContent(String resourceName) throws IOException {

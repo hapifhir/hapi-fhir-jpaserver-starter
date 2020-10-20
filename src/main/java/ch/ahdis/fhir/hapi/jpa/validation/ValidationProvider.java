@@ -98,10 +98,20 @@ public class ValidationProvider {
     String contentString = "";
     try {
       bytes = IOUtils.toByteArray(theRequest.getInputStream());
+      if (bytes.length>2 && bytes[0]==-17 && bytes[1]==-69 && bytes[2]==-65) {
+        byte[] dest = new byte[bytes.length-3]; 
+        System.arraycopy(bytes, 3, dest, 0, bytes.length-3);
+        bytes = dest;
+        SingleValidationMessage m = new SingleValidationMessage();
+        m.setSeverity(ResultSeverityEnum.WARNING);
+        m.setMessage("Resource content has a UTF-8 BOM marking, skipping BOM, see https://en.wikipedia.org/wiki/Byte_order_mark");
+        m.setLocationCol(0);
+        m.setLocationLine(0);
+        addedValidationMessages.add(m);
+      }
       contentString = new String(bytes);
     } catch (IOException e) {
     }
-    // ValidationResult result = 
     
     if (contentString.length()==0) {
       SingleValidationMessage m = new SingleValidationMessage();
