@@ -21,7 +21,7 @@
 	<artifactId>hapi-fhir-jpavalidator-starter</artifactId>
 
 	<properties>
-		<java.version>8</java.version>
+		<java.version>11</java.version>
 		<spring_boot_version>2.3.4.RELEASE</spring_boot_version>
 	    <fhir.core.version>5.1.15</fhir.core.version>
 	</properties>
@@ -436,6 +436,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<runOrder>alphabetical</runOrder>
+					<reuseFork>true</reuseFork>
 				</configuration>
 			</plugin>
 

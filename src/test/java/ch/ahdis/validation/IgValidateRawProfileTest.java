@@ -4,31 +4,37 @@ import static org.junit.Assert.assertEquals;
 /**
  * Attention: if it is the first test run, an error about not connecting to port 8080 appears, running IgValidateR4 first works 
  */
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.rules.SpringClassRule;
+import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.Application;
 
-// @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-// @ContextConfiguration(classes = { Application.class })
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+@ContextConfiguration(classes = { Application.class })
 public class IgValidateRawProfileTest {
+
+  @ClassRule
+  public static final SpringClassRule scr = new SpringClassRule();
+
+  @Rule
+  public final SpringMethodRule smr = new SpringMethodRule();
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(IgValidateRawProfileTest.class);
 

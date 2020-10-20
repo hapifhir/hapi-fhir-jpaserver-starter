@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.Resource;
-import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,10 +18,6 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.Application;
-import ca.uhn.fhir.rest.api.EncodingEnum;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-
-
 
 /**
  * see https://www.baeldung.com/springjunit4classrunner-parameterized

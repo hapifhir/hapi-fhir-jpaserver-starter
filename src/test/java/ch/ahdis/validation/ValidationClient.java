@@ -16,7 +16,6 @@ import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.client.method.HttpPostClientInvocation;
 import ca.uhn.fhir.rest.client.method.IClientResponseHandler;
 import ca.uhn.fhir.rest.client.method.MethodUtil;
-import ca.uhn.fhir.rest.client.method.OperationMethodBinding;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 
 

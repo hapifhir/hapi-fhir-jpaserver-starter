@@ -1,6 +1,8 @@
 package ch.ahdis.fhir.hapi.jpa.validation;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ import java.util.List;
  */
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.hl7.fhir.instance.model.api.IBase;
@@ -123,6 +126,8 @@ public class ValidationProvider {
       return new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages).toOperationOutcome();
     }
 
+    String sha3Hex = new DigestUtils("SHA3-256").digestAsHex(contentString+(profile!=null ? profile : ""));
+
     EncodingEnum encoding = EncodingEnum.forContentType(theRequest.getContentType());
     if (encoding == null) {
       encoding = EncodingEnum.detectEncoding(contentString);
@@ -177,7 +182,7 @@ public class ValidationProvider {
           }
           result = validatorModule.validateWithResult(resourceInParam, validationOptions);
           
-          IBaseResource operationOutcome = getOperationOutcome(addedValidationMessages, sw, profile, result);
+          IBaseResource operationOutcome = getOperationOutcome(sha3Hex, addedValidationMessages, sw, profile, result);
           
           IBaseParameters returnParameters = ParametersUtil.newInstance(myFhirCtx);
           ParametersUtil.addParameterToParameters(myFhirCtx, returnParameters, "return", operationOutcome);
@@ -186,10 +191,10 @@ public class ValidationProvider {
       } else {
          result = validatorModule.validateWithResult(contentString, validationOptions);
       }
-    return getOperationOutcome(addedValidationMessages, sw, profile, result);
+    return getOperationOutcome(sha3Hex, addedValidationMessages, sw, profile, result);
   }
 
-  private IBaseResource getOperationOutcome(ArrayList<SingleValidationMessage> addedValidationMessages, StopWatch sw,
+  private IBaseResource getOperationOutcome(String id, ArrayList<SingleValidationMessage> addedValidationMessages, StopWatch sw,
       String profile, ValidationResult result) {
     sw.endCurrentTask();
 
@@ -203,7 +208,9 @@ public class ValidationProvider {
     }
     addedValidationMessages.addAll(result.getMessages());
 
-    return new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages).toOperationOutcome();
+    IBaseResource operationOutcome = new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages).toOperationOutcome();
+    operationOutcome.setId(id);
+    return operationOutcome;
   }
 
   private IBaseResource getValidationMessageProfileNotSupported(String profile) {
