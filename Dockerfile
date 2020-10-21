@@ -5,7 +5,6 @@ COPY pom.xml .
 RUN mvn -ntp dependency:go-offline
 
 COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
-RUN set MAVEN_OPTS="-Xmx1024m"
 RUN mvn clean install -DskipTests
 
 FROM tomcat:9.0.38-jdk11-openjdk-slim-buster
