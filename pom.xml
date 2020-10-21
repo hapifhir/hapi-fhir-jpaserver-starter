@@ -284,6 +284,12 @@
 			<version>${project.version}</version>
 		</dependency>
 		
+        <dependency>
+            <groupId>org.hl7.fhir.testcases</groupId>
+            <artifactId>fhir-test-cases</artifactId>
+            <version>1.1.47-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
 
 
 		<!-- For some reason JavaDoc crashed during site generation unless we have 

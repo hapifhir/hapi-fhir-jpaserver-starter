@@ -37,6 +37,13 @@ The easiest way to run this server entirely depends on your environment requirem
 ```bash
 mvn clean install -DskipTests spring-boot:run
 ```
+to debug:
+
+```
+mvn clean install -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
+```
+
+
 
 Then, browse to the following link to use the server:
 

@@ -138,6 +138,9 @@ public class ValidationProvider {
 
     FhirInstanceValidator instanceValidator = new FhirInstanceValidator(myValidationSupport);
     instanceValidator.setBestPracticeWarningLevel(BestPracticeWarningLevel.Ignore);
+    ArrayList<String> extensionDomains = new ArrayList<String>();
+    instanceValidator.setCustomExtensionDomains(extensionDomains);
+
     validatorModule.registerValidatorModule(instanceValidator);
 
     // the $validate operation can be called in different ways, see
@@ -148,15 +151,14 @@ public class ValidationProvider {
     // Resource profile not specified --> return OperationOutcome
     // Parameters profile not specified --> return Parameters/OperationOutcome
     ValidationResult result = null;
-    int lookahead = 200;
-    int indexParameter = contentString.indexOf("Parameters");
-    if (indexParameter != -1 && indexParameter < lookahead && profile == null) {
-      IBaseResource resource = null;
-      try {
-        resource = encoding.newParser(myFhirCtx).parseResource(contentString);
-      } catch (DataFormatException e) {
-        return getValidationMessageDataFormatException(e);
-      }
+    IBaseResource resource = null;
+    try {
+      // we still parse to catch wrongli formatted 
+      resource = encoding.newParser(myFhirCtx).parseResource(contentString);
+    } catch (DataFormatException e) {
+      return getValidationMessageDataFormatException(e);
+    }
+    if (resource!=null && "Parameters".equals(resource.fhirType()) && profile == null) {
       IBaseParameters parameters = (IBaseParameters) resource;
       IBaseResource resourceInParam = null;
       List<String> profiles = ParametersUtil.getNamedParameterValuesAsString(myFhirCtx, parameters, "profile");
@@ -190,6 +192,9 @@ public class ValidationProvider {
         IBaseParameters returnParameters = ParametersUtil.newInstance(myFhirCtx);
         ParametersUtil.addParameterToParameters(myFhirCtx, returnParameters, "return", operationOutcome);
         return returnParameters;
+      } else {
+        // we have a validation for a Parameter but not a resource inside, fall back to validate only Parameter
+        result = validatorModule.validateWithResult(contentString, validationOptions);
       }
     } else {
       result = validatorModule.validateWithResult(contentString, validationOptions);

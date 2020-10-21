@@ -18,7 +18,9 @@ import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.term.api.ITermReadSvcR4;
+import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ExtTermReadSvcR4;
+import ch.ahdis.fhir.hapi.jpa.validation.JpaExtendedValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -86,4 +88,10 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
     return new ValidationProvider();
   }
 
+  @Bean(name = JPA_VALIDATION_SUPPORT_CHAIN)
+	public JpaValidationSupportChain jpaValidationSupportChain() {
+		return new JpaExtendedValidationSupportChain(fhirContext());
+	}
 }
+
+

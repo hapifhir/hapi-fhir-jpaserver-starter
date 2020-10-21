@@ -14,5 +14,7 @@ public class JpaExtendedValidationSupportChain extends JpaValidationSupportChain
   @PostConstruct
   public void postConstruct() {
     super.postConstruct();
+    // we don't want to fetch for additional resources during validation (or at least not incorrect onces
+    this.removeValidationSupport(myJpaValidationSupport);
   }
 }
