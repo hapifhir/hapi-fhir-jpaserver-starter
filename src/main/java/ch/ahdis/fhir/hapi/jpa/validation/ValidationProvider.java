@@ -64,7 +64,7 @@ public class ValidationProvider {
 
   @Autowired
   protected FhirContext myFhirCtx;
-  
+
   @Autowired
   protected NpmJpaValidationSupport npmJpaValidationSuport;
 
@@ -73,25 +73,25 @@ public class ValidationProvider {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ValidationProvider.class);
 
-  @Operation(name = "$validate", manualRequest=true, idempotent = true, returnParameters = {
-    @OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
-    public IBaseResource validate(HttpServletRequest theRequest) {
+  @Operation(name = "$validate", manualRequest = true, idempotent = true, returnParameters = {
+      @OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
+  public IBaseResource validate(HttpServletRequest theRequest) {
     log.debug("$validate");
     ArrayList<SingleValidationMessage> addedValidationMessages = new ArrayList<>();
-    
+
     StopWatch sw = new StopWatch();
     sw.startTask("Total");
 
     String profile = null;
 
     ValidationOptions validationOptions = new ValidationOptions();
-    if (theRequest.getParameter("profile")!=null) {
-      profile= theRequest.getParameter("profile");
+    if (theRequest.getParameter("profile") != null) {
+      profile = theRequest.getParameter("profile");
     }
-    
+
     if (profile != null) {
-      if (npmJpaValidationSuport.fetchStructureDefinition(profile)==null && 
-          defaultProfileValidationSuport.fetchStructureDefinition(profile) == null) {
+      if (npmJpaValidationSuport.fetchStructureDefinition(profile) == null
+          && defaultProfileValidationSuport.fetchStructureDefinition(profile) == null) {
         return getValidationMessageProfileNotSupported(profile);
       }
       validationOptions.addProfileIfNotBlank(profile);
@@ -101,13 +101,14 @@ public class ValidationProvider {
     String contentString = "";
     try {
       bytes = IOUtils.toByteArray(theRequest.getInputStream());
-      if (bytes.length>2 && bytes[0]==-17 && bytes[1]==-69 && bytes[2]==-65) {
-        byte[] dest = new byte[bytes.length-3]; 
-        System.arraycopy(bytes, 3, dest, 0, bytes.length-3);
+      if (bytes.length > 2 && bytes[0] == -17 && bytes[1] == -69 && bytes[2] == -65) {
+        byte[] dest = new byte[bytes.length - 3];
+        System.arraycopy(bytes, 3, dest, 0, bytes.length - 3);
         bytes = dest;
         SingleValidationMessage m = new SingleValidationMessage();
         m.setSeverity(ResultSeverityEnum.WARNING);
-        m.setMessage("Resource content has a UTF-8 BOM marking, skipping BOM, see https://en.wikipedia.org/wiki/Byte_order_mark");
+        m.setMessage(
+            "Resource content has a UTF-8 BOM marking, skipping BOM, see https://en.wikipedia.org/wiki/Byte_order_mark");
         m.setLocationCol(0);
         m.setLocationLine(0);
         addedValidationMessages.add(m);
@@ -115,8 +116,8 @@ public class ValidationProvider {
       contentString = new String(bytes);
     } catch (IOException e) {
     }
-    
-    if (contentString.length()==0) {
+
+    if (contentString.length() == 0) {
       SingleValidationMessage m = new SingleValidationMessage();
       m.setSeverity(ResultSeverityEnum.ERROR);
       m.setMessage("No resource provided in http body");
@@ -126,89 +127,93 @@ public class ValidationProvider {
       return new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages).toOperationOutcome();
     }
 
-    String sha3Hex = new DigestUtils("SHA3-256").digestAsHex(contentString+(profile!=null ? profile : ""));
+    String sha3Hex = new DigestUtils("SHA3-256").digestAsHex(contentString + (profile != null ? profile : ""));
 
     EncodingEnum encoding = EncodingEnum.forContentType(theRequest.getContentType());
     if (encoding == null) {
       encoding = EncodingEnum.detectEncoding(contentString);
     }
-    
+
     FhirValidator validatorModule = myFhirCtx.newValidator();
-    
+
     FhirInstanceValidator instanceValidator = new FhirInstanceValidator(myValidationSupport);
     instanceValidator.setBestPracticeWarningLevel(BestPracticeWarningLevel.Ignore);
     validatorModule.registerValidatorModule(instanceValidator);
-    
-    
-    // the $validate operation can be called in different ways, see https://www.hl7.org/fhir/resource-operation-validate.html 
-    // HTTP Body ---- HTTP Header Paramet 
-    // Resource       profile = specified --> return OperationOutcome
-    // Parameters     profile = specified --> return OperationOutcome
-    // Resource       profile not specified --> return OperationOutcome
-    // Parameters     profile not specified --> return Parameters/OperationOutcome
 
+    // the $validate operation can be called in different ways, see
+    // https://www.hl7.org/fhir/resource-operation-validate.html
+    // HTTP Body ---- HTTP Header Parameter
+    // Resource profile = specified --> return OperationOutcome
+    // Parameters profile = specified --> return OperationOutcome
+    // Resource profile not specified --> return OperationOutcome
+    // Parameters profile not specified --> return Parameters/OperationOutcome
+    ValidationResult result = null;
+    int lookahead = 200;
+    int indexParameter = contentString.indexOf("Parameters");
+    if (indexParameter != -1 && indexParameter < lookahead && profile == null) {
       IBaseResource resource = null;
       try {
         resource = encoding.newParser(myFhirCtx).parseResource(contentString);
-      } catch(DataFormatException e) {
+      } catch (DataFormatException e) {
         return getValidationMessageDataFormatException(e);
       }
-      ValidationResult result = null;
-      if ("Parameters".equals(resource.fhirType()) && profile==null) {
-        IBaseParameters parameters = (IBaseParameters) resource;
-        IBaseResource resourceInParam = null;
-        List<String> profiles = ParametersUtil.getNamedParameterValuesAsString(myFhirCtx, parameters, "profile");
-        if (profiles!=null && profiles.size()==1) {
-          profile = profiles.get(0);
-        }
-        List<IBase> paramChildElems = ParametersUtil.getNamedParameters(myFhirCtx, parameters, "resource");
-        if (paramChildElems!=null && paramChildElems.size()==1) {
-          IBase param = paramChildElems.get(0);
-          BaseRuntimeElementCompositeDefinition<?> nextParameterDef = (BaseRuntimeElementCompositeDefinition<?>) myFhirCtx.getElementDefinition(param.getClass());
-          BaseRuntimeChildDefinition nameChild = nextParameterDef.getChildByName("resource");
-          List<IBase> resourceValues = nameChild.getAccessor().getValues(param);
-          if (resourceValues!=null && resourceValues.size()==1) {
-            resourceInParam = (IBaseResource) resourceValues.get(0);
-          }
-        }
-        if (resourceInParam!=null) {
-          validationOptions = new ValidationOptions();
-          if (profile != null) {
-            if (npmJpaValidationSuport.fetchStructureDefinition(profile)==null && 
-                defaultProfileValidationSuport.fetchStructureDefinition(profile) == null) {
-              return getValidationMessageProfileNotSupported(profile);
-            }
-            validationOptions.addProfileIfNotBlank(profile);
-          }
-          result = validatorModule.validateWithResult(resourceInParam, validationOptions);
-          
-          IBaseResource operationOutcome = getOperationOutcome(sha3Hex, addedValidationMessages, sw, profile, result);
-          
-          IBaseParameters returnParameters = ParametersUtil.newInstance(myFhirCtx);
-          ParametersUtil.addParameterToParameters(myFhirCtx, returnParameters, "return", operationOutcome);
-          return returnParameters;
-        }
-      } else {
-         result = validatorModule.validateWithResult(contentString, validationOptions);
+      IBaseParameters parameters = (IBaseParameters) resource;
+      IBaseResource resourceInParam = null;
+      List<String> profiles = ParametersUtil.getNamedParameterValuesAsString(myFhirCtx, parameters, "profile");
+      if (profiles != null && profiles.size() == 1) {
+        profile = profiles.get(0);
       }
+      List<IBase> paramChildElems = ParametersUtil.getNamedParameters(myFhirCtx, parameters, "resource");
+      if (paramChildElems != null && paramChildElems.size() == 1) {
+        IBase param = paramChildElems.get(0);
+        BaseRuntimeElementCompositeDefinition<?> nextParameterDef = (BaseRuntimeElementCompositeDefinition<?>) myFhirCtx
+            .getElementDefinition(param.getClass());
+        BaseRuntimeChildDefinition nameChild = nextParameterDef.getChildByName("resource");
+        List<IBase> resourceValues = nameChild.getAccessor().getValues(param);
+        if (resourceValues != null && resourceValues.size() == 1) {
+          resourceInParam = (IBaseResource) resourceValues.get(0);
+        }
+      }
+      if (resourceInParam != null) {
+        validationOptions = new ValidationOptions();
+        if (profile != null) {
+          if (npmJpaValidationSuport.fetchStructureDefinition(profile) == null
+              && defaultProfileValidationSuport.fetchStructureDefinition(profile) == null) {
+            return getValidationMessageProfileNotSupported(profile);
+          }
+          validationOptions.addProfileIfNotBlank(profile);
+        }
+        result = validatorModule.validateWithResult(resourceInParam, validationOptions);
+
+        IBaseResource operationOutcome = getOperationOutcome(sha3Hex, addedValidationMessages, sw, profile, result);
+
+        IBaseParameters returnParameters = ParametersUtil.newInstance(myFhirCtx);
+        ParametersUtil.addParameterToParameters(myFhirCtx, returnParameters, "return", operationOutcome);
+        return returnParameters;
+      }
+    } else {
+      result = validatorModule.validateWithResult(contentString, validationOptions);
+    }
     return getOperationOutcome(sha3Hex, addedValidationMessages, sw, profile, result);
   }
 
-  private IBaseResource getOperationOutcome(String id, ArrayList<SingleValidationMessage> addedValidationMessages, StopWatch sw,
-      String profile, ValidationResult result) {
+  private IBaseResource getOperationOutcome(String id, ArrayList<SingleValidationMessage> addedValidationMessages,
+      StopWatch sw, String profile, ValidationResult result) {
     sw.endCurrentTask();
 
     if (profile != null) {
       SingleValidationMessage m = new SingleValidationMessage();
       m.setSeverity(ResultSeverityEnum.INFORMATION);
-      m.setMessage("Validation for profile "+ profile +" " + (result.getMessages().size()==0 ? "No Issues detected. " : "") + sw.formatTaskDurations());
+      m.setMessage("Validation for profile " + profile + " "
+          + (result.getMessages().size() == 0 ? "No Issues detected. " : "") + sw.formatTaskDurations());
       m.setLocationCol(0);
       m.setLocationLine(0);
       addedValidationMessages.add(m);
     }
     addedValidationMessages.addAll(result.getMessages());
 
-    IBaseResource operationOutcome = new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages).toOperationOutcome();
+    IBaseResource operationOutcome = new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages)
+        .toOperationOutcome();
     operationOutcome.setId(id);
     return operationOutcome;
   }
@@ -216,7 +221,8 @@ public class ValidationProvider {
   private IBaseResource getValidationMessageProfileNotSupported(String profile) {
     SingleValidationMessage m = new SingleValidationMessage();
     m.setSeverity(ResultSeverityEnum.ERROR);
-    m.setMessage("Validation for profile "+ profile + " not supported by this server, but additional ig's could be configured.");
+    m.setMessage("Validation for profile " + profile
+        + " not supported by this server, but additional ig's could be configured.");
     m.setLocationCol(0);
     m.setLocationLine(0);
     ArrayList<SingleValidationMessage> newValidationMessages = new ArrayList<>();
