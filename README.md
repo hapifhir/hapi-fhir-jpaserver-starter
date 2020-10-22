@@ -25,10 +25,10 @@ Each tagged/released version of `hapi-fhir-jpaserver` is built as a Docker image
 
 ```
 docker pull hapiproject/hapi:latest
-docker run -p 8080:8080 hapiproject/hapi:tagname
+docker run -p 8080:8080 hapiproject/hapi:latest
 ```
 
-This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/hapi-fhir-jpaserver/` in the browser to access the HAPI FHIR server's UI.
+This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/` in the browser to access the HAPI FHIR server's UI or use `http://localhost:8080/fhir/` as the base URL for your REST requests.
 
 If you change the mapped port, you need to change the configuration used by HAPI to have the correct `hapi.fhir.tester` property/value.
 
@@ -36,7 +36,9 @@ If you change the mapped port, you need to change the configuration used by HAPI
 
 You can customize HAPI directly from the `run` command using environment variables. For example:
 
-`docker run -p 8080:8080 -e hapi.fhir.default_encoding=xml hapiproject/hapi:tagname`
+```
+docker run -p 8080:8080 -e hapi.fhir.default_encoding=xml hapiproject/hapi:latest
+```
 
 HAPI looks in the environment variables for properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file for defaults.
 
@@ -44,7 +46,9 @@ HAPI looks in the environment variables for properties in the [application.yaml]
 
 You can customize HAPI by telling HAPI to look for the configuration file in a different location, eg.:
 
-`docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.application.yaml" hapiproject/hapi:tagname`
+```
+docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.application.yaml" hapiproject/hapi:latest
+```
 
 ### Example docker-compose.yml
 
@@ -52,7 +56,7 @@ You can customize HAPI by telling HAPI to look for the configuration file in a d
 version: '3.7'
 services:
   web:
-    image: "hapiproject/hapi:tagname"
+    image: "hapiproject/hapi:latest"
     ports:
       - "8090:8080"
     configs:
@@ -205,7 +209,7 @@ This will create a file called `ROOT.war` in your `target` directory. This shoul
 
 Again, browse to the following link to use the server (note that the port 8080 may not be correct depending on how your server is configured).
 
-[http://localhost:8080/](http://localhost:8080/hapi-fhir-jpaserver/)
+[http://localhost:8080/](http://localhost:8080/)
 
 If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localhost:8080/hapi-fhir-jpaserver/ - then rename the WAR file to ```hapi-fhir-jpaserver.war```.
 
@@ -230,7 +234,7 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
 ```
 
-## Running hapi-fhir-jpaserver direclty from IntelliJ as Spring Boot
+## Running hapi-fhir-jpaserver directly from IntelliJ as Spring Boot
 Make sure you run with the maven profile called ```boot``` and NOT also ```jetty```. Then you are ready to press debug the project directly without any extra Application Servers.
 
 ## Running hapi-fhir-jpaserver-example in Tomcat from IntelliJ
@@ -275,7 +279,7 @@ The server may be configured with subscription support by enabling properties in
 
 - `hapi.fhir.subscription.email.*` - Enables email subscriptions. Note that you must also provide the connection details for a usable SMTP server.
 
-- `hapi.fhir.subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/hapi-fhir-jpaserver/websocket](ws://localhost:8080/hapi-fhir-jpaserver/websocket)
+- `hapi.fhir.subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/websocket](ws://localhost:8080/websocket)
 
 ## Enabling EMPI
 
