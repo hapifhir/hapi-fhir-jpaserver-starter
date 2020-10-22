@@ -25,7 +25,7 @@ Each tagged/released version of `hapi-fhir-jpaserver` is built as a Docker image
 
 ```
 docker pull hapiproject/hapi:latest
-docker run -p 8080:8080 -e "spring.batch.job.enabled=false" hapiproject/hapi:latest
+docker run -p 8080:8080 hapiproject/hapi:latest
 ```
 
 This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/` in the browser to access the HAPI FHIR server's UI or use `http://localhost:8080/fhir/` as the base URL for your REST requests.
@@ -80,7 +80,7 @@ The easiest way to run this server entirely depends on your environment requirem
 
 ### Using jetty
 ```bash
-mvn jetty:run -Dspring.batch.job.enabled=false
+mvn jetty:run
 ```
 
 
@@ -121,7 +121,7 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 ```
 ### Using Spring Boot and Google distroless
 ```bash
-mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 -e spring.batch.job.enabled=false distroless-hapi
+mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 distroless-hapi
 ```
 Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
 
@@ -137,7 +137,7 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 
 ### Using the Dockerfile and multistage build
 ```bash
-./build-docker-image.sh && docker run -p 8080:8080 -e "spring.batch.job.enabled=false" hapi-fhir/hapi-fhir-jpaserver-starter:latest
+./build-docker-image.sh && docker run -p 8080:8080 hapi-fhir/hapi-fhir-jpaserver-starter:latest
 ```
 Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
 
@@ -210,6 +210,8 @@ This will create a file called `ROOT.war` in your `target` directory. This shoul
 Again, browse to the following link to use the server (note that the port 8080 may not be correct depending on how your server is configured).
 
 [http://localhost:8080/](http://localhost:8080/)
+
+If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localhost:8080/hapi-fhir-jpaserver/ - then rename the WAR file to ```hapi-fhir-jpaserver.war```.
 
 ## Deploy with docker compose
 
