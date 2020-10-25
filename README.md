@@ -102,7 +102,21 @@ Server will then be accessible at http://localhost:8888/ and eg. http://localhos
           fhir_version: R4
 ```
 
+### Using Spring Boot with :run
+```bash
+mvn clean spring-boot:run -Pboot
+```
+Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
 
+```yaml
+    tester:
+      -
+          id: home
+          name: Local Tester
+          server_address: 'http://localhost:8080/fhir'
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+```
 
 ### Using Spring Boot
 ```bash
