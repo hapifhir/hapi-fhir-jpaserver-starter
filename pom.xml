@@ -1,7 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
+    <!-- 'mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 -e spring.batch.job.enabled=false distroless-hapi' -->
     <!--
     Note: HAPI projects use the "hapi-fhir" POM as their base to provide easy management.
     You do not need to use this in your own projects, so the "parent" tag and it's
@@ -11,14 +14,33 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>5.0.0</version>
+        <version>5.1.0</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
 
+    <properties>
+        <java.version>8</java.version>
+        <spring_boot_version>2.3.4.RELEASE</spring_boot_version>
+    </properties>
+
     <prerequisites>
-        <maven>3.5.0</maven>
+        <maven>3.6.3</maven>
     </prerequisites>
+
+    <packaging>war</packaging>
+
+    <name>HAPI FHIR JPA Server - Starter Project</name>
+
+    <repositories>
+        <repository>
+            <id>oss-snapshots</id>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -34,7 +56,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.11</version>
+            <version>8.0.16</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
@@ -54,12 +76,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>javax.mail-api</artifactId>
-        </dependency>
-        -->
 
         <!-- This dependency includes the core HAPI-FHIR classes -->
         <dependency>
@@ -84,7 +100,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        <!-- This dependency includes the JPA EMPI Server -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-jpaserver-empi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- This dependency is used for the "FHIR Tester" web app overlay -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
@@ -98,7 +119,7 @@
             <artifactId>hapi-fhir-testpage-overlay</artifactId>
             <version>${project.version}</version>
             <classifier>classes</classifier>
-            <scope>provided</scope>
+
         </dependency>
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
@@ -220,18 +241,7 @@
             <artifactId>jetty-webapp</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-schematron</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>Saxon-HE</artifactId>
-                    <groupId>net.sf.saxon</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-			-->
+
 
         <!--
         For some reason JavaDoc crashed during site generation unless we have this dependency
@@ -249,34 +259,69 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>4.0.0-rc1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>${spring_boot_version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.6.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.6.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring_boot_version}</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 
-    <packaging>war</packaging>
-
-    <name>HAPI FHIR JPA Server - Starter Project</name>
-
-    <repositories>
-        <repository>
-            <id>oss-snapshots</id>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
-
     <build>
 
-        <!-- Tells Maven to name the generated WAR file as hapi-fhir-jpaserver.war -->
-        <finalName>hapi-fhir-jpaserver</finalName>
+        <!-- Tells Maven to name the generated WAR file as ROOT.war -->
+        <finalName>ROOT</finalName>
 
         <plugins>
-            <!-- The following is not required for the application to build, but allows you to test it by issuing "mvn jetty:run" from the command line. -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>ca.uhn.fhir.jpa.starter.Application</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- The following is not required for the application to build, but allows you to test it by issuing "mvn package jetty:run -Dspring.batch.job.enabled=false" from the command line. -->
+            <!--
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-					 <version>${jetty_version}</version>
+                <version>${jetty_version}</version>
                 <configuration>
                     <webApp>
                         <contextPath>/hapi-fhir-jpaserver</contextPath>
@@ -284,14 +329,15 @@
                     </webApp>
                 </configuration>
             </plugin>
+            -->
 
             <!-- Tell Maven which Java source version you want to use -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <release>8</release>
                 </configuration>
             </plugin>
 
@@ -311,7 +357,7 @@
                             <artifactId>hapi-fhir-testpage-overlay</artifactId>
                         </overlay>
                     </overlays>
-                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
 
@@ -319,6 +365,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M5</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 </configuration>
@@ -421,12 +468,55 @@
                     <ignoredResourcePatterns>
                         <ignoredResourcePattern>.*\.txt$</ignoredResourcePattern>
                         <ignoredResourcePattern>.*\.html$</ignoredResourcePattern>
+                        <ignoredResourcePattern>config/favicon.ico</ignoredResourcePattern>
                     </ignoredResourcePatterns>
                 </configuration>
             </plugin>
-
-
         </plugins>
     </build>
 
+    <profiles>
+        <!-- Package the war for your preference. Use the boot profile if you prefer a single jar/war
+        that can be started with and embedded application server. Default is jetty as it is assumed
+        that the main users of this project already have an app server.
+        Different profiles are needed as packing it for spring boot, makes the resulting war undeployable
+        due to a class shading issue between tomcat and jetty.
+        (the error is 'java.util.ServiceConfigurationError: org.apache.juli.logging.Log: org.eclipse.jetty.apache.jsp.JuliLog not a subtype')
+
+         -->
+
+        <!-- example of how to start the server using spring boot-->
+        <!-- mvn clean package spring-boot:repackage -Pboot && java -jar target/hapi-fhir-jpaserver.war -->
+
+        <!-- Use the boot profile for development and debugging options when using your IDE -->
+        <profile>
+            <id>boot</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                    <version>${spring_boot_version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <!-- examples of how to start the server using the default profile-->
+        <!-- mvn clean package jetty:run -Dspring.batch.job.enabled=false -->
+        <!-- java -jar -Dspring.batch.job.enabled=false jetty-runner.jar target/hapi-fhir-jpaserver.war -->
+        <profile>
+            <id>jetty</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                    <version>${spring_boot_version}</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-tomcat</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>

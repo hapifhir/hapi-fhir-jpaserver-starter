@@ -1,0 +1,104 @@
+spring:
+  datasource:
+    url: 'jdbc:h2:file:./target/database/h2'
+    username: sa
+    password: null
+    driverClassName: org.h2.Driver
+    max-active: 15
+  profiles:
+    ### This is the FHIR version. Choose between, dstu2, dstu3, r4 or r5
+    active: r4
+
+hapi:
+  fhir:
+    #supported_resource_types:
+    #  - Patient
+    #  - Observation
+#    allow_cascading_deletes: true
+#    allow_contains_searches: true
+#    allow_external_references: true
+#    allow_multiple_delete: true
+#    allow_override_default_search_params: true
+#    allow_placeholder_references: true
+#    auto_create_placeholder_reference_targets: false
+#    default_encoding: JSON
+#    default_pretty_print: true
+#    default_page_size: 20
+#    enable_index_missing_fields: false
+#    enforce_referential_integrity_on_delete: false
+#    enforce_referential_integrity_on_write: false
+#    etag_support_enabled: true
+#    expunge_enabled: true
+#    daoconfig_client_id_strategy: null
+#    fhirpath_interceptor_enabled: false
+#    filter_search_enabled: true
+#    graphql_enabled: true
+    #partitioning:
+    #  cross_partition_reference_mode: true
+    #  multitenancy_enabled: true
+    #  partitioning_include_in_search_hashes: true
+    #cors:
+    #  allow_Credentials: true
+      # Supports multiple, comma separated allowed origin entries
+      # cors.allowed_origin=http://localhost:8080,https://localhost:8080,https://fhirtest.uhn.ca
+    #  allowed_origin:
+    #    - '*'
+
+#    logger:
+#      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
+#      format: >-
+#        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
+#        Operation[${operationType} ${operationName} ${idOrResourceName}]
+#        UA[${requestHeader.user-agent}] Params[${requestParameters}]
+#        ResponseEncoding[${responseEncodingNoDefault}]
+#      log_exceptions: true
+#      name: fhirtest.access
+#    max_binary_size: 104857600
+#    max_page_size: 200
+#    retain_cached_searches_mins: 60
+#    reuse_cached_search_results_millis: 60000
+    tester:
+      -
+          id: home
+          name: Local Tester
+          server_address: 'http://localhost:8080/hapi-fhir-jpaserver/fhir'
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+      -
+          id: global
+          name: Global Tester
+          server_address: "http://hapi.fhir.org/baseR4"
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+#    validation:
+#      requests_enabled: true
+#      responses_enabled: true
+#    binary_storage_enabled: true
+#    bulk_export_enabled: true
+#    partitioning_multitenancy_enabled:
+#    subscription:
+#      resthook_enabled: false
+#      websocket_enabled: false
+#      email:
+#        from: some@test.com
+#        host: google.com
+#        port:
+#        username:
+#        password:
+#        auth:
+#        startTlsEnable:
+#        startTlsRequired:
+#        quitWait:
+
+
+#
+#elasticsearch:
+#  debug:
+#    pretty_print_json_log: false
+#    refresh_after_write: false
+#  enabled: false
+#  password: SomePassword
+#  required_index_status: YELLOW
+#  rest_url: 'http://localhost:9200'
+#  schema_management_strategy: CREATE
+#  username: SomeUsername
