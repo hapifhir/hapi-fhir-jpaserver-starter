@@ -1,0 +1,18 @@
+FROM maven:3.6.3-jdk-11-slim as build-hapi
+WORKDIR /tmp/hapi-fhir-jpaserver-starter
+
+COPY pom.xml .
+COPY cert.pem .
+RUN mvn -ntp dependency:go-offline
+
+COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
+RUN mvn clean install -DskipTests
+FROM s390x/tomcat:9.0.39-jdk11-adoptopenjdk-hotspot
+
+RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles
+COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/*.war /usr/local/tomcat/webapps/
+COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/cert.pem /usr/local/tomcat/conf/cert.pem
+
+EXPOSE 8080
+
+CMD ["catalina.sh", "run"]
