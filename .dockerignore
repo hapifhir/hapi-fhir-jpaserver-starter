@@ -1,3 +1,5 @@
 target
 .idea
 .git
+.env.dev
+.env.prod

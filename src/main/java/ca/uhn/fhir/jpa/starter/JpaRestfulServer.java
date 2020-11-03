@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.jpa.starter.config.IlaraHealthSecurityInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
@@ -10,6 +11,9 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
 
   @Autowired
   AppProperties appProperties;
+
+  @Autowired
+  IlaraHealthSecurityInterceptor ilaraHealthSecurityInterceptor;
 
   private static final long serialVersionUID = 1L;
 
@@ -22,6 +26,7 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     super.initialize();
 
     // Add your own customization here
+    this.registerInterceptor(ilaraHealthSecurityInterceptor);
 
   }
 
