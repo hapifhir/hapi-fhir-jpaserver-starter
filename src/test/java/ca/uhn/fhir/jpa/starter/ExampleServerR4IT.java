@@ -6,6 +6,7 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
+import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.util.BundleUtil;
 import org.eclipse.jetty.websocket.api.Session;
@@ -16,6 +17,7 @@ import org.hl7.fhir.r4.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -48,6 +50,8 @@ public class ExampleServerR4IT {
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
   private IGenericClient ourClient;
   private FhirContext ourCtx;
+  @Value("ILARA_HEALTH_SECURITY_USERNAME") String basicUsername;
+  @Value("ILARA_HEALTH_SECURITY_PASSWORD") String basicPassword;
 
   @LocalServerPort
   private int port;
@@ -162,5 +166,7 @@ public class ExampleServerR4IT {
     String ourServerBase = "http://localhost:" + port + "/fhir/";
     ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
     ourClient.registerInterceptor(new LoggingInterceptor(true));
+    BasicAuthInterceptor authInterceptor = new BasicAuthInterceptor(basicUsername, basicPassword);
+    ourClient.registerInterceptor(authInterceptor);
   }
 }

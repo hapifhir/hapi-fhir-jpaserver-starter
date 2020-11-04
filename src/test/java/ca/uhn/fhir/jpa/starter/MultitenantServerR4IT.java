@@ -4,6 +4,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
+import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.client.interceptor.UrlTenantSelectionInterceptor;
 import ca.uhn.fhir.rest.server.provider.ProviderConstants;
@@ -11,6 +12,7 @@ import org.hl7.fhir.r4.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -33,7 +35,8 @@ public class MultitenantServerR4IT {
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
   private IGenericClient ourClient;
   private FhirContext ourCtx;
-
+  @Value("ILARA_HEALTH_SECURITY_USERNAME") String basicUsername;
+  @Value("ILARA_HEALTH_SECURITY_PASSWORD") String basicPassword;
   @LocalServerPort
   private int port;
 
@@ -103,5 +106,7 @@ public class MultitenantServerR4IT {
     ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
     ourClient.registerInterceptor(new LoggingInterceptor(true));
     ourClient.registerInterceptor(ourClientTenantInterceptor);
+    BasicAuthInterceptor authInterceptor = new BasicAuthInterceptor(basicUsername, basicPassword);
+    ourClient.registerInterceptor(authInterceptor);
   }
 }
