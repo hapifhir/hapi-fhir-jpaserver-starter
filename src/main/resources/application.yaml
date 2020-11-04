@@ -131,3 +131,10 @@ hapi:
 #  rest_url: 'http://localhost:9200'
 #  schema_management_strategy: CREATE
 #  username: SomeUsername
+
+
+ilara:
+  health:
+    security:
+      username: ${ILARA_HEALTH_SECURITY_USERNAME:ilarafhir}
+      password: ${ILARA_HEALTH_SECURITY_PASSWORD:ilaraP@ssword}
