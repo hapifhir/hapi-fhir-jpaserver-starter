@@ -35,8 +35,8 @@ public class MultitenantServerR4IT {
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
   private IGenericClient ourClient;
   private FhirContext ourCtx;
-  @Value("ILARA_HEALTH_SECURITY_USERNAME") String basicUsername;
-  @Value("ILARA_HEALTH_SECURITY_PASSWORD") String basicPassword;
+  @Value("${ilara.health.security.username}") private String basicUsername;
+  @Value("${ilara.health.security.password}") private String basicPassword;
   @LocalServerPort
   private int port;
 
@@ -107,6 +107,6 @@ public class MultitenantServerR4IT {
     ourClient.registerInterceptor(new LoggingInterceptor(true));
     ourClient.registerInterceptor(ourClientTenantInterceptor);
     BasicAuthInterceptor authInterceptor = new BasicAuthInterceptor(basicUsername, basicPassword);
-    ourClient.registerInterceptor(authInterceptor);
+    ourClient.registerInterceptor(authInterceptor);;
   }
 }
