@@ -42,15 +42,23 @@ docker run -p 8080:8080 -e hapi.fhir.default_encoding=xml hapiproject/hapi:lates
 
 HAPI looks in the environment variables for properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file for defaults.
 
-### Configuration via overridden application.yaml file
+### Configuration via overridden application.yaml file and using Docker
 
 You can customize HAPI by telling HAPI to look for the configuration file in a different location, eg.:
 
 ```
+docker run -p 8090:8080 -v $(pwd)/yourLocalFolder:/configs -e "--spring.config.location=file:///configs/another.application.yaml" hapiproject/hapi:latest
+```
+Here, the configuration file (*another.application.yaml*) is placed locally in the folder *yourLocalFolder*.
+
+
+
+```
 docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.application.yaml" hapiproject/hapi:latest
 ```
+Here, the configuration file (*another.application.yaml*) is part of the compiled set of resources.
 
-### Example docker-compose.yml
+### Example using docker-compose.yml for docker-compose
 
 ```
 version: '3.7'
