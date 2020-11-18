@@ -26,17 +26,17 @@
       "name": "cosine-given-name",
       "resourceType": "*",
       "resourcePath": "name.given",
-      "metric": "COSINE",
-      "matchThreshold": 0.8,
-      "exact": true
+      "matcher": {
+        "algorithm": "COLOGNE"
+      }
     },
     {
       "name": "jaro-last-name",
       "resourceType": "*",
       "resourcePath": "name.family",
-      "metric": "JARO_WINKLER",
-      "matchThreshold": 0.8,
-      "exact": true
+      "matcher": {
+        "algorithm": "SOUNDEX"
+      }
     }
   ],
   "matchResultMap": {
