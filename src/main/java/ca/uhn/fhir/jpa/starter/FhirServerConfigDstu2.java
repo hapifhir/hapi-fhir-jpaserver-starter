@@ -3,24 +3,21 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigDstu2;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import ca.uhn.fhir.jpa.starter.annotations.OnDSTU2Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 @Configuration
-@Profile("dstu2")
+@Conditional(OnDSTU2Condition.class)
 public class FhirServerConfigDstu2 extends BaseJavaConfigDstu2 {
 
   @Autowired

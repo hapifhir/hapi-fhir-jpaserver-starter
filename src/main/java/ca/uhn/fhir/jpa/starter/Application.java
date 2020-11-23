@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.empi.EmpiConfig;
+import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
@@ -15,6 +16,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -44,6 +46,7 @@ public class Application extends SpringBootServletInitializer {
   AutowireCapableBeanFactory beanFactory;
 
   @Bean
+  @Conditional(OnEitherVersion.class)
   public ServletRegistrationBean hapiServletRegistration() {
     ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
     JpaRestfulServer jpaRestfulServer = new JpaRestfulServer();
