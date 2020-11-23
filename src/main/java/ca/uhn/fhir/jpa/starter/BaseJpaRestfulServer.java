@@ -16,6 +16,8 @@ import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.GraphQLProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
+import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
+import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.r4.JpaConformanceProviderR4;
 import ca.uhn.fhir.jpa.provider.r5.JpaConformanceProviderR5;
@@ -35,6 +37,7 @@ import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
 
@@ -94,6 +97,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
   @Autowired
   AppProperties appProperties;
+
+  @Autowired
+  ApplicationContext myApplicationContext;
 
   public BaseJpaRestfulServer() {
 
@@ -236,16 +242,14 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * so it is a potential security vulnerability. Consider using an AuthorizationInterceptor
      * with this feature.
      */
-    if (false) { // <-- DISABLED RIGHT NOW
-      //registerProvider(appCtx.getBean(TerminologyUploaderProvider.class));
+    if (ctx.getVersion().getVersion().isEqualOrNewerThan(FhirVersionEnum.DSTU3)) { // <-- ENABLED RIGHT NOW
+      registerProvider(myApplicationContext.getBean(TerminologyUploaderProvider.class));
     }
 
     // If you want to enable the $trigger-subscription operation to allow
     // manual triggering of a subscription delivery, enable this provider
-    if (false) { // <-- DISABLED RIGHT NOW
-     /* SubscriptionTriggeringProvider retriggeringProvider = appCtx
-        .getBean(SubscriptionTriggeringProvider.class);
-      registerProvider(retriggeringProvider);*/
+    if (true) { // <-- ENABLED RIGHT NOW
+      registerProvider(myApplicationContext.getBean(SubscriptionTriggeringProvider.class));
     }
 
     // Define your CORS configuration. This is an example

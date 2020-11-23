@@ -14,8 +14,8 @@ public class EnvironmentHelper {
 
   public static Properties getHibernateProperties(ConfigurableEnvironment environment) {
     Properties properties = new Properties();
+
     if (environment.getProperty("spring.jpa.properties", String.class) == null) {
-      properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
       properties.put("hibernate.search.model_mapping", "ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory");
       properties.put("hibernate.format_sql", "false");
       properties.put("hibernate.show_sql", "false");

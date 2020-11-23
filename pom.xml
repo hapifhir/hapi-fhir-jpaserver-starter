@@ -14,18 +14,18 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>5.1.0</version>
+        <version>5.2.0</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
 
     <properties>
         <java.version>8</java.version>
-        <spring.boot>2.3.3.RELEASE</spring.boot>
+        <spring_boot_version>2.3.4.RELEASE</spring_boot_version>
     </properties>
 
     <prerequisites>
-        <maven>3.6.0</maven>
+        <maven>3.6.3</maven>
     </prerequisites>
 
     <packaging>war</packaging>
@@ -269,7 +269,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${spring.boot}</version>
+            <version>${spring_boot_version}</version>
         </dependency>
 
 
@@ -289,7 +289,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring.boot}</version>
+            <version>${spring_boot_version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -298,8 +298,8 @@
 
     <build>
 
-        <!-- Tells Maven to name the generated WAR file as hapi-fhir-jpaserver.war -->
-        <finalName>hapi-fhir-jpaserver</finalName>
+        <!-- Tells Maven to name the generated WAR file as ROOT.war -->
+        <finalName>ROOT</finalName>
 
         <plugins>
             <plugin>
@@ -495,7 +495,7 @@
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-web</artifactId>
-                    <version>2.3.3.RELEASE</version>
+                    <version>${spring_boot_version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -508,7 +508,7 @@
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-web</artifactId>
-                    <version>2.3.3.RELEASE</version>
+                    <version>${spring_boot_version}</version>
                     <exclusions>
                         <exclusion>
                             <groupId>org.springframework.boot</groupId>
