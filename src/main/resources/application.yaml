@@ -28,7 +28,7 @@ spring:
 hapi:
   fhir:
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
-    fhir_version: DSTU3
+#    fhir_version: DSTU3 #Default is R4
 #    defer_indexing_for_codesystems_of_size: 101
 #    implementationguides:
 #      -
