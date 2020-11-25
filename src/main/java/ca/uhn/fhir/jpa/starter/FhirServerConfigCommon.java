@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Optional;
@@ -133,8 +134,8 @@ public class FhirServerConfigCommon {
 
   @Primary
   @Bean
-  public HibernateDialectProvider jpaStarterDialectProvider() {
-    return new JpaHibernateDialectProvider();
+  public HibernateDialectProvider jpaStarterDialectProvider(LocalContainerEntityManagerFactoryBean myEntityManagerFactory) {
+    return new JpaHibernateDialectProvider(myEntityManagerFactory);
   }
 
   @Bean

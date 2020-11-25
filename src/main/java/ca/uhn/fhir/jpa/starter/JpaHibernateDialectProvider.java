@@ -3,20 +3,29 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.config.HibernateDialectProvider;
 import org.hibernate.dialect.Dialect;
-import org.springframework.beans.factory.annotation.Value;
+import org.hibernate.engine.jdbc.dialect.internal.StandardDialectResolver;
+import org.hibernate.engine.jdbc.dialect.spi.DatabaseMetaDataDialectResolutionInfoAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
 
 public class JpaHibernateDialectProvider extends HibernateDialectProvider {
 
-  @Value("${spring.jpa.properties.hibernate.dialect}")
-  public String myDialectClass;
+  private final Dialect dialect;
 
+  public JpaHibernateDialectProvider(LocalContainerEntityManagerFactoryBean myEntityManagerFactory) {
+    DataSource connection = myEntityManagerFactory.getDataSource();
+    try {
+      dialect = new StandardDialectResolver()
+        .resolveDialect(new DatabaseMetaDataDialectResolutionInfoAdapter(connection.getConnection().getMetaData()));
+    } catch (SQLException sqlException) {
+      throw new ConfigurationException(sqlException.getMessage(), sqlException);
+    }
+  }
 
   @Override
   public Dialect getDialect() {
-    try {
-      return (Dialect) Class.forName(myDialectClass).newInstance();
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-      throw new ConfigurationException("Can not load dialect: " + myDialectClass);
-    }
+    return dialect;
   }
 }

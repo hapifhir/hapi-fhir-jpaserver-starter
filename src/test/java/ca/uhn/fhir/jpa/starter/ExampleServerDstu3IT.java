@@ -33,8 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
   {
     "spring.batch.job.enabled=false",
-    "spring.profiles.active=dstu3",
     "spring.datasource.url=jdbc:h2:mem:dbr3",
+    "hapi.fhir.fhir_version=dstu3",
     "hapi.fhir.subscription.websocket_enabled=true",
     "hapi.fhir.allow_external_references=true",
     "hapi.fhir.allow_placeholder_references=true",

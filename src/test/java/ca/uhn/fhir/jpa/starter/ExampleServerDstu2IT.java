@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
   {
     "spring.batch.job.enabled=false",
-    "spring.profiles.active=dstu2",
+    "hapi.fhir.fhir_version=dstu2",
     "spring.datasource.url=jdbc:h2:mem:dbr2"
   })
 public class ExampleServerDstu2IT {
