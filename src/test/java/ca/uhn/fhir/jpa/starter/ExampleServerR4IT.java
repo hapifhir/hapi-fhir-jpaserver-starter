@@ -36,8 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
   {
     "spring.batch.job.enabled=false",
-    "spring.profiles.active=r4",
     "spring.datasource.url=jdbc:h2:mem:dbr4",
+    "hapi.fhir.fhir_version=r4",
     "hapi.fhir.subscription.websocket_enabled=true",
     "hapi.fhir.empi_enabled=true",
     //Override is currently required when using Empi as the construction of the Empi beans are ambiguous as they are constructed multiple places. This is evident when running in a spring boot environment
