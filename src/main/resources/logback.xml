@@ -9,6 +9,7 @@
 		</encoder>
 	</appender>
 
+<<<<<<< HEAD
 	<appender name="SUBSCRIPTION_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>DEBUG</level>
@@ -26,6 +27,14 @@
 			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{req.remoteAddr}] [%X{req.userAgent}] %-5level %logger{36} %msg%n</pattern>
 		</encoder>
 	</appender>
+=======
+	<logger name="org.springframework.beans" level="INFO">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="org.springframework.core" level="INFO">
+		<appender-ref ref="STDOUT" />
+	</logger>
+>>>>>>> Added some files for CQL support - more work to be done on this..
 
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
