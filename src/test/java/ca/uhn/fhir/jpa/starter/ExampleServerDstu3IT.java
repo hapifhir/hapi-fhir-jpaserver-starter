@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.cql.provider.CqlProviderLoader;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
@@ -34,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
   {
     "spring.batch.job.enabled=false",
     "spring.datasource.url=jdbc:h2:mem:dbr3",
+    "hapi.fhir.cql_enabled=true",
     "hapi.fhir.fhir_version=dstu3",
     "hapi.fhir.subscription.websocket_enabled=true",
     "hapi.fhir.allow_external_references=true",
@@ -61,6 +63,15 @@ public class ExampleServerDstu3IT {
 
     Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
     assertEquals(methodName, pt2.getName().get(0).getFamily());
+  }
+
+  @Test
+  public void testCQLAvailable() {
+    CqlProviderLoader cqlProviderLoader = null;
+    // FIXME KBD Remove this and put some Unit Test code here
+    for (String resourceType : ourCtx.getResourceTypes()) {
+      System.out.println("resourceType = '" + resourceType + "'");
+    }
   }
 
   @Test

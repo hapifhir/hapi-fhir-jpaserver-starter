@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
   {
     "spring.batch.job.enabled=false",
     "spring.datasource.url=jdbc:h2:mem:dbr4",
+    "hapi.fhir.cql_enabled=true",
     "hapi.fhir.fhir_version=r4",
     "hapi.fhir.subscription.websocket_enabled=true",
     "hapi.fhir.empi_enabled=true",
