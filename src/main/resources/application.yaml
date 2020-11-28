@@ -1,7 +1,7 @@
 spring:
   datasource:
-    #url: 'jdbc:h2:file:./target/database/h2'
-    url: jdbc:h2:mem:test_mem
+    url: 'jdbc:h2:file:./target/database/h2'
+    #url: jdbc:h2:mem:test_mem
     username: sa
     password: null
     driverClassName: org.h2.Driver
@@ -33,9 +33,9 @@ hapi:
 #    defer_indexing_for_codesystems_of_size: 101
     implementationguides:
       #example from registry (packages.fhir.org)
-      swiss:
-        name: swiss.mednet.fhir
-        version: 0.8.0
+      #swiss:
+        #name: swiss.mednet.fhir
+        #version: 0.8.0
       #example not from registry
       ips_0_3_0:
         url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
