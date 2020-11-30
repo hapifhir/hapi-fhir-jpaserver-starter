@@ -1,6 +1,8 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.cql.provider.CqlProviderLoader;
+import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
@@ -13,6 +15,8 @@ import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.*;
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
@@ -44,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
     //Override is currently required when using Empi as the construction of the Empi beans are ambiguous as they are constructed multiple places. This is evident when running in a spring boot environment
     "spring.main.allow-bean-definition-overriding=true"
   })
-public class ExampleServerR4IT {
+public class ExampleServerR4IT implements IServerSupport {
 
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
   private IGenericClient ourClient;
@@ -53,6 +58,20 @@ public class ExampleServerR4IT {
   @LocalServerPort
   private int port;
 
+  @BeforeEach
+  void beforeEach() {
+    ourCtx = FhirContext.forR4();
+    ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+    ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
+    String ourServerBase = "http://localhost:" + port + "/fhir/";
+    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
+    ourClient.registerInterceptor(new LoggingInterceptor(true));
+  }
+
+  @AfterEach
+  void afterEach() {
+    ourLog.info("Finished running a test...");
+  }
 
   @Test
   void testCreateAndRead() {
@@ -89,6 +108,61 @@ public class ExampleServerR4IT {
   private List<Person> getPeople() {
     Bundle bundle = ourClient.search().forResource(Person.class).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute();
     return BundleUtil.toListOfResourcesOfType(ourCtx, bundle, Person.class);
+  }
+
+  @Test
+  public void testCQLEvaluateMeasure() throws IOException {
+    CqlProviderLoader cqlProviderLoader = null;
+
+    // FIXME KBD Remove this and put some Unit Test code here
+    loadBundle("r4/EXM104/EXM104-8.2.000-bundle.json", ourCtx, ourClient);
+
+    Parameters inParams = new Parameters();
+//    inParams.addParameter().setName("measure").setValue(new StringType("Measure/measure-EXM104-8.2.000"));
+//    inParams.addParameter().setName("patient").setValue(new StringType("Patient/numer-EXM104-FHIR3"));
+    inParams.addParameter().setName("periodStart").setValue(new DateType("2019-01-01"));
+    inParams.addParameter().setName("periodEnd").setValue(new DateType("2019-12-31"));
+
+    Parameters outParams = ourClient
+      .operation()
+      .onInstance(new IdDt("Measure", "measure-EXM104-8.2.000"))
+      .named("$evaluate-measure")
+      .withParameters(inParams)
+      .cacheControl(new CacheControlDirective().setNoCache(true))
+      .withAdditionalHeader("Content-Type", "application/json")
+      .useHttpGet()
+      .execute();
+
+//    Parameters outParams = ourClient
+//      .operation()
+//      .onType(Measure.class)
+//      .named("$evaluate-measure")
+//      .withParameters(inParams)
+//      .useHttpGet()
+//      .execute();
+
+    List<Parameters.ParametersParameterComponent> response = outParams.getParameter();
+
+    Assert.assertTrue(!response.isEmpty());
+
+    Parameters.ParametersParameterComponent component = response.get(0);
+
+    Assert.assertTrue(component.getResource() instanceof MeasureReport);
+
+    MeasureReport report = (MeasureReport) component.getResource();
+
+    for (MeasureReport.MeasureReportGroupComponent group : report.getGroup()) {
+      for (MeasureReport.MeasureReportGroupPopulationComponent population : group.getPopulation()) {
+        Assert.assertTrue(population.getCount() > 0);
+      }
+    }
+  }
+
+  private Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
+    String json = stringFromResource(theLocation);
+    Bundle bundle = (Bundle) theCtx.newJsonParser().parseResource(json);
+    Bundle result = (Bundle) theClient.transaction().withBundle(bundle).execute();
+    return result;
   }
 
   @Test
@@ -151,17 +225,5 @@ public class ExampleServerR4IT {
 
   private int activeSubscriptionCount() {
     return ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size();
-  }
-
-
-  @BeforeEach
-  void beforeEach() {
-
-    ourCtx = FhirContext.forR4();
-    ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-    ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-    String ourServerBase = "http://localhost:" + port + "/fhir/";
-    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-    ourClient.registerInterceptor(new LoggingInterceptor(true));
   }
 }
