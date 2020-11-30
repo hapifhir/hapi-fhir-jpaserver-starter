@@ -9,13 +9,10 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
-import com.google.common.base.Charsets;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.hl7.fhir.dstu3.model.*;
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,17 +20,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -53,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
   })
 
 
-public class ExampleServerDstu3IT {
+public class ExampleServerDstu3IT implements IServerSupport {
 
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
   private IGenericClient ourClient;
@@ -62,7 +53,17 @@ public class ExampleServerDstu3IT {
   @LocalServerPort
   private int port;
 
-  @Test
+  @BeforeEach
+  void beforeEach() {
+    ourCtx = FhirContext.forDstu3();
+    ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+    ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
+    String ourServerBase = "http://localhost:" + port + "/fhir/";
+    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
+    ourClient.registerInterceptor(new LoggingInterceptor(true));
+  }
+
+    @Test
   public void testCreateAndRead() {
 
     String methodName = "testCreateResourceConditional";
@@ -80,10 +81,11 @@ public class ExampleServerDstu3IT {
     CqlProviderLoader cqlProviderLoader = null;
 
     // FIXME KBD Remove this and put some Unit Test code here
-    loadBundle("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json");
+    loadBundle("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json", ourCtx, ourClient);
 
     Parameters inParams = new Parameters();
-    inParams.addParameter().setName("patientId").setValue(new StringType("Patient/numer-EXM104-FHIR3"));
+//    inParams.addParameter().setName("measure").setValue(new StringType("Measure/measure-EXM104-8.2.000"));
+//    inParams.addParameter().setName("patient").setValue(new StringType("Patient/numer-EXM104-FHIR3"));
     inParams.addParameter().setName("periodStart").setValue(new DateType("2019-01-01"));
     inParams.addParameter().setName("periodEnd").setValue(new DateType("2019-12-31"));
 
@@ -94,6 +96,14 @@ public class ExampleServerDstu3IT {
       .withParameters(inParams)
       .useHttpGet()
       .execute();
+
+//    Parameters outParams = ourClient
+//      .operation()
+//      .onType(Measure.class)
+//      .named("$evaluate-measure")
+//      .withParameters(inParams)
+//      .useHttpGet()
+//      .execute();
 
     List<Parameters.ParametersParameterComponent> response = outParams.getParameter();
 
@@ -112,40 +122,11 @@ public class ExampleServerDstu3IT {
     }
   }
 
-  private void putResource(String resourceFileName, String id) {
-    InputStream is = ExampleServerDstu3IT.class.getResourceAsStream(resourceFileName);
-    Scanner scanner = new Scanner(is).useDelimiter("\\A");
-    String json = scanner.hasNext() ? scanner.next() : "";
-
-    boolean isJson = resourceFileName.endsWith("json");
-
-    IBaseResource resource = isJson ? ourCtx.newJsonParser().parseResource(json) : ourCtx.newXmlParser().parseResource(json);
-
-    if (resource instanceof Bundle) {
-      ourClient.transaction().withBundle((Bundle) resource).execute();
-    }
-    else {
-      ourClient.update().resource(resource).withId(id).execute();
-    }
-  }
-
-  private Bundle loadBundle(String theLocation) throws IOException {
+  private Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
     String json = stringFromResource(theLocation);
-    Bundle bundle = (Bundle) ourCtx.newJsonParser().parseResource(json);
-    Bundle result = (Bundle) ourClient.transaction().withBundle(bundle).execute();
+    Bundle bundle = (Bundle) theCtx.newJsonParser().parseResource(json);
+    Bundle result = (Bundle) theClient.transaction().withBundle(bundle).execute();
     return result;
-  }
-
-  private String stringFromResource(String theLocation) throws IOException {
-    InputStream is = null;
-    if (theLocation.startsWith(File.separator)) {
-      is = new FileInputStream(theLocation);
-    } else {
-      DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-      Resource resource = resourceLoader.getResource(theLocation);
-      is = resource.getInputStream();
-    }
-    return IOUtils.toString(is, Charsets.UTF_8);
   }
 
   @Test
@@ -204,17 +185,6 @@ public class ExampleServerDstu3IT {
      * Clean up
      */
     ourClient.delete().resourceById(mySubscriptionId).execute();
-  }
-
-  @BeforeEach
-  void beforeEach() {
-
-    ourCtx = FhirContext.forDstu3();
-    ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-    ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-    String ourServerBase = "http://localhost:" + port + "/fhir/";
-    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-    ourClient.registerInterceptor(new LoggingInterceptor(true));
   }
 
 }
