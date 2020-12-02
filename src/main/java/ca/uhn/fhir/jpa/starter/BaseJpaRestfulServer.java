@@ -21,6 +21,8 @@ import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.searchparam.registry.ISearchParamRegistry;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
+import ca.uhn.fhir.narrative.INarrativeGenerator;
+import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
 import ca.uhn.fhir.rest.server.RestfulServer;
@@ -177,7 +179,11 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * This server tries to dynamically generate narratives
      */
     FhirContext ctx = getFhirContext();
-    ctx.setNarrativeGenerator(new DefaultThymeleafNarrativeGenerator());
+    INarrativeGenerator theNarrativeGenerator =
+      appProperties.getNarrative_enabled() ?
+      new DefaultThymeleafNarrativeGenerator() :
+      new NullNarrativeGenerator();
+    ctx.setNarrativeGenerator(theNarrativeGenerator);
 
     /*
      * Default to JSON and pretty printing

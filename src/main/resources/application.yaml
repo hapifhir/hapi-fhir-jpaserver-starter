@@ -63,6 +63,7 @@ hapi:
 #    fhirpath_interceptor_enabled: false
 #    filter_search_enabled: true
 #    graphql_enabled: true
+#    narrative_enabled: true
     #partitioning:
     #  cross_partition_reference_mode: true
     #  multitenancy_enabled: true
