@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties
 public class AppProperties {
 
+  private Boolean cql_enabled = false;
   private Boolean empi_enabled = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
@@ -85,6 +86,14 @@ public class AppProperties {
     this.partitioning = partitioning;
   }
 
+  public Boolean getCql_enabled() {
+    return cql_enabled;
+  }
+
+  public void setCql_enabled(Boolean cql_enabled) {
+    this.cql_enabled = cql_enabled;
+  }
+
   public Boolean getEmpi_enabled() {
     return empi_enabled;
   }
@@ -92,7 +101,6 @@ public class AppProperties {
   public void setEmpi_enabled(Boolean empi_enabled) {
     this.empi_enabled = empi_enabled;
   }
-
 
   public Cors getCors() {
     return cors;

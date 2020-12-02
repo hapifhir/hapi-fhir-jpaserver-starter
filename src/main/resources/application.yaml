@@ -29,7 +29,6 @@ hapi:
   fhir:
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
-    cql_enabled: true
 #    defer_indexing_for_codesystems_of_size: 101
 #    implementationguides:
 #      -
@@ -50,6 +49,8 @@ hapi:
 #    allow_override_default_search_params: true
 #    allow_placeholder_references: true
 #    auto_create_placeholder_reference_targets: false
+#    cql_enabled: true
+#    empi_enabled: true
 #    default_encoding: JSON
 #    default_pretty_print: true
 #    default_page_size: 20

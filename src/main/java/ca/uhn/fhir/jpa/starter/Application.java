@@ -32,8 +32,8 @@ public class Application extends SpringBootServletInitializer {
     System.setProperty("spring.batch.job.enabled", "false");
     SpringApplication.run(Application.class, args);
 
-    //Server is now accessible at eg. http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata
-    //UI is now accessible at http://localhost:8080/hapi-fhir-jpaserver/
+    //Server is now accessible at eg. http://localhost:8080/fhir/metadata
+    //UI is now accessible at http://localhost:8080/
   }
 
   @Override

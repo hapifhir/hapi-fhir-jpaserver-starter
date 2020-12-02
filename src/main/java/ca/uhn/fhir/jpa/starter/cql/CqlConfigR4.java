@@ -1,13 +1,10 @@
 package ca.uhn.fhir.jpa.starter.cql;
 
 import ca.uhn.fhir.cql.config.CqlR4Config;
-import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-@Configuration
-@Conditional({OnR4Condition.class, CqlConfigCondition.class})
+@Conditional({CqlConfigCondition.class})
 @Import({CqlR4Config.class})
 public class CqlConfigR4 {
 }

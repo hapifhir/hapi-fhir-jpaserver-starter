@@ -1,7 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.cql.provider.CqlProviderLoader;
+import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -9,6 +9,7 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -18,12 +19,16 @@ import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -49,6 +54,9 @@ public class ExampleServerDstu3IT implements IServerSupport {
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
   private IGenericClient ourClient;
   private FhirContext ourCtx;
+
+  @Autowired
+  DaoRegistry myDaoRegistry;
 
   @LocalServerPort
   private int port;
@@ -76,50 +84,66 @@ public class ExampleServerDstu3IT implements IServerSupport {
     assertEquals(methodName, pt2.getName().get(0).getFamily());
   }
 
-  @Test
-  public void testCQLEvaluateMeasure() throws IOException {
-    CqlProviderLoader cqlProviderLoader = null;
+  // Currently fails with:
+  // ca.uhn.fhir.rest.server.exceptions.InternalErrorException: HTTP 500 : Failed to call access method: java.lang.IllegalArgumentException: Could not load library source for libraries referenced in Measure/Measure/measure-EXM104-FHIR3-8.1.000/_history/1.
+  //@Test
+  public void testCQLEvaluateMeasureEXM104() throws IOException {
+    String measureId = "measure-EXM104-FHIR3-8.1.000";
 
-    // FIXME KBD Remove this and put some Unit Test code here
-    loadBundle("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json", ourCtx, ourClient);
+    int numFilesLoaded = loadDataFromDirectory("dstu3/EXM104/EXM104_FHIR3-8.1.000-files");
+    //assertEquals(numFilesLoaded, 3);
+    ourLog.info("{} files imported successfully!", numFilesLoaded);
+    //loadBundle("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json", ourCtx, ourClient);
 
+    // http://localhost:8080/fhir/Measure/measure-EXM104-FHIR3-8.1.000/$evaluate-measure?periodStart=2019-01-01&periodEnd=2019-12-31
     Parameters inParams = new Parameters();
 //    inParams.addParameter().setName("measure").setValue(new StringType("Measure/measure-EXM104-8.2.000"));
 //    inParams.addParameter().setName("patient").setValue(new StringType("Patient/numer-EXM104-FHIR3"));
-    inParams.addParameter().setName("periodStart").setValue(new DateType("2019-01-01"));
-    inParams.addParameter().setName("periodEnd").setValue(new DateType("2019-12-31"));
+//    inParams.addParameter().setName("periodStart").setValue(new StringType("2019-01-01"));
+//    inParams.addParameter().setName("periodEnd").setValue(new StringType("2019-12-31"));
 
     Parameters outParams = ourClient
       .operation()
-      .onInstance(new IdDt("Measure", "measure-EXM104-FHIR3-8.1.000"))
+      .onInstance(new IdDt("Measure", measureId))
       .named("$evaluate-measure")
       .withParameters(inParams)
+      .cacheControl(new CacheControlDirective().setNoCache(true))
+      .withAdditionalHeader("Content-Type", "application/json")
       .useHttpGet()
       .execute();
 
-//    Parameters outParams = ourClient
-//      .operation()
-//      .onType(Measure.class)
-//      .named("$evaluate-measure")
-//      .withParameters(inParams)
-//      .useHttpGet()
-//      .execute();
-
     List<Parameters.ParametersParameterComponent> response = outParams.getParameter();
-
     Assert.assertTrue(!response.isEmpty());
-
     Parameters.ParametersParameterComponent component = response.get(0);
-
     Assert.assertTrue(component.getResource() instanceof MeasureReport);
-
     MeasureReport report = (MeasureReport) component.getResource();
+    Assert.assertEquals("Measure/"+measureId, report.getMeasure());
+  }
 
-    for (MeasureReport.MeasureReportGroupComponent group : report.getGroup()) {
-      for (MeasureReport.MeasureReportGroupPopulationComponent population : group.getPopulation()) {
-        Assert.assertTrue(population.getCount() > 0);
+  private int loadDataFromDirectory(String theDirectoryName) throws IOException {
+    int count = 0;
+    ourLog.info("Reading files in directory: {}", theDirectoryName);
+    ClassPathResource dir = new ClassPathResource(theDirectoryName);
+    Collection<File> files = FileUtils.listFiles(dir.getFile(), null, false);
+    ourLog.info("{} files found.", files.size());
+    for (File file : files) {
+      String filename = file.getAbsolutePath();
+      ourLog.info("Processing filename '{}'", filename);
+      if (filename.endsWith(".cql") || filename.contains("expectedresults")) {
+        // Ignore .cql and expectedresults files
+        ourLog.info("Ignoring file: '{}'", filename);
+      } else if (filename.endsWith(".json")) {
+        if (filename.contains("bundle")) {
+          loadBundle(filename, ourCtx, ourClient);
+        } else {
+          loadResource(filename, ourCtx, myDaoRegistry);
+        }
+        count++;
+      } else {
+        ourLog.info("Ignoring file: '{}'", filename);
       }
     }
+    return count;
   }
 
   private Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {

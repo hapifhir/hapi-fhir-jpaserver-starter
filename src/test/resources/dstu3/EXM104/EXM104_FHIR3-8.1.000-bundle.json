@@ -183,7 +183,7 @@
         "type": {
           "coding": [
             {
-              "system": "http://hl7.org/fhir/codesystem-library-type.html",
+              "system": "http://hl7.org/fhir/library-type",
               "code": "logic-library"
             }
           ]
@@ -338,7 +338,7 @@
         "type": {
           "coding": [
             {
-              "system": "http://hl7.org/fhir/codesystem-library-type.html",
+              "system": "http://hl7.org/fhir/library-type",
               "code": "logic-library"
             }
           ]
@@ -1610,7 +1610,7 @@
         "type": {
           "coding": [
             {
-              "system": "http://hl7.org/fhir/codesystem-library-type.html",
+              "system": "http://hl7.org/fhir/library-type",
               "code": "logic-library"
             }
           ]
@@ -2177,7 +2177,7 @@
         "type": {
           "coding": [
             {
-              "system": "http://hl7.org/fhir/codesystem-library-type.html",
+              "system": "http://hl7.org/fhir/library-type",
               "code": "logic-library"
             }
           ]
@@ -2265,7 +2265,7 @@
         "type": {
           "coding": [
             {
-              "system": "http://hl7.org/fhir/codesystem-library-type.html",
+              "system": "http://hl7.org/fhir/library-type",
               "code": "logic-library"
             }
           ]

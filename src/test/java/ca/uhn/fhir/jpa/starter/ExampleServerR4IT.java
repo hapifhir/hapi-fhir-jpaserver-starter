@@ -1,7 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.cql.provider.CqlProviderLoader;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -42,10 +41,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
   {
     "spring.batch.job.enabled=false",
     "spring.datasource.url=jdbc:h2:mem:dbr4",
+    "hapi.fhir.fhir_version=R4",
     "hapi.fhir.cql_enabled=true",
-    "hapi.fhir.fhir_version=r4",
-    "hapi.fhir.subscription.websocket_enabled=true",
     "hapi.fhir.empi_enabled=true",
+    "hapi.fhir.subscription.websocket_enabled=true",
     //Override is currently required when using Empi as the construction of the Empi beans are ambiguous as they are constructed multiple places. This is evident when running in a spring boot environment
     "spring.main.allow-bean-definition-overriding=true"
   })
@@ -54,6 +53,7 @@ public class ExampleServerR4IT implements IServerSupport {
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
   private IGenericClient ourClient;
   private FhirContext ourCtx;
+  private String ourServerBaseURL;
 
   @LocalServerPort
   private int port;
@@ -63,8 +63,8 @@ public class ExampleServerR4IT implements IServerSupport {
     ourCtx = FhirContext.forR4();
     ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
     ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-    String ourServerBase = "http://localhost:" + port + "/fhir/";
-    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
+    ourServerBaseURL = "http://localhost:" + port + "/fhir/";
+    ourClient = ourCtx.newRestfulGenericClient(ourServerBaseURL);
     ourClient.registerInterceptor(new LoggingInterceptor(true));
   }
 
@@ -111,21 +111,21 @@ public class ExampleServerR4IT implements IServerSupport {
   }
 
   @Test
-  public void testCQLEvaluateMeasure() throws IOException {
-    CqlProviderLoader cqlProviderLoader = null;
+  public void testCQLEvaluateMeasureEXM104() throws IOException {
+    String measureId = "measure-EXM104-8.2.000";
 
-    // FIXME KBD Remove this and put some Unit Test code here
     loadBundle("r4/EXM104/EXM104-8.2.000-bundle.json", ourCtx, ourClient);
 
+    // http://localhost:8080/fhir/Measure/measure-EXM104-8.2.000/$evaluate-measure?periodStart=2019-01-01&periodEnd=2019-12-31
     Parameters inParams = new Parameters();
 //    inParams.addParameter().setName("measure").setValue(new StringType("Measure/measure-EXM104-8.2.000"));
 //    inParams.addParameter().setName("patient").setValue(new StringType("Patient/numer-EXM104-FHIR3"));
-    inParams.addParameter().setName("periodStart").setValue(new DateType("2019-01-01"));
-    inParams.addParameter().setName("periodEnd").setValue(new DateType("2019-12-31"));
+    inParams.addParameter().setName("periodStart").setValue(new StringType("2019-01-01"));
+    inParams.addParameter().setName("periodEnd").setValue(new StringType("2019-12-31"));
 
     Parameters outParams = ourClient
       .operation()
-      .onInstance(new IdDt("Measure", "measure-EXM104-8.2.000"))
+      .onInstance(new IdDt("Measure", measureId))
       .named("$evaluate-measure")
       .withParameters(inParams)
       .cacheControl(new CacheControlDirective().setNoCache(true))
@@ -133,29 +133,12 @@ public class ExampleServerR4IT implements IServerSupport {
       .useHttpGet()
       .execute();
 
-//    Parameters outParams = ourClient
-//      .operation()
-//      .onType(Measure.class)
-//      .named("$evaluate-measure")
-//      .withParameters(inParams)
-//      .useHttpGet()
-//      .execute();
-
     List<Parameters.ParametersParameterComponent> response = outParams.getParameter();
-
     Assert.assertTrue(!response.isEmpty());
-
     Parameters.ParametersParameterComponent component = response.get(0);
-
     Assert.assertTrue(component.getResource() instanceof MeasureReport);
-
     MeasureReport report = (MeasureReport) component.getResource();
-
-    for (MeasureReport.MeasureReportGroupComponent group : report.getGroup()) {
-      for (MeasureReport.MeasureReportGroupPopulationComponent population : group.getPopulation()) {
-        Assert.assertTrue(population.getCount() > 0);
-      }
-    }
+    Assert.assertEquals("Measure/"+measureId, report.getMeasure());
   }
 
   private Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
