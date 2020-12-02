@@ -1,7 +1,8 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
+import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import com.google.common.base.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -12,26 +13,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Scanner;
 
 public interface  IServerSupport {
 
-//  default void putResourceDstu3(String resourceFileName, String id, FhirContext theCtx, IGenericClient theClient) {
-//    InputStream is = ExampleServerDstu3IT.class.getResourceAsStream(resourceFileName);
-//    Scanner scanner = new Scanner(is).useDelimiter("\\A");
-//    String json = scanner.hasNext() ? scanner.next() : "";
-//
-//    boolean isJson = resourceFileName.endsWith("json");
-//
-//    IBaseResource resource = isJson ? theCtx.newJsonParser().parseResource(json) : theCtx.newXmlParser().parseResource(json);
-//
-//    if (resource instanceof Bundle) {
-//      theClient.transaction().withBundle((Bundle) resource).execute();
-//    }
-//    else {
-//      theClient.update().resource(resource).withId(id).execute();
-//    }
-//  }
+  default IBaseResource loadResource(String theLocation, FhirContext theFhirContext, DaoRegistry theDaoRegistry) throws IOException {
+    String json = stringFromResource(theLocation);
+    IBaseResource resource = theFhirContext.newJsonParser().parseResource(json);
+    IFhirResourceDao<IBaseResource> dao = theDaoRegistry.getResourceDao(resource.getIdElement().getResourceType());
+    if (dao == null) {
+      return null;
+    } else {
+      dao.update(resource);
+      return resource;
+    }
+  }
 
   default String stringFromResource(String theLocation) throws IOException {
     InputStream is = null;

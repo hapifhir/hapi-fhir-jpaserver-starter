@@ -16,6 +16,8 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.cql.provider.CqlProviderLoader;
+import ca.uhn.fhir.empi.provider.EmpiProviderLoader;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
@@ -116,6 +118,14 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   ApplicationContext myApplicationContext;
 
+  // These are set only if the features are enabled
+  private CqlProviderLoader cqlProviderLoader;
+  private EmpiProviderLoader empiProviderLoader;
+
+  public BaseJpaRestfulServer() {
+
+  }
+
   private static final long serialVersionUID = 1L;
 
   private static final Logger ourLog = LoggerFactory.getLogger(BaseJpaRestfulServer.class);
@@ -138,10 +148,21 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     setFhirContext(fhirSystemDao.getContext());
+
+    FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
+    if (fhirVersion == FhirVersionEnum.DSTU3 || fhirVersion == FhirVersionEnum.R4) {
+      if (appProperties.getCql_enabled()) {
+        cqlProviderLoader = myApplicationContext.getBean(CqlProviderLoader.class);
+        cqlProviderLoader.loadProvider();
+      }
+      if (appProperties.getEmpi_enabled()) {
+        empiProviderLoader = myApplicationContext.getBean(EmpiProviderLoader.class);
+        empiProviderLoader.loadProvider();
+      }
+    }
     registerProviders(resourceProviders.createProviders());
     registerProvider(jpaSystemProvider);
 
-    FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
     /*
      * The conformance provider exports the supported resources, search parameters, etc for
      * this server. The JPA version adds resourceProviders counts to the exported statement, so it

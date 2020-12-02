@@ -22,7 +22,8 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 @EnableConfigurationProperties
 public class AppProperties {
 
-  private Boolean mdm_enabled = false;
+  private Boolean cql_enabled = false;
+  private Boolean empi_enabled = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
   private Boolean allow_external_references = false;
@@ -93,8 +94,16 @@ public class AppProperties {
     this.partitioning = partitioning;
   }
 
-  public Boolean getMdm_enabled() {
-    return mdm_enabled;
+  public Boolean getCql_enabled() {
+    return cql_enabled;
+  }
+
+  public void setCql_enabled(Boolean cql_enabled) {
+    this.cql_enabled = cql_enabled;
+  }
+
+  public Boolean getEmpi_enabled() {
+    return empi_enabled;
   }
 
   public void setMdm_enabled(Boolean mdm_enabled) {
