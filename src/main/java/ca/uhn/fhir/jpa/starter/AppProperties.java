@@ -53,6 +53,7 @@ public class AppProperties {
   private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
   private List<String> supported_resource_types = new ArrayList<>();
   private List<Bundle.BundleType> allowed_bundle_types = null;
+  private Boolean narrative_enabled = true;
 
   private Validation validation = new Validation();
   private List<Tester> tester = ImmutableList.of(new Tester());
@@ -377,6 +378,16 @@ public class AppProperties {
 
   public void setTester(List<Tester> tester) {
     this.tester = tester;
+  }
+
+  public Boolean getNarrative_enabled()
+  {
+    return narrative_enabled;
+  }
+
+  public void setNarrative_enabled(Boolean narrative_enabled)
+  {
+    this.narrative_enabled = narrative_enabled;
   }
 
   public static class Cors {
