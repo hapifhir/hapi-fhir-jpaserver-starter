@@ -360,6 +360,12 @@ public class BaseJpaRestfulServer extends RestfulServer {
           .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
       }
     }
+
+    if (appProperties.getLastn_enabled()) {
+      daoConfig.setLastNEnabled(true);
+    }
+
+
   }
 
 
