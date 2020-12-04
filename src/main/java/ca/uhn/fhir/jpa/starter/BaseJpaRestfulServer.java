@@ -149,17 +149,6 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     setFhirContext(fhirSystemDao.getContext());
 
-    FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
-    if (fhirVersion == FhirVersionEnum.DSTU3 || fhirVersion == FhirVersionEnum.R4) {
-      if (appProperties.getCql_enabled()) {
-        cqlProviderLoader = myApplicationContext.getBean(CqlProviderLoader.class);
-        cqlProviderLoader.loadProvider();
-      }
-      if (appProperties.getEmpi_enabled()) {
-        empiProviderLoader = myApplicationContext.getBean(EmpiProviderLoader.class);
-        empiProviderLoader.loadProvider();
-      }
-    }
     registerProviders(resourceProviders.createProviders());
     registerProvider(jpaSystemProvider);
 
@@ -175,9 +164,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
 //  OE: Not seting it that it deferred  daoConfig.setDeferIndexingForCodesystemsOfSize(HapiProperties.getDeferIndexingForCodeSystemOfSize());
 
-
- //   ISearchParamRegistry searchParamRegistry = appCtx.getBean(ISearchParamRegistry.class);
-
+    FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
     if (fhirVersion == FhirVersionEnum.DSTU2) {
 
       JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, fhirSystemDao,

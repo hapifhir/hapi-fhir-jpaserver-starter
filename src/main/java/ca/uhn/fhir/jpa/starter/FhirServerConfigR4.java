@@ -5,7 +5,7 @@ import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
-import ca.uhn.fhir.jpa.starter.cql.CqlConfigR4;
+import ca.uhn.fhir.jpa.starter.cql.StarterCqlR4Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -25,7 +25,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @Conditional(OnR4Condition.class)
-@Import(CqlConfigR4.class)
+@Import(StarterCqlR4Config.class)
 public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 
   @Autowired
