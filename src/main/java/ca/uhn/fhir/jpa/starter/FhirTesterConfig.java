@@ -36,15 +36,15 @@ public class FhirTesterConfig {
   @Bean
   public TesterConfig testerConfig(AppProperties appProperties) {
     TesterConfig retVal = new TesterConfig();
-    appProperties.getTester().stream().forEach(t -> {
+    appProperties.getTester().entrySet().stream().forEach(t -> {
       retVal
         .addServer()
-        .withId(t.getId())
-        .withFhirVersion(t.getFhir_version())
-        .withBaseUrl(t.getServer_address())
-        .withName(t.getName());
+        .withId(t.getKey())
+        .withFhirVersion(t.getValue().getFhir_version())
+        .withBaseUrl(t.getValue().getServer_address())
+        .withName(t.getValue().getName());
       retVal.setRefuseToFetchThirdPartyUrls(
-        t.getRefuse_to_fetch_third_party_urls());
+        t.getValue().getRefuse_to_fetch_third_party_urls());
 
     });
     return retVal;

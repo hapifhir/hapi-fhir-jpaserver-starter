@@ -1,6 +1,7 @@
 spring:
   datasource:
     url: 'jdbc:h2:file:./target/database/h2'
+    #url: jdbc:h2:mem:test_mem
     username: sa
     password: null
     driverClassName: org.h2.Driver
@@ -32,14 +33,16 @@ hapi:
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
 #    defer_indexing_for_codesystems_of_size: 101
-#    implementationguides:
-#      -
-#        url: https://build.fhir.org/ig/hl7dk/dk-medcom/branches/corrections/package.tgz
-#        name: dk.fhir.ig.medcom-core
-#        version: 0.8.0
-#      -
-#        name: hl7.fhir.uv.ips
-#        version: 0.3.0
+    #implementationguides:
+      #example from registry (packages.fhir.org)
+      #swiss:
+        #name: swiss.mednet.fhir
+        #version: 0.8.0
+      #example not from registry
+      #ips_1_0_0:
+        #url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
+        #name: hl7.fhir.uv.ips
+        #version: 1.0.0
 
     #supported_resource_types:
     #  - Patient
@@ -89,14 +92,14 @@ hapi:
 #    retain_cached_searches_mins: 60
 #    reuse_cached_search_results_millis: 60000
     tester:
-      -
-          id: home
+
+        home:
           name: Local Tester
           server_address: 'http://localhost:8080/fhir'
           refuse_to_fetch_third_party_urls: false
           fhir_version: R4
-      -
-          id: global
+
+        global:
           name: Global Tester
           server_address: "http://hapi.fhir.org/baseR4"
           refuse_to_fetch_third_party_urls: false
