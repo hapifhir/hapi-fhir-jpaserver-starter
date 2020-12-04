@@ -6,5 +6,5 @@ import org.springframework.context.annotation.Import;
 
 @Conditional({CqlConfigCondition.class})
 @Import({CqlR4Config.class})
-public class CqlConfigR4 {
+public class StarterCqlR4Config {
 }

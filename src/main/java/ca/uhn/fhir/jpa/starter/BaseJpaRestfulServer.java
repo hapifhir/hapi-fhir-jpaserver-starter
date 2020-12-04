@@ -130,17 +130,6 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     setFhirContext(fhirSystemDao.getContext());
 
-    FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
-    if (fhirVersion == FhirVersionEnum.DSTU3 || fhirVersion == FhirVersionEnum.R4) {
-      if (appProperties.getCql_enabled()) {
-        cqlProviderLoader = myApplicationContext.getBean(CqlProviderLoader.class);
-        cqlProviderLoader.loadProvider();
-      }
-      if (appProperties.getEmpi_enabled()) {
-        empiProviderLoader = myApplicationContext.getBean(EmpiProviderLoader.class);
-        empiProviderLoader.loadProvider();
-      }
-    }
     registerProviders(resourceProviders.createProviders());
     registerProvider(jpaSystemProvider);
 
@@ -153,7 +142,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * provide further customization of your server's CapabilityStatement
      */
 
-
+    FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
     if (fhirVersion == FhirVersionEnum.DSTU2) {
 
       JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, fhirSystemDao,

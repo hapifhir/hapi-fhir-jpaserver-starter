@@ -9,5 +9,5 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Conditional({OnDSTU3Condition.class, CqlConfigCondition.class})
 @Import({CqlDstu3Config.class})
-public class CqlConfigDstu3 {
+public class StarterCqlDstu3Config {
 }
