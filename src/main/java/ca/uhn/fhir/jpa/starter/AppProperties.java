@@ -62,6 +62,8 @@ public class AppProperties {
   private Partitioning partitioning = null;
   private List<ImplementationGuide> implementationGuides = null;
 
+  private Boolean lastn_enabled = false;
+
   public Integer getDefer_indexing_for_codesystems_of_size() {
     return defer_indexing_for_codesystems_of_size;
   }
@@ -380,6 +382,14 @@ public class AppProperties {
   public void setNarrative_enabled(Boolean narrative_enabled)
   {
     this.narrative_enabled = narrative_enabled;
+  }
+
+  public Boolean getLastn_enabled() {
+    return lastn_enabled;
+  }
+
+  public void setLastn_enabled(Boolean lastn_enabled) {
+    this.lastn_enabled = lastn_enabled;
   }
 
   public static class Cors {

@@ -120,6 +120,7 @@ hapi:
 #        startTlsEnable:
 #        startTlsRequired:
 #        quitWait:
+#    lastn_enabled: true
 
 
 #
