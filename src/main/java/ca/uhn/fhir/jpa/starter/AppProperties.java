@@ -7,8 +7,10 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.hl7.fhir.r4.model.Bundle;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -52,14 +54,17 @@ public class AppProperties {
   private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
   private List<String> supported_resource_types = new ArrayList<>();
   private List<Bundle.BundleType> allowed_bundle_types = null;
+  private Boolean narrative_enabled = true;
 
   private Validation validation = new Validation();
-  private List<Tester> tester = ImmutableList.of(new Tester());
+  private Map<String, Tester> tester = ImmutableMap.of("home", new Tester());
   private Logger logger = new Logger();
   private Subscription subscription = new Subscription();
   private Cors cors = null;
   private Partitioning partitioning = null;
-  private List<ImplementationGuide> implementationGuides = null;
+  private Map<String, ImplementationGuide> implementationGuides = null;
+
+  private Boolean lastn_enabled = false;
 
   public Integer getDefer_indexing_for_codesystems_of_size() {
     return defer_indexing_for_codesystems_of_size;
@@ -69,11 +74,11 @@ public class AppProperties {
     this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
   }
 
-  public List<ImplementationGuide> getImplementationGuides() {
+  public Map<String, ImplementationGuide> getImplementationGuides() {
     return implementationGuides;
   }
 
-  public void setImplementationGuides(List<ImplementationGuide> implementationGuides) {
+  public void setImplementationGuides(Map<String, ImplementationGuide> implementationGuides) {
     this.implementationGuides = implementationGuides;
   }
 
@@ -363,12 +368,30 @@ public class AppProperties {
     this.reuse_cached_search_results_millis = reuse_cached_search_results_millis;
   }
 
-  public List<Tester> getTester() {
+  public Map<String, Tester> getTester() {
     return tester;
   }
 
-  public void setTester(List<Tester> tester) {
+  public void setTester(Map<String, Tester> tester) {
     this.tester = tester;
+  }
+
+  public Boolean getNarrative_enabled()
+  {
+    return narrative_enabled;
+  }
+
+  public void setNarrative_enabled(Boolean narrative_enabled)
+  {
+    this.narrative_enabled = narrative_enabled;
+  }
+
+  public Boolean getLastn_enabled() {
+    return lastn_enabled;
+  }
+
+  public void setLastn_enabled(Boolean lastn_enabled) {
+    this.lastn_enabled = lastn_enabled;
   }
 
   public static class Cors {
@@ -437,7 +460,6 @@ public class AppProperties {
 
   public static class Tester {
 
-    private String id = "home";
     private String name = "Local Tester";
     private String server_address = "http://localhost:8080/fhir";
     private Boolean refuse_to_fetch_third_party_urls = true;
@@ -449,14 +471,6 @@ public class AppProperties {
 
     public void setFhir_version(FhirVersionEnum fhir_version) {
       this.fhir_version = fhir_version;
-    }
-
-    public String getId() {
-      return id;
-    }
-
-    public void setId(String id) {
-      this.id = id;
     }
 
     public String getName() {

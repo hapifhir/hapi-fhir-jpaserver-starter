@@ -13,11 +13,7 @@ import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
-import ca.uhn.fhir.jpa.provider.GraphQLProvider;
-import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
-import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
-import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
-import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
+import ca.uhn.fhir.jpa.provider.*;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.r4.JpaConformanceProviderR4;
 import ca.uhn.fhir.jpa.provider.r5.JpaConformanceProviderR5;
@@ -25,6 +21,8 @@ import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.searchparam.registry.ISearchParamRegistry;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
+import ca.uhn.fhir.narrative.INarrativeGenerator;
+import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
 import ca.uhn.fhir.rest.server.RestfulServer;
@@ -42,10 +40,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
 
 import javax.servlet.ServletException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BaseJpaRestfulServer extends RestfulServer {
@@ -181,7 +176,11 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * This server tries to dynamically generate narratives
      */
     FhirContext ctx = getFhirContext();
-    ctx.setNarrativeGenerator(new DefaultThymeleafNarrativeGenerator());
+    INarrativeGenerator theNarrativeGenerator =
+      appProperties.getNarrative_enabled() ?
+      new DefaultThymeleafNarrativeGenerator() :
+      new NullNarrativeGenerator();
+    ctx.setNarrativeGenerator(theNarrativeGenerator);
 
     /*
      * Default to JSON and pretty printing
@@ -349,15 +348,21 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     if (appProperties.getImplementationGuides() != null) {
-      List<AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
-      for (AppProperties.ImplementationGuide guide : guides) {
+      Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
+      for (Map.Entry<String, AppProperties.ImplementationGuide> guide : guides.entrySet()) {
         packageInstallerSvc.install(new PackageInstallationSpec()
-          .setPackageUrl(guide.getUrl())
-          .setName(guide.getName())
-          .setVersion(guide.getVersion())
+          .setPackageUrl(guide.getValue().getUrl())
+          .setName(guide.getValue().getName())
+          .setVersion(guide.getValue().getVersion())
           .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
       }
     }
+
+    if (appProperties.getLastn_enabled()) {
+      daoConfig.setLastNEnabled(true);
+    }
+
+
   }
 
 

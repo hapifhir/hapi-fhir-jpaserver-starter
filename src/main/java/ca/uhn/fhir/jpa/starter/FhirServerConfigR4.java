@@ -3,23 +3,22 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
+import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Arrays;
-import java.util.Properties;
 
 @Configuration
-@Profile("r4")
+@Conditional(OnR4Condition.class)
 public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 
   @Autowired
@@ -66,6 +65,20 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
     JpaTransactionManager retVal = new JpaTransactionManager();
     retVal.setEntityManagerFactory(entityManagerFactory);
     return retVal;
+  }
+
+  @Bean()
+  public ElasticsearchSvcImpl elasticsearchSvc() {
+    if (EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment)) {
+      String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
+      String elasticsearchHost = elasticsearchUrl.substring(elasticsearchUrl.indexOf("://")+3, elasticsearchUrl.lastIndexOf(":"));
+      String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
+      String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
+      int elasticsearchPort = Integer.parseInt(elasticsearchUrl.substring(elasticsearchUrl.lastIndexOf(":")+1));
+      return new ElasticsearchSvcImpl(elasticsearchHost, elasticsearchPort, elasticsearchUsername, elasticsearchPassword);
+    } else {
+      return null;
+    }
   }
 
 }
