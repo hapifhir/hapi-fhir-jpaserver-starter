@@ -2,11 +2,6 @@ name: main
 
 on:
   push:
-    branches:
-      - 'master'
-    tags:
-      - 'v*'
-  pull_request:
 
 jobs:
   build-and-publish:
