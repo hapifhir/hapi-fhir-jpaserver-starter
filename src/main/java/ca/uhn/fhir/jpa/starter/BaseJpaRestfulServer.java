@@ -270,9 +270,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     // If you want to enable the $trigger-subscription operation to allow
     // manual triggering of a subscription delivery, enable this provider
-    if (true) { // <-- ENABLED RIGHT NOW
-      registerProvider(myApplicationContext.getBean(SubscriptionTriggeringProvider.class));
-    }
+//    if (true) { // <-- ENABLED RIGHT NOW
+//      registerProvider(myApplicationContext.getBean(SubscriptionTriggeringProvider.class));
+//    }
 
     // Define your CORS configuration. This is an example
     // showing a typical setup. You should customize this

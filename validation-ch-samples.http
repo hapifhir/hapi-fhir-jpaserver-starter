@@ -1,7 +1,7 @@
 ### 
-### @host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
-### @host = http://test.ahdis.ch/r4
-@host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
+@host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
+### @host = http://test.ahdis.ch/r4
+### @host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
 ### @host = http://localhost:8080/fhir
 
 
@@ -173,6 +173,12 @@ Accept: application/fhir+xml
 
 < ./examples/2-7-MedicationCard.xml
 
+### ch-emed
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+< ./src/test/resources/ehs-439.json
 
 ### Failed to parse JSON encoded FHIR content: Content does not appear to be FHIR JSON, first non-whitespace character was: '[' (must be 
 POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard HTTP/1.1

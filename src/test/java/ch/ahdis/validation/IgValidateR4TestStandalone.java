@@ -26,7 +26,7 @@ import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
-import org.hl7.fhir.utilities.cache.NpmPackage;
+import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
