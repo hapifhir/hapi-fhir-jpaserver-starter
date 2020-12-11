@@ -22,7 +22,7 @@ RUN tar -xvjf hapi-fhir-5.2.0-cli.tar.bz2 -C /tmp/hapi-fhir-5.2.0-cli
 FROM tomcat:9.0.38-jdk11-openjdk-slim-buster
 
 RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles
-COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/*.war /usr/local/tomcat/webapps/
+COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /usr/local/tomcat/webapps/terminology.war
 
 # copy hapi-fhir-cli
 COPY --from=build-hapi /tmp/hapi-fhir-5.2.0-cli /usr/local/hapi-fhir-5.2.0-cli/
