@@ -42,10 +42,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
 
 import javax.servlet.ServletException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BaseJpaRestfulServer extends RestfulServer {
@@ -357,15 +354,21 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     if (appProperties.getImplementationGuides() != null) {
-      List<AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
-      for (AppProperties.ImplementationGuide guide : guides) {
+      Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
+      for (Map.Entry<String, AppProperties.ImplementationGuide> guide : guides.entrySet()) {
         packageInstallerSvc.install(new PackageInstallationSpec()
-          .setPackageUrl(guide.getUrl())
-          .setName(guide.getName())
-          .setVersion(guide.getVersion())
+          .setPackageUrl(guide.getValue().getUrl())
+          .setName(guide.getValue().getName())
+          .setVersion(guide.getValue().getVersion())
           .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
       }
     }
+
+    if (appProperties.getLastn_enabled()) {
+      daoConfig.setLastNEnabled(true);
+    }
+
+
   }
 
 

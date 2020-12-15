@@ -233,7 +233,20 @@ Again, browse to the following link to use the server (note that the port 8080 m
 
 [http://localhost:8080/](http://localhost:8080/)
 
-If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localhost:8080/hapi-fhir-jpaserver/ - then rename the WAR file to ```hapi-fhir-jpaserver.war```.
+You will then be able access the JPA server e.g. using http://localhost:8080/fhir/metadata.
+
+If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localhost:8080/hapi-fhir-jpaserver/ or http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata - then rename the WAR file to ```hapi-fhir-jpaserver.war``` and adjust the overlay configuration accordingly e.g.
+
+```yaml
+    tester:
+      -
+          id: home
+          name: Local Tester
+          server_address: 'http://localhost:8080/hapi-fhir-jpaserver/fhir'
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+```
+
 
 ## Deploy with docker compose
 
@@ -320,4 +333,29 @@ elasticsearch.username=SomeUsername
 elasticsearch.password=SomePassword
 elasticsearch.required_index_status=YELLOW
 elasticsearch.schema_management_strategy=CREATE
+```
+
+## Enabling LastN
+
+Set `hapi.fhir.lastn_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable the $lastn operation on this server.  Note that the $lastn operation relies on Elasticsearch, so for $lastn to work, indexing must be enabled using Elasticsearch.
+
+## Example of a Dockerfile based on distroless images (for lower footprint and improved security)
+
+```code
+FROM maven:3.6.3-jdk-11-slim as build-hapi
+WORKDIR /tmp/hapi-fhir-jpaserver-starter
+
+COPY pom.xml .
+RUN mvn -ntp dependency:go-offline
+
+COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
+RUN mvn clean package spring-boot:repackage -Pboot
+
+FROM gcr.io/distroless/java:11
+
+COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /app/main.war
+
+EXPOSE 8080
+WORKDIR /app
+CMD ["main.war"]
 ```
