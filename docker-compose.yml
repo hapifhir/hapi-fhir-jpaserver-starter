@@ -12,13 +12,13 @@ services:
       - ./SnomedCT_InternationalRF2_PRODUCTION_20200731T120000Z.zip:/data/SnomedCT_InternationalRF2_PRODUCTION_20200731T120000Z.zip
     environment:
       SPRING_CONFIG_LOCATION: file:///opt/hapi/application.yaml
-      HAPI_FHIR_URL: http://hapi-fhir-jpa:8080/fhir
+      HAPI_FHIR_URL: http://localhost:8080/fhir
       JDK_JAVA_OPTIONS: -Xmx4g
 
   postgres:
     image: postgres:13
     environment:
-      - POSTGRES_USER=hapi 
+      - POSTGRES_USER=hapi
       - POSTGRES_PASSWORD=deadbeefdeadbeef
       - POSTGRES_DB=test-hapi-db
     ports:

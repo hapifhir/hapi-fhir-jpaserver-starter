@@ -291,8 +291,8 @@
 
     <build>
 
-        <!-- Tells Maven to name the generated WAR file as ROOT.war -->
-        <finalName>ROOT</finalName>
+        <!-- Tells Maven to name the generated WAR file as terminology.war -->
+        <finalName>terminology</finalName>
 
         <plugins>
             <plugin>
