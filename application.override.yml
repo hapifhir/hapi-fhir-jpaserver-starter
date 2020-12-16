@@ -1,3 +1,7 @@
+server:
+  servlet:
+    context-path: /terminology
+
 spring:
   datasource:
     url: "jdbc:postgresql://postgres:5432/test-hapi-db"
