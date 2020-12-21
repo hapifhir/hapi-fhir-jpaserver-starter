@@ -1,21 +1,39 @@
 version: "3"
 services:
-  hapi-fhir-jpaserver-start:
+
+  hapi-fhir-jpa:
+    image: arkhn/hapi-fhir-jpa:latest
     build: .
-    container_name: hapi-fhir-jpaserver-start
     restart: on-failure
-    ports:
-      - "8080:8080"
-  hapi-fhir-mysql:
-    image: mysql:latest
-    container_name: hapi-fhir-mysql
-    restart: always
-    environment:
-      MYSQL_DATABASE: 'hapi'
-      MYSQL_USER: 'admin'
-      MYSQL_PASSWORD: 'admin'
-      MYSQL_ROOT_PASSWORD: 'admin'
     volumes:
-      - hapi-fhir-mysql:/var/lib/mysql
+      - ./application.override.yml:/opt/hapi/application.yaml
+      - ./Loinc_2.68.zip:/data/Loinc_2.68.zip
+      - ./SnomedCT_InternationalRF2_PRODUCTION_20200731T120000Z.zip:/data/SnomedCT_InternationalRF2_PRODUCTION_20200731T120000Z.zip
+    environment:
+      SPRING_CONFIG_LOCATION: file:///opt/hapi/application.yaml
+      HAPI_FHIR_URL: http://localhost:8080/fhir
+      JDK_JAVA_OPTIONS: -Xmx4g
+
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=hapi
+      - POSTGRES_PASSWORD=deadbeefdeadbeef
+      - POSTGRES_DB=test-hapi-db
+    ports:
+      - 5432:5432
+    volumes:
+      - hapi-pgdata:/var/lib/postgresql/data
+  
+  nginx:
+    image: nginx
+    restart: always
+    ports:
+        - 8080:8080
+    volumes:
+    - ./nginx.conf:/etc/nginx/nginx.conf
+
+
 volumes:
-  hapi-fhir-mysql:
+  hapi-pgdata:
+

@@ -233,7 +233,20 @@ Again, browse to the following link to use the server (note that the port 8080 m
 
 [http://localhost:8080/](http://localhost:8080/)
 
-If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localhost:8080/hapi-fhir-jpaserver/ - then rename the WAR file to ```hapi-fhir-jpaserver.war```.
+You will then be able access the JPA server e.g. using http://localhost:8080/fhir/metadata.
+
+If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localhost:8080/hapi-fhir-jpaserver/ or http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata - then rename the WAR file to ```hapi-fhir-jpaserver.war``` and adjust the overlay configuration accordingly e.g.
+
+```yaml
+    tester:
+      -
+          id: home
+          name: Local Tester
+          server_address: 'http://localhost:8080/hapi-fhir-jpaserver/fhir'
+          refuse_to_fetch_third_party_urls: false
+          fhir_version: R4
+```
+
 
 ## Deploy with docker compose
 

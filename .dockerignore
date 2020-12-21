@@ -1,3 +1,8 @@
 target
 .idea
 .git
+Loinc_2.68*
+SnomedCT_InternationalRF2_PRODUCTION_20200731T120000Z.zip
+Loinc_2.68/
+.classpath
+.project
