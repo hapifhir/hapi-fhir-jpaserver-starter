@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Application-hapi-fhir-jpavalidator-starter",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+            "projectName": "hapi-fhir-jpavalidator-starter",
+            "args": "--spring.profiles.active=boot"
+        }
+    ]
+}

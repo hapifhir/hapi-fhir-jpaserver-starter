@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Composition xmlns="http://hl7.org/fhir">
+  <meta>
+    <profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-composition-epr"/>
+  </meta>
+  <confidentiality value="N">
+    <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-confidentialitycode">
+      <valueCodeableConcept>
+        <coding>
+          <system value="http://snomed.info/sct"/>
+          <code value="abc"/>
+          <display value="Normal"/>
+        </coding>
+      </valueCodeableConcept>
+    </extension>
+  </confidentiality>
+</Composition>

@@ -1,0 +1,144 @@
+<Bundle 
+  xmlns="http://hl7.org/fhir">
+  <!--<id value="56562bcf-2a5a-48d4-9a83-0f0dbbef74cc"/>-->
+  <id value="ch-atc-iti-81-response-sample"/>
+  <type value="searchset"/>
+  <total value="3"/>
+  <link>
+    <relation value="self"/>
+    <url value="/r4/*/AuditEvent"/>
+  </link>
+  <entry>
+    <fullUrl value="http://test.fhir.ch/r4/AuditEvent/1"/>
+    <resource>
+      <AuditEvent>
+        <id value="1"/>
+        <text>
+          <status value="generated"/>
+          <div 
+            xmlns="http://www.w3.org/1999/xhtml">Upload of Birth certificate  10.10.2020 18:29 from Julia Helfe-Gern on behalf of Jakob Wieder-Gesund 
+          </div>
+        </text>
+        <type>
+          <system value="http://dicom.nema.org/resources/ontology/DCM"/>
+          <code value="110106"/>
+          <display value="Export"/>
+        </type>
+        <subtype>
+          <system value="urn:oid:2.16.756.5.30.1.127.3.10.7"/>
+          <code value="ATC_DOC_CREATE"/>
+          <display value="Document upload"/>
+        </subtype>
+        <action value="C"/>
+        <recorded value="2020-10-10T16:29:00Z"/>
+        <outcome value="0"/>
+        <purposeOfEvent>
+          <coding>
+            <system value="urn:oid:2.16.756.5.30.1.127.3.10.5"/>
+            <code value="NORM"/>
+            <display value="Normal Access"/>
+          </coding>
+        </purposeOfEvent>
+        <agent>
+          <role>
+            <coding>
+              <system value="urn:oid:2.16.756.5.30.1.127.3.10.6"/>
+              <code value="PAT"/>
+              <display value="Patient"/>
+            </coding>
+          </role>
+          <name value="Jakob Wieder-Gesund"/>
+          <requestor value="false"/>
+        </agent>
+        <agent>
+          <role>
+            <coding>
+              <system value="urn:oid:2.16.756.5.30.1.127.3.10.6"/>
+              <code value="REP"/>
+              <display value="Representative"/>
+            </coding>
+          </role>
+          <who>
+            <identifier>
+              <system value="urn:oid:2.16.756.5.30.1.127.3.10.3"/>
+              <value value="761322222222222222"/>
+            </identifier>
+          </who>
+          <name value="Julia Helfe Gern"/>
+          <requestor value="true"/>
+        </agent>
+        <source>
+          <observer>
+            <identifier>
+              <system value="urn:ietf:rfc:3986"/>
+              <value value="urn:oid:7.8.9.10.11"/>
+            </identifier>
+          </observer>
+        </source>
+        <entity>
+          <!-- Patient -->
+          <what>
+            <identifier>
+              <system value="urn:oid:2.16.756.5.30.1.127.3.10.3"/>
+              <value value="761337610469261945"/>
+            </identifier>
+          </what>
+          <type>
+            <system value="http://terminology.hl7.org/CodeSystem/audit-entity-type"/>
+            <code value="1"/>
+            <display value="Person"/>
+          </type>
+          <role>
+            <system value="http://terminology.hl7.org/CodeSystem/object-role"/>
+            <code value="1"/>
+            <display value="Patient"/>
+          </role>
+        </entity>
+        <entity>
+          <!-- Document -->
+          <what>
+            <identifier>
+              <type>
+                <coding>
+                  <system value="urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab"/>
+                  <code value="IHE XDS Metadata"/>
+                  <display value="XDSDocumentEntry.uniqueId"/>
+                </coding>
+              </type>
+              <system value="urn:ietf:rfc:3986"/>
+              <value value="urn:oid:1.2.3.4.5"/>
+            </identifier>
+          </what>
+          <type>
+            <system value="http://terminology.hl7.org/CodeSystem/audit-entity-type"/>
+            <code value="2"/>
+            <display value="System Object"/>
+          </type>
+          <role>
+            <system value="http://terminology.hl7.org/CodeSystem/object-role"/>
+            <code value="3"/>
+            <display value="Report"/>
+          </role>
+          <detail>
+            <type value="Repository Unique Id"/>
+            <!-- base64 of OID eg 1.2.3 == -->
+            <valueBase64Binary value="MS4yLjM="/>
+          </detail>
+          <detail>
+            <type value="homeCommunityID"/>
+            <!-- base64 of OID URN homeCommunityId e.g. 5.6.7.8 -->
+            <valueBase64Binary value="NS42LjcuOA=="/>
+          </detail>
+          <detail>
+            <type value="EprDocumentTypeCode"/>
+            <!-- base64 typeCode 444561001 -->
+            <valueBase64Binary value="NDQ0NTYxMDAx"/>
+          </detail>
+        </entity>
+      </AuditEvent>
+    </resource>
+    <search>
+      <mode value="match"/>
+    </search>
+  </entry>
+</Bundle>

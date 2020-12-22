@@ -1,0 +1,328 @@
+### 
+### @host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
+### @host = http://test.ahdis.ch/r4
+### @host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
+@host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
+
+
+GET {{host}}/metadata HTTP/1.1
+Accept: application/fhir+json
+
+###
+GET {{host}}/ValueSet HTTP/1.1
+Accept: application/fhir+json
+
+### Validate parameter file
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Parameters HTTP/.1
+Content-Type: application/fhir+xml
+
+< ./examples/parameters.xml
+
+
+### Validate patient file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+xml
+
+< ./examples/patienthtmllang.xml
+
+### Validate patient parameter file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+json
+Accept: application/fhir+xml
+
+< ./examples/patienthtmllang.json
+
+### Validate parameter file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+xml
+Accept: application/fhir+xml
+
+< ./examples/parampatienthtmllang.xml
+
+### Validate parameter file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+json
+Accept: application/fhir+xml
+
+< ./examples/parampatienthtmllang.json
+
+### Validate parameter file -- FAILS to check
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+xml
+
+< ./examples/ParametersSent.xml
+
+### Validate parameter file
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+xml
+
+< ./examples/ParametersBroenni.xml
+
+### Validate parameter file: Check validaton errror
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+xml
+Accept: application/fhir+xml
+
+< ./examples/cdaig.xml
+
+
+### CH-Core Franz Muster (expected warning: None of the codes provided are in the value set)
+POST {{host}}/$validate/?profile=http://hl7.org/fhir/StructureDefinition/Patient HTTP/.1
+Content-Type: application/fhir+xml
+
+< ./examples/PatientFranzMuster.xml
+
+
+### CH-Core Franz Muster )
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient
+Content-Type: application/fhir+xml
+
+< ./examples/PatientFranzMuster.xml
+
+### CH-Core Franz Muster (No issues detected)
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/PatientFranzMuster.xml
+
+### CH-Core UnknownGender warning (ch-pat-2: gender unknown is currently not used in Switzerland in eCH and the EPR [gender.empty() or (gender != 'unknown')])
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/PatientUnknownGender.xml
+
+
+### CH-Core Franz Muster validate with profile inside
+POST {{host}}/$validate HTTP/.1
+Content-Type: application/fhir+xml
+
+< ./examples/parametersValidate.xml
+
+
+### CH-Core Bundle
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-document-epr HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/CdaContainingOriginalRepresentationAsPdfA.xml
+
+
+### CH-ATC one warning: None of the codes provided are in the value set http://hl7.org/fhir/ValueSet/identifier-type (http://hl7.org/fhir/ValueSet/identifier-type), and a code should come from this value set unless it has no suitable code) (codes = urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab#IHE XDS Metadata)"/>
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-atc/StructureDefinition/DocumentAuditEvent HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/atc-doc-create-rep-pat.xml
+
+
+### CH-ATC one warning: None of the codes provided are in the value set http://hl7.org/fhir/ValueSet/identifier-type (http://hl7.org/fhir/ValueSet/identifier-type), and a code should come from this value set unless it has no suitable code) (codes = urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab#IHE XDS Metadata)"/>
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/ch-atc-iti-81-response-sample.xml
+
+### CH-ATC one warning: None of the codes provided are in the value set http://hl7.org/fhir/ValueSet/identifier-type (http://hl7.org/fhir/ValueSet/identifier-type), and a code should come from this value set unless it has no suitable code) (codes = urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab#IHE XDS Metadata)"/>
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-atc/StructureDefinition/CH-ATC.ITI-81.Response HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/ch-atc-iti-81-response-sample.xml
+
+
+### CH-EMED bundle
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/2-7-MedicationCard.xml
+
+
+### Error mesages
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-composition-epr HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/CompositionConfcodeSctError.xml
+
+
+### ch-epr-mhealth
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-epr-mhealth/StructureDefinition/ch-mhd-providedocumentbundle-comprehensive HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+xml
+
+< ./examples/2-7-BundleProvideDocument.json
+
+
+### ch-epr-mhealth
+POST {{host}}/$validate?profile=http://ihe.net/fhir/StructureDefinition/IHE_MHD_Provide_Comprehensive_DocumentBundle HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+xml
+
+< ./examples/2-7-BundleProvideDocument.json
+
+### ch-epr-mhealth
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+xml
+
+< ./examples/2-7-BundleProvideDocument.json
+
+### ch-epr-mhealth
+POST {{host}}/$validate?profile=http://ihe.net/fhir/ihe.mhd.fhir/StructureDefinition/IHE.MHD.ProvideDocumentBundle.Comprehensive HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+xml
+
+< ./examples/2-7-BundleProvideDocument.json
+
+
+### ch-epr-mhealth
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-epr-mhealth/StructureDefinition/ch-mhd-comprehensive-documentmanifest HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+< ./examples/DocumentManifest-2-7-DocManMedicationCard.json
+
+### ch-epr-mhealth
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-epr-mhealth/StructureDefinition/ch-mhd-query-comprehensive-documentreference HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+xml
+
+< ./examples/DocumentReference-2-7-DocRefMedicationCard.json
+
+
+### ch-emed
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard HTTP/1.1
+Content-Type: application/fhir+xml
+Accept: application/fhir+xml
+
+< ./examples/2-7-MedicationCard.xml
+
+### ch-emed
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+< ./src/test/resources/ehs-439.json
+
+### Failed to parse JSON encoded FHIR content: Content does not appear to be FHIR JSON, first non-whitespace character was: '[' (must be 
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+< ./src/test/resources/ehs-431.json
+
+
+### Resource content has a UTF-8 BOM marking, skipping BOM
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Patient HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+< ./src/test/resources/ehs-419.json
+
+
+### cpb-0: Name should be usable as an identifier
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+< /Users/oliveregger/Documents/github/fhir-test-cases/validator/capstmt.json
+
+### warning he Measure 'http://cdcmeasures.example.org/modules/covid19/20200331/numTotBeds' could not be resolved, so no validation can be performed against the Measure"
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+< /Users/oliveregger/Documents/github/fhir-test-cases/validator/mr-covid-mr1.json
+
+
+###
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+< /Users/oliveregger/Documents/github/fhir-test-cases/validator/parameters-profiled-resource-invalid.json
+
+
+###
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+xml
+Accept: application/fhir+json
+
+< /Users/oliveregger/Documents/github/fhir-test-cases/validator/patient-xver.xml
+
+
+### Caused by: java.lang.NullPointerException: null
+###        at org.hl7.fhir.r5.utils.XVerExtensionManager.status(XVerExtensionManager.java:49)
+###        at org.hl7.fhir.validation.instance.InstanceValidator.checkExtension(InstanceValidator.java:1501)
+###        at org.hl7.fhir.validation.instance.InstanceValidator.checkChild(InstanceValidator.java:4254)
+###        at org.hl7.fhir.validation.instance.InstanceValidator.validateElement(InstanceValidator.java:4088)
+###        at org.hl7.fhir.validation.instance.InstanceValidator.startInner(InstanceValidator.java:3826)
+###        at org.hl7.fhir.validation.instance.InstanceValidator.start(InstanceValidator.java:3713)
+###        at org.hl7.fhir.validation.instance.InstanceValidator.validateResource(InstanceValidator.java:4819)
+### TODO looks like an error in R5 itselft, however strange that it validates directly? different versions
+
+
+###
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+xml
+Accept: application/fhir+json
+
+< /Users/oliveregger/Documents/github/fhir-test-cases/validator/patient-xver-bad.xml
+
+
+### TODO same error as above, looks like an error in R5 itselft, however strange that it validates directly? different versions
+
+
+###
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+< /Users/oliveregger/Documents/github/fhir-test-cases/validator/bb-obs-value-is-not-in-valueset.json
+
+### has specified a profile and then I cant do base validation
+
+###
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+< /Users/oliveregger/Documents/github/fhir-test-cases/validator/bundle-duplicate-ids-not.json
+
+### Failed to call access method: com.google.gson.JsonSyntaxException: com.google.gson.stream.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 2805 column 2 path $"
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+xml
+Accept: application/fhir+json
+
+< /Users/oliveregger/Documents/github/fhir-test-cases/validator/bundle-bad-by-param.xml
+### should be 0 not 1
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+< /Users/oliveregger/Documents/github/fhir-test-cases/validator/obs-temp.json
+### should be 0 not 1
+
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+xml
+Accept: application/fhir+json
+
+< /Users/oliveregger/Documents/github/fhir-test-cases/validator/observation-bad-profile.xml
+###
+
+GET http://fhir.ch/ig/ch-core/Patient-FranzMuster.xml HTTP/1.1
+
+###
+
+GET https://github.com/hl7ch/ch-core/raw/master/input/examplesNonValid/patient/UnknownGender.xml HTTP/1.1
+
+###
+GET https://github.com/hl7ch/ch-core/raw/master/input/examples/bundle/CdaContainingOriginalRepresentationAsPdfA.xml HTTP/1.1
+
+###
+GET https://raw.githubusercontent.com/ehealthsuisse/ch-atc/master/input/examples/auditevent/atc-doc-create-rep-pat.xml HTTP/1.1
+
+###
+GET https://raw.githubusercontent.com/ehealthsuisse/ch-atc/master/input/examples/bundle/ch-atc-iti-81-response-sample.xml HTTP/1.1
+
+###
+GET https://raw.githubusercontent.com/hl7ch/ch-emed/master/input/examples/bundle/2-7-MedicationCard.xml HTTP/1.1
+
+
+###
+GET https://raw.githubusercontent.com/ehealthsuisse/ch-epr-mhealth/master/input/examples/bundle/2-7-BundleProvideDocument.json HTTP/1.1

@@ -1,5 +1,19 @@
 package ca.uhn.fhir.jpa.starter;
 
+import java.util.Arrays;
+import java.util.Collections;
+
+import javax.servlet.ServletException;
+
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.Meta;
+import org.hl7.fhir.r4.model.Bundle.BundleType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.cors.CorsConfiguration;
+
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
@@ -26,12 +40,14 @@ import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
 import ca.uhn.fhir.rest.server.RestfulServer;
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.rest.server.interceptor.*;
 import ca.uhn.fhir.rest.server.interceptor.partition.RequestTenantPartitionInterceptor;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
+import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import com.google.common.base.Strings;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +92,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
   IValidatorModule validatorModule;
 
   @Autowired
+  ValidationProvider validationProvider;
+
+  @Autowired
   Optional<GraphQLProvider> graphQLProvider;
 
   @Autowired
@@ -96,11 +115,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   ApplicationContext myApplicationContext;
 
-  public BaseJpaRestfulServer() {
-
-  }
-
   private static final long serialVersionUID = 1L;
+
+  private static final Logger ourLog = LoggerFactory.getLogger(BaseJpaRestfulServer.class);
 
   @SuppressWarnings("unchecked")
   @Override
@@ -132,7 +149,12 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * You can also create your own subclass of the conformance provider if you need to
      * provide further customization of your server's CapabilityStatement
      */
+//    DaoConfig daoConfig = appCtx.getBean(DaoConfig.class);
 
+//  OE: Not seting it that it deferred  daoConfig.setDeferIndexingForCodesystemsOfSize(HapiProperties.getDeferIndexingForCodeSystemOfSize());
+
+
+ //   ISearchParamRegistry searchParamRegistry = appCtx.getBean(ISearchParamRegistry.class);
 
     if (fhirVersion == FhirVersionEnum.DSTU2) {
 
@@ -350,19 +372,27 @@ public class BaseJpaRestfulServer extends RestfulServer {
     if (appProperties.getImplementationGuides() != null) {
       Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
       for (Map.Entry<String, AppProperties.ImplementationGuide> guide : guides.entrySet()) {
-        packageInstallerSvc.install(new PackageInstallationSpec()
+        try {
+          ourLog.info("installing " + guide.getValue().getName());
+          packageInstallerSvc.install(new PackageInstallationSpec()
           .setPackageUrl(guide.getValue().getUrl())
           .setName(guide.getValue().getName())
           .setVersion(guide.getValue().getVersion())
-          .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
+            .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
+          } catch (NullPointerException e) {
+            ourLog.error("package not available or np for ", e);
+            System.exit(-1); 
+          }
+      }
+      if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages().booleanValue()) {
+        System.exit(0);
       }
     }
-
     if (appProperties.getLastn_enabled()) {
       daoConfig.setLastNEnabled(true);
     }
 
-
+    registerProviders(validationProvider);
   }
 
 

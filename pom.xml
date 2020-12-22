@@ -20,8 +20,9 @@
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
 
     <properties>
-        <java.version>8</java.version>
+        <java.version>11</java.version>
         <spring_boot_version>2.3.4.RELEASE</spring_boot_version>
+	    <fhir.core.version>5.2.0</fhir.core.version>
     </properties>
 
     <prerequisites>
@@ -99,6 +100,31 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>org.hl7.fhir.utilities</artifactId>
+            <version>${fhir.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>org.hl7.fhir.r4</artifactId>
+            <version>${fhir.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>org.hl7.fhir.r5</artifactId>
+            <version>${fhir.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>org.hl7.fhir.convertors</artifactId>
+            <version>${fhir.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>org.hl7.fhir.validation</artifactId>
+            <version>${fhir.core.version}</version>
         </dependency>
         <!-- This dependency includes the JPA EMPI Server -->
         <dependency>
@@ -234,7 +260,24 @@
             <artifactId>jetty-webapp</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring_boot_version}</version>
+        </dependency>
 
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-client</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+        <dependency>
+            <groupId>org.hl7.fhir.testcases</groupId>
+            <artifactId>fhir-test-cases</artifactId>
+            <version>1.1.47-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
 
         <!--
         For some reason JavaDoc crashed during site generation unless we have this dependency
@@ -330,7 +373,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <release>8</release>
+                    <release>11</release>
                 </configuration>
             </plugin>
 
@@ -386,7 +429,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <failBuildInCaseOfConflict>true</failBuildInCaseOfConflict>
+                    <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
                     <checkTestClasspath>false</checkTestClasspath>
                     <!--
                     <printEqualFiles>false</printEqualFiles>

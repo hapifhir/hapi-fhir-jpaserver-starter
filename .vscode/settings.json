@@ -4,5 +4,33 @@
         "**/.project": true,
         "**/.settings": true,
         "**/.factorypath": true
-    }
+    },
+    "cSpell.words": [
+        "Autowired",
+        "Dimage",
+        "Djetty",
+        "Dskip",
+        "Dstu",
+        "Multitenant",
+        "Pboot",
+        "Projectathon",
+        "Servlet",
+        "Websphere",
+        "Wildfly",
+        "confcode",
+        "datasource",
+        "distroless",
+        "emed",
+        "explicity",
+        "jdbc",
+        "jpaserver",
+        "jpavalidator",
+        "mhealth",
+        "postgresql",
+        "publically",
+        "validaton",
+        "webapps"
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "maven.view": "hierarchical"
 }

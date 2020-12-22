@@ -29,7 +29,7 @@ public class FhirTesterConfig {
 	 * Note the use of the ${serverBase} variable below. This will be replaced with
 	 * the base URL as reported by the server itself. Often for a simple Tomcat
 	 * (or other container) installation, this will end up being something
-	 * like "http://localhost:8080/hapi-fhir-jpaserver-starter". If you are
+	 * like "http://localhost:8080/hapi-fhir-jpavalidator-starter". If you are
 	 * deploying your server to a place with a fully qualified domain name,
 	 * you might want to use that instead of using the variable.
 	 */

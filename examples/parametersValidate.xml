@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Parameters xmlns="http://hl7.org/fhir">
+  <parameter>
+    <name value="profile"/>
+    <valueString value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient"/>
+  </parameter>
+  <parameter>
+    <name value="resource"/>
+    <resource>
+      <Patient>
+        <name>
+          <use value="official"/>
+          <family value="Chalmers"/>
+          <given value="Peter"/>
+          <given value="James"/>
+        </name>
+      </Patient>
+    </resource>
+  </parameter>
+</Parameters>

@@ -66,6 +66,8 @@ public class AppProperties {
 
   private Boolean lastn_enabled = false;
 
+  private Boolean only_install_packages = false;
+
   public Integer getDefer_indexing_for_codesystems_of_size() {
     return defer_indexing_for_codesystems_of_size;
   }
@@ -393,6 +395,15 @@ public class AppProperties {
   public void setLastn_enabled(Boolean lastn_enabled) {
     this.lastn_enabled = lastn_enabled;
   }
+
+  public Boolean getOnly_install_packages() {
+    return only_install_packages;
+  }
+
+  public void setOnly_install_packages(Boolean only_install_packages) {
+    this.only_install_packages = only_install_packages;
+  }
+
 
   public static class Cors {
     private Boolean allow_Credentials = true;

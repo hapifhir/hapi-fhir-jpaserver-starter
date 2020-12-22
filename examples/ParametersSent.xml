@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Patient xmlns="http://hl7.org/fhir">
+    <id value="testcomposition"/>
+<!--    <language value="en-US"/>  Resource has a language, but the XHTML does not have an xml:lang tag (needs both lang and xml:lang - see https://www.w3.org/TR/i18n-html-tech-lang/#langvalues) -->
+    <text>
+        <status value="generated"/>
+        <div xmlns="http://www.w3.org/1999/xhtml"
+            xmlns:lang="en-US" lang="en-US">
+            <p>
+                <b>Generated Narrative with Details</b>
+            </p>
+        </div>
+    </text>
+</Patient>

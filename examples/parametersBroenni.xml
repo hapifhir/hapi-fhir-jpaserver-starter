@@ -1,0 +1,76 @@
+<Parameters xmlns="http://hl7.org/fhir">
+  <parameter>
+    <name value="resource"/>
+    <resource>
+      <Patient xmlns="http://hl7.org/fhir">
+        <id value="ElisabethBroennimannByBFH"/>
+        <meta>
+          <source value="https://www.ti.bfh.ch/de/bachelor/medizininformatik.html"/>
+          <profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient"/>
+        </meta>
+        <text>
+          <status value="generated"/>
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            <p>
+              <b>Generated Narrative with Details</b>
+            </p>
+            <p>
+              <b>id</b>: ElisabethBroennimannByBFH </p>
+            <p>
+              <b>meta</b>: 
+            </p>
+            <p>
+              <b>name</b>: Elisabeth Brönnimann-Bertholet </p>
+            <p>
+              <b>telecom</b>: ph: +41 32 321 61 11(HOME), elisabeth@broennimann.today </p>
+            <p>
+              <b>gender</b>: FEMALE </p>
+            <p>
+              <b>birthDate</b>: May 3, 1937 </p>
+            <p>
+              <b>address</b>: Kreuzweg 11 Biel/Bienne 2500 (HOME) </p>
+            <p>
+              <b>maritalStatus</b>: verheiratet <span style="background: LightGoldenRodYellow">(Details : {http://fhir.ch/ig/ch-core/CodeSystem/ech-11-maritalstatus code '2' = '2', given as 'verheiratet'}; {http://terminology.hl7.org/CodeSystem/v3-MaritalStatus code 'M' = 'Married', given as 'married'})</span>
+            </p>
+          </div>
+        </text>
+        <name>
+          <family value="Brönnimann-Bertholet"/>
+          <given value="Elisabeth"/>
+        </name>
+        <telecom>
+          <system value="phone"/>
+          <value value="+41 32 321 61 11"/>
+          <use value="home"/>
+        </telecom>
+        <telecom>
+          <system value="email"/>
+          <value value="elisabeth@broennimann.today"/>
+        </telecom>
+        <gender value="female"/>
+        <birthDate value="1937-05-03"/>
+        <address>
+          <use value="home"/>
+          <line value="Kreuzweg 11"/>
+          <city value="Biel/Bienne"/>
+          <postalCode value="2500"/>
+        </address>
+        <maritalStatus>
+          <coding>
+            <system value="http://fhir.ch/ig/ch-core/CodeSystem/ech-11-maritalstatus"/>
+            <code value="2"/>
+            <display value="verheiratet"/>
+          </coding>
+          <coding>
+            <system value="http://terminology.hl7.org/CodeSystem/v3-MaritalStatus"/>
+            <code value="M"/>
+            <display value="married"/>
+          </coding>
+        </maritalStatus>
+        <generalPractitioner>
+          <reference value="Practitioner/HanspeterWengerByBFH"/>
+        </generalPractitioner>
+      </Patient>
+    </resource>
+  </parameter>
+</Parameters>

@@ -1,1 +1,1 @@
-docker build -t hapi-fhir/hapi-fhir-jpaserver-starter .
+docker build -t hapi-fhir/hapi-fhir-jpavalidator-starter .
