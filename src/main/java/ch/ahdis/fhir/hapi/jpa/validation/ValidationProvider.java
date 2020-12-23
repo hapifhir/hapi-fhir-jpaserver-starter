@@ -125,6 +125,8 @@ public class ValidationProvider {
       m.setLocationLine(0);
       addedValidationMessages.add(m);
       return new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages).toOperationOutcome();
+    } else {
+      log.debug(contentString);
     }
 
     String sha3Hex = new DigestUtils("SHA3-256").digestAsHex(contentString + (profile != null ? profile : ""));

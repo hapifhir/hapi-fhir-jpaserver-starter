@@ -22,7 +22,7 @@
     <properties>
         <java.version>11</java.version>
         <spring_boot_version>2.3.4.RELEASE</spring_boot_version>
-	    <fhir.core.version>5.2.0</fhir.core.version>
+	    <fhir.core.version>5.2.12-SNAPSHOT</fhir.core.version>
     </properties>
 
     <prerequisites>

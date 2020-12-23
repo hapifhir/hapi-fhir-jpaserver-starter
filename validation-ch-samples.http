@@ -46,7 +46,7 @@ Accept: application/fhir+xml
 
 < ./examples/parampatienthtmllang.json
 
-### Validate parameter file -- FAILS to check
+### Validate parameter file -- FAILS in 5.2.0, correct 5.3.0 snapshot
 POST {{host}}/$validate HTTP/.1
 Content-Type: application/fhir+xml
 
@@ -58,7 +58,7 @@ Content-Type: application/fhir+xml
 
 < ./examples/ParametersBroenni.xml
 
-### Validate parameter file: Check validaton errror
+### Validate parameter file: Check validaton errror (FAILS in 5.2.0), correct in 5.3.0-snapshot
 POST {{host}}/$validate HTTP/.1
 Content-Type: application/fhir+xml
 Accept: application/fhir+xml
@@ -155,12 +155,20 @@ Accept: application/fhir+xml
 
 < ./examples/2-7-BundleProvideDocument.json
 
-### ch-epr-mhealth
+### ch-epr-mhealth --> gives an error
 POST {{host}}/$validate HTTP/1.1
-Content-Type: application/fhir+json
+Content-Type: application/fhir+xml
 Accept: application/fhir+xml
 
-< ./examples/2-7-BundleProvideDocument.json
+< ./examples/2-7-BundleProvideDocumentParameters.xml
+
+### ch-epr-mhealth --> gives no error but is the extracr from above?
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+xml
+Accept: application/fhir+xml
+
+< ./examples/2-7-BundleProvideDocument.xml
+
 
 ### ch-epr-mhealth
 POST {{host}}/$validate?profile=http://ihe.net/fhir/ihe.mhd.fhir/StructureDefinition/IHE.MHD.ProvideDocumentBundle.Comprehensive HTTP/1.1
