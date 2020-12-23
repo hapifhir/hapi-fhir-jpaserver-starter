@@ -25,7 +25,7 @@ The docker file will install the implementaiton guide in a docker image. The bui
 
 In order to use this sample, you should have:
 
-- [This project](https://github.com/hapifhir/hapi-fhir-jpavalidator-starter) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
+- [This project](https://github.com/hapifhir/hapi-fhir-jpavalidator) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
 - Oracle Java (JDK) installed: Minimum JDK8 or newer.
 - Apache Maven build tool (newest version)
 
@@ -52,13 +52,13 @@ Then, browse to the following link to use the server:
 ## building with Docker
 
 ```bash
-docker build -t hapi-fhir-jpavalidator-starter .
-docker run -d --name hapi-fhir-jpavalidator-starter -p 8080:8080 hapi-fhir-jpavalidator-starter
+docker build -t hapi-fhir-jpavalidator .
+docker run -d --name hapi-fhir-jpavalidator -p 8080:8080 hapi-fhir-jpavalidator
 ```
-Server will then be accessible at http://localhost:8888/hapi-fhir-jpavalidator-starter and eg. http://localhost:8888/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+Server will then be accessible at http://localhost:8888/hapi-fhir-jpavalidator and eg. http://localhost:8888/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
 
 ### making container available
 ```
-docker tag hapi-fhir-jpavalidator-starter eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-starter:v020
-docker push eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-starter:v020
+docker tag hapi-fhir-jpavalidator eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator:v120
+docker push eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator:v120
 ```
