@@ -147,15 +147,11 @@ public class ExampleServerR4IT implements IServerSupport {
     Assert.assertEquals("Measure/"+measureId, report.getMeasure());
   }
 
-  // Fails with:
-  // ca.uhn.fhir.rest.server.exceptions.InternalErrorException:
-  // HTTP 500 Server Error: Failed to call access method: org.opencds.cqf.cql.engine.exception.CqlException:
-  // Could not resolve expression reference 'null' in library 'EXM349'.
-  //@Test
+  @Test
   public void testCQLEXM349EvaluateMeasure() throws IOException {
     String measureId = "measure-EXM349-2.10.000";
 
-    loadBundle("r4/EXM349/EXM349-2.10.000-bundle.json", ourCtx, ourClient);
+    loadBundle("r4/EXM349/EXM349-2.10.000-bundle.json.manuallyeditedtoremovesupplementaldata", ourCtx, ourClient);
 
     // http://localhost:8080/fhir/Measure/measure-EXM349-2.10.000/$evaluate-measure?periodStart=2019-01-01&periodEnd=2019-12-31
     Parameters inParams = new Parameters();
