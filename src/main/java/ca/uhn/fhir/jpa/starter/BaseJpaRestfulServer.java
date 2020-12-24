@@ -17,7 +17,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.cql.common.provider.CqlProviderLoader;
-import ca.uhn.fhir.empi.provider.EmpiProviderLoader;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
@@ -120,10 +119,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
   // These are set only if the features are enabled
   private CqlProviderLoader cqlProviderLoader;
-  private EmpiProviderLoader empiProviderLoader;
 
   public BaseJpaRestfulServer() {
-
   }
 
   private static final long serialVersionUID = 1L;

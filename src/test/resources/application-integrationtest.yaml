@@ -22,7 +22,6 @@ hapi:
 #    allow_placeholder_references: true
 #    auto_create_placeholder_reference_targets: false
 #    cql_enabled: false
-#    empi_enabled: false
 #    default_encoding: JSON
 #    default_pretty_print: true
 #    default_page_size: 20

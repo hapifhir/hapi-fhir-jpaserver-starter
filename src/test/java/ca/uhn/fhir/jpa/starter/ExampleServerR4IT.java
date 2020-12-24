@@ -177,7 +177,6 @@ public class ExampleServerR4IT {
     "spring.datasource.url=jdbc:h2:mem:dbr4",
     "hapi.fhir.fhir_version=R4",
     "hapi.fhir.cql_enabled=true",
-    "hapi.fhir.empi_enabled=false",
     "hapi.fhir.subscription.websocket_enabled=true",
     //Override is currently required when using Empi as the construction of the Empi beans are ambiguous as they are constructed multiple places. This is evident when running in a spring boot environment
     "spring.main.allow-bean-definition-overriding=true"
@@ -328,9 +327,7 @@ public class ExampleServerR4IT implements IServerSupport {
     Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
     assertEquals(methodName, pt2.getName().get(0).getFamily());
 
-    // Test EMPI
-
-    // Wait until the EMPI message has been processed
+    // Wait until the message has been processed
     await().until(() -> getPeople().size() > 0);
     List<Person> persons = getPeople();
 
