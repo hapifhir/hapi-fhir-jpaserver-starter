@@ -245,14 +245,11 @@ public class ExampleServerR4IT implements IServerSupport {
     return result;
   }
 
-  // Fails with: ca.uhn.fhir.rest.server.exceptions.InternalErrorException: HTTP 500 :
-  //             Failed to call access method: java.lang.IllegalArgumentException:
-  //             Could not load library source for libraries referenced in Measure/Measure/measure-EXM130-FHIR4-7.2.000/_history/1.
-  //@Test
+  @Test
   public void testCQLEXM130EvaluateMeasure() throws IOException {
-    String measureId = "measure-EXM130-FHIR4-7.2.000";
+    String measureId = "measure-EXM130-7.3.000";
 
-    loadBundle("r4/EXM130/EXM130_FHIR4-7.2.000-bundle.json", ourCtx, ourClient);
+    loadBundle("r4/EXM130/EXM130-7.3.000-bundle.json", ourCtx, ourClient);
 
     // http://localhost:8080/fhir/Measure/measure-EXM130-FHIR4-7.2.000/$evaluate-measure?periodStart=2019-01-01&periodEnd=2019-12-31
     Parameters inParams = new Parameters();
