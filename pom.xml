@@ -101,12 +101,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- This dependency includes the JPA EMPI Server -->
-        <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-jpaserver-empi</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <!-- This dependency includes the JPA CQL Server -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>

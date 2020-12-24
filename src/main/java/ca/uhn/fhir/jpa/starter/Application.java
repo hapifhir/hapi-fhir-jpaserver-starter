@@ -1,6 +1,5 @@
 package ca.uhn.fhir.jpa.starter;
 
-import ca.uhn.fhir.jpa.empi.EmpiConfig;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
@@ -24,7 +23,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 @ServletComponentScan(basePackageClasses = {
   JpaRestfulServer.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
-@Import({SubscriptionSubmitterConfig.class, SubscriptionProcessorConfig.class, SubscriptionChannelConfig.class, WebsocketDispatcherConfig.class, EmpiConfig.class})
+@Import({SubscriptionSubmitterConfig.class, SubscriptionProcessorConfig.class, SubscriptionChannelConfig.class, WebsocketDispatcherConfig.class})
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
