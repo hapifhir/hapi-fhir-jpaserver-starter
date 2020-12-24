@@ -2806,35 +2806,6 @@
             } ]
           }
         } ]
-      } ],
-      "supplementalData": [ {
-        "usage": [ {
-          "coding": [ {
-            "system": "http://hl7.org/fhir/measure-data-usage",
-            "code": "supplemental-data"
-          } ]
-        } ]
-      }, {
-        "usage": [ {
-          "coding": [ {
-            "system": "http://hl7.org/fhir/measure-data-usage",
-            "code": "supplemental-data"
-          } ]
-        } ]
-      }, {
-        "usage": [ {
-          "coding": [ {
-            "system": "http://hl7.org/fhir/measure-data-usage",
-            "code": "supplemental-data"
-          } ]
-        } ]
-      }, {
-        "usage": [ {
-          "coding": [ {
-            "system": "http://hl7.org/fhir/measure-data-usage",
-            "code": "supplemental-data"
-          } ]
-        } ]
       } ]
     },
     "request": {
