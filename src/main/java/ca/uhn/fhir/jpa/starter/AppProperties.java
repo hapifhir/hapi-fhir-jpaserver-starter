@@ -57,7 +57,7 @@ public class AppProperties {
   private Boolean narrative_enabled = true;
 
   private Validation validation = new Validation();
-  private Map<String, Tester> tester = ImmutableMap.of("home", new Tester());
+  private Map<String, Tester> tester = null;
   private Logger logger = new Logger();
   private Subscription subscription = new Subscription();
   private Cors cors = null;
@@ -485,8 +485,8 @@ public class AppProperties {
 
   public static class Tester {
 
-    private String name = "Local Tester";
-    private String server_address = "http://localhost:8080/fhir";
+    private String name;
+    private String server_address;
     private Boolean refuse_to_fetch_third_party_urls = true;
     private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
 
