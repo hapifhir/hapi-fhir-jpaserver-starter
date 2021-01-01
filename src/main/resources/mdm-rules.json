@@ -1,5 +1,6 @@
 {
   "version": "1",
+  "mdmTypes": ["Patient", "Practitioner"],
   "candidateSearchParams": [
     {
       "resourceType": "Patient",

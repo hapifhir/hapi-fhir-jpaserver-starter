@@ -316,9 +316,9 @@ The server may be configured with subscription support by enabling properties in
 
 - `hapi.fhir.subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/websocket](ws://localhost:8080/websocket)
 
-## Enabling EMPI
+## Enabling MDM (EMPI)
 
-Set `hapi.fhir.empi_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable EMPI on this server.  The EMPI matching rules are configured in [empi-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/empi-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that EMPI relies on subscriptions, so for EMPI to work, subscriptions must be enabled. 
+Set `hapi.fhir.mdm_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable MDM on this server.  The MDM matching rules are configured in [mdm-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/mdm-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that MDM relies on subscriptions, so for MDM to work, subscriptions must be enabled. 
 
 ## Using Elasticsearch
 

@@ -132,6 +132,13 @@ public class FhirServerConfigCommon {
   }
 
 
+  @Bean
+  @Lazy
+  public RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory() {
+  	return new RepositoryValidationInterceptorFactory();
+  }
+
+
   @Primary
   @Bean
   public HibernateDialectProvider jpaStarterDialectProvider(LocalContainerEntityManagerFactoryBean myEntityManagerFactory) {
