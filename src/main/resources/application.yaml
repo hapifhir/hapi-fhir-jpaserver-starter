@@ -135,6 +135,7 @@ hapi:
 #  enabled: false
 #  password: SomePassword
 #  required_index_status: YELLOW
-#  rest_url: 'http://localhost:9200'
+#  rest_url: 'localhost:9200'
+#  protocol: 'http'
 #  schema_management_strategy: CREATE
 #  username: SomeUsername
