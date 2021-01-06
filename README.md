@@ -328,9 +328,10 @@ For example:
 
 ```properties
 elasticsearch.enabled=true
-elasticsearch.rest_url=http://localhost:9200
+elasticsearch.rest_url=localhost:9200
 elasticsearch.username=SomeUsername
 elasticsearch.password=SomePassword
+elasticsearch.protocol=http
 elasticsearch.required_index_status=YELLOW
 elasticsearch.schema_management_strategy=CREATE
 ```
