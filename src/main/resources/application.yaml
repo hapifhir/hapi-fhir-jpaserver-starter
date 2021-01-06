@@ -8,23 +8,22 @@ spring:
   batch:
     job:
       enabled: false
-server:
+server: 
   servlet:
     context-path: /hapi-fhir-jpavalidator
 hapi:
   fhir:
     fhir_version: R4
-    defer_indexing_for_codesystems_of_size: 0    
+    defer_indexing_for_codesystems_of_size: 0
     tester:
-
         home:
           name: Local Tester©
           server_address: 'http://localhost:8080/fhir'
           refuse_to_fetch_third_party_urls: false
           fhir_version: R4
-
         global:
           name: Global Tester
           server_address: "http://hapi.fhir.org/baseR4"
           refuse_to_fetch_third_party_urls: false
           fhir_version: R4
+
