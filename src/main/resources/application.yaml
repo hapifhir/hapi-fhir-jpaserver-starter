@@ -17,7 +17,7 @@ hapi:
     defer_indexing_for_codesystems_of_size: 0
     tester:
         home:
-          name: Local Tester©
+          name: Local Tester
           server_address: 'http://localhost:8080/fhir'
           refuse_to_fetch_third_party_urls: false
           fhir_version: R4
