@@ -18,6 +18,7 @@ spring:
 #      hibernate.cache.use_second_level_cache: false
 #      hibernate.cache.use_structured_entries: false
 #      hibernate.cache.use_minimal_puts: false
+#      hibernate.search.enabled: true
 #      hibernate.search.default.directory_provider: filesystem
 #      hibernate.search.default.indexbase: target/lucenefiles
 #      hibernate.search.lucene_version: lucene_current
@@ -58,6 +59,7 @@ hapi:
 #    default_encoding: JSON
 #    default_pretty_print: true
 #    default_page_size: 20
+#    enable_repository_validating_interceptor: false
 #    enable_index_missing_fields: false
 #    enforce_referential_integrity_on_delete: false
 #    enforce_referential_integrity_on_write: false
@@ -135,6 +137,7 @@ hapi:
 #  enabled: false
 #  password: SomePassword
 #  required_index_status: YELLOW
-#  rest_url: 'http://localhost:9200'
+#  rest_url: 'localhost:9200'
+#  protocol: 'http'
 #  schema_management_strategy: CREATE
 #  username: SomeUsername

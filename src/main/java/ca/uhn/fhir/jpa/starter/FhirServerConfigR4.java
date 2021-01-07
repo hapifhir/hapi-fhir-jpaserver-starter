@@ -69,8 +69,14 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
   @Bean()
   public ElasticsearchSvcImpl elasticsearchSvc() {
     if (EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment)) {
-      String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
-      String elasticsearchHost = elasticsearchUrl.substring(elasticsearchUrl.indexOf("://")+3, elasticsearchUrl.lastIndexOf(":"));
+		 String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
+		 String elasticsearchHost;
+		 if (elasticsearchUrl.startsWith("http")) {
+			 elasticsearchHost = elasticsearchUrl.substring(elasticsearchUrl.indexOf("://") + 3, elasticsearchUrl.lastIndexOf(":"));
+		 } else {
+			 elasticsearchHost = elasticsearchUrl.substring(0, elasticsearchUrl.indexOf(":"));
+		 }
+
       String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
       String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
       int elasticsearchPort = Integer.parseInt(elasticsearchUrl.substring(elasticsearchUrl.lastIndexOf(":")+1));
