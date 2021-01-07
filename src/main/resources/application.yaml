@@ -6,8 +6,8 @@ spring:
     password: null
     driverClassName: org.h2.Driver
     max-active: 15
-  jpa:
-    properties:
+#  jpa:
+#    properties:
 #      hibernate.dialect: org.hibernate.dialect.h2dialect
 #      hibernate.search.model_mapping: ca.uhn.fhir.jpa.search.lucenesearchmappingfactory
 #      hibernate.format_sql: false

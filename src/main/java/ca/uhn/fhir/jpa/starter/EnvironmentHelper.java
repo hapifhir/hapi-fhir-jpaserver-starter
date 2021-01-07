@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer;
 import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.stats.IndexStats;
 import org.hibernate.search.backend.elasticsearch.index.IndexStatus;
 import org.hibernate.search.backend.lucene.cfg.LuceneBackendSettings;
@@ -45,7 +46,7 @@ public class EnvironmentHelper {
 		properties.put(HibernateOrmMapperSettings.ENABLED, environment.getProperty("spring.jpa.properties.hibernate.search.enabled", "false"));
 
     } else {
-      Arrays.asList(environment.getProperty("spring.jpa.properties", String.class).split(" ")).stream().forEach(s ->
+      Arrays.asList(environment.getProperty("spring.jpa.properties", String.class).split(" ")).stream().filter(s -> !StringUtils.isEmpty(s)).forEach(s ->
       {
         String[] values = s.split("=");
         properties.put(values[0], values[1]);
