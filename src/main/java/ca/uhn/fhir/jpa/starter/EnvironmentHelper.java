@@ -40,7 +40,9 @@ public class EnvironmentHelper {
 		properties.put(BackendSettings.backendKey(BackendSettings.TYPE), "lucene");
 		properties.put(BackendSettings.backendKey(LuceneBackendSettings.ANALYSIS_CONFIGURER), HapiLuceneAnalysisConfigurer.class.getName());
 		properties.put(BackendSettings.backendKey(LuceneBackendSettings.LUCENE_VERSION), "LUCENE_CURRENT");
-		properties.put(HibernateOrmMapperSettings.ENABLED, "true");
+
+		//Set this value to true in the properties to enable lucene.
+		properties.put(HibernateOrmMapperSettings.ENABLED, environment.getProperty("spring.jpa.properties.hibernate.search.enabled", "false"));
 
     } else {
       Arrays.asList(environment.getProperty("spring.jpa.properties", String.class).split(" ")).stream().forEach(s ->
