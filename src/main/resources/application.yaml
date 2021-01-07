@@ -22,7 +22,7 @@ hapi:
           refuse_to_fetch_third_party_urls: false
           fhir_version: R4
         global:
-          name: Global Tester
+          name: Global Tester-2
           server_address: "http://hapi.fhir.org/baseR4"
           refuse_to_fetch_third_party_urls: false
           fhir_version: R4
