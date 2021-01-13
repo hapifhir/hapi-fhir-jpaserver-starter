@@ -261,6 +261,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
       config.addAllowedHeader(HttpHeaders.CONTENT_TYPE);
       config.addAllowedHeader(HttpHeaders.AUTHORIZATION);
       config.addAllowedHeader(HttpHeaders.CACHE_CONTROL);
+      config.addAllowedHeader("x-api-key");
       config.addAllowedHeader("x-fhir-starter");
       config.addAllowedHeader("X-Requested-With");
       config.addAllowedHeader("Prefer");
