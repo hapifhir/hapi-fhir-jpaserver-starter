@@ -2,8 +2,12 @@
 ### @host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
 ### @host = http://test.ahdis.ch/r4
 ### @host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
-@host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
 
+@host = https://ehealthsuisse.ihe-europe.net/hapi-fhir-jpavalidator/fhir
+### internally mapped to port 8883, not 8080
+
+
+### @host = http://localhost:8080/hapi-fhir-jpavalidator/fhir
 
 GET {{host}}/metadata HTTP/1.1
 Accept: application/fhir+json
