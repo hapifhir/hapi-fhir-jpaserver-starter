@@ -1,29 +1,28 @@
 package ca.uhn.fhir.jpa.starter;
 
-
-import ca.uhn.fhir.context.FhirVersionEnum;
-import ca.uhn.fhir.jpa.api.config.DaoConfig.ClientIdStrategyEnum;
-import ca.uhn.fhir.rest.api.EncodingEnum;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import org.hl7.fhir.r4.model.Bundle;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
+import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.api.config.DaoConfig.ClientIdStrategyEnum;
+import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
+import ca.uhn.fhir.rest.api.EncodingEnum;
 
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
 @EnableConfigurationProperties
 public class AppProperties {
 
-  private Boolean empi_enabled = false;
+  private Boolean mdm_enabled = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
   private Boolean allow_external_references = false;
@@ -32,6 +31,7 @@ public class AppProperties {
   private Boolean allow_placeholder_references = true;
   private Boolean auto_create_placeholder_reference_targets = true;
   private Boolean enable_index_missing_fields = false;
+  private Boolean enable_repository_validating_interceptor = false;
   private Boolean enforce_referential_integrity_on_delete = true;
   private Boolean enforce_referential_integrity_on_write = true;
   private Boolean etag_support_enabled = true;
@@ -65,6 +65,7 @@ public class AppProperties {
   private Map<String, ImplementationGuide> implementationGuides = null;
 
   private Boolean lastn_enabled = false;
+  private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
 
   private Boolean only_install_packages = false;
 
@@ -92,14 +93,13 @@ public class AppProperties {
     this.partitioning = partitioning;
   }
 
-  public Boolean getEmpi_enabled() {
-    return empi_enabled;
+  public Boolean getMdm_enabled() {
+    return mdm_enabled;
   }
 
-  public void setEmpi_enabled(Boolean empi_enabled) {
-    this.empi_enabled = empi_enabled;
+  public void setMdm_enabled(Boolean mdm_enabled) {
+    this.mdm_enabled = mdm_enabled;
   }
-
 
   public Cors getCors() {
     return cors;
@@ -169,8 +169,7 @@ public class AppProperties {
     return client_id_strategy;
   }
 
-  public void setClient_id_strategy(
-    ClientIdStrategyEnum client_id_strategy) {
+  public void setClient_id_strategy(ClientIdStrategyEnum client_id_strategy) {
     this.client_id_strategy = client_id_strategy;
   }
 
@@ -210,8 +209,7 @@ public class AppProperties {
     return allow_override_default_search_params;
   }
 
-  public void setAllow_override_default_search_params(
-    Boolean allow_override_default_search_params) {
+  public void setAllow_override_default_search_params(Boolean allow_override_default_search_params) {
     this.allow_override_default_search_params = allow_override_default_search_params;
   }
 
@@ -227,8 +225,7 @@ public class AppProperties {
     return auto_create_placeholder_reference_targets;
   }
 
-  public void setAuto_create_placeholder_reference_targets(
-    Boolean auto_create_placeholder_reference_targets) {
+  public void setAuto_create_placeholder_reference_targets(Boolean auto_create_placeholder_reference_targets) {
     this.auto_create_placeholder_reference_targets = auto_create_placeholder_reference_targets;
   }
 
@@ -248,12 +245,19 @@ public class AppProperties {
     this.enable_index_missing_fields = enable_index_missing_fields;
   }
 
+  public Boolean getEnable_repository_validating_interceptor() {
+    return enable_repository_validating_interceptor;
+  }
+
+  public void setEnable_repository_validating_interceptor(Boolean theEnable_repository_validating_interceptor) {
+    enable_repository_validating_interceptor = theEnable_repository_validating_interceptor;
+  }
+
   public Boolean getEnforce_referential_integrity_on_delete() {
     return enforce_referential_integrity_on_delete;
   }
 
-  public void setEnforce_referential_integrity_on_delete(
-    Boolean enforce_referential_integrity_on_delete) {
+  public void setEnforce_referential_integrity_on_delete(Boolean enforce_referential_integrity_on_delete) {
     this.enforce_referential_integrity_on_delete = enforce_referential_integrity_on_delete;
   }
 
@@ -261,8 +265,7 @@ public class AppProperties {
     return enforce_referential_integrity_on_write;
   }
 
-  public void setEnforce_referential_integrity_on_write(
-    Boolean enforce_referential_integrity_on_write) {
+  public void setEnforce_referential_integrity_on_write(Boolean enforce_referential_integrity_on_write) {
     this.enforce_referential_integrity_on_write = enforce_referential_integrity_on_write;
   }
 
@@ -378,13 +381,11 @@ public class AppProperties {
     this.tester = tester;
   }
 
-  public Boolean getNarrative_enabled()
-  {
+  public Boolean getNarrative_enabled() {
     return narrative_enabled;
   }
 
-  public void setNarrative_enabled(Boolean narrative_enabled)
-  {
+  public void setNarrative_enabled(Boolean narrative_enabled) {
     this.narrative_enabled = narrative_enabled;
   }
 
@@ -404,6 +405,13 @@ public class AppProperties {
     this.only_install_packages = only_install_packages;
   }
 
+  public NormalizedQuantitySearchLevel getNormalized_quantity_search_level() {
+    return this.normalized_quantity_search_level;
+  }
+
+  public void setNormalized_quantity_search_level(NormalizedQuantitySearchLevel normalized_quantity_search_level) {
+    this.normalized_quantity_search_level = normalized_quantity_search_level;
+  }
 
   public static class Cors {
     private Boolean allow_Credentials = true;
@@ -424,7 +432,6 @@ public class AppProperties {
     public void setAllow_Credentials(Boolean allow_Credentials) {
       this.allow_Credentials = allow_Credentials;
     }
-
 
   }
 
@@ -468,7 +475,6 @@ public class AppProperties {
     }
   }
 
-
   public static class Tester {
 
     private String name = "Local Tester";
@@ -509,8 +515,7 @@ public class AppProperties {
     }
   }
 
-  public static class ImplementationGuide
-  {
+  public static class ImplementationGuide {
     private String url;
     private String name;
     private String version;
@@ -566,7 +571,6 @@ public class AppProperties {
 
     private Boolean partitioning_include_in_search_hashes = false;
 
-
     public Boolean getPartitioning_include_in_search_hashes() {
       return partitioning_include_in_search_hashes;
     }
@@ -605,7 +609,6 @@ public class AppProperties {
     public void setEmail(Email email) {
       this.email = email;
     }
-
 
     public static class Email {
       public String getFrom() {

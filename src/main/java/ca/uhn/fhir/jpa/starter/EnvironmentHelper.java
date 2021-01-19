@@ -1,8 +1,16 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer;
 import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
-import org.hibernate.search.elasticsearch.cfg.ElasticsearchIndexStatus;
-import org.hibernate.search.elasticsearch.cfg.IndexSchemaManagementStrategy;
+import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.action.admin.indices.stats.IndexStats;
+import org.hibernate.search.backend.elasticsearch.index.IndexStatus;
+import org.hibernate.search.backend.lucene.cfg.LuceneBackendSettings;
+import org.hibernate.search.backend.lucene.cfg.LuceneIndexSettings;
+import org.hibernate.search.engine.cfg.BackendSettings;
+import org.hibernate.search.mapper.orm.automaticindexing.session.AutomaticIndexingSynchronizationStrategyNames;
+import org.hibernate.search.mapper.orm.cfg.HibernateOrmMapperSettings;
+import org.hibernate.search.mapper.orm.schema.management.SchemaManagementStrategyName;
 import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
@@ -19,7 +27,6 @@ public class EnvironmentHelper {
     Properties properties = new Properties();
 
     if (environment.getProperty("spring.jpa.properties", String.class) == null) {
-      properties.put("hibernate.search.model_mapping", "ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory");
       properties.put("hibernate.format_sql", "false");
       properties.put("hibernate.show_sql", "false");
       properties.put("hibernate.hbm2ddl.auto", "update");
@@ -28,11 +35,18 @@ public class EnvironmentHelper {
       properties.put("hibernate.cache.use_second_level_cache", "false");
       properties.put("hibernate.cache.use_structured_entries", "false");
       properties.put("hibernate.cache.use_minimal_puts", "false");
-      properties.put("hibernate.search.default.directory_provider", "filesystem");
-      properties.put("hibernate.search.default.indexBase", "target/lucenefiles");
-      properties.put("hibernate.search.lucene_version", "LUCENE_CURRENT");
+
+		properties.put(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_TYPE), "local-filesystem");
+		properties.put(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_ROOT), "target/lucenefiles");
+		properties.put(BackendSettings.backendKey(BackendSettings.TYPE), "lucene");
+		properties.put(BackendSettings.backendKey(LuceneBackendSettings.ANALYSIS_CONFIGURER), HapiLuceneAnalysisConfigurer.class.getName());
+		properties.put(BackendSettings.backendKey(LuceneBackendSettings.LUCENE_VERSION), "LUCENE_CURRENT");
+
+		//Set this value to true in the properties to enable lucene.
+		properties.put(HibernateOrmMapperSettings.ENABLED, environment.getProperty("spring.jpa.properties.hibernate.search.enabled", "false"));
+
     } else {
-      Arrays.asList(environment.getProperty("spring.jpa.properties", String.class).split(" ")).stream().forEach(s ->
+      Arrays.asList(environment.getProperty("spring.jpa.properties", String.class).split(" ")).stream().filter(s -> !StringUtils.isEmpty(s)).forEach(s ->
       {
         String[] values = s.split("=");
         properties.put(values[0], values[1]);
@@ -42,9 +56,9 @@ public class EnvironmentHelper {
     if (environment.getProperty("elasticsearch.enabled", Boolean.class) != null
           && environment.getProperty("elasticsearch.enabled", Boolean.class) == true ){
       ElasticsearchHibernatePropertiesBuilder builder = new ElasticsearchHibernatePropertiesBuilder();
-      ElasticsearchIndexStatus requiredIndexStatus = environment.getProperty("elasticsearch.required_index_status", ElasticsearchIndexStatus.class);
+      IndexStatus requiredIndexStatus = environment.getProperty("elasticsearch.required_index_status", IndexStatus.class);
       if (requiredIndexStatus == null) {
-        builder.setRequiredIndexStatus(ElasticsearchIndexStatus.YELLOW);
+        builder.setRequiredIndexStatus(IndexStatus.YELLOW);
       } else {
         builder.setRequiredIndexStatus(requiredIndexStatus);
       }
@@ -52,18 +66,19 @@ public class EnvironmentHelper {
       builder.setRestUrl(getElasticsearchServerUrl(environment));
       builder.setUsername(getElasticsearchServerUsername(environment));
       builder.setPassword(getElasticsearchServerPassword(environment));
-      IndexSchemaManagementStrategy indexSchemaManagementStrategy = environment.getProperty("elasticsearch.schema_management_strategy", IndexSchemaManagementStrategy.class);
+		builder.setProtocol(getElasticsearchServerProtocol(environment));
+		 SchemaManagementStrategyName indexSchemaManagementStrategy = environment.getProperty("elasticsearch.schema_management_strategy", SchemaManagementStrategyName.class);
       if (indexSchemaManagementStrategy == null) {
-        builder.setIndexSchemaManagementStrategy(IndexSchemaManagementStrategy.CREATE);
+        builder.setIndexSchemaManagementStrategy(SchemaManagementStrategyName.CREATE);
       } else {
         builder.setIndexSchemaManagementStrategy(indexSchemaManagementStrategy);
       }
       //    pretty_print_json_log: false
       Boolean refreshAfterWrite = environment.getProperty("elasticsearch.debug.refresh_after_write", Boolean.class);
-      if (refreshAfterWrite == null) {
-        builder.setDebugRefreshAfterWrite(false);
+      if (refreshAfterWrite == null || refreshAfterWrite == false) {
+      	builder.setDebugIndexSyncStrategy(AutomaticIndexingSynchronizationStrategyNames.ASYNC);
       } else {
-        builder.setDebugRefreshAfterWrite(refreshAfterWrite);
+			builder.setDebugIndexSyncStrategy(AutomaticIndexingSynchronizationStrategyNames.READ_SYNC);
       }
       //    pretty_print_json_log: false
       Boolean prettyPrintJsonLog = environment.getProperty("elasticsearch.debug.pretty_print_json_log", Boolean.class);
@@ -74,7 +89,6 @@ public class EnvironmentHelper {
       }
       builder.apply(properties);
     }
-
     return properties;
   }
 
@@ -82,7 +96,11 @@ public class EnvironmentHelper {
     return environment.getProperty("elasticsearch.rest_url", String.class);
   }
 
-  public static String getElasticsearchServerUsername(ConfigurableEnvironment environment) {
+	public static String getElasticsearchServerProtocol(ConfigurableEnvironment environment) {
+		return environment.getProperty("elasticsearch.protocol", String.class, "http");
+	}
+
+	public static String getElasticsearchServerUsername(ConfigurableEnvironment environment) {
     return environment.getProperty("elasticsearch.username");
   }
 
