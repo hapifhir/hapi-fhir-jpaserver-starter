@@ -5,6 +5,7 @@ import ca.uhn.fhir.jpa.binstore.DatabaseBlobBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.binstore.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.config.HibernateDialectProvider;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
+import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
 import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
@@ -77,7 +78,6 @@ public class FhirServerConfigCommon {
     retVal.setAllowMultipleDelete(appProperties.getAllow_multiple_delete());
     retVal.setAllowExternalReferences(appProperties.getAllow_external_references());
     retVal.setExpungeEnabled(appProperties.getExpunge_enabled());
-    retVal.setAutoCreatePlaceholderReferenceTargets(appProperties.getAllow_placeholder_references());
     if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
       retVal.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
 
@@ -126,6 +126,12 @@ public class FhirServerConfigCommon {
     // Partitioning
     if (appProperties.getPartitioning() != null) {
       retVal.setPartitioningEnabled(true);
+      retVal.setIncludePartitionInSearchHashes(appProperties.getPartitioning().getPartitioning_include_in_search_hashes());
+      if(appProperties.getPartitioning().getAllow_references_across_partitions()) {
+        retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.ALLOWED_UNQUALIFIED);
+      } else {
+        retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.NOT_ALLOWED); 
+      }
     }
 
     return retVal;
