@@ -8,9 +8,9 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import org.hl7.fhir.r4.model.Bundle;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -30,7 +30,7 @@ public class AppProperties {
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean allow_placeholder_references = true;
-  private Boolean auto_create_placeholder_reference_targets = true;
+  private Boolean auto_create_placeholder_reference_targets = false;
   private Boolean enable_index_missing_fields = false;
   private Boolean enforce_referential_integrity_on_delete = true;
   private Boolean enforce_referential_integrity_on_write = true;
@@ -365,7 +365,11 @@ public class AppProperties {
   }
 
   public void setReuse_cached_search_results_millis(Long reuse_cached_search_results_millis) {
-    this.reuse_cached_search_results_millis = reuse_cached_search_results_millis;
+    if (Objects.equals(reuse_cached_search_results_millis, 0L)) {
+      this.reuse_cached_search_results_millis = null;
+    } else {
+      this.reuse_cached_search_results_millis = reuse_cached_search_results_millis;
+    }
   }
 
   public Map<String, Tester> getTester() {
@@ -554,7 +558,7 @@ public class AppProperties {
   public static class Partitioning {
 
     private Boolean partitioning_include_in_search_hashes = false;
-
+    private Boolean allow_references_across_partitions = false;
 
     public Boolean getPartitioning_include_in_search_hashes() {
       return partitioning_include_in_search_hashes;
@@ -562,6 +566,13 @@ public class AppProperties {
 
     public void setPartitioning_include_in_search_hashes(Boolean partitioning_include_in_search_hashes) {
       this.partitioning_include_in_search_hashes = partitioning_include_in_search_hashes;
+    }
+    public Boolean getAllow_references_across_partitions() {
+      return allow_references_across_partitions;
+    }
+
+    public void setAllow_references_across_partitions(Boolean allow_references_across_partitions) {
+      this.allow_references_across_partitions = allow_references_across_partitions;
     }
   }
 
