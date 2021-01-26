@@ -71,9 +71,8 @@ hapi:
 #    graphql_enabled: true
 #    narrative_enabled: true
     #partitioning:
-    #  cross_partition_reference_mode: true
-    #  multitenancy_enabled: true
-    #  partitioning_include_in_search_hashes: true
+    #  allow_references_across_partitions: false
+    #  partitioning_include_in_search_hashes: false
     #cors:
     #  allow_Credentials: true
       # Supports multiple, comma separated allowed origin entries
@@ -112,7 +111,6 @@ hapi:
 #      responses_enabled: true
 #    binary_storage_enabled: true
 #    bulk_export_enabled: true
-#    partitioning_multitenancy_enabled:
 #    subscription:
 #      resthook_enabled: false
 #      websocket_enabled: false
