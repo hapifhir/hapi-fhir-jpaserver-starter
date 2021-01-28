@@ -47,6 +47,16 @@ hapi:
     #supported_resource_types:
     #  - Patient
     #  - Observation
+    #allowed_bundle_types:
+    #  - document
+    #  - message
+    #  - transaction
+    #  - transaction-response
+    #  - batch
+    #  - batch-response
+    #  - history
+    #  - searchset
+    #  - collection
 #    allow_cascading_deletes: true
 #    allow_contains_searches: true
 #    allow_external_references: true
