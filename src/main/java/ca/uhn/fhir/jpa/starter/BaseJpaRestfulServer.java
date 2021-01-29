@@ -30,6 +30,7 @@ import ca.uhn.fhir.rest.server.interceptor.*;
 import ca.uhn.fhir.rest.server.interceptor.partition.RequestTenantPartitionInterceptor;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
+import ca.uhn.fhir.util.StringUtil;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
@@ -325,6 +326,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     if (appProperties.getAllowed_bundle_types() != null) {
+      List<String> allowedBundleTypes =  appProperties.getAllowed_bundle_types().stream().map(a -> a.toString()).collect(Collectors.toList());
+      log("Server configured with allowed bundle types: " + String.join(", ", allowedBundleTypes));
       daoConfig.setBundleTypesAllowedForStorage(appProperties.getAllowed_bundle_types().stream().map(BundleType::toCode).collect(Collectors.toSet()));
     }
 
@@ -343,6 +346,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     if (appProperties.getClient_id_strategy() == DaoConfig.ClientIdStrategyEnum.ANY) {
+      log("Server configured to support ANY client ID");
       daoConfig.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
       daoConfig.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
     }
