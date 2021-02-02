@@ -102,12 +102,11 @@ Server will then be accessible at http://localhost:8888/ and eg. http://localhos
 
 ```yaml
     tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8888/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
+      home
+        name: Local Tester
+        server_address: 'http://localhost:8888/fhir'
+        refuse_to_fetch_third_party_urls: false
+        fhir_version: R4
 ```
 
 ### Using Spring Boot with :run
@@ -118,12 +117,11 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 
 ```yaml
     tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
+      home
+        name: Local Tester
+        server_address: 'http://localhost:8080/fhir'
+        refuse_to_fetch_third_party_urls: false
+        fhir_version: R4
 ```
 
 ### Using Spring Boot
@@ -134,12 +132,11 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 
 ```yaml
     tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
+      home
+        name: Local Tester
+        server_address: 'http://localhost:8080/fhir'
+        refuse_to_fetch_third_party_urls: false
+        fhir_version: R4
 ```
 ### Using Spring Boot and Google distroless
 ```bash
@@ -149,12 +146,11 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 
 ```yaml
     tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
+      home
+        name: Local Tester
+        server_address: 'http://localhost:8080/fhir'
+        refuse_to_fetch_third_party_urls: false
+        fhir_version: R4
 ```
 
 ### Using the Dockerfile and multistage build
@@ -165,12 +161,11 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 
 ```yaml
     tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
+      home
+        name: Local Tester
+        server_address: 'http://localhost:8080/fhir'
+        refuse_to_fetch_third_party_urls: false
+        fhir_version: R4
 ```
 
 ## Configurations
@@ -239,12 +234,11 @@ If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localho
 
 ```yaml
     tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/hapi-fhir-jpaserver/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
+      home
+        name: Local Tester
+        server_address: 'http://localhost:8080/hapi-fhir-jpaserver/fhir'
+        refuse_to_fetch_third_party_urls: false
+        fhir_version: R4
 ```
 
 
