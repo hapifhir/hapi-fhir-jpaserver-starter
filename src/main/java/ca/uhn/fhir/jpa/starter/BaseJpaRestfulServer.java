@@ -366,6 +366,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setLastNEnabled(true);
     }
 
+    daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
+    
     // Repository Validating Interceptor
 	 if (Boolean.TRUE.equals(appProperties.getEnable_repository_validating_interceptor())) {
 		 RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory = myApplicationContext.getBean(RepositoryValidationInterceptorFactory.class);

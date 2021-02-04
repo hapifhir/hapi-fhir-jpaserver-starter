@@ -169,6 +169,7 @@ public class FhirServerConfigCommon {
       modelConfig.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
     }
 
+    modelConfig.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
     return modelConfig;
   }
 
