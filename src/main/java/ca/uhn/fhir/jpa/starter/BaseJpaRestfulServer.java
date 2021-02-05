@@ -41,6 +41,8 @@ import ca.uhn.fhir.narrative.INarrativeGenerator;
 import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
+import ca.uhn.fhir.rest.server.ApacheProxyAddressStrategy;
+import ca.uhn.fhir.rest.server.IncomingRequestAddressStrategy;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.rest.server.interceptor.*;
@@ -260,6 +262,12 @@ public class BaseJpaRestfulServer extends RestfulServer {
     String serverAddress = appProperties.getServer_address();
     if (!Strings.isNullOrEmpty(serverAddress)) {
       setServerAddressStrategy(new HardcodedServerAddressStrategy(serverAddress));
+    } else if (appProperties.getUse_apache_address_strategy()) {
+      boolean useHttps = appProperties.getUse_apache_address_strategy_https();
+      setServerAddressStrategy(useHttps ? ApacheProxyAddressStrategy.forHttps() :
+                    ApacheProxyAddressStrategy.forHttp());
+    } else {
+      setServerAddressStrategy(new IncomingRequestAddressStrategy());
     }
 
     /*
