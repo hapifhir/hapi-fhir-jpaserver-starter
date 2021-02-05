@@ -1,6 +1,7 @@
 version: "3"
 services:
   hapi-fhir-jpaserver-start:
+    network_mode: host
     build: .
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
