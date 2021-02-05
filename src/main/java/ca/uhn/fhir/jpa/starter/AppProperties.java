@@ -66,6 +66,25 @@ public class AppProperties {
 
   private Boolean lastn_enabled = false;
 
+  private Boolean use_apache_address_strategy = false;
+  private Boolean use_apache_address_strategy_https = false;
+
+  public Boolean getUse_apache_address_strategy() {
+    return use_apache_address_strategy;
+  }
+
+  public void setUse_apache_address_strategy(Boolean use_apache_address_strategy) {
+    this.use_apache_address_strategy = use_apache_address_strategy;
+  }
+
+    public Boolean getUse_apache_address_strategy_https() {
+    return use_apache_address_strategy_https;
+  }
+
+  public void setUse_apache_address_strategy_https(Boolean use_apache_address_strategy_https) {
+    this.use_apache_address_strategy_https = use_apache_address_strategy_https;
+  }
+
   public Integer getDefer_indexing_for_codesystems_of_size() {
     return defer_indexing_for_codesystems_of_size;
   }
