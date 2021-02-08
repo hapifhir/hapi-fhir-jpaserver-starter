@@ -5,6 +5,21 @@ spring:
     password: null
     driverClassName: org.h2.Driver
     max-active: 15
+  jpa:
+    properties:
+#      hibernate.dialect: org.hibernate.dialect.h2dialect
+#      hibernate.search.model_mapping: ca.uhn.fhir.jpa.search.lucenesearchmappingfactory
+      hibernate.format_sql: true
+#      hibernate.show_sql: false
+#      hibernate.hbm2ddl.auto: update
+#      hibernate.jdbc.batch_size: 20
+#      hibernate.cache.use_query_cache: false
+#      hibernate.cache.use_second_level_cache: false
+#      hibernate.cache.use_structured_entries: false
+#      hibernate.cache.use_minimal_puts: false
+#      hibernate.search.default.directory_provider: filesystem
+#      hibernate.search.default.indexbase: target/lucenefiles
+#      hibernate.search.lucene_version: lucene_current
   batch:
     job:
       enabled: false
