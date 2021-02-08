@@ -10,7 +10,6 @@ import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
-import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
@@ -96,6 +95,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
   @Autowired
   ApplicationContext myApplicationContext;
+
+
+  @Autowired(required = false)
+  RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory;
 
   public BaseJpaRestfulServer() {
 
@@ -364,15 +367,5 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
-    
-    // Repository Validating Interceptor
-	 if (Boolean.TRUE.equals(appProperties.getEnable_repository_validating_interceptor())) {
-		 RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory = myApplicationContext.getBean(RepositoryValidationInterceptorFactory.class);
-		 RepositoryValidatingInterceptor interceptor = repositoryValidationInterceptorFactory.build();
-		 interceptorService.registerInterceptor(interceptor);
-	 }
-
   }
-
-
 }
