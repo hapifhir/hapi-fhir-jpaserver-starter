@@ -6,19 +6,29 @@ services:
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
     ports:
-      - "8080:8080"
+      - '8080:8080'
     environment:
-      JAVA_OPTS: "-Dhapi.properties=/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/hapi-r4.properties -Denable-web=false -Durl_pattern=/fhir/*"
-      HAPI_FHIR_VERSION: "R4"
-      HAPI_SERVER_ADDRESS: "https://<fhirDomain>/fhir/"
-      HAPI_DATASOURCE_DRIVER: "com.mysql.jdbc.Driver"
-      HAPI_DATASOURCE_URL: "jdbc:mysql://<mysqlHost>:<mysqlHostPort>/<dbName>"
-      HAPI_DATASOURCE_USERNAME: "<dbUserName>"
-      HAPI_DATASOURCE_PASSWORD: "<dbPassword>"
-      HAPI_HIBERNATE_DIALECT: "org.hibernate.dialect.MySQL5InnoDBDialect"
-      HAPI_SUBSCRIPTION_RESTHOOK_ENABLED: "true"
-      HAPI_SUBSCRIPTION_WEBSOCKET_ENABLED: "true"
-      API_KEY: "<apiKey>"
-      VALIDATE_API_KEY: "true"
-      HAPI_REUSE_CACHED_SEARCH_RESULTS_MILLIS: "0"
-      HAPI_DATASOURCE_MAX_POOL_SIZE: "100"
+      JAVA_OPTS: '-Dhapi.properties=/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/hapi-r4.properties -Denable-web=true -Durl_pattern=/fhir/*'
+      HAPI_FHIR_VERSION: 'R4'
+      HAPI_SERVER_ADDRESS: 'http://localhost:8080/fhir/'
+      HAPI_DATASOURCE_DRIVER: 'com.mysql.jdbc.Driver'
+      HAPI_DATASOURCE_URL: 'jdbc:mysql://localhost:3306/hapi'
+      HAPI_DATASOURCE_USERNAME: 'admin'
+      HAPI_DATASOURCE_PASSWORD: 'admin'
+      HAPI_HIBERNATE_DIALECT: 'org.hibernate.dialect.MySQL5InnoDBDialect'
+      API_KEY: '<apiKey>'
+      VALIDATE_API_KEY: 'false'
+  hapi-fhir-mysql:
+    network_mode: host
+    image: mysql:latest
+    container_name: hapi-fhir-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'hapi'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'admin'
+      MYSQL_ROOT_PASSWORD: 'admin'
+    volumes:
+      - hapi-fhir-mysql:/var/lib/mysql
+volumes:
+  hapi-fhir-mysql:
