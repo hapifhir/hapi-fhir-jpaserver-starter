@@ -18,29 +18,29 @@ public class EnvironmentHelper {
   public static Properties getHibernateProperties(ConfigurableEnvironment environment) {
     Properties properties = new Properties();
 
-    if (environment.getProperty("spring.jpa.properties", String.class) == null) {
-      properties.put("hibernate.search.model_mapping", "ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory");
-      properties.put("hibernate.format_sql", "false");
-      properties.put("hibernate.show_sql", "false");
-      properties.put("hibernate.hbm2ddl.auto", "update");
-      properties.put("hibernate.jdbc.batch_size", "20");
-      properties.put("hibernate.cache.use_query_cache", "false");
-      properties.put("hibernate.cache.use_second_level_cache", "false");
-      properties.put("hibernate.cache.use_structured_entries", "false");
-      properties.put("hibernate.cache.use_minimal_puts", "false");
-      properties.put("hibernate.search.default.directory_provider", "filesystem");
-      properties.put("hibernate.search.default.indexBase", "target/lucenefiles");
-      properties.put("hibernate.search.lucene_version", "LUCENE_CURRENT");
-    } else {
-      Arrays.asList(environment.getProperty("spring.jpa.properties", String.class).split(" ")).stream().forEach(s ->
-      {
-        String[] values = s.split("=");
-        properties.put(values[0], values[1]);
-      });
+    Map<String, Object> jpaProps = getPropertiesStartingWith(environment, "spring.jpa.properties");
+
+    properties.putIfAbsent("hibernate.search.model_mapping", "ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory");
+    properties.putIfAbsent("hibernate.format_sql", "false");
+    properties.putIfAbsent("hibernate.show_sql", "false");
+    properties.putIfAbsent("hibernate.hbm2ddl.auto", "update");
+    properties.putIfAbsent("hibernate.jdbc.batch_size", "20");
+    properties.putIfAbsent("hibernate.cache.use_query_cache", "false");
+    properties.putIfAbsent("hibernate.cache.use_second_level_cache", "false");
+    properties.putIfAbsent("hibernate.cache.use_structured_entries", "false");
+    properties.putIfAbsent("hibernate.cache.use_minimal_puts", "false");
+    properties.putIfAbsent("hibernate.search.default.directory_provider", "filesystem");
+    properties.putIfAbsent("hibernate.search.default.indexBase", "target/lucenefiles");
+    properties.putIfAbsent("hibernate.search.lucene_version", "LUCENE_CURRENT");
+
+    for (Map.Entry<String, Object> entry : jpaProps.entrySet()) {
+      String strippedKey = entry.getKey().replace("spring.jpa.properties.", "");
+      properties.put(strippedKey, entry.getValue().toString());
     }
 
+
     if (environment.getProperty("elasticsearch.enabled", Boolean.class) != null
-          && environment.getProperty("elasticsearch.enabled", Boolean.class) == true ){
+      && environment.getProperty("elasticsearch.enabled", Boolean.class) == true) {
       ElasticsearchHibernatePropertiesBuilder builder = new ElasticsearchHibernatePropertiesBuilder();
       ElasticsearchIndexStatus requiredIndexStatus = environment.getProperty("elasticsearch.required_index_status", ElasticsearchIndexStatus.class);
       if (requiredIndexStatus == null) {
