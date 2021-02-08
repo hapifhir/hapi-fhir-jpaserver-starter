@@ -9,7 +9,7 @@ spring:
     properties:
 #      hibernate.dialect: org.hibernate.dialect.h2dialect
 #      hibernate.search.model_mapping: ca.uhn.fhir.jpa.search.lucenesearchmappingfactory
-      hibernate.format_sql: true
+#      hibernate.format_sql: false
 #      hibernate.show_sql: false
 #      hibernate.hbm2ddl.auto: update
 #      hibernate.jdbc.batch_size: 20
