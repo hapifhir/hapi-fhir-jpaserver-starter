@@ -37,6 +37,7 @@ import static ca.uhn.fhir.util.TestUtil.waitForSize;
 import static java.util.Comparator.comparing;
 import static org.awaitility.Awaitility.await;
 import static org.awaitility.Awaitility.pollInSameThread;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -86,7 +87,7 @@ public class ExampleServerR4IT {
 			ourLog.info("Patient: " + p.getId() + " : " + p.toString());
 		}
 		// Wait until the MDM message has been processed
-		//await().until(() -> getPatients().size(), equalTo(2));
+		await().until(() -> getPatients().size(), equalTo(2));
 		List<Patient> persons = getPatients();
 		Patient goldenRecord = persons.get(0);
 
