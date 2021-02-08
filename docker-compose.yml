@@ -8,7 +8,7 @@ services:
     ports:
       - '8080:8080'
     environment:
-      JAVA_OPTS: '-Dhapi.properties=/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/hapi-r4.properties -Denable-web=true -Durl_pattern=/fhir/*'
+      JAVA_OPTS: '-Dhapi.properties=/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/hapi-r4.properties -Denable-web=false -Durl_pattern=/fhir/*'
       HAPI_FHIR_VERSION: 'R4'
       HAPI_SERVER_ADDRESS: 'http://localhost:8080/fhir/'
       HAPI_DATASOURCE_DRIVER: 'com.mysql.jdbc.Driver'
