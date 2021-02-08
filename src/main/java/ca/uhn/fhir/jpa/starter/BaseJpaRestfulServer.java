@@ -96,10 +96,6 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   ApplicationContext myApplicationContext;
 
-
-  @Autowired(required = false)
-  RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory;
-
   public BaseJpaRestfulServer() {
 
   }
