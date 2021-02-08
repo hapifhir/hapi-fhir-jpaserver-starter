@@ -6,9 +6,7 @@ import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.interceptor.validation.IRepositoryValidatingRule;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingRuleBuilder;
-import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
@@ -22,7 +20,6 @@ import java.util.List;
  */
 @ConditionalOnProperty(prefix = "hapi.fhir", name = "enable_repository_validating_interceptor", havingValue = "true")
 @Configuration
-@Conditional({OnEitherVersion.class})
 public class RepositoryValidationInterceptorFactory {
 
 	private final FhirContext fhirContext;

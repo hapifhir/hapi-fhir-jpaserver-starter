@@ -116,9 +116,6 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   ApplicationContext myApplicationContext;
 
-  // These are set only if the features are enabled
-  private CqlProviderLoader cqlProviderLoader;
-
   public BaseJpaRestfulServer() {
   }
 
