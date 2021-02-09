@@ -1,12 +1,25 @@
 version: "3"
 services:
   hapi-fhir-jpaserver-start:
+    network_mode: host
     build: .
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
     ports:
-      - "8080:8080"
+      - '8080:8080'
+    environment:
+      JAVA_OPTS: '-Dhapi.properties=/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/hapi-r4.properties -Denable-web=false -Durl_pattern=/fhir/*'
+      HAPI_FHIR_VERSION: 'R4'
+      HAPI_SERVER_ADDRESS: 'http://localhost:8080/fhir/'
+      HAPI_DATASOURCE_DRIVER: 'com.mysql.jdbc.Driver'
+      HAPI_DATASOURCE_URL: 'jdbc:mysql://localhost:3306/hapi'
+      HAPI_DATASOURCE_USERNAME: 'admin'
+      HAPI_DATASOURCE_PASSWORD: 'admin'
+      HAPI_HIBERNATE_DIALECT: 'org.hibernate.dialect.MySQL5InnoDBDialect'
+      API_KEY: '<apiKey>'
+      VALIDATE_API_KEY: 'false'
   hapi-fhir-mysql:
+    network_mode: host
     image: mysql:latest
     container_name: hapi-fhir-mysql
     restart: always
