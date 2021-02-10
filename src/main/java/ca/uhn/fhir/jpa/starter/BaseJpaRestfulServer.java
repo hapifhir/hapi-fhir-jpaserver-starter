@@ -11,6 +11,7 @@ import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
+import ca.uhn.fhir.jpa.packages.PackageInstallOutcomeJson;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.*;
@@ -95,6 +96,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
   @Autowired
   ApplicationContext myApplicationContext;
+
+  @Autowired(required = false)
+  RepositoryValidationInterceptorFactoryR4 factory;
 
   public BaseJpaRestfulServer() {
 
@@ -350,13 +354,19 @@ public class BaseJpaRestfulServer extends RestfulServer {
     if (appProperties.getImplementationGuides() != null) {
       Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
       for (Map.Entry<String, AppProperties.ImplementationGuide> guide : guides.entrySet()) {
-        packageInstallerSvc.install(new PackageInstallationSpec()
-          .setPackageUrl(guide.getValue().getUrl())
-          .setName(guide.getValue().getName())
-          .setVersion(guide.getValue().getVersion())
-          .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
+			PackageInstallOutcomeJson outcome = packageInstallerSvc.install(new PackageInstallationSpec()
+				.setPackageUrl(guide.getValue().getUrl())
+				.setName(guide.getValue().getName())
+				.setVersion(guide.getValue().getVersion())
+				.setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
+
       }
     }
+
+    if(factory != null)
+    	interceptorService.registerInterceptor(factory.buildUsingStoredStructureDefinitions());
+
+
 
     if (appProperties.getLastn_enabled()) {
       daoConfig.setLastNEnabled(true);
