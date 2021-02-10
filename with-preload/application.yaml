@@ -1,0 +1,18 @@
+hapi:
+  fhir:
+    implementationguides:
+      core:
+        name: ch.fhir.ig.ch-core
+        version: 1.0.0
+      eprterm:
+        name: ch.fhir.ig.ch-epr-term
+        version: 2.0.4
+      emed:
+        name: ch.fhir.ig.ch-emed
+        version: 0.1.1
+      atc:
+        name: ch.fhir.ig.ch-atc
+        version: 3.1.0
+      mhealth:
+        name: ch.fhir.ig.ch-epr-mhealth
+        version: 0.1.2

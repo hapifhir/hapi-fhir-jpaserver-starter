@@ -2,7 +2,7 @@
 
 This project is a  starter project you can use to deploy a FHIR server using HAPI FHIR JPA validaton with the npm implementation support.
 
-- Implementation Guides can be added to hapi.properties and will be loaded during startup of the server, currently configured are the swiss implementation guides relevant for the Swiss EPR Projectathon 2020
+- Optionally Implementation Guides can be added that will be loaded during startup of the server. The "with-preload" subfolder contains an example with the swiss implementation guides relevant for the Swiss EPR Projectathon 2020
 
   - ch.fhir.ig.ch-epr-term#2.0.4
   - ch.fhir.ig.ch-core#1.0.0
@@ -18,8 +18,9 @@ This project is a  starter project you can use to deploy a FHIR server using HAP
   
   < ./composition_confcode.xml
   ```   
-
-The docker file will install the implementaiton guide in a docker image. The built docker image does not need to download the implementation guides afterwards.
+The docker file will create a docker image with no preloaded implementation guides. A list of implementation guides to load can be passed as config-map.
+A second docker file will create an image with fixed configuration and preloaded implementation guides.  
+That  docker image does not need to download the implementation guides afterwards.
 
 ## Prerequisites
 
@@ -34,9 +35,15 @@ In order to use this sample, you should have:
 The easiest way to run this server entirely depends on your environment requirements. At least, the following 4 ways are supported:
 
 ### Using spring-boot
+With no implementation guide:
 ```bash
 mvn clean install -DskipTests spring-boot:run
 ```
+Load example implementation guides:
+```bash
+mvn clean install -DskipTests spring-boot:run -Dspring.config.additional-location=file:with-preload/application.yaml
+```
+
 to debug:
 
 ```
@@ -51,11 +58,25 @@ Then, browse to the following link to use the server:
 
 ## building with Docker
 
+### Configurable base image:
+
 ```bash
+mvn package
 docker build -t hapi-fhir-jpavalidator .
 docker run -d --name hapi-fhir-jpavalidator -p 8080:8080 hapi-fhir-jpavalidator
 ```
-Server will then be accessible at http://localhost:8888/hapi-fhir-jpavalidator and eg. http://localhost:8888/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+Server will then be accessible at http://localhost:8888/hapi-fhir-jpavalidator and eg. http://localhost:8888/fhir/metadata. 
+To dynamicaly configure run in a kubernetes environment and add a kubernetes config map that provides /config/application.yaml file with
+implementation guide list like in "with-preload/application.yaml" 
+
+### Image with preloaded implementation guides
+
+After building the base image:
+```bash
+cd with-preload
+docker build -t hapi-fhir-jpavalidator-preload .
+docker run -d --name hapi-fhir-jpavalidator-preload -p 8080:8080 hapi-fhir-jpavalidator-preload
+```
 
 ### making container available
 ```
