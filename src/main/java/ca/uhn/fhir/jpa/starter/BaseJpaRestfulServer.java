@@ -118,7 +118,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
   ApplicationContext myApplicationContext;
 
   @Autowired(required = false)
-  RepositoryValidationInterceptorFactoryR4 factory;
+  IRepositoryValidationInterceptorFactory factory;
 
   public BaseJpaRestfulServer() {
   }

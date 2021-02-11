@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @ConditionalOnProperty(prefix = "hapi.fhir", name = "enable_repository_validating_interceptor", havingValue = "true")
 @Configuration
 @Conditional(OnR5Condition.class)
-public class RepositoryValidationInterceptorFactoryR5 {
+public class RepositoryValidationInterceptorFactoryR5 implements IRepositoryValidationInterceptorFactory {
 
 	private final FhirContext fhirContext;
 	private final RepositoryValidatingRuleBuilder repositoryValidatingRuleBuilder;
