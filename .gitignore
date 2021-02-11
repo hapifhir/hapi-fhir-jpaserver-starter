@@ -161,3 +161,9 @@ Temporary Items
 
 .classpath
 .project
+
+# FHIR test files folder
+output
+
+# MISC
+.idea
