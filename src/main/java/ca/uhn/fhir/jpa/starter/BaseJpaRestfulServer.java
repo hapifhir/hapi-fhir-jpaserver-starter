@@ -98,7 +98,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
   ApplicationContext myApplicationContext;
 
   @Autowired(required = false)
-  RepositoryValidationInterceptorFactoryR4 factory;
+  IRepositoryValidationInterceptorFactory factory;
 
   public BaseJpaRestfulServer() {
 
@@ -354,7 +354,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
     if (appProperties.getImplementationGuides() != null) {
       Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
       for (Map.Entry<String, AppProperties.ImplementationGuide> guide : guides.entrySet()) {
-			PackageInstallOutcomeJson outcome = packageInstallerSvc.install(new PackageInstallationSpec()
+			packageInstallerSvc.install(new PackageInstallationSpec()
 				.setPackageUrl(guide.getValue().getUrl())
 				.setName(guide.getValue().getName())
 				.setVersion(guide.getValue().getVersion())
@@ -363,9 +363,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
       }
     }
 
-    if(factory != null)
-    	interceptorService.registerInterceptor(factory.buildUsingStoredStructureDefinitions());
-
+    if(factory != null) {
+		 interceptorService.registerInterceptor(factory.buildUsingStoredStructureDefinitions());
+	 }
 
 
     if (appProperties.getLastn_enabled()) {

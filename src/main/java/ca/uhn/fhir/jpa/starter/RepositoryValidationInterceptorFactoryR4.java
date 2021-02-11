@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @ConditionalOnProperty(prefix = "hapi.fhir", name = "enable_repository_validating_interceptor", havingValue = "true")
 @Configuration
 @Conditional(OnR4Condition.class)
-public class RepositoryValidationInterceptorFactoryR4 {
+public class RepositoryValidationInterceptorFactoryR4 implements IRepositoryValidationInterceptorFactory {
 
 	private final FhirContext fhirContext;
 	private final RepositoryValidatingRuleBuilder repositoryValidatingRuleBuilder;
@@ -42,6 +42,7 @@ public class RepositoryValidationInterceptorFactoryR4 {
 
 	}
 
+	@Override
 	public RepositoryValidatingInterceptor buildUsingStoredStructureDefinitions() {
 
 		IBundleProvider results = structureDefinitionResourceProvider.search(new SearchParameterMap().add(StructureDefinition.SP_KIND, new TokenParam("resource")));
@@ -60,6 +61,7 @@ public class RepositoryValidationInterceptorFactoryR4 {
 		return new RepositoryValidatingInterceptor(fhirContext, rules);
 	}
 
+	@Override
 	public RepositoryValidatingInterceptor build() {
 
 		// Customize the ruleBuilder here to have the rules you want! We will give a simple example
