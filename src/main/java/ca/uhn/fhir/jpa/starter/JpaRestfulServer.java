@@ -2,6 +2,9 @@ package ca.uhn.fhir.jpa.starter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import ca.uhn.fhir.rest.server.interceptor.auth.AuthorizationInterceptor;
+
+import ca.uhn.fhir.jpa.starter.CustomAuthorizationInterceptor;
 
 import javax.servlet.ServletException;
 
@@ -22,6 +25,8 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     super.initialize();
 
     // Add your own customization here
+    AuthorizationInterceptor authorizationInterceptor = new CustomAuthorizationInterceptor();
+    this.registerInterceptor(authorizationInterceptor);
   }
 
 }
