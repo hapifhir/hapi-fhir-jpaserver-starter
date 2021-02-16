@@ -77,13 +77,8 @@ public class ExampleServerR4IT {
 
 		// Test MDM
 
-		List<Patient> patients = getPatients();
-		ourLog.info(((patients == null)?"0":patients.size()) + " Patients found...");
-		for (Patient p : patients) {
-			ourLog.info("Patient: " + p.getId() + " : " + p.toString());
-		}
 		// Wait until the MDM message has been processed
-		await().until(() -> getPatients().size(), equalTo(2));
+		await().until(() -> getPatients().size(), equalTo(3));
 		List<Patient> persons = getPatients();
 		Patient goldenRecord = persons.get(0);
 
