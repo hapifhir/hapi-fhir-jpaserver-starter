@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
 import static java.util.Comparator.comparing;
 import static org.awaitility.Awaitility.await;
+import static org.awaitility.Awaitility.pollInSameThread;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -49,8 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 		"spring.main.allow-bean-definition-overriding=true"
 	})
 public class ExampleServerR4IT {
-
-	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
+	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
 	private IGenericClient ourClient;
 	private FhirContext ourCtx;
 
@@ -61,8 +61,8 @@ public class ExampleServerR4IT {
 	@Test
 	@Order(0)
 	void testCreateAndRead() {
-
-		String methodName = "testCreateResourceConditional";
+		String methodName = "testCreateAndRead";
+		ourLog.info("Entering " + methodName + "()...");
 
 		Patient pt = new Patient();
 		pt.setActive(true);
@@ -78,7 +78,7 @@ public class ExampleServerR4IT {
 		// Test MDM
 
 		// Wait until the MDM message has been processed
-		await().until(() -> getPatients().size(), equalTo(2));
+		await().until(() -> getPatients().size(), equalTo(3));
 		List<Patient> persons = getPatients();
 		Patient goldenRecord = persons.get(0);
 

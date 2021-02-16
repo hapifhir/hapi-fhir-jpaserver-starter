@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.cql.common.provider.CqlProviderLoader;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
@@ -100,8 +101,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired(required = false)
   IRepositoryValidationInterceptorFactory factory;
 
-  public BaseJpaRestfulServer() {
+  // These are set only if the features are enabled
+  private CqlProviderLoader cqlProviderLoader;
 
+  public BaseJpaRestfulServer() {
   }
 
   private static final long serialVersionUID = 1L;
@@ -124,10 +127,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     setFhirContext(fhirSystemDao.getContext());
+
     registerProviders(resourceProviders.createProviders());
     registerProvider(jpaSystemProvider);
 
-    FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
     /*
      * The conformance provider exports the supported resources, search parameters, etc for
      * this server. The JPA version adds resourceProviders counts to the exported statement, so it
@@ -137,7 +140,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * provide further customization of your server's CapabilityStatement
      */
 
-
+    FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
     if (fhirVersion == FhirVersionEnum.DSTU2) {
 
       JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, fhirSystemDao,
