@@ -81,8 +81,7 @@ public class ExampleServerR4IT {
 
 		// Wait until the MDM message has been processed
 		await().until(() -> getPatients().size(), equalTo(2));
-		List<Patient> persons = getPatients();
-		Patient goldenRecord = persons.get(0);
+		Patient goldenRecord = getGoldenResourcePatient();
 
 		// Verify that a golden record Patient was created
 		assertNotNull(goldenRecord.getMeta().getTag("http://hapifhir.io/fhir/NamingSystem/mdm-record-status", "GOLDEN_RECORD"));
@@ -93,6 +92,17 @@ public class ExampleServerR4IT {
 		List<Patient> retVal = BundleUtil.toListOfResourcesOfType(ourCtx, bundle, Patient.class);
 		retVal.sort(comparing(o -> ((Patient) o).getMeta().getLastUpdated()).reversed());
 		return retVal;
+	}
+	private Patient getGoldenResourcePatient() {
+		Bundle bundle = ourClient.search()
+			.forResource(Patient.class)
+			.withTag("http://hapifhir.io/fhir/NamingSystem/mdm-record-status", "GOLDEN_RECORD")
+			.cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute();
+		if (bundle.getEntryFirstRep() != null) {
+			return (Patient) bundle.getEntryFirstRep().getResource();
+		} else {
+			return null;
+		}
 	}
 
 	@Test
