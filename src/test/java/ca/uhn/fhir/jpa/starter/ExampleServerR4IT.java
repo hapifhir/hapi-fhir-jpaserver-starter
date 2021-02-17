@@ -30,6 +30,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
+import static java.lang.Thread.sleep;
 import static java.util.Comparator.comparing;
 import static org.awaitility.Awaitility.await;
 import static org.awaitility.Awaitility.pollInSameThread;
@@ -76,7 +77,10 @@ public class ExampleServerR4IT {
 
 
 		// Wait until the MDM message has been processed
-		await().until(() -> getPatients().size(), equalTo(2));
+		await().until(() -> {
+			sleep(1000);
+			return getGoldenResourcePatient() != null;
+		});
 		Patient goldenRecord = getGoldenResourcePatient();
 
 		// Verify that a golden record Patient was created
@@ -147,7 +151,7 @@ public class ExampleServerR4IT {
 		ourClient.create().resource(obs).execute();
 
 		// Give some time for the subscription to deliver
-		Thread.sleep(2000);
+		sleep(2000);
 
 		/*
 		 * Ensure that we receive a ping on the websocket
