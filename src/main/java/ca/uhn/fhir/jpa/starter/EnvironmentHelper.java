@@ -26,35 +26,30 @@ public class EnvironmentHelper {
   public static Properties getHibernateProperties(ConfigurableEnvironment environment) {
     Properties properties = new Properties();
 
-    if (environment.getProperty("spring.jpa.properties", String.class) == null) {
-      properties.put("hibernate.format_sql", "false");
-      properties.put("hibernate.show_sql", "false");
-      properties.put("hibernate.hbm2ddl.auto", "update");
-      properties.put("hibernate.jdbc.batch_size", "20");
-      properties.put("hibernate.cache.use_query_cache", "false");
-      properties.put("hibernate.cache.use_second_level_cache", "false");
-      properties.put("hibernate.cache.use_structured_entries", "false");
-      properties.put("hibernate.cache.use_minimal_puts", "false");
+    Map<String, Object> jpaProps = getPropertiesStartingWith(environment, "spring.jpa.properties");
+    properties.putIfAbsent("hibernate.format_sql", "false");
+    properties.putIfAbsent("hibernate.show_sql", "false");
+    properties.putIfAbsent("hibernate.hbm2ddl.auto", "update");
+    properties.putIfAbsent("hibernate.jdbc.batch_size", "20");
+    properties.putIfAbsent("hibernate.cache.use_query_cache", "false");
+    properties.putIfAbsent("hibernate.cache.use_second_level_cache", "false");
+    properties.putIfAbsent("hibernate.cache.use_structured_entries", "false");
+    properties.putIfAbsent("hibernate.cache.use_minimal_puts", "false");
 
-		properties.put(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_TYPE), "local-filesystem");
-		properties.put(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_ROOT), "target/lucenefiles");
-		properties.put(BackendSettings.backendKey(BackendSettings.TYPE), "lucene");
-		properties.put(BackendSettings.backendKey(LuceneBackendSettings.ANALYSIS_CONFIGURER), HapiLuceneAnalysisConfigurer.class.getName());
-		properties.put(BackendSettings.backendKey(LuceneBackendSettings.LUCENE_VERSION), "LUCENE_CURRENT");
+    properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_TYPE), "local-filesystem");
+    properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_ROOT), "target/lucenefiles");
+    properties.putIfAbsent(BackendSettings.backendKey(BackendSettings.TYPE), "lucene");
+    properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.ANALYSIS_CONFIGURER), HapiLuceneAnalysisConfigurer.class.getName());
+    properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.LUCENE_VERSION), "LUCENE_CURRENT");
 
-		//Set this value to true in the properties to enable lucene.
-		properties.put(HibernateOrmMapperSettings.ENABLED, environment.getProperty("spring.jpa.properties.hibernate.search.enabled", "false"));
-
-    } else {
-      Arrays.asList(environment.getProperty("spring.jpa.properties", String.class).split(" ")).stream().filter(s -> !StringUtils.isEmpty(s)).forEach(s ->
-      {
-        String[] values = s.split("=");
-        properties.put(values[0], values[1]);
-      });
+    for (Map.Entry<String, Object> entry : jpaProps.entrySet()) {
+      String strippedKey = entry.getKey().replace("spring.jpa.properties.", "");
+      properties.put(strippedKey, entry.getValue().toString());
     }
 
+
     if (environment.getProperty("elasticsearch.enabled", Boolean.class) != null
-          && environment.getProperty("elasticsearch.enabled", Boolean.class) == true ){
+      && environment.getProperty("elasticsearch.enabled", Boolean.class) == true) {
       ElasticsearchHibernatePropertiesBuilder builder = new ElasticsearchHibernatePropertiesBuilder();
       IndexStatus requiredIndexStatus = environment.getProperty("elasticsearch.required_index_status", IndexStatus.class);
       if (requiredIndexStatus == null) {
