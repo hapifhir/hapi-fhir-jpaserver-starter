@@ -36,11 +36,16 @@ public class EnvironmentHelper {
     properties.putIfAbsent("hibernate.cache.use_structured_entries", "false");
     properties.putIfAbsent("hibernate.cache.use_minimal_puts", "false");
 
-    properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_TYPE), "local-filesystem");
-    properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_ROOT), "target/lucenefiles");
-    properties.putIfAbsent(BackendSettings.backendKey(BackendSettings.TYPE), "lucene");
-    properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.ANALYSIS_CONFIGURER), HapiLuceneAnalysisConfigurer.class.getName());
-    properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.LUCENE_VERSION), "LUCENE_CURRENT");
+    if (jpaProps.getOrDefault("spring.jpa.properties.hibernate.search.enabled", "false").toString() == "true") {
+		 properties.putIfAbsent(HibernateOrmMapperSettings.ENABLED, true);
+		 properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_TYPE), "local-filesystem");
+		 properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_ROOT), "target/lucenefiles");
+		 properties.putIfAbsent(BackendSettings.backendKey(BackendSettings.TYPE), "lucene");
+		 properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.ANALYSIS_CONFIGURER), HapiLuceneAnalysisConfigurer.class.getName());
+		 properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.LUCENE_VERSION), "LUCENE_CURRENT");
+	 } else {
+    	properties.putIfAbsent(HibernateOrmMapperSettings.ENABLED, false);
+	 }
 
     for (Map.Entry<String, Object> entry : jpaProps.entrySet()) {
       String strippedKey = entry.getKey().replace("spring.jpa.properties.", "");

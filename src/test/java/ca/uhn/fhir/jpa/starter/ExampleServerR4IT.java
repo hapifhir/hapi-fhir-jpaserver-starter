@@ -75,10 +75,8 @@ public class ExampleServerR4IT {
 		assertEquals(methodName, pt2.getName().get(0).getFamily());
 
 
-		// Test MDM
-
 		// Wait until the MDM message has been processed
-		await().until(() -> getPatients().size(), equalTo(3));
+		await().until(() -> getPatients().size(), equalTo(2));
 		List<Patient> persons = getPatients();
 		Patient goldenRecord = persons.get(0);
 
@@ -165,6 +163,6 @@ public class ExampleServerR4IT {
 		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
 		String ourServerBase = "http://localhost:" + port + "/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-		ourClient.registerInterceptor(new LoggingInterceptor(true));
+//		ourClient.registerInterceptor(new LoggingInterceptor(false));
 	}
 }
