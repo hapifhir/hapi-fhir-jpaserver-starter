@@ -14,14 +14,14 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>5.2.0</version>
+        <!-- FIMXME KBD Change this to 5.3.0 BEFORE merging this code to master !  -->
+        <version>5.3.0</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
 
     <properties>
         <java.version>8</java.version>
-        <spring_boot_version>2.3.4.RELEASE</spring_boot_version>
     </properties>
 
     <prerequisites>
@@ -41,6 +41,7 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
     </repositories>
+
 
     <dependencies>
         <dependency>
@@ -100,10 +101,16 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- This dependency includes the JPA EMPI Server -->
+        <!-- This dependency includes the JPA CQL Server -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-jpaserver-empi</artifactId>
+            <artifactId>hapi-fhir-jpaserver-cql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- This dependency includes the JPA MDM Server -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-jpaserver-mdm</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- This dependency is used for the "FHIR Tester" web app overlay -->
@@ -234,6 +241,21 @@
             <artifactId>jetty-webapp</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
 
 
         <!--
@@ -264,7 +286,6 @@
             <artifactId>spring-boot-autoconfigure</artifactId>
             <version>${spring_boot_version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -358,7 +379,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M5</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 </configuration>
@@ -386,7 +406,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <failBuildInCaseOfConflict>true</failBuildInCaseOfConflict>
+                    <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
                     <checkTestClasspath>false</checkTestClasspath>
                     <!--
                     <printEqualFiles>false</printEqualFiles>

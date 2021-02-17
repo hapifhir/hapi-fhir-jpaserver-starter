@@ -3,7 +3,7 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.binstore.DatabaseBlobBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.binstore.IBinaryStorageSvc;
-import ca.uhn.fhir.jpa.config.HibernateDialectProvider;
+import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
@@ -140,8 +140,8 @@ public class FhirServerConfigCommon {
 
   @Primary
   @Bean
-  public HibernateDialectProvider jpaStarterDialectProvider(LocalContainerEntityManagerFactoryBean myEntityManagerFactory) {
-    return new JpaHibernateDialectProvider(myEntityManagerFactory);
+  public HibernatePropertiesProvider jpaStarterDialectProvider(LocalContainerEntityManagerFactoryBean myEntityManagerFactory) {
+    return new JpaHibernatePropertiesProvider(myEntityManagerFactory);
   }
 
   @Bean
@@ -162,6 +162,7 @@ public class FhirServerConfigCommon {
       modelConfig.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
     }
 
+    modelConfig.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
     return modelConfig;
   }
 

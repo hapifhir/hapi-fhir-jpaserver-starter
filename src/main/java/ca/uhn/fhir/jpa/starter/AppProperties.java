@@ -3,27 +3,26 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.api.config.DaoConfig.ClientIdStrategyEnum;
+import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
 import ca.uhn.fhir.rest.api.EncodingEnum;
+import com.google.common.collect.ImmutableList;
+import org.hl7.fhir.r4.model.Bundle;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.google.common.collect.ImmutableList;
-import org.hl7.fhir.r4.model.Bundle;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-
-
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
 @EnableConfigurationProperties
 public class AppProperties {
 
-  private Boolean empi_enabled = false;
+  private Boolean cql_enabled = false;
+  private Boolean mdm_enabled = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
   private Boolean allow_external_references = false;
@@ -32,6 +31,7 @@ public class AppProperties {
   private Boolean allow_placeholder_references = true;
   private Boolean auto_create_placeholder_reference_targets = false;
   private Boolean enable_index_missing_fields = false;
+  private Boolean enable_repository_validating_interceptor = false;
   private Boolean enforce_referential_integrity_on_delete = true;
   private Boolean enforce_referential_integrity_on_write = true;
   private Boolean etag_support_enabled = true;
@@ -65,6 +65,7 @@ public class AppProperties {
   private Map<String, ImplementationGuide> implementationGuides = null;
 
   private Boolean lastn_enabled = false;
+  private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
 
   public Integer getDefer_indexing_for_codesystems_of_size() {
     return defer_indexing_for_codesystems_of_size;
@@ -90,14 +91,21 @@ public class AppProperties {
     this.partitioning = partitioning;
   }
 
-  public Boolean getEmpi_enabled() {
-    return empi_enabled;
+  public Boolean getCql_enabled() {
+    return cql_enabled;
   }
 
-  public void setEmpi_enabled(Boolean empi_enabled) {
-    this.empi_enabled = empi_enabled;
+  public void setCql_enabled(Boolean cql_enabled) {
+    this.cql_enabled = cql_enabled;
   }
 
+  public Boolean getMdm_enabled() {
+    return mdm_enabled;
+  }
+
+  public void setMdm_enabled(Boolean mdm_enabled) {
+    this.mdm_enabled = mdm_enabled;
+  }
 
   public Cors getCors() {
     return cors;
@@ -246,7 +254,15 @@ public class AppProperties {
     this.enable_index_missing_fields = enable_index_missing_fields;
   }
 
-  public Boolean getEnforce_referential_integrity_on_delete() {
+	public Boolean getEnable_repository_validating_interceptor() {
+		return enable_repository_validating_interceptor;
+	}
+
+	public void setEnable_repository_validating_interceptor(Boolean theEnable_repository_validating_interceptor) {
+		enable_repository_validating_interceptor = theEnable_repository_validating_interceptor;
+	}
+
+	public Boolean getEnforce_referential_integrity_on_delete() {
     return enforce_referential_integrity_on_delete;
   }
 
@@ -398,7 +414,16 @@ public class AppProperties {
     this.lastn_enabled = lastn_enabled;
   }
 
-  public static class Cors {
+  public NormalizedQuantitySearchLevel getNormalized_quantity_search_level() {
+	return this.normalized_quantity_search_level;
+  }
+
+  public void setNormalized_quantity_search_level(NormalizedQuantitySearchLevel normalized_quantity_search_level) {
+	this.normalized_quantity_search_level = normalized_quantity_search_level;
+  }
+
+
+public static class Cors {
     private Boolean allow_Credentials = true;
     private List<String> allowed_origin = ImmutableList.of("*");
 

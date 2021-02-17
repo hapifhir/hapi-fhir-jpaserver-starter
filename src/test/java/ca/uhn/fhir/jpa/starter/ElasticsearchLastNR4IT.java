@@ -26,11 +26,13 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pl.allegro.tech.embeddedelasticsearch.EmbeddedElastic;
-import pl.allegro.tech.embeddedelasticsearch.PopularProperties;
+import org.testcontainers.elasticsearch.ElasticsearchContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import javax.annotation.PreDestroy;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.UUID;
@@ -49,7 +51,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     // Because the port is set randomly, we will set the rest_url using the Initializer.
     // "elasticsearch.rest_url='http://localhost:9200'",
     "elasticsearch.username=SomeUsername",
-    "elasticsearch.password=SomePassword"
+    "elasticsearch.password=SomePassword",
+	 "elasticsearch.protocol=http"
   })
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
 public class ElasticsearchLastNR4IT {
@@ -57,30 +60,20 @@ public class ElasticsearchLastNR4IT {
   private IGenericClient ourClient;
   private FhirContext ourCtx;
 
-  private static final String ELASTIC_VERSION = "6.5.4";
-  private static EmbeddedElastic embeddedElastic;
+  private static final String ELASTIC_VERSION = "7.10.1";
+	private static final String ELASTIC_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:" + ELASTIC_VERSION;
+
+	private static ElasticsearchContainer embeddedElastic;
 
   @Autowired
   private ElasticsearchSvcImpl myElasticsearchSvc;
 
   @BeforeAll
   public static void beforeClass() {
-
-    embeddedElastic = null;
-    try {
-      embeddedElastic = EmbeddedElastic.builder()
-        .withElasticVersion(ELASTIC_VERSION)
-        .withSetting(PopularProperties.TRANSPORT_TCP_PORT, 0)
-        .withSetting(PopularProperties.HTTP_PORT, 0)
-        .withSetting(PopularProperties.CLUSTER_NAME, UUID.randomUUID())
-        .withStartTimeout(60, TimeUnit.SECONDS)
-        .build()
-        .start();
-    } catch (IOException | InterruptedException e) {
-      throw new ConfigurationException(e);
-    }
+	  embeddedElastic = new ElasticsearchContainer(ELASTIC_IMAGE).withStartupTimeout(Duration.of(300, ChronoUnit.SECONDS));
+	  embeddedElastic.start();
   }
-
+  
   @PreDestroy
   public void stop() {
     embeddedElastic.stop();
@@ -136,7 +129,7 @@ public class ElasticsearchLastNR4IT {
     public void initialize(
       ConfigurableApplicationContext configurableApplicationContext) {
       // Since the port is dynamically generated, replace the URL with one that has the correct port
-      TestPropertyValues.of("elasticsearch.rest_url=http://localhost:" + embeddedElastic.getHttpPort())
+      TestPropertyValues.of("elasticsearch.rest_url=" + embeddedElastic.getHost() +":" + embeddedElastic.getMappedPort(9200))
         .applyTo(configurableApplicationContext.getEnvironment());
     }
 
