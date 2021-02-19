@@ -40,8 +40,8 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			if (theRequest.getRequestPath().equals(RestOperationTypeEnum.METADATA.getCode())) {
 				return allowAll();
 			}
-			
-			if(!oAuth2Helper.isOAuthEnabled() && !isApiKeyEnabled()) {
+
+			if (!oAuth2Helper.isOAuthEnabled() && !isApiKeyEnabled()) {
 				logger.info("Apikey & Oauth2 are disabled");
 				return allowAll();
 			}
