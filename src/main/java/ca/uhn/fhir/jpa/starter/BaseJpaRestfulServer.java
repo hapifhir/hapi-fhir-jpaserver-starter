@@ -116,7 +116,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Override
   protected void initialize() throws ServletException {
     super.initialize();
-
+    daoConfig.setUseLegacySearchBuilder(true);
     /*
      * Create a FhirContext object that uses the version of FHIR
      * specified in the properties file.
