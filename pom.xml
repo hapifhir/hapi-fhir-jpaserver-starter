@@ -76,6 +76,23 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+         <!-- Required for OAuth support -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.12.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>jwks-rsa</artifactId>
+            <version>0.15.0</version>
+        </dependency>
+        <dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20201115</version>
+		</dependency>
 
         <!-- This dependency includes the core HAPI-FHIR classes -->
         <dependency>
