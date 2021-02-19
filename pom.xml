@@ -89,10 +89,10 @@
             <version>0.15.0</version>
         </dependency>
         <dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20201115</version>
-		</dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20201115</version>
+        </dependency>
 
         <!-- This dependency includes the core HAPI-FHIR classes -->
         <dependency>
