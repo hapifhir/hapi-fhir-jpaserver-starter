@@ -13,10 +13,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.auth0.jwt.JWT;
@@ -25,20 +23,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import ca.uhn.fhir.rest.api.server.RequestDetails;
-
 public class OAuth2Helper {
 	private static final Logger logger = LoggerFactory.getLogger(OAuth2Helper.class);
-	private static final String OAUTH_ENABLED = System.getenv("OAUTH_ENABLED");
-
-	protected Boolean isOAuthEnabled() {
-		return ((OAUTH_ENABLED != null) && Boolean.parseBoolean(OAUTH_ENABLED));
-	}
-
-	protected Boolean isOAuthHeaderPresent(RequestDetails theRequest) {
-		String token = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
-		return (!StringUtils.isEmpty(token));
-	}
 
 	protected String getJwtKeyId(String token) {
 		String tokenHeader = token.split("\\.")[0];
@@ -54,8 +40,7 @@ public class OAuth2Helper {
 	}
 
 	// The Base64 strings that come from a JWKS need some manipilation before they
-	// can be decoded,
-	// so we do that here
+	// can be decoded, so we do that here
 	protected byte[] base64Decode(String base64) throws IOException {
 		base64 = base64.replaceAll("-", "+");
 		base64 = base64.replaceAll("_", "/");

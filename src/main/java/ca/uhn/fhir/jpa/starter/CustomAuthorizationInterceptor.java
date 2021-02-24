@@ -13,7 +13,6 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.interceptor.api.Interceptor;
 import ca.uhn.fhir.rest.api.RestOperationTypeEnum;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
@@ -25,10 +24,10 @@ import ca.uhn.fhir.rest.server.interceptor.auth.RuleBuilder;
 public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(CustomAuthorizationInterceptor.class);
 	private static final String OAUTH_URL = System.getenv("OAUTH_URL");
+	private static final String OAUTH_ENABLED = System.getenv("OAUTH_ENABLED");
 	private static final String APIKEY_ENABLED = System.getenv("APIKEY_ENABLED");
 	private static final String APIKEY_HEADER = "x-api-key";
 	private static final String APIKEY = System.getenv("APIKEY");
-	private static final String FHIR_VERSION = System.getenv("fhir_version");
 	private static final String TOKEN_PREFIX = "BEARER ";
 	private static PublicKey publicKey = null;
 	private static OAuth2Helper oAuth2Helper = new OAuth2Helper();
@@ -41,12 +40,12 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 				return allowAll();
 			}
 
-			if (!oAuth2Helper.isOAuthEnabled() && !isApiKeyEnabled()) {
-				logger.info("Apikey & Oauth2 are disabled");
+			if (!isOAuthEnabled() && !isApiKeyEnabled()) {
+				logger.warn("APIKEY and OAuth2 authentication are disabled");
 				return allowAll();
 			}
 
-			if (oAuth2Helper.isOAuthEnabled() && oAuth2Helper.isOAuthHeaderPresent(theRequest)) {
+			if (isOAuthEnabled() && isOAuthHeaderPresent(theRequest)) {
 				logger.info("Auhorizing via OAuth");
 				return authorizeOAuth(theRequest);
 			}
@@ -60,7 +59,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			return denyAll();
 		}
 
-		logger.info("Authorization failure - fall through");
+		logger.warn("Authorization failure - fall through");
 		return denyAll();
 	}
 
@@ -103,6 +102,15 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 		return denyAll();
 	}
 
+	protected Boolean isOAuthEnabled() {
+		return ((OAUTH_ENABLED != null) && Boolean.parseBoolean(OAUTH_ENABLED));
+	}
+
+	protected Boolean isOAuthHeaderPresent(RequestDetails theRequest) {
+		String token = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
+		return (!StringUtils.isEmpty(token));
+	}
+	
 	private Boolean isApiKeyEnabled() {
 		return ((APIKEY_ENABLED != null) && Boolean.parseBoolean(APIKEY_ENABLED));
 	}
