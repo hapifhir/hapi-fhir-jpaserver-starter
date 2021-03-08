@@ -126,7 +126,6 @@
             <artifactId>hapi-fhir-testpage-overlay</artifactId>
             <version>${project.version}</version>
             <classifier>classes</classifier>
-
         </dependency>
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
@@ -311,6 +310,21 @@
     </dependencies>
 
     <build>
+
+        <pluginManagement>
+            <plugins>
+                <!--
+                There is a bug in 3.1.2 that prevents go-offline from working
+                Reported here:
+                https://issues.apache.org/jira/browse/MDEP-739
+                -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.1.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
 
         <!-- Tells Maven to name the generated WAR file as ROOT.war -->
         <finalName>ROOT</finalName>
