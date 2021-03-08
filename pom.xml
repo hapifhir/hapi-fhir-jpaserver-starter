@@ -15,7 +15,7 @@
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
         <!-- FIMXME KBD Change this to 5.3.0 BEFORE merging this code to master !  -->
-        <version>5.3.0</version>
+        <version>5.4.0-PRE1-SNAPSHOT</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>

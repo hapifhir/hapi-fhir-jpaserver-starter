@@ -88,6 +88,9 @@ public class AppProperties {
   public void setUse_apache_address_strategy_https(Boolean use_apache_address_strategy_https) {
     this.use_apache_address_strategy_https = use_apache_address_strategy_https;
   }
+  private Integer search_coord_core_pool_size = 20;
+  private Integer search_coord_max_pool_size = 100;
+  private Integer search_coord_queue_capacity = 200;
 
   public Integer getDefer_indexing_for_codesystems_of_size() {
     return defer_indexing_for_codesystems_of_size;
@@ -437,7 +440,25 @@ public class AppProperties {
     this.normalized_quantity_search_level = normalized_quantity_search_level;
   }
 
-  public static class Cors {
+  public Integer getSearch_coord_core_pool_size() { return search_coord_core_pool_size; }
+
+  public void setSearch_coord_core_pool_size(Integer search_coord_core_pool_size) {
+    this.search_coord_core_pool_size = search_coord_core_pool_size;
+  }
+
+  public Integer getSearch_coord_max_pool_size() { return search_coord_max_pool_size; }
+
+  public void setSearch_coord_max_pool_size(Integer search_coord_max_pool_size) {
+    this.search_coord_max_pool_size = search_coord_max_pool_size;
+  }
+
+  public Integer getSearch_coord_queue_capacity() { return search_coord_queue_capacity; }
+
+  public void setSearch_coord_queue_capacity(Integer search_coord_queue_capacity) {
+  	 this.search_coord_queue_capacity = search_coord_queue_capacity;
+  }
+
+public static class Cors {
     private Boolean allow_Credentials = true;
     private List<String> allowed_origin = ImmutableList.of("*");
 
