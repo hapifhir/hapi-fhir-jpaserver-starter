@@ -99,7 +99,6 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			if(!roles.isEmpty() && !Collections.disjoint(roles, ROLES)) {
 				return allowAll();
 			}
-			return denyAll();
 		} catch (TokenExpiredException e) {
 			logger.info("Authorization failure - token has expired");
 		} catch (Exception e) {
