@@ -9,9 +9,15 @@ import javax.servlet.ServletException;
 
 @Import(AppProperties.class)
 public class JpaRestfulServer extends BaseJpaRestfulServer {
+	
+	private static final String FHIR_VERSION = System.getenv("fhir_version");
+	private static final String OAUTH_ENABLED = System.getenv("OAUTH_ENABLED");
 
   @Autowired
   AppProperties appProperties;
+  
+  @Autowired
+  CustomServerCapabilityStatementProviderR4 customCapabilityStatementProviderR4;
 
   private static final long serialVersionUID = 1L;
 
