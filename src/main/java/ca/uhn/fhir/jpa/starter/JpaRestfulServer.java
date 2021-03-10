@@ -15,9 +15,6 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
 
   @Autowired
   AppProperties appProperties;
-  
-  @Autowired
-  CustomServerCapabilityStatementProviderR4 customCapabilityStatementProviderR4;
 
   private static final long serialVersionUID = 1L;
 
