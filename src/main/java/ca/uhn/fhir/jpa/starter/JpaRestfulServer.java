@@ -16,9 +16,6 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
 
   @Autowired
   AppProperties appProperties;
-  
-  @Autowired
-  CustomServerCapabilityStatementProviderR4 customCapabilityStatementProviderR4;
 
   private static final long serialVersionUID = 1L;
 
@@ -33,7 +30,7 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     // Add your own customization here
     
     /* Custom ServerConformanceProvider will be triggered when fhir version is R4 and Oath is enabled. */
-    if(FHIR_VERSION.equals(FhirVersionEnum.R4.name()) && Boolean.parseBoolean(OAUTH_ENABLED) ) {
+    if(FHIR_VERSION.equals(FhirVersionEnum.R4.name()) && Boolean.parseBoolean(OAUTH_ENABLED)) {
     	CustomServerCapabilityStatementProviderR4 customCapabilityStatementProviderR4 = new CustomServerCapabilityStatementProviderR4(this, fhirSystemDao,
     	          daoConfig, searchParamRegistry);
     	setServerConformanceProvider(customCapabilityStatementProviderR4);
@@ -41,5 +38,5 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     AuthorizationInterceptor authorizationInterceptor = new CustomAuthorizationInterceptor();
     this.registerInterceptor(authorizationInterceptor);
   }
-  
+
 }
