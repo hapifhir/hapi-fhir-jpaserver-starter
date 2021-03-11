@@ -274,6 +274,13 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
           refuse_to_fetch_third_party_urls: false
           fhir_version: R4
 ```
+Also with custom property file and enviornment variables , use below docker command, replace <values> with actual values
+
+```bash
+./build-docker-image.sh && docker run -p 8080:8080 -e APIKEY=<apikey> -e APIKEY_ENABLED=<true/false> -e datasource.driver=<datasource_driver> -e datasource.password=<datasource_password> -e datasource.url=<jdbc_url> -e datasource.username=<datasource_password> -e enable_web=<true/false> -e fhir_version=<DSTU2/DSTU3/R4> -e hapi.fhir.server_address=<server_address>/fhir/ -e hibernate.dialect=<hibernate_dialect> -e OAUTH_ENABLED=<true/false> -e OAUTH_URL=<oauth_server_url> -e reuse_cached_search_results_millis=<milliseconds_value_to_reuse_cached_search_results> -e spring.config.location='</usr/local/tomcat/webapps/ROOT/WEB-INF/classes/application-custom.yaml>' -e subscription.resthook.enabled=<true/false> -e subscription.websocket.enabled=<true/false> -e url_pattern=</fhir/*> hapi-fhir/hapi-fhir-jpaserver-starter:latest
+```
+
+
 
 ## Configurations
 
