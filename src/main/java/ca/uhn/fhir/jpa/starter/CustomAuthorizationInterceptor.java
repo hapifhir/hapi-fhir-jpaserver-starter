@@ -29,7 +29,8 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	private static final String APIKEY_HEADER = "x-api-key";
 	private static final String APIKEY = System.getenv("APIKEY");
 	private static final String TOKEN_PREFIX = "BEARER ";
-	private static final String ROLE = System.getenv("OAUTH_USER_ROLE");
+	private static final String OAUTH_USER_ROLE = System.getenv("OAUTH_USER_ROLE");
+	private static final String OAUTH_CLIENT_ID = System.getenv("OAUTH_CLIENT_ID");
 	private static PublicKey publicKey = null;
 	private static OAuth2Helper oAuth2Helper = new OAuth2Helper();
 
@@ -93,7 +94,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			JWTVerifier verifier = oAuth2Helper.getJWTVerifier(jwt, publicKey);
 			jwt = verifier.verify(token);
 			
-			if (oAuth2Helper.checkRole(jwt, ROLE)) {
+			if (oAuth2Helper.hasClientRole(jwt, OAUTH_USER_ROLE, OAUTH_CLIENT_ID)) {
 				return allowAll();
 			}
 		} catch (TokenExpiredException e) {
