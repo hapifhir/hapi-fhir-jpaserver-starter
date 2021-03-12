@@ -28,7 +28,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 public class OAuth2Helper {
 	private static final Logger logger = LoggerFactory.getLogger(OAuth2Helper.class);
-	private static final String CLIENT_NAME = System.getenv("OAUTH_CLIENT_NAME");
 
 	protected String getJwtKeyId(String token) {
 		String tokenHeader = token.split("\\.")[0];
@@ -109,12 +108,12 @@ public class OAuth2Helper {
 		return publicKey;
 	}
 	
-	protected Boolean checkRole(DecodedJWT jwt, String role) {
+	protected Boolean hasClientRole(DecodedJWT jwt, String roleName, String clientId) {
 		Claim claim = jwt.getClaim("resource_access");
 		HashMap<String, HashMap<String, ArrayList<String>>> resources = claim.as(HashMap.class);
-		HashMap<String, ArrayList<String>> clientMap = resources.getOrDefault(CLIENT_NAME, new HashMap<String, ArrayList<String>>());
+		HashMap<String, ArrayList<String>> clientMap = resources.getOrDefault(clientId, new HashMap<String, ArrayList<String>>());
 		ArrayList<String> roles = clientMap.getOrDefault("roles", new ArrayList<String>());
-		return roles.contains(role);
+		return roles.contains(roleName);
 	}
 
 }
