@@ -5,10 +5,14 @@ import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.server.interceptor.auth.AuthorizationInterceptor;
 
 @Import(AppProperties.class)
 public class JpaRestfulServer extends BaseJpaRestfulServer {
+	
+	private static final String FHIR_VERSION = System.getenv("fhir_version");
+	private static final String OAUTH_ENABLED = System.getenv("OAUTH_ENABLED");
 
   @Autowired
   AppProperties appProperties;
@@ -24,6 +28,13 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     super.initialize();
 
     // Add your own customization here
+    
+    /* Custom ServerConformanceProvider will be triggered when fhir version is R4 and Oauth is enabled. */
+    if (FHIR_VERSION.equals(FhirVersionEnum.R4.name()) && Boolean.parseBoolean(OAUTH_ENABLED)) {
+    	CustomServerCapabilityStatementProviderR4 customCapabilityStatementProviderR4 = new CustomServerCapabilityStatementProviderR4(this, fhirSystemDao,
+    	          daoConfig, searchParamRegistry);
+    	setServerConformanceProvider(customCapabilityStatementProviderR4);
+    }
     AuthorizationInterceptor authorizationInterceptor = new CustomAuthorizationInterceptor();
     this.registerInterceptor(authorizationInterceptor);
   }
