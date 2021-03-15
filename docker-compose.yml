@@ -6,20 +6,13 @@ services:
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
     environment:
-      APIKEY: '<apiKey>'
-      APIKEY_ENABLED: 'false'
       datasource.driver: 'com.mysql.jdbc.Driver'
       datasource.password: 'admin'
       datasource.url: 'jdbc:mysql://localhost:3306/hapi'
       datasource.username: 'admin'
-      enable_web: 'true'
       fhir_version: 'R4'
       hapi.fhir.server_address: 'http://localhost:8080/fhir/'
       hibernate.dialect: 'org.hibernate.dialect.MySQL5InnoDBDialect'
-      OAUTH_CLIENT_ID: '<oauth_clientId>'
-      OAUTH_ENABLED: 'false'
-      OAUTH_URL: '<oauth_server_url>'
-      OAUTH_USER_ROLE: '<oauth_user_role>'
       reuse_cached_search_results_millis: '0'
       spring.config.location: '/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/application-custom.yaml'
       subscription.resthook.enabled: 'true'
