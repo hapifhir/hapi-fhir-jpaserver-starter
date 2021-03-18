@@ -55,9 +55,13 @@ public class EnvironmentHelper {
 		properties.putIfAbsent(AvailableSettings.USE_MINIMAL_PUTS, false);
 
 		//Hibernate Search defaults
-		properties.putIfAbsent(HibernateOrmMapperSettings.ENABLED, true);
+		properties.putIfAbsent(HibernateOrmMapperSettings.ENABLED, false);
 		if (Boolean.parseBoolean(String.valueOf(properties.get(HibernateOrmMapperSettings.ENABLED)))) {
-			properties.putIfAbsent(BackendSettings.backendKey(BackendSettings.TYPE), LuceneBackendSettings.TYPE_NAME);
+			if (isElasticsearchEnabled(environment)) {
+				properties.putIfAbsent(BackendSettings.backendKey(BackendSettings.TYPE), ElasticsearchBackendSettings.TYPE_NAME);
+			} else {
+				properties.putIfAbsent(BackendSettings.backendKey(BackendSettings.TYPE), LuceneBackendSettings.TYPE_NAME);
+			}
 
 			if (properties.get(BackendSettings.backendKey(BackendSettings.TYPE)).equals(LuceneBackendSettings.TYPE_NAME)) {
 				properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_TYPE), LocalFileSystemDirectoryProvider.NAME);
