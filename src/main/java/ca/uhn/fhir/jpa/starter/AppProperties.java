@@ -31,6 +31,7 @@ public class AppProperties {
   private Boolean allow_placeholder_references = true;
   private Boolean auto_create_placeholder_reference_targets = false;
   private Boolean enable_index_missing_fields = false;
+  private Boolean enable_index_contained_resource = false;
   private Boolean enable_repository_validating_interceptor = false;
   private Boolean enforce_referential_integrity_on_delete = true;
   private Boolean enforce_referential_integrity_on_write = true;
@@ -272,6 +273,14 @@ public class AppProperties {
   public void setEnable_index_missing_fields(Boolean enable_index_missing_fields) {
     this.enable_index_missing_fields = enable_index_missing_fields;
   }
+
+	public Boolean getEnable_index_contained_resource() {
+		return enable_index_contained_resource;
+	}
+
+	public void setEnable_index_contained_resource(Boolean enable_index_contained_resource) {
+		this.enable_index_contained_resource = enable_index_contained_resource;
+	}
 
 	public Boolean getEnable_repository_validating_interceptor() {
 		return enable_repository_validating_interceptor;
