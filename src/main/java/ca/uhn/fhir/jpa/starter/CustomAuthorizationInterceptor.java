@@ -94,7 +94,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			JWTVerifier verifier = oAuth2Helper.getJWTVerifier(jwt, publicKey);
 			jwt = verifier.verify(token);
 			
-			if (oAuth2Helper.hasClientRole(jwt, OAUTH_USER_ROLE, OAUTH_CLIENT_ID)) {
+			if (oAuth2Helper.hasClientRole(jwt, OAUTH_CLIENT_ID, OAUTH_USER_ROLE)) {
 				return allowAll();
 			}
 		} catch (TokenExpiredException e) {

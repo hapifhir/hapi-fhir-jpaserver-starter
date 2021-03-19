@@ -1,14 +1,15 @@
 version: "3"
 services:
   hapi-fhir-jpaserver-start:
-    network_mode: host
     build: .
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
+    ports:
+      - '8080:8080'
     environment:
       datasource.driver: 'com.mysql.jdbc.Driver'
       datasource.password: 'admin'
-      datasource.url: 'jdbc:mysql://localhost:3306/hapi'
+      datasource.url: 'jdbc:mysql://hapi-fhir-mysql/hapi'
       datasource.username: 'admin'
       fhir_version: 'R4'
       hapi.fhir.server_address: 'http://localhost:8080/fhir/'
@@ -18,7 +19,6 @@ services:
       subscription.resthook.enabled: 'true'
       subscription.websocket.enabled: 'true'
   hapi-fhir-mysql:
-    network_mode: host
     image: mysql:latest
     container_name: hapi-fhir-mysql
     restart: always
