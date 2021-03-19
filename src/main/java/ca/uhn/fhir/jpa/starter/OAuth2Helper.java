@@ -108,12 +108,12 @@ public class OAuth2Helper {
 		return publicKey;
 	}
 	
-	protected Boolean hasClientRole(DecodedJWT jwt, String roleName, String clientId) {
+	protected Boolean hasClientRole(DecodedJWT jwt, String clientId, String userRole) {
 		Claim claim = jwt.getClaim("resource_access");
 		HashMap<String, HashMap<String, ArrayList<String>>> resources = claim.as(HashMap.class);
 		HashMap<String, ArrayList<String>> clientMap = resources.getOrDefault(clientId, new HashMap<String, ArrayList<String>>());
 		ArrayList<String> roles = clientMap.getOrDefault("roles", new ArrayList<String>());
-		return roles.contains(roleName);
+		return roles.contains(userRole);
 	}
 
 }
