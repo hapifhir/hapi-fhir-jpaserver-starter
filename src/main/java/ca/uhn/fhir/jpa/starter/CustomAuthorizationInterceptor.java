@@ -29,6 +29,8 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	private static final String APIKEY_HEADER = "x-api-key";
 	private static final String APIKEY = System.getenv("APIKEY");
 	private static final String TOKEN_PREFIX = "BEARER ";
+	private static final String OAUTH_USER_ROLE = System.getenv("OAUTH_USER_ROLE");
+	private static final String OAUTH_CLIENT_ID = System.getenv("OAUTH_CLIENT_ID");
 	private static PublicKey publicKey = null;
 	private static OAuth2Helper oAuth2Helper = new OAuth2Helper();
 
@@ -91,7 +93,10 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			publicKey = StringUtils.isEmpty(publicKey) ? oAuth2Helper.getJwtPublicKey(kid, OAUTH_URL) : publicKey;
 			JWTVerifier verifier = oAuth2Helper.getJWTVerifier(jwt, publicKey);
 			jwt = verifier.verify(token);
-			return allowAll();
+			
+			if (oAuth2Helper.hasClientRole(jwt, OAUTH_CLIENT_ID, OAUTH_USER_ROLE)) {
+				return allowAll();
+			}
 		} catch (TokenExpiredException e) {
 			logger.info("Authorization failure - token has expired");
 		} catch (Exception e) {
@@ -102,11 +107,11 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 		return denyAll();
 	}
 
-	protected Boolean isOAuthEnabled() {
+	private Boolean isOAuthEnabled() {
 		return ((OAUTH_ENABLED != null) && Boolean.parseBoolean(OAUTH_ENABLED));
 	}
 
-	protected Boolean isOAuthHeaderPresent(RequestDetails theRequest) {
+	private Boolean isOAuthHeaderPresent(RequestDetails theRequest) {
 		String token = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
 		return (!StringUtils.isEmpty(token));
 	}
