@@ -322,7 +322,7 @@ Set `hapi.fhir.cql_enabled=true` in the [application.yaml](https://github.com/ha
 
 ## Enabling MDM (EMPI)
 
-Set `hapi.fhir.mdm_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable MDM on this server.  The MDM matching rules are configured in [mdm-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/mdm-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that MDM relies on subscriptions, so for MDM to work, subscriptions must be enabled. 
+Set `hapi.fhir.mdm_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable MDM on this server.  The MDM matching rules are configured in [mdm-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/mdm-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that MDM relies on subscriptions, so for MDM to work, subscriptions must be enabled.
 
 ## Using Elasticsearch
 
@@ -344,23 +344,14 @@ elasticsearch.schema_management_strategy=CREATE
 
 Set `hapi.fhir.lastn_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable the $lastn operation on this server.  Note that the $lastn operation relies on Elasticsearch, so for $lastn to work, indexing must be enabled using Elasticsearch.
 
-## Example of a Dockerfile based on distroless images (for lower footprint and improved security)
+## Build the distroless variant of the image (for lower footprint and improved security)
 
-```code
-FROM maven:3.6.3-jdk-11-slim as build-hapi
-WORKDIR /tmp/hapi-fhir-jpaserver-starter
+The default Dockerfile contains a `release-distroless` stage to build a variant of the image
+using the `gcr.io/distroless/java-debian10:11` base image:
 
-COPY pom.xml .
-RUN mvn -ntp dependency:go-offline
-
-COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
-RUN mvn clean package spring-boot:repackage -Pboot
-
-FROM gcr.io/distroless/java:11
-
-COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /app/main.war
-
-EXPOSE 8080
-WORKDIR /app
-CMD ["main.war"]
+```sh
+docker build --target=release-distroless -t hapi-fhir:distroless .
 ```
+
+Note that distroless images are also automatically build and pushed to the container registry,
+see the `-distroless` suffix in the image tags.
