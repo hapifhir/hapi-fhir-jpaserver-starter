@@ -115,5 +115,11 @@ public class OAuth2Helper {
 		ArrayList<String> roles = clientMap.getOrDefault("roles", new ArrayList<String>());
 		return roles.contains(userRole);
 	}
+	
+	protected String getPatientReferenceFromToken(DecodedJWT jwt) {
+		Claim claim = jwt.getClaim("Patient");
+		String patientRef = claim.as(String.class);
+		return patientRef;
+		}
 
 }

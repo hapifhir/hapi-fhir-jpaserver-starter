@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Import;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.server.interceptor.auth.AuthorizationInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.auth.SearchNarrowingInterceptor;
 
 @Import(AppProperties.class)
 public class JpaRestfulServer extends BaseJpaRestfulServer {
@@ -35,6 +36,8 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     	          daoConfig, searchParamRegistry);
     	setServerConformanceProvider(customCapabilityStatementProviderR4);
     }
+    SearchNarrowingInterceptor customSearchNarrowingInterceptor = new CustomSearchNarrowingInterceptor();
+    this.registerInterceptor(customSearchNarrowingInterceptor);
     AuthorizationInterceptor authorizationInterceptor = new CustomAuthorizationInterceptor();
     this.registerInterceptor(authorizationInterceptor);
   }
