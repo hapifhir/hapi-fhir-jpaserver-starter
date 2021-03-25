@@ -32,7 +32,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	private static final String TOKEN_PREFIX = "BEARER ";
 	private static final String OAUTH_USER_ROLE = System.getenv("OAUTH_USER_ROLE");
 	private static final String OAUTH_CLIENT_ID = System.getenv("OAUTH_CLIENT_ID");
-	private static final String OAUTH_ADMIN_ROLE = System.getenv("OAUTH_ADMIN_ROLE");;
+	private static final String OAUTH_ADMIN_ROLE = System.getenv("OAUTH_ADMIN_ROLE");
 	private static PublicKey publicKey = null;
 	private static OAuth2Helper oAuth2Helper = new OAuth2Helper();
 
