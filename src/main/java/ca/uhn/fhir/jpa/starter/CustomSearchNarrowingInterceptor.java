@@ -14,16 +14,22 @@ public class CustomSearchNarrowingInterceptor extends SearchNarrowingInterceptor
   @Override
   protected AuthorizedList buildAuthorizedList(RequestDetails theRequestDetails) {
     String patientId = getPatientFromToken(theRequestDetails);
-    String patientRef = "Patient/" + patientId;
-    return new AuthorizedList().addCompartment(patientRef);
+    if (patientId != null) {
+      String patientRef = "Patient/" + patientId;
+      return new AuthorizedList().addCompartment(patientRef);
+    }
+    return new AuthorizedList();
   }
 
   private String getPatientFromToken(RequestDetails theRequestDetails) {
     String token = theRequestDetails.getHeader("Authorization");
-    token = token.substring(CustomAuthorizationInterceptor.getTokenPrefix().length());
-    DecodedJWT jwt = JWT.decode(token);
-    String patRefId = oAuth2Helper.getPatientReferenceFromToken(jwt);
-    return patRefId;
+    if (token != null) {
+      token = token.substring(CustomAuthorizationInterceptor.getTokenPrefix().length());
+      DecodedJWT jwt = JWT.decode(token);
+      String patRefId = oAuth2Helper.getPatientReferenceFromToken(jwt);
+      return patRefId;
+    }
+    return null;
   }
 
 }
