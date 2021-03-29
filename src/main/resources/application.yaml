@@ -6,6 +6,10 @@ spring:
     password: null
     driverClassName: org.h2.Driver
     max-active: 15
+
+    # database connection pool size
+    hikari:
+      maximum-pool-size: 10
   jpa:
     properties:
       hibernate.format_sql: false
@@ -89,6 +93,11 @@ hapi:
       # cors.allowed_origin=http://localhost:8080,https://localhost:8080,https://fhirtest.uhn.ca
     #  allowed_origin:
     #    - '*'
+
+    # Search coordinator thread pool sizes
+    search-coord-core-pool-size: 20
+    search-coord-max-pool-size: 100
+    search-coord-queue-capacity: 200
 
 #    logger:
 #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
