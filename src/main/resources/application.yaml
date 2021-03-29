@@ -74,6 +74,7 @@ hapi:
 #    default_page_size: 20
 #    enable_repository_validating_interceptor: false
 #    enable_index_missing_fields: false
+#    enable_index_contained_resource: false
 #    enforce_referential_integrity_on_delete: false
 #    enforce_referential_integrity_on_write: false
 #    etag_support_enabled: true

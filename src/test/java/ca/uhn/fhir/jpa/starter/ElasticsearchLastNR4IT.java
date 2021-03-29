@@ -60,7 +60,7 @@ public class ElasticsearchLastNR4IT {
   private IGenericClient ourClient;
   private FhirContext ourCtx;
 
-  private static final String ELASTIC_VERSION = "7.10.1";
+  private static final String ELASTIC_VERSION = "7.10.2";
 	private static final String ELASTIC_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:" + ELASTIC_VERSION;
 
 	private static ElasticsearchContainer embeddedElastic;
