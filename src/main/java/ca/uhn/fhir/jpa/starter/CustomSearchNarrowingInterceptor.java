@@ -9,6 +9,9 @@ import ca.uhn.fhir.rest.server.interceptor.auth.SearchNarrowingInterceptor;
 
 @Interceptor
 public class CustomSearchNarrowingInterceptor extends SearchNarrowingInterceptor {
+
+  private static final String CLAIM_NAME = System.getenv("claim_name");
+  
   private OAuth2Helper oAuth2Helper = new OAuth2Helper();
 
   @Override
@@ -26,7 +29,7 @@ public class CustomSearchNarrowingInterceptor extends SearchNarrowingInterceptor
     if (token != null) {
       token = token.substring(CustomAuthorizationInterceptor.getTokenPrefix().length());
       DecodedJWT jwt = JWT.decode(token);
-      String patRefId = oAuth2Helper.getPatientReferenceFromToken(jwt);
+      String patRefId = oAuth2Helper.getPatientReferenceFromToken(jwt, CLAIM_NAME);
       return patRefId;
     }
     return null;
