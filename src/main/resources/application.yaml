@@ -82,12 +82,11 @@ hapi:
     #partitioning:
     #  allow_references_across_partitions: false
     #  partitioning_include_in_search_hashes: false
-    #cors:
-    #  allow_Credentials: true
-      # Supports multiple, comma separated allowed origin entries
-      # cors.allowed_origin=http://localhost:8080,https://localhost:8080,https://fhirtest.uhn.ca
-    #  allowed_origin:
-    #    - '*'
+    cors:
+      allow_Credentials: true
+      # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
+      allowed_origin:
+        - '*'
 
 #    logger:
 #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
