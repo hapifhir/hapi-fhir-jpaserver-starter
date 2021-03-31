@@ -301,7 +301,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
       config.addAllowedHeader("X-Requested-With");
       config.addAllowedHeader("Prefer");
       List<String> allAllowedCORSOrigins = appProperties.getCors().getAllowed_origin();
-      allAllowedCORSOrigins.forEach(config::addAllowedOrigin);
+      allAllowedCORSOrigins.forEach(config::addAllowedOriginPattern);
 
 
       config.addExposedHeader("Location");

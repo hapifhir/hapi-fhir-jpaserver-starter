@@ -40,7 +40,7 @@ hapi:
     ### enable to set the Server URL
 #    server_address: http://hapi.fhir.org/baseR4
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
-    fhir_version: R4
+git     fhir_version: R4
     defer_indexing_for_codesystems_of_size: 0
     tester:
         home:
