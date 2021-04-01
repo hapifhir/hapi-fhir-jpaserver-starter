@@ -14,6 +14,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import ca.uhn.fhir.interceptor.api.Interceptor;
+import ca.uhn.fhir.rest.api.RequestTypeEnum;
 import ca.uhn.fhir.rest.api.RestOperationTypeEnum;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.interceptor.auth.AuthorizationInterceptor;
@@ -31,6 +32,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	private static final String TOKEN_PREFIX = "BEARER ";
 	private static final String OAUTH_USER_ROLE = System.getenv("OAUTH_USER_ROLE");
 	private static final String OAUTH_CLIENT_ID = System.getenv("OAUTH_CLIENT_ID");
+	private static final String OAUTH_ADMIN_ROLE = System.getenv("OAUTH_ADMIN_ROLE");
 	private static PublicKey publicKey = null;
 	private static OAuth2Helper oAuth2Helper = new OAuth2Helper();
 
@@ -94,7 +96,11 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			JWTVerifier verifier = oAuth2Helper.getJWTVerifier(jwt, publicKey);
 			jwt = verifier.verify(token);
 			
-			if (oAuth2Helper.hasClientRole(jwt, OAUTH_CLIENT_ID, OAUTH_USER_ROLE)) {
+			if (theRequest.getRequestType().equals(RequestTypeEnum.DELETE)) {
+				if (oAuth2Helper.hasClientRole(jwt, OAUTH_CLIENT_ID, OAUTH_ADMIN_ROLE)) {
+					return allowAll();
+				}
+			} else if (oAuth2Helper.hasClientRole(jwt, OAUTH_CLIENT_ID, OAUTH_USER_ROLE)) {
 				return allowAll();
 			}
 		} catch (TokenExpiredException e) {
