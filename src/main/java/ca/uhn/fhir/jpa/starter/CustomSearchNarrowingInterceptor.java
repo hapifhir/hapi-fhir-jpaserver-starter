@@ -10,7 +10,7 @@ import ca.uhn.fhir.rest.server.interceptor.auth.SearchNarrowingInterceptor;
 @Interceptor
 public class CustomSearchNarrowingInterceptor extends SearchNarrowingInterceptor {
 
-  private static final String OAUTH_CLAIM_NAME = "subject";
+  private static final String OAUTH_CLAIM_NAME = "patient";
   
   private OAuth2Helper oAuth2Helper = new OAuth2Helper();
 
