@@ -116,4 +116,13 @@ public class OAuth2Helper {
 		return roles.contains(userRole);
 	}
 
+	protected String getPatientReferenceFromToken(DecodedJWT jwt, String claimName) {
+		if (claimName != null) {
+			Claim claim = jwt.getClaim(claimName);
+			String patientRef = claim.as(String.class);
+			return patientRef;
+		}
+		return null;
+	}
+
 }

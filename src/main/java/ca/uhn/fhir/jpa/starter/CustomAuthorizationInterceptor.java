@@ -145,4 +145,8 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 		logger.info("Authorization failure - invalid X-API-KEY header");
 		return denyAll();
 	}
+
+	public static String getTokenPrefix() {
+		return TOKEN_PREFIX;
+	}
 }
