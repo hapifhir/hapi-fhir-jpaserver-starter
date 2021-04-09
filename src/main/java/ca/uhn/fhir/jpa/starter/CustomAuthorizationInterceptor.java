@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter;
 import java.security.PublicKey;
 import java.util.List;
 
+import org.hl7.fhir.r4.model.IdType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -101,7 +102,8 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 					return allowAll();
 				}
 			} else if (oAuth2Helper.hasClientRole(jwt, OAUTH_CLIENT_ID, OAUTH_USER_ROLE)) {
-				return allowAll();
+				String patientId = getPatientFromToken(theRequest);
+				return StringUtils.isEmpty(patientId) ? allowAll() : allowForClaimResourceId(theRequest,patientId);
 			}
 		} catch (TokenExpiredException e) {
 			logger.info("Authorization failure - token has expired");
@@ -111,6 +113,25 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 
 		logger.info("Authentication failure");
 		return denyAll();
+	}
+	
+	private List<IAuthRule> allowForClaimResourceId(RequestDetails theRequestDetails,String patientId) {
+    return new RuleBuilder()
+        .allow().read().allResources().inCompartment("Patient", new IdType("Patient", patientId)).andThen()
+        .allow().write().allResources().inCompartment("Patient", new IdType("Patient", patientId)).andThen()
+        .denyAll()
+        .build();
+	}
+
+	private String getPatientFromToken(RequestDetails theRequestDetails) {
+		String token = theRequestDetails.getHeader("Authorization");
+		if (token != null) {
+			token = token.substring(CustomAuthorizationInterceptor.getTokenPrefix().length());
+			DecodedJWT jwt = JWT.decode(token);
+			String patRefId = oAuth2Helper.getPatientReferenceFromToken(jwt, "patient");
+			return patRefId;
+		}
+		return null;
 	}
 
 	private Boolean isOAuthEnabled() {
