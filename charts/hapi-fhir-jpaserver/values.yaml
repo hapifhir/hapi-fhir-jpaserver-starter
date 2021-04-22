@@ -1,0 +1,159 @@
+# Default values for hapi-fhir-jpaserver.
+# This is a YAML-formatted file.
+
+# number of replicas
+replicaCount: 1
+
+image: # +doc-gen:ignore
+  registry: ghcr.io
+  repository: chgl/hapifhir/hapi-fhir-jpaserver-starter
+  tag: v5.3.0-distroless
+  pullPolicy: IfNotPresent
+
+# image pull secrets
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# annotations applied to the server deployment
+deploymentAnnotations: {}
+
+# annotations applied to the server pod
+podAnnotations: {}
+
+# PodSecurityContext applied to the pod
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+# ContainerSecurityContext applied to the container
+securityContext: # +doc-gen:ignore
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65532
+
+service:
+  # type of service to expose the server
+  type: ClusterIP
+  # service port
+  port: 8080
+
+ingress:
+  # whether to create an Ingress to expose the FHIR server web interface
+  enabled: false
+  # provide any additional annotations which may be required. Evaluated as a template.
+  annotations:
+    {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: fhir-server.127.0.0.1.xip.io
+      pathType: ImplementationSpecific
+      paths: ["/"]
+  # ingress TLS config
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# resource requests and limits
+resources:
+  {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# node labels for pods assignment
+# see: <https://kubernetes.io/docs/user-guide/node-selection/>
+nodeSelector: {}
+
+# tolerations for pods assignment
+# see: <https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/>
+tolerations: []
+
+# affinity for pods assignment
+# see: <https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity>
+affinity: {}
+
+# see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
+postgresql:
+  # enable an included PostgreSQL DB.
+  # if set to `false`, the values under `webApi.db` are used
+  enabled: true
+  # update the default Postgres version to 13.2
+  image: # +doc-gen:break
+    tag: 13.2.0
+  # name of the database to create
+  # see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run>
+  postgresqlDatabase: "fhir"
+  # Name of existing secret to use for PostgreSQL passwords.
+  # The secret has to contain the keys `postgresql-password`
+  # which is the password for `postgresqlUsername` when it is
+  # different of `postgres`, `postgresql-postgres-password` which
+  # will override `postgresqlPassword`, `postgresql-replication-password`
+  # which will override `replication.password` and `postgresql-ldap-password`
+  # which will be sed to authenticate on LDAP. The value is evaluated as a template.
+  existingSecret: ""
+  replication:
+    # should be true for production use
+    enabled: false
+    # number of read replicas
+    readReplicas: 2
+    # set synchronous commit mode: on, off, remote_apply, remote_write and local
+    synchronousCommit: "on"
+    # from the number of `readReplicas` defined above, set the number of those that will have synchronous replication
+    numSynchronousReplicas: 1
+  metrics:
+    # should also be true for production use
+    enabled: false
+    serviceMonitor:
+      # create a Prometheus Operator ServiceMonitor resource
+      enabled: false
+      # the labels used for Prometheus autodiscover, e.g. could be `release: prometheus`
+      additionalLabels: {}
+  containerSecurityContext: # +doc-gen:ignore
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+
+# readiness probe
+readinessProbe: # +doc-gen:ignore
+  failureThreshold: 5
+  initialDelaySeconds: 30
+  periodSeconds: 20
+  successThreshold: 1
+  timeoutSeconds: 20
+# startup probe
+startupProbe: # +doc-gen:ignore
+  failureThreshold: 10
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  successThreshold: 1
+  timeoutSeconds: 30
+
+# only used if `postgresql.enabeld=false`
+externalDatabase:
+  # Database host
+  host: localhost
+  # non-root Username for FHIR Database
+  user: fhir
+  # Database password
+  password: ""
+  # Name of an existing secret resource containing the DB password in a 'postgresql-password' key
+  existingSecret: ""
+  # Database name
+  database: fhir
+  # Database port number
+  port: 5432

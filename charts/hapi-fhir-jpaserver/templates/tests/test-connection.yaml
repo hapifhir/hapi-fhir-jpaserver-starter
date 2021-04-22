@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "hapi-fhir-jpaserver.fullname" . }}-test-connection"
+  labels:
+    {{- include "hapi-fhir-jpaserver.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  restartPolicy: Never
+  containers:
+    - name: wget
+      image: busybox:1
+      imagePullPolicy: Always
+      command: ['wget', '-O', '-']
+      args: ['http://{{ include "hapi-fhir-jpaserver.fullname" . }}:{{ .Values.service.port }}/fhir/Patient?_count=1']
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: true
+        runAsUser: 22222
+        runAsNonRoot: true
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      livenessProbe:
+        exec:
+          command: ["true"]
+      readinessProbe:
+        exec:
+          command: ["true"]

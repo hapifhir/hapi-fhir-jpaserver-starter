@@ -161,3 +161,6 @@ Temporary Items
 .vscode/settings.json
 .classpath
 .project
+
+# Helm Chart dependencies
+**/charts/*.tgz
