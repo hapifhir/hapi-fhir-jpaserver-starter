@@ -1,0 +1,13 @@
+apiVersion: v2
+name: hapi-fhir-jpaserver
+description: A Helm chart for deploying the HAPI FHIR JPA server starter on Kubernetes.
+type: application
+home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+sources:
+  - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+dependencies:
+  - name: postgresql
+    version: 10.3.16
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+version: 0.2.0

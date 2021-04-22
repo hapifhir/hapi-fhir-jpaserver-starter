@@ -158,3 +158,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Helm Chart dependencies
+**/charts/*.tgz
