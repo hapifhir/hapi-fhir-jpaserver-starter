@@ -189,7 +189,7 @@ spring:
     password: admin
     driverClassName: com.mysql.jdbc.Driver
 ```
-On some systems, it might be necessary to override hibernate's default naming strategy. The naming strategy must be set using spring.jpa.hibernate.naming.physical-strategy. 
+On some systems, it might be necessary to override hibernate's default naming strategy. The naming strategy must be set using spring.jpa.hibernate.physical_naming_strategy. 
 
 ```yaml
 spring:
