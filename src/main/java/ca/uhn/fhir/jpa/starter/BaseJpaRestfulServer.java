@@ -106,8 +106,6 @@ public class BaseJpaRestfulServer extends RestfulServer {
   public BaseJpaRestfulServer() {
   }
 
-  private static final long serialVersionUID = 1L;
-
   @SuppressWarnings("unchecked")
   @Override
   protected void initialize() throws ServletException {
