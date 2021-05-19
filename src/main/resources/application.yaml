@@ -9,20 +9,20 @@ spring:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
-#      hibernate.dialect: org.hibernate.dialect.h2dialect
-#      hibernate.hbm2ddl.auto: update
-#      hibernate.jdbc.batch_size: 20
-#      hibernate.cache.use_query_cache: false
-#      hibernate.cache.use_second_level_cache: false
-#      hibernate.cache.use_structured_entries: false
-#      hibernate.cache.use_minimal_puts: false
-# These settings will enable fulltext search with lucene
-#      hibernate.search.enabled: true
-#      hibernate.search.backend.type: lucene
-#      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
-#      hibernate.search.backend.directory.type: local-filesystem
-#      hibernate.search.backend.directory.root: target/lucenefiles
-#      hibernate.search.backend.lucene_version: lucene_current
+  #      hibernate.dialect: org.hibernate.dialect.h2dialect
+  #      hibernate.hbm2ddl.auto: update
+  #      hibernate.jdbc.batch_size: 20
+  #      hibernate.cache.use_query_cache: false
+  #      hibernate.cache.use_second_level_cache: false
+  #      hibernate.cache.use_structured_entries: false
+  #      hibernate.cache.use_minimal_puts: false
+  ###    These settings will enable fulltext search with lucene
+  #      hibernate.search.enabled: true
+  #      hibernate.search.backend.type: lucene
+  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
+  #      hibernate.search.backend.directory.type: local-filesystem
+  #      hibernate.search.backend.directory.root: target/lucenefiles
+  #      hibernate.search.backend.lucene_version: lucene_current
   batch:
     job:
       enabled: false
