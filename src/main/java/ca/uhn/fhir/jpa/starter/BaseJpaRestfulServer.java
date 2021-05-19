@@ -337,6 +337,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
     // Cascading deletes
 
 
+
     if (appProperties.getAllow_cascading_deletes()) {
       CascadingDeleteInterceptor cascadingDeleteInterceptor = new CascadingDeleteInterceptor(ctx,
         daoRegistry, interceptorBroadcaster);
