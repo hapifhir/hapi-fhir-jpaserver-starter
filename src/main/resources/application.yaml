@@ -21,46 +21,42 @@ spring:
 #      hibernate.cache.use_second_level_cache: false
 #      hibernate.cache.use_structured_entries: false
 #      hibernate.cache.use_minimal_puts: false
-
-       # These settings will enable fulltext search with lucene
+###    These settings will enable fulltext search with lucene
 #      hibernate.search.enabled: true
 #      hibernate.search.backend.type: lucene
 #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
 #      hibernate.search.backend.directory.type: local-filesystem
 #      hibernate.search.backend.directory.root: target/lucenefiles
 #      hibernate.search.backend.lucene_version: lucene_current
-
   batch:
     job:
       enabled: false
-
 hapi:
   fhir:
-    ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
-    ### to determine the FHIR server address
-#   use_apache_address_strategy: false
-    ### forces the use of the https:// protocol for the returned server address.
-    ### alternatively, it may be set using the X-Forwarded-Proto header.
-#   use_apache_address_strategy_https: false
-    ### enable to set the Server URL
-#    server_address: http://hapi.fhir.org/baseR4
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
+### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
+### to determine the FHIR server address
+#   use_apache_address_strategy: false
+### forces the use of the https:// protocol for the returned server address.
+### alternatively, it may be set using the X-Forwarded-Proto header.
+#   use_apache_address_strategy_https: false
+### enable to set the Server URL
+#    server_address: http://hapi.fhir.org/baseR4
 #    defer_indexing_for_codesystems_of_size: 101
-    #implementationguides:
-      #example from registry (packages.fhir.org)
-      #swiss:
-        #name: swiss.mednet.fhir
-        #version: 0.8.0
-      #example not from registry
-      #ips_1_0_0:
-        #url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
-        #name: hl7.fhir.uv.ips
-        #version: 1.0.0
-
-    #supported_resource_types:
-    #  - Patient
-    #  - Observation
+#    implementationguides:
+###    example from registry (packages.fhir.org)
+#      swiss:
+#        name: swiss.mednet.fhir
+#        version: 0.8.0
+#      example not from registry
+#      ips_1_0_0:
+#        url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
+#        name: hl7.fhir.uv.ips
+#        version: 1.0.0
+#    supported_resource_types:
+#      - Patient
+#      - Observation
 #    allow_cascading_deletes: true
 #    allow_contains_searches: true
 #    allow_external_references: true
@@ -80,19 +76,19 @@ hapi:
 #    etag_support_enabled: true
 #    expunge_enabled: true
 #    daoconfig_client_id_strategy: null
+#    client_id_strategy: ALPHANUMERIC
 #    fhirpath_interceptor_enabled: false
 #    filter_search_enabled: true
 #    graphql_enabled: true
 #    narrative_enabled: true
-    #partitioning:
-    #  allow_references_across_partitions: false
-    #  partitioning_include_in_search_hashes: false
-    #cors:
-    #  allow_Credentials: true
-      # Supports multiple, comma separated allowed origin entries
-      # cors.allowed_origin=http://localhost:8080,https://localhost:8080,https://fhirtest.uhn.ca
-    #  allowed_origin:
-    #    - '*'
+#    partitioning:
+#      allow_references_across_partitions: false
+#      partitioning_include_in_search_hashes: false
+     cors:
+       allow_Credentials: true
+       # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
+       allowed_origin:
+       - '*'
 
     # Search coordinator thread pool sizes
     search-coord-core-pool-size: 20
@@ -113,13 +109,11 @@ hapi:
 #    retain_cached_searches_mins: 60
 #    reuse_cached_search_results_millis: 60000
     tester:
-
         home:
           name: Local Tester
           server_address: 'http://localhost:8080/fhir'
           refuse_to_fetch_third_party_urls: false
           fhir_version: R4
-
         global:
           name: Global Tester
           server_address: "http://hapi.fhir.org/baseR4"
@@ -144,14 +138,11 @@ hapi:
 #        startTlsRequired:
 #        quitWait:
 #    lastn_enabled: true
-    ### This is configuration for normalized quantity serach level default is 0
-    ###  0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
-    ###  1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
-    ###  2: NORMALIZED_QUANTITY_SEARCH_SUPPORTED
+###  This is configuration for normalized quantity serach level default is 0
+###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
+###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
+###   2: NORMALIZED_QUANTITY_SEARCH_SUPPORTED
 #    normalized_quantity_search_level: 2
-
-
-#
 #elasticsearch:
 #  debug:
 #    pretty_print_json_log: false
