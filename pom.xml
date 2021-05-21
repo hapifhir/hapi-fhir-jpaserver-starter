@@ -147,6 +147,13 @@
             <artifactId>thymeleaf</artifactId>
         </dependency>
 
+        <!-- Needed for parsing the config -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.28</version>
+        </dependency>
+
         <!-- Used for CORS support -->
         <!-- Spring Web is used to deploy the server to a web container. -->
         <dependency>
