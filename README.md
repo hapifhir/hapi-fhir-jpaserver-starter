@@ -87,3 +87,4 @@ docker push eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-ihe:v121
 
 Note that distroless images are also automatically build and pushed to the container registry,
 see the `-distroless` suffix in the image tags.
+
