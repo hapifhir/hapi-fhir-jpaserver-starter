@@ -120,6 +120,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
         .allow().read().allResources().inCompartment("Patient", new IdType("Patient", patientId)).andThen()
         .allow().write().allResources().inCompartment("Patient", new IdType("Patient", patientId)).andThen()
         .allow().transaction().withAnyOperation().andApplyNormalRules().andThen()
+        .allow().patch().allRequests().andThen()
         .denyAll()
         .build();
 	}
