@@ -6,16 +6,17 @@ services:
     restart: on-failure
     ports:
       - "8080:8080"
-  hapi-fhir-mysql:
-    image: mysql:latest
-    container_name: hapi-fhir-mysql
+  db:
+    image: postgres:latest
+    container_name: postgres
     restart: always
     environment:
-      MYSQL_DATABASE: 'hapi'
-      MYSQL_USER: 'admin'
-      MYSQL_PASSWORD: 'admin'
-      MYSQL_ROOT_PASSWORD: 'admin'
+      POSTGRES_PASSWORD: 'admin'
+      POSTGRES_USER: 'admin'
+      POSTGRES_DB: 'fhir'
+    ports:
+      - 5000:5432
     volumes:
-      - hapi-fhir-mysql:/var/lib/mysql
+      - fhirData:/var/lib/postgresql/data
 volumes:
-  hapi-fhir-mysql:
+  fhirData:
