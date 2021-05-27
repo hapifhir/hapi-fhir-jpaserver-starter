@@ -14,8 +14,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <!-- FIMXME KBD Change this to 5.3.0 BEFORE merging this code to master !  -->
-        <version>5.3.0</version>
+		  <version>5.4.0</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -146,6 +145,13 @@
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>
+        </dependency>
+
+        <!-- Needed for parsing the config -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.28</version>
         </dependency>
 
         <!-- Used for CORS support -->

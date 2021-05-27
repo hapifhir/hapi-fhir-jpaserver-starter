@@ -11,6 +11,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -28,6 +29,20 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
    */
   @Autowired
   AppProperties appProperties;
+
+  @PostConstruct
+  public void initSettings() {
+    if(appProperties.getSearch_coord_core_pool_size() != null) {
+		 setSearchCoordCorePoolSize(appProperties.getSearch_coord_core_pool_size());
+	 }
+	  if(appProperties.getSearch_coord_max_pool_size() != null) {
+		  setSearchCoordMaxPoolSize(appProperties.getSearch_coord_max_pool_size());
+	  }
+	  if(appProperties.getSearch_coord_queue_capacity() != null) {
+		  setSearchCoordQueueCapacity(appProperties.getSearch_coord_queue_capacity());
+	  }
+  }
+
 
   @Override
   public DatabaseBackedPagingProvider databaseBackedPagingProvider() {
@@ -68,7 +83,12 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
   public ElasticsearchSvcImpl elasticsearchSvc() {
     if (EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment)) {
       String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
-      String elasticsearchHost = elasticsearchUrl.substring(elasticsearchUrl.indexOf("://")+3, elasticsearchUrl.lastIndexOf(":"));
+      String elasticsearchHost;
+      if (elasticsearchUrl.startsWith("http")) {
+        elasticsearchHost = elasticsearchUrl.substring(elasticsearchUrl.indexOf("://") + 3, elasticsearchUrl.lastIndexOf(":"));
+      } else {
+        elasticsearchHost = elasticsearchUrl.substring(0, elasticsearchUrl.indexOf(":"));
+      }
       String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
       String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
       int elasticsearchPort = Integer.parseInt(elasticsearchUrl.substring(elasticsearchUrl.lastIndexOf(":")+1));
