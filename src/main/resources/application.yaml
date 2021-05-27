@@ -1,9 +1,10 @@
 spring:
   datasource:
-    url: 'jdbc:postgresql://db:5432/fhir'
-    username: admin
-    password: admin
-    driverClassName: org.postgresql.Driver
+    url: 'jdbc:h2:file:./target/database/h2'
+    #url: jdbc:h2:mem:test_mem
+    username: sa
+    password: null
+    driverClassName: org.h2.Driver
     max-active: 15
 
     # database connection pool size
@@ -13,7 +14,7 @@ spring:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
-      hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
+#      hibernate.dialect: org.hibernate.dialect.h2dialect
 #      hibernate.hbm2ddl.auto: update
 #      hibernate.jdbc.batch_size: 20
 #      hibernate.cache.use_query_cache: false
@@ -21,12 +22,12 @@ spring:
 #      hibernate.cache.use_structured_entries: false
 #      hibernate.cache.use_minimal_puts: false
 ###    These settings will enable fulltext search with lucene
-      hibernate.search.enabled: true
-      hibernate.search.backend.type: lucene
-      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
-      hibernate.search.backend.directory.type: local-filesystem
-      hibernate.search.backend.directory.root: target/lucenefiles
-      hibernate.search.backend.lucene_version: lucene_current
+#      hibernate.search.enabled: true
+#      hibernate.search.backend.type: lucene
+#      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
+#      hibernate.search.backend.directory.type: local-filesystem
+#      hibernate.search.backend.directory.root: target/lucenefiles
+#      hibernate.search.backend.lucene_version: lucene_current
   batch:
     job:
       enabled: false
@@ -94,19 +95,19 @@ hapi:
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
 
-    logger:
-      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
-      format: >-
-        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
-        Operation[${operationType} ${operationName} ${idOrResourceName}]
-        UA[${requestHeader.user-agent}] Params[${requestParameters}]
-        ResponseEncoding[${responseEncodingNoDefault}]
-      log_exceptions: true
-      name: fhirtest.access
-    max_binary_size: 104857600
-    max_page_size: 200
-    retain_cached_searches_mins: 60
-    reuse_cached_search_results_millis: 30000
+#    logger:
+#      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
+#      format: >-
+#        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
+#        Operation[${operationType} ${operationName} ${idOrResourceName}]
+#        UA[${requestHeader.user-agent}] Params[${requestParameters}]
+#        ResponseEncoding[${responseEncodingNoDefault}]
+#      log_exceptions: true
+#      name: fhirtest.access
+#    max_binary_size: 104857600
+#    max_page_size: 200
+#    retain_cached_searches_mins: 60
+#    reuse_cached_search_results_millis: 60000
     tester:
         home:
           name: Local Tester
