@@ -1,2 +1,12 @@
+target/classes/
+target/failsafe-reports/
+target/generated-*
+target/maven-*
+target/ROOT
+target/test-classes/
+target/war
+target/duplicate-finder-result.xml
+target/jacoco.exec
+target/*.original
 .idea
 .git
