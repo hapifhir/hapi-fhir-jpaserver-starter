@@ -28,7 +28,6 @@ public class AppProperties {
   private Boolean allow_external_references = false;
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
-  private Boolean allow_placeholder_references = true;
   private Boolean auto_create_placeholder_reference_targets = false;
   private Boolean enable_index_missing_fields = false;
   private Boolean enable_repository_validating_interceptor = false;
@@ -238,14 +237,6 @@ public class AppProperties {
   public void setAllow_override_default_search_params(
     Boolean allow_override_default_search_params) {
     this.allow_override_default_search_params = allow_override_default_search_params;
-  }
-
-  public Boolean getAllow_placeholder_references() {
-    return allow_placeholder_references;
-  }
-
-  public void setAllow_placeholder_references(Boolean allow_placeholder_references) {
-    this.allow_placeholder_references = allow_placeholder_references;
   }
 
   public Boolean getAuto_create_placeholder_reference_targets() {

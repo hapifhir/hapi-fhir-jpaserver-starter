@@ -58,7 +58,6 @@ hapi:
 #    allow_external_references: true
 #    allow_multiple_delete: true
 #    allow_override_default_search_params: true
-#    allow_placeholder_references: true
 #    auto_create_placeholder_reference_targets: false
 #    cql_enabled: true
 #    default_encoding: JSON
