@@ -19,3 +19,4 @@ services:
       - hapi-fhir-mysql:/var/lib/mysql
 volumes:
   hapi-fhir-mysql:
+
