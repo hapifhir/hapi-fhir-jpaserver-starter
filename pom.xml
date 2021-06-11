@@ -88,7 +88,7 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-base</artifactId>
-            <version>${project.version}</version>
+            <version>5.4.1-PRE5-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -116,15 +116,21 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-testpage-overlay</artifactId>
-            <version>${project.version}</version>
+            <version>5.4.1-PRE5-SNAPSHOT</version>
             <type>war</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-testpage-overlay</artifactId>
-            <version>${project.version}</version>
+            <version>5.4.1-PRE5-SNAPSHOT</version>
             <classifier>classes</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-opensrp-security-config</artifactId>
+            <version>5.4.0-PRE5-SNAPSHOT</version>
         </dependency>
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
@@ -314,7 +320,17 @@
 
 
     </dependencies>
-
+<!--    <dependencyManagement>-->
+<!--        <dependencies>-->
+<!--    <dependency>-->
+<!--        <groupId>org.keycloak.bom</groupId>-->
+<!--        <artifactId>keycloak-adapter-bom</artifactId>-->
+<!--        <version>13.0.0</version>-->
+<!--        <type>pom</type>-->
+<!--        <scope>import</scope>-->
+<!--    </dependency>-->
+<!--</dependencies>-->
+<!--        </dependencyManagement>-->
     <build>
 
         <pluginManagement>
@@ -390,6 +406,7 @@
                         <overlay>
                             <groupId>ca.uhn.hapi.fhir</groupId>
                             <artifactId>hapi-fhir-testpage-overlay</artifactId>
+<!--                            <version>5.4.1-PRE5-SNAPSHOT</version>-->
                         </overlay>
                     </overlays>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
