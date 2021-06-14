@@ -317,11 +317,11 @@ It is important to use MySQL5Dialect when using MySQL version 5+.
 
 The server may be configured with subscription support by enabling properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file:
 
-- `hapi.fhir.subscription.resthook.enabled` - Enables REST Hook subscriptions, where the server will make an outgoing connection to a remote REST server
+- `hapi.fhir.subscription.resthook_enabled` - Enables REST Hook subscriptions, where the server will make an outgoing connection to a remote REST server
 
 - `hapi.fhir.subscription.email.*` - Enables email subscriptions. Note that you must also provide the connection details for a usable SMTP server.
 
-- `hapi.fhir.subscription.websocket.enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/websocket](ws://localhost:8080/websocket)
+- `hapi.fhir.subscription.websocket_enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/websocket](ws://localhost:8080/websocket)
 
 ## Enabling CQL
 
@@ -351,6 +351,11 @@ elasticsearch.schema_management_strategy=CREATE
 
 Set `hapi.fhir.lastn_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable the $lastn operation on this server.  Note that the $lastn operation relies on Elasticsearch, so for $lastn to work, indexing must be enabled using Elasticsearch.
 
+## Changing cached search results time
+
+It is possible to change the cached search results time. The option `reuse_cached_search_results_millis` in the [application.yaml] is 6000 miliseconds by default.
+Set `reuse_cached_search_results_millis: -1` in the [application.yaml] file to ignore the cache time every search. 
+
 ## Build the distroless variant of the image (for lower footprint and improved security)
 
 The default Dockerfile contains a `release-distroless` stage to build a variant of the image
@@ -362,3 +367,9 @@ docker build --target=release-distroless -t hapi-fhir:distroless .
 
 Note that distroless images are also automatically build and pushed to the container registry,
 see the `-distroless` suffix in the image tags.
+
+## Adding custom operations
+
+To add a custom operation, refer to the documentation in the core hapi-fhir libraries [here](https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations_operations.html).
+
+Within `hapi-fhir-jpaserver-starter`, create a generic class (that does not extend or implement any classes or interfaces), add the `@Operation` as a method within the generic class, and then register the class as a provider using `RestfulServer.registerProvider()`.

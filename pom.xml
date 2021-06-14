@@ -392,6 +392,7 @@
                             <Build-Time>${maven.build.timestamp}</Build-Time>
                         </manifestEntries>
                     </archive>
+                    <attachClasses>true</attachClasses>
                     <overlays>
                         <overlay>
                             <groupId>ca.uhn.hapi.fhir</groupId>

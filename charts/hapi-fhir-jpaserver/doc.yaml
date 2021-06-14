@@ -1,0 +1,19 @@
+project:
+  name: HAPI FHIR JPA Server
+  shortName: hapi-fhir-jpaserver
+  url: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+  description: Helm chart for deploying the HAPI FHIR JPA starter server
+  app: the HAPI FHIR JPA starter server.
+repository:
+  url: https://hapifhir.github.io/hapi-fhir-jpaserver-starter
+  name: hapifhir
+chart:
+  name: hapi-fhir-jpaserver
+  values: "-- generate from values file --"
+  valuesExample: "-- generate from values file --"
+prerequisites:
+  - "Kubernetes v1.18+"
+  - "Helm v3"
+release:
+  name: hapi-fhir-jpaserver
+  namespace: fhir

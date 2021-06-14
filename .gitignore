@@ -160,3 +160,6 @@ Temporary Items
 .apdisk
 .classpath
 .project
+
+# Helm Chart dependencies
+**/charts/*.tgz
