@@ -158,7 +158,7 @@ hapi:
 #security:
 #  ignored: none
 keycloak:
-  auth-server-url: https://cc3ddc230510.ngrok.io/auth/
+  auth-server-url: http://localhost:8180/auth/
   realm: fhir-core
   resource: fhir-core-server
   credentials:

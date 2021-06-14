@@ -88,7 +88,7 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-base</artifactId>
-            <version>5.4.1-PRE5-SNAPSHOT</version>
+            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -116,14 +116,14 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-testpage-overlay</artifactId>
-            <version>5.4.1-PRE5-SNAPSHOT</version>
+            <version>${project.version}</version>
             <type>war</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-testpage-overlay</artifactId>
-            <version>5.4.1-PRE5-SNAPSHOT</version>
+            <version>${project.version}</version>
             <classifier>classes</classifier>
         </dependency>
 
@@ -320,17 +320,7 @@
 
 
     </dependencies>
-<!--    <dependencyManagement>-->
-<!--        <dependencies>-->
-<!--    <dependency>-->
-<!--        <groupId>org.keycloak.bom</groupId>-->
-<!--        <artifactId>keycloak-adapter-bom</artifactId>-->
-<!--        <version>13.0.0</version>-->
-<!--        <type>pom</type>-->
-<!--        <scope>import</scope>-->
-<!--    </dependency>-->
-<!--</dependencies>-->
-<!--        </dependencyManagement>-->
+
     <build>
 
         <pluginManagement>
@@ -406,7 +396,6 @@
                         <overlay>
                             <groupId>ca.uhn.hapi.fhir</groupId>
                             <artifactId>hapi-fhir-testpage-overlay</artifactId>
-<!--                            <version>5.4.1-PRE5-SNAPSHOT</version>-->
                         </overlay>
                     </overlays>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
