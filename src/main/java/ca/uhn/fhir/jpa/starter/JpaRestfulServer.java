@@ -22,6 +22,7 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     super.initialize();
 
     // Add your own customization here
+    registerInterceptor(new NatsInterceptor());
 
   }
 
