@@ -196,6 +196,9 @@ spring:
   jpa:
     hibernate.physical_naming_strategy: NAME_OF_PREFERRED_STRATEGY
 ```
+On linux systems or when using docker mysql containers, it will be necessary to review the case-sensitive setup for
+mysql schema identifiers. See  https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html. We suggest you
+set `lower_case_table_names=1` during mysql startup.
 
 ### PostgreSQL configuration
 
