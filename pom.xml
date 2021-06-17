@@ -127,11 +127,17 @@
             <classifier>classes</classifier>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>ca.uhn.hapi.fhir</groupId>-->
+<!--            <artifactId>hapi-fhir-opensrp-security-config</artifactId>-->
+<!--            <version>0.0.1-PRE5-SNAPSHOT</version>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
+            <groupId>org.smartregister</groupId>
             <artifactId>hapi-fhir-opensrp-security-config</artifactId>
-            <version>0.0.1-PRE5-SNAPSHOT</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
             is used here, but log4j would also be fine. -->
