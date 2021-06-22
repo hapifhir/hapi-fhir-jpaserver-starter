@@ -5,8 +5,9 @@ This project is a  starter project you can use to deploy a FHIR server using HAP
 - Optionally Implementation Guides can be added that will be loaded during startup of the server. The "with-preload" subfolder contains an example with the swiss implementation guides relevant for the Swiss EPR Projectathon 2020
 
   - ch.fhir.ig.ch-epr-term#2.0.4
-  - ch.fhir.ig.ch-core#1.0.0
-  - ch.fhir.ig.ch-emed#0.1.0
+  - ch.fhir.ig.ch-core#1.2.0
+  - ch.fhir.ig.ch-emed#0.2.0
+  - ch.fhir.ig.ch-vacd#0.1.0
   - ch.fhir.ig.ch-atc#3.1.0
   - ch.fhir.ig.ch-epr-mhealth#0.1.2
 
@@ -74,12 +75,12 @@ implementation guide list like in "with-preload/application.yaml"
 After building the base image:
 ```bash
 cd with-preload
-docker build -t hapi-fhir-jpavalidator-preload .
-docker run -d --name hapi-fhir-jpavalidator-preload -p 8080:8080 hapi-fhir-jpavalidator-preload
+docker build -t hapi-fhir-jpavalidator-ihe .
+docker run -d --name hapi-fhir-jpavalidator-ihe -p 8080:8080 hapi-fhir-jpavalidator-ihe
 ```
 
 ### making container available
 ```
-docker tag hapi-fhir-jpavalidator eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator:v120
-docker push eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator:v120
+docker tag hapi-fhir-jpavalidator-ihe eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-ihe:v121
+docker push eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-ihe:v121
 ```
