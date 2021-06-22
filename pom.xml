@@ -129,7 +129,7 @@
 
         <dependency>
             <groupId>org.smartregister</groupId>
-            <artifactId>hapi-fhir-opensrp-security-config</artifactId>
+            <artifactId>hapi-fhir-keycloak</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
