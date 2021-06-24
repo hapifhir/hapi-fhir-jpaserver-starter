@@ -45,6 +45,7 @@ import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -365,12 +366,16 @@ public class BaseJpaRestfulServer extends RestfulServer {
     if (appProperties.getImplementationGuides() != null) {
       Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
       for (Map.Entry<String, AppProperties.ImplementationGuide> guide : guides.entrySet()) {
-			packageInstallerSvc.install(new PackageInstallationSpec()
+			PackageInstallationSpec packageInstallationSpec = new PackageInstallationSpec()
 				.setPackageUrl(guide.getValue().getUrl())
 				.setName(guide.getValue().getName())
-				.setVersion(guide.getValue().getVersion())
-				.setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
-
+				.setVersion(guide.getValue().getVersion());
+			if(appProperties.getInstall_transitive_ig_dependencies()) {
+				packageInstallationSpec.setFetchDependencies(true)
+					.setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL);
+				packageInstallationSpec.setDependencyExcludes(ImmutableList.of("hl7.fhir.r2.core", "hl7.fhir.r3.core", "hl7.fhir.r4.core", "hl7.fhir.r5.core"));
+			}
+			packageInstallerSvc.install(packageInstallationSpec);
       }
     }
 
