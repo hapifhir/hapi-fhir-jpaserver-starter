@@ -62,6 +62,7 @@ public class AppProperties {
   private Subscription subscription = new Subscription();
   private Cors cors = null;
   private Partitioning partitioning = null;
+  private Boolean install_transitive_ig_dependencies = true;
   private Map<String, ImplementationGuide> implementationGuides = null;
 
   private Boolean lastn_enabled = false;
@@ -73,7 +74,7 @@ public class AppProperties {
   private Boolean use_apache_address_strategy = false;
   private Boolean use_apache_address_strategy_https = false;
 
-  public Boolean getUse_apache_address_strategy() {
+	public Boolean getUse_apache_address_strategy() {
     return use_apache_address_strategy;
   }
 
@@ -462,7 +463,15 @@ public class AppProperties {
   	 this.search_coord_queue_capacity = search_coord_queue_capacity;
   }
 
-public static class Cors {
+	public boolean getInstall_transitive_ig_dependencies() {
+		return install_transitive_ig_dependencies;
+	}
+
+	public void setInstall_transitive_ig_dependencies(boolean install_transitive_ig_dependencies) {
+		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
+	}
+
+	public static class Cors {
     private Boolean allow_Credentials = true;
     private List<String> allowed_origin = ImmutableList.of("*");
 
