@@ -9,6 +9,7 @@ import java.security.spec.RSAPublicKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +26,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.RuntimeResourceDefinition;
+import ca.uhn.fhir.context.RuntimeSearchParam;
 
 public class OAuth2Helper {
 	private static final Logger logger = LoggerFactory.getLogger(OAuth2Helper.class);
@@ -123,6 +127,13 @@ public class OAuth2Helper {
 			return patientRef;
 		}
 		return null;
+	}
+
+	protected boolean checkInPatientCompartment(String resourceType) {
+		FhirContext ctx = FhirContext.forR4();
+		RuntimeResourceDefinition data = ctx.getResourceDefinition(resourceType);
+		List<RuntimeSearchParam> compartmentList = data.getSearchParamsForCompartmentName("Patient");
+		return !compartmentList.isEmpty();
 	}
 
 }
