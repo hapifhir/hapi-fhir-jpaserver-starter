@@ -81,6 +81,7 @@ hapi:
 #    filter_search_enabled: true
 #    graphql_enabled: true
 #    narrative_enabled: true
+#    mdm_enabled: true
 #    partitioning:
 #      allow_references_across_partitions: false
 #      partitioning_include_in_search_hashes: false

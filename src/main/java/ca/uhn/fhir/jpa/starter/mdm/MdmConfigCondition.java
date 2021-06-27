@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.mdm;
+package ca.uhn.fhir.jpa.starter.mdm;
 
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
