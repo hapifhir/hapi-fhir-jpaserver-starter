@@ -126,7 +126,7 @@ hapi:
 #    binary_storage_enabled: true
 #    bulk_export_enabled: true
 #    subscription:
-#      resthook_enabled: false
+#      resthook_enabled: true
 #      websocket_enabled: false
 #      email:
 #        from: some@test.com
