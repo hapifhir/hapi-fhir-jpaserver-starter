@@ -1,10 +1,12 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
+    url: 'jdbc:postgresql://localhost:5432/hapi_fhir'
     #url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
+    username: postgres
+    password: root
+    driverClassName: org.postgresql.Driver
     max-active: 15
 
     # database connection pool size
@@ -153,3 +155,15 @@ hapi:
 #  protocol: 'http'
 #  schema_management_strategy: CREATE
 #  username: SomeUsername
+#security:
+#  ignored: none
+keycloak:
+  auth-server-url: http://localhost:8180/auth/
+  realm: fhir-core
+  resource: fhir-core-server
+  credentials:
+    secret: b7747a19-f72f-4906-8892-8438ce2492be
+  ssl-required: external
+#  use-resource-role-mappings: true,
+logging.level.org.springframework.web: trace
+logging.level.org.apache: trace

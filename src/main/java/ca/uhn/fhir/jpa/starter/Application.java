@@ -9,8 +9,10 @@ import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -25,6 +27,7 @@ import org.springframework.web.servlet.DispatcherServlet;
   JpaRestfulServer.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
 @Import({SubscriptionSubmitterConfig.class, SubscriptionProcessorConfig.class, SubscriptionChannelConfig.class, WebsocketDispatcherConfig.class, MdmConfig.class})
+@EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class})
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
