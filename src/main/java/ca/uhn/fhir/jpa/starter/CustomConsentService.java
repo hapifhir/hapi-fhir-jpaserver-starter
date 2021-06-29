@@ -3,7 +3,7 @@ package ca.uhn.fhir.jpa.starter;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.Task;
+import org.hl7.fhir.r4.model.Resource;
 import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -98,7 +98,7 @@ public class CustomConsentService implements IConsentService {
       String patientRef = "Patient/" + patientId;
       switch (resourceName) {
         case "Task":
-          return validateTaskResource((Task) theResource, patientRef);
+          return validateResourceRef((Resource) theResource, patientRef, "for");
         default:
           return false;
       }
@@ -106,15 +106,15 @@ public class CustomConsentService implements IConsentService {
     return true;
   }
 
-  private boolean validateTaskResource(Task task, String patientRef) {
+  private boolean validateResourceRef(Resource theResource, String patientRef, String refPropertyName) {
     try {
-      Reference ref = (Reference) task.getNamedProperty("for").getValues().get(0);
+      Reference ref = (Reference) theResource.getNamedProperty(refPropertyName).getValues().get(0);
       if (ref.getReference().equals(patientRef)) {
         return true;
       }
       return false;
     } catch (Exception e) {
-      log.error("Unable to find patient reference in Task resource");
+      log.error("Unable to find patient reference in "+ theResource.getClass().getCanonicalName() +" resource");
       return false;
     }
   }
