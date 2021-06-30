@@ -116,7 +116,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	}
 	
 	private List<IAuthRule> allowForClaimResourceId(RequestDetails theRequestDetails,String patientId) {
-		if (oAuth2Helper.checkInPatientCompartment(theRequestDetails.getResourceName())) {
+		if (oAuth2Helper.canBeInPatientCompartment(theRequestDetails.getResourceName())) {
 			return new RuleBuilder()
 		            .allow().read().allResources().inCompartment("Patient", new IdType("Patient", patientId)).andThen()
 		            .allow().write().allResources().inCompartment("Patient", new IdType("Patient", patientId)).andThen()
