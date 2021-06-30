@@ -129,7 +129,7 @@ public class OAuth2Helper {
 		return null;
 	}
 
-	protected boolean checkInPatientCompartment(String resourceType) {
+	protected boolean canBeInPatientCompartment(String resourceType) {
 		FhirContext ctx = FhirContext.forR4();
 		RuntimeResourceDefinition data = ctx.getResourceDefinition(resourceType);
 		List<RuntimeSearchParam> compartmentList = data.getSearchParamsForCompartmentName("Patient");

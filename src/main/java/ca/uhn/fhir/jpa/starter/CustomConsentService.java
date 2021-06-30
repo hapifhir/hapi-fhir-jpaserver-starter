@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Reference;
@@ -22,7 +23,7 @@ public class CustomConsentService implements IConsentService {
       org.slf4j.LoggerFactory.getLogger(CustomConsentService.class);
 
   private OAuth2Helper oAuth2Helper = new OAuth2Helper();
-  DaoRegistry daoRegistry;
+  private DaoRegistry daoRegistry;
 
   public CustomConsentService() {}
 
@@ -33,35 +34,35 @@ public class CustomConsentService implements IConsentService {
   @Override
   public ConsentOutcome startOperation(RequestDetails theRequestDetails,
       IConsentContextServices theContextServices) {
-    if (oAuth2Helper.checkInPatientCompartment(theRequestDetails.getResourceName())) {
-      return ConsentOutcome.AUTHORIZED;
-    }
-    if (theRequestDetails.getHeader("Authorization") != null) {
+    if (!ObjectUtils.isEmpty(theRequestDetails.getHeader("Authorization"))) {
+      if (oAuth2Helper.canBeInPatientCompartment(theRequestDetails.getResourceName())) {
+        return ConsentOutcome.AUTHORIZED;
+      }
       String patientId = getPatientFromToken(theRequestDetails);
       String resourceName = null;
       boolean proceed = false;
       switch (theRequestDetails.getRequestType().toString()) {
         case "POST":
           resourceName = theRequestDetails.getResourceName();
-          proceed = validateResource(resourceName, patientId, theRequestDetails.getResource());
+          proceed = isResourceValid(resourceName, patientId, theRequestDetails.getResource());
           break;
         case "PUT":
           resourceName = theRequestDetails.getResourceName();
           IBaseResource putResource = getResourceFromDB(theRequestDetails.getRequestPath());
-          if (validateResource(resourceName, patientId, putResource)) {
-            proceed = validateResource(resourceName, patientId, theRequestDetails.getResource());
+          if (isResourceValid(resourceName, patientId, putResource)) {
+            proceed = isResourceValid(resourceName, patientId, theRequestDetails.getResource());
           }
           break;
         case "PATCH":
           resourceName = theRequestDetails.getResourceName();
           IBaseResource patchResource = getResourceFromDB(theRequestDetails.getRequestPath());
-          proceed = validateResource(resourceName, patientId, patchResource);
+          proceed = isResourceValid(resourceName, patientId, patchResource);
           break;
         case "GET":
           resourceName = theRequestDetails.getResourceName();
           if (theRequestDetails.getRequestPath().split("/").length > 1) {
             IBaseResource getResource = getResourceFromDB(theRequestDetails.getRequestPath());
-            proceed = validateResource(resourceName, patientId, getResource);
+            proceed = isResourceValid(resourceName, patientId, getResource);
           }
           proceed = true;
           break;
@@ -77,13 +78,16 @@ public class CustomConsentService implements IConsentService {
   @Override
   public ConsentOutcome canSeeResource(RequestDetails theRequestDetails, IBaseResource theResource,
       IConsentContextServices theContextServices) {
-    if (oAuth2Helper.checkInPatientCompartment(theRequestDetails.getResourceName())) {
-      return ConsentOutcome.AUTHORIZED;
+    if (!ObjectUtils.isEmpty(theRequestDetails.getHeader("Authorization"))) {
+      if (oAuth2Helper.canBeInPatientCompartment(theRequestDetails.getResourceName())) {
+        return ConsentOutcome.AUTHORIZED;
+      }
+      String patientId = getPatientFromToken(theRequestDetails);
+      String resourceName = theResource.getClass().getSimpleName();
+      return isResourceValid(resourceName, patientId, theResource) ? ConsentOutcome.PROCEED
+          : ConsentOutcome.REJECT;
     }
-    String patientId = getPatientFromToken(theRequestDetails);
-    String resourceName = theResource.getClass().getSimpleName();
-    return validateResource(resourceName, patientId, theResource) ? ConsentOutcome.PROCEED
-        : ConsentOutcome.REJECT;
+    return ConsentOutcome.AUTHORIZED;
   }
 
   private IBaseResource getResourceFromDB(String requestedPath) {
@@ -92,13 +96,13 @@ public class CustomConsentService implements IConsentService {
   }
 
 
-  private boolean validateResource(String resourceName, String patientId,
+  private boolean isResourceValid(String resourceName, String patientId,
       IBaseResource theResource) {
     if (patientId != null) {
       String patientRef = "Patient/" + patientId;
       switch (resourceName) {
         case "Task":
-          return validateResourceRef((Resource) theResource, patientRef, "for");
+          return isReferanceValid((Resource) theResource, patientRef, "for");
         default:
           return false;
       }
@@ -106,7 +110,8 @@ public class CustomConsentService implements IConsentService {
     return true;
   }
 
-  private boolean validateResourceRef(Resource theResource, String patientRef, String refPropertyName) {
+  private boolean isReferanceValid(Resource theResource, String patientRef,
+      String refPropertyName) {
     try {
       Reference ref = (Reference) theResource.getNamedProperty(refPropertyName).getValues().get(0);
       if (ref.getReference().equals(patientRef)) {
@@ -114,7 +119,8 @@ public class CustomConsentService implements IConsentService {
       }
       return false;
     } catch (Exception e) {
-      log.error("Unable to find patient reference in "+ theResource.getClass().getCanonicalName() +" resource");
+      log.error("Unable to find patient reference in " + theResource.getClass().getCanonicalName()
+          + " resource");
       return false;
     }
   }
