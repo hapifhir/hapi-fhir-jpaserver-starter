@@ -24,6 +24,7 @@ import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
+import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative.INarrativeGenerator;
 import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
@@ -46,19 +47,18 @@ import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import org.hl7.fhir.r4.model.Bundle.BundleType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.cors.CorsConfiguration;
-
-import javax.servlet.ServletException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.servlet.ServletException;
+import org.hl7.fhir.r4.model.Bundle.BundleType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.cors.CorsConfiguration;
 
 public class BaseJpaRestfulServer extends RestfulServer {
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(BaseJpaRestfulServer.class);
@@ -73,7 +73,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   IFhirSystemDao fhirSystemDao;
   @Autowired
-  ResourceProviderFactory resourceProviders;
+  ResourceProviderFactory resourceProviderFactory;
   @Autowired
   IJpaSystemProvider jpaSystemProvider;
   @Autowired
@@ -101,9 +101,13 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired(required = false)
   IRepositoryValidationInterceptorFactory factory;
   // These are set only if the features are enabled
-  private CqlProviderLoader cqlProviderLoader;
-	@Autowired
-	private IValidationSupport myValidationSupport;
+  @Autowired
+  Optional<CqlProviderLoader> cqlProviderLoader;
+  @Autowired
+  Optional<MdmProviderLoader> mdmProviderProvider;
+
+  @Autowired
+  private IValidationSupport myValidationSupport;
 
   public BaseJpaRestfulServer() {
   }
@@ -127,7 +131,14 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     setFhirContext(fhirSystemDao.getContext());
 
-    registerProviders(resourceProviders.createProviders());
+    /*
+     * Order matters - the MDM provider registers itself on the resourceProviderFactory - hence the loading must be done
+     * ahead of provider registration
+     */
+    if(appProperties.getMdm_enabled())
+    	mdmProviderProvider.get().loadProvider();
+
+    registerProviders(resourceProviderFactory.createProviders());
     registerProvider(jpaSystemProvider);
 
     /*
