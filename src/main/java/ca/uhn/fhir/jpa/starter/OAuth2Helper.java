@@ -11,6 +11,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +30,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.RuntimeResourceDefinition;
 import ca.uhn.fhir.context.RuntimeSearchParam;
+import ca.uhn.fhir.rest.server.provider.ProviderConstants;
 
 public class OAuth2Helper {
 	private static final Logger logger = LoggerFactory.getLogger(OAuth2Helper.class);
@@ -130,10 +132,16 @@ public class OAuth2Helper {
 	}
 
 	protected boolean canBeInPatientCompartment(String resourceType) {
+		/*
+		 * For Bundle Request resourceType would be null.
+		 * For now we allow all bundle operations this will apply normal rules from authorization intercepter
+		 */
+		if (ObjectUtils.isEmpty(resourceType)) {
+			return true;
+		}
 		FhirContext ctx = FhirContext.forR4();
 		RuntimeResourceDefinition data = ctx.getResourceDefinition(resourceType);
 		List<RuntimeSearchParam> compartmentList = data.getSearchParamsForCompartmentName("Patient");
 		return !compartmentList.isEmpty();
 	}
-
 }
