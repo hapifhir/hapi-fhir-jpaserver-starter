@@ -1,3 +1,17 @@
+2021/07/05 Release 1.3.0
+- updated hapi-fhir to 5.5.0-PRE5-SNAPSHOT with patches for hapi-fhir and org.hl7.fhir.core (dev branch on ahdis foreach project)
+- updated swiss epr implementation guides to STU2 Ballot
+- renamed project to matchbox-validator
+- base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox-validator:v130
+- swiss epr release: docker pull eu.gcr.io/fhir-ch/matchbox-validator-swissepr:v130
+- testsystem endpoint for siwssepr validator: https://test.ahdis.ch/matchbox-validator/fhir
+
+2020/12/23 Release 1.2.0
+- updated hapi-fhir to 5.2.0
+- updated ch-epr-mhealth to 0.1.2
+- Release is available here:
+docker pull eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator:v120
+
 2020/10/22 Release 1.1.0
 - updated hapi-fhir to (21.10.2020) and spring-boot
 - updated fhir.core.version 5.1.15, later is not yet possible due to class name changes

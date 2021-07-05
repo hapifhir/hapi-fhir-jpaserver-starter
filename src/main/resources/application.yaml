@@ -32,7 +32,7 @@ spring:
       enabled: false
 server: 
   servlet:
-    context-path: /hapi-fhir-jpavalidator
+    context-path: /matchbox-validator
 hapi:
   fhir:
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5

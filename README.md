@@ -1,15 +1,6 @@
-# HAPI-FHIR JPA Validator Starter Project
+# Matchbox Validator 
 
-This project is a  starter project you can use to deploy a FHIR server using HAPI FHIR JPA validaton with the npm implementation support.
-
-- Optionally Implementation Guides can be added that will be loaded during startup of the server. The "with-preload" subfolder contains an example with the swiss implementation guides relevant for the Swiss EPR Projectathon 2020
-
-  - ch.fhir.ig.ch-epr-term#2.0.4
-  - ch.fhir.ig.ch-core#1.2.0
-  - ch.fhir.ig.ch-emed#0.2.0
-  - ch.fhir.ig.ch-vacd#0.1.0
-  - ch.fhir.ig.ch-atc#3.1.0
-  - ch.fhir.ig.ch-epr-mhealth#0.1.2
+This project is a starter project you can use to deploy a FHIR server using HAPI FHIR JPA validation for supporting FHIR implementation guides.
 
 - The server offers a $validate operation on the root with a profile parameter, e.g. you can do:
 
@@ -19,15 +10,20 @@ This project is a  starter project you can use to deploy a FHIR server using HAP
   
   < ./composition_confcode.xml
   ```   
+
+- Optionally Implementation Guides can be added that will be loaded during startup of the server. The "with-preload" subfolder contains an example with the swiss implementation guides relevant for the Swiss EPR Projectathon 2021
+
 The docker file will create a docker image with no preloaded implementation guides. A list of implementation guides to load can be passed as config-map.
+
 A second docker file will create an image with fixed configuration and preloaded implementation guides.  
-That  docker image does not need to download the implementation guides afterwards.
+That docker image does not need to download the implementation guides afterwards.
 
 ## Prerequisites
 
-In order to use this sample, you should have:
+1. to develop with matchbox-validator you need to check out the **dev** branches of the forked [org.hl7.fhir.core](https://github.com/ahdis/org.hl7.fhir.core/tree/dev) and [hapi-fhir](https://github.com/ahdis/hapi-fhir/tree/dev) project
+2. run mvn clean install -DskipTests in org.hl7.fhir.core and hapi-fhir (this will install local maven snapshots in your system)
 
-- [This project](https://github.com/hapifhir/hapi-fhir-jpavalidator) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
+- [This project](https://github.com/ahdis/matchbox-validator) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
 - Oracle Java (JDK) installed: Minimum JDK8 or newer.
 - Apache Maven build tool (newest version)
 
@@ -42,10 +38,12 @@ mvn clean install -DskipTests spring-boot:run
 ```
 Load example implementation guides:
 ```bash
-mvn clean install -DskipTests spring-boot:run -Dspring.config.additional-location=file:with-preload/application.yaml
+mvn clean install -DskipTests spring-boot:run -Dspring-boot.run.arguments=--spring.config.additional-location=file:with-preload/application.yaml
 ```
-
-to debug:
+or
+```
+java -Dspring.config.additional-location=file:with-preload/application.yaml -jar target/matchbox-validator.jar
+```
 
 ```
 mvn clean install -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
@@ -54,7 +52,7 @@ mvn clean install -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="-X
 
 Then, browse to the following link to use the server:
 
-[http://localhost:8080/hapi-fhir-jpavalidator/](http://localhost:8080/hapi-fhir-jpavalidator/)
+[http://localhost:8080/matchbox-validator/](http://localhost:8080/matchbox-validator/)
 
 
 ## building with Docker
@@ -62,25 +60,28 @@ Then, browse to the following link to use the server:
 ### Configurable base image:
 
 ```bash
-mvn package
-docker build -t hapi-fhir-jpavalidator .
-docker run -d --name hapi-fhir-jpavalidator -p 8080:8080 hapi-fhir-jpavalidator
+mvn package -DskipTests
+docker build -t matchbox-validator .
+docker run -d --name matchbox-validator -p 8080:8080 matchbox-validator
 ```
-Server will then be accessible at http://localhost:8888/hapi-fhir-jpavalidator and eg. http://localhost:8888/fhir/metadata. 
-To dynamicaly configure run in a kubernetes environment and add a kubernetes config map that provides /config/application.yaml file with
-implementation guide list like in "with-preload/application.yaml" 
+Server will then be accessible at http://localhost:8080/matchbox-validator/fhir/metadata. 
+
+To dynamically configure run in a kubernetes environment and add a kubernetes config map that provides /config/application.yaml file with implementation guide list like in "with-preload/application.yaml" 
 
 ### Image with preloaded implementation guides
 
 After building the base image:
 ```bash
 cd with-preload
-docker build -t hapi-fhir-jpavalidator-ihe .
-docker run -d --name hapi-fhir-jpavalidator-ihe -p 8080:8080 hapi-fhir-jpavalidator-ihe
+docker build -t matchbox-validator-swissepr .
+docker run -d --name matchbox-validator-swissepr -p 8080:8080 matchbox-validator-swissepr
 ```
 
 ### making container available
 ```
-docker tag hapi-fhir-jpavalidator-ihe eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-ihe:v121
-docker push eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator-ihe:v121
+docker tag matchbox-validator eu.gcr.io/fhir-ch/matchbox-validator:v130
+docker tag matchbox-validator-swissepr eu.gcr.io/fhir-ch/matchbox-validator-swissepr:v130
+
+docker push eu.gcr.io/fhir-ch/matchbox-validator:v130
+docker push eu.gcr.io/fhir-ch/matchbox-validator-swissepr:v130
 ```

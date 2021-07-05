@@ -53,7 +53,8 @@ public class IgValidateR4TestStandalone {
 
   static private Set<String> loadedIgs = new HashSet<String>();
 
-  private String targetServer = "http://localhost:8080/hapi-fhir-jpavalidator/fhir";
+//  private String targetServer = "http://localhost:8080/matchbox-validator/fhir";
+  private String targetServer = "https://test.ahdis.ch/matchbox-validator/fhir";
     private Resource resource;
   private String name;
 
@@ -138,16 +139,20 @@ public class IgValidateR4TestStandalone {
 
   static public List<Resource> loadIg(String src, boolean examples) throws IOException, FHIRException, Exception {
     List<Resource> resources = new ArrayList<Resource>();
-    Map<String, byte[]> source = fetchByPackage(src, examples);
-    String version = "4.0.1";
-    for (Entry<String, byte[]> t : source.entrySet()) {
-      String fn = t.getKey();
-      if (!exemptFile(fn)) {
-        Resource r = loadFileWithErrorChecking(version, t, fn);
-        if (r != null) {
-          resources.add(r);
+    try {
+      Map<String, byte[]> source = fetchByPackage(src, examples);
+      String version = "4.0.1";
+      for (Entry<String, byte[]> t : source.entrySet()) {
+        String fn = t.getKey();
+        if (!exemptFile(fn)) {
+          Resource r = loadFileWithErrorChecking(version, t, fn);
+          if (r != null) {
+            resources.add(r);
+          }
         }
       }
+    } catch (java.io.FileNotFoundException e) {
+      
     }
     return resources;
   }

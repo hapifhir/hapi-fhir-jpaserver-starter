@@ -62,7 +62,7 @@ public class ValidationClient extends GenericClient{
 
   /**
    * Performs the $validate operation with a direct POST (see http://hl7.org/fhir/resource-operation-validate.html#examples)
-   * and the profile specified as a parameter (not the Parameters syntact).
+   * and the profile specified as a parameter (not the Parameters syntax).
    * @param theContents content to validate
    * @param theProfile optional: profile to validate against
    * @return

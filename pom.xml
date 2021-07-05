@@ -17,7 +17,7 @@
 		  <version>5.4.0</version>
     </parent>
 
-    <artifactId>hapi-fhir-jpaserver-starter</artifactId>
+    <artifactId>matchbox-validator</artifactId>
 
     <properties>
         <java.version>11</java.version>
@@ -31,7 +31,7 @@
 
     <packaging>jar</packaging>
 
-    <name>HAPI FHIR JPA Server - Starter Project</name>
+    <name>matchbox validator</name>
 
     <repositories>
         <repository>
@@ -378,7 +378,7 @@
         </pluginManagement>
 
         <!-- Tells Maven to name the generated WAR file as ROOT.war -->
-        <finalName>hapi-fhir-jpavalidator</finalName>
+		<finalName>matchbox-validator</finalName>
 
         <plugins>
             <plugin>

@@ -1,6 +1,10 @@
 hapi:
   fhir:
     implementationguides:
+      iheformatcodefhir:
+        url: https://profiles.ihe.net/fhir/ihe.formatcode.fhir/package.tgz
+        name: ihe.formatcode.fhir
+        version: 1.0.0
       core:
         name: ch.fhir.ig.ch-core
         version: 1.2.0

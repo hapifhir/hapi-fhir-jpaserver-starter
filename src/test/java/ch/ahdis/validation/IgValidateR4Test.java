@@ -36,7 +36,7 @@ public class IgValidateR4Test extends IgValidateR4TestStandalone{
   public final SpringMethodRule smr = new SpringMethodRule();
   
   
-  private String targetServer = "http://localhost:8080/hapi-fhir-jpavalidator/fhir";
+  private String targetServer = "http://localhost:8080/matchbox-validator/fhir";
   private Resource resource;
   private String name;
   

@@ -38,7 +38,7 @@ public class IgValidateRawProfileTest {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(IgValidateRawProfileTest.class);
 
-  private String targetServer = "http://localhost:8080/hapi-fhir-jpavalidator/fhir";
+  private String targetServer = "http://localhost:8080/matchbox-validator/fhir";
 
   @Test
   public void validateRaw() {
@@ -55,16 +55,6 @@ public class IgValidateRawProfileTest {
     operationOutcome = validationClient.validate(patient,
         "http://hl7.org/fhir/StructureDefinition/Bundle");
     assertEquals(1, IgValidateR4TestStandalone.getValidationFailures((OperationOutcome) operationOutcome));
-  }
-
-  @Test
-  public void validateEhs349() throws IOException {
-    FhirContext contextR4 = FhirVersionEnum.R4.newContext();
-    ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);
-    IBaseOperationOutcome operationOutcome = validationClient.validate(getContent("ehs-439.json"),
-        "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard");
-    log.debug(contextR4.newJsonParser().encodeResourceToString(operationOutcome));
-    assertEquals(0, IgValidateR4TestStandalone.getValidationFailures((OperationOutcome) operationOutcome));
   }
 
   @Test
