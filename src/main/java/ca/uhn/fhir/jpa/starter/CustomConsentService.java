@@ -48,6 +48,7 @@ public class CustomConsentService implements IConsentService {
     }
     String patientId = getPatientFromToken(theRequestDetails);
     String resourceName = null;
+    IBaseResource existingResource = null;
     boolean proceed = false;
     switch (theRequestDetails.getRequestType().toString()) {
       case "POST":
@@ -56,15 +57,15 @@ public class CustomConsentService implements IConsentService {
         break;
       case "PUT":
         resourceName = theRequestDetails.getResourceName();
-        IBaseResource putResource = getResourceFromDB(theRequestDetails.getRequestPath());
-        if (isResourceValid(resourceName, patientId, putResource)) {
+        existingResource = getResourceFromDB(theRequestDetails.getRequestPath());
+        if (isResourceValid(resourceName, patientId, existingResource)) {
           proceed = isResourceValid(resourceName, patientId, theRequestDetails.getResource());
         }
         break;
       case "PATCH":
         resourceName = theRequestDetails.getResourceName();
-        IBaseResource patchResource = getResourceFromDB(theRequestDetails.getRequestPath());
-        if (isResourceValid(resourceName, patientId, patchResource)) {
+        existingResource = getResourceFromDB(theRequestDetails.getRequestPath());
+        if (isResourceValid(resourceName, patientId, existingResource)) {
           // As Patch request body doesn't contain any Resource we need to handle it
           // differently
           proceed = isPatchRequestBodyValid(resourceName,
