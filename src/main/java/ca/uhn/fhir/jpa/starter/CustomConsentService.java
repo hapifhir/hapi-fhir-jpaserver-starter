@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.ObjectUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.Base;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
@@ -119,9 +120,11 @@ public class CustomConsentService implements IConsentService {
   private boolean isReferanceValid(Resource theResource, String patientRef,
       String refPropertyName) {
     try {
-      Reference ref = (Reference) theResource.getNamedProperty(refPropertyName).getValues().get(0);
-      if (ref.getReference().equals(patientRef)) {
-        return true;
+      List<Base> refList = theResource.getNamedProperty(refPropertyName).getValues();
+      for (Base ref : refList) {
+        if (((Reference)ref).getReference().equals(patientRef)) {
+          return true;
+        }
       }
       return false;
     } catch (Exception e) {
