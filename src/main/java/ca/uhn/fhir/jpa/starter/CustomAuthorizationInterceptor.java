@@ -116,13 +116,16 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	}
 	
 	private List<IAuthRule> allowForClaimResourceId(RequestDetails theRequestDetails,String patientId) {
-    return new RuleBuilder()
-        .allow().read().allResources().inCompartment("Patient", new IdType("Patient", patientId)).andThen()
-        .allow().write().allResources().inCompartment("Patient", new IdType("Patient", patientId)).andThen()
-        .allow().transaction().withAnyOperation().andApplyNormalRules().andThen()
-        .allow().patch().allRequests().andThen()
-        .denyAll()
-        .build();
+		if (oAuth2Helper.canBeInPatientCompartment(theRequestDetails.getResourceName())) {
+			return new RuleBuilder()
+		            .allow().read().allResources().inCompartment("Patient", new IdType("Patient", patientId)).andThen()
+		            .allow().write().allResources().inCompartment("Patient", new IdType("Patient", patientId)).andThen()
+		            .allow().transaction().withAnyOperation().andApplyNormalRules().andThen()
+		            .allow().patch().allRequests().andThen()
+		            .denyAll()
+		            .build();
+		}
+		return allowAll();
 	}
 
 	private String getPatientFromToken(RequestDetails theRequestDetails) {
