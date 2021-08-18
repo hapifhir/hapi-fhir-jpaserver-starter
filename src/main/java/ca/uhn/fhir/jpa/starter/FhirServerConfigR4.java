@@ -5,6 +5,11 @@ import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
+import org.hl7.fhir.r5.context.SimpleWorkerContext;
+import org.springframework.beans.factory.annotation.Autowire;
 import ca.uhn.fhir.jpa.starter.cql.StarterCqlR4Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
@@ -20,6 +25,11 @@ import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ExtTermReadSvcR4;
 import ch.ahdis.fhir.hapi.jpa.validation.JpaExtendedValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseProvider;
+
+import java.io.IOException;
+
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -97,6 +107,26 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
   @Bean(autowire = Autowire.BY_TYPE)
   public ValidationProvider validationProvider() {
     return new ValidationProvider();
+  }
+  
+  @Bean
+  public QuestionnaireProvider questionnaireProvider() {
+	  return new QuestionnaireProvider();
+  }
+
+  @Bean
+  public QuestionnaireResponseProvider questionnaireResponseProvider() {
+	  return new QuestionnaireResponseProvider();
+  }
+
+  
+  @Bean
+  public SimpleWorkerContext simpleWorkerContext() {
+	  try {
+	     return SimpleWorkerContext.fromNothing();
+	  } catch (IOException e) {
+		 throw new RuntimeException(e);  
+	  }
   }
 
   @Bean()

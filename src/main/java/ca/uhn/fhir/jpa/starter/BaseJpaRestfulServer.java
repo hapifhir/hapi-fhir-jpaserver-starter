@@ -55,6 +55,9 @@ import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseProvider;
+
 import com.google.common.base.Strings;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,9 +132,17 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
   @Autowired(required = false)
   IRepositoryValidationInterceptorFactory factory;
-
-  public BaseJpaRestfulServer() {
-  }
+  
+  @Autowired
+  QuestionnaireProvider questionnaireProvider;
+  
+  @Autowired
+  QuestionnaireResponseProvider questionnaireResponseProvider;
+  
+  // These are set only if the features are enabled
+  private CqlProviderLoader cqlProviderLoader;
+	@Autowired
+	private IValidationSupport myValidationSupport;
 
   private static final long serialVersionUID = 1L;
 
@@ -419,7 +430,13 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setLastNEnabled(true);
     }
 
-    registerProviders(validationProvider);
+    registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider);    
+    // Repository Validating Interceptor
+	 if (Boolean.TRUE.equals(appProperties.getEnable_repository_validating_interceptor())) {
+		 RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory = myApplicationContext.getBean(RepositoryValidationInterceptorFactory.class);
+		 RepositoryValidatingInterceptor interceptor = repositoryValidationInterceptorFactory.build();
+		 interceptorService.registerInterceptor(interceptor);
+	 }
     daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
     
     daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
