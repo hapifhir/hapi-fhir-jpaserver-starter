@@ -53,6 +53,7 @@ import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.RestfulServerUtils;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
+import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
 import ch.ahdis.matchbox.mappinglanguage.TransformSupportServices;
 import ch.ahdis.matchbox.provider.SimpleWorkerContextProvider;
 
@@ -64,7 +65,7 @@ public class QuestionnaireResponseProvider  {
   protected FhirContext myFhirCtx;
 	
   @Autowired
-  protected SimpleWorkerContext workerContext;
+  protected ConvertingWorkerContext workerContext;
   
   @Operation(name = "$extract", type = QuestionnaireResponse.class, manualResponse = true, manualRequest = true)
   public void extract(HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
@@ -91,6 +92,7 @@ public class QuestionnaireResponseProvider  {
       throw new UnprocessableEntityException("No questionnaire canonical URL given.");
 
     // fetch corresponding questionnaire
+    workerContext.load(org.hl7.fhir.r4.model.Questionnaire.class, questionnaireUri);
     Questionnaire questionnaire = workerContext.fetchResource(Questionnaire.class, questionnaireUri);
     if (questionnaire == null)
       throw new UnprocessableEntityException(
@@ -103,6 +105,7 @@ public class QuestionnaireResponseProvider  {
     String mapUrl = targetStructureMapExtension.getValue().primitiveValue();
 
     // fetch structure map to use
+    workerContext.loadMap(mapUrl);
     org.hl7.fhir.r5.model.StructureMap map = workerContext.getTransform(mapUrl);
     if (map == null) {
       throw new UnprocessableEntityException("Map not available with canonical url " + mapUrl);

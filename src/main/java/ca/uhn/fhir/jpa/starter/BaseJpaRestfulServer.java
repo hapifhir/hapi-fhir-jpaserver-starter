@@ -55,6 +55,7 @@ import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
+import ch.ahdis.matchbox.interceptor.MappingLanguageInterceptor;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseProvider;
 
@@ -261,6 +262,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
     if (appProperties.getFhirpath_interceptor_enabled()) {
       registerInterceptor(new FhirPathFilterInterceptor());
     }
+    
+    this.registerInterceptor(new MappingLanguageInterceptor());
 
     /*
      * Add some logging for each request

@@ -48,6 +48,7 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
+import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
 import ch.ahdis.matchbox.mappinglanguage.TransformSupportServices;
 import ch.ahdis.matchbox.provider.SimpleWorkerContextProvider;
 
@@ -63,7 +64,7 @@ public class QuestionnaireProvider {
 	protected FhirContext myFhirCtx;
 	
 	@Autowired
-	protected SimpleWorkerContext workerContext;
+	protected ConvertingWorkerContext workerContext;
 	
 	
 	
@@ -100,6 +101,7 @@ public class QuestionnaireProvider {
 		  
 		  // resolve questionnaire reference if given
 		  if (questionnaire==null && questionnaireRef!=null) {
+			  workerContext.load(org.hl7.fhir.r4.model.Questionnaire.class, questionnaireRef.getReference());
 			  org.hl7.fhir.r5.model.Questionnaire questionnaireR5 = workerContext.fetchResource(org.hl7.fhir.r5.model.Questionnaire.class, questionnaireRef.getReference());
 			  if (questionnaireR5==null) throw new UnprocessableEntityException("Questionnaire referenced by questionnaireRef could not be resolved.");
 			  questionnaire = (Questionnaire) VersionConvertor_40_50.convertResource(questionnaireR5);
@@ -116,6 +118,7 @@ public class QuestionnaireProvider {
 	      Base mapUrlValue = src.getExtensionValue(SOURCE_STRUCTURE_MAP);
 	      if (mapUrlValue == null) throw new UnprocessableEntityException("No sdc-questionnaire-sourceStructureMap extension found in resource");
 	      String mapUrl = mapUrlValue.primitiveValue();
+	      workerContext.loadMap(mapUrl);
 	      org.hl7.fhir.r5.model.StructureMap map = workerContext.getTransform(mapUrl);
 	      if (map == null) {
 	          throw new UnprocessableEntityException("Map not available with canonical url "+mapUrl);

@@ -1,6 +1,8 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.ConfigurationException;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
@@ -8,6 +10,7 @@ import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.springframework.beans.factory.annotation.Autowire;
 import ca.uhn.fhir.jpa.starter.cql.StarterCqlR4Config;
@@ -25,6 +28,7 @@ import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ExtTermReadSvcR4;
 import ch.ahdis.fhir.hapi.jpa.validation.JpaExtendedValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
+import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseProvider;
 
@@ -49,6 +53,9 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
    */
   @Autowired
   AppProperties appProperties;
+  
+  @Autowired
+  FhirContext fhirContext;
 
   @PostConstruct
   public void initSettings() {
@@ -121,11 +128,16 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 
   
   @Bean
-  public SimpleWorkerContext simpleWorkerContext() {
+  public ConvertingWorkerContext simpleWorkerContext() {
 	  try {
-	     return SimpleWorkerContext.fromNothing();
+		  
+		  IValidationSupport validationSupport = (IValidationSupport) fhirContext.getValidationSupport();
+		  HapiWorkerContext test = new HapiWorkerContext(fhirContext, validationSupport);
+		  ConvertingWorkerContext conv = new ConvertingWorkerContext(test);
+          
+	       return conv;
 	  } catch (IOException e) {
-		 throw new RuntimeException(e);  
+		  throw new RuntimeException(e);
 	  }
   }
 
