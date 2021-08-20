@@ -119,6 +119,13 @@ local.properties
 
 # STS (Spring Tool Suite)
 .springBeans
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
 # Code Recommenders
 .recommenders/
