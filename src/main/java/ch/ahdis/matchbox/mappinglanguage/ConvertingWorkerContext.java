@@ -3,6 +3,7 @@ package ch.ahdis.matchbox.mappinglanguage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +13,8 @@ import org.hl7.fhir.convertors.VersionConvertor_40_50;
 import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.TerminologyServiceException;
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
 import org.hl7.fhir.r5.context.BaseWorkerContext;
 import org.hl7.fhir.r5.context.CanonicalResourceManager.CanonicalResourceProxy;
@@ -51,13 +54,15 @@ import com.google.gson.JsonObject;
 
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
+import ca.uhn.fhir.jpa.cache.IResourceChangeEvent;
+import ca.uhn.fhir.jpa.cache.IResourceChangeListener;
 import ca.uhn.fhir.jpa.dao.JpaPersistedResourceValidationSupport;
 import ca.uhn.fhir.jpa.packages.NpmJpaValidationSupport;
 import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.param.UriParam;
 
-public class ConvertingWorkerContext extends SimpleWorkerContext {
+public class ConvertingWorkerContext extends SimpleWorkerContext implements IResourceChangeListener {
 
 	//private HapiWorkerContext parent;
 	
@@ -78,6 +83,95 @@ public class ConvertingWorkerContext extends SimpleWorkerContext {
 		}
 		
 	}
+	
+	public ConvertingWorkerContext(ConvertingWorkerContext parent) throws FileNotFoundException, IOException, FHIRException {
+		super(parent);	
+		this.myValidationSupport = parent.myValidationSupport;
+		this.myDaoRegistry = parent.myDaoRegistry;
+	}
+	
+	@Override
+	public <T extends Resource> T fetchResource(Class<T> class_, String uri) {
+		System.out.println("fetchResource");
+		T result =super.fetchResource(class_, uri);
+		if (result == null) {
+			load(getClassForR4(class_.getSimpleName()), uri);
+			result = super.fetchResource(class_, uri);
+		}
+		return result;
+	}
+	
+    public <T extends org.hl7.fhir.r4.model.Resource> void load(Class<T> cl, String uri) {
+		
+		Resource res = VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.Resource) myValidationSupport.fetchResource(cl, uri));
+		if (res != null) {
+		  dropResource(res.getClass().getSimpleName(), res.getId());		
+		  System.out.println("FOUND: "+res);
+		  cacheResource(res);
+		}
+	}
+    
+    @Override
+	public StructureMap getTransform(String code) {
+		System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName());
+		StructureMap result = super.getTransform(code);
+		if (result == null) {
+			loadMap(code);
+			result = super.getTransform(code);
+		}
+		return result;
+	
+	}
+	
+	public void loadMap(String code) {
+		SearchParameterMap params = new SearchParameterMap();
+		params.setLoadSynchronousUpTo(1);
+		params.add(StructureMap.SP_URL, new UriParam(code));
+		IBundleProvider search = myDaoRegistry.getResourceDao("StructureMap").search(params);
+		if (search.size()>0) {
+		  List<IBaseResource> results = search.getResources(0, 1);		
+		  dropResource("StructureMap", code);
+		  cacheResource(VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.StructureMap) results.get(0)));
+		}
+	}
+	
+	public void load(String resourceType, IIdType id) {
+		IBaseResource res = myDaoRegistry.getResourceDao(resourceType).read(id);
+		if (res != null) {
+			System.out.println("FOUND: "+res);
+			Resource convRes = VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.Resource) res);
+			dropResource(resourceType, convRes.getId());
+			cacheResource(convRes);
+		}
+	}
+    
+	@Override
+	public void handleChange(IResourceChangeEvent theResourceChangeEvent) {
+		for (IIdType type : theResourceChangeEvent.getDeletedResourceIds()) {
+			dropResource(type.getResourceType(), type.getIdPart());
+		}
+		for (IIdType type : theResourceChangeEvent.getCreatedResourceIds()) {
+			load(type.getResourceType(), type);
+		}
+		for (IIdType type : theResourceChangeEvent.getUpdatedResourceIds()) {
+			load(type.getResourceType(), type);
+		}
+		
+	}
+
+	@Override
+	public void handleInit(Collection<IIdType> theResourceIds) {
+		System.out.println("init:");
+		for (IIdType type : theResourceIds) {
+			System.out.println(type.getResourceType()+"/"+type.getValue());
+			load(type.getResourceType(), type);
+		}		
+	}
+	
+	public <T extends org.hl7.fhir.r4.model.Resource> Class<T> getClassForR4(String resourceType) {
+		return myDaoRegistry.getResourceDao(resourceType).getResourceType();
+	}
+	
 
 	@Override
 	protected void copy(SimpleWorkerContext other) {
@@ -307,11 +401,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext {
 		super.setValidatorFactory(validatorFactory);
 	}
 
-	@Override
-	public <T extends Resource> T fetchResource(Class<T> class_, String uri) {
-		System.out.println("fetchResource");
-		return super.fetchResource(class_, uri);
-	}
+	
 
 	@Override
 	public StructureDefinition fetchRawProfile(String uri) {
@@ -638,38 +728,16 @@ public class ConvertingWorkerContext extends SimpleWorkerContext {
 		System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName()+":B "+uri);
 		return super.fetchResourceWithException(cls, uri);
 	}
-
-	public Class getR4Class(Class class_) {
-		String name = class_.getName();
-		System.out.println("classname="+name);
-		if (name.equals("org.hl7.fhir.r5.model.Questionnaire")) return org.hl7.fhir.r4.model.Questionnaire.class;
-		else if (name.equals("org.hl7.fhir.r5.model.Resource")) return org.hl7.fhir.r4.model.Resource.class;
-		return null;
-	}
+	
 	
 	@Override
 	public <T extends Resource> T fetchResourceWithException(Class<T> class_, String uri, CanonicalResource source) throws FHIRException {
 		System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName()+":C "+uri);
 		T result = super.fetchResourceWithException(class_, uri, source);
-		return result;
-		/*if (result != null) return result;
-		
-		Class other = getR4Class(class_);
-		if (other != null) {		
-			
-			result = (T) VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.Resource) myValidationSupport.fetchResource(other, uri));
-			System.out.println("FOUND: "+result);
-			cacheResource(result);
-			return result;
-		}		
-		return null;*/ 
+		return result;	
 	}
 	
-	public <T extends org.hl7.fhir.r4.model.Resource> void load(Class<T> cl, String uri) {
-		Resource res = VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.Resource) myValidationSupport.fetchResource(cl, uri));
-		System.out.println("FOUND: "+res);
-		cacheResource(res);	
-	}
+	
 
 	@Override
 	public <T extends Resource> T fetchResourceWithException(String cls, String uri, CanonicalResource source) throws FHIRException {
@@ -716,7 +784,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext {
 
 	@Override
 	public void dropResource(String fhirType, String id) {
-		System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName());
+		System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName()+" id="+id);
 		super.dropResource(fhirType, id);
 	}
 
@@ -750,28 +818,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext {
 		return super.listTransforms();
 	}
 
-	@Override
-	public StructureMap getTransform(String code) {
-		System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName());
-		
-		SearchParameterMap params = new SearchParameterMap();
-		params.setLoadSynchronousUpTo(1);
-		params.add(StructureMap.SP_URL, new UriParam(code));
-		IBundleProvider search = myDaoRegistry.getResourceDao("StructureMap").search(params);
-		search.getResources(0, 1).get(0);
-		
-		return (org.hl7.fhir.r5.model.StructureMap) VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.StructureMap) search.getResources(0, 1).get(0));		
-	}
 	
-	public void loadMap(String code) {
-		SearchParameterMap params = new SearchParameterMap();
-		params.setLoadSynchronousUpTo(1);
-		params.add(StructureMap.SP_URL, new UriParam(code));
-		IBundleProvider search = myDaoRegistry.getResourceDao("StructureMap").search(params);
-		search.getResources(0, 1).get(0);
-		
-		cacheResource(VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.StructureMap) search.getResources(0, 1).get(0)));		
-	}
 
 	@Override
 	public List<StructureDefinition> listStructures() {
@@ -970,8 +1017,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext {
 		System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName());
 		super.setLocator(locator);
 	}
-	
-	
+
 
 	
 }

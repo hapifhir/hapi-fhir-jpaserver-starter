@@ -25,6 +25,7 @@ import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.export.provider.BulkDataExportProvider;
+import ca.uhn.fhir.jpa.cache.IResourceChangeListenerRegistry;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
@@ -37,6 +38,7 @@ import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative.INarrativeGenerator;
@@ -56,6 +58,7 @@ import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.interceptor.MappingLanguageInterceptor;
+import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseProvider;
 
@@ -139,6 +142,12 @@ public class BaseJpaRestfulServer extends RestfulServer {
   
   @Autowired
   QuestionnaireResponseProvider questionnaireResponseProvider;
+  
+  @Autowired
+  IResourceChangeListenerRegistry resourceChangeListenerRegistry;
+  
+  @Autowired
+  ConvertingWorkerContext baseWorkerContext;
   
   // These are set only if the features are enabled
   private CqlProviderLoader cqlProviderLoader;
@@ -409,14 +418,23 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
       daoConfig.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
     }
-
+        
     if (appProperties.getImplementationGuides() != null) {
       Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
       for (Map.Entry<String, AppProperties.ImplementationGuide> guide : guides.entrySet()) {
         try {
           ourLog.info("installing " + guide.getValue().getName());
+
           packageInstallerSvc.install(new PackageInstallationSpec()
           .setPackageUrl(guide.getValue().getUrl())
+          .addInstallResourceTypes("NamingSystem",
+        			"CodeSystem",
+        			"ValueSet",
+        			"StructureDefinition",
+        			"ConceptMap",
+        			"SearchParameter",
+        			"Subscription",
+        			"StructureMap","Questionnaire")
           .setName(guide.getValue().getName())
           .setVersion(guide.getValue().getVersion())
             .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
@@ -441,7 +459,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
 		 interceptorService.registerInterceptor(interceptor);
 	 }
     daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
-    
-    daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
+
+		daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
+		
+		resourceChangeListenerRegistry.registerResourceResourceChangeListener("StructureDefinition", new SearchParameterMap(), baseWorkerContext, 3000);
   }
 }

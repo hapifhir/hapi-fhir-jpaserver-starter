@@ -16,6 +16,7 @@ import org.hl7.fhir.convertors.VersionConvertor_40_50;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.model.Extension;
+import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r5.model.Questionnaire;
 import org.hl7.fhir.r4.model.QuestionnaireResponse;
@@ -65,11 +66,11 @@ public class QuestionnaireResponseProvider  {
   protected FhirContext myFhirCtx;
 	
   @Autowired
-  protected ConvertingWorkerContext workerContext;
+  protected ConvertingWorkerContext baseWorkerContext;
   
   @Operation(name = "$extract", type = QuestionnaireResponse.class, manualResponse = true, manualRequest = true)
   public void extract(HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
-
+	ConvertingWorkerContext workerContext = new ConvertingWorkerContext(baseWorkerContext);
     StructureMapUtilities utils = new StructureMapUtilities(workerContext,
         new TransformSupportServices(workerContext, new ArrayList<Base>()));
     String contentType = theServletRequest.getContentType();
@@ -92,7 +93,7 @@ public class QuestionnaireResponseProvider  {
       throw new UnprocessableEntityException("No questionnaire canonical URL given.");
 
     // fetch corresponding questionnaire
-    workerContext.load(org.hl7.fhir.r4.model.Questionnaire.class, questionnaireUri);
+    //workerContext.load(org.hl7.fhir.r4.model.Questionnaire.class, questionnaireUri);
     Questionnaire questionnaire = workerContext.fetchResource(Questionnaire.class, questionnaireUri);
     if (questionnaire == null)
       throw new UnprocessableEntityException(
@@ -105,14 +106,14 @@ public class QuestionnaireResponseProvider  {
     String mapUrl = targetStructureMapExtension.getValue().primitiveValue();
 
     // fetch structure map to use
-    workerContext.loadMap(mapUrl);
+    //workerContext.loadMap(mapUrl);
     org.hl7.fhir.r5.model.StructureMap map = workerContext.getTransform(mapUrl);
     if (map == null) {
       throw new UnprocessableEntityException("Map not available with canonical url " + mapUrl);
     }
 
     // create target resource of structure map
-    org.hl7.fhir.r5.elementmodel.Element r = getTargetResourceFromStructureMap(map);
+    org.hl7.fhir.r5.elementmodel.Element r = getTargetResourceFromStructureMap(workerContext, map);
     if (r == null) {
       throw new UnprocessableEntityException(
           "Target Structure can not be resolved from map, is the corresponding implmentation guide provided?");
@@ -136,7 +137,7 @@ public class QuestionnaireResponseProvider  {
 
   }
 
-  private org.hl7.fhir.r5.elementmodel.Element getTargetResourceFromStructureMap(
+  private org.hl7.fhir.r5.elementmodel.Element getTargetResourceFromStructureMap(IWorkerContext workerContext, 
       org.hl7.fhir.r5.model.StructureMap map) {
     String targetTypeUrl = null;
     for (StructureMapStructureComponent component : map.getStructure()) {
