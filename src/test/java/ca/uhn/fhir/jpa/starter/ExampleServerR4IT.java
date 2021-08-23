@@ -1,15 +1,11 @@
 package ca.uhn.fhir.jpa.starter;
 
-import static ca.uhn.fhir.util.TestUtil.waitForSize;
-import static java.lang.Thread.sleep;
-import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.net.URI;
-import java.time.Duration;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.api.CacheControlDirective;
+import ca.uhn.fhir.rest.api.EncodingEnum;
+import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
@@ -25,17 +21,23 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.api.CacheControlDirective;
-import ca.uhn.fhir.rest.api.EncodingEnum;
-import ca.uhn.fhir.rest.api.MethodOutcome;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
+import java.net.URI;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import static ca.uhn.fhir.util.TestUtil.waitForSize;
+import static java.lang.Thread.sleep;
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties = {
-		"spring.batch.job.enabled=false", "spring.datasource.url=jdbc:h2:mem:dbr4",
-		"hapi.fhir.enable_repository_validating_interceptor=true", "hapi.fhir.fhir_version=r4",
-		"hapi.fhir.subscription.websocket_enabled=true", "hapi.fhir.mdm_enabled=true",
+		"spring.batch.job.enabled=false",
+		"spring.datasource.url=jdbc:h2:mem:dbr4",
+		"hapi.fhir.enable_repository_validating_interceptor=true",
+		"hapi.fhir.fhir_version=r4",
+		"hapi.fhir.subscription.websocket_enabled=true",
+		"hapi.fhir.mdm_enabled=true",
 		// Override is currently required when using MDM as the construction of the MDM
 		// beans are ambiguous as they are constructed multiple places. This is evident
 		// when running in a spring boot environment
@@ -104,7 +106,7 @@ class ExampleServerR4IT {
 		IIdType mySubscriptionId = methodOutcome.getId();
 
 		// Wait for the subscription to be activated
-		await().atMost(Duration.ofMinutes(1)).until(() -> activeSubscriptionCount() == 3);
+		await().atMost(1, TimeUnit.MINUTES).until(() -> activeSubscriptionCount() == 3);
 
 		/*
 		 * Attach websocket
