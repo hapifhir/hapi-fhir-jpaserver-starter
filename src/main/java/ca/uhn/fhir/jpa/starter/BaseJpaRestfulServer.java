@@ -60,8 +60,8 @@ import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.interceptor.MappingLanguageInterceptor;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
 import ch.ahdis.matchbox.provider.IGLoadOperationProvider;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireProvider;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnairePopulateProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
 import com.google.common.base.Strings;
@@ -139,10 +139,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
   IRepositoryValidationInterceptorFactory factory;
   
   @Autowired
-  QuestionnaireProvider questionnaireProvider;
+  QuestionnairePopulateProvider questionnaireProvider;
   
   @Autowired
-  QuestionnaireResponseProvider questionnaireResponseProvider;
+  QuestionnaireResponseExtractProvider questionnaireResponseProvider;
   
   @Autowired
   IGLoadOperationProvider igLoadOperationProvider;

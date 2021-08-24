@@ -30,8 +30,8 @@ import ch.ahdis.fhir.hapi.jpa.validation.JpaExtendedValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
 import ch.ahdis.matchbox.provider.IGLoadOperationProvider;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireProvider;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnairePopulateProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
 import java.io.IOException;
@@ -119,13 +119,13 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
   }
   
   @Bean
-  public QuestionnaireProvider questionnaireProvider() {
-	  return new QuestionnaireProvider();
+  public QuestionnairePopulateProvider questionnaireProvider() {
+	  return new QuestionnairePopulateProvider();
   }
 
   @Bean
-  public QuestionnaireResponseProvider questionnaireResponseProvider() {
-	  return new QuestionnaireResponseProvider();
+  public QuestionnaireResponseExtractProvider questionnaireResponseProvider() {
+	  return new QuestionnaireResponseExtractProvider();
   }
   
   @Bean

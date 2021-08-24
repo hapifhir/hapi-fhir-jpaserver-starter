@@ -23,6 +23,10 @@ import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
+/**
+ * $load and $load-all Operation for ImplementationGuide Resource
+ *
+ */
 public class IGLoadOperationProvider implements PropertyChangeListener {
 
 	@Autowired

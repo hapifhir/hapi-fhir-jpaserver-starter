@@ -47,6 +47,8 @@ import org.hl7.fhir.utilities.TranslationServices;
 import org.hl7.fhir.utilities.npm.BasePackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.validation.ValidationOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -59,12 +61,19 @@ import ca.uhn.fhir.jpa.cache.IResourceChangeListener;
 import ca.uhn.fhir.jpa.dao.JpaPersistedResourceValidationSupport;
 import ca.uhn.fhir.jpa.packages.NpmJpaValidationSupport;
 import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
+import ca.uhn.fhir.jpa.starter.BaseJpaRestfulServer;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.param.UriParam;
 
+/**
+ * IWorkerContext implementation 
+ * based on SimpleWorkerContext
+ * that converts R4 Resources from the database to R5 on the fly 
+ * @author Alexander Kreutz
+ *
+ */
 public class ConvertingWorkerContext extends SimpleWorkerContext implements IResourceChangeListener {
 
-	//private HapiWorkerContext parent;
 	
 	 @Autowired
 	 @Qualifier("myJpaValidationSupport")
@@ -72,6 +81,8 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 	 
 	 @Autowired
 	 private DaoRegistry myDaoRegistry;
+	 
+	 private static final Logger ourLog = LoggerFactory.getLogger(ConvertingWorkerContext.class);
 	
 	public ConvertingWorkerContext(HapiWorkerContext parent) throws FileNotFoundException, IOException, FHIRException {
 		super();
@@ -92,7 +103,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 	
 	@Override
 	public <T extends Resource> T fetchResource(Class<T> class_, String uri) {
-		System.out.println("fetchResource");
+		
 		T result =super.fetchResource(class_, uri);
 		if (result == null) {
 			load(getClassForR4(class_.getSimpleName()), uri);
@@ -106,14 +117,14 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 		Resource res = VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.Resource) myValidationSupport.fetchResource(cl, uri));
 		if (res != null) {
 		  dropResource(res.getClass().getSimpleName(), res.getId());		
-		  System.out.println("FOUND: "+res);
+		  ourLog.debug("cache: "+res);
 		  cacheResource(res);
 		}
 	}
     
     @Override
 	public StructureMap getTransform(String code) {
-		System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName());
+		//System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName());
 		StructureMap result = super.getTransform(code);
 		if (result == null) {
 			loadMap(code);
@@ -138,7 +149,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 	public void load(String resourceType, IIdType id) {
 		IBaseResource res = myDaoRegistry.getResourceDao(resourceType).read(id);
 		if (res != null) {
-			System.out.println("FOUND: "+res);
+			ourLog.debug("cache: "+res);
 			Resource convRes = VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.Resource) res);
 			dropResource(resourceType, convRes.getId());
 			cacheResource(convRes);
@@ -161,9 +172,8 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 
 	@Override
 	public void handleInit(Collection<IIdType> theResourceIds) {
-		System.out.println("init:");
-		for (IIdType type : theResourceIds) {
-			System.out.println(type.getResourceType()+"/"+type.getValue());
+		ourLog.info("initializing WorkerContext cache");
+		for (IIdType type : theResourceIds) {			
 			load(type.getResourceType(), type);
 		}		
 	}
@@ -172,7 +182,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 		return myDaoRegistry.getResourceDao(resourceType).getResourceType();
 	}
 	
-
+/*
 	@Override
 	protected void copy(SimpleWorkerContext other) {
 		System.out.println("copy");
@@ -1018,6 +1028,6 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 		super.setLocator(locator);
 	}
 
-
+*/
 	
 }
