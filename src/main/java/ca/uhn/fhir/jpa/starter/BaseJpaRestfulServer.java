@@ -59,8 +59,10 @@ import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.interceptor.MappingLanguageInterceptor;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
+import ch.ahdis.matchbox.provider.IGLoadOperationProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseProvider;
+import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
 import com.google.common.base.Strings;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
@@ -126,8 +128,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
   BinaryStorageInterceptor binaryStorageInterceptor;
 
   @Autowired
-  IPackageInstallerSvc packageInstallerSvc;
-
+  MatchboxPackageInstallerImpl packageInstallerSvc;
   @Autowired
   AppProperties appProperties;
 
@@ -142,6 +143,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
   
   @Autowired
   QuestionnaireResponseProvider questionnaireResponseProvider;
+  
+  @Autowired
+  IGLoadOperationProvider igLoadOperationProvider;
   
   @Autowired
   IResourceChangeListenerRegistry resourceChangeListenerRegistry;
@@ -419,7 +423,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
     }
         
-    if (appProperties.getImplementationGuides() != null) {
+    /*if (appProperties.getImplementationGuides() != null) {
       Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
       for (Map.Entry<String, AppProperties.ImplementationGuide> guide : guides.entrySet()) {
         try {
@@ -446,12 +450,12 @@ public class BaseJpaRestfulServer extends RestfulServer {
       if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages().booleanValue()) {
         System.exit(0);
       }
-    }
+    }*/
     if (appProperties.getLastn_enabled()) {
       daoConfig.setLastNEnabled(true);
     }
 
-    registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider);    
+    registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider, igLoadOperationProvider);    
     // Repository Validating Interceptor
 	 if (Boolean.TRUE.equals(appProperties.getEnable_repository_validating_interceptor())) {
 		 RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory = myApplicationContext.getBean(RepositoryValidationInterceptorFactory.class);

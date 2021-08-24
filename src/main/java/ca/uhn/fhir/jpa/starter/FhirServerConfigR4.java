@@ -29,8 +29,10 @@ import ch.ahdis.fhir.hapi.jpa.validation.ExtTermReadSvcR4;
 import ch.ahdis.fhir.hapi.jpa.validation.JpaExtendedValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
+import ch.ahdis.matchbox.provider.IGLoadOperationProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseProvider;
+import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
 import java.io.IOException;
 
@@ -125,6 +127,11 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
   public QuestionnaireResponseProvider questionnaireResponseProvider() {
 	  return new QuestionnaireResponseProvider();
   }
+  
+  @Bean
+  public IGLoadOperationProvider igLoadOperationProvider() {
+	  return new IGLoadOperationProvider();
+  }
 
   
   @Bean
@@ -165,6 +172,11 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 	public JpaValidationSupportChain jpaValidationSupportChain() {
 		return new JpaExtendedValidationSupportChain(fhirContext());
 	}
+  
+  @Bean
+  public MatchboxPackageInstallerImpl packageInstaller() {
+	  return new MatchboxPackageInstallerImpl();
+  }
 }
 
 

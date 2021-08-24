@@ -35,6 +35,7 @@ import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StructureMap;
+import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.Manager;
@@ -48,7 +49,9 @@ import org.hl7.fhir.r5.model.StructureMap.StructureMapStructureComponent;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.annotation.Create;
 import ca.uhn.fhir.rest.annotation.Delete;
 import ca.uhn.fhir.rest.annotation.IdParam;
@@ -62,84 +65,24 @@ import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.RestfulServerUtils;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
-import ch.ahdis.matchbox.provider.SimpleWorkerContextProvider;
 
-public class StructureMapTransformProvider extends SimpleWorkerContextProvider<StructureMap> implements IResourceProvider {
+public class StructureMapTransformProvider {
   
   private StructureMapUtilities utils = null;
   
+  @Autowired
+  protected FhirContext myFhirCtx;
+	
+  @Autowired
+  protected ConvertingWorkerContext baseWorkerContext;
+  
 
-  public StructureMapTransformProvider(SimpleWorkerContext fhirContext) {
+  /*public StructureMapTransformProvider(SimpleWorkerContext fhirContext) {
     super(fhirContext, StructureMap.class);
     utils = new StructureMapUtilities(fhirContext, new TransformSupportServices(fhirContext, new ArrayList<Base>()));
-  }
+  }*/
  
-  @Create
-  public MethodOutcome createStructureMap(@ResourceParam StructureMap theResource) {
-    log.debug("created structuredmap, caching");
-
-    // FIXME: don't know why a # is prefixed to the contained it
-    for (org.hl7.fhir.r4.model.Resource r : theResource.getContained()) {
-      if (r instanceof org.hl7.fhir.r4.model.ConceptMap && ((org.hl7.fhir.r4.model.ConceptMap) r).getId().startsWith("#")) {
-        r.setId(((org.hl7.fhir.r4.model.ConceptMap) r).getId().substring(1));
-      }
-      // If a contained element is not referred it will not serialized in hapi
-      if (r instanceof org.hl7.fhir.r4.model.ConceptMap) {
-        Extension e = new Extension();
-        Reference reference = new Reference();
-        reference.setReference("#"+r.getId());
-        e.setValue(reference);
-        e.setUrl("http://fhir.ch/reference");
-        theResource.addExtension(e);
-      }
-    }
-    theResource.setId(theResource.getName());
-    theResource = updateWorkerContext(theResource);
-    MethodOutcome retVal = new MethodOutcome();
-    retVal.setCreated(true);
-    retVal.setResource(theResource);
-    return retVal;
-  }
-
-  public StructureMap updateWorkerContext(StructureMap theResource) {
-    org.hl7.fhir.r5.model.StructureMap cached = fhirContext.fetchResource(org.hl7.fhir.r5.model.StructureMap.class, theResource.getUrl());
-    if (cached != null) {
-      fhirContext.dropResource(cached);
-    }    
-    
-    org.hl7.fhir.r5.model.StructureMap mapR5 = (org.hl7.fhir.r5.model.StructureMap) VersionConvertor_40_50.convertResource(theResource);
-    mapR5.getText().setStatus(NarrativeStatus.GENERATED);
-    mapR5.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
-    String render = StructureMapUtilities.render(mapR5);
-    mapR5.getText().getDiv().addTag("pre").addText(render);
-
-    fhirContext.cacheResource(mapR5);
-    
-    return (StructureMap) VersionConvertor_40_50.convertResource(mapR5);
-  }
   
-  @Delete()
-  public void deleteStructureMap(@IdParam IdType theId) {
-      org.hl7.fhir.r5.model.StructureMap cached = fhirContext.fetchResource(org.hl7.fhir.r5.model.StructureMap.class, theId.getId());
-      if (cached == null) {
-          throw new ResourceNotFoundException("Unknown version");
-      }
-      fhirContext.dropResource(cached);
-      return; //
-  }
-  
-  @Update
-  public MethodOutcome update(@IdParam IdType theId, @ResourceParam StructureMap theResource) {
-     updateWorkerContext(theResource);
-     return new MethodOutcome();
-  }
-  
-  @Read()
-  public org.hl7.fhir.r4.model.Resource getResourceById(@IdParam IdType theId) {
-    return VersionConvertor_40_50.convertResource(getMapByUrl(theId.getId()));
-  }
-
-
 
   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StructureMapTransformProvider.class);
 
@@ -167,18 +110,19 @@ public class StructureMapTransformProvider extends SimpleWorkerContextProvider<S
   
   @Operation(name = "$transform", manualResponse = true, manualRequest = true)
   public void manualInputAndOutput(@IdParam IdType theStructureMap, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
+	  ConvertingWorkerContext fhirContext = new ConvertingWorkerContext(baseWorkerContext);
     org.hl7.fhir.r5.model.StructureMap map = (org.hl7.fhir.r5.model.StructureMap) fhirContext.fetchResourceById(theStructureMap.getResourceType(), theStructureMap.getIdPart());
     if (map == null) {
       throw new UnprocessableEntityException("Map not available with id "+theStructureMap.getIdPart());
     }
-    transfrom(map, theServletRequest, theServletResponse);
+    transfrom(map, theServletRequest, theServletResponse, fhirContext);
   }
   
       
   @Operation(name = "$transform", manualResponse = true, manualRequest = true)
   public void manualInputAndOutput(HttpServletRequest theServletRequest, HttpServletResponse theServletResponse)
       throws IOException {
-
+	  ConvertingWorkerContext fhirContext = new ConvertingWorkerContext(baseWorkerContext);
     Map<String, String[]> requestParams = theServletRequest.getParameterMap();
     String[] source = requestParams.get("source");
     if (source != null && source.length > 0) {
@@ -187,7 +131,7 @@ public class StructureMapTransformProvider extends SimpleWorkerContextProvider<S
       if (map == null) {
           throw new UnprocessableEntityException("Map not available with canonical url "+source[0]);
       }
-      transfrom(map, theServletRequest, theServletResponse);
+      transfrom(map, theServletRequest, theServletResponse, fhirContext);
     } else {
       throw new UnprocessableEntityException("No source parameter provided");
     }
@@ -195,7 +139,7 @@ public class StructureMapTransformProvider extends SimpleWorkerContextProvider<S
 
   
   
-  public void transfrom(org.hl7.fhir.r5.model.StructureMap map, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
+  public void transfrom(org.hl7.fhir.r5.model.StructureMap map, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse, ConvertingWorkerContext fhirContext) throws IOException {
 
     String contentType = theServletRequest.getContentType();
     org.hl7.fhir.r5.elementmodel.Element src = Manager.parse(fhirContext, theServletRequest.getInputStream(),
@@ -212,7 +156,7 @@ public class StructureMapTransformProvider extends SimpleWorkerContextProvider<S
       responseContentType = Constants.CT_FHIR_JSON_NEW;
     }
 
-    org.hl7.fhir.r5.elementmodel.Element r = getTargetResourceFromStructureMap(map);
+    org.hl7.fhir.r5.elementmodel.Element r = getTargetResourceFromStructureMap(map, fhirContext);
     if (r == null) {
       throw new UnprocessableEntityException("Target Structure can not be resolved from map, is the corresponding implmentation guide provided?");
     }
@@ -238,7 +182,7 @@ public class StructureMapTransformProvider extends SimpleWorkerContextProvider<S
 
   }
 
-  private org.hl7.fhir.r5.elementmodel.Element getTargetResourceFromStructureMap(org.hl7.fhir.r5.model.StructureMap map) {
+  private org.hl7.fhir.r5.elementmodel.Element getTargetResourceFromStructureMap(org.hl7.fhir.r5.model.StructureMap map, IWorkerContext fhirContext) {
     String targetTypeUrl = null;
     for (StructureMapStructureComponent component : map.getStructure()) {
       if (component.getMode() == org.hl7.fhir.r5.model.StructureMap.StructureMapModelMode.TARGET) {
@@ -262,11 +206,7 @@ public class StructureMapTransformProvider extends SimpleWorkerContextProvider<S
 
     return Manager.build(fhirContext, structureDefinition);
   }
-
-  public org.hl7.fhir.r5.model.StructureMap getMapByUrl(String url) {
-    return fhirContext.fetchResource(org.hl7.fhir.r5.model.StructureMap.class, url);
-  }
-
+  
 
   
 }
