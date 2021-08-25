@@ -10,6 +10,8 @@ import java.util.Set;
 
 import org.fhir.ucum.UcumService;
 import org.hl7.fhir.convertors.VersionConvertor_40_50;
+import org.hl7.fhir.convertors.loaders.BaseLoaderR5;
+import org.hl7.fhir.convertors.loaders.R4ToR5Loader;
 import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.TerminologyServiceException;
@@ -45,8 +47,11 @@ import org.hl7.fhir.r5.utils.XVerExtensionManager;
 import org.hl7.fhir.utilities.TimeTracker;
 import org.hl7.fhir.utilities.TranslationServices;
 import org.hl7.fhir.utilities.npm.BasePackageCacheManager;
+import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
+import org.hl7.fhir.utilities.npm.ToolsVersion;
 import org.hl7.fhir.utilities.validation.ValidationOptions;
+import org.hl7.fhir.validation.ValidatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,12 +91,20 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 	
 	public ConvertingWorkerContext(HapiWorkerContext parent) throws FileNotFoundException, IOException, FHIRException {
 		super();
-				
+	    setCanRunWithoutTerminology(true);	
+	    FilesystemPackageCacheManager pcm = new FilesystemPackageCacheManager(true, ToolsVersion.TOOLS_VERSION);
+	    NpmPackage npm = pcm.loadPackage("hl7.fhir.r4.core#4.0.1", null);
+	    if (npm != null) {
+	      version = npm.fhirVersion();
+	      loadFromPackage(npm, new R4ToR5Loader(new String[]{"CapabilityStatement", "StructureDefinition", "ValueSet", "CodeSystem", "SearchParameter", "OperationDefinition", "Questionnaire", "ConceptMap", "StructureMap", "NamingSystem"}, new BaseLoaderR5.NullLoaderKnowledgeProvider()));//, ValidatorUtils.loaderForVersion(version));
+	    }
+	    
+	    /*
 		for (var str : parent.getStructures()) {
 			org.hl7.fhir.r5.model.StructureDefinition r5Structure = (org.hl7.fhir.r5.model.StructureDefinition) VersionConvertor_40_50.convertResource(str);
 		    generateSnapshot(r5Structure, true);
 		    cacheResource(r5Structure);
-		}
+		}*/
 		
 	}
 	
@@ -117,7 +130,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 		Resource res = VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.Resource) myValidationSupport.fetchResource(cl, uri));
 		if (res != null) {
 		  dropResource(res.getClass().getSimpleName(), res.getId());		
-		  ourLog.debug("cache: "+res);
+		  ourLog.info("cache: "+res);
 		  cacheResource(res);
 		}
 	}
@@ -149,7 +162,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 	public void load(String resourceType, IIdType id) {
 		IBaseResource res = myDaoRegistry.getResourceDao(resourceType).read(id);
 		if (res != null) {
-			ourLog.debug("cache: "+res);
+			ourLog.info("cache: "+res);
 			Resource convRes = VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.Resource) res);
 			dropResource(resourceType, convRes.getId());
 			cacheResource(convRes);
@@ -182,7 +195,13 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 		return myDaoRegistry.getResourceDao(resourceType).getResourceType();
 	}
 	
-/*
+	@Override
+	public String getVersion() {			
+		return "5.0";
+	}
+
+	
+	/*
 	@Override
 	protected void copy(SimpleWorkerContext other) {
 		System.out.println("copy");
@@ -387,11 +406,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 		return super.hasCache();
 	}
 
-	@Override
-	public String getVersion() {
-		System.out.println("getVersion");
-		return super.getVersion();
-	}
+	
 
 	@Override
 	public List<StructureMap> findTransformsforSource(String url) {

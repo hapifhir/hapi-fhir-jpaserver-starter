@@ -1,5 +1,6 @@
 package ch.ahdis.matchbox.questionnaire;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
@@ -9,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.QuestionnaireResponse;
+import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
@@ -23,9 +26,12 @@ import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
+import ca.uhn.fhir.rest.annotation.IdParam;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.api.Constants;
 import ca.uhn.fhir.rest.server.RestfulServerUtils;
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
 import ch.ahdis.matchbox.mappinglanguage.TransformSupportServices;
@@ -44,25 +50,49 @@ public class QuestionnaireResponseExtractProvider  {
   @Autowired
   protected ConvertingWorkerContext baseWorkerContext;
   
+  @Autowired
+  private DaoRegistry myDaoRegistry;
+
+  @Operation(name = "$extract", type = QuestionnaireResponse.class, manualRequest = true, manualResponse = true, idempotent = true)
+  public void extract(@IdParam IdType theQuestionnaireResponseId, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
+	  
+	  QuestionnaireResponse input = myDaoRegistry.getResourceDao(QuestionnaireResponse.class).read(theQuestionnaireResponseId);
+	  if (input == null) throw new ResourceNotFoundException(theQuestionnaireResponseId);
+	  ConvertingWorkerContext workerContext = new ConvertingWorkerContext(baseWorkerContext);
+	    StructureMapUtilities utils = new StructureMapUtilities(workerContext,
+	        new TransformSupportServices(workerContext, new ArrayList<Base>()));
+
+	  
+	    // parse QuestionnaireResponse from request body
+	    org.hl7.fhir.r5.elementmodel.Element src = convertToElementModel(workerContext, input);
+
+	    extract(workerContext, src, theServletRequest, theServletResponse);
+  }
+
+  
   @Operation(name = "$extract", type = QuestionnaireResponse.class, manualResponse = true, manualRequest = true)
   public void extract(HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
 	ConvertingWorkerContext workerContext = new ConvertingWorkerContext(baseWorkerContext);
-    StructureMapUtilities utils = new StructureMapUtilities(workerContext,
-        new TransformSupportServices(workerContext, new ArrayList<Base>()));
-    String contentType = theServletRequest.getContentType();
+    
+    String contentType = theServletRequest.getContentType();   
 
-    Set<String> highestRankedAcceptValues = RestfulServerUtils
-        .parseAcceptHeaderAndReturnHighestRankedOptions(theServletRequest);
+    // parse QuestionnaireResponse from request body
+    org.hl7.fhir.r5.elementmodel.Element src = Manager.parse(workerContext, theServletRequest.getInputStream(),
+        contentType.contains("xml") ? FhirFormat.XML : FhirFormat.JSON);
+    extract(workerContext, src, theServletRequest, theServletResponse); 
+  }
+
+   public void extract(ConvertingWorkerContext workerContext, org.hl7.fhir.r5.elementmodel.Element src, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
+	 StructureMapUtilities utils = new StructureMapUtilities(workerContext,
+	     new TransformSupportServices(workerContext, new ArrayList<Base>()));
+	   
+	 Set<String> highestRankedAcceptValues = RestfulServerUtils
+		        .parseAcceptHeaderAndReturnHighestRankedOptions(theServletRequest);
 
     String responseContentType = Constants.CT_FHIR_XML_NEW;
     if (highestRankedAcceptValues.contains(Constants.CT_FHIR_JSON_NEW)) {
       responseContentType = Constants.CT_FHIR_JSON_NEW;
     }
-
-    // parse QuestionnaireResponse from request body
-    org.hl7.fhir.r5.elementmodel.Element src = Manager.parse(workerContext, theServletRequest.getInputStream(),
-        contentType.contains("xml") ? FhirFormat.XML : FhirFormat.JSON);
-
     // get canonical URL of questionnaire
     String questionnaireUri = src.getChildValue("questionnaire");
     if (questionnaireUri == null)
@@ -138,5 +168,20 @@ public class QuestionnaireResponseExtractProvider  {
 
     return Manager.build(workerContext, structureDefinition);
   }
+  
+  /**
+	 * convert R4 resources to element model
+	 * @param inputResource
+	 * @return
+	 */
+	private org.hl7.fhir.r5.elementmodel.Element convertToElementModel(IWorkerContext workerContext, Resource inputResource) {
+		 String inStr = FhirContext.forR4().newJsonParser().encodeResourceToString(inputResource);
+		 
+		 try {
+	       return Manager.parse(workerContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.JSON);
+		 } catch (IOException e) {
+			 throw new UnprocessableEntityException("Cannot convert resource to element model");
+		 }	 
+	}
 
 }

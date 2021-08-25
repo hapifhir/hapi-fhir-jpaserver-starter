@@ -377,7 +377,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     // Validation
-
+    
     if (validatorModule != null) {
       if (appProperties.getValidation().getRequests_enabled()) {
         RequestValidatingInterceptor interceptor = new RequestValidatingInterceptor();
@@ -457,7 +457,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider, igLoadOperationProvider);    
     // Repository Validating Interceptor
-	 if (Boolean.TRUE.equals(appProperties.getEnable_repository_validating_interceptor())) {
+	if (Boolean.TRUE.equals(appProperties.getEnable_repository_validating_interceptor())) {
 		 RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory = myApplicationContext.getBean(RepositoryValidationInterceptorFactory.class);
 		 RepositoryValidatingInterceptor interceptor = repositoryValidationInterceptorFactory.build();
 		 interceptorService.registerInterceptor(interceptor);
@@ -467,5 +467,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
 		daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
 		
 		resourceChangeListenerRegistry.registerResourceResourceChangeListener("StructureDefinition", new SearchParameterMap(), baseWorkerContext, 3000);
+		resourceChangeListenerRegistry.registerResourceResourceChangeListener("CodeSystem", new SearchParameterMap(), baseWorkerContext, 3000);
+		resourceChangeListenerRegistry.registerResourceResourceChangeListener("ValueSet", new SearchParameterMap(), baseWorkerContext, 3000);
   }
 }

@@ -1,0 +1,52 @@
+
+ @host = http://localhost:8080/matchbox-validator/fhir
+###@host = https://test.ahdis.ch/matchbox-order/fhir
+
+### Get Capability Statement
+GET {{host}}/metadata HTTP/1.1
+
+### Reload all implementation Guides
+POST {{host}}/ImplementationGuide/$load-all HTTP/1.1
+Content-Type: application/json+fhir
+
+< poc/empty-params.json
+
+### Load Questionnaire (as Bundle)
+GET {{host}}/Questionnaire?url=http://fhir.ch/ig/ch-rad-order/Questionnaire/QuestionnaireRadiologyOrder HTTP/1.1
+Accept: application/json+fhir
+
+### Populate and get QuestionnaireResponse
+POST {{host}}/Questionnaire/$populate HTTP/1.1
+Content-Type: application/json+fhir
+
+< poc/populate-params.json
+
+### Save QuestionnaireResponse
+POST {{host}}/QuestionnaireResponse HTTP/1.1
+Content-Type: application/json+fhir
+
+< poc/example-radorder.json
+
+### Load QuestionnaireResponses
+GET {{host}}/QuestionnaireResponse?questionnaire=http://fhir.ch/ig/ch-rad-order/Questionnaire/QuestionnaireRadiologyOrder HTTP/1.1
+Accept: application/json+fhir
+
+### Validate QuestionnaireResponse
+GET {{host}}/QuestionnaireResponse/902/$validate HTTP/1.1
+Content-Type: application/json+fhir
+Accept: application/json+fhir
+
+< poc/example-radorder.json
+
+### Extract QuestionnaireResponse (with id 902) to Bundle
+GET {{host}}/QuestionnaireResponse/902/$extract HTTP/1.1
+Accept: application/json+fhir
+
+### Save Bundle
+POST {{host}}/Bundle HTTP/1.1
+Content-Type: application/json+fhir
+
+< poc/example-bundle.json
+
+### Load Bundles
+GET {{host}}/Bundle HTTP/1.1

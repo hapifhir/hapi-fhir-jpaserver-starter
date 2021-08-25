@@ -49,6 +49,7 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.util.ParametersUtil;
 import ca.uhn.fhir.util.StopWatch;
 import ca.uhn.fhir.validation.FhirValidator;
+import ca.uhn.fhir.validation.IInstanceValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import ca.uhn.fhir.validation.ValidationOptions;
@@ -60,7 +61,7 @@ import ca.uhn.fhir.validation.ValidationResult;
 public class ValidationProvider {
 
   @Autowired
-  protected IValidationSupport myValidationSupport;
+  protected IInstanceValidatorModule instanceValidator;
 
   @Autowired
   protected FhirContext myFhirCtx;
@@ -138,11 +139,12 @@ public class ValidationProvider {
 
     FhirValidator validatorModule = myFhirCtx.newValidator();
 
-    FhirInstanceValidator instanceValidator = new FhirInstanceValidator(myValidationSupport);
-    instanceValidator.setBestPracticeWarningLevel(BestPracticeWarningLevel.Ignore);
+    //FhirInstanceValidator instanceValidator = new FhirInstanceValidator(myValidationSupport);
+    /*instanceValidator.setBestPracticeWarningLevel(BestPracticeWarningLevel.Ignore);
     ArrayList<String> extensionDomains = new ArrayList<String>();
     instanceValidator.setCustomExtensionDomains(extensionDomains);
-
+    */
+    validatorModule.setInterceptorBroadcaster(myInterceptorRegistry);
     validatorModule.registerValidatorModule(instanceValidator);
 
     // the $validate operation can be called in different ways, see

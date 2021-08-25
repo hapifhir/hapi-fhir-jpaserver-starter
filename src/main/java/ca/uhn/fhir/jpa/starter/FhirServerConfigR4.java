@@ -25,7 +25,9 @@ import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.term.api.ITermReadSvcR4;
 import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
+import ca.uhn.fhir.validation.IInstanceValidatorModule;
 import ch.ahdis.fhir.hapi.jpa.validation.ExtTermReadSvcR4;
+import ch.ahdis.fhir.hapi.jpa.validation.FhirInstanceValidator;
 import ch.ahdis.fhir.hapi.jpa.validation.JpaExtendedValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
@@ -131,6 +133,11 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
   @Bean
   public IGLoadOperationProvider igLoadOperationProvider() {
 	  return new IGLoadOperationProvider();
+  }
+  
+  @Bean
+  public IInstanceValidatorModule instanceValidator() {
+	  return new FhirInstanceValidator();
   }
 
   
