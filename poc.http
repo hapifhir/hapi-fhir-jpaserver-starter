@@ -1,6 +1,7 @@
 
- @host = http://localhost:8080/matchbox-validator/fhir
-###@host = https://test.ahdis.ch/matchbox-order/fhir
+# @host = http://localhost:8080/matchbox-validator/fhir
+@host = https://test.ahdis.ch/matchbox-order/fhir
+@example-qr-id = 1457
 
 ### Get Capability Statement
 GET {{host}}/metadata HTTP/1.1
@@ -31,15 +32,18 @@ Content-Type: application/json+fhir
 GET {{host}}/QuestionnaireResponse?questionnaire=http://fhir.ch/ig/ch-rad-order/Questionnaire/QuestionnaireRadiologyOrder HTTP/1.1
 Accept: application/json+fhir
 
-### Validate QuestionnaireResponse
-GET {{host}}/QuestionnaireResponse/902/$validate HTTP/1.1
+### Validate QuestionnaireResponse (by sending)
+POST {{host}}/QuestionnaireResponse/$validate HTTP/1.1
 Content-Type: application/json+fhir
-Accept: application/json+fhir
 
 < poc/example-radorder.json
 
-### Extract QuestionnaireResponse (with id 902) to Bundle
-GET {{host}}/QuestionnaireResponse/902/$extract HTTP/1.1
+### Validate QuestionnaireResponse (from database)
+GET {{host}}/QuestionnaireResponse/{{example-qr-id}}/$validate HTTP/1.1
+Accept: application/json+fhir
+
+### Extract QuestionnaireResponse from database to Bundle
+GET {{host}}/QuestionnaireResponse/{{example-qr-id}}/$extract HTTP/1.1
 Accept: application/json+fhir
 
 ### Save Bundle
