@@ -54,3 +54,24 @@ Content-Type: application/json+fhir
 
 ### Load Bundles
 GET {{host}}/Bundle HTTP/1.1
+
+
+###
+GET {{host}}/QuestionnaireResponse/{{example-qr-id}} HTTP/1.1
+Accept: application/json+fhir
+
+###
+DELETE {{host}}/StructureMap/OrfQrToBundle
+Accept: application/json+fhir
+
+###
+GET {{host}}/StructureMap?url=http://fhir.ch/ig/ch-orf/StructureMap/OrfQrToBundle HTTP/1.1
+Accept: application/json+fhir
+
+
+### Post fixed StructureMap which is not integrated in the implementation guide 
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./poc/OrfQrToBundle.map
