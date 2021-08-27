@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 import javax.servlet.ServletException;
+import static org.smartregister.extension.utils.Constants.LOCATION;
 
 @Import(AppProperties.class)
 public class JpaRestfulServer extends BaseJpaRestfulServer {
@@ -24,7 +25,13 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
   @Override
   protected void initialize() throws ServletException {
     super.initialize();
-	  IFhirResourceDao<Location> locationIFhirResourceDao = daoRegistry.getResourceDao("Location");
+
+    // Add your own customization here
+	  registerLocationHierarchyTypes();
+  }
+
+  private void registerLocationHierarchyTypes() {
+	  IFhirResourceDao<Location> locationIFhirResourceDao = daoRegistry.getResourceDao(LOCATION);
 	  LocationHierarchyResourceProvider locationHierarchyResourceProvider = new LocationHierarchyResourceProvider();
 	  locationHierarchyResourceProvider.setLocationIFhirResourceDao(locationIFhirResourceDao);
 
@@ -36,9 +43,6 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
 	  getFhirContext().registerCustomType(SingleTreeNode.class);
 	  getFhirContext().registerCustomType(TreeNode.class);
 	  getFhirContext().registerCustomType(ChildTreeNode.class);
-
-    // Add your own customization here
-
   }
 
 }
