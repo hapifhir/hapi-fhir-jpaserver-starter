@@ -1,11 +1,18 @@
 package ca.uhn.fhir.jpa.starter;
 
-import ca.uhn.fhir.context.ConfigurationException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
+import java.io.IOException;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import javax.annotation.PreDestroy;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DateTimeType;
@@ -27,18 +34,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
-import org.testcontainers.junit.jupiter.Container;
-
-import javax.annotation.PreDestroy;
-import java.io.IOException;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
@@ -52,7 +47,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     // "elasticsearch.rest_url='http://localhost:9200'",
     "elasticsearch.username=SomeUsername",
     "elasticsearch.password=SomePassword",
-	 "elasticsearch.protocol=http"
+	 "elasticsearch.protocol=http",
+	  "spring.main.allow-bean-definition-overriding=true"
   })
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
 public class ElasticsearchLastNR4IT {
