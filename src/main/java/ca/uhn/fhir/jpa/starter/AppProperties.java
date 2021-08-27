@@ -74,6 +74,9 @@ public class AppProperties {
   private Boolean use_apache_address_strategy = false;
   private Boolean use_apache_address_strategy_https = false;
 
+	private Integer bundle_batch_pool_size = 20;
+	private Integer bundle_batch_pool_max_size = 100;
+
 	public Boolean getUse_apache_address_strategy() {
     return use_apache_address_strategy;
   }
@@ -469,6 +472,22 @@ public class AppProperties {
 
 	public void setInstall_transitive_ig_dependencies(boolean install_transitive_ig_dependencies) {
 		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
+	}
+
+	public Integer getBundle_batch_pool_size() {
+		return this.bundle_batch_pool_size;
+	}
+
+	public void setBundle_batch_pool_size(Integer bundle_batch_pool_size) {
+		this.bundle_batch_pool_size = bundle_batch_pool_size;
+	}
+
+	public Integer getBundle_batch_pool_max_size() {
+		return bundle_batch_pool_max_size;
+	}
+
+	public void setBundle_batch_pool_max_size(Integer bundle_batch_pool_max_size) {
+		this.bundle_batch_pool_max_size = bundle_batch_pool_max_size;
 	}
 
 	public static class Cors {

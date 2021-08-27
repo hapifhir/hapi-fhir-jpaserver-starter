@@ -99,6 +99,10 @@ hapi:
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
 
+    # Threadpool size for BATCH'ed GETs in a bundle.
+#    bundle_batch_pool_size: 10
+#    bundle_batch_pool_max_size: 50
+
 #    logger:
 #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
 #      format: >-

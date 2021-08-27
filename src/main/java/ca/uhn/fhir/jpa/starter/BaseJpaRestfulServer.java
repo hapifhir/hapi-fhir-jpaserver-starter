@@ -373,6 +373,11 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
       daoConfig.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
     }
+    //Parallel Batch GET execution settings
+  	 daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
+  	 daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());
+  	 System.out.println("BATCH SIZE IS " + appProperties.getBundle_batch_pool_size());
+	  System.out.println("BATCH MAX SIZE IS " + appProperties.getBundle_batch_pool_max_size());
 
     if (appProperties.getImplementationGuides() != null) {
       Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
