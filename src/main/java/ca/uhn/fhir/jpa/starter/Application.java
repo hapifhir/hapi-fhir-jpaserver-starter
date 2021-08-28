@@ -29,14 +29,6 @@ public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
 
-  	 /*
-  	 * https://github.com/hapifhir/hapi-fhir-jpaserver-starter/issues/246
-  	 * This will be allowed for a short period until we know how MDM should be configured
-  	 * or don't have multiple equal bean instantiations.
-  	 *
-  	 * This will require changes in the main project as stated in the Github comment
-  	 * */
-  	 System.setProperty("spring.main.allow-bean-definition-overriding","true");
 
     System.setProperty("spring.batch.job.enabled", "false");
     SpringApplication.run(Application.class, args);
