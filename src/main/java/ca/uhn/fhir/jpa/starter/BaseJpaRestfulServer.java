@@ -160,8 +160,6 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
   private static final long serialVersionUID = 1L;
 
-  private static final Logger ourLog = LoggerFactory.getLogger(BaseJpaRestfulServer.class);
-
   @SuppressWarnings("unchecked")
   @Override
   protected void initialize() throws ServletException {
@@ -212,19 +210,19 @@ public class BaseJpaRestfulServer extends RestfulServer {
         setServerConformanceProvider(confProvider);
       } else if (fhirVersion == FhirVersionEnum.R4) {
 
-        JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, fhirSystemDao,
-          daoConfig, searchParamRegistry);
-        confProvider.setImplementationDescription("HAPI FHIR R4 Server");
-        setServerConformanceProvider(confProvider);
-      } else if (fhirVersion == FhirVersionEnum.R5) {
+        JpaCapabilityStatementProvider confProvider = new JpaCapabilityStatementProvider(this, fhirSystemDao,
+            daoConfig, searchParamRegistry, myValidationSupport);
+          confProvider.setImplementationDescription("HAPI FHIR R4 Server");
+          setServerConformanceProvider(confProvider);
+        } else if (fhirVersion == FhirVersionEnum.R5) {
 
-        JpaConformanceProviderR5 confProvider = new JpaConformanceProviderR5(this, fhirSystemDao,
-          daoConfig, searchParamRegistry);
-        confProvider.setImplementationDescription("HAPI FHIR R5 Server");
-        setServerConformanceProvider(confProvider);
-      } else {
-        throw new IllegalStateException();
-      }
+          JpaCapabilityStatementProvider confProvider = new JpaCapabilityStatementProvider(this, fhirSystemDao,
+            daoConfig, searchParamRegistry, myValidationSupport);
+          confProvider.setImplementationDescription("HAPI FHIR R5 Server");
+          setServerConformanceProvider(confProvider);
+        } else {
+          throw new IllegalStateException();
+        }
     }
 
     /*
@@ -457,11 +455,11 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider, igLoadOperationProvider);    
     // Repository Validating Interceptor
-	if (Boolean.TRUE.equals(appProperties.getEnable_repository_validating_interceptor())) {
-		 RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory = myApplicationContext.getBean(RepositoryValidationInterceptorFactory.class);
-		 RepositoryValidatingInterceptor interceptor = repositoryValidationInterceptorFactory.build();
-		 interceptorService.registerInterceptor(interceptor);
-	 }
+//	if (Boolean.TRUE.equals(appProperties.getEnable_repository_validating_interceptor())) {
+//		 RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory = myApplicationContext.getBean(RepositoryValidationInterceptorFactory.class);
+//		 RepositoryValidatingInterceptor interceptor = repositoryValidationInterceptorFactory.build();
+//		 interceptorService.registerInterceptor(interceptor);
+//	 }
     daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 
 		daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());

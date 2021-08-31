@@ -164,3 +164,5 @@ Temporary Items
 
 # Helm Chart dependencies
 **/charts/*.tgz
+database/h2.mv.db
+database/h2.trace.db

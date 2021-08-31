@@ -216,7 +216,7 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 			for (IBaseResource next : resources) {
 
 				try {
-					next = isStructureDefinitionWithoutSnapshot(next) ? generateSnapshot(next) : next;
+			    next = isStructureDefinitionWithoutSnapshot(next) ? generateSnapshot(next) : next;
 					create(next, theOutcome);
 				} catch (Exception e) {
 					ourLog.warn("Failed to upload resource of type {} with ID {} - Error: {}", myFhirContext.getResourceType(next), next.getIdElement().getValue(), e.toString());

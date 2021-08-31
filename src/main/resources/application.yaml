@@ -21,7 +21,7 @@ spring:
   #      hibernate.cache.use_structured_entries: false
   #      hibernate.cache.use_minimal_puts: false
   ###    These settings will enable fulltext search with lucene
-  #      hibernate.search.enabled: true
+      hibernate.search.enabled: true
   #      hibernate.search.backend.type: lucene
   #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
   #      hibernate.search.backend.directory.type: local-filesystem
@@ -30,6 +30,9 @@ spring:
   batch:
     job:
       enabled: false
+  main:
+#    TODO 5.6.0 -> Prevent duplicate bean definitions in the Spring batch config in HAPI: see:
+    allow-bean-definition-overriding: true
 server: 
   servlet:
     context-path: /matchbox-validator

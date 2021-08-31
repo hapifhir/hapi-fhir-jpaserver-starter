@@ -144,7 +144,7 @@ public class ValidationProvider {
     ArrayList<String> extensionDomains = new ArrayList<String>();
     instanceValidator.setCustomExtensionDomains(extensionDomains);
     */
-    validatorModule.setInterceptorBroadcaster(myInterceptorRegistry);
+    // FIXME??? validatorModule.setInterceptorBroadcaster(myInterceptorRegistry);
     validatorModule.registerValidatorModule(instanceValidator);
 
     // the $validate operation can be called in different ways, see

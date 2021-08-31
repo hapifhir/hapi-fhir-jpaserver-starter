@@ -624,6 +624,7 @@ public static class Cors {
   public static class Partitioning {
 
     private Boolean partitioning_include_in_search_hashes = false;
+    private Boolean allow_references_across_partitions = false;
 
     public Boolean getPartitioning_include_in_search_hashes() {
       return partitioning_include_in_search_hashes;
