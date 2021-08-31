@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.convertors.VersionConvertor_40_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.BooleanType;
@@ -97,7 +97,7 @@ public class QuestionnairePopulateProvider {
 			  //workerContext.load(org.hl7.fhir.r4.model.Questionnaire.class, questionnaireRef.getReference());
 			  org.hl7.fhir.r5.model.Questionnaire questionnaireR5 = workerContext.fetchResource(org.hl7.fhir.r5.model.Questionnaire.class, questionnaireRef.getReference());
 			  if (questionnaireR5==null) throw new UnprocessableEntityException("Questionnaire referenced by questionnaireRef could not be resolved.");
-			  questionnaire = (Questionnaire) VersionConvertor_40_50.convertResource(questionnaireR5);
+			  questionnaire = (Questionnaire) VersionConvertorFactory_40_50.convertResource(questionnaireR5);
 		  }
 		  
 		  // convert questionaire to element model		      		    

@@ -34,7 +34,7 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hl7.fhir.convertors.VersionConvertor_40_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r4.formats.IParser;
@@ -126,7 +126,7 @@ public class MappingLanguageInterceptor extends InterceptorAdapter implements IT
       e.printStackTrace();
     }
     StructureMapUtilities smu5 = new StructureMapUtilities(contextR5, this);
-    StructureMap map =  (StructureMap) VersionConvertor_40_50.convertResource(smu5.parse(content, "map"));
+    StructureMap map =  (StructureMap) VersionConvertorFactory_40_50.convertResource(smu5.parse(content, "map"));
     
     return map;
   }

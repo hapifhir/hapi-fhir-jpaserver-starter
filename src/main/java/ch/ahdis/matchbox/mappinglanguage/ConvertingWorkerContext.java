@@ -2,71 +2,32 @@ package ch.ahdis.matchbox.mappinglanguage;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import org.fhir.ucum.UcumService;
-import org.hl7.fhir.convertors.VersionConvertor_40_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.loaders.BaseLoaderR5;
 import org.hl7.fhir.convertors.loaders.R4ToR5Loader;
-import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.exceptions.TerminologyServiceException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
-import org.hl7.fhir.r5.context.BaseWorkerContext;
-import org.hl7.fhir.r5.context.CanonicalResourceManager.CanonicalResourceProxy;
-import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
-import org.hl7.fhir.r5.formats.IParser;
-import org.hl7.fhir.r5.formats.ParserType;
-import org.hl7.fhir.r5.model.CanonicalResource;
-import org.hl7.fhir.r5.model.CodeSystem;
-import org.hl7.fhir.r5.model.CodeableConcept;
-import org.hl7.fhir.r5.model.Coding;
-import org.hl7.fhir.r5.model.ConceptMap;
-import org.hl7.fhir.r5.model.ElementDefinition.ElementDefinitionBindingComponent;
-import org.hl7.fhir.r5.model.ImplementationGuide;
-import org.hl7.fhir.r5.model.Parameters;
-import org.hl7.fhir.r5.model.Questionnaire;
 import org.hl7.fhir.r5.model.Resource;
-import org.hl7.fhir.r5.model.SearchParameter;
-import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureMap;
-import org.hl7.fhir.r5.model.TerminologyCapabilities;
-import org.hl7.fhir.r5.model.ValueSet;
-import org.hl7.fhir.r5.model.ValueSet.ConceptSetComponent;
-import org.hl7.fhir.r5.terminologies.TerminologyClient;
-import org.hl7.fhir.r5.terminologies.ValueSetExpander.ValueSetExpansionOutcome;
-import org.hl7.fhir.r5.utils.IResourceValidator;
-import org.hl7.fhir.r5.utils.XVerExtensionManager;
-import org.hl7.fhir.utilities.TimeTracker;
-import org.hl7.fhir.utilities.TranslationServices;
-import org.hl7.fhir.utilities.npm.BasePackageCacheManager;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.npm.ToolsVersion;
-import org.hl7.fhir.utilities.validation.ValidationOptions;
-import org.hl7.fhir.validation.ValidatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.google.gson.JsonObject;
-
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.cache.IResourceChangeEvent;
 import ca.uhn.fhir.jpa.cache.IResourceChangeListener;
-import ca.uhn.fhir.jpa.dao.JpaPersistedResourceValidationSupport;
-import ca.uhn.fhir.jpa.packages.NpmJpaValidationSupport;
 import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
-import ca.uhn.fhir.jpa.starter.BaseJpaRestfulServer;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.param.UriParam;
 
@@ -127,7 +88,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 	
     public <T extends org.hl7.fhir.r4.model.Resource> void load(Class<T> cl, String uri) {
 		
-		Resource res = VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.Resource) myValidationSupport.fetchResource(cl, uri));
+		Resource res = VersionConvertorFactory_40_50.convertResource((org.hl7.fhir.r4.model.Resource) myValidationSupport.fetchResource(cl, uri));
 		if (res != null) {
 		  dropResource(res.getClass().getSimpleName(), res.getId());		
 		  ourLog.info("cache: "+res);
@@ -155,7 +116,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 		if (search.size()>0) {
 		  List<IBaseResource> results = search.getResources(0, 1);		
 		  dropResource("StructureMap", code);
-		  cacheResource(VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.StructureMap) results.get(0)));
+		  cacheResource(VersionConvertorFactory_40_50.convertResource((org.hl7.fhir.r4.model.StructureMap) results.get(0)));
 		}
 	}
 	
@@ -163,7 +124,7 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 		IBaseResource res = myDaoRegistry.getResourceDao(resourceType).read(id);
 		if (res != null) {
 			ourLog.info("cache: "+res);
-			Resource convRes = VersionConvertor_40_50.convertResource((org.hl7.fhir.r4.model.Resource) res);
+			Resource convRes = VersionConvertorFactory_40_50.convertResource((org.hl7.fhir.r4.model.Resource) res);
 			dropResource(resourceType, convRes.getId());
 			cacheResource(convRes);
 		}

@@ -1,25 +1,7 @@
 hapi:
   fhir:
     implementationguides:
-      iheformatcodefhir:
-        url: https://profiles.ihe.net/fhir/ihe.formatcode.fhir/package.tgz
-        name: ihe.formatcode.fhir
-        version: 1.0.0
-      core:
-        name: ch.fhir.ig.ch-core
-        version: 1.2.0
-      eprterm:
-        name: ch.fhir.ig.ch-epr-term
-        version: 2.0.4
-      emed:
-        name: ch.fhir.ig.ch-emed
-        version: 0.2.0
-      vacd:
-        name: ch.fhir.ig.ch-vacd
-        version: 0.1.0
-      atc:
-        name: ch.fhir.ig.ch-atc
-        version: 3.1.0
-      mhealth:
-        name: ch.fhir.ig.ch-epr-mhealth
+      teleservicesimdph:
+        url: https://gazelle-ans.kereval.com/package.tgz
+        name: ans.cnsa.fhir
         version: 0.1.2

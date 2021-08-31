@@ -9,7 +9,6 @@ import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMod
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
 import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
-import ca.uhn.fhir.jpa.subscription.match.deliver.email.JavaMailEmailSender;
 import com.google.common.base.Strings;
 import org.hl7.fhir.dstu2.model.Subscription;
 import org.springframework.boot.env.YamlPropertySourceLoader;
@@ -204,24 +203,24 @@ public class FhirServerConfigCommon {
 
   @Bean()
   public IEmailSender emailSender(AppProperties appProperties, Optional<SubscriptionDeliveryHandlerFactory> subscriptionDeliveryHandlerFactory) {
-    if (appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null) {
-      JavaMailEmailSender retVal = new JavaMailEmailSender();
-
-      AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
-      retVal.setSmtpServerHostname(email.getHost());
-      retVal.setSmtpServerPort(email.getPort());
-      retVal.setSmtpServerUsername(email.getUsername());
-      retVal.setSmtpServerPassword(email.getPassword());
-      retVal.setAuth(email.getAuth());
-      retVal.setStartTlsEnable(email.getStartTlsEnable());
-      retVal.setStartTlsRequired(email.getStartTlsRequired());
-      retVal.setQuitWait(email.getQuitWait());
-
-      if(subscriptionDeliveryHandlerFactory.isPresent())
-       subscriptionDeliveryHandlerFactory.get().setEmailSender(retVal);
-
-      return retVal;
-    }
+//    if (appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null) {
+//      JavaMailEmailSender retVal = new JavaMailEmailSender();
+//
+//      AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
+//      retVal.setSmtpServerHostname(email.getHost());
+//      retVal.setSmtpServerPort(email.getPort());
+//      retVal.setSmtpServerUsername(email.getUsername());
+//      retVal.setSmtpServerPassword(email.getPassword());
+//      retVal.setAuth(email.getAuth());
+//      retVal.setStartTlsEnable(email.getStartTlsEnable());
+//      retVal.setStartTlsRequired(email.getStartTlsRequired());
+//      retVal.setQuitWait(email.getQuitWait());
+//
+//      if(subscriptionDeliveryHandlerFactory.isPresent())
+//       subscriptionDeliveryHandlerFactory.get().setEmailSender(retVal);
+//
+//      return retVal;
+//    }
 
     return null;
   }
