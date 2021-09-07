@@ -88,6 +88,17 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 		}
 		return result;
 	}
+		
+	public <T extends org.hl7.fhir.r4.model.Resource> T fetchResourceAsR4(Class<T> class_, String uri) {
+		// We fetch as R5 resource first. The R4 fetchResource function from myValidationSupport
+		// will fail if only an abstract Class like "Resource" is provided as input. 
+		// So we use the R5 resource to determine the concrete resource type
+		Resource r = fetchResource(Resource.class, uri);
+		if (r == null) return null;
+		T resR4 = myValidationSupport.fetchResource(getClassForR4(r.getClass().getSimpleName()), uri);
+		return resR4;				
+	}
+	
 	
     public <T extends org.hl7.fhir.r4.model.Resource> void load(Class<T> cl, String uri) {
 		
