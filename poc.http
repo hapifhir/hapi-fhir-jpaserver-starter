@@ -2,7 +2,7 @@
 ### @host = http://localhost:8080/matchbox-validator/fhir
 @host = https://test.ahdis.ch/matchbox-order/fhir
 ### @host = https://test.ahdis.ch/r4
-@example-qr-id = 2960
+@example-qr-id = 4760
 
 ### Get Capability Statement
 GET {{host}}/metadata HTTP/1.1
@@ -34,10 +34,10 @@ GET {{host}}/QuestionnaireResponse?questionnaire=http://fhir.ch/ig/ch-rad-order/
 Accept: application/json+fhir
 
 ### Validate QuestionnaireResponse (by sending)
-POST {{host}}/QuestionnaireResponse/$validate HTTP/1.1
+POST {{host}}/QuestionnaireResponse HTTP/1.1
 Content-Type: application/json+fhir
 
-< poc/example-radorder.json
+< poc/qrbundleattachment.json
 
 ### Validate QuestionnaireResponse (from database)
 GET {{host}}/QuestionnaireResponse/{{example-qr-id}}/$validate HTTP/1.1
@@ -69,7 +69,7 @@ GET {{host}}/QuestionnaireResponse/{{example-qr-id}} HTTP/1.1
 Accept: application/json+fhir
 
 ###
-DELETE {{host}}/StructureMap/OrfQrToBundle
+DELETE {{host}}/StructureMap?url=http://fhir.ch/ig/ch-orf/StructureMap/OrfQrToBundle
 Accept: application/json+fhir
 
 ###

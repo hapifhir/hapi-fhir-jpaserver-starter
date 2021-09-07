@@ -49,6 +49,7 @@ group QrToGroups(source qr : QuestionnaireResponse, target patient : Patient, ta
     qr.item as grp where linkId='sender' then SenderAuthorInit(grp, bundle, composition, serviceRequest) "grpsender";
     qr.item as grp where linkId='receiverCopies' then ReceiverCopy(grp, bundle, composition, serviceRequest) "grpsender";
     qr.item as grp where linkId='appointment' then Appointment(grp, bundle, composition, serviceRequest) "grpsender";
+    qr.item as grp where linkId='previousResults' then PreviousResults(grp, bundle, serviceRequest) "previousResults";
     qr.item as grp where linkId='note' then Note(grp, serviceRequest) "note";
 }
 
@@ -629,6 +630,22 @@ group Appointment(source grp : BackboneElement, target bundle: Bundle, target co
          } "location";
       } "appointment.location";
    } "Appointment";
+}
+
+group PreviousResults(source grp : BackboneElement, target bundle: Bundle, target serviceRequest: ServiceRequest) {
+   grp.item as item where (linkId='previousResults.attachment' and answer.exists()) then {
+      item.answer as answer then {
+         answer.value: Attachment as attachment -> 
+            bundle.entry as e, 
+            e.resource = create('Media') as media, 
+            media.id = uuid() as uuid,
+            e.fullUrl = append('urn:uuid:',uuid), 
+            media.content = attachment,
+            serviceRequest.supportingInfo as supportingInfo,
+            supportingInfo.reference = ('urn:uuid:'+uuid)
+            "media"; 
+      } "answer";
+   } "item";
 }
 
 group Note(source grp : BackboneElement, target serviceRequest: ServiceRequest) {
