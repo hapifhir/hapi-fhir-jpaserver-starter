@@ -1,0 +1,13 @@
+{
+	"resourceType": "SearchParameter",
+    "url" : "http://fhir.ch/ig/ch-orf/SearchParameter/placer",
+    "id": "2959",
+    "name" : "Placer",
+    "title": "Placer",
+	"base": [ "Bundle" ],
+	"status": "active",
+	"code": "placer",
+	"type": "token",
+	"expression": "Bundle.entry.resource.as(ServiceRequest).identifier.where(type.coding.where(system='http://terminology.hl7.org/CodeSystem/v2-0203' and code='PLAC').exists())",
+	"xpathUsage": "normal"
+}

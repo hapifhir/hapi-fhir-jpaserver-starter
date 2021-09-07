@@ -1,0 +1,68 @@
+<Parameters xmlns="http://hl7.org/fhir">
+    <parameter>
+        <name value="includeDefinition"/>
+        <valueBoolean value="false"/>
+    </parameter>
+    <parameter>
+        <name value="excludeNested"/>
+        <valueBoolean value="false"/>
+    </parameter>
+    <parameter>
+        <name value="valueSet"/>
+        <resource>
+            <ValueSet xmlns="http://hl7.org/fhir">
+                <id value="ch-rad-order-caveat-device"/>
+                <text>
+                    <status value="generated"/>
+                    <div xmlns="http://www.w3.org/1999/xhtml">
+                        <ul>
+                            <li>Include codes from <a href="http://www.snomed.org/">
+                                <code>http://snomed.info/sct</code>
+                            </a> where concept  is-a  397578001 (Device in situ (finding))</li>
+                    </ul>
+                </div>
+            </text>
+            <url value="http://fhir.ch/ig/ch-rad-order/ValueSet/ch-rad-order-caveat-device"/>
+            <version value="0.1.0"/>
+            <name value="ChRadOrderCaveatDevice"/>
+            <title value="Caveat Device"/>
+            <status value="active"/>
+            <date value="2021-06-17T15:58:58+02:00"/>
+            <publisher value="HL7 Switzerland"/>
+            <contact>
+                <name value="Juerg P. Bleuer"/>
+                <telecom>
+                    <system value="url"/>
+                    <value value="https://www.hl7.ch"/>
+                </telecom>
+            </contact>
+            <description value="Definition for Caveat Device Value Set in the context of CH RAD-Order."/>
+            <jurisdiction>
+                <coding>
+                    <system value="urn:iso:std:iso:3166"/>
+                    <code value="CH"/>
+                </coding>
+            </jurisdiction>
+            <copyright value="CC-BY-SA-4.0"/>
+            <compose>
+                <include>
+                    <system value="http://snomed.info/sct"/>
+                    <filter>
+                        <property value="concept"/>
+                        <op value="is-a"/>
+                        <value value="397578001"/>
+                    </filter>
+                </include>
+            </compose>
+        </ValueSet>
+    </resource>
+</parameter>
+<parameter>
+    <name value="_limit"/>
+    <valueString value="1000"/>
+</parameter>
+<parameter>
+    <name value="_incomplete"/>
+    <valueString value="true"/>
+</parameter>
+</Parameters>"

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,11 +29,11 @@ import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.yaml.snakeyaml.Yaml;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
@@ -48,20 +49,33 @@ import ch.ahdis.matchbox.util.PackageCacheInitializer;
  * @author oliveregger
  */
 @RunWith(Parameterized.class)
-@Ignore
 public class IgValidateR4TestStandalone {
 
   static private Set<String> loadedIgs = new HashSet<String>();
 
-//  private String targetServer = "http://localhost:8080/matchbox-validator/fhir";
-  private String targetServer = "https://test.ahdis.ch/matchbox-validator/fhir";
+  private String targetServer = "http://localhost:8080/matchbox-validator/fhir";
+//  private String targetServer = "https://test.ahdis.ch/matchbox-validator/fhir";
     private Resource resource;
   private String name;
+  
+  
+  public static List<ImplementationGuide> getImplementationGuides() {
+    Yaml yaml = new Yaml();
+    InputStream inputStream = null;
+    try {
+      inputStream = new FileInputStream("./with-preload/application.yaml");
+    } catch (FileNotFoundException e) {
+      return null;
+    }
+    Map<String, Object> obj = yaml.load(inputStream);
+    return PackageCacheInitializer.getIgs(obj);
+  }
+
 
   @Parameters(name = "{index}: file {0}")
   public static Iterable<Object[]> data() throws ParserConfigurationException, IOException, FHIRFormatError {
 
-    List<ImplementationGuide> igs = PackageCacheInitializer.getImplementationGuides();
+    List<ImplementationGuide> igs = getImplementationGuides();
     List<Object[]> objects = new ArrayList<Object[]>();
     for (ImplementationGuide ig : igs) {
       String igName = ig.getName() + "#" + ig.getVersion();

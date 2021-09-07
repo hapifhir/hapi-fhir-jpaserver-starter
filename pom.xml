@@ -14,7 +14,8 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-		  <version>5.6.0-PRE2-SNAPSHOT</version>
+<!--    <version>5.6.0-PRE2-SNAPSHOT</version>  -->		  
+		<version>5.5.1</version>
     </parent>
 
     <artifactId>matchbox-validator</artifactId>
@@ -22,7 +23,8 @@
     <properties>
         <java.version>11</java.version>
         <spring_boot_version>2.3.4.RELEASE</spring_boot_version>
-	    <fhir.core.version>5.4.12-SNAPSHOT</fhir.core.version>
+<!-- <fhir.core.version>5.4.12-SNAPSHOT</fhir.core.version> -->
+		<fhir.core.version>5.4.10</fhir.core.version>
     </properties>
 
     <prerequisites>

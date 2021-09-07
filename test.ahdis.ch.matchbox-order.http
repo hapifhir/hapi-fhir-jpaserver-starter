@@ -1,4 +1,5 @@
-@host = https://test.ahdis.ch/matchbox-order/fhir
+### @host = https://test.ahdis.ch/matchbox-order/fhir
+@host = http://localhost:8080/matchbox-validator/fhir
 
 ###
 GET {{host}}/metadata HTTP/1.1

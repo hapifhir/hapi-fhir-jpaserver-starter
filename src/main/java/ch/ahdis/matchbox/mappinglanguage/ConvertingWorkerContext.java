@@ -13,11 +13,14 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
+import org.hl7.fhir.r5.model.Coding;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.r5.model.StructureMap;
+import org.hl7.fhir.r5.model.ValueSet;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.npm.ToolsVersion;
+import org.hl7.fhir.utilities.validation.ValidationOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +91,12 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 	
     public <T extends org.hl7.fhir.r4.model.Resource> void load(Class<T> cl, String uri) {
 		
-		Resource res = VersionConvertorFactory_40_50.convertResource((org.hl7.fhir.r4.model.Resource) myValidationSupport.fetchResource(cl, uri));
+		org.hl7.fhir.r4.model.Resource resR4 = myValidationSupport.fetchResource(cl, uri);
+		if (resR4==null) {
+			ourLog.info("error ressource with uri not  found "+uri);
+			return ;
+		}
+		Resource res = VersionConvertorFactory_40_50.convertResource(resR4);
 		if (res != null) {
 		  dropResource(res.getClass().getSimpleName(), res.getId());		
 		  ourLog.info("cache: "+res);
@@ -592,13 +600,15 @@ public class ConvertingWorkerContext extends SimpleWorkerContext implements IRes
 		System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName());
 		super.validateCodeBatch(options, codes, vs);
 	}
-
+*/
 	@Override
 	public ValidationResult validateCode(ValidationOptions options, Coding code, ValueSet vs) {
 		System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName());
-		return super.validateCode(options, code, vs);
+//		return super.validateCode(options, code, vs);
+		return null;
 	}
 
+/*
 	@Override
 	public ValidationResult validateCode(ValidationOptions options, CodeableConcept code, ValueSet vs) {
 		System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName());
