@@ -20,10 +20,11 @@ import ca.uhn.fhir.context.FhirContext;
 public class TransformSupportServices implements ITransformerServices {
 
   private List<Base> outputs;
-  private SimpleWorkerContext fhirContext;
+  private ConvertingWorkerContext fhirContext;
+  	
   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TransformSupportServices.class);
 
-  public TransformSupportServices(SimpleWorkerContext fhirContext, List<Base> outputs) {
+  public TransformSupportServices(ConvertingWorkerContext fhirContext, List<Base> outputs) {
     this.fhirContext = fhirContext;
     this.outputs = outputs;
   }
@@ -48,10 +49,10 @@ public class TransformSupportServices implements ITransformerServices {
   }
 
   @Override
-  public Base resolveReference(Object appContext, String url) throws FHIRException {
-    Resource resource = fhirContext.fetchResource(Resource.class, url);
+  public Base resolveReference(Object appContext, String url) throws FHIRException {	
+	org.hl7.fhir.r4.model.Resource resource = fhirContext.fetchResourceAsR4(org.hl7.fhir.r4.model.Resource.class, url);
     if (resource != null) {
-      String inStr = FhirContext.forR5().newJsonParser().encodeResourceToString(resource);
+      String inStr = FhirContext.forR4().newJsonParser().encodeResourceToString(resource);
       try {
         return Manager.parse(fhirContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.JSON);
       } catch (IOException e) {
