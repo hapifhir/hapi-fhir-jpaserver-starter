@@ -250,9 +250,9 @@ group PatientItems(source src : BackboneElement, target tgt:Patient) {
                                                                                    value.system=(item.answer.valueString) "patient.localPidDomain"; 
   src.item as item where (linkId.value = 'patient.birthDate' and answer.exists()) -> tgt.birthDate = (item.answer.value);
   src.item as item where (linkId.value = 'patient.gender' and answer.exists()) -> tgt.gender = (item.answer.value.code);
-  src.item as item where (linkId.value = 'patient.phone' and answer.exists()) -> tgt.telecom as value, 
-                                                                                   value.system = 'phone',
-                                                                                   value.value=(item.answer.value) "patient.phone"; 
+  src.item as item where (linkId.value = 'patient.phone' and answer.exists()) then {
+   item.answer as answer -> tgt.telecom as value, value.system = 'phone', value.value=(answer.value) "patient.phone";  
+  } "patient.phone";
   src.item as item where (linkId.value = 'patient.email' and answer.exists()) -> tgt.telecom as value, 
                                                                                    value.system = 'email',
                                                                                    value.value=(item.answer.value) "patient.email"; 
