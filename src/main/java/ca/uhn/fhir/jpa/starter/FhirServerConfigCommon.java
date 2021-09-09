@@ -36,6 +36,7 @@ public class FhirServerConfigCommon {
     ourLog.info("Server configured to " + (appProperties.getAllow_contains_searches() ? "allow" : "deny") + " contains searches");
     ourLog.info("Server configured to " + (appProperties.getAllow_multiple_delete() ? "allow" : "deny") + " multiple deletes");
     ourLog.info("Server configured to " + (appProperties.getAllow_external_references() ? "allow" : "deny") + " external references");
+    ourLog.info("Server configured to " + (appProperties.getDelete_expunge_enabled() ? "enable" : "disable") + " delete expunges");
     ourLog.info("Server configured to " + (appProperties.getExpunge_enabled() ? "enable" : "disable") + " expunges");
     ourLog.info("Server configured to " + (appProperties.getAllow_override_default_search_params() ? "allow" : "deny") + " overriding default search params");
     ourLog.info("Server configured to " + (appProperties.getAuto_create_placeholder_reference_targets() ? "allow" : "disable") + " auto-creating placeholder references");
@@ -81,6 +82,7 @@ public class FhirServerConfigCommon {
     retVal.setAllowContainsSearches(appProperties.getAllow_contains_searches());
     retVal.setAllowMultipleDelete(appProperties.getAllow_multiple_delete());
     retVal.setAllowExternalReferences(appProperties.getAllow_external_references());
+    retVal.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
     retVal.setExpungeEnabled(appProperties.getExpunge_enabled());
     if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
       retVal.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
