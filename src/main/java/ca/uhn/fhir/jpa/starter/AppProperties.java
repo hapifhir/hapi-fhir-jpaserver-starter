@@ -29,6 +29,7 @@ public class AppProperties {
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
+  private Boolean delete_expunge_enabled = false;
   private Boolean enable_index_missing_fields = false;
   private Boolean enable_index_contained_resource = false;
   private Boolean enable_repository_validating_interceptor = false;
@@ -259,6 +260,14 @@ public class AppProperties {
 
   public void setDefault_page_size(Integer default_page_size) {
     this.default_page_size = default_page_size;
+  }
+
+  public Boolean getDelete_expunge_enabled() {
+    return delete_expunge_enabled;
+  }
+
+  public void setDelete_expunge_enabled(Boolean delete_expunge_enabled) {
+    this.delete_expunge_enabled = delete_expunge_enabled;
   }
 
   public Boolean getEnable_index_missing_fields() {
