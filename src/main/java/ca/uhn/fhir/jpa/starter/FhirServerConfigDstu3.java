@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -62,8 +63,8 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
   
   @Override
   @Bean
-  public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-    LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory();
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(ConfigurableListableBeanFactory theBeanFactory) {
+    LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory(theBeanFactory);
     retVal.setPersistenceUnitName("HAPI_PU");
 
     try {
@@ -72,7 +73,7 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
       throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
     }
 
-    retVal.setJpaProperties(EnvironmentHelper.getHibernateProperties(configurableEnvironment));
+    retVal.setJpaProperties(EnvironmentHelper.getHibernateProperties(configurableEnvironment, theBeanFactory));
     return retVal;
   }
 

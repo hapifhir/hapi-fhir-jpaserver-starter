@@ -14,6 +14,7 @@ import org.hibernate.search.engine.cfg.BackendSettings;
 import org.hibernate.search.mapper.orm.automaticindexing.session.AutomaticIndexingSynchronizationStrategyNames;
 import org.hibernate.search.mapper.orm.cfg.HibernateOrmMapperSettings;
 import org.hibernate.search.mapper.orm.schema.management.SchemaManagementStrategyName;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy;
 import org.springframework.core.env.CompositePropertySource;
@@ -25,7 +26,7 @@ import java.util.*;
 
 public class EnvironmentHelper {
 
-	public static Properties getHibernateProperties(ConfigurableEnvironment environment) {
+	public static Properties getHibernateProperties(ConfigurableEnvironment environment, ConfigurableListableBeanFactory theBeanFactory) {
 		Properties properties = new Properties();
 		Map<String, Object> jpaProps = getPropertiesStartingWith(environment, "spring.jpa.properties");
 		for (Map.Entry<String, Object> entry : jpaProps.entrySet()) {
@@ -41,7 +42,7 @@ public class EnvironmentHelper {
 		//properties.putIfAbsent(AvailableSettings.BEAN_CONTAINER, new SpringBeanContainer(beanFactory));
 
 		//hapi-fhir-jpaserver-base "sensible defaults"
-		Map<String, Object> hapiJpaPropertyMap = new HapiFhirLocalContainerEntityManagerFactoryBean().getJpaPropertyMap();
+		Map<String, Object> hapiJpaPropertyMap = new HapiFhirLocalContainerEntityManagerFactoryBean(theBeanFactory).getJpaPropertyMap();
 		hapiJpaPropertyMap.forEach(properties::putIfAbsent);
 
 		//hapi-fhir-jpaserver-starter defaults
