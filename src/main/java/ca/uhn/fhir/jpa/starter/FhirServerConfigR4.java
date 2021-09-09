@@ -1,5 +1,24 @@
 package ca.uhn.fhir.jpa.starter;
 
+import java.io.IOException;
+
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
+import org.hl7.fhir.common.hapi.validation.support.UnknownCodeSystemWarningValidationSupport;
+import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.IValidationSupport;
@@ -7,27 +26,11 @@ import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
-import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
-import org.hl7.fhir.r5.context.SimpleWorkerContext;
-import org.springframework.beans.factory.annotation.Autowire;
 import ca.uhn.fhir.jpa.starter.cql.StarterCqlR4Config;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-
-import ca.uhn.fhir.context.ConfigurationException;
-import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
-import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.term.api.ITermReadSvcR4;
 import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
-import ca.uhn.fhir.validation.IInstanceValidatorModule;
 import ch.ahdis.fhir.hapi.jpa.validation.ExtTermReadSvcR4;
-import ch.ahdis.fhir.hapi.jpa.validation.FhirInstanceValidator;
+import ch.ahdis.fhir.hapi.jpa.validation.ExtUnknownCodeSystemWarningValidationSupport;
 import ch.ahdis.fhir.hapi.jpa.validation.JpaExtendedValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
@@ -35,12 +38,6 @@ import ch.ahdis.matchbox.provider.IGLoadOperationProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnairePopulateProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
-
-import java.io.IOException;
-
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 
 @Configuration
 @Conditional(OnR4Condition.class)
@@ -120,6 +117,12 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
     return new ValidationProvider();
   }
   
+	@Bean
+	public UnknownCodeSystemWarningValidationSupport unknownCodeSystemWarningValidationSupport() {
+		return new ExtUnknownCodeSystemWarningValidationSupport(fhirContext());
+	}
+
+  
   @Bean
   public QuestionnairePopulateProvider questionnaireProvider() {
 	  return new QuestionnairePopulateProvider();
@@ -135,10 +138,10 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 	  return new IGLoadOperationProvider();
   }
   
-  @Bean
-  public IInstanceValidatorModule instanceValidator() {
-	  return new FhirInstanceValidator();
-  }
+//  @Bean
+//  public IInstanceValidatorModule instanceValidator() {
+//	  return new FhirInstanceValidator();
+//  }
 
   
   @Bean

@@ -1,8 +1,6 @@
 package ch.ahdis.fhir.hapi.jpa.validation;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,19 +27,18 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
-import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseParameters;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r5.utils.IResourceValidator.BestPracticeWarningLevel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
 import ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.context.support.IValidationSupport;
-import ca.uhn.fhir.jpa.packages.NpmJpaValidationSupport;
+import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
@@ -62,22 +59,26 @@ public class ValidationProvider {
 
   @Autowired
   protected IInstanceValidatorModule instanceValidator;
+  
+  @Autowired
+  protected JpaValidationSupportChain validationSupportChain;
 
   @Autowired
   protected FhirContext myFhirCtx;
 
   @Autowired
-  protected NpmJpaValidationSupport npmJpaValidationSuport;
-
-  @Autowired
   protected DefaultProfileValidationSupport defaultProfileValidationSuport;
 
+	@Autowired
+	@Qualifier("myJpaValidationSupport")
+	protected IValidationSupport myJpaValidationSupport;
+	
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ValidationProvider.class);
 
   @Operation(name = "$validate", manualRequest = true, idempotent = true, returnParameters = {
       @OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
   public IBaseResource validate(HttpServletRequest theRequest) {
-    log.debug("$validate");
+    log.info("$validate");
     ArrayList<SingleValidationMessage> addedValidationMessages = new ArrayList<>();
 
     StopWatch sw = new StopWatch();
@@ -91,7 +92,7 @@ public class ValidationProvider {
     }
 
     if (profile != null) {
-      if (npmJpaValidationSuport.fetchStructureDefinition(profile) == null
+      if (myJpaValidationSupport.fetchStructureDefinition(profile) == null
           && defaultProfileValidationSuport.fetchStructureDefinition(profile) == null) {
         return getValidationMessageProfileNotSupported(profile);
       }
@@ -127,7 +128,7 @@ public class ValidationProvider {
       addedValidationMessages.add(m);
       return new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages).toOperationOutcome();
     } else {
-      log.debug(contentString);
+      log.info(contentString);
     }
 
     String sha3Hex = new DigestUtils("SHA3-256").digestAsHex(contentString + (profile != null ? profile : ""));
@@ -136,16 +137,9 @@ public class ValidationProvider {
     if (encoding == null) {
       encoding = EncodingEnum.detectEncoding(contentString);
     }
-
-    FhirValidator validatorModule = myFhirCtx.newValidator();
-
-    //FhirInstanceValidator instanceValidator = new FhirInstanceValidator(myValidationSupport);
-    /*instanceValidator.setBestPracticeWarningLevel(BestPracticeWarningLevel.Ignore);
-    ArrayList<String> extensionDomains = new ArrayList<String>();
-    instanceValidator.setCustomExtensionDomains(extensionDomains);
-    */
-    // FIXME??? validatorModule.setInterceptorBroadcaster(myInterceptorRegistry);
-    validatorModule.registerValidatorModule(instanceValidator);
+    
+    FhirValidator validator = myFhirCtx.newValidator();
+    validator.registerValidatorModule(instanceValidator);
 
     // the $validate operation can be called in different ways, see
     // https://www.hl7.org/fhir/resource-operation-validate.html
@@ -183,25 +177,23 @@ public class ValidationProvider {
       if (resourceInParam != null) {
         validationOptions = new ValidationOptions();
         if (profile != null) {
-          if (npmJpaValidationSuport.fetchStructureDefinition(profile) == null
+          if (myJpaValidationSupport.fetchStructureDefinition(profile) == null
               && defaultProfileValidationSuport.fetchStructureDefinition(profile) == null) {
             return getValidationMessageProfileNotSupported(profile);
           }
           validationOptions.addProfileIfNotBlank(profile);
         }
-        result = validatorModule.validateWithResult(resourceInParam, validationOptions);
-
+        result = validator.validateWithResult(resourceInParam, validationOptions);
         IBaseResource operationOutcome = getOperationOutcome(sha3Hex, addedValidationMessages, sw, profile, result);
-
         IBaseParameters returnParameters = ParametersUtil.newInstance(myFhirCtx);
         ParametersUtil.addParameterToParameters(myFhirCtx, returnParameters, "return", operationOutcome);
         return returnParameters;
       } else {
         // we have a validation for a Parameter but not a resource inside, fall back to validate only Parameter
-        result = validatorModule.validateWithResult(contentString, validationOptions);
+        result = validator.validateWithResult(contentString, validationOptions);
       }
     } else {
-      result = validatorModule.validateWithResult(contentString, validationOptions);
+      result = validator.validateWithResult(contentString, validationOptions);
     }
     return getOperationOutcome(sha3Hex, addedValidationMessages, sw, profile, result);
   }
@@ -209,6 +201,8 @@ public class ValidationProvider {
   private IBaseResource getOperationOutcome(String id, ArrayList<SingleValidationMessage> addedValidationMessages,
       StopWatch sw, String profile, ValidationResult result) {
     sw.endCurrentTask();
+    
+    log.info("Validation time: "+sw.toString());
 
     if (profile != null) {
       SingleValidationMessage m = new SingleValidationMessage();
@@ -224,6 +218,9 @@ public class ValidationProvider {
     IBaseResource operationOutcome = new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages)
         .toOperationOutcome();
     operationOutcome.setId(id);
+    
+    log.info(this.myFhirCtx.newXmlParser().encodeResourceToString(operationOutcome));
+
     return operationOutcome;
   }
 
