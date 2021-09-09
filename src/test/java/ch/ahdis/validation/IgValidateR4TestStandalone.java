@@ -277,34 +277,34 @@ public class IgValidateR4TestStandalone {
       Assume.assumeFalse(skip);
     }
 
-//    IGenericClient fhirClient = contextR4.newRestfulGenericClient(targetServer+"/$validate");
-//    String content =  new org.hl7.fhir.r4.formats.JsonParser().composeString(resource);
-//  String response = fhirClient.transaction().withBundle(content).execute();
-//    OperationOutcome outcome  =  (OperationOutcome) new org.hl7.fhir.r4.formats.JsonParser().parse(response);
+    IGenericClient fhirClient = contextR4.newRestfulGenericClient(targetServer+"/$validate");
+    String content =  new org.hl7.fhir.r4.formats.JsonParser().composeString(resource);
+    String response = fhirClient.transaction().withBundle(content).execute();
+    OperationOutcome outcome  =  (OperationOutcome) new org.hl7.fhir.r4.formats.JsonParser().parse(response);
 
-    IGenericClient fhirClient = contextR4.newRestfulGenericClient(targetServer);
-    fhirClient.setEncoding(EncodingEnum.XML);
-
-    org.hl7.fhir.r4.model.Parameters inParams = new org.hl7.fhir.r4.model.Parameters();
-    inParams.addParameter().setName("resource").setResource(resource);
-
-    org.hl7.fhir.r4.model.Parameters outcomeParameters = fhirClient.operation().onServer().named("$validate")
-        .withParameters(inParams).execute();
-    OperationOutcome outcome = null;
-    for (ParametersParameterComponent parameterComponent : outcomeParameters.getParameter()) {
-      if ("return".equals(parameterComponent.getName())) {
-        outcome = (OperationOutcome) parameterComponent.getResource();
-      }
-    }
+//    IGenericClient fhirClient = contextR4.newRestfulGenericClient(targetServer);
+//    fhirClient.setEncoding(EncodingEnum.XML);
+//
+//    org.hl7.fhir.r4.model.Parameters inParams = new org.hl7.fhir.r4.model.Parameters();
+//    inParams.addParameter().setName("resource").setResource(resource);
+//
+//    org.hl7.fhir.r4.model.Parameters outcomeParameters = fhirClient.operation().onServer().named("$validate")
+//        .withParameters(inParams).execute();
+//    OperationOutcome outcome = null;
+//    for (ParametersParameterComponent parameterComponent : outcomeParameters.getParameter()) {
+//      if ("return".equals(parameterComponent.getName())) {
+//        outcome = (OperationOutcome) parameterComponent.getResource();
+//      }
+//    }
     if (outcome == null) {
       log.debug(contextR4.newXmlParser().encodeResourceToString(resource));
       log.error("should have a return element");
-      log.error(contextR4.newXmlParser().encodeResourceToString(outcomeParameters));
+      log.error(contextR4.newXmlParser().encodeResourceToString(outcome));
     } else {
       if (getValidationFailures(outcome) > 0) {
         log.debug(contextR4.newXmlParser().encodeResourceToString(resource));
         log.debug("Validation Errors " + getValidationFailures(outcome));
-        log.error(contextR4.newXmlParser().encodeResourceToString(outcomeParameters));
+        log.error(contextR4.newXmlParser().encodeResourceToString(outcome));
       }
     }
 

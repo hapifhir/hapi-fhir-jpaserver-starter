@@ -1,7 +1,9 @@
 <Parameters xmlns="http://hl7.org/fhir">
     <parameter>
+        <name value="return"/>
         <resource>
             <OperationOutcome xmlns="http://hl7.org/fhir">
+                <id value="6ca285e6b1c9e53e077440bbef91ac60e9e83426b73b88ec95cdf7d4ccea10de"/>
                 <text>
                     <status value="generated"/>
                     <div xmlns="http://www.w3.org/1999/xhtml">
@@ -9,23 +11,219 @@
                         <table border="0">
                             <tr>
                                 <td style="font-weight: bold;">INFORMATION</td>
-                                <td>[Parameters.parameter[0].resource.ofType(PractitionerRole).specialty[0], Line 1, Col 1450]</td>
+                                <td>[Bundle.entry[0], Line 1, Col 389]</td>
                                 <td>
-                                    <pre>None of the codes provided are in the value set http://hl7.org/fhir/ValueSet/c80-practice-codes (http://hl7.org/fhir/ValueSet/c80-practice-codes), and a code is recommended to come from this value set) (codes = urn:oid:2.16.756.5.30.1.127.3.5#1001)</pre>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: bold;">ERROR</td>
-                                <td>[Parameters.parameter[0].resource.ofType(PractitionerRole).specialty[0].coding[0], Line 1, Col 1461]</td>
-                                <td>
-                                    <pre>Unknown code {urn:oid:2.16.756.5.30.1.127.3.5}1001 for 'urn:oid:2.16.756.5.30.1.127.3.5#1001'</pre>
+                                    <pre>This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard</pre>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="font-weight: bold;">INFORMATION</td>
-                                <td>[Parameters.parameter[0].resource.ofType(PractitionerRole).specialty[0], Line 1, Col 1450]</td>
+                                <td>[Bundle.entry[1], Line 1, Col 297145]</td>
                                 <td>
-                                    <pre>None of the codes provided are in the value set http://fhir.ch/ig/ch-epr-term/ValueSet/HCProfessional.hcSpecialisation (http://fhir.ch/ig/ch-epr-term/ValueSet/HCProfessional.hcSpecialisation), and a code is recommended to come from this value set) (codes = urn:oid:2.16.756.5.30.1.127.3.5#1001)</pre>
+                                    <pre>This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">INFORMATION</td>
+                                <td>[Bundle.entry[2], Line 1, Col 298065]</td>
+                                <td>
+                                    <pre>This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">INFORMATION</td>
+                                <td>[Bundle.entry[3], Line 1, Col 298593]</td>
+                                <td>
+                                    <pre>This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">INFORMATION</td>
+                                <td>[Bundle.entry[4], Line 1, Col 299246]</td>
+                                <td>
+                                    <pre>This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">INFORMATION</td>
+                                <td>[Bundle.entry[5], Line 1, Col 299724]</td>
+                                <td>
+                                    <pre>This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">INFORMATION</td>
+                                <td>[Bundle.entry[6], Line 1, Col 300277]</td>
+                                <td>
+                                    <pre>This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">INFORMATION</td>
+                                <td>[Bundle.entry[7], Line 1, Col 305551]</td>
+                                <td>
+                                    <pre>This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">INFORMATION</td>
+                                <td>[Bundle.entry[8], Line 1, Col 310314]</td>
+                                <td>
+                                    <pre>This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">ERROR</td>
+                                <td>[Bundle, Line 1, Col 37]</td>
+                                <td>
+                                    <pre>Bundle.entry:Composition: minimum required = 1, but only found 0 (from http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard)</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">ERROR</td>
+                                <td>[Bundle.entry[0].resource, Line 1, Col 463]</td>
+                                <td>
+                                    <pre>dom-3: 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' ( (unmatched: 1,2,3,4,5,6,7,8))</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[0].resource.contained[0].ofType(Patient), Line 1, Col 1496]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[0].resource.contained[1].ofType(Patient), Line 1, Col 1761]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[0].resource.contained[2].ofType(Practitioner), Line 1, Col 2273]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[0].resource.contained[3].ofType(Organization), Line 1, Col 2521]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[0].resource.contained[4].ofType(Organization), Line 1, Col 2849]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[0].resource.contained[5].ofType(MedicationStatement), Line 1, Col 3057]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[0].resource.contained[6].ofType(Composition), Line 1, Col 4997]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[0].resource.contained[6].ofType(Composition).amount.denominator, Line 1, Col 5537]</td>
+                                <td>
+                                    <pre>UCUM Codes that contain human readable annotations like {Package} can be misleading. Best Practice is not to use annotations in the UCUM code, and rather to make sure that Quantity.unit is correctly human readable </pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[0].resource.contained[7].ofType(MedicationStatement), Line 1, Col 6226]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[0].resource.contained[8].ofType(Medication), Line 1, Col 7699]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[0].resource.contained[8].ofType(Medication).amount.denominator, Line 1, Col 8220]</td>
+                                <td>
+                                    <pre>UCUM Codes that contain human readable annotations like {Package} can be misleading. Best Practice is not to use annotations in the UCUM code, and rather to make sure that Quantity.unit is correctly human readable </pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[0].resource.ofType(Composition).confidentiality, Line 1, Col 295617]</td>
+                                <td>
+                                    <pre>ValueSet http://terminology.hl7.org/ValueSet/v3-ConfidentialityClassification|2014-03-26 not found by validator</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">ERROR</td>
+                                <td>[Bundle.entry[6].resource.ofType(MedicationStatement), Line 1, Col 300351]</td>
+                                <td>
+                                    <pre>dom-3: 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' ( (unmatched: 2))</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[6].resource.ofType(MedicationStatement).contained[0].ofType(Medication), Line 1, Col 301942]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[6].resource.ofType(MedicationStatement).contained[0].ofType(Medication).amount.denominator, Line 1, Col 302482]</td>
+                                <td>
+                                    <pre>UCUM Codes that contain human readable annotations like {Package} can be misleading. Best Practice is not to use annotations in the UCUM code, and rather to make sure that Quantity.unit is correctly human readable </pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[6].resource.ofType(MedicationStatement).contained[1].ofType(Patient), Line 1, Col 303171]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">ERROR</td>
+                                <td>[Bundle.entry[7].resource.ofType(MedicationStatement), Line 1, Col 305625]</td>
+                                <td>
+                                    <pre>dom-3: 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' ( (unmatched: 2))</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[7].resource.ofType(MedicationStatement).contained[0].ofType(Medication), Line 1, Col 307191]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[7].resource.ofType(MedicationStatement).contained[0].ofType(Medication).amount.denominator, Line 1, Col 307712]</td>
+                                <td>
+                                    <pre>UCUM Codes that contain human readable annotations like {Package} can be misleading. Best Practice is not to use annotations in the UCUM code, and rather to make sure that Quantity.unit is correctly human readable </pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">WARNING</td>
+                                <td>[Bundle.entry[7].resource.ofType(MedicationStatement).contained[1].ofType(Patient), Line 1, Col 308401]</td>
+                                <td>
+                                    <pre>dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed</pre>
                                 </td>
                             </tr>
                         </table>
@@ -37,19 +235,9 @@
                     </extension>
                     <severity value="information"/>
                     <code value="processing"/>
-                    <diagnostics value="None of the codes provided are in the value set http://hl7.org/fhir/ValueSet/c80-practice-codes (http://hl7.org/fhir/ValueSet/c80-practice-codes), and a code is recommended to come from this value set) (codes = urn:oid:2.16.756.5.30.1.127.3.5#1001)"/>
-                    <location value="Parameters.parameter[0].resource.ofType(PractitionerRole).specialty[0]"/>
-                    <location value="Line 1, Col 1450"/>
-                </issue>
-                <issue>
-                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
-                        <valueInteger value="1"/>
-                    </extension>
-                    <severity value="error"/>
-                    <code value="processing"/>
-                    <diagnostics value="Unknown code {urn:oid:2.16.756.5.30.1.127.3.5}1001 for 'urn:oid:2.16.756.5.30.1.127.3.5#1001'"/>
-                    <location value="Parameters.parameter[0].resource.ofType(PractitionerRole).specialty[0].coding[0]"/>
-                    <location value="Line 1, Col 1461"/>
+                    <diagnostics value="This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard"/>
+                    <location value="Bundle.entry[0]"/>
+                    <location value="Line 1, Col 389"/>
                 </issue>
                 <issue>
                     <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
@@ -57,9 +245,299 @@
                     </extension>
                     <severity value="information"/>
                     <code value="processing"/>
-                    <diagnostics value="None of the codes provided are in the value set http://fhir.ch/ig/ch-epr-term/ValueSet/HCProfessional.hcSpecialisation (http://fhir.ch/ig/ch-epr-term/ValueSet/HCProfessional.hcSpecialisation), and a code is recommended to come from this value set) (codes = urn:oid:2.16.756.5.30.1.127.3.5#1001)"/>
-                    <location value="Parameters.parameter[0].resource.ofType(PractitionerRole).specialty[0]"/>
-                    <location value="Line 1, Col 1450"/>
+                    <diagnostics value="This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard"/>
+                    <location value="Bundle.entry[1]"/>
+                    <location value="Line 1, Col 297145"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="information"/>
+                    <code value="processing"/>
+                    <diagnostics value="This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard"/>
+                    <location value="Bundle.entry[2]"/>
+                    <location value="Line 1, Col 298065"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="information"/>
+                    <code value="processing"/>
+                    <diagnostics value="This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard"/>
+                    <location value="Bundle.entry[3]"/>
+                    <location value="Line 1, Col 298593"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="information"/>
+                    <code value="processing"/>
+                    <diagnostics value="This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard"/>
+                    <location value="Bundle.entry[4]"/>
+                    <location value="Line 1, Col 299246"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="information"/>
+                    <code value="processing"/>
+                    <diagnostics value="This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard"/>
+                    <location value="Bundle.entry[5]"/>
+                    <location value="Line 1, Col 299724"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="information"/>
+                    <code value="processing"/>
+                    <diagnostics value="This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard"/>
+                    <location value="Bundle.entry[6]"/>
+                    <location value="Line 1, Col 300277"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="information"/>
+                    <code value="processing"/>
+                    <diagnostics value="This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard"/>
+                    <location value="Bundle.entry[7]"/>
+                    <location value="Line 1, Col 305551"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="information"/>
+                    <code value="processing"/>
+                    <diagnostics value="This element does not match any known slice defined in the profile http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard"/>
+                    <location value="Bundle.entry[8]"/>
+                    <location value="Line 1, Col 310314"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="error"/>
+                    <code value="processing"/>
+                    <diagnostics value="Bundle.entry:Composition: minimum required = 1, but only found 0 (from http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard)"/>
+                    <location value="Bundle"/>
+                    <location value="Line 1, Col 37"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="error"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-3: 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' ( (unmatched: 1,2,3,4,5,6,7,8))"/>
+                    <location value="Bundle.entry[0].resource"/>
+                    <location value="Line 1, Col 463"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[0].resource.contained[0].ofType(Patient)"/>
+                    <location value="Line 1, Col 1496"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[0].resource.contained[1].ofType(Patient)"/>
+                    <location value="Line 1, Col 1761"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[0].resource.contained[2].ofType(Practitioner)"/>
+                    <location value="Line 1, Col 2273"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[0].resource.contained[3].ofType(Organization)"/>
+                    <location value="Line 1, Col 2521"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[0].resource.contained[4].ofType(Organization)"/>
+                    <location value="Line 1, Col 2849"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[0].resource.contained[5].ofType(MedicationStatement)"/>
+                    <location value="Line 1, Col 3057"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[0].resource.contained[6].ofType(Composition)"/>
+                    <location value="Line 1, Col 4997"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="UCUM Codes that contain human readable annotations like {Package} can be misleading. Best Practice is not to use annotations in the UCUM code, and rather to make sure that Quantity.unit is correctly human readable "/>
+                    <location value="Bundle.entry[0].resource.contained[6].ofType(Composition).amount.denominator"/>
+                    <location value="Line 1, Col 5537"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[0].resource.contained[7].ofType(MedicationStatement)"/>
+                    <location value="Line 1, Col 6226"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[0].resource.contained[8].ofType(Medication)"/>
+                    <location value="Line 1, Col 7699"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="UCUM Codes that contain human readable annotations like {Package} can be misleading. Best Practice is not to use annotations in the UCUM code, and rather to make sure that Quantity.unit is correctly human readable "/>
+                    <location value="Bundle.entry[0].resource.contained[8].ofType(Medication).amount.denominator"/>
+                    <location value="Line 1, Col 8220"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="ValueSet http://terminology.hl7.org/ValueSet/v3-ConfidentialityClassification|2014-03-26 not found by validator"/>
+                    <location value="Bundle.entry[0].resource.ofType(Composition).confidentiality"/>
+                    <location value="Line 1, Col 295617"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="error"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-3: 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' ( (unmatched: 2))"/>
+                    <location value="Bundle.entry[6].resource.ofType(MedicationStatement)"/>
+                    <location value="Line 1, Col 300351"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[6].resource.ofType(MedicationStatement).contained[0].ofType(Medication)"/>
+                    <location value="Line 1, Col 301942"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="UCUM Codes that contain human readable annotations like {Package} can be misleading. Best Practice is not to use annotations in the UCUM code, and rather to make sure that Quantity.unit is correctly human readable "/>
+                    <location value="Bundle.entry[6].resource.ofType(MedicationStatement).contained[0].ofType(Medication).amount.denominator"/>
+                    <location value="Line 1, Col 302482"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[6].resource.ofType(MedicationStatement).contained[1].ofType(Patient)"/>
+                    <location value="Line 1, Col 303171"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="error"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-3: 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' ( (unmatched: 2))"/>
+                    <location value="Bundle.entry[7].resource.ofType(MedicationStatement)"/>
+                    <location value="Line 1, Col 305625"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[7].resource.ofType(MedicationStatement).contained[0].ofType(Medication)"/>
+                    <location value="Line 1, Col 307191"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="UCUM Codes that contain human readable annotations like {Package} can be misleading. Best Practice is not to use annotations in the UCUM code, and rather to make sure that Quantity.unit is correctly human readable "/>
+                    <location value="Bundle.entry[7].resource.ofType(MedicationStatement).contained[0].ofType(Medication).amount.denominator"/>
+                    <location value="Line 1, Col 307712"/>
+                </issue>
+                <issue>
+                    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+                        <valueInteger value="1"/>
+                    </extension>
+                    <severity value="warning"/>
+                    <code value="processing"/>
+                    <diagnostics value="dom-6: 'A resource should have narrative for robust management' Rule 'A resource should have narrative for robust management' Failed"/>
+                    <location value="Bundle.entry[7].resource.ofType(MedicationStatement).contained[1].ofType(Patient)"/>
+                    <location value="Line 1, Col 308401"/>
                 </issue>
             </OperationOutcome>
         </resource>

@@ -30,11 +30,13 @@ import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseParameters;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
+import org.hl7.fhir.r4.model.Parameters;
+import org.hl7.fhir.r4.model.Parameters.ParametersParameterComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
-import ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.context.support.IValidationSupport;
@@ -157,23 +159,47 @@ public class ValidationProvider {
       return getValidationMessageDataFormatException(e);
     }
     if (resource!=null && "Parameters".equals(resource.fhirType()) && profile == null) {
-      IBaseParameters parameters = (IBaseParameters) resource;
+//      IBaseParameters parameters = (IBaseParameters) resource;
+// https://github.com/ahdis/matchbox-validator/issues/11
+      Parameters parameters = (Parameters) resource;
       IBaseResource resourceInParam = null;
+      for (ParametersParameterComponent compoment: parameters.getParameter()) {
+        if ("resource".equals(compoment.getName())) {
+          resourceInParam = compoment.getResource();
+          break;
+        }
+      }
+      if (resourceInParam.fhirType().contentEquals("Bundle") ) {
+         Bundle bundle = (Bundle) resourceInParam;
+         for (BundleEntryComponent entry : bundle.getEntry()) {
+            if (entry.getResource()!=null && entry.getResource().getId()==null) {
+              if (entry.getFullUrl()!=null && entry.getFullUrl().startsWith("urn:uuid:")) {
+                entry.setId(entry.getFullUrl().substring(9));
+              }
+            }
+           
+         }
+      }
       List<String> profiles = ParametersUtil.getNamedParameterValuesAsString(myFhirCtx, parameters, "profile");
       if (profiles != null && profiles.size() == 1) {
         profile = profiles.get(0);
       }
-      List<IBase> paramChildElems = ParametersUtil.getNamedParameters(myFhirCtx, parameters, "resource");
-      if (paramChildElems != null && paramChildElems.size() == 1) {
-        IBase param = paramChildElems.get(0);
-        BaseRuntimeElementCompositeDefinition<?> nextParameterDef = (BaseRuntimeElementCompositeDefinition<?>) myFhirCtx
-            .getElementDefinition(param.getClass());
-        BaseRuntimeChildDefinition nameChild = nextParameterDef.getChildByName("resource");
-        List<IBase> resourceValues = nameChild.getAccessor().getValues(param);
-        if (resourceValues != null && resourceValues.size() == 1) {
-          resourceInParam = (IBaseResource) resourceValues.get(0);
-        }
-      }
+//      List<IBase> paramChildElems = ParametersUtil.getNamedParameters(myFhirCtx, parameters, "resource");
+//      if (paramChildElems != null && paramChildElems.size() == 1) {
+//        IBase param = paramChildElems.get(0);
+//        BaseRuntimeElementCompositeDefinition<?> nextParameterDef = (BaseRuntimeElementCompositeDefinition<?>) myFhirCtx
+//            .getElementDefinition(param.getClass());
+//        BaseRuntimeChildDefinition nameChild = nextParameterDef.getChildByName("resource");
+//        List<IBase> resourceValues = nameChild.getAccessor().getValues(param);
+//        if (resourceValues != null && resourceValues.size() == 1) {
+//          resourceInParam = (IBaseResource) resourceValues.get(0);
+//          // we get dom-3: 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' ( (unmatched: 2))
+//          // there seems to be backpointer to the Parmeterresource
+//          String serialized = encoding.newParser(myFhirCtx).encodeResourceToString(resourceInParam);
+//          resourceInParam = encoding.newParser(myFhirCtx).parseResource(serialized);
+//          log.info(serialized);
+//        }
+//      }
       if (resourceInParam != null) {
         validationOptions = new ValidationOptions();
         if (profile != null) {
