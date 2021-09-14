@@ -215,7 +215,7 @@ public class QuestionnairePopulateProvider {
 	 * @return
 	 */
 	private org.hl7.fhir.r5.elementmodel.Element convertToElementModel(IWorkerContext workerContext, Resource inputResource) {
-		 String inStr = FhirContext.forR4().newJsonParser().encodeResourceToString(inputResource);
+		 String inStr = FhirContext.forR4Cached().newJsonParser().encodeResourceToString(inputResource);
 		 
 		 try {
 	       return Manager.parse(workerContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.JSON);
@@ -233,7 +233,7 @@ public class QuestionnairePopulateProvider {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		try {
 		  new org.hl7.fhir.r5.elementmodel.JsonParser(workerContext).compose(input, output, OutputStyle.NORMAL, null);
-		  return FhirContext.forR4().newJsonParser().parseResource(new String(output.toByteArray()));
+		  return FhirContext.forR4Cached().newJsonParser().parseResource(new String(output.toByteArray()));
 		} catch (IOException e) {
 			throw new UnprocessableEntityException("Cannot convert to R4");
 		}
@@ -278,7 +278,7 @@ public class QuestionnairePopulateProvider {
 	private Bundle resolveBundleFromUri(String uri) {
 		if (baseUrl==null) throw new UnprocessableEntityException("missing baseUrl");
 		System.out.println("fetch from external: "+uri);
-		IGenericClient client = FhirContext.forR4().newRestfulGenericClient(baseUrl);
+		IGenericClient client = FhirContext.forR4Cached().newRestfulGenericClient(baseUrl);
 		Bundle result = client.search()
 			.byUrl(uri)
 			.returnBundle(Bundle.class)

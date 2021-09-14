@@ -158,13 +158,13 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
       break;
     case "StructureDefinition": {
       // Don't allow the core FHIR definitions to be overwritten
-//      if (theUri.startsWith("http://hl7.org/fhir/StructureDefinition/")) {
-//        String typeName = theUri.substring("http://hl7.org/fhir/StructureDefinition/".length());
-//        if (myValidationSupportContext.getRootValidationSupport().getFhirContext()
-//            .getElementDefinition(typeName) != null) {
-//          return myNoMatch;
-//        }
-//      }
+      if (theUri.startsWith("http://hl7.org/fhir/StructureDefinition/")) {
+        String typeName = theUri.substring("http://hl7.org/fhir/StructureDefinition/".length());
+        if (myValidationSupportContext.getRootValidationSupport().getFhirContext()
+            .getElementDefinition(typeName) != null) {
+          return myNoMatch;
+        }
+      }
       SearchParameterMap params = new SearchParameterMap();
       params.setLoadSynchronousUpTo(1);
       params.add(StructureDefinition.SP_URL, new UriParam(theUri));

@@ -89,8 +89,6 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
     return super.update(theRequest, fixMap(theResource), theId, theConditional, theRequestDetails);
   }
 
-  private StructureMapUtilities utils = null;
-  
   @Autowired
   protected ConvertingWorkerContext baseWorkerContext;
 

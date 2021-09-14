@@ -18,7 +18,6 @@ public class TransformSupportServices implements ITransformerServices {
 
   private List<Base> outputs;
   private ConvertingWorkerContext fhirContext;
-  	
   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TransformSupportServices.class);
 
   public TransformSupportServices(ConvertingWorkerContext fhirContext, List<Base> outputs) {
@@ -49,9 +48,9 @@ public class TransformSupportServices implements ITransformerServices {
   public Base resolveReference(Object appContext, String url) throws FHIRException {	
 	org.hl7.fhir.r4.model.Resource resource = fhirContext.fetchResourceAsR4(org.hl7.fhir.r4.model.Resource.class, url);
     if (resource != null) {
-      String inStr = FhirContext.forR4().newXmlParser().encodeResourceToString(resource);
+      String inStr = FhirContext.forR4Cached().newJsonParser().encodeResourceToString(resource);
       try {
-        return Manager.parse(fhirContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.XML);
+        return Manager.parse(fhirContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.JSON);
       } catch (IOException e) {
         throw new FHIRException("Cannot convert resource to element model");
       }

@@ -174,7 +174,7 @@ public class QuestionnaireResponseExtractProvider  {
 	 * @return
 	 */
 	private org.hl7.fhir.r5.elementmodel.Element convertToElementModel(IWorkerContext workerContext, Resource inputResource) {
-		 String inStr = FhirContext.forR4().newJsonParser().encodeResourceToString(inputResource);
+		 String inStr = FhirContext.forR4Cached().newJsonParser().encodeResourceToString(inputResource);
 		 
 		 try {
 	       return Manager.parse(workerContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.JSON);
