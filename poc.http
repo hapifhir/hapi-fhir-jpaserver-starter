@@ -218,3 +218,11 @@ PUT {{host}}/ConceptMap/cm-administrative-gender-v3 HTTP/1.1
 Content-Type: application/fhir+json
 
 < ./poc/cm-administrative-gender-v3.json
+
+
+###
+POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationCardDocumentToBundle
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: application/fhir+xml;fhirVersion=4.0
+
+< ./poc/cda-ch-emed-2-7-MedicationCard-UUIDfullUrl.xml
