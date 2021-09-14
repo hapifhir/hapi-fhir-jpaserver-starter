@@ -31,6 +31,4 @@ COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/*.war /usr/local/
 COPY catalina.properties /usr/local/tomcat/conf/catalina.properties
 COPY server.xml /usr/local/tomcat/conf/server.xml
 
-EXPOSE 8080
-
 CMD ["catalina.sh", "run"]
