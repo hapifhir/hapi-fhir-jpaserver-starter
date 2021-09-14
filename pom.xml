@@ -18,7 +18,7 @@
 		<version>5.5.1</version>
     </parent>
 
-    <artifactId>matchbox-validator</artifactId>
+    <artifactId>matchbox</artifactId>
 
     <properties>
         <java.version>11</java.version>
@@ -368,7 +368,7 @@
         </pluginManagement>
 
         <!-- Tells Maven to name the generated WAR file as ROOT.war -->
-		<finalName>matchbox-validator</finalName>
+		<finalName>matchbox</finalName>
 
         <plugins>
             <plugin>

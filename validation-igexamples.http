@@ -1,7 +1,7 @@
 ###  @host = http://test.ahdis.ch/r4
-@host = http://localhost:8080/matchbox-validator/fhir
+@host = http://localhost:8080/matchbox/fhir
 
-### @host = https://test.ahdis.ch/matchbox-validator/fhir
+### @host = https://test.ahdis.ch/matchbox/fhir
 
 ## No issues detected during validation
 POST {{host}}/$validate HTTP/1.1

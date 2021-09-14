@@ -32,7 +32,7 @@ import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
  */
 public class GenericFhirClient extends GenericClient{
 
-  static final public String testServer = "http://localhost:8080/matchbox-validator/fhir";  
+  static final public String testServer = "http://localhost:8080/matchbox/fhir";  
   
   public GenericFhirClient(FhirContext theContext, String theServerBase) {
     super(theContext, null, theServerBase, null);

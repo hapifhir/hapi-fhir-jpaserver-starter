@@ -33,7 +33,7 @@ mvn clean install -DskipTests spring-boot:run -Dspring-boot.run.arguments=--spri
 ```
 or
 ```
-java -Dspring.config.additional-location=file:with-preload/application.yaml -jar target/matchbox-validator.jar
+java -Dspring.config.additional-location=file:with-preload/application.yaml -jar target/matchbox.jar
 ```
 
 ```
@@ -63,8 +63,8 @@ To dynamically configure run in a kubernetes environment and add a kubernetes co
 After building the base image:
 ```bash
 cd with-preload
-docker build -t matchbox-validator-swissepr .
-docker run -d --name matchbox-validator-swissepr -p 8080:8080 matchbox-validator-swissepr
+docker build -t matchbox-swissepr .
+docker run -d --name matchbox-swissepr -p 8080:8080 matchbox-swissepr
 ```
 
 ### making container available
@@ -72,6 +72,6 @@ docker run -d --name matchbox-validator-swissepr -p 8080:8080 matchbox-validator
 docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v140
 docker tag matchbox-swissepr eu.gcr.io/fhir-ch/matchbox-swissepr:v140
 
-docker push eu.gcr.io/fhir-ch/matchbox-validator:v140
-docker push eu.gcr.io/fhir-ch/matchbox-validator-swissepr:v140
+docker push eu.gcr.io/fhir-ch/matchbox:v140
+docker push eu.gcr.io/fhir-ch/matchbox-swissepr:v140
 ```

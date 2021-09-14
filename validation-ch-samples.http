@@ -1,7 +1,7 @@
 ### 
 ### @host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
 ### @host = http://test.ahdis.ch/r4
-@host = http://localhost:8080/matchbox-validator/fhir
+@host = http://localhost:8080/matchbox/fhir
 ### @host = https://test.ahdis.ch/matchbox-order/fhir
 ### @host = http://hapi.fhir.org/baseR4
 
@@ -383,7 +383,7 @@ Content-Type: application/fhir+xml
 ### CH-Core Franz Muster (No issues detected)
 ### ERROR calling with parameter
 ### om-3: 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' 'If the resource is contained in another resource, it SHALL be referred to from elsewhere in the resource or SHALL refer to the containing resource' ( (unmatched: 1,2,3,4,5,6,7,8))
-### see error https://github.com/ahdis/matchbox-validator/issues/11
+### see error https://github.com/ahdis/matchbox/issues/11
 POST {{host}}/$validate HTTP/1.1
 Content-Type: application/fhir+xml
 

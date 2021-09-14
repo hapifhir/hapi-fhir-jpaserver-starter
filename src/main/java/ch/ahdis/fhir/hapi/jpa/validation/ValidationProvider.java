@@ -160,7 +160,7 @@ public class ValidationProvider {
     }
     if (resource!=null && "Parameters".equals(resource.fhirType()) && profile == null) {
 //      IBaseParameters parameters = (IBaseParameters) resource;
-// https://github.com/ahdis/matchbox-validator/issues/11
+// https://github.com/ahdis/matchbox/issues/11
       Parameters parameters = (Parameters) resource;
       IBaseResource resourceInParam = null;
       for (ParametersParameterComponent compoment: parameters.getParameter()) {

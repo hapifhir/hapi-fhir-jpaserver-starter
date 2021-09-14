@@ -38,7 +38,7 @@ public class IgValidateRawProfileTest {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(IgValidateRawProfileTest.class);
 
-  private String targetServer = "http://localhost:8080/matchbox-validator/fhir";
+  private String targetServer = "http://localhost:8080/matchbox/fhir";
 
   @Test
   public void validateRaw() {

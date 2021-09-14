@@ -2,7 +2,7 @@ FROM adoptopenjdk/openjdk11-openj9:alpine-slim
 MAINTAINER oliver egger <oliver.egger@ahdis.ch>
 EXPOSE 8080
 
-COPY ./target/matchbox-validator.jar /app.jar
+COPY ./target/matchbox.jar /app.jar
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles

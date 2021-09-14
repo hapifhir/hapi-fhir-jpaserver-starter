@@ -35,7 +35,7 @@ spring:
     allow-bean-definition-overriding: true
 server: 
   servlet:
-    context-path: /matchbox-validator
+    context-path: /matchbox
 hapi:
   fhir:
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
@@ -123,6 +123,6 @@ hapi:
           fhir_version: R4
         global:
           name: Global Tester
-          server_address: "http://hapi.fhir.org/baseR4"
+          server_address: "http://test.ahdis.ch/matchbox/fhir"
           refuse_to_fetch_third_party_urls: false
           fhir_version: R4
