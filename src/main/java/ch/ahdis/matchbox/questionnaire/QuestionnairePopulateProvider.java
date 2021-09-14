@@ -38,6 +38,7 @@ import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
+import ch.ahdis.matchbox.mappinglanguage.ElementModelSorter;
 import ch.ahdis.matchbox.mappinglanguage.TransformSupportServices;
 
 /**
@@ -163,6 +164,7 @@ public class QuestionnairePopulateProvider {
 	        throw new UnprocessableEntityException("Target Structure can not be resolved from map, is the corresponding implmentation guide provided?");
 	      }	      
 	      utils.transform(null, bundle, map, r);
+	      ElementModelSorter.sort(r);
 	      
 	      // convert output to R4 resource
 	      IBaseResource result = convertToR4(baseWorkerContext, r);	      
