@@ -219,7 +219,7 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 			    next = isStructureDefinitionWithoutSnapshot(next) ? generateSnapshot(next) : next;
 					create(next, theOutcome);
 				} catch (Exception e) {
-					ourLog.warn("Failed to upload resource of type {} with ID {} - Error: {}", myFhirContext.getResourceType(next), next.getIdElement().getValue(), e.toString());
+					ourLog.debug("Failed to upload resource of type {} with ID {} - Error: {}", myFhirContext.getResourceType(next), next.getIdElement().getValue(), e.toString());
 					throw new ImplementationGuideInstallationException(String.format("Error installing IG %s#%s: %s", name, version, e.toString()), e);
 				}
 
@@ -336,31 +336,31 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 		}
 	}
 
-	private void create(IBaseResource theResource, PackageInstallOutcomeJson theOutcome) {
+	public void create(IBaseResource theResource, PackageInstallOutcomeJson theOutcome) {
 		IFhirResourceDao dao = myDaoRegistry.getResourceDao(theResource.getClass());
 		SearchParameterMap map = createSearchParameterMapFor(theResource);
 		IBundleProvider searchResult = searchResource(dao, map);
 		if (validForUpload(theResource)) {
 			if (searchResult.isEmpty()) {
 
-				ourLog.info("Creating new resource matching {}", map.toNormalizedQueryString(myFhirContext));
+				ourLog.debug("Creating new resource matching {}", map.toNormalizedQueryString(myFhirContext));
 				theOutcome.incrementResourcesInstalled(myFhirContext.getResourceType(theResource));
 
 				IIdType id = theResource.getIdElement();
 
 				if (id.isEmpty()) {
 					createResource(dao, theResource);
-					ourLog.info("Created resource with new id");
+					ourLog.debug("Created resource with new id");
 				} else {
 					if (id.isIdPartValidLong()) {
 						String newIdPart = "npm-" + id.getIdPart();
 						id.setParts(id.getBaseUrl(), id.getResourceType(), newIdPart, id.getVersionIdPart());
 					}
 					updateResource(dao, theResource);
-					ourLog.info("Created resource with existing id");
+					ourLog.debug("Created resource with existing id");
 				}
 			} else {
-			ourLog.info("Updating existing resource matching {}", map.toNormalizedQueryString(myFhirContext));
+			ourLog.debug("Updating existing resource matching {}", map.toNormalizedQueryString(myFhirContext));
 				theResource.setId(searchResult.getResources(0, 1).get(0).getIdElement().toUnqualifiedVersionless());
 				DaoMethodOutcome outcome = updateResource(dao, theResource);
 				if (!outcome.isNop()) {

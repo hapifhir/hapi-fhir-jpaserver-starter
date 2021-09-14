@@ -1,16 +1,26 @@
 hapi:
   fhir:
     implementationguides:
+      cda:
+        url: https://github.com/ahdis/cda-core-2.0/releases/download/v0.0.3-dev/package.tgz
+        name: hl7.fhir.cda
+        version: 2.1.0
+      cdach:
+        name: ch.fhir.ig.cda-fhir-maps
+        version: 0.2.0
       iheformatcodefhir:
         url: https://profiles.ihe.net/fhir/ihe.formatcode.fhir/package.tgz
         name: ihe.formatcode.fhir
         version: 1.0.0
-      core:
-        name: ch.fhir.ig.ch-core
-        version: 2.0.0
+#      terminology:
+#       name: hl7.terminology.r4
+#       version: 2.1.0
       eprterm:
         name: ch.fhir.ig.ch-epr-term
         version: 2.0.5
+      core:
+        name: ch.fhir.ig.ch-core
+        version: 2.0.0
       emed:
         name: ch.fhir.ig.ch-emed
         version: 1.0.0

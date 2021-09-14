@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r4.formats.IParser;
 import org.hl7.fhir.r4.formats.ParserFactory;
@@ -140,9 +141,12 @@ public class MappingLanguageInterceptor extends InterceptorAdapter implements IT
 	    log.debug("processing text/fhir mapping - converting to json");	    
 	    FhirVersionEnum version = extractFhirVersion(contentType);
       ((MutableHttpServletRequest) theRequest).putHeader(Constants.HEADER_CONTENT_TYPE, "application/fhir+json");
-      
 
       StructureMap structureMap = parseMap(new String(theRequestDetails.loadRequestContents()));
+      if ("PUT".equals(theRequest.getMethod())) {
+        IIdType id = theRequestDetails.getId();
+        structureMap.setId(id.getIdPart());
+      }
       
       IParser parserConverted = ParserFactory.parser(FhirFormat.JSON);    
       try {

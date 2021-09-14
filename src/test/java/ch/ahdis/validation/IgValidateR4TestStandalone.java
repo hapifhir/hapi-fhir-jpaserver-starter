@@ -19,6 +19,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.FHIRFormatError;
+import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome.IssueSeverity;
 import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
@@ -46,6 +47,8 @@ import ch.ahdis.matchbox.util.PackageCacheInitializer;
  * see https://www.baeldung.com/springjunit4classrunner-parameterized read the
  * implementation guides defined in ig and execute the validations
  * 
+ * when running the testsuite we have sometime spurious errors during startup and alos during proccessing (Bundles to big?))
+ * 
  * @author oliveregger
  */
 @RunWith(Parameterized.class)
@@ -53,8 +56,6 @@ public class IgValidateR4TestStandalone {
 
   static private Set<String> loadedIgs = new HashSet<String>();
 
-  private String targetServer = "http://localhost:8080/matchbox-validator/fhir";
-//  private String targetServer = "https://test.ahdis.ch/matchbox-validator/fhir";
     private Resource resource;
   private String name;
   
@@ -218,7 +219,7 @@ public class IgValidateR4TestStandalone {
 
   @Test
   public void validate() throws Exception {
-    OperationOutcome outcome = validate(resource, targetServer);
+    OperationOutcome outcome = validate(resource);
     int fails = getValidationFailures(outcome);
     if (fails > 0) {
       assertEquals("success", outcome.toString());
@@ -242,7 +243,6 @@ public class IgValidateR4TestStandalone {
 
   public boolean upload(String implementationGuide, String targetServer) {
     List<Resource> resources = getResources(implementationGuide);
-    this.targetServer = targetServer;
     try {
       for (Resource resource : resources) {
         validate(resource, targetServer);
@@ -253,17 +253,9 @@ public class IgValidateR4TestStandalone {
     return false;
   }
 
-//  public IHttpRequest createValidationProfileOperation(FhirContext theContext, String theContents, String theProfile) {
-//    HttpPostClientInvocation clientInvoke = new HttpPostClientInvocation(theContext, theContents, false, "/$validate");
-//    Map<String, List<String>> theExtraParams = null;
-//    if (theProfile!=null) {
-//      theExtraParams = new HashMap<String, List<String>>();
-//      List<String> profiles = new ArrayList<String>();
-//      profiles.add(theProfile);
-//      theExtraParams.put("profile", profiles);
-//    }
-//    IHttpRequest httpRequest = clientInvoke.asHttpRequest(this.targetServer, theExtraParams , null, false);
-//   }
+  public OperationOutcome validate(Resource resource) throws IOException {
+  	return validate(resource, GenericFhirClient.testServer);
+  }
 
 
   public OperationOutcome validate(Resource resource, String targetServer) throws IOException {
@@ -277,25 +269,11 @@ public class IgValidateR4TestStandalone {
       Assume.assumeFalse(skip);
     }
 
-    IGenericClient fhirClient = contextR4.newRestfulGenericClient(targetServer+"/$validate");
-    String content =  new org.hl7.fhir.r4.formats.JsonParser().composeString(resource);
-    String response = fhirClient.transaction().withBundle(content).execute();
-    OperationOutcome outcome  =  (OperationOutcome) new org.hl7.fhir.r4.formats.JsonParser().parse(response);
+    GenericFhirClient genericClient = new GenericFhirClient(contextR4);
 
-//    IGenericClient fhirClient = contextR4.newRestfulGenericClient(targetServer);
-//    fhirClient.setEncoding(EncodingEnum.XML);
-//
-//    org.hl7.fhir.r4.model.Parameters inParams = new org.hl7.fhir.r4.model.Parameters();
-//    inParams.addParameter().setName("resource").setResource(resource);
-//
-//    org.hl7.fhir.r4.model.Parameters outcomeParameters = fhirClient.operation().onServer().named("$validate")
-//        .withParameters(inParams).execute();
-//    OperationOutcome outcome = null;
-//    for (ParametersParameterComponent parameterComponent : outcomeParameters.getParameter()) {
-//      if ("return".equals(parameterComponent.getName())) {
-//        outcome = (OperationOutcome) parameterComponent.getResource();
-//      }
-//    }
+    String content =  new org.hl7.fhir.r4.formats.JsonParser().composeString(resource);
+    OperationOutcome outcome = (OperationOutcome) genericClient.validate(content, null);
+
     if (outcome == null) {
       log.debug(contextR4.newXmlParser().encodeResourceToString(resource));
       log.error("should have a return element");

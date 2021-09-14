@@ -6,7 +6,9 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.UnknownCodeSystemWarningValidationSupport;
+import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
 import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -31,10 +34,11 @@ import ca.uhn.fhir.jpa.term.api.ITermReadSvcR4;
 import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ExtTermReadSvcR4;
 import ch.ahdis.fhir.hapi.jpa.validation.ExtUnknownCodeSystemWarningValidationSupport;
+import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProvider;
 import ch.ahdis.fhir.hapi.jpa.validation.JpaExtendedValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
-import ch.ahdis.matchbox.provider.IGLoadOperationProvider;
+import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnairePopulateProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
@@ -132,12 +136,26 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
   public QuestionnaireResponseExtractProvider questionnaireResponseProvider() {
 	  return new QuestionnaireResponseExtractProvider();
   }
-  
-  @Bean
-  public IGLoadOperationProvider igLoadOperationProvider() {
-	  return new IGLoadOperationProvider();
+
+
+  @Override
+  public ca.uhn.fhir.jpa.rp.r4.StructureMapResourceProvider rpStructureMapR4() {
+    ca.uhn.fhir.jpa.rp.r4.StructureMapResourceProvider retVal;
+    retVal = new StructureMapTransformProvider();
+    retVal.setContext(fhirContextR4());
+    retVal.setDao(daoStructureMapR4());
+    return retVal;
   }
-  
+
+  @Override
+  public ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider rpImplementationGuideR4() {
+    ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider retVal;
+    retVal = new ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProvider();
+    retVal.setContext(fhirContextR4());
+    retVal.setDao(daoImplementationGuideR4());
+    return retVal;
+  }
+
 //  @Bean
 //  public IInstanceValidatorModule instanceValidator() {
 //	  return new FhirInstanceValidator();
@@ -146,13 +164,9 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
   
   @Bean
   public ConvertingWorkerContext simpleWorkerContext() {
-	  try {
-		  
-		  IValidationSupport validationSupport = (IValidationSupport) fhirContext.getValidationSupport();
-		  HapiWorkerContext test = new HapiWorkerContext(fhirContext, validationSupport);
-		  ConvertingWorkerContext conv = new ConvertingWorkerContext(test);
-          
-	       return conv;
+    try {
+		  ConvertingWorkerContext conv = new ConvertingWorkerContext(this.jpaValidationSupportChain().getValidationSupport());
+		  return conv;
 	  } catch (IOException e) {
 		  throw new RuntimeException(e);
 	  }
@@ -179,7 +193,7 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
   }
 
   @Bean(name = JPA_VALIDATION_SUPPORT_CHAIN)
-	public JpaValidationSupportChain jpaValidationSupportChain() {
+	public JpaExtendedValidationSupportChain jpaValidationSupportChain() {
 		return new JpaExtendedValidationSupportChain(fhirContext());
 	}
   

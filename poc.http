@@ -2,10 +2,16 @@
 @host = http://localhost:8080/matchbox-validator/fhir
 ### @host = https://test.ahdis.ch/matchbox-order/fhir
 ### @host = https://test.ahdis.ch/r4
-@example-qr-id = 4760
+@example-qr-id = 6002
 
 ### Get Capability Statement
 GET {{host}}/metadata HTTP/1.1
+
+### Reload all implementation Guides
+POST {{host}}/ImplementationGuide/$load HTTP/1.1
+Content-Type: application/json+fhir
+
+< poc/ig-r4-conceptmaps.json
 
 ### Reload all implementation Guides
 POST {{host}}/ImplementationGuide/$load-all HTTP/1.1
@@ -149,12 +155,12 @@ POST {{host}}/$mark-all-resources-for-reindexing HTTP/1.1
 Accept: application/json+fhir
 
 ###
-GET {{host}}/Bundle?placer=http://ahdis.ch/fhir/Questionnaire|urn:oid:2.16.756.5.30.1.145.1.2.3
+GET {{host}}/Bundle?placer=|urn:oid:2.16.756.5.30.1.145.1.2.3
 Accept: application/json+fhir
 Cache-Control: no-cache
 
 ###
-GET {{host}}/Bundle?placer:not=http://ahdis.ch/fhir/Questionnaire|urn:oid:2.16.756.5.30.1.145.1.2.3
+GET {{host}}/Bundle?placer:not=|urn:oid:2.16.756.5.30.1.145.1.2.3
 Accept: application/json+fhir
 Cache-Control: no-cache
 
@@ -189,6 +195,26 @@ Accept: application/json+fhir
 GET {{host}}/Questionnaire?url=http://fhir.ch/ig/ch-rad-order/Questionnaire/QuestionnaireRadiologyOrder
 Accept: application/json+fhir
 
-
 ###
 GET https://test.ahdis.ch/matchbox-order/fhir/QuestionnaireResponse/2960
+
+###
+GET {{host}}/ConceptMap?url=http://hl7.org/fhir/ConceptMap/cm-administrative-gender-v3
+Accept: application/json+fhir
+
+###
+GET {{host}}/ConceptMap?url=http://hl7.org/fhir/ConceptMap/cm-administrative-gender-v3
+Accept: application/json+fhir
+
+###
+GET {{host}}/ConceptMap
+Accept: application/json+fhir
+
+
+
+
+### Upload ConcepMap cm-administrative-gender-v3 from R4 Example
+PUT {{host}}/ConceptMap/cm-administrative-gender-v3 HTTP/1.1
+Content-Type: application/fhir+json
+
+< ./poc/cm-administrative-gender-v3.json

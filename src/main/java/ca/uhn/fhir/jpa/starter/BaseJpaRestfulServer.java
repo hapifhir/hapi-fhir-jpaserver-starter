@@ -2,17 +2,20 @@ package ca.uhn.fhir.jpa.starter;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 
-import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.Meta;
+import org.apache.commons.lang3.time.DateUtils;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
+
+import com.google.common.base.Strings;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
@@ -26,9 +29,10 @@ import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.export.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.cache.IResourceChangeListenerRegistry;
+import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
-import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
-import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
+import ca.uhn.fhir.jpa.model.sched.ISchedulerService;
+import ca.uhn.fhir.jpa.model.sched.ScheduledJobDefinition;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.GraphQLProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
@@ -37,8 +41,8 @@ import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
+import ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
-import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative.INarrativeGenerator;
@@ -48,36 +52,25 @@ import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
 import ca.uhn.fhir.rest.server.IncomingRequestAddressStrategy;
 import ca.uhn.fhir.rest.server.RestfulServer;
-import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import ca.uhn.fhir.rest.server.interceptor.*;
+import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.FhirPathFilterInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.partition.RequestTenantPartitionInterceptor;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
 import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
+import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProvider;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.interceptor.MappingLanguageInterceptor;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
-import ch.ahdis.matchbox.provider.IGLoadOperationProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnairePopulateProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
-
-import com.google.common.base.Strings;
-import org.hl7.fhir.r4.model.Bundle.BundleType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.cors.CorsConfiguration;
-
-import javax.servlet.ServletException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class BaseJpaRestfulServer extends RestfulServer {
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(BaseJpaRestfulServer.class);
@@ -145,13 +138,20 @@ public class BaseJpaRestfulServer extends RestfulServer {
   QuestionnaireResponseExtractProvider questionnaireResponseProvider;
   
   @Autowired
-  IGLoadOperationProvider igLoadOperationProvider;
-  
-  @Autowired
   IResourceChangeListenerRegistry resourceChangeListenerRegistry;
   
   @Autowired
   ConvertingWorkerContext baseWorkerContext;
+  
+  @Autowired
+  INpmPackageVersionDao myPackageVersionDao;
+  
+  @Autowired
+  private ISchedulerService mySvc;
+  
+  @Autowired
+  private ImplementationGuideResourceProvider implementationGuideResourceProvider;
+
   
   // These are set only if the features are enabled
   private CqlProviderLoader cqlProviderLoader;
@@ -421,39 +421,25 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
     }
         
-    /*if (appProperties.getImplementationGuides() != null) {
-      Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
-      for (Map.Entry<String, AppProperties.ImplementationGuide> guide : guides.entrySet()) {
-        try {
-          ourLog.info("installing " + guide.getValue().getName());
-
-          packageInstallerSvc.install(new PackageInstallationSpec()
-          .setPackageUrl(guide.getValue().getUrl())
-          .addInstallResourceTypes("NamingSystem",
-        			"CodeSystem",
-        			"ValueSet",
-        			"StructureDefinition",
-        			"ConceptMap",
-        			"SearchParameter",
-        			"Subscription",
-        			"StructureMap","Questionnaire")
-          .setName(guide.getValue().getName())
-          .setVersion(guide.getValue().getVersion())
-            .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
-          } catch (NullPointerException e) {
-            ourLog.error("package not available or np for ", e);
-            System.exit(-1); 
-          }
-      }
-      if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages().booleanValue()) {
-        System.exit(0);
-      }
-    }*/
+    if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages().booleanValue() && appProperties.getImplementationGuides() != null) {
+        ((ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProvider) implementationGuideResourceProvider).loadAll(true);
+        if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages().booleanValue()) {
+          System.exit(0);
+        }
+    }
+    
+    if (appProperties.getImplementationGuides() != null) {
+      ScheduledJobDefinition jobDefinition = new ScheduledJobDefinition();
+      jobDefinition.setId(this.getClass().getName());
+      jobDefinition.setJobClass(ImplementationGuideProvider.class);
+      mySvc.scheduleLocalJob(DateUtils.MILLIS_PER_MINUTE, jobDefinition);
+    }
+    
     if (appProperties.getLastn_enabled()) {
       daoConfig.setLastNEnabled(true);
     }
 
-    registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider, igLoadOperationProvider);    
+    registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider);
     // Repository Validating Interceptor
 //	if (Boolean.TRUE.equals(appProperties.getEnable_repository_validating_interceptor())) {
 //		 RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory = myApplicationContext.getBean(RepositoryValidationInterceptorFactory.class);
@@ -464,8 +450,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
 		daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
 		
-		resourceChangeListenerRegistry.registerResourceResourceChangeListener("StructureDefinition", new SearchParameterMap(), baseWorkerContext, 3000);
-		resourceChangeListenerRegistry.registerResourceResourceChangeListener("CodeSystem", new SearchParameterMap(), baseWorkerContext, 3000);
-		resourceChangeListenerRegistry.registerResourceResourceChangeListener("ValueSet", new SearchParameterMap(), baseWorkerContext, 3000);
+
+		
   }
 }

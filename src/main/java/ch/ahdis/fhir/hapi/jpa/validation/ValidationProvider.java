@@ -169,7 +169,7 @@ public class ValidationProvider {
           break;
         }
       }
-      if (resourceInParam.fhirType().contentEquals("Bundle") ) {
+      if (resourceInParam!=null && resourceInParam.fhirType().contentEquals("Bundle") ) {
          Bundle bundle = (Bundle) resourceInParam;
          for (BundleEntryComponent entry : bundle.getEntry()) {
             if (entry.getResource()!=null && entry.getResource().getId()==null) {

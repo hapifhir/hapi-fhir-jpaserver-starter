@@ -2,13 +2,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-Application-matchbox-validator-starter",
+            "name": "Launch Java Program",
             "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "console": "internalConsole",
-            "mainClass": "ca.uhn.fhir.jpa.starter.Application",
-            "projectName": "matchbox-validator-starter",
-            "args": "--spring.profiles.active=boot"
+            "mainClass": "ca.uhn.fhir.jpa.starter.Application"
         }
     ]
 }

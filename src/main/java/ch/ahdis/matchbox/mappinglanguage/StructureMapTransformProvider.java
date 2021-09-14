@@ -1,6 +1,7 @@
 package ch.ahdis.matchbox.mappinglanguage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,12 +30,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.instance.model.api.IBase;
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.StructureMap;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
+import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.Property;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureMap.StructureMapStructureComponent;
@@ -44,33 +52,71 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.annotation.IdParam;
 import ca.uhn.fhir.rest.annotation.Operation;
+import ca.uhn.fhir.rest.annotation.OperationParam;
+import ca.uhn.fhir.rest.annotation.ResourceParam;
 import ca.uhn.fhir.rest.api.Constants;
+import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.RestfulServerUtils;
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
 
 /**
- * $transform Operation for StructureMaps
+ * StructureMapTransformProvider
+
  *
  */
-public class StructureMapTransformProvider {
+public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.StructureMapResourceProvider {
   
+  @Override
+  public MethodOutcome create(HttpServletRequest theRequest, StructureMap theResource, String theConditional,
+      RequestDetails theRequestDetails) {
+    if (theResource.getUrl()!=null) {
+       org.hl7.fhir.r5.model.StructureMap existing = baseWorkerContext.getTransform(theResource.getUrl());
+       if (existing !=null ) {
+         theResource.setId(existing.getId());
+         IdType theId = new IdType();
+         theId.setId(existing.getId());
+         return super.update(theRequest, fixMap(theResource), theId, theConditional, theRequestDetails);
+       }
+    }
+    return super.create(theRequest, fixMap(theResource), theConditional, theRequestDetails);
+  }
+
+  @Override
+  public MethodOutcome update(HttpServletRequest theRequest, StructureMap theResource, IIdType theId,
+      String theConditional, RequestDetails theRequestDetails) {
+    return super.update(theRequest, fixMap(theResource), theId, theConditional, theRequestDetails);
+  }
+
   private StructureMapUtilities utils = null;
   
   @Autowired
-  protected FhirContext myFhirCtx;
-	
-  @Autowired
   protected ConvertingWorkerContext baseWorkerContext;
-  
-
-  /*public StructureMapTransformProvider(SimpleWorkerContext fhirContext) {
-    super(fhirContext, StructureMap.class);
-    utils = new StructureMapUtilities(fhirContext, new TransformSupportServices(fhirContext, new ArrayList<Base>()));
-  }*/
- 
-  
 
   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StructureMapTransformProvider.class);
+  
+  public StructureMap fixMap(@ResourceParam StructureMap theResource) {
+    log.debug("created structuredmap, caching");
+    
+    if (theResource!=null) {
+      // don't know why a # is prefixed to the contained it
+      for (org.hl7.fhir.r4.model.Resource r : theResource.getContained()) {
+        if (r instanceof org.hl7.fhir.r4.model.ConceptMap && ((org.hl7.fhir.r4.model.ConceptMap) r).getId().startsWith("#")) {
+          r.setId(((org.hl7.fhir.r4.model.ConceptMap) r).getId().substring(1));
+        }
+        // If a contained element is not referred it will not serialized in hapi
+        if (r instanceof org.hl7.fhir.r4.model.ConceptMap) {
+          Extension e = new Extension();
+          Reference reference = new Reference();
+          reference.setReference("#"+r.getId());
+          e.setValue(reference);
+          e.setUrl("http://fhir.ch/reference");
+          theResource.addExtension(e);
+        }
+      }
+    }
+    return theResource;
+  }
 
   private void removeBundleEntryIds(org.hl7.fhir.r5.elementmodel.Element bundle) {
     List<Element> ids = bundle.getChildrenByName("id");
@@ -92,38 +138,31 @@ public class StructureMapTransformProvider {
       }
     }
   }
-
   
   @Operation(name = "$transform", manualResponse = true, manualRequest = true)
   public void manualInputAndOutput(@IdParam IdType theStructureMap, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
-	  ConvertingWorkerContext fhirContext = new ConvertingWorkerContext(baseWorkerContext);
-    org.hl7.fhir.r5.model.StructureMap map = (org.hl7.fhir.r5.model.StructureMap) fhirContext.fetchResourceById(theStructureMap.getResourceType(), theStructureMap.getIdPart());
+    org.hl7.fhir.r5.model.StructureMap map = (org.hl7.fhir.r5.model.StructureMap) baseWorkerContext.fetchResourceById(theStructureMap.getResourceType(), theStructureMap.getIdPart());
     if (map == null) {
       throw new UnprocessableEntityException("Map not available with id "+theStructureMap.getIdPart());
     }
-    transfrom(map, theServletRequest, theServletResponse, fhirContext);
+    transfrom(map, theServletRequest, theServletResponse, baseWorkerContext);
   }
-  
-      
-  @Operation(name = "$transform", manualResponse = true, manualRequest = true)
+ 
+  @Operation(name = "$transform", type = StructureMap.class, manualResponse = true, manualRequest = true)
   public void manualInputAndOutput(HttpServletRequest theServletRequest, HttpServletResponse theServletResponse)
       throws IOException {
-	  ConvertingWorkerContext fhirContext = new ConvertingWorkerContext(baseWorkerContext);
     Map<String, String[]> requestParams = theServletRequest.getParameterMap();
     String[] source = requestParams.get("source");
     if (source != null && source.length > 0) {
-      
-      org.hl7.fhir.r5.model.StructureMap map  = fhirContext.getTransform(source[0]);
+      org.hl7.fhir.r5.model.StructureMap map  = baseWorkerContext.getTransform(source[0]);
       if (map == null) {
           throw new UnprocessableEntityException("Map not available with canonical url "+source[0]);
       }
-      transfrom(map, theServletRequest, theServletResponse, fhirContext);
+      transfrom(map, theServletRequest, theServletResponse, baseWorkerContext);
     } else {
       throw new UnprocessableEntityException("No source parameter provided");
     }
   }
-
-  
   
   public void transfrom(org.hl7.fhir.r5.model.StructureMap map, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse, ConvertingWorkerContext fhirContext) throws IOException {
 
@@ -147,6 +186,7 @@ public class StructureMapTransformProvider {
       throw new UnprocessableEntityException("Target Structure can not be resolved from map, is the corresponding implmentation guide provided?");
     }
     
+    StructureMapUtilities utils = new StructureMapUtilities(fhirContext, new TransformSupportServices(fhirContext, new ArrayList<Base>()));
     utils.transform(null, src, map, r);
     if (r.isResource() && "Bundle".contentEquals(r.getType())) {
       Property bundleType = r.getChildByName("type");
@@ -193,6 +233,16 @@ public class StructureMapTransformProvider {
     return Manager.build(fhirContext, structureDefinition);
   }
   
+  @Operation(name = "$convert", type = StructureMap.class, idempotent = true, returnParameters = {
+      @OperationParam(name = "output", type = IBase.class, min = 1, max = 1) })
+  public IBaseResource convert(@OperationParam(name = "input", min = 1, max = 1) final IBaseResource content,
+      @OperationParam(name = "ig", min = 0, max = 1) final String ig,
+      @OperationParam(name = "from", min = 0, max = 1) final String from,
+      @OperationParam(name = "to", min = 0, max = 1) final String to,
+      HttpServletRequest theRequest) {
+    
+    log.debug("$convert");
+    return content;
+  }
 
-  
 }

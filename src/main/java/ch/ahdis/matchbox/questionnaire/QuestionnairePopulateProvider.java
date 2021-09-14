@@ -52,8 +52,6 @@ public class QuestionnairePopulateProvider {
 	
 	private String baseUrl;
 	
-	@Autowired
-	protected FhirContext myFhirCtx;
 	
 	@Autowired
 	protected ConvertingWorkerContext baseWorkerContext;
@@ -86,22 +84,21 @@ public class QuestionnairePopulateProvider {
 			@OperationParam(name = "content", min=0 ) List<Reference> content,
 			@OperationParam(name = "local", min=0, max=1 ) BooleanType local)
 	      throws IOException {		
-		  ConvertingWorkerContext workerContext = new ConvertingWorkerContext(baseWorkerContext);
 		  
-		  StructureMapUtilities utils = new StructureMapUtilities(workerContext, new TransformSupportServices(workerContext, new ArrayList<Base>()));
+		  StructureMapUtilities utils = new StructureMapUtilities(baseWorkerContext, new TransformSupportServices(baseWorkerContext, new ArrayList<Base>()));
 			
 		  if (questionnaire==null && questionnaireRef==null) throw new UnprocessableEntityException("No questionnaire given in Parameters");
 		  
 		  // resolve questionnaire reference if given
 		  if (questionnaire==null && questionnaireRef!=null) {
 			  //workerContext.load(org.hl7.fhir.r4.model.Questionnaire.class, questionnaireRef.getReference());
-			  org.hl7.fhir.r5.model.Questionnaire questionnaireR5 = workerContext.fetchResource(org.hl7.fhir.r5.model.Questionnaire.class, questionnaireRef.getReference());
+			  org.hl7.fhir.r5.model.Questionnaire questionnaireR5 = baseWorkerContext.fetchResource(org.hl7.fhir.r5.model.Questionnaire.class, questionnaireRef.getReference());
 			  if (questionnaireR5==null) throw new UnprocessableEntityException("Questionnaire referenced by questionnaireRef could not be resolved.");
 			  questionnaire = (Questionnaire) VersionConvertorFactory_40_50.convertResource(questionnaireR5);
 		  }
 		  
 		  // convert questionaire to element model		      		    
-	      org.hl7.fhir.r5.elementmodel.Element src = convertToElementModel(workerContext, questionnaire);
+	      org.hl7.fhir.r5.elementmodel.Element src = convertToElementModel(baseWorkerContext, questionnaire);
 	      
 	      // get launch context from questionnaire
 	      org.hl7.fhir.r5.elementmodel.Element launchContextDefinition = src.getExtension(LAUNCH_CONTEXT);
@@ -112,7 +109,7 @@ public class QuestionnairePopulateProvider {
 	      if (mapUrlValue == null) throw new UnprocessableEntityException("No sdc-questionnaire-sourceStructureMap extension found in resource");
 	      String mapUrl = mapUrlValue.primitiveValue();
 	      //workerContext.loadMap(mapUrl);
-	      org.hl7.fhir.r5.model.StructureMap map = workerContext.getTransform(mapUrl);
+	      org.hl7.fhir.r5.model.StructureMap map = baseWorkerContext.getTransform(mapUrl);
 	      if (map == null) {
 	          throw new UnprocessableEntityException("Map not available with canonical url "+mapUrl);
 	      }
@@ -127,7 +124,7 @@ public class QuestionnairePopulateProvider {
 	    	  // convert launch context to element model and use as input for structure map		    
 	        Bundle prepopBundle = new Bundle();
 	        prepopBundle.addEntry().setResource(launchContext);
-	        bundle = convertToElementModel(workerContext, prepopBundle);	
+	        bundle = convertToElementModel(baseWorkerContext, prepopBundle);	
 	      } else {
 	    	  // normal branch with source queries
 		      if (sourceQueriesExt == null) throw new UnprocessableEntityException("No sdc-questionnaire-sourceQueries extension found in resource");
@@ -150,25 +147,25 @@ public class QuestionnairePopulateProvider {
 		    	  } else if (entry.hasRequest()) {
 		    		  if (entry.getRequest().getMethod()!=Bundle.HTTPVerb.GET) throw new UnprocessableEntityException("Bundle request method must be GET");
 		    		  String url = entry.getRequest().getUrl();
-		    		  url = evaluateFhirPath(workerContext, subject, url);
+		    		  url = evaluateFhirPath(baseWorkerContext, subject, url);
 		    		  Bundle result = resolveBundleFromUri(url);
 		    		  processBundle.addEntry().setResource(result).setFullUrl(entry.getFullUrl());
 		    	  }
 		      }
 		      
 		      // convert input bundle to element model		           
-		      bundle = convertToElementModel(workerContext, processBundle);	
+		      bundle = convertToElementModel(baseWorkerContext, processBundle);	
 	      }
 	      
 	      // build output QuestionnaireResponse using element model
-	      org.hl7.fhir.r5.elementmodel.Element r = getTargetResourceFromStructureMap(workerContext, map);
+	      org.hl7.fhir.r5.elementmodel.Element r = getTargetResourceFromStructureMap(baseWorkerContext, map);
 	      if (r == null) {
 	        throw new UnprocessableEntityException("Target Structure can not be resolved from map, is the corresponding implmentation guide provided?");
 	      }	      
 	      utils.transform(null, bundle, map, r);
 	      
 	      // convert output to R4 resource
-	      IBaseResource result = convertToR4(workerContext, r);	      
+	      IBaseResource result = convertToR4(baseWorkerContext, r);	      
 	      if (!(result instanceof QuestionnaireResponse)) throw new UnprocessableEntityException("Structure Map does not produce correct output resource type.");	      
 	      QuestionnaireResponse questionnaireResponse = (QuestionnaireResponse) result;
 	      

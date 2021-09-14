@@ -1,0 +1,13 @@
+{
+     "resourceType": "Parameters",
+     "parameter": [
+          {
+               "name": "name",
+               "valueString": "hl7.fhir.r4.examples"
+          },
+          {
+               "name": "version",
+               "valueString": "4.0.1"
+          }
+     ]
+}

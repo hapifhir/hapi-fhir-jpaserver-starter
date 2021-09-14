@@ -1,0 +1,13 @@
+{
+     "resourceType": "Parameters",
+     "parameter": [
+          {
+               "name": "name",
+               "valueString": "hl7.terminology.r4"
+          },
+          {
+               "name": "version",
+               "valueString": "2.1.0"
+          }
+     ]
+}

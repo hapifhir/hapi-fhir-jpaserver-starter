@@ -52,34 +52,31 @@ public class QuestionnaireResponseExtractProvider  {
   
   @Autowired
   private DaoRegistry myDaoRegistry;
+  
 
   @Operation(name = "$extract", type = QuestionnaireResponse.class, manualRequest = true, manualResponse = true, idempotent = true)
   public void extract(@IdParam IdType theQuestionnaireResponseId, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
 	  
 	  QuestionnaireResponse input = myDaoRegistry.getResourceDao(QuestionnaireResponse.class).read(theQuestionnaireResponseId);
 	  if (input == null) throw new ResourceNotFoundException(theQuestionnaireResponseId);
-	  ConvertingWorkerContext workerContext = new ConvertingWorkerContext(baseWorkerContext);
-	    StructureMapUtilities utils = new StructureMapUtilities(workerContext,
-	        new TransformSupportServices(workerContext, new ArrayList<Base>()));
 
 	  
 	    // parse QuestionnaireResponse from request body
-	    org.hl7.fhir.r5.elementmodel.Element src = convertToElementModel(workerContext, input);
+	    org.hl7.fhir.r5.elementmodel.Element src = convertToElementModel(baseWorkerContext, input);
 
-	    extract(workerContext, src, theServletRequest, theServletResponse);
+	    extract(baseWorkerContext, src, theServletRequest, theServletResponse);
   }
 
   
   @Operation(name = "$extract", type = QuestionnaireResponse.class, manualResponse = true, manualRequest = true)
   public void extract(HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
-	ConvertingWorkerContext workerContext = new ConvertingWorkerContext(baseWorkerContext);
     
     String contentType = theServletRequest.getContentType();   
 
     // parse QuestionnaireResponse from request body
-    org.hl7.fhir.r5.elementmodel.Element src = Manager.parse(workerContext, theServletRequest.getInputStream(),
+    org.hl7.fhir.r5.elementmodel.Element src = Manager.parse(baseWorkerContext, theServletRequest.getInputStream(),
         contentType.contains("xml") ? FhirFormat.XML : FhirFormat.JSON);
-    extract(workerContext, src, theServletRequest, theServletResponse); 
+    extract(baseWorkerContext, src, theServletRequest, theServletResponse); 
   }
 
    public void extract(ConvertingWorkerContext workerContext, org.hl7.fhir.r5.elementmodel.Element src, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {

@@ -36,7 +36,6 @@ public class IgValidateR4Test extends IgValidateR4TestStandalone{
   public final SpringMethodRule smr = new SpringMethodRule();
   
   
-  private String targetServer = "http://localhost:8080/matchbox-validator/fhir";
   private Resource resource;
   private String name;
   
@@ -51,7 +50,7 @@ public class IgValidateR4Test extends IgValidateR4TestStandalone{
 
   @Test
   public void validate() throws Exception {    
-    OperationOutcome outcome = validate(resource,targetServer); 
+    OperationOutcome outcome = validate(resource); 
     int fails = getValidationFailures(outcome);
     if (fails>0) {
       FhirContext contextR4 = FhirVersionEnum.R4.newContext();
