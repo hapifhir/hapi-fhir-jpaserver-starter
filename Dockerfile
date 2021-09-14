@@ -2,6 +2,7 @@ FROM maven:3.6.3-jdk-11-slim as build-hapi
 WORKDIR /tmp/hapi-fhir-jpaserver-starter
 
 COPY pom.xml .
+COPY server.xml .
 RUN mvn -ntp dependency:go-offline
 
 COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
@@ -26,6 +27,9 @@ FROM tomcat:9.0.38-jdk11-openjdk-slim-buster
 
 RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles
 COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/*.war /usr/local/tomcat/webapps/
+
+COPY catalina.properties /usr/local/tomcat/conf/catalina.properties
+COPY server.xml /usr/local/tomcat/conf/server.xml
 
 EXPOSE 8080
 
