@@ -1,29 +1,19 @@
-# Matchbox Validator 
+# matchbox 
 
-This project is a starter project you can use to deploy a FHIR server using HAPI FHIR JPA validation for supporting FHIR implementation guides.
+matchbox is a FHIR server based on the [hapifhir/hapi-fhir-jpaserver-starter](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) 
+- (pre-)load FHIR implementation guides from the package server for conformance resources (StructureMap, Questionnaire, CodeSystem, ValueSet, ConceptMap, NamingSystem, StructureDefinition). The "with-preload" subfolder contains an example with the implementation guides provided for the public test server.
+- validation support: [server]/$validate for checking FHIR resources conforming to the loaded implementation guides
+- FHIR Mapping Language endpoints for creation of StructureMaps and support for the [StructureMap/$transform](https://www.hl7.org/fhir/operation-structuremap-transform.html) operation
+- SDC (Structured Data Capture) [extraction](https://build.fhir.org/ig/HL7/sdc/extraction.html#map-extract) support based on the FHIR Mapping language and [Questionnaire/$extract](http://build.fhir.org/ig/HL7/sdc/OperationDefinition-QuestionnaireResponse-extract.html)
 
-- The server offers a $validate operation on the root with a profile parameter, e.g. you can do:
-
-  ```
-  POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-composition-epr HTTP/1.1
-  Content-Type: application/fhir+xml
-  
-  < ./composition_confcode.xml
-  ```   
-
-- Optionally Implementation Guides can be added that will be loaded during startup of the server. The "with-preload" subfolder contains an example with the swiss implementation guides relevant for the Swiss EPR Projectathon 2021
+## containers
 
 The docker file will create a docker image with no preloaded implementation guides. A list of implementation guides to load can be passed as config-map.
-
-A second docker file will create an image with fixed configuration and preloaded implementation guides.  
-That docker image does not need to download the implementation guides afterwards.
+A second docker file will create an image with fixed configuration and preloaded implementation guides.  That docker image does not need to download the implementation guides afterwards.
 
 ## Prerequisites
 
-1. to develop with matchbox-validator you need to check out the **dev** branches of the forked [org.hl7.fhir.core](https://github.com/ahdis/org.hl7.fhir.core/tree/dev) and [hapi-fhir](https://github.com/ahdis/hapi-fhir/tree/dev) project
-2. run mvn clean install -DskipTests in org.hl7.fhir.core and hapi-fhir (this will install local maven snapshots in your system)
-
-- [This project](https://github.com/ahdis/matchbox-validator) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
+- [This project](https://github.com/ahdis/matchbox) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
 - Oracle Java (JDK) installed: Minimum JDK8 or newer.
 - Apache Maven build tool (newest version)
 
@@ -32,6 +22,7 @@ That docker image does not need to download the implementation guides afterwards
 The easiest way to run this server entirely depends on your environment requirements. At least, the following 4 ways are supported:
 
 ### Using spring-boot
+
 With no implementation guide:
 ```bash
 mvn clean install -DskipTests spring-boot:run
@@ -52,8 +43,7 @@ mvn clean install -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="-X
 
 Then, browse to the following link to use the server:
 
-[http://localhost:8080/matchbox-validator/](http://localhost:8080/matchbox-validator/)
-
+[http://localhost:8080/matchbox/](http://localhost:8080/matchbox/)
 
 ## building with Docker
 
@@ -61,10 +51,10 @@ Then, browse to the following link to use the server:
 
 ```bash
 mvn package -DskipTests
-docker build -t matchbox-validator .
-docker run -d --name matchbox-validator -p 8080:8080 matchbox-validator
+docker build -t matchbox .
+docker run -d --name matchbox -p 8080:8080 matchbox
 ```
-Server will then be accessible at http://localhost:8080/matchbox-validator/fhir/metadata. 
+Server will then be accessible at http://localhost:8080/matchbox/fhir/metadata. 
 
 To dynamically configure run in a kubernetes environment and add a kubernetes config map that provides /config/application.yaml file with implementation guide list like in "with-preload/application.yaml" 
 
@@ -79,9 +69,9 @@ docker run -d --name matchbox-validator-swissepr -p 8080:8080 matchbox-validator
 
 ### making container available
 ```
-docker tag matchbox-validator eu.gcr.io/fhir-ch/matchbox-validator:v130
-docker tag matchbox-validator-swissepr eu.gcr.io/fhir-ch/matchbox-validator-swissepr:v130
+docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v140
+docker tag matchbox-swissepr eu.gcr.io/fhir-ch/matchbox-swissepr:v140
 
-docker push eu.gcr.io/fhir-ch/matchbox-validator:v130
-docker push eu.gcr.io/fhir-ch/matchbox-validator-swissepr:v130
+docker push eu.gcr.io/fhir-ch/matchbox-validator:v140
+docker push eu.gcr.io/fhir-ch/matchbox-validator-swissepr:v140
 ```
