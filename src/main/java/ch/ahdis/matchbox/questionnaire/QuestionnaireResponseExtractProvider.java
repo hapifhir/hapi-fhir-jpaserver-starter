@@ -34,6 +34,7 @@ import ca.uhn.fhir.rest.server.RestfulServerUtils;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
+import ch.ahdis.matchbox.mappinglanguage.ElementModelSorter;
 import ch.ahdis.matchbox.mappinglanguage.TransformSupportServices;
 
 /**
@@ -124,6 +125,7 @@ public class QuestionnaireResponseExtractProvider  {
 
     // transform
     utils.transform(null, src, map, r);
+    ElementModelSorter.sort(r);
 
     // return result
     theServletResponse.setContentType(responseContentType);
@@ -172,7 +174,7 @@ public class QuestionnaireResponseExtractProvider  {
 	 * @return
 	 */
 	private org.hl7.fhir.r5.elementmodel.Element convertToElementModel(IWorkerContext workerContext, Resource inputResource) {
-		 String inStr = FhirContext.forR4().newJsonParser().encodeResourceToString(inputResource);
+		 String inStr = FhirContext.forR4Cached().newJsonParser().encodeResourceToString(inputResource);
 		 
 		 try {
 	       return Manager.parse(workerContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.JSON);

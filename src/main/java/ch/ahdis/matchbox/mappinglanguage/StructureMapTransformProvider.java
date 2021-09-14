@@ -2,6 +2,8 @@ package ch.ahdis.matchbox.mappinglanguage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +51,6 @@ import org.hl7.fhir.r5.model.StructureMap.StructureMapStructureComponent;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.annotation.IdParam;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
@@ -88,8 +89,6 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
     return super.update(theRequest, fixMap(theResource), theId, theConditional, theRequestDetails);
   }
 
-  private StructureMapUtilities utils = null;
-  
   @Autowired
   protected ConvertingWorkerContext baseWorkerContext;
 
@@ -163,7 +162,7 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
       throw new UnprocessableEntityException("No source parameter provided");
     }
   }
-  
+    
   public void transfrom(org.hl7.fhir.r5.model.StructureMap map, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse, ConvertingWorkerContext fhirContext) throws IOException {
 
     String contentType = theServletRequest.getContentType();
@@ -188,6 +187,7 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
     
     StructureMapUtilities utils = new StructureMapUtilities(fhirContext, new TransformSupportServices(fhirContext, new ArrayList<Base>()));
     utils.transform(null, src, map, r);
+    ElementModelSorter.sort(r);
     if (r.isResource() && "Bundle".contentEquals(r.getType())) {
       Property bundleType = r.getChildByName("type");
       if (bundleType!=null && bundleType.getValues()!=null && "document".equals(bundleType.getValues().get(0).primitiveValue())) {
@@ -196,8 +196,7 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
     }
     theServletResponse.setContentType(responseContentType);
     theServletResponse.setCharacterEncoding("UTF-8");
-    ServletOutputStream output = theServletResponse.getOutputStream();
-
+    ServletOutputStream output = theServletResponse.getOutputStream();    
     if (output != null) {
       if (output != null && responseContentType.equals(Constants.CT_FHIR_JSON_NEW))
         new org.hl7.fhir.r5.elementmodel.JsonParser(fhirContext).compose(r, output, OutputStyle.PRETTY, null);
@@ -244,5 +243,7 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
     log.debug("$convert");
     return content;
   }
-
+    
+	
 }
+
