@@ -3,7 +3,10 @@
 - $extract on QuestionnaireResponse for StructureMap based extraction
 - support for the $transform operation for StructureMap
 - FHIR Mapping Language Support (POST FHIR Mapping language, transform)
+- fixed issues #7 and #8 (custom SearchParmeters and validation)
 - public test instance https://test.ahdis.ch/matchbox/fhir
+- base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v140
+- swiss epr release: docker pull eu.gcr.io/fhir-ch/matchbox-swissepr:v140
 
 2021/07/05 Release 1.3.0
 - updated hapi-fhir to 5.5.0-PRE5-SNAPSHOT with patches for hapi-fhir and org.hl7.fhir.core (dev branch on ahdis foreach project)
