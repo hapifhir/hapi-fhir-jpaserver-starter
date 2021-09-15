@@ -1,7 +1,8 @@
 
-@host = http://localhost:8080/matchbox/fhir
+### @host = http://localhost:8080/matchbox/fhir
+@host = https://test.ahdis.ch/matchbox/fhir
 ### @host = https://test.ahdis.ch/matchbox-order/fhir
-### @host = https://test.ahdis.ch/r4
+
 @example-qr-id = 6002
 
 ### Get Capability Statement
@@ -222,7 +223,7 @@ Content-Type: application/fhir+json
 
 ###
 POST {{host}}/StructureMap/$transform?source=http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChEmedMedicationCardDocumentToBundle
-Accept: application/fhir+xml;fhirVersion=4.0
-Content-Type: application/fhir+xml;fhirVersion=4.0
+Accept: application/fhir+xml;fhirVersion=4.0;charset=UTF-8
+Content-Type: application/fhir+xml;fhirVersion=4.0;charset=UTF-8
 
 < ./poc/cda-ch-emed-2-7-MedicationCard-UUIDfullUrl.xml
