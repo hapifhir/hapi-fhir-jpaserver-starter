@@ -1,7 +1,7 @@
 
 ### @host = http://localhost:8080/matchbox/fhir
-@host = https://test.ahdis.ch/matchbox/fhir
-### @host = https://test.ahdis.ch/matchbox-order/fhir
+###@host = https://test.ahdis.ch/matchbox/fhir
+@host = https://test.ahdis.ch/matchbox-order/fhir
 
 @example-qr-id = 6002
 
@@ -123,12 +123,19 @@ Content-Type: application/xml+fhir
 
 < ./poc/valuesettoexpand-valueset-ch-rad-order-caveat-device.xml
 
-###
+### POC FIX issue https://github.com/ahdis/matchbox/issues/6
 PUT {{host}}/ValueSet/ch-rad-order-caveat-device HTTP/1.1
 Accept: application/json+fhir
 Content-Type: application/json+fhir
 
 < ./poc/ch-rad-order-caveat-device.json
+
+### POC FIX issue https://github.com/ahdis/matchbox/issues/6
+PUT {{host}}/ValueSet/ch-rad-order-requested-service HTTP/1.1
+Accept: application/json+fhir
+Content-Type: application/json+fhir
+
+< ./poc/ch-rad-order-requested-service.json
 
 ###
 GET {{host}}/Bundle HTTP/1.1

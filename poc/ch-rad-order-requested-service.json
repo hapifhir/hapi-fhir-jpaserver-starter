@@ -1,0 +1,78 @@
+{
+    "resourceType": "ValueSet",
+    "id": "ch-rad-order-requested-service",
+    "language": "en",
+    "url": "http://fhir.ch/ig/ch-rad-order/ValueSet/ch-rad-order-requested-service",
+    "version": "0.1.0",
+    "name": "ChRadOrderRequestedService",
+    "title": "Requested Service",
+    "status": "active",
+    "date": "2021-06-17T15:58:58+02:00",
+    "jurisdiction": [
+      {
+        "coding": [
+          {
+            "system": "urn:iso:std:iso:3166",
+            "code": "CH"
+          }
+        ]
+      }
+    ],
+    "expansion": {
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/valueset-unclosed",
+          "valueBoolean": true
+        }
+      ],
+      "identifier": "urn:uuid:38504054-d1eb-41f5-96a2-d2168b807524",
+      "timestamp": "2021-09-03T14:50:49.649Z",
+      "parameter": [
+        {
+          "name": "expansion-source",
+          "valueString": "ValueSet/ch-rad-order-requested-service"
+        },
+        {
+          "name": "limitedExpansion",
+          "valueBoolean": true
+        }
+      ],
+      "contains": [
+          {
+            "system" : "http://fhir.ch/ig/ch-rad-order/CodeSystem/ch-rad-order-requested-service",
+            "code" : "RequestForPrecedentReport",
+            "display" : "Request for precedent Reports only"
+          },
+          {
+            "system" : "http://fhir.ch/ig/ch-rad-order/CodeSystem/ch-rad-order-requested-service",
+            "code" : "RequestForPrecedentReportAndImages",
+            "display" : "Request for precedent Reports and Images"
+          },
+          {
+            "system" : "http://fhir.ch/ig/ch-rad-order/CodeSystem/ch-rad-order-requested-service",
+            "code" : "ImagingRequest",
+            "display" : "Imaging Request"
+          },
+          {
+            "system" : "http://fhir.ch/ig/ch-rad-order/CodeSystem/ch-rad-order-requested-service",
+            "code" : "RadIntervention",
+            "display" : "Interventional radiology"
+          },
+          {
+            "system" : "http://fhir.ch/ig/ch-rad-order/CodeSystem/ch-rad-order-requested-service",
+            "code" : "SecondOpinion",
+            "display" : "Second Opinion"
+          },
+          {
+            "system" : "http://fhir.ch/ig/ch-rad-order/CodeSystem/ch-rad-order-requested-service",
+            "code" : "ImagingRequestWithIntervention",
+            "display" : "Imaging Request with Intervention"
+          },
+          {
+            "system" : "http://fhir.ch/ig/ch-rad-order/CodeSystem/ch-rad-order-requested-service",
+            "code" : "RemoteReporting",
+            "display" : "Remote Reporting"
+          }
+        ]
+    }
+  }
