@@ -13,7 +13,7 @@ A second docker file will create an image with fixed configuration and preloaded
 
 ## Prerequisites
 
-- [This project](https://github.com/ahdis/matchbox) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
+- [This project](https://github.com/ahdis/matchbox) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub. Check out the main branch (master is kept in sync with [hapi-fhir-jpaserver-starter](https://github.com/hapifhir/hapi-fhir-jpaserver-starter)
 - Oracle Java (JDK) installed: Minimum JDK8 or newer.
 - Apache Maven build tool (newest version)
 
@@ -75,3 +75,12 @@ docker tag matchbox-swissepr eu.gcr.io/fhir-ch/matchbox-swissepr:v140
 docker push eu.gcr.io/fhir-ch/matchbox:v140
 docker push eu.gcr.io/fhir-ch/matchbox-swissepr:v140
 ```
+
+API
+===
+
+Use VSCode, REST Client to work with the API:
+- [FHIR Mapping language](fml.http)
+- [Load Implementation Guide onto server](ig.http)
+- [Validation examples](validation-igexamples.http)
+- SDC TODO

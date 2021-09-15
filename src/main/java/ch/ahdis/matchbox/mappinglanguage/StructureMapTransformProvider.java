@@ -2,8 +2,6 @@ package ch.ahdis.matchbox.mappinglanguage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -201,7 +199,7 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
       if (output != null && responseContentType.equals(Constants.CT_FHIR_JSON_NEW))
         new org.hl7.fhir.r5.elementmodel.JsonParser(fhirContext).compose(r, output, OutputStyle.PRETTY, null);
       else
-        new org.hl7.fhir.r5.elementmodel.XmlParser(fhirContext).compose(r, output, OutputStyle.PRETTY, null);
+        new ch.ahdis.matchbox.mappinglanguage.XmlParser(fhirContext).compose(r, output, OutputStyle.PRETTY, null);
     }
     theServletResponse.getOutputStream().close();
 

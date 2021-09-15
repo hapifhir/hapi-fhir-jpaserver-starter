@@ -44,10 +44,6 @@ Accept: application/fhir+json
 GET {{host}}/ValueSet/UnitCode/$expand HTTP/1.1
 Accept: application/fhir+json
 
-###
-GET {{host}}/ImplementationGuide HTTP/1.1
-Accept: application/fhir+json
-
 
 ###
 GET {{host}}/StructureDefinition HTTP/1.1

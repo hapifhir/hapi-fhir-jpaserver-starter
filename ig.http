@@ -1,0 +1,23 @@
+@host = http://localhost:8080/matchbox/fhir
+### @host = https://test.ahdis.ch/matchbox/fhir
+
+
+###
+GET {{host}}/metadata HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+
+###
+GET {{host}}/ImplementationGuide HTTP/1.1
+Accept: application/fhir+json
+
+###
+POST {{host}}/ImplementationGuide HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+{
+  "resourceType": "ImplementationGuide",
+  "version": "2.0.5",
+  "name": "ch.fhir.ig.ch-epr-term",
+  "packageId": "ch.fhir.ig.ch-epr-term"
+}

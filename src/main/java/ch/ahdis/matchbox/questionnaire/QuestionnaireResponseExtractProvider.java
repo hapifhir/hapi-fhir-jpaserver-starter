@@ -136,7 +136,7 @@ public class QuestionnaireResponseExtractProvider  {
       if (output != null && responseContentType.equals(Constants.CT_FHIR_JSON_NEW))
         new org.hl7.fhir.r5.elementmodel.JsonParser(workerContext).compose(r, output, OutputStyle.PRETTY, null);
       else
-        new org.hl7.fhir.r5.elementmodel.XmlParser(workerContext).compose(r, output, OutputStyle.PRETTY, null);
+        new ch.ahdis.matchbox.mappinglanguage.XmlParser(workerContext).compose(r, output, OutputStyle.PRETTY, null);
     }
     theServletResponse.getOutputStream().close();
 

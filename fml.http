@@ -1,12 +1,10 @@
 @host = http://localhost:8080/matchbox/fhir
-### @host = https://test.ahdis.ch/matchbox-order/fhir
-### @host = https://test.ahdis.ch/r4
-
+### @host = https://test.ahdis.ch/matchbox/fhir
 
 ###
 GET {{host}}/metadata HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
-Origin: http://localhost"
+Origin: http://localhost
 
 
 
@@ -31,7 +29,7 @@ GET {{host}}/StructureMap?url=http://ahdis.ch/matchbox/fml/qr2patgender HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 
 ###
-DELETE {{host}}/StructureMap/qr2patgender HTTP/1.1
+DELETE {{host}}/StructureMap?url=http://ahdis.ch/matchbox/fml/qr2patgender HTTP/1.1
 
 ###
 
