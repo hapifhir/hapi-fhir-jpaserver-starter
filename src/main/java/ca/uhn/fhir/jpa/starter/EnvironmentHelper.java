@@ -74,7 +74,7 @@ public class EnvironmentHelper {
 				ElasticsearchHibernatePropertiesBuilder builder = new ElasticsearchHibernatePropertiesBuilder();
 				IndexStatus requiredIndexStatus = environment.getProperty("elasticsearch.required_index_status", IndexStatus.class);
 				builder.setRequiredIndexStatus(requireNonNullElse(requiredIndexStatus, IndexStatus.YELLOW));
-				builder.setRestUrl(getElasticsearchServerUrl(environment));
+				builder.setHosts(getElasticsearchServerUrl(environment));
 				builder.setUsername(getElasticsearchServerUsername(environment));
 				builder.setPassword(getElasticsearchServerPassword(environment));
 				builder.setProtocol(getElasticsearchServerProtocol(environment));
