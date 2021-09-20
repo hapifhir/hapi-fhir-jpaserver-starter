@@ -135,8 +135,8 @@
 
         <!-- This dependency holds all the code extensions that OpenSRP will build on top of Hapi-Fhir-->
         <dependency>
-            <groupId>org.smartregister</groupId>
-            <artifactId>hapi-fhir-opensrp-extensions</artifactId>
+            <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
+            <artifactId>location</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
