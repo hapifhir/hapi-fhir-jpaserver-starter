@@ -133,6 +133,14 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <!-- This dependency holds all the code extensions that OpenSRP will build on top of Hapi-Fhir-->
+        <dependency>
+            <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
+            <artifactId>location</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
             is used here, but log4j would also be fine. -->
         <dependency>
