@@ -130,7 +130,7 @@
         <dependency>
             <groupId>org.smartregister</groupId>
             <artifactId>hapi-fhir-keycloak</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.2-SNAPSHOT</version>
         </dependency>
 
         <!-- This dependency holds all the code extensions that OpenSRP will build on top of Hapi-Fhir-->
