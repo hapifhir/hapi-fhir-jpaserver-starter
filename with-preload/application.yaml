@@ -48,3 +48,6 @@ hapi:
       cheprmhealth:
         name: ch.fhir.ig.ch-epr-mhealth
         version: 0.2.0
+      challergyintolerance:
+        name: ch.fhir.ig.ch-allergyintolerance
+        version": 0.2.0
