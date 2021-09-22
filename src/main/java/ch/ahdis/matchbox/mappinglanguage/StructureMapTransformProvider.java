@@ -194,15 +194,20 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
     }
     theServletResponse.setContentType(responseContentType);
     theServletResponse.setCharacterEncoding("UTF-8");
-    ServletOutputStream output = theServletResponse.getOutputStream();    
-    if (output != null) {
-      if (output != null && responseContentType.equals(Constants.CT_FHIR_JSON_NEW))
-        new org.hl7.fhir.r5.elementmodel.JsonParser(fhirContext).compose(r, output, OutputStyle.PRETTY, null);
-      else
-        new ch.ahdis.matchbox.mappinglanguage.XmlParser(fhirContext).compose(r, output, OutputStyle.PRETTY, null);
+    ServletOutputStream output = theServletResponse.getOutputStream();
+    try {
+      if (output != null) {
+        if (output != null && responseContentType.equals(Constants.CT_FHIR_JSON_NEW))
+          new org.hl7.fhir.r5.elementmodel.JsonParser(fhirContext).compose(r, output, OutputStyle.PRETTY, null);
+        else
+          new ch.ahdis.matchbox.mappinglanguage.XmlParser(fhirContext).compose(r, output, OutputStyle.PRETTY, null);
+      }
+    } catch(org.hl7.fhir.exceptions.FHIRException e) {
+      log.error("Transform exception", e);
+      output.write("Exception during Transform: ".getBytes());
+      output.write(e.getMessage().getBytes());
     }
     theServletResponse.getOutputStream().close();
-
   }
 
   private org.hl7.fhir.r5.elementmodel.Element getTargetResourceFromStructureMap(org.hl7.fhir.r5.model.StructureMap map, IWorkerContext fhirContext) {
