@@ -29,6 +29,7 @@ public class AppProperties {
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
+  private Boolean delete_expunge_enabled = false;
   private Boolean enable_index_missing_fields = false;
   private Boolean enable_index_contained_resource = false;
   private Boolean enable_repository_validating_interceptor = false;
@@ -62,6 +63,7 @@ public class AppProperties {
   private Subscription subscription = new Subscription();
   private Cors cors = null;
   private Partitioning partitioning = null;
+  private Boolean install_transitive_ig_dependencies = true;
   private Map<String, ImplementationGuide> implementationGuides = null;
 
   private Boolean lastn_enabled = false;
@@ -73,7 +75,7 @@ public class AppProperties {
   private Boolean use_apache_address_strategy = false;
   private Boolean use_apache_address_strategy_https = false;
 
-  public Boolean getUse_apache_address_strategy() {
+	public Boolean getUse_apache_address_strategy() {
     return use_apache_address_strategy;
   }
 
@@ -258,6 +260,14 @@ public class AppProperties {
 
   public void setDefault_page_size(Integer default_page_size) {
     this.default_page_size = default_page_size;
+  }
+
+  public Boolean getDelete_expunge_enabled() {
+    return delete_expunge_enabled;
+  }
+
+  public void setDelete_expunge_enabled(Boolean delete_expunge_enabled) {
+    this.delete_expunge_enabled = delete_expunge_enabled;
   }
 
   public Boolean getEnable_index_missing_fields() {
@@ -462,7 +472,15 @@ public class AppProperties {
   	 this.search_coord_queue_capacity = search_coord_queue_capacity;
   }
 
-public static class Cors {
+	public boolean getInstall_transitive_ig_dependencies() {
+		return install_transitive_ig_dependencies;
+	}
+
+	public void setInstall_transitive_ig_dependencies(boolean install_transitive_ig_dependencies) {
+		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
+	}
+
+	public static class Cors {
     private Boolean allow_Credentials = true;
     private List<String> allowed_origin = ImmutableList.of("*");
 
