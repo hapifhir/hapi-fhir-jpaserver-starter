@@ -33,6 +33,9 @@ spring:
   batch:
     job:
       enabled: false
+  main:
+#    TODO 5.6.0 -> Prevent duplicate bean definitions in the Spring batch config in HAPI: see:
+    allow-bean-definition-overriding: true
 hapi:
   fhir:
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
@@ -46,6 +49,7 @@ hapi:
 ### enable to set the Server URL
 #    server_address: http://hapi.fhir.org/baseR4
 #    defer_indexing_for_codesystems_of_size: 101
+#    install_transitive_ig_dependencies: true
 #    implementationguides:
 ###    example from registry (packages.fhir.org)
 #      swiss:
@@ -69,6 +73,7 @@ hapi:
 #    default_encoding: JSON
 #    default_pretty_print: true
 #    default_page_size: 20
+#    delete_expunge_enabled: true
 #    enable_repository_validating_interceptor: false
 #    enable_index_missing_fields: false
 #    enable_index_contained_resource: false
@@ -82,6 +87,7 @@ hapi:
 #    filter_search_enabled: true
 #    graphql_enabled: true
 #    narrative_enabled: true
+#    mdm_enabled: true
 #    partitioning:
 #      allow_references_across_partitions: false
 #      partitioning_include_in_search_hashes: false
@@ -126,7 +132,7 @@ hapi:
 #    binary_storage_enabled: true
 #    bulk_export_enabled: true
 #    subscription:
-#      resthook_enabled: false
+#      resthook_enabled: true
 #      websocket_enabled: false
 #      email:
 #        from: some@test.com

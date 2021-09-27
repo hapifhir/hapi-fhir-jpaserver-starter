@@ -9,6 +9,8 @@ services:
   hapi-fhir-mysql:
     image: mysql:latest
     container_name: hapi-fhir-mysql
+    #https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html
+    command: --lower_case_table_names=1
     restart: always
     environment:
       MYSQL_DATABASE: 'hapi'

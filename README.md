@@ -2,9 +2,9 @@
 
 This project is a complete starter project you can use to deploy a FHIR server using HAPI FHIR JPA.
 
-Note that this project is specifically intended for end users of the HAPI FHIR JPA server module (in other words, it helps you implement HAPI FHIR, it is not the source of the library itself). If you are looking for the main HAPI FHIR project, see here: https://github.com/jamesagnew/hapi-fhir
+Note that this project is specifically intended for end users of the HAPI FHIR JPA server module (in other words, it helps you implement HAPI FHIR, it is not the source of the library itself). If you are looking for the main HAPI FHIR project, see here: https://github.com/hapifhir/hapi-fhir
 
-Need Help? Please see: https://github.com/jamesagnew/hapi-fhir/wiki/Getting-Help
+Need Help? Please see: https://github.com/hapifhir/hapi-fhir/wiki/Getting-Help
 
 ## Prerequisites
 
@@ -196,6 +196,9 @@ spring:
   jpa:
     hibernate.physical_naming_strategy: NAME_OF_PREFERRED_STRATEGY
 ```
+On linux systems or when using docker mysql containers, it will be necessary to review the case-sensitive setup for
+mysql schema identifiers. See  https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html. We suggest you
+set `lower_case_table_names=1` during mysql startup.
 
 ### PostgreSQL configuration
 
