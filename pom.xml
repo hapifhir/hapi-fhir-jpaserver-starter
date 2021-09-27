@@ -18,7 +18,6 @@
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
-
     <properties>
         <java.version>8</java.version>
     </properties>
