@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.mdm;
+package ca.uhn.fhir.jpa.starter.mdm;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.mdm.config.MdmConsumerConfig;
@@ -9,6 +9,7 @@ import ca.uhn.fhir.mdm.rules.config.MdmRuleValidator;
 import ca.uhn.fhir.mdm.rules.config.MdmSettings;
 import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import com.google.common.base.Charsets;
+import java.io.IOException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,12 +19,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
-import java.io.IOException;
-
-/**
- * TODO: Move this to package "ca.uhn.fhir.jpa.starter" in HAPI FHIR 5.2.0+. The lousy component scan
- * in 5.1.0 picks this up even if MDM is disabled currently.
- */
 @Configuration
 @Conditional(MdmConfigCondition.class)
 @Import({MdmConsumerConfig.class, MdmSubmitterConfig.class})

@@ -39,13 +39,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
   {
-    "spring.batch.job.enabled=false",
-    "spring.datasource.url=jdbc:h2:mem:dbr3",
-    "hapi.fhir.cql_enabled=true",
-    "hapi.fhir.fhir_version=dstu3",
-    "hapi.fhir.subscription.websocket_enabled=true",
-    "hapi.fhir.allow_external_references=true",
-    "hapi.fhir.allow_placeholder_references=true",
+     "spring.batch.job.enabled=false",
+     "spring.datasource.url=jdbc:h2:mem:dbr3",
+     "hapi.fhir.cql_enabled=true",
+     "hapi.fhir.fhir_version=dstu3",
+     "hapi.fhir.subscription.websocket_enabled=true",
+     "hapi.fhir.allow_external_references=true",
+     "hapi.fhir.allow_placeholder_references=true",
+	  "spring.main.allow-bean-definition-overriding=true"
   })
 
 
