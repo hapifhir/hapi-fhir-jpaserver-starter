@@ -39,6 +39,10 @@ public class JpaExtendedValidationSupportChain extends JpaValidationSupportChain
 	private ITermConceptMappingSvc myConceptMappingSvc;
 	@Autowired
 	private UnknownCodeSystemWarningValidationSupport myUnknownCodeSystemWarningValidationSupport;
+	
+	private SnapshotGeneratingValidationSupport snapshotGeneratingValidationSupport;
+	private ExtInMemoryTerminologyServerValidationSupport extInMemoryTerminologyServerValidationSupport;
+	private CommonCodeSystemsTerminologyService commonCodeSystemsTerminologyService;
 
 	public JpaExtendedValidationSupportChain(FhirContext theFhirContext) {
 		super(theFhirContext);
@@ -62,14 +66,20 @@ public class JpaExtendedValidationSupportChain extends JpaValidationSupportChain
 		addValidationSupport(myJpaValidationSupport);
 		//TODO MAKE SURE THAT THIS IS BEING CAL
 		addValidationSupport(myTerminologyService);
-		addValidationSupport(new SnapshotGeneratingValidationSupport(myFhirContext));
-		addValidationSupport(new ExtInMemoryTerminologyServerValidationSupport(myFhirContext));
+		snapshotGeneratingValidationSupport = new SnapshotGeneratingValidationSupport(myFhirContext);
+		addValidationSupport(snapshotGeneratingValidationSupport);
+		extInMemoryTerminologyServerValidationSupport = new ExtInMemoryTerminologyServerValidationSupport(myFhirContext);
+		addValidationSupport(extInMemoryTerminologyServerValidationSupport);
 		addValidationSupport(myNpmJpaValidationSupport);
-		addValidationSupport(new CommonCodeSystemsTerminologyService(myFhirContext));
+		commonCodeSystemsTerminologyService = new CommonCodeSystemsTerminologyService(myFhirContext);
+		addValidationSupport(commonCodeSystemsTerminologyService);
 		addValidationSupport(myConceptMappingSvc);
 	}
 	
-	public IValidationSupport getValidationSupport() {
-	   return new CachingValidationSupport(new ValidationSupportChain(myDefaultProfileValidationSupport, myJpaValidationSupport));
-	}
+  public IValidationSupport getValidationSupport() {
+    return new CachingValidationSupport(
+        new ValidationSupportChain(myDefaultProfileValidationSupport, myJpaValidationSupport, myTerminologyService,
+            snapshotGeneratingValidationSupport, extInMemoryTerminologyServerValidationSupport,
+            myNpmJpaValidationSupport, commonCodeSystemsTerminologyService, myConceptMappingSvc));
+  }
 }
