@@ -1,6 +1,4 @@
 spring:
-  main:
-    allow-bean-definition-overriding: true
   datasource:
     url: 'jdbc:postgresql://localhost:5432/hapi_fhir'
     #url: jdbc:h2:mem:test_mem
