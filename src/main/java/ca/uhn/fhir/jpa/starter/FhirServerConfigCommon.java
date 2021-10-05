@@ -120,6 +120,7 @@ public class FhirServerConfigCommon {
     }
 
     retVal.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
+	 retVal.setAdvancedLuceneIndexing(appProperties.getAdvanced_lucene_indexing());
 
     return retVal;
   }

@@ -23,6 +23,7 @@ public class AppProperties {
 
   private Boolean cql_enabled = false;
   private Boolean mdm_enabled = false;
+  private boolean advanced_lucene_indexing = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
   private Boolean allow_external_references = false;
@@ -206,7 +207,15 @@ public class AppProperties {
     this.client_id_strategy = client_id_strategy;
   }
 
-  public Boolean getAllow_cascading_deletes() {
+	public boolean getAdvanced_lucene_indexing() {
+		return this.advanced_lucene_indexing;
+	}
+
+	public void setAdvanced_lucene_indexing(boolean theAdvanced_lucene_indexing) {
+		advanced_lucene_indexing = theAdvanced_lucene_indexing;
+	}
+
+	public Boolean getAllow_cascading_deletes() {
     return allow_cascading_deletes;
   }
 
