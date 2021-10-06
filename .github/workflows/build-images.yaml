@@ -4,9 +4,12 @@ on:
   push:
     tags:
       - "image/v*"
+    paths-ignore:
+      - "charts/**"
   pull_request:
     branches: [master]
-
+    paths-ignore:
+      - "charts/**"
 env:
   IMAGES: docker.io/hapiproject/hapi
   PLATFORMS: linux/amd64,linux/arm64/v8

@@ -31,6 +31,18 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
+Create image tag
+*/}}
+{{- define "hapi-fhir-jpaserver.imageTag" -}}
+{{- $version := default .Chart.AppVersion .Values.image.tag -}}
+{{- if .Values.image.flavor }}
+{{- printf "%s-%s" $version .Values.image.flavor }}
+{{- else }}
+{{- printf "%s" $version }}
+{{- end }}
+{{- end }}
+
+{{/*
 Common labels
 */}}
 {{- define "hapi-fhir-jpaserver.labels" -}}
@@ -60,7 +72,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Get the Postgresql credentials secret.
+Get the Postgresql credentials secret name.
 */}}
 {{- define "hapi-fhir-jpaserver.postgresql.secretName" -}}
 {{- if and (.Values.postgresql.enabled) (not .Values.postgresql.existingSecret) -}}
@@ -71,8 +83,19 @@ Get the Postgresql credentials secret.
     {{- if .Values.externalDatabase.existingSecret -}}
         {{- printf "%s" .Values.externalDatabase.existingSecret -}}
     {{- else -}}
-        {{ printf "%s-%s" .Release.Name "externaldb" }}
+        {{ printf "%s-%s" (include "hapi-fhir-jpaserver.fullname" .) "external-db" }}
     {{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the Postgresql credentials secret key.
+*/}}
+{{- define "hapi-fhir-jpaserver.postgresql.secretKey" -}}
+{{- if (.Values.externalDatabase.existingSecret) -}}
+    {{- printf "%s" .Values.externalDatabase.existingSecretKey -}}
+{{- else }}
+    {{- printf "postgresql-password" -}}
 {{- end -}}
 {{- end -}}
 
@@ -87,7 +110,7 @@ Add environment variables to configure database values
 Add environment variables to configure database values
 */}}
 {{- define "hapi-fhir-jpaserver.database.user" -}}
-{{- ternary .Values.postgresql.postgresqlUsername .Values.externalDatabase.user .Values.postgresql.enabled | quote -}}
+{{- ternary .Values.postgresql.postgresqlUsername .Values.externalDatabase.user .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{/*
@@ -111,5 +134,6 @@ Create the JDBC URL from the host, port and database name.
 {{- $host := (include "hapi-fhir-jpaserver.database.host" .) -}}
 {{- $port := (include "hapi-fhir-jpaserver.database.port" .) -}}
 {{- $name := (include "hapi-fhir-jpaserver.database.name" .) -}}
-{{ printf "jdbc:postgresql://%s:%d/%s" $host (int $port) $name }}
+{{- $appName := .Release.Name -}}
+{{ printf "jdbc:postgresql://%s:%d/%s?ApplicationName=%s" $host (int $port) $name $appName }}
 {{- end -}}
