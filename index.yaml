@@ -1,0 +1,31 @@
+apiVersion: v1
+entries:
+  hapi-fhir-jpaserver:
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
+          description: |
+            updated HAPI FHIR starter image to 5.5.1
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/prerelease: "true"
+    apiVersion: v2
+    appVersion: v5.5.1
+    created: "2021-10-07T10:03:13.803072405Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.12.2
+    description: A Helm chart for deploying the HAPI FHIR JPA server starter on Kubernetes.
+    digest: bc454bfcd70f468954fa0d44d07935030adf590850a0697434a0340bf3ecdaca
+    home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    name: hapi-fhir-jpaserver
+    sources:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    type: application
+    urls:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.6.0/hapi-fhir-jpaserver-0.6.0.tgz
+    version: 0.6.0
+generated: "2021-10-07T10:03:13.803084605Z"
