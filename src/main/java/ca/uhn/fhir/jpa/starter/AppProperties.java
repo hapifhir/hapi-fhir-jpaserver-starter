@@ -11,10 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
@@ -77,6 +74,7 @@ public class AppProperties {
 
 	private Integer bundle_batch_pool_size = 20;
 	private Integer bundle_batch_pool_max_size = 100;
+	private List<String> local_base_urls = new ArrayList<>();
 
 	public Boolean getUse_apache_address_strategy() {
     return use_apache_address_strategy;
@@ -190,7 +188,11 @@ public class AppProperties {
     this.supported_resource_types = supported_resource_types;
   }
 
-  public Logger getLogger() {
+	public List<String> getSupported_resource_types(List<String> supported_resource_types) {
+		return this.supported_resource_types;
+	}
+
+	public Logger getLogger() {
     return logger;
   }
 
@@ -497,6 +499,10 @@ public class AppProperties {
 
 	public void setBundle_batch_pool_max_size(Integer bundle_batch_pool_max_size) {
 		this.bundle_batch_pool_max_size = bundle_batch_pool_max_size;
+	}
+
+	public List<String> getLocal_base_urls() {
+		return local_base_urls;
 	}
 
 	public static class Cors {

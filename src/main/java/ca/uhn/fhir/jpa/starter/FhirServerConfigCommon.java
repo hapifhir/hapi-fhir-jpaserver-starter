@@ -26,6 +26,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 /**
@@ -121,6 +122,7 @@ public class FhirServerConfigCommon {
 
     retVal.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
 	 retVal.setAdvancedLuceneIndexing(appProperties.getAdvanced_lucene_indexing());
+	 retVal.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
 
     return retVal;
   }
