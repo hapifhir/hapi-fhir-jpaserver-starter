@@ -2,6 +2,8 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
+import ca.uhn.fhir.jpa.starter.smart.WellKnownEndpointController;
+import ca.uhn.fhir.jpa.starter.smart.WellknownEndpointHelper;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
@@ -85,4 +87,21 @@ public class Application extends SpringBootServletInitializer {
     return registrationBean;
 
   }
+
+	@Bean
+	public ServletRegistrationBean wellknownRegistrationBean() {
+
+		AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
+		DispatcherServlet dispatcherServlet = new DispatcherServlet(
+			annotationConfigWebApplicationContext);
+		dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
+		dispatcherServlet.setContextConfigLocation(WellKnownEndpointController.class.getName());
+
+		ServletRegistrationBean registrationBean = new ServletRegistrationBean();
+		registrationBean.setServlet(dispatcherServlet);
+		registrationBean.addUrlMappings("/fhir/.well-known/*");
+		registrationBean.setLoadOnStartup(1);
+		return registrationBean;
+
+	}
 }
