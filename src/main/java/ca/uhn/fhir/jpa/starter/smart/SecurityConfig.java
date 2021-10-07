@@ -12,10 +12,9 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	/*@Override
+	@Override
 	protected void configure(HttpSecurity http) throws Exception {// @formatter:off
-		http.cors()
-			.and()
+		/*http.cors().disable()
 			.authorizeRequests()
 			.antMatchers(HttpMethod.GET, "/user/info", "/api/foos/**")
 			.hasAuthority("SCOPE_read")
@@ -25,9 +24,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authenticated()
 			.and()
 			.oauth2ResourceServer()
-			.jwt();
+			.jwt();*/
+		http.authorizeRequests().anyRequest().permitAll();
 	}// @formatter:on
-*/
+
 	@Bean
 	JwtDecoder jwtDecoder(OAuth2ResourceServerProperties properties) {
 		NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(properties.getJwt().getJwkSetUri()).build();

@@ -98,8 +98,9 @@ public class Application extends SpringBootServletInitializer {
 		dispatcherServlet.setContextConfigLocation(WellKnownEndpointController.class.getName());
 
 		ServletRegistrationBean registrationBean = new ServletRegistrationBean();
+		registrationBean.setName("wellknown");
 		registrationBean.setServlet(dispatcherServlet);
-		registrationBean.addUrlMappings("/fhir/.well-known/*");
+		registrationBean.addUrlMappings("/.well-known/*");
 		registrationBean.setLoadOnStartup(1);
 		return registrationBean;
 

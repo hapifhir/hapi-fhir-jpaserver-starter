@@ -6,12 +6,12 @@ spring:
     password: null
     driverClassName: org.h2.Driver
     max-active: 15
- # security:
- #   oauth2:
- #     resourceserver:
- #       jwt:
- #         jwk-set-uri: https://oidc-test.hosted.trifork.com/auth/realms/sds
- #         issuer-uri: https://oidc-test.hosted.trifork.com/auth/realms/sds
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://oidc-test.hosted.trifork.com/auth/realms/sds
+          issuer-uri: https://oidc-test.hosted.trifork.com/auth/realms/sds
     # database connection pool size
     hikari:
       maximum-pool-size: 10
