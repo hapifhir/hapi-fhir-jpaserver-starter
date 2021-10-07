@@ -4,9 +4,8 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+// Originally from https://github.com/mcode/smart-backend-auths
 public class WellknownEndpointHelper {
-
-	// Taken from https://github.com/mcode/smart-backend-auth
 	// Well Known JSON Keys
 	private static final String WELL_KNOWN_TOKEN_ENDPOINT_KEY = "token_endpoint";
 	private static final String WELL_KNOWN_REGISTRATION_ENDPOINT_KEY = "registration_endpoint";

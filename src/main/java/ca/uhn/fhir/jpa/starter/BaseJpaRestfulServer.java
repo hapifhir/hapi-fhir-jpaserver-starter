@@ -23,6 +23,8 @@ import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import ca.uhn.fhir.jpa.starter.smart.ScopeBasedAuthorizationInterceptor;
+import ca.uhn.fhir.jpa.starter.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
@@ -105,6 +107,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
   Optional<CqlProviderLoader> cqlProviderLoader;
   @Autowired
   Optional<MdmProviderLoader> mdmProviderProvider;
+  @Autowired
+  Optional<ScopeBasedAuthorizationInterceptor> scopeBasedAuthorizationInterceptor;
 
   @Autowired
   private IValidationSupport myValidationSupport;
@@ -344,6 +348,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
       }
     }
 
+	 if(scopeBasedAuthorizationInterceptor.isPresent())
+		registerInterceptor(scopeBasedAuthorizationInterceptor.get());
     // GraphQL
     if (appProperties.getGraphql_enabled()) {
       if (fhirVersion.isEqualOrNewerThan(FhirVersionEnum.DSTU3)) {

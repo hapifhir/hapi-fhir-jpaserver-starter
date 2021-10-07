@@ -1,14 +1,17 @@
 package ca.uhn.fhir.jpa.starter.smart;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
+// Originally from https://github.com/igia/igia-fhir-autoconfigure
+
+@ConditionalOnProperty(prefix = "spring", name = "security")
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 

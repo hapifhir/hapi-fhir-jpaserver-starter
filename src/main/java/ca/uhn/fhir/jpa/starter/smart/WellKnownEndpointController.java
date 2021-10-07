@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
+// Originally from https://github.com/mcode/smart-backend-auth
 @RestController
 public class WellKnownEndpointController {
 	/**
@@ -22,7 +23,6 @@ public class WellKnownEndpointController {
 
 		return WellknownEndpointHelper.getWellKnownJson(yourTokenUrl, yourRegistrationUrl);
 	}
-
 
 
 }

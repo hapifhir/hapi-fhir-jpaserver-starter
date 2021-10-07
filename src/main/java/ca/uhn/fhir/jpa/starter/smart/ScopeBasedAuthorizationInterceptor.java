@@ -20,27 +20,34 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.ResourceFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@ConditionalOnProperty(prefix = "hapi.fhir", name = "smart_enabled", havingValue = "true")
+@Configuration
 public class ScopeBasedAuthorizationInterceptor extends AuthorizationInterceptor {
 	public static final String LAUNCH_CONTEXT_PATIENT_PARAM_NAME = "patient";
 	private static final String RULE_PATIENT_SCOPE_DEFAULT_DENY = "DENY ALL patient, resource or operation access if not explicitly granted in authorized scope";
+	private final JwtDecoder jwtDecoder;
 
-	public ScopeBasedAuthorizationInterceptor() {
+	public ScopeBasedAuthorizationInterceptor(JwtDecoder jwtDecoder) {
 		this.setFlags(AuthorizationFlagsEnum.NO_NOT_PROACTIVELY_BLOCK_COMPARTMENT_READ_ACCESS);
+		this.jwtDecoder = jwtDecoder;
 	}
 
 	@Override
 	public List<IAuthRule> buildRuleList(RequestDetails theRequestDetails) {
+/*
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		// if the user is not authenticated, we can't do any authorization
@@ -48,7 +55,9 @@ public class ScopeBasedAuthorizationInterceptor extends AuthorizationInterceptor
 			return new RuleBuilder().allowAll().build();
 		}
 
-		Jwt token = ((JwtAuthenticationToken) authentication).getToken();
+		Jwt token = ((JwtAuthenticationToken) authentication).getToken();*/
+
+		Jwt token = jwtDecoder.decode(theRequestDetails.getHeader("Authorization").replace("Bearer ", ""));
 
 		Set<SmartScope> smartScopes = getSmartScopes(token);
 

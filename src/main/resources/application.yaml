@@ -6,15 +6,19 @@ spring:
     password: null
     driverClassName: org.h2.Driver
     max-active: 15
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: https://oidc-test.hosted.trifork.com/auth/realms/sds
-          issuer-uri: https://oidc-test.hosted.trifork.com/auth/realms/sds
-    # database connection pool size
     hikari:
       maximum-pool-size: 10
+      
+  autoconfigure:
+      exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+#  security:
+ #   oauth2:
+  #    resourceserver:
+   #     jwt:
+    #      jwk-set-uri: https://oidc-test.hosted.trifork.com/auth/realms/sds
+     #s     issuer-uri: https://oidc-test.hosted.trifork.com/auth/realms/sds
+    # database connection pool size
+
   jpa:
     properties:
       hibernate.format_sql: false
@@ -41,6 +45,7 @@ spring:
     allow-bean-definition-overriding: true
 hapi:
   fhir:
+    smart_enabled: true
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
 ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
@@ -77,7 +82,7 @@ hapi:
 #    default_pretty_print: true
 #    default_page_size: 20
 #    delete_expunge_enabled: true
-#    enable_repository_validating_interceptor: false
+#    enable_repository_validating_interceptor: true
 #    enable_index_missing_fields: false
 #    enable_index_contained_resource: false
 #    enforce_referential_integrity_on_delete: false

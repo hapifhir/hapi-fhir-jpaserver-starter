@@ -20,6 +20,7 @@ import org.hl7.fhir.r4.model.CapabilityStatement.RestfulCapabilityMode;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.UriType;
 
+// Originally from https://github.com/mcode/smart-backend-auth
 public class SMARTServerCapabilityStatementProvider extends ServerCapabilityStatementProvider {
 
 	private String tokenAddress;

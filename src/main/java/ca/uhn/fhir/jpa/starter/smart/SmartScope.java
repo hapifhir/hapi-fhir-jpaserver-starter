@@ -12,7 +12,7 @@
  */
 package ca.uhn.fhir.jpa.starter.smart;
 
-
+// Originally from https://github.com/igia/igia-fhir-autoconfigure
 public class SmartScope {
 	private String scope;
 
