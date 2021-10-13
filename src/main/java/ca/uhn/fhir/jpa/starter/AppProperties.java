@@ -22,6 +22,7 @@ import java.util.Objects;
 public class AppProperties {
 
   private Boolean cql_enabled = false;
+  private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
@@ -74,6 +75,15 @@ public class AppProperties {
   private Integer search_coord_queue_capacity = 200;
   private Boolean use_apache_address_strategy = false;
   private Boolean use_apache_address_strategy_https = false;
+
+	public Boolean getOpenapi_enabled() {
+		return openapi_enabled;
+	}
+
+	public void setOpenapi_enabled(Boolean openapi_enabled) {
+		this.openapi_enabled = openapi_enabled;
+	}
+
 
 	public Boolean getUse_apache_address_strategy() {
     return use_apache_address_strategy;

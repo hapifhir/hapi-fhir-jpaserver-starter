@@ -30,6 +30,7 @@ import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative.INarrativeGenerator;
 import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
+import ca.uhn.fhir.rest.openapi.OpenApiInterceptor;
 import ca.uhn.fhir.rest.server.ApacheProxyAddressStrategy;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
@@ -367,6 +368,11 @@ public class BaseJpaRestfulServer extends RestfulServer {
     if (appProperties.getBulk_export_enabled()) {
       registerProvider(bulkDataExportProvider);
     }
+
+	 if(appProperties.getOpenapi_enabled()){
+		 registerInterceptor(new OpenApiInterceptor());
+	 }
+
 
     // Partitioning
     if (appProperties.getPartitioning() != null) {
