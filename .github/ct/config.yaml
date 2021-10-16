@@ -1,6 +1,5 @@
 debug: true
 remote: origin
-lint-conf: .github/ct/lintconf.yaml
 chart-yaml-schema: .github/ct/chart-schema.yaml
 validate-maintainers: false
 validate-chart-schema: true
