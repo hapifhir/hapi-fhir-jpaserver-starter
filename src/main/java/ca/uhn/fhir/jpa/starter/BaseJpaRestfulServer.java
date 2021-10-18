@@ -23,7 +23,8 @@ import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
-import ca.uhn.fhir.jpa.starter.smart.ScopeBasedAuthorizationInterceptor;
+import ca.uhn.fhir.jpa.starter.smart.interceptors.scope.ParentAuthorizationInterceptor;
+import ca.uhn.fhir.jpa.starter.smart.interceptors.scope.resource.ResourceAuthorizationInterceptor;
 import ca.uhn.fhir.jpa.starter.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
@@ -109,7 +110,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   Optional<MdmProviderLoader> mdmProviderProvider;
   @Autowired
-  Optional<ScopeBasedAuthorizationInterceptor> scopeBasedAuthorizationInterceptor;
+  Optional<List<ResourceAuthorizationInterceptor>> resourceAuthorizationInterceptors;
+  @Autowired
+  Optional<ParentAuthorizationInterceptor> parentAuthorizationInterceptor;
+
 
   @Autowired
   private IValidationSupport myValidationSupport;
@@ -348,9 +352,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
         registerInterceptor(interceptor);
       }
     }
+	  parentAuthorizationInterceptor.ifPresent(this::registerInterceptor);
 
-	 if(scopeBasedAuthorizationInterceptor.isPresent())
-		registerInterceptor(scopeBasedAuthorizationInterceptor.get());
     // GraphQL
     if (appProperties.getGraphql_enabled()) {
       if (fhirVersion.isEqualOrNewerThan(FhirVersionEnum.DSTU3)) {

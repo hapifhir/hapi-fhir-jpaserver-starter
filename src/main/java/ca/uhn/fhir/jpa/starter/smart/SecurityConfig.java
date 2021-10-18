@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
 // Originally from https://github.com/igia/igia-fhir-autoconfigure
 
-@ConditionalOnProperty(prefix = "spring", name = "security")
+//@ConditionalOnProperty(prefix = "spring", name = "security")
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
