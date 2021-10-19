@@ -18,7 +18,7 @@ import java.util.Set;
 
 @ConditionalOnProperty(prefix = "hapi.fhir", name = "smart_enabled", havingValue = "true")
 @Configuration
-public class UserAuthorizationInterceptor extends ResourceAuthorizationInterceptor{
+public class UserAuthorizationInterceptor extends ResourceScopedAuthorizationInterceptor {
 
 	public UserAuthorizationInterceptor(JwtDecoder jwtDecoder) {
 		super(jwtDecoder);

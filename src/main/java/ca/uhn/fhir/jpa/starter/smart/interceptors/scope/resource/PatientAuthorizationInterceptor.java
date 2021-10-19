@@ -21,7 +21,7 @@ import java.util.Set;
 
 @ConditionalOnProperty(prefix = "hapi.fhir", name = "smart_enabled", havingValue = "true")
 @Configuration
-public class PatientAuthorizationInterceptor extends ResourceAuthorizationInterceptor {
+public class PatientAuthorizationInterceptor extends ResourceScopedAuthorizationInterceptor {
 
 	public static final String LAUNCH_CONTEXT_PATIENT_PARAM_NAME = "patient";
 	private static final String PATIENT_RESOURCE_NAME = "Patient";
@@ -47,7 +47,7 @@ public class PatientAuthorizationInterceptor extends ResourceAuthorizationInterc
 			String patientId = (String) claims.get(LAUNCH_CONTEXT_PATIENT_PARAM_NAME);
 			rules = filterToPatientScopes(rules, patientId, smartScopes);
 		}
-
+//		rules = rules.deny().read().resourcesOfType(PATIENT_RESOURCE_NAME).withAnyId().andThen();
 		return rules.build();
 	}
 

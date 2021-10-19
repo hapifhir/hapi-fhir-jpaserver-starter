@@ -24,7 +24,7 @@ import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.starter.smart.interceptors.scope.ParentAuthorizationInterceptor;
-import ca.uhn.fhir.jpa.starter.smart.interceptors.scope.resource.ResourceAuthorizationInterceptor;
+import ca.uhn.fhir.jpa.starter.smart.interceptors.scope.resource.ResourceScopedAuthorizationInterceptor;
 import ca.uhn.fhir.jpa.starter.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
@@ -110,7 +110,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   Optional<MdmProviderLoader> mdmProviderProvider;
   @Autowired
-  Optional<List<ResourceAuthorizationInterceptor>> resourceAuthorizationInterceptors;
+  Optional<List<ResourceScopedAuthorizationInterceptor>> resourceAuthorizationInterceptors;
   @Autowired
   Optional<ParentAuthorizationInterceptor> parentAuthorizationInterceptor;
 
