@@ -13,8 +13,10 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 
@@ -36,7 +38,7 @@ class PatientAuthorizationInterceptorTest {
 	}
 
 	@Test
-	void testGetPatientPermissions_jwtTokenProvidedDoesNotContainPatientReadPermissions(){
+	void testGetPatientPermissions_jwtTokenContainsReadScopeButNotPatientId(){
 		// ARRANGE
 		String mockJwtToken = "I.am.JWT";
 		String mockHeader = "Bearer " + mockJwtToken;
@@ -49,9 +51,13 @@ class PatientAuthorizationInterceptorTest {
 		when(mockJwtDecoder.decode(mockJwtToken)).thenReturn(mockJwt);
 
 		// ACT
-		ResponseEntity<String> entity=restTemplate.getRestTemplate().getForEntity("/fhir/Patient/123",String.class, headers);
+		ResponseEntity<String> entity=restTemplate.exchange(
+			"/fhir/Patient/123", HttpMethod.GET, new HttpEntity<>(null, headers),
+			String.class);
+
 		// ASSERT
-		assertEquals(HttpStatus.OK, entity.getStatusCode());
+		assertEquals(HttpStatus.FORBIDDEN, entity.getStatusCode());
+		assertTrue(Objects.requireNonNull(entity.getBody()).contains("Access denied by rule: Deny ALL patient requests if no patient id is passed!"));
 	}
 
 	@Test
@@ -77,15 +83,6 @@ class PatientAuthorizationInterceptorTest {
 		// ASSERT
 		assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
 	}
-
-//	@Test
-//	void testGetPatientPermissions_jwtTokenProvidedDoesNotContainPatientReadPermissions(){
-//		// ACT
-//		ResponseEntity<String> entity=restTemplate.getForEntity("/fhir/Patient/123",String.class);
-//		// ASSERT
-//		assertEquals(HttpStatus.FORBIDDEN, entity.getStatusCode());
-//	}
-
 
 	private Map<String, Object> getJwtHeaders(){
 		Map<String, Object> jwtHeaders = new HashMap<>();

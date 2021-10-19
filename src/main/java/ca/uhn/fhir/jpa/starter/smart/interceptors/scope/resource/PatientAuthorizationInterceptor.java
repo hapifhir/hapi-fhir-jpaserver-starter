@@ -25,6 +25,7 @@ public class PatientAuthorizationInterceptor extends ResourceScopedAuthorization
 
 	public static final String LAUNCH_CONTEXT_PATIENT_PARAM_NAME = "patient";
 	private static final String PATIENT_RESOURCE_NAME = "Patient";
+	private static final String DENY_REQUESTS_WITH_NO_PATIENT_ID_RULE = "Deny ALL patient requests if no patient id is passed!";
 
 	public PatientAuthorizationInterceptor(JwtDecoder jwtDecoder) {
 		super(jwtDecoder);
@@ -45,7 +46,11 @@ public class PatientAuthorizationInterceptor extends ResourceScopedAuthorization
 		if (smartScopes.stream().anyMatch(SmartScope::isPatientScope)) {
 			Map<String, Object> claims = token.getClaims();
 			String patientId = (String) claims.get(LAUNCH_CONTEXT_PATIENT_PARAM_NAME);
-			rules = filterToPatientScopes(rules, patientId, smartScopes);
+			try{
+				rules = filterToPatientScopes(rules, patientId, smartScopes);
+			} catch (SecurityException e){
+				rules.denyAll(DENY_REQUESTS_WITH_NO_PATIENT_ID_RULE);
+			}
 		}
 //		rules = rules.deny().read().resourcesOfType(PATIENT_RESOURCE_NAME).withAnyId().andThen();
 		return rules.build();
