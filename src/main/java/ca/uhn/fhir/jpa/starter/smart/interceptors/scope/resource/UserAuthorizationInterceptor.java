@@ -35,7 +35,7 @@ public class UserAuthorizationInterceptor extends ResourceScopedAuthorizationInt
 		Set<SmartScope> smartScopes = getSmartScopes(token);
 		IAuthRuleBuilder rules = new RuleBuilder();
 
-		if (smartScopes.stream().anyMatch(SmartScope::isUserScope)) {
+		if (smartScopes.stream().anyMatch(scope -> scope.isResourceScope("user"))) {
 			String userId = token.getSubject();
 			rules = filterToUserScopes(rules, userId, smartScopes);
 			rules.denyAll().andThen();
@@ -73,6 +73,7 @@ public class UserAuthorizationInterceptor extends ResourceScopedAuthorizationInt
 
 	protected void applyUserScopeResourceClassifier(IAuthRuleBuilderRuleOp ruleOp, String userId, SmartScope smartScope) {
 		if (smartScope.getResource().equalsIgnoreCase("*")) {
+			// TODO: Replace this with proper implementation once the decision is made on where to get the IDs accessible to the user
 			ruleOp.allResources().withAnyId().andThen();
 		} else {
 			Class<? extends IBaseResource> theType;
@@ -116,7 +117,7 @@ public class UserAuthorizationInterceptor extends ResourceScopedAuthorizationInt
 
 	protected IAuthRuleBuilder filterToUserScopes(IAuthRuleBuilder rules, String userId, Set<SmartScope> smartScopes) {
 		for (SmartScope smartScope : smartScopes) {
-			if (smartScope.isUserScope()) {
+			if (smartScope.isResourceScope("user")) {
 				filterToUserScope(userId, smartScope, rules);
 			}
 		}

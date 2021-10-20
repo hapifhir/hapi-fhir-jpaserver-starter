@@ -20,17 +20,12 @@ public class SmartScope {
 		this.scope = scope;
 	}
 
-	public boolean isPatientScope() {
-		return "patient".equalsIgnoreCase(firstPartOrNull());
+	public boolean isResourceScope(String resourceName){
+		return resourceName.equalsIgnoreCase(firstPartOrNull());
 	}
-
-	public boolean isUserScope() {
-		return "user".equalsIgnoreCase(firstPartOrNull());
-	}
-
 
 	public String getResource() {
-		if (!isPatientScope() && !isUserScope())
+		if (!isResourceScope("patient") && !isResourceScope("user"))
 			return null;
 
 		int forwardSlashIndex = this.scope.indexOf("/");
@@ -41,7 +36,7 @@ public class SmartScope {
 
 	public String getOperation() {
 		//fix logic in base class, and not or
-		if (!isPatientScope() && !isUserScope())
+		if (!isResourceScope("patient") && !isResourceScope("user"))
 			return null;
 
 		int periodIndex = this.scope.indexOf(".");
