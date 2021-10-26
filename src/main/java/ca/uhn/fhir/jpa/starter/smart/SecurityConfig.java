@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.oauth2ResourceServer()
 			.jwt();*/
-		http.authorizeRequests().anyRequest().permitAll();
+		http.authorizeRequests().anyRequest().permitAll().and().csrf().disable();
 	}// @formatter:on
 
 	@Bean

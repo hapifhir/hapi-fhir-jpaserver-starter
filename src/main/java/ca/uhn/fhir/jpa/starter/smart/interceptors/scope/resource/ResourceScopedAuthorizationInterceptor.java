@@ -74,22 +74,22 @@ public abstract class ResourceScopedAuthorizationInterceptor {
 		switch (smartScope.getOperation()) {
 			case "*":
 				applyResourceScopeClassifier(rules.allow().read(), resourceId, smartScope, resourceName);
-				applyResourceScopeClassifier(rules.allow().write(), resourceId, smartScope, resourceName);
+//				applyResourceScopeClassifier(rules.allow().write(), resourceId, smartScope, resourceName);
 				applyResourceScopeClassifier(rules.allow().delete(), resourceId, smartScope, resourceName);
 				applyResourceScopeConditionalClassifier(rules.allow().createConditional(), smartScope);
-				applyResourceScopeConditionalClassifier(rules.allow().updateConditional(), smartScope);
+//				applyResourceScopeConditionalClassifier(rules.allow().updateConditional(), smartScope);
 				applyResourceScopeConditionalClassifier(rules.allow().deleteConditional(), smartScope);
 				// resource operations (type or instance level) may read, alter or delete data, should restrict to "*" scope
-				applyResourceScopeOperationClassifier(rules, resourceId, smartScope, resourceName);
 				break;
 			case "read":
 				applyResourceScopeClassifier(rules.allow().read(), resourceId, smartScope, resourceName);
 				break;
 			case "write":
-				applyResourceScopeClassifier(rules.allow().write(), resourceId, smartScope, resourceName);
+//				applyResourceScopeClassifier(rules.allow().write(), resourceId, smartScope, resourceName);
+//				applyResourceScopeClassifier(rules.allow().create(), resourceId, smartScope, resourceName);
 				applyResourceScopeClassifier(rules.allow().delete(), resourceId, smartScope, resourceName);
 				applyResourceScopeConditionalClassifier(rules.allow().createConditional(), smartScope);
-				applyResourceScopeConditionalClassifier(rules.allow().updateConditional(), smartScope);
+//				applyResourceScopeConditionalClassifier(rules.allow().updateConditional(), smartScope);
 				applyResourceScopeConditionalClassifier(rules.allow().deleteConditional(), smartScope);
 				break;
 			default:
