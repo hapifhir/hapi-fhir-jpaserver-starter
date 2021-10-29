@@ -11,10 +11,7 @@ import ca.uhn.fhir.rest.gclient.IReadExecutable;
 import ca.uhn.fhir.rest.gclient.IUpdateExecutable;
 import ca.uhn.fhir.rest.server.exceptions.ForbiddenOperationException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.IdType;
-import org.hl7.fhir.r4.model.Observation;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,6 +27,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,6 +37,8 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
 class PatientAuthorizationInterceptorTest {
 
+	public static final String ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE = "HTTP 403 : Access denied by rule: Deny all requests that do not match any pre-defined rules";
+	public static final String ACCESS_DENIED_BY_RULE_DENY_ALL_REQUESTS_IF_NO_ID_EXCEPTION_MESSAGE = "HTTP 403 : Access denied by rule: Deny ALL patient requests if no patient id is passed!";
 	private IGenericClient client;
 	private FhirContext ctx;
 
@@ -95,7 +95,7 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, patientReadExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny all requests that do not match any pre-defined rules", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 	}
 
 	@Test
@@ -117,7 +117,28 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, patientReadExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny all requests that do not match any pre-defined rules", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
+	}
+
+	@Test
+	void testBuildRules_readPatient_emptyClaims() {
+		// ARRANGE
+		String mockId="123";
+
+		String mockJwtToken = "I.am.JWT";
+		String mockHeader = "Bearer " + mockJwtToken;
+
+		HashMap<String, Object> claims = new HashMap<>();
+		claims.put("scope", "");
+
+		Jwt mockJwt = new Jwt("someValue", Instant.now(), Instant.now().plusSeconds(120), getJwtHeaders(), claims);
+		when(mockJwtDecoder.decode(mockJwtToken)).thenReturn(mockJwt);
+		// ACT
+		IReadExecutable<IBaseResource> patientReadExecutable= client.read().resource("Patient").withId(mockId).withAdditionalHeader("Authorization", mockHeader);
+		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, patientReadExecutable::execute);
+
+		// ASSERT
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 	}
 
 	@ParameterizedTest
@@ -135,7 +156,7 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, patientReadExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny ALL patient requests if no patient id is passed!", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_BY_RULE_DENY_ALL_REQUESTS_IF_NO_ID_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 		}
 
 	@ParameterizedTest
@@ -172,7 +193,7 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, patientReadExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny all requests that do not match any pre-defined rules", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 	}
 
 
@@ -214,12 +235,12 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, observationCreateExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny all requests that do not match any pre-defined rules", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 
 	}
 
 	@ParameterizedTest
-	@MethodSource("providePatientWriteClaims")
+	@MethodSource({"providePatientWriteClaims"})
 	void testBuildRules_createObservationOnPatient_providedJwtContainsWriteScopesButNotPatientId(Map<String, Object> claims) {
 		// ARRANGE
 		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
@@ -234,12 +255,12 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, observationCreateExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny ALL patient requests if no patient id is passed!", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_BY_RULE_DENY_ALL_REQUESTS_IF_NO_ID_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 	}
 
 
 	@ParameterizedTest
-	@MethodSource("providePatientReadClaims")
+	@MethodSource({"providePatientReadClaims", "provideEmptyClaims"})
 	void testBuildRules_createObservationOnPatient_providedJwtDoesNotContainWriteScope(Map<String, Object> claims) {
 		// ARRANGE
 		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
@@ -257,7 +278,7 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, observationCreateExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny all requests that do not match any pre-defined rules", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 	}
 
 	@ParameterizedTest
@@ -301,11 +322,11 @@ class PatientAuthorizationInterceptorTest {
 		// ACT
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, observationDeleteExecutable::execute);
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny all requests that do not match any pre-defined rules", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 	}
 
 	@ParameterizedTest
-	@MethodSource({"providePatientReadClaims", "providePatientWriteClaims"})
+	@MethodSource({"providePatientReadClaims", "providePatientWriteClaims", "provideEmptyClaims"})
 	void testBuildRules_deleteObservationOnPatient_providedJwtDoesNotContainCorrectWritePermissions(Map<String, Object> claims) {
 		// ARRANGE
 		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
@@ -324,12 +345,12 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, observationDeleteExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny all requests that do not match any pre-defined rules", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 	}
 
 	@ParameterizedTest
 	@MethodSource({"providePatientReadClaims", "providePatientWriteClaims", "provideAllWriteClaims","provideObservationWriteClaims"})
-	void testBuildRules_deleteObservationOnPatient_providedJwtDoesNotContainPatientId(Map<String, Object> claims) {
+	void gtestBuildRules_deleteObservationOnPatient_providedJwtDoesNotContainPatientId(Map<String, Object> claims) {
 		// ARRANGE
 		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
 		IBaseResource mockObservation= observationResourceDao.create(new Observation().setSubject(new Reference(mockPatient.getIdElement()))).getResource();
@@ -344,7 +365,7 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, observationDeleteExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny ALL patient requests if no patient id is passed!", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_BY_RULE_DENY_ALL_REQUESTS_IF_NO_ID_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 	}
 
 	@ParameterizedTest
@@ -385,7 +406,7 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, observationUpdateExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny all requests that do not match any pre-defined rules", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 	}
 
 	@ParameterizedTest
@@ -404,11 +425,11 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, observationUpdateExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny ALL patient requests if no patient id is passed!", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_BY_RULE_DENY_ALL_REQUESTS_IF_NO_ID_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 	}
 
 	@ParameterizedTest
-	@MethodSource({"providePatientReadClaims", "providePatientWriteClaims"})
+	@MethodSource({"providePatientReadClaims", "providePatientWriteClaims", "provideEmptyClaims"})
 	void testBuildRules_updateObservationOnPatient_providedJwtContainsWrongScopes(Map<String, Object> claims) {
 		// ARRANGE
 		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
@@ -425,7 +446,7 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, observationUpdateExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny all requests that do not match any pre-defined rules", forbiddenOperationException.getMessage());
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
 	}
 
 	@ParameterizedTest
@@ -439,12 +460,203 @@ class PatientAuthorizationInterceptorTest {
 		mockJwtWithClaims(claims);
 
 		// ACT
+		String uuid = UUID.randomUUID().toString();
 		Observation observation = new Observation().setStatus(Observation.ObservationStatus.FINAL);
+
+		observation.addIdentifier(new Identifier().setValue(uuid));
 		observation.setSubject(new Reference(mockPatient.getIdElement()));
-		ICreateTyped observationCreateExecutable= client.create().resource(observation).conditional().where(Observation.STATUS.exactly().code(Observation.ObservationStatus.FINAL.toCode())).withAdditionalHeader("Authorization", MOCK_HEADER);
+		ICreateTyped observationCreateExecutable= client.create().resource(observation).conditional().where(Observation.IDENTIFIER.exactly().identifier(uuid)).withAdditionalHeader("Authorization", MOCK_HEADER);
 
 		// ASSERT
 		assertDoesNotThrow(observationCreateExecutable::execute);
+	}
+
+	@ParameterizedTest
+	@MethodSource({"providePatientReadClaims", "provideEmptyClaims"})
+	void testBuildRules_conditionalCreateObservationOnPatient_providedJwtDoesNotContainWriteScopesAndContainsPatientId(Map<String, Object> claims) {
+		// ARRANGE
+		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
+		String mockId=mockPatient.getIdElement().getIdPart();
+
+		claims.put("patient", mockId);
+		mockJwtWithClaims(claims);
+
+		// ACT
+		String uuid = UUID.randomUUID().toString();
+		Observation observation = new Observation().setStatus(Observation.ObservationStatus.FINAL);
+
+		observation.addIdentifier(new Identifier().setValue(uuid));
+		observation.setSubject(new Reference(mockPatient.getIdElement()));
+		ICreateTyped observationCreateExecutable= client.create().resource(observation).conditional().where(Observation.IDENTIFIER.exactly().identifier(uuid)).withAdditionalHeader("Authorization", MOCK_HEADER);
+
+		// ACT
+		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, observationCreateExecutable::execute);
+
+		// ASSERT
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
+	}
+
+	@ParameterizedTest
+	@MethodSource({"provideAllWriteClaims", "provideObservationWriteClaims"})
+	void testBuildRules_conditionalCreateObservationOnPatient_providedJwtContainsWriteScopesAndContainsWrongPatientId(Map<String, Object> claims) {
+		// ARRANGE
+		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
+		IBaseResource otherPatient= patientResourceDao.create(new Patient()).getResource();
+		String otherId=otherPatient.getIdElement().getIdPart();
+
+
+		claims.put("patient", otherId);
+		mockJwtWithClaims(claims);
+
+		// ACT
+		String uuid = UUID.randomUUID().toString();
+		Observation observation = new Observation().setStatus(Observation.ObservationStatus.FINAL);
+
+		observation.addIdentifier(new Identifier().setValue(uuid));
+		observation.setSubject(new Reference(mockPatient.getIdElement()));
+		ICreateTyped observationCreateExecutable= client.create().resource(observation).conditional().where(Observation.IDENTIFIER.exactly().identifier(uuid)).withAdditionalHeader("Authorization", MOCK_HEADER);
+
+		// ACT
+		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, observationCreateExecutable::execute);
+
+		// ASSERT
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
+	}
+
+	@ParameterizedTest
+	@MethodSource({"provideAllWriteClaims", "provideObservationWriteClaims"})
+	void testBuildRules_conditionalCreateObservationOnPatient_providedJwtContainsWriteScopesNoPatientId(Map<String, Object> claims) {
+		mockJwtWithClaims(claims);
+
+		// ACT
+		String uuid = UUID.randomUUID().toString();
+		Observation observation = new Observation().setStatus(Observation.ObservationStatus.FINAL);
+
+		observation.addIdentifier(new Identifier().setValue(uuid));
+		observation.setSubject(new Reference());
+		ICreateTyped observationCreateExecutable= client.create().resource(observation).conditional().where(Observation.IDENTIFIER.exactly().identifier(uuid)).withAdditionalHeader("Authorization", MOCK_HEADER);
+
+		// ACT
+		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, observationCreateExecutable::execute);
+
+		// ASSERT
+		assertEquals(ACCESS_DENIED_BY_RULE_DENY_ALL_REQUESTS_IF_NO_ID_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
+	}
+
+
+	@ParameterizedTest
+	@MethodSource({"provideAllWriteClaims", "provideObservationWriteClaims"})
+	void testBuildRules_conditionalOperationObservationOnPatient_providedJwtContainsWriteScopesAndPatientId(Map<String, Object> claims) {
+		// ARRANGE
+		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
+		String mockId=mockPatient.getIdElement().getIdPart();
+		Reference patientReference = new Reference(mockPatient.getIdElement());
+
+		IBaseResource mockObservation = observationResourceDao.create(new Observation().setSubject(patientReference)).getResource();
+
+
+		claims.put("patient", mockId);
+		mockJwtWithClaims(claims);
+
+		// ACT
+		IUpdateExecutable observationUpdateExecutable= client.update().resource(mockObservation).conditional().where(Observation.IDENTIFIER.exactly().identifier(mockObservation.getIdElement().getValue())).withAdditionalHeader("Authorization", MOCK_HEADER);
+		IDeleteTyped observationDeleteExecutable= client.delete().resourceConditionalByType(mockObservation.getClass()).where(Observation.IDENTIFIER.exactly().identifier(mockObservation.getIdElement().getValue())).withAdditionalHeader("Authorization", MOCK_HEADER);
+
+		// ASSERT
+		assertDoesNotThrow(observationUpdateExecutable::execute);
+		assertDoesNotThrow(observationDeleteExecutable::execute);
+	}
+
+	@ParameterizedTest
+	@MethodSource({"providePatientReadClaims", "provideEmptyClaims"})
+	void testBuildRules_conditionalOperationObservationOnPatient_providedJwtDoesNotContainWriteScopesAndContainsPatientId(Map<String, Object> claims) {
+		// ARRANGE
+		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
+		String mockId=mockPatient.getIdElement().getIdPart();
+		Reference patientReference = new Reference(mockPatient.getIdElement());
+
+		String id = UUID.randomUUID().toString();
+		Observation mockObservation = new Observation().setSubject(patientReference).addIdentifier(new Identifier().setValue(id));
+		mockObservation = (Observation) observationResourceDao.create(mockObservation).getResource();
+
+		claims.put("patient", mockId);
+		mockJwtWithClaims(claims);
+
+		IUpdateExecutable observationUpdateExecutable= client.update().resource(mockObservation).conditional().where(Observation.IDENTIFIER.exactly().identifier(id)).withAdditionalHeader("Authorization", MOCK_HEADER);
+		IDeleteTyped observationDeleteExecutable= client.delete().resourceConditionalByType(mockObservation.getClass()).where(Observation.IDENTIFIER.exactly().identifier(id)).withAdditionalHeader("Authorization", MOCK_HEADER);
+
+		// ACT
+		ForbiddenOperationException forbiddenUpdateException=assertThrows(ForbiddenOperationException.class, observationUpdateExecutable::execute);
+		ForbiddenOperationException forbiddenDeleteException=assertThrows(ForbiddenOperationException.class, observationDeleteExecutable::execute);
+
+		// ASSERT
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenUpdateException.getMessage());
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenDeleteException.getMessage());
+
+	}
+
+	@ParameterizedTest
+	@MethodSource({"provideAllWriteClaims", "provideObservationWriteClaims"})
+	void testBuildRules_conditionalOperationsObservationOnPatient_providedJwtContainsWriteScopesAndContainsWrongPatientId(Map<String, Object> claims) {
+		// ARRANGE
+		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
+		Reference patientReference = new Reference(mockPatient.getIdElement());
+
+		String id = UUID.randomUUID().toString();
+		Observation mockObservation = new Observation().setSubject(patientReference).addIdentifier(new Identifier().setValue(id));
+		mockObservation = (Observation) observationResourceDao.create(mockObservation).getResource();
+
+		IBaseResource otherPatient= patientResourceDao.create(new Patient()).getResource();
+		String otherId=otherPatient.getIdElement().getIdPart();
+
+		claims.put("patient", otherId);
+		mockJwtWithClaims(claims);
+
+		IUpdateExecutable observationUpdateExecutable= client.update().resource(mockObservation).conditional().where(Observation.IDENTIFIER.exactly().identifier(id)).withAdditionalHeader("Authorization", MOCK_HEADER);
+		IDeleteTyped observationDeleteExecutable= client.delete().resourceConditionalByType(mockObservation.getClass()).where(Observation.IDENTIFIER.exactly().identifier(id)).withAdditionalHeader("Authorization", MOCK_HEADER);
+
+		// ACT
+		ForbiddenOperationException forbiddenUpdateException=assertThrows(ForbiddenOperationException.class, observationUpdateExecutable::execute);
+		ForbiddenOperationException forbiddenDeleteException=assertThrows(ForbiddenOperationException.class, observationDeleteExecutable::execute);
+
+		// ASSERT
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenUpdateException.getMessage());
+		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenDeleteException.getMessage());
+	}
+
+	@ParameterizedTest
+	@MethodSource({"provideAllWriteClaims", "provideObservationWriteClaims"})
+	void testBuildRules_conditionalOperationsObservationOnPatient_providedJwtContainsWriteScopesNoPatientId(Map<String, Object> claims) {
+		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
+		Reference patientReference = new Reference(mockPatient.getIdElement());
+
+		String id = UUID.randomUUID().toString();
+		Observation mockObservation = new Observation().setSubject(patientReference).addIdentifier(new Identifier().setValue(id));
+		mockObservation = (Observation) observationResourceDao.create(mockObservation).getResource();
+
+		mockJwtWithClaims(claims);
+
+		IUpdateExecutable observationUpdateExecutable= client.update().resource(mockObservation).conditional().where(Observation.IDENTIFIER.exactly().identifier(id)).withAdditionalHeader("Authorization", MOCK_HEADER);
+		IDeleteTyped observationDeleteExecutable= client.delete().resourceConditionalByType(mockObservation.getClass()).where(Observation.IDENTIFIER.exactly().identifier(id)).withAdditionalHeader("Authorization", MOCK_HEADER);
+
+		// ACT
+		ForbiddenOperationException forbiddenUpdateException=assertThrows(ForbiddenOperationException.class, observationUpdateExecutable::execute);
+		ForbiddenOperationException forbiddenDeleteException=assertThrows(ForbiddenOperationException.class, observationDeleteExecutable::execute);
+
+		// ASSERT
+		assertEquals(ACCESS_DENIED_BY_RULE_DENY_ALL_REQUESTS_IF_NO_ID_EXCEPTION_MESSAGE, forbiddenUpdateException.getMessage());
+		assertEquals(ACCESS_DENIED_BY_RULE_DENY_ALL_REQUESTS_IF_NO_ID_EXCEPTION_MESSAGE, forbiddenDeleteException.getMessage());
+	}
+
+
+	private static Stream<Arguments> provideEmptyClaims(){
+		return Stream.of(
+			Arguments.of(
+				new HashMap<String, String>() {{
+					put("scope", "");
+				}}
+			)
+		);
 	}
 
 	private static Stream<Arguments> providePatientReadClaims(){
