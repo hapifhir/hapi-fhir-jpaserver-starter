@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 class PatientAuthorizationInterceptorTest {
 
 	public static final String ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE = "HTTP 403 : Access denied by rule: Deny all requests that do not match any pre-defined rules";
-	public static final String ACCESS_DENIED_BY_RULE_DENY_ALL_REQUESTS_IF_NO_ID_EXCEPTION_MESSAGE = "HTTP 403 : Access denied by rule: Deny ALL patient requests if no patient id is passed!";
+	public static final String ACCESS_DENIED_BY_RULE_DENY_ALL_REQUESTS_IF_NO_ID_EXCEPTION_MESSAGE = "HTTP 403 : Access denied by rule: Deny ALL Patient requests if no launch context is given!";
 	private IGenericClient client;
 	private FhirContext ctx;
 
@@ -73,7 +73,7 @@ class PatientAuthorizationInterceptorTest {
 		ForbiddenOperationException forbiddenOperationException=assertThrows(ForbiddenOperationException.class, patientReadExecutable::execute);
 
 		// ASSERT
-		assertEquals("HTTP 403 : Access denied by rule: Deny ALL patient requests if no authorization information is given!", forbiddenOperationException.getMessage());
+		assertEquals("HTTP 403 : Access denied by rule: No JWT given", forbiddenOperationException.getMessage());
 	}
 
 	@Test
@@ -236,7 +236,6 @@ class PatientAuthorizationInterceptorTest {
 
 		// ASSERT
 		assertEquals(ACCESS_DENIED_DUE_TO_SCOPE_RULE_EXCEPTION_MESSAGE, forbiddenOperationException.getMessage());
-
 	}
 
 	@ParameterizedTest
@@ -260,7 +259,7 @@ class PatientAuthorizationInterceptorTest {
 
 
 	@ParameterizedTest
-	@MethodSource({"providePatientReadClaims", "provideEmptyClaims"})
+	@MethodSource({"providePatientReadClaims"})
 	void testBuildRules_createObservationOnPatient_providedJwtDoesNotContainWriteScope(Map<String, Object> claims) {
 		// ARRANGE
 		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
@@ -326,7 +325,7 @@ class PatientAuthorizationInterceptorTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource({"providePatientReadClaims", "providePatientWriteClaims", "provideEmptyClaims"})
+	@MethodSource({"providePatientReadClaims", "providePatientWriteClaims"})
 	void testBuildRules_deleteObservationOnPatient_providedJwtDoesNotContainCorrectWritePermissions(Map<String, Object> claims) {
 		// ARRANGE
 		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
@@ -429,7 +428,7 @@ class PatientAuthorizationInterceptorTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource({"providePatientReadClaims", "providePatientWriteClaims", "provideEmptyClaims"})
+	@MethodSource({"providePatientReadClaims", "providePatientWriteClaims"})
 	void testBuildRules_updateObservationOnPatient_providedJwtContainsWrongScopes(Map<String, Object> claims) {
 		// ARRANGE
 		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();
@@ -472,7 +471,7 @@ class PatientAuthorizationInterceptorTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource({"providePatientReadClaims", "provideEmptyClaims"})
+	@MethodSource({"providePatientReadClaims"})
 	void testBuildRules_conditionalCreateObservationOnPatient_providedJwtDoesNotContainWriteScopesAndContainsPatientId(Map<String, Object> claims) {
 		// ARRANGE
 		IBaseResource mockPatient= patientResourceDao.create(new Patient()).getResource();

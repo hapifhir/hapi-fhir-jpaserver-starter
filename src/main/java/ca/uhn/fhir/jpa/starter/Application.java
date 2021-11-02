@@ -22,6 +22,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @ServletComponentScan(basePackageClasses = {
   JpaRestfulServer.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
@@ -103,5 +106,13 @@ public class Application extends SpringBootServletInitializer {
 		registrationBean.setLoadOnStartup(1);
 		return registrationBean;
 
+	}
+
+	@Bean
+	public Map<String, String> resourceMapping(){
+		Map<String, String> resourceMapping = new HashMap<>();
+		resourceMapping.put("Patient", "patient");
+		resourceMapping.put("Practitioner", "user");
+		return resourceMapping;
 	}
 }

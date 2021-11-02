@@ -23,8 +23,7 @@ import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
-import ca.uhn.fhir.jpa.starter.smart.interceptors.scope.ParentAuthorizationInterceptor;
-import ca.uhn.fhir.jpa.starter.smart.interceptors.scope.resource.ResourceScopedAuthorizationInterceptor;
+import ca.uhn.fhir.jpa.starter.smart.interceptors.scope.CompartmentAuthorizationInterceptor;
 import ca.uhn.fhir.jpa.starter.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
@@ -51,16 +50,14 @@ import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
 
@@ -110,9 +107,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   Optional<MdmProviderLoader> mdmProviderProvider;
   @Autowired
-  Optional<List<ResourceScopedAuthorizationInterceptor>> resourceAuthorizationInterceptors;
-  @Autowired
-  Optional<ParentAuthorizationInterceptor> parentAuthorizationInterceptor;
+  Optional<CompartmentAuthorizationInterceptor> parentAuthorizationInterceptor;
 
 
   @Autowired
@@ -418,4 +413,6 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
 		daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
   }
+
+
 }
