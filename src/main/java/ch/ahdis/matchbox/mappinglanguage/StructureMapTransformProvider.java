@@ -93,22 +93,11 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StructureMapTransformProvider.class);
   
   public StructureMap fixMap(@ResourceParam StructureMap theResource) {
-    log.debug("created structuredmap, caching");
-    
     if (theResource!=null) {
       // don't know why a # is prefixed to the contained it
       for (org.hl7.fhir.r4.model.Resource r : theResource.getContained()) {
         if (r instanceof org.hl7.fhir.r4.model.ConceptMap && ((org.hl7.fhir.r4.model.ConceptMap) r).getId().startsWith("#")) {
           r.setId(((org.hl7.fhir.r4.model.ConceptMap) r).getId().substring(1));
-        }
-        // If a contained element is not referred it will not serialized in hapi
-        if (r instanceof org.hl7.fhir.r4.model.ConceptMap) {
-          Extension e = new Extension();
-          Reference reference = new Reference();
-          reference.setReference("#"+r.getId());
-          e.setValue(reference);
-          e.setUrl("http://fhir.ch/reference");
-          theResource.addExtension(e);
         }
       }
     }

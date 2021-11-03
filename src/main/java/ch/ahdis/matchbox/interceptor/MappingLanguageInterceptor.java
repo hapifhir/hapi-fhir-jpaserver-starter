@@ -40,10 +40,15 @@ import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r4.formats.IParser;
 import org.hl7.fhir.r4.formats.ParserFactory;
+import org.hl7.fhir.r4.model.Extension;
+import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StructureMap;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
+import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r5.utils.structuremap.ITransformerServices;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
+import org.hl7.fhir.utilities.xhtml.NodeType;
+import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
@@ -127,8 +132,14 @@ public class MappingLanguageInterceptor extends InterceptorAdapter implements IT
       e.printStackTrace();
     }
     StructureMapUtilities smu5 = new StructureMapUtilities(contextR5, this);
-    StructureMap map =  (StructureMap) VersionConvertorFactory_40_50.convertResource(smu5.parse(content, "map"));
     
+    org.hl7.fhir.r5.model.StructureMap mapR5 = smu5.parse(content, "map");
+    mapR5.getText().setStatus(NarrativeStatus.GENERATED);
+    mapR5.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
+    String render = StructureMapUtilities.render(mapR5);
+    mapR5.getText().getDiv().addTag("pre").addText(render);
+    
+    StructureMap map =  (StructureMap) VersionConvertorFactory_40_50.convertResource(mapR5);
     return map;
   }
 
