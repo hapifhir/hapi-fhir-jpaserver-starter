@@ -10,15 +10,15 @@
  * <p>
  * Copyright (C) 2018-2019 Persistent Systems, Inc.
  */
-package ca.uhn.fhir.jpa.starter.smart;
+package ca.uhn.fhir.jpa.starter.smart.model;
 
-import ca.uhn.fhir.jpa.starter.smart.exceptions.InvalidClinicalScopeException;
+import ca.uhn.fhir.jpa.starter.smart.exception.InvalidClinicalScopeException;
 
-// Originally from https://github.com/igia/igia-fhir-autoconfigure
 public class SmartClinicalScope {
-	private String compartment;
-	private String resource;
-	private SmartOperationEnum operation;
+
+	private final String compartment;
+	private final String resource;
+	private final SmartOperationEnum operation;
 
 	public SmartClinicalScope(String compartment, String resource, SmartOperationEnum operation) {
 		this.compartment = compartment;
@@ -29,9 +29,9 @@ public class SmartClinicalScope {
 	public SmartClinicalScope(String scope) {
 		if(scope.matches("([A-z]*/([A-z]*|[*])[.]([*]|[A-z]*))")){
 			String[] parts = scope.split("/");
-			compartment = parts[0].substring(0, 1).toUpperCase() + parts[0].substring(1);;
-			String[] resourceAndOperation= parts[1].split("[.]");
-			resource =resourceAndOperation[0];
+			compartment = parts[0];
+			String[] resourceAndOperation = parts[1].split("[.]");
+			resource = resourceAndOperation[0];
 			operation = SmartOperationEnum.findByValue(resourceAndOperation[1]);
 		} else{
 			throw new InvalidClinicalScopeException(scope+" is not a valid clinical scope");

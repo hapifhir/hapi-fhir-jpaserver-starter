@@ -81,7 +81,7 @@ hapi:
 #      - ConceptMap
 #      - Endpoint
 #      - Binary
-#    allow_cascading_deletes: true
+    allow_cascading_deletes: true
 #    allow_contains_searches: true
 #    allow_external_references: true
 #    allow_multiple_delete: true

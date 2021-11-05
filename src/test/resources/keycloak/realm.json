@@ -136,16 +136,16 @@
       "fullScopeAllowed": false,
       "nodeReRegistrationTimeout": 0,
       "defaultClientScopes": [
-        "web-origins",
-        "profile",
-        "roles",
-        "email"
       ],
       "optionalClientScopes": [
         "address",
         "phone",
         "offline_access",
-        "microprofile-jwt"
+        "microprofile-jwt",
+        "web-origins",
+        "profile",
+        "roles",
+        "email"
       ]
     },
     {
@@ -426,20 +426,135 @@
       "fullScopeAllowed": true,
       "nodeReRegistrationTimeout": -1,
       "defaultClientScopes": [
-        "web-origins",
-        "profile",
-        "roles",
-        "email"
       ],
       "optionalClientScopes": [
         "address",
         "phone",
         "offline_access",
-        "microprofile-jwt"
+        "microprofile-jwt",
+        "launch/patient",
+        "patient/*.read",
+        "patient/*.write",
+        "patient/*.*",
+        "user/*.read",
+        "user/*.write",
+        "user/*.*",
+        "web-origins",
+        "profile",
+        "roles",
+        "email"
       ]
     }
   ],
   "clientScopes": [
+    {
+      "id": "4990066c-6ade-4b82-8ce8-cd2b6dfe74a0",
+      "name": "launch/user",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true"
+      },
+      "protocolMappers": [
+        {
+          "id": "e787679c-fb69-4193-941b-b39886a26073",
+          "protocol": "openid-connect",
+          "config": {
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "",
+            "aggregate.attrs": "",
+            "user.attribute": "user",
+            "jsonType.label": "String",
+            "claim.name": "launch/user"
+          },
+          "name": "user-mapper",
+          "protocolMapper": "oidc-usermodel-attribute-mapper"
+        }
+      ]
+    },
+    {
+      "id": "fde77a93-3146-41d4-9e31-9473049e5cc5",
+      "name": "user/*.*",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true"
+      },
+      "protocolMappers": [
+        {
+          "id": "c240c176-41c3-4b7f-9c0b-e3b7ab1af584",
+          "protocol": "openid-connect",
+          "config": {
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "",
+            "aggregate.attrs": "",
+            "user.attribute": "user",
+            "jsonType.label": "String",
+            "claim.name": "user"
+          },
+          "name": "user-mapper",
+          "protocolMapper": "oidc-usermodel-attribute-mapper"
+        }
+      ]
+    },
+    {
+      "id": "f22e1b3e-dcfd-4467-a1ae-14dec01b0a42",
+      "name": "user/*.read",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true"
+      },
+      "protocolMappers": [
+        {
+          "id": "03dcf4d7-01b3-4bca-a406-6a8f7d3d5fa7",
+          "protocol": "openid-connect",
+          "config": {
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "",
+            "aggregate.attrs": "",
+            "user.attribute": "user",
+            "jsonType.label": "String",
+            "claim.name": "user"
+          },
+          "name": "user-mapper",
+          "protocolMapper": "oidc-usermodel-attribute-mapper"
+        }
+      ]
+    },
+    {
+      "id": "62053910-8f3c-41f6-9209-908674340f00",
+      "name": "user/*.write",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true"
+      },
+      "protocolMappers": [
+        {
+          "id": "3efdb469-ba29-479a-8885-bc4fabbb8a65",
+          "protocol": "openid-connect",
+          "config": {
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "",
+            "aggregate.attrs": "",
+            "user.attribute": "patient",
+            "jsonType.label": "String",
+            "claim.name": "user"
+          },
+          "name": "user-mapper",
+          "protocolMapper": "oidc-usermodel-attribute-mapper"
+        }
+      ]
+    },
     {
       "id": "f897b1cc-6b5c-4cd3-a7f3-c91fe25f0413",
       "name": "launch/patient",
@@ -447,7 +562,25 @@
       "attributes": {
         "include.in.token.scope": "true",
         "display.on.consent.screen": "true"
-      }
+      },
+      "protocolMappers": [
+        {
+          "id": "8122a216-274a-48b2-a211-7e331f077118",
+          "protocol": "openid-connect",
+          "config": {
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "",
+            "aggregate.attrs": "",
+            "user.attribute": "patient",
+            "jsonType.label": "String",
+            "claim.name": "launch/patient"
+          },
+          "name": "patient-mapper",
+          "protocolMapper": "oidc-usermodel-attribute-mapper"
+        }
+      ]
     },
     {
       "id": "49464674-9d8a-46d4-b3df-e7f25c900433",
@@ -456,7 +589,79 @@
       "attributes": {
         "include.in.token.scope": "true",
         "display.on.consent.screen": "true"
-      }
+      },
+      "protocolMappers": [
+        {
+          "id": "e2db56d8-7f20-4e75-8ca9-a26ae5d7882d",
+          "protocol": "openid-connect",
+          "config": {
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "",
+            "aggregate.attrs": "",
+            "user.attribute": "patient",
+            "jsonType.label": "String",
+            "claim.name": "patient"
+          },
+          "name": "patient-mapper",
+          "protocolMapper": "oidc-usermodel-attribute-mapper"
+        }
+      ]
+    },
+    {
+      "id": "c18889e2-42c8-4996-af8b-fc9fa8517c0c",
+      "name": "patient/*.write",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true"
+      },
+      "protocolMappers": [
+        {
+          "id": "dc430233-62c8-4b92-9da1-ce9208c77694",
+          "protocol": "openid-connect",
+          "config": {
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "",
+            "aggregate.attrs": "",
+            "user.attribute": "patient",
+            "jsonType.label": "String",
+            "claim.name": "patient"
+          },
+          "name": "patient-mapper",
+          "protocolMapper": "oidc-usermodel-attribute-mapper"
+        }
+      ]
+    },
+    {
+      "id": "7f75cf88-f2db-4846-9926-4484ceed30a4",
+      "name": "patient/*.*",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true"
+      },
+      "protocolMappers": [
+        {
+          "id": "19dea452-7797-4553-9920-245596fec81b",
+          "protocol": "openid-connect",
+          "config": {
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "",
+            "aggregate.attrs": "",
+            "user.attribute": "patient",
+            "jsonType.label": "String",
+            "claim.name": "patient"
+          },
+          "name": "patient-mapper",
+          "protocolMapper": "oidc-usermodel-attribute-mapper"
+        }
+      ]
     },
     {
       "id": "747a63ac-0d7a-43f5-a757-9e18a00ba6a9",
@@ -465,7 +670,25 @@
       "attributes": {
         "include.in.token.scope": "true",
         "display.on.consent.screen": "true"
-      }
+      },
+      "protocolMappers": [
+        {
+          "id": "3c71dd04-7e79-4ef0-9a30-4f8826aac5f3",
+          "protocol": "openid-connect",
+          "config": {
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "",
+            "aggregate.attrs": "",
+            "user.attribute": "encounter",
+            "jsonType.label": "String",
+            "claim.name": "encounter"
+          },
+          "name": "encounter-mapper",
+          "protocolMapper": "oidc-usermodel-attribute-mapper"
+        }
+      ]
     },
     {
       "id": "b96adc83-754d-41ee-a7bb-b888eecc8668",
@@ -1985,14 +2208,19 @@
   },
   "users": [
     {
-      "username": "nurse",
+      "username": "patient",
       "enabled": true,
       "credentials": [
         {
           "type": "password",
-          "value": "nurse"
+          "value": "patient"
         }
-      ]
+      ],
+      "attributes": {
+        "patient": [
+          "101"
+        ]
+      }
     },
     {
       "username": "practitioner",
@@ -2002,7 +2230,30 @@
           "type": "password",
           "value": "practitioner"
         }
-      ]
+      ],
+      "attributes": {
+        "patient": [
+          "101"
+        ],
+        "user": [
+          "102"
+        ]
+      }
+    },
+    {
+      "username": "test",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test"
+        }
+      ],
+      "attributes": {
+        "patient": [
+          "101"
+        ]
+      }
     }
   ]
 }

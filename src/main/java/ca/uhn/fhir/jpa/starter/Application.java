@@ -2,7 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
-import ca.uhn.fhir.jpa.starter.smart.WellKnownEndpointController;
+import ca.uhn.fhir.jpa.starter.smart.controller.WellKnownEndpointController;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
@@ -21,9 +21,6 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @ServletComponentScan(basePackageClasses = {
   JpaRestfulServer.class})
@@ -106,13 +103,5 @@ public class Application extends SpringBootServletInitializer {
 		registrationBean.setLoadOnStartup(1);
 		return registrationBean;
 
-	}
-
-	@Bean
-	public Map<String, String> resourceMapping(){
-		Map<String, String> resourceMapping = new HashMap<>();
-		resourceMapping.put("Patient", "patient");
-		resourceMapping.put("Practitioner", "user");
-		return resourceMapping;
 	}
 }

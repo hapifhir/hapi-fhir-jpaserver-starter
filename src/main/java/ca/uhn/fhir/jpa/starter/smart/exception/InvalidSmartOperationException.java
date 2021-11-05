@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.starter.smart.exceptions;
+package ca.uhn.fhir.jpa.starter.smart.exception;
 
 public class InvalidSmartOperationException extends RuntimeException{
 

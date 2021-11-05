@@ -1,5 +1,6 @@
-package ca.uhn.fhir.jpa.starter.smart;
+package ca.uhn.fhir.jpa.starter.smart.controller;
 
+import ca.uhn.fhir.jpa.starter.smart.util.WellknownEndpointHelper;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

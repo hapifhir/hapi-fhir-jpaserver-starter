@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.starter.smart;
+package ca.uhn.fhir.jpa.starter.smart.util;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -11,6 +11,10 @@ public class WellknownEndpointHelper {
 	private static final String WELL_KNOWN_REGISTRATION_ENDPOINT_KEY = "registration_endpoint";
 	private static final String RESPONSE_TYPES_SUPPORTED_KEY = "response_types_supported";
 	private static final String SCOPES_SUPPORTED_KEY = "scopes_supported";
+
+	private WellknownEndpointHelper(){
+
+	}
 
 	/**
 	 * Create the .well-known/smart-configuration JSON object
