@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
+    url: jdbc:h2:mem:test_mem
     username: sa
     password: null
     driverClassName: org.h2.Driver
@@ -8,13 +8,12 @@ spring:
   profiles:
     ### This is the FHIR version. Choose between, dstu2, dstu3, r4 or r5
     active: r4
-
 hapi:
   fhir:
     #supported_resource_types:
     #  - Patient
     #  - Observation
-#    allow_cascading_deletes: true
+    allow_cascading_deletes: true
 #    allow_contains_searches: true
 #    allow_external_references: true
 #    allow_multiple_delete: true

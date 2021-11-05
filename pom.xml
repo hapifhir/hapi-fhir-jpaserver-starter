@@ -252,9 +252,16 @@
             <artifactId>jetty-webapp</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--   TEST CONTAINERS   -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>1.16.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

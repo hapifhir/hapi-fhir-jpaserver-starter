@@ -9,14 +9,14 @@ spring:
     hikari:
       maximum-pool-size: 10
 
-  autoconfigure:
-      exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-#  security:
- #   oauth2:
-  #    resourceserver:
-   #     jwt:
-    #      jwk-set-uri: https://oidc-test.hosted.trifork.com/auth/realms/sds
-     #s     issuer-uri: https://oidc-test.hosted.trifork.com/auth/realms/sds
+#  autoconfigure:
+#      exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8081/auth/realms/smart/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8081/auth/realms/smart
     # database connection pool size
 
   jpa:
@@ -47,7 +47,7 @@ hapi:
   fhir:
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
     openapi_enabled: true
-    #smart_enabled: true
+    smart_enabled: true
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
 ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
@@ -81,7 +81,7 @@ hapi:
 #      - ConceptMap
 #      - Endpoint
 #      - Binary
-#    allow_cascading_deletes: true
+    allow_cascading_deletes: true
 #    allow_contains_searches: true
 #    allow_external_references: true
 #    allow_multiple_delete: true
