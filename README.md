@@ -69,9 +69,9 @@ docker run -d --name matchbox-swissepr -p 8080:8080 matchbox-swissepr
 
 ### making container available
 ```
-docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v140
+docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v141
 
-docker push eu.gcr.io/fhir-ch/matchbox:v140
+docker push eu.gcr.io/fhir-ch/matchbox:v141
 docker push eu.gcr.io/fhir-ch/matchbox-swissepr:v140
 ```
 
@@ -83,3 +83,9 @@ Use VSCode, REST Client to work with the API:
 - [Load Implementation Guide onto server](ig.http)
 - [Validation examples](validation-igexamples.http)
 - SDC TODO
+
+
+Kubernetes
+==========
+
+kubectl cp matchbox-test-0:fhir.logdir_IS_UNDEFINED ./fhir.logdir/
