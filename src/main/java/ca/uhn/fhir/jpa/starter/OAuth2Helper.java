@@ -144,4 +144,10 @@ public class OAuth2Helper {
 		List<RuntimeSearchParam> compartmentList = data.getSearchParamsForCompartmentName("Patient");
 		return !compartmentList.isEmpty();
 	}
+
+  public boolean verifyClientId(DecodedJWT jwt, String oauthClientId) {
+    Claim claim = jwt.getClaim("azp");
+    String azp = claim.asString();
+    return azp.equals(oauthClientId);
+  }
 }
