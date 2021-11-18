@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -62,8 +63,9 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
   
   @Override
   @Bean
-  public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-    LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory();
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+	  ConfigurableListableBeanFactory myConfigurableListableBeanFactory) {
+    LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory(myConfigurableListableBeanFactory);
     retVal.setPersistenceUnitName("HAPI_PU");
 
     try {
@@ -72,7 +74,8 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
       throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
     }
 
-    retVal.setJpaProperties(EnvironmentHelper.getHibernateProperties(configurableEnvironment));
+    retVal.setJpaProperties(EnvironmentHelper.getHibernateProperties(configurableEnvironment,
+		 myConfigurableListableBeanFactory));
     return retVal;
   }
 
@@ -96,8 +99,7 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
       }
       String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
       String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
-      int elasticsearchPort = Integer.parseInt(elasticsearchUrl.substring(elasticsearchUrl.lastIndexOf(":")+1));
-      return new ElasticsearchSvcImpl(elasticsearchHost, elasticsearchPort, elasticsearchUsername, elasticsearchPassword);
+      return new ElasticsearchSvcImpl(elasticsearchHost, elasticsearchUsername, elasticsearchPassword);
     } else {
       return null;
     }
