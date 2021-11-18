@@ -14,13 +14,14 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-		  <version>5.5.1</version>
+		  <version>5.6.0</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
 
     <properties>
         <java.version>8</java.version>
+        <spring_boot_version>2.5.6</spring_boot_version>
     </properties>
 
     <prerequisites>
@@ -69,6 +70,7 @@
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.activation</groupId>

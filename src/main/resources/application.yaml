@@ -10,6 +10,8 @@ spring:
     # database connection pool size
     hikari:
       maximum-pool-size: 10
+  flyway:
+    check-location: false
   jpa:
     properties:
       hibernate.format_sql: false
@@ -31,9 +33,6 @@ spring:
   batch:
     job:
       enabled: false
-  main:
-#    TODO 5.6.0 -> Prevent duplicate bean definitions in the Spring batch config in HAPI: see:
-    allow-bean-definition-overriding: true
 hapi:
   fhir:
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
