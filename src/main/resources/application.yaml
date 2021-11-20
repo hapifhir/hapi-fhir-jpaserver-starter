@@ -12,6 +12,7 @@ spring:
       maximum-pool-size: 10
   flyway:
     check-location: false
+    baselineOnMigrate: true
   jpa:
     properties:
       hibernate.format_sql: false
