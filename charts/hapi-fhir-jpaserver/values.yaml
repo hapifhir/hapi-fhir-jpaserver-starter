@@ -2,13 +2,16 @@
 replicaCount: 1
 
 image:
+  # -- registry where the HAPI FHIR server image is hosted
   registry: docker.io
+  # -- the path inside the repository
   repository: hapiproject/hapi
   # -- defaults to `Chart.appVersion`
   tag: ""
   # -- the flavor or variant of the image to use.
   # appended to the image tag by `-`.
   flavor: "distroless"
+  # -- image pullPolicy to use
   pullPolicy: IfNotPresent
 
 # -- image pull secrets to use when pulling the image
@@ -42,7 +45,9 @@ securityContext:
 
 # service to expose the server
 service:
+  # -- service type
   type: ClusterIP
+  # -- port where the server will be exposed at
   port: 8080
 
 ingress:
@@ -157,3 +162,9 @@ networkPolicy:
   #       matchLabels:
   #         app.kubernetes.io/name: {{ $.Release.Name }}
   allowedFrom: []
+
+# -- extra environment variables to set on the server container
+extraEnv:
+  []
+  # - name: SPRING_FLYWAY_BASELINE_ON_MIGRATE
+  #   value: "true"
