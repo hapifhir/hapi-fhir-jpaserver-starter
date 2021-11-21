@@ -67,6 +67,8 @@ public class AppProperties {
   private Boolean install_transitive_ig_dependencies = true;
   private Map<String, ImplementationGuide> implementationGuides = null;
 
+	private String staticLocation = null;
+
   private Boolean lastn_enabled = false;
   private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
 
@@ -75,6 +77,16 @@ public class AppProperties {
   private Integer search_coord_queue_capacity = 200;
   private Boolean use_apache_address_strategy = false;
   private Boolean use_apache_address_strategy_https = false;
+
+
+	public String getStaticLocation() {
+		return staticLocation;
+	}
+
+	public void setStaticLocation(String staticLocation) {
+		this.staticLocation = staticLocation;
+	}
+
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
