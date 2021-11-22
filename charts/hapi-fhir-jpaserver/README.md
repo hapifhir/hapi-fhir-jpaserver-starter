@@ -47,6 +47,9 @@ helm install --render-subchart-notes hapi-fhir-jpaserver hapifhir/hapi-fhir-jpas
 | networkPolicy.explicitNamespacesSelector | object | `{}` | a Kubernetes LabelSelector to explicitly select namespaces from which ingress traffic could be allowed |
 | nodeSelector | object | `{}` | node selector for the pod |
 | podAnnotations | object | `{}` | annotations applied to the server pod |
+| podDisruptionBudget.enabled | bool | `false` | Enable PodDisruptionBudget for the server pods. uses policy/v1/PodDisruptionBudget thus requiring k8s 1.21+ |
+| podDisruptionBudget.maxUnavailable | string | `""` | maximum unavailable instances |
+| podDisruptionBudget.minAvailable | int | `1` | minimum available instances |
 | podSecurityContext | object | `{}` | pod security context |
 | postgresql.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
