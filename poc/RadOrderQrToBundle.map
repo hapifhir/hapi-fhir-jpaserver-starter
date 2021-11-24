@@ -46,6 +46,7 @@ group RadOrderQrToServiceRequest(source qr : QuestionnaireResponse, target patie
   qr.item as grp where linkId='desiredRadiologist' then DesiredRadiologistServiceItems(grp, bundle, serviceRequest) "desiredRadiologist";
   qr.item as grp where linkId='diagnosisList' then DiagnosisListServiceItems(grp, patient, bundle, serviceRequest) "diagnosisList";
   qr.item as grp where linkId='caveat' then CaveatServiceItems(grp, patient, bundle, serviceRequest) "Caveat";
+  qr.item as grp where linkId='previousResults' then PreviousImagingStudyResults(grp, bundle, serviceRequest, patient) "previousResults";
 }
 
 group RequestedServiceItems(source src : BackboneElement, target serviceRequest: ServiceRequest) {
@@ -137,16 +138,11 @@ group OrderDetailServiceItems(source src : BackboneElement, target serviceReques
 }
 
 group DesiredRadiologistServiceItems(source src : BackboneElement, target bundle : Bundle, target serviceRequest: ServiceRequest) {
-  src -> bundle.entry as e4, 
-    e4.resource = create('PractitionerRole') as practitionerRole, 
-    practitionerRole.id = uuid() as uuid4,
-    e4.fullUrl = append('urn:uuid:',uuid4),
-    serviceRequest.performer as performer,
-    performer.reference = ('urn:uuid:'+uuid4),
-    bundle.entry as e, 
+  src -> bundle.entry as e, 
     e.resource = create('Practitioner') as practitioner, 
     practitioner.id = uuid() as uuid,
-    practitionerRole.practitioner = create('Reference') as reference, reference.reference = append('urn:uuid:',uuid),
+    serviceRequest.performer as performer,
+    performer.reference = ('urn:uuid:'+uuid),
     e.fullUrl = ('urn:uuid:'+uuid) then {
       src.item as item where (linkId.value = 'desiredRadiologist.familyName' and answer.exists()) -> practitioner.name as name share name, name.family = (item.answer.value);
       src.item as item where (linkId.value = 'desiredRadiologist.givenName' and answer.exists()) -> practitioner.name as name share name, name.given = (item.answer.value);
@@ -463,4 +459,22 @@ group RenalInsufficiencyCreatinineServiceItems(source src : BackboneElement, tar
       } "item.answer";
     } "caveat.renalInsufficiency.creatinine.dateTime";
   } "observation";
+}
+
+group PreviousImagingStudyResults(source grp : BackboneElement, target bundle: Bundle, target serviceRequest: ServiceRequest, target patient: Patient) {
+  grp.item as item where (linkId.value = 'previousResults.imagingStudy') -> 
+    bundle.entry as e, 
+    e.resource = create('ImagingStudy') as imagingStudy, 
+    imagingStudy.id = uuid() as uuid,
+    imagingStudy.status = 'available',
+    e.fullUrl = append('urn:uuid:',uuid), 
+    serviceRequest.subject as subject, subject.reference = ('urn:uuid:'+patient.id),
+    serviceRequest.supportingInfo as supportingInfo,
+    supportingInfo.reference = ('urn:uuid:'+uuid) then {
+      item.item as dictomitem where (linkId.value = 'previousResults.imagingStudy.uid' and answer.exists()) -> 
+        imagingStudy.identifier as uid, uid.system='urn:dicom:uid', uid.use='official', uid.value=('urn:oid:'+dictomitem.answer.value) "uid";
+     item.item as dictomitem where (linkId.value = 'previousResults.imagingStudy.acsn' and answer.exists()) -> 
+        imagingStudy.identifier as acsn, acsn.type as type, type.coding as coding, coding.system ='http://terminology.hl7.org/CodeSystem/v2-0203',
+        coding.code='ACSN', acsn.use='usual', acsn.value=('urn:oid:'+dictomitem.answer.value) "acsn";
+    } "imagingStudy";
 }

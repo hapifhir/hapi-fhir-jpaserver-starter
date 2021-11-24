@@ -1,0 +1,20 @@
+{
+    "resourceType": "QuestionnaireResponse",
+    "status": "in-progress",
+    "item": [
+      {
+        "linkId": "patient",
+        "text": "Patient",
+        "item": [
+          {
+            "linkId": "patient.name.text",
+            "answer": [
+              {
+                "valueString": "value to add to patient.name.text"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }

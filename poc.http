@@ -256,7 +256,11 @@ Content-Type: application/fhir+xml;fhirVersion=4.0;charset=UTF-8
 < ./poc/cda-ch-emed-2-7-MedicationCard-UUIDfullUrl.xml
 
 ###
-DELETE {{host}}/Questionnaire/1301 HTTP/1.1
+DELETE {{host}}/Questionnaire/1432 HTTP/1.1
+
+
+###
+DELETE {{host}}/Task/1279 HTTP/1.1
 
 ### Populate and get QuestionnaireResponse
 PUT {{host}}/Questionnaire/QuestionnaireRadiologyOrder HTTP/1.1

@@ -1,0 +1,11 @@
+map "http://ahdis.ch/matchbox/fml/qr2patnametext" = "qr2patnametext"
+uses "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse" alias QuestionnaireResponse as source
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as target
+
+group QuestionnaireResponse(source src : QuestionnaireResponse, target tgt : Patient) {
+  src.item as item -> tgt as patient then item(item, patient);
+}
+
+group item(source src, target tgt: Patient) {
+  src.item as item where linkId.value in ('patient.name.text') -> tgt.name as name, name.text = (item.answer.valueString);
+}

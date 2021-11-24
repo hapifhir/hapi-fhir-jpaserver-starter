@@ -1,0 +1,12 @@
+{
+	"resourceType": "SearchParameter",
+    "url" : "http://fhir.ch/ig/ch-orf/SearchParameter/filler",
+    "name" : "Filler",
+    "title": "Filler",
+	"base": [ "Bundle" ],
+	"status": "active",
+	"code": "filler",
+	"type": "token",
+	"expression": "Bundle.entry.resource.as(ServiceRequest).identifier.where(type.coding.where(system='http://terminology.hl7.org/CodeSystem/v2-0203' and code='FILL').exists())",
+	"xpathUsage": "normal"
+}

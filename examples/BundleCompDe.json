@@ -1,0 +1,397 @@
+{
+    "resourceType": "Bundle",
+    "id": "DIS-34196672",
+    "meta": {
+        "lastUpdated": "2021-09-21T10:39:47.044+02:00",
+        "profile": [
+            "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationdispense"
+        ]
+    },
+    "identifier": {
+        "system": "urn:ietf:rfc:3986",
+        "value": "urn:uuid:DIS-34196672"
+    },
+    "type": "document",
+    "timestamp": "2021-09-21T10:39:47.071+02:00",
+    "entry": [
+        {
+            "fullUrl": "https://www.abilis-qi.int.abilis.ch/Composition/DIS-34196672",
+            "resource": {
+                "resourceType": "Composition",
+                "id": "DIS-34196672",
+                "language": "de-CH",
+                "text": {
+                    "status": "extensions",
+                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">TODO</div>"
+                },
+                "extension": [
+                    {
+                        "url": "http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-informationrecipient",
+                        "valueReference": {
+                            "reference": "Patient/7566725119971Recipient"
+                        }
+                    }
+                ],
+                "identifier": {
+                    "system": "urn:ietf:rfc:3986",
+                    "value": "urn:uuid:DIS-34196672"
+                },
+                "status": "final",
+                "type": {
+                    "coding": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "60593-1",
+                            "display": "Medication dispensed.extended"
+                        },
+                        {
+                            "system": "http://snomed.info/sct",
+                            "code": "419891008",
+                            "display": "Record artifact (record artifact)"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "Patient/7566725119971"
+                },
+                "date": "2021-09-21T10:39:47+02:00",
+                "author": [
+                    {
+                        "reference": "Organization/14090",
+                        "extension": [
+                            {
+                                "url": "http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-time",
+                                "valueDateTime": "2021-09-21T10:39:47+02:00"
+                            }
+                        ]
+                    },
+                    {
+                        "reference": "Practitioner/123123"
+                    }
+                ],
+                "title": "Abgabe",
+                "confidentiality": "N",
+                "_confidentiality": {
+                    "extension": [
+                        {
+                            "url": "http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-confidentialitycode",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "system": "http://snomed.info/sct",
+                                        "code": "17621005",
+                                        "display": "Normally accessible"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "custodian": {
+                    "reference": "Organization/14090"
+                },
+                "section": [
+                    {
+                        "title": "Abgabe eines Medikaments",
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "60590-7",
+                                    "display": "Medication dispensed.brief"
+                                }
+                            ]
+                        },
+                        "text": {
+                            "status": "generated",
+                            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">TODO</div>"
+                        },
+                        "entry": [
+                            {
+                                "reference": "MedicationDispense/DIS-34196672"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "https://www.abilis-qi.int.abilis.ch/Patient/7566725119971",
+            "resource": {
+                "resourceType": "Patient",
+                "id": "7566725119971",
+                "text": {
+                    "status": "generated",
+                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">TODO</div>"
+                },
+                "identifier": [
+                    {
+                        "type": {
+                            "coding": [
+                                {
+                                    "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                                    "code": "MR"
+                                }
+                            ]
+                        },
+                        "value": "7566725119971"
+                    }
+                ],
+                "name": [
+                    {
+                        "family": "Muller",
+                        "given": [
+                            "Monika"
+                        ]
+                    }
+                ],
+                "gender": "female",
+                "birthDate": "2021-09-21",
+                "address": [
+                    {
+                        "use": "work",
+                        "line": [
+                            "10 rue de rive"
+                        ],
+                        "city": "Geneva",
+                        "postalCode": "1200",
+                        "country": "CH"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "https://www.abilis-qi.int.abilis.ch/Practitioner/123123",
+            "resource": {
+                "resourceType": "Practitioner",
+                "id": "123123",
+                "text": {
+                    "status": "generated",
+                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">TODO</div>"
+                },
+                "identifier": [
+                    {
+                        "value": "123123"
+                    }
+                ],
+                "name": [
+                    {
+                        "text": "fullname",
+                        "family": "Bakir",
+                        "given": [
+                            "Brahim"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "https://www.abilis-qi.int.abilis.ch/Organization/14090",
+            "resource": {
+                "resourceType": "Organization",
+                "id": "14090",
+                "text": {
+                    "status": "generated",
+                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">TODO</div>"
+                },
+                "identifier": [
+                    {
+                        "value": "14090"
+                    }
+                ],
+                "name": "Apotheke",
+                "address": [
+                    {
+                        "use": "work",
+                        "line": [
+                            "adress1",
+                            "adress2"
+                        ],
+                        "city": "Geneva",
+                        "postalCode": "1200",
+                        "country": "CH"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "https://www.abilis-qi.int.abilis.ch/Patient/7566725119971Recipient",
+            "resource": {
+                "resourceType": "Patient",
+                "id": "7566725119971",
+                "text": {
+                    "status": "generated",
+                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">TODO</div>"
+                },
+                "name": [
+                    {
+                        "family": "Muller",
+                        "given": [
+                            "Monika"
+                        ]
+                    }
+                ],
+                "address": [
+                    {
+                        "use": "work",
+                        "line": [
+                            "10 rue de rive"
+                        ],
+                        "city": "Geneva",
+                        "postalCode": "1200",
+                        "country": "CH"
+                    }
+                ]
+            }
+        },
+        {
+            "fullUrl": "https://www.abilis-qi.int.abilis.ch/MedicationDispense/DIS-34196672",
+            "resource": {
+                "resourceType": "MedicationDispense",
+                "id": "34196672",
+                "text": {
+                    "status": "generated",
+                    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">TODO</div>"
+                },
+                "contained": [
+                    {
+                        "resourceType": "Medication",
+                        "id": "med",
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "urn:oid:2.51.1.1",
+                                    "code": "7680538751228",
+                                    "display": "TRIATEC 2.5 cpr 2.500 mg 20 pce"
+                                }
+                            ],
+                            "text": "TRIATEC 2.5 cpr 2.500 mg 20 pce"
+                        },
+                        "form": {
+                            "coding": [
+                                {
+                                    "system": "urn:oid:0.4.0.127.0.16.1.1.2.1",
+                                    "code": "10219000",
+                                    "display": "Tablet"
+                                }
+                            ],
+                            "text": "comprimé"
+                        },
+                        "amount": {
+                            "numerator": {
+                                "value": 20.0,
+                                "unit": "Stk",
+                                "system": "http://snomed.info/sct",
+                                "code": "732936001"
+                            },
+                            "denominator": {
+                                "value": 1,
+                                "unit": "Package",
+                                "system": "http://unitsofmeasure.org",
+                                "code": "{Package}"
+                            }
+                        },
+                        "ingredient": [
+                            {
+                                "itemCodeableConcept": {
+                                    "coding": [
+                                        {
+                                            "system": "http://www.whocc.no/atc",
+                                            "code": "C09AA05",
+                                            "display": "Ramipril"
+                                        }
+                                    ]
+                                },
+                                "strength": {
+                                    "numerator": {
+                                        "value": 2,
+                                        "unit": "MG",
+                                        "system": "http://unitsofmeasure.org",
+                                        "code": "mg"
+                                    },
+                                    "denominator": {
+                                        "value": 1
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "extension": [
+                    {
+                        "url": "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-ext-pharmaceuticaladvice",
+                        "extension": [
+                            {
+                                "url": "id",
+                                "valueIdentifier": {
+                                    "system": "urn:ietf:rfc:3986",
+                                    "value": "urn:uuid:id"
+                                }
+                            },
+                            {
+                                "url": "externalDocumentId",
+                                "valueIdentifier": {
+                                    "system": "urn:ietf:rfc:3986",
+                                    "value": "urn:uuid:id"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "identifier": [
+                    {
+                        "system": "urn:ietf:rfc:3986",
+                        "value": "urn:uuid:DIS-34196672"
+                    }
+                ],
+                "status": "completed",
+                "medicationReference": {
+                    "reference": "#med"
+                },
+                "subject": {
+                    "reference": "Patient/7566725119971"
+                },
+                "quantity": {
+                    "value": 1
+                },
+                "dosageInstruction": [
+                    {
+                        "timing": {
+                            "repeat": {
+                                "boundsPeriod": {
+                                    "start": "2020-11-29T00:00:00+01:00",
+                                    "end": "2021-01-07T00:00:00+01:00"
+                                },
+                                "when": [
+                                    "CM"
+                                ]
+                            }
+                        },
+                        "route": {
+                            "coding": [
+                                {
+                                    "system": "urn:oid:0.4.0.127.0.16.1.1.2.1",
+                                    "code": "20053000",
+                                    "display": "Oral use"
+                                }
+                            ]
+                        },
+                        "method": {
+                            "text": "action inconnue"
+                        },
+                        "doseAndRate": [
+                            {
+                                "doseQuantity": {
+                                    "value": 0.5,
+                                    "unit": "Stk",
+                                    "system": "http://unitsofmeasure.org",
+                                    "code": "{Unit}"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
