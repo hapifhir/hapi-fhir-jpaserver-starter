@@ -25,12 +25,14 @@ public class CustomSearchNarrowingInterceptor extends SearchNarrowingInterceptor
   }
 
   private String getPatientFromToken(RequestDetails theRequestDetails) {
-    String token = theRequestDetails.getHeader("Authorization");
-    if (token != null) {
-      token = token.substring(CustomAuthorizationInterceptor.getTokenPrefix().length());
-      DecodedJWT jwt = JWT.decode(token);
-      String patRefId = oAuth2Helper.getPatientReferenceFromToken(jwt, OAUTH_CLAIM_NAME);
-      return patRefId;
+    if (oAuth2Helper.isOAuthHeaderPresent(theRequestDetails)) {      
+      String token = theRequestDetails.getHeader("Authorization");
+      if (token != null) {
+        token = token.substring(CustomAuthorizationInterceptor.getTokenPrefix().length());
+        DecodedJWT jwt = JWT.decode(token);
+        String patRefId = oAuth2Helper.getPatientReferenceFromToken(jwt, OAUTH_CLAIM_NAME);
+        return patRefId;
+      }
     }
     return null;
   }
