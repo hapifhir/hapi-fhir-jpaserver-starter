@@ -10,17 +10,17 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -30,7 +30,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.RuntimeResourceDefinition;
 import ca.uhn.fhir.context.RuntimeSearchParam;
-import ca.uhn.fhir.rest.server.provider.ProviderConstants;
+import ca.uhn.fhir.rest.api.server.RequestDetails;
 
 public class OAuth2Helper {
 	private static final Logger logger = LoggerFactory.getLogger(OAuth2Helper.class);
@@ -149,5 +149,10 @@ public class OAuth2Helper {
     Claim claim = jwt.getClaim("azp");
     String azp = claim.asString();
     return azp.equals(oauthClientId);
+  }
+  
+  public boolean isOAuthHeaderPresent(RequestDetails theRequest) {
+    String token = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    return (!StringUtils.isEmpty(token) && token.toUpperCase().contains(CustomAuthorizationInterceptor.getTokenPrefix()));
   }
 }

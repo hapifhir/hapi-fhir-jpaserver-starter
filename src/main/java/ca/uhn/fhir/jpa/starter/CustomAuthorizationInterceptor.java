@@ -30,12 +30,17 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	private static final String APIKEY_ENABLED = System.getenv("APIKEY_ENABLED");
 	private static final String APIKEY_HEADER = "x-api-key";
 	private static final String APIKEY = System.getenv("APIKEY");
-	private static final String TOKEN_PREFIX = "BEARER ";
+	private static final String OAUTH_TOKEN_PREFIX = "BEARER ";
 	private static final String OAUTH_USER_ROLE = System.getenv("OAUTH_USER_ROLE");
 	private static final String OAUTH_CLIENT_ID = System.getenv("OAUTH_CLIENT_ID");
 	private static final String OAUTH_ADMIN_ROLE = System.getenv("OAUTH_ADMIN_ROLE");
+	private static final String BASIC_AUTH_ENABLED = System.getenv("BASIC_AUTH_ENABLED");
+	private static final String BASIC_AUTH_USERNAME = System.getenv("BASIC_AUTH_USERNAME");
+	private static final String BASIC_AUTH_PASS = System.getenv("BASIC_AUTH_PASS");
+	private static final String BASIC_AUTH_TOKEN_PREFIX = "BASIC ";
 	private static PublicKey publicKey = null;
 	private static OAuth2Helper oAuth2Helper = new OAuth2Helper();
+	private static BasicAuthHelper basicAuthHelper = new BasicAuthHelper();
 
 	@Override
 	public List<IAuthRule> buildRuleList(RequestDetails theRequest) {
@@ -45,12 +50,12 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 				return allowAll();
 			}
 
-			if (!isOAuthEnabled() && !isApiKeyEnabled()) {
-				logger.warn("APIKEY and OAuth2 authentication are disabled");
+			if (!isOAuthEnabled() && !isApiKeyEnabled() && !isBasicAuthEnabled()) {
+				logger.warn("APIKEY, BasicAuth and OAuth2 authentication are disabled");
 				return allowAll();
 			}
 
-			if (isOAuthEnabled() && isOAuthHeaderPresent(theRequest)) {
+			if (isOAuthEnabled() && oAuth2Helper.isOAuthHeaderPresent(theRequest)) {
 				logger.info("Auhorizing via OAuth");
 				return authorizeOAuth(theRequest);
 			}
@@ -58,6 +63,10 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			if (isApiKeyEnabled() && isApiKeyHeaderPresent(theRequest)) {
 				logger.info("Auhorizing via X-API-KEY");
 				return authorizeApiKey(theRequest);
+			}
+			if (isBasicAuthEnabled() && isBasicAuthHeaderPresent(theRequest)) {
+				logger.info("Auhorizing via BasicAuth");
+				return authorizeBasicAuth(theRequest);
 			}
 		} catch (Exception e) {
 			logger.info("Unexpected authorization error", e);
@@ -83,12 +92,12 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			return denyAll();
 		}
 
-		if (!token.toUpperCase().startsWith(TOKEN_PREFIX)) {
+		if (!token.toUpperCase().startsWith(OAUTH_TOKEN_PREFIX)) {
 			logger.info("Authorization failure - invalid authorization header");
 			return denyAll();
 		}
 
-		token = token.substring(TOKEN_PREFIX.length());
+		token = token.substring(OAUTH_TOKEN_PREFIX.length());
 
 		try {
 			DecodedJWT jwt = JWT.decode(token);
@@ -143,10 +152,14 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	private Boolean isOAuthEnabled() {
 		return ((OAUTH_ENABLED != null) && Boolean.parseBoolean(OAUTH_ENABLED));
 	}
-
-	private Boolean isOAuthHeaderPresent(RequestDetails theRequest) {
+	
+	private Boolean isBasicAuthEnabled() {
+		return ((BASIC_AUTH_ENABLED != null) && Boolean.parseBoolean(BASIC_AUTH_ENABLED));
+	}
+	
+	private Boolean isBasicAuthHeaderPresent(RequestDetails theRequest) {
 		String token = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
-		return (!StringUtils.isEmpty(token));
+		return (!StringUtils.isEmpty(token) && token.toUpperCase().contains(BASIC_AUTH_TOKEN_PREFIX));
 	}
 	
 	private Boolean isApiKeyEnabled() {
@@ -172,8 +185,22 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 		logger.info("Authorization failure - invalid X-API-KEY header");
 		return denyAll();
 	}
+	
+	private List<IAuthRule> authorizeBasicAuth(RequestDetails theRequest) {
+		String basicAuthToken = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
+		if (StringUtils.isEmpty(basicAuthToken)) {
+			logger.info("Authorization failure - missing authorization header");
+			return denyAll();
+		}
+		basicAuthToken = basicAuthToken.substring(BASIC_AUTH_TOKEN_PREFIX.length());
+		if (basicAuthHelper.isValid(BASIC_AUTH_USERNAME, BASIC_AUTH_PASS, basicAuthToken)) {
+			return allowAll();
+		}
+		logger.info("Authorization failure - invalid credentials");
+		return denyAll();
+	}
 
 	public static String getTokenPrefix() {
-		return TOKEN_PREFIX;
+		return OAUTH_TOKEN_PREFIX;
 	}
 }
