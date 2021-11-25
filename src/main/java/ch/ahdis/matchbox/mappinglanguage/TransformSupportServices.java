@@ -50,7 +50,7 @@ public class TransformSupportServices implements ITransformerServices {
     if (resource != null) {
       String inStr = FhirContext.forR4Cached().newJsonParser().encodeResourceToString(resource);
       try {
-        return Manager.parse(fhirContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.JSON);
+        return Manager.parseSingle(fhirContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.JSON);
       } catch (IOException e) {
         throw new FHIRException("Cannot convert resource to element model");
       }

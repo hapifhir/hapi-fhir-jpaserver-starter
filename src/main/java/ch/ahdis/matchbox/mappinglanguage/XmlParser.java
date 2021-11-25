@@ -109,7 +109,7 @@ public class XmlParser extends ParserBase {
     this.allowXsiLocation = allowXsiLocation;
   }
 
-  public Element parse(InputStream stream) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
+  public Element parseSingle(InputStream stream) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
 		Document doc = null;
   	try {
   		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -790,6 +790,15 @@ public class XmlParser extends ParserBase {
       logError(0, 0, "XML", IssueType.INVALID, e.getMessage(), IssueSeverity.ERROR);
     }
     return "?xml-p2?";
+  }
+  @Override
+  public List<NamedElement> parse(InputStream stream)
+      throws IOException, FHIRFormatError, DefinitionException, FHIRException {
+    // FIXME: cannot use it for parsing List<Property> properties = element.getProperty().getChildProperties(element.getName(), XMLUtil.getXsiType(node));
+    if (true) {
+      throw new RuntimeException("Patch only for serializing");
+    }
+    return null;
   }
 
 }

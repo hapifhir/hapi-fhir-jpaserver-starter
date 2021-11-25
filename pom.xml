@@ -14,17 +14,15 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-<!--    <version>5.6.0-PRE2-SNAPSHOT</version>  -->		  
-		<version>5.5.1</version>
+		  <version>5.6.0</version>
     </parent>
 
     <artifactId>matchbox</artifactId>
 
     <properties>
         <java.version>11</java.version>
-        <spring_boot_version>2.3.4.RELEASE</spring_boot_version>
-<!-- <fhir.core.version>5.4.12-SNAPSHOT</fhir.core.version> -->
-		<fhir.core.version>5.4.10</fhir.core.version>
+        <spring_boot_version>2.5.6</spring_boot_version>
+		<fhir.core.version>5.5.7</fhir.core.version>
     </properties>
 
     <prerequisites>
@@ -60,13 +58,13 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.16</version>
+            <version>8.0.25</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.9</version>
+            <version>42.2.23</version>
         </dependency>
 
         <!-- This dependency includes the core HAPI-FHIR classes -->
@@ -129,6 +127,12 @@
             <artifactId>hapi-fhir-jpaserver-cql</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- This dependency includes the OpenAPI Server -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-server-openapi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- This dependency includes the JPA MDM Server -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
@@ -174,7 +178,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.28</version>
+            <version>1.29</version>
         </dependency>
 
         <!-- Used for CORS support -->
@@ -207,7 +211,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>3.3.7</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
@@ -317,7 +321,7 @@
         <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
-            <version>4.0.0-rc1</version>
+            <version>4.1.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -330,13 +334,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.6.2</version>
+            <version>5.7.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.6.2</version>
+            <version>5.7.2</version>
             <scope>test</scope>
         </dependency>
 
@@ -354,15 +358,10 @@
 
         <pluginManagement>
             <plugins>
-                <!--
-                There is a bug in 3.1.2 that prevents go-offline from working
-                Reported here:
-                https://issues.apache.org/jira/browse/MDEP-739
-                -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.2.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>

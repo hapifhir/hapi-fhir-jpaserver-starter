@@ -218,7 +218,7 @@ public class QuestionnairePopulateProvider {
 		 String inStr = FhirContext.forR4Cached().newJsonParser().encodeResourceToString(inputResource);
 		 
 		 try {
-	       return Manager.parse(workerContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.JSON);
+	       return Manager.parseSingle(workerContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.JSON);
 		 } catch (IOException e) {
 			 throw new UnprocessableEntityException("Cannot convert resource to element model");
 		 }	 

@@ -1,0 +1,16 @@
+# HAPI FHIR JPA Server Starter Helm Chart
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+This helm chart will help you install the HAPI FHIR JPA Server in a Kubernetes environment.
+
+## Sample usage
+
+```sh
+helm repo add hapifhir https://hapifhir.github.io/hapi-fhir-jpaserver-starter/
+helm install --render-subchart-notes hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
+```
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}

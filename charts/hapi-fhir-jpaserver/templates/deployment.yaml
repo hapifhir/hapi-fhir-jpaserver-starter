@@ -28,10 +28,16 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+<<<<<<< HEAD
       {{- if .Values.postgresql.enabled }}
       initContainers:
         - name: wait-for-db
           image: busybox:1.32
+=======
+      initContainers:
+        - name: wait-for-db-to-be-ready
+          image: "{{ .Values.postgresql.image.registry }}/{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
+>>>>>>> master
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
@@ -41,15 +47,38 @@ spec:
               drop:
                 - ALL
             runAsNonRoot: true
+<<<<<<< HEAD
             runAsUser: 11111
             runAsGroup: 11111
           command: ["sh", "-c", "while ! nc -z {{ .Release.Name }}-postgresql 5432 -w 5; do echo $(date) waiting for database; sleep 5; done;"]
       {{- end }}
+=======
+            runAsUser: 1001
+            runAsGroup: 1001
+          env:
+            - name: PGHOST
+              value: "{{ include "hapi-fhir-jpaserver.database.host" . }}"
+            - name: PGPORT
+              value: "{{ include "hapi-fhir-jpaserver.database.port" . }}"
+            - name: PGUSER
+              value: "{{ include "hapi-fhir-jpaserver.database.user" . }}"
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              until pg_isready; do
+                echo "Waiting for DB ${PGUSER}@${PGHOST}:${PGPORT} to be up";
+                sleep 15;
+              done;
+>>>>>>> master
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+<<<<<<< HEAD
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+=======
+          image: {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ include "hapi-fhir-jpaserver.imageTag" . }}
+>>>>>>> master
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -68,7 +97,11 @@ spec:
           {{- end }}
           startupProbe:
             httpGet:
+<<<<<<< HEAD
               path: /fhir/Patient?_count=1
+=======
+              path: /fhir/metadata
+>>>>>>> master
               port: http
           {{- with .Values.startupProbe }}
             initialDelaySeconds: {{ .initialDelaySeconds }}
@@ -88,7 +121,11 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "hapi-fhir-jpaserver.postgresql.secretName" . }}
+<<<<<<< HEAD
                   key: postgresql-password
+=======
+                  key: {{ include "hapi-fhir-jpaserver.postgresql.secretKey" . }}
+>>>>>>> master
             - name: SPRING_DATASOURCE_DRIVERCLASSNAME
               value: org.postgresql.Driver
             - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT

@@ -19,17 +19,21 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
-          version: v3.4.0
+          version: v3.7.0
+
       - name: Add bitnami repo
         run: helm repo add bitnami https://charts.bitnami.com/bitnami
+
       - name: Update dependencies
         run: find charts/ ! -path charts/ -maxdepth 1 -type d -exec helm dependency update {} \;
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.0
         with:
-          config: .github/ct/ct.yaml
+          config: .github/ct/config.yaml
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

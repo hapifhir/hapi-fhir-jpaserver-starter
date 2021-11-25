@@ -1,8 +1,8 @@
 ### 
 ### @host = http://test.ahdis.ch/hapi-fhir-jpavalidator/fhir
 ### @host = http://test.ahdis.ch/r4
-### @host = http://localhost:8080/matchbox/fhir
-@host = https://test.ahdis.ch/matchbox/fhir
+@host = http://localhost:8080/matchbox/fhir
+### @host = https://test.ahdis.ch/matchbox/fhir
 ### @host = http://hapi.fhir.org/baseR4
 
 ### @host = https://ehealthsuisse.ihe-europe.net/hapi-fhir-jpavalidator/fhir

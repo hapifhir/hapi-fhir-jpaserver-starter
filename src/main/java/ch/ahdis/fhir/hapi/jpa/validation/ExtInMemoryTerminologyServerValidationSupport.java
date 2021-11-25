@@ -94,7 +94,7 @@ public class ExtInMemoryTerminologyServerValidationSupport extends InMemoryTermi
 				throw new IllegalArgumentException("Can not handle version: " + myCtx.getVersion().getVersion());
 		}
 
-		return new ValueSetExpansionOutcome(expansion, null);
+		return new ValueSetExpansionOutcome(expansion);
 	}
 
 	private org.hl7.fhir.r5.model.ValueSet expandValueSetToCanonical(ValidationSupportContext theValidationSupportContext, IBaseResource theValueSetToExpand, @Nullable String theWantSystemUrlAndVersion, @Nullable String theWantCode) {

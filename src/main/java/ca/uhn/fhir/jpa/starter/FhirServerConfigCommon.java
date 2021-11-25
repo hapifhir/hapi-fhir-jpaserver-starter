@@ -8,7 +8,9 @@ import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
 import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory;
+import ca.uhn.fhir.jpa.subscription.match.deliver.email.EmailSenderImpl;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
+import ca.uhn.fhir.rest.server.mail.MailConfig;
 import com.google.common.base.Strings;
 import org.hl7.fhir.dstu2.model.Subscription;
 import org.springframework.boot.env.YamlPropertySourceLoader;
@@ -35,6 +37,7 @@ public class FhirServerConfigCommon {
     ourLog.info("Server configured to " + (appProperties.getAllow_contains_searches() ? "allow" : "deny") + " contains searches");
     ourLog.info("Server configured to " + (appProperties.getAllow_multiple_delete() ? "allow" : "deny") + " multiple deletes");
     ourLog.info("Server configured to " + (appProperties.getAllow_external_references() ? "allow" : "deny") + " external references");
+    ourLog.info("Server configured to " + (appProperties.getDelete_expunge_enabled() ? "enable" : "disable") + " delete expunges");
     ourLog.info("Server configured to " + (appProperties.getExpunge_enabled() ? "enable" : "disable") + " expunges");
     ourLog.info("Server configured to " + (appProperties.getAllow_override_default_search_params() ? "allow" : "deny") + " overriding default search params");
     ourLog.info("Server configured to " + (appProperties.getAuto_create_placeholder_reference_targets() ? "allow" : "disable") + " auto-creating placeholder references");
@@ -80,6 +83,7 @@ public class FhirServerConfigCommon {
     retVal.setAllowContainsSearches(appProperties.getAllow_contains_searches());
     retVal.setAllowMultipleDelete(appProperties.getAllow_multiple_delete());
     retVal.setAllowExternalReferences(appProperties.getAllow_external_references());
+    retVal.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
     retVal.setExpungeEnabled(appProperties.getExpunge_enabled());
     if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
       retVal.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
@@ -203,24 +207,23 @@ public class FhirServerConfigCommon {
 
   @Bean()
   public IEmailSender emailSender(AppProperties appProperties, Optional<SubscriptionDeliveryHandlerFactory> subscriptionDeliveryHandlerFactory) {
-//    if (appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null) {
-//      JavaMailEmailSender retVal = new JavaMailEmailSender();
-//
-//      AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
-//      retVal.setSmtpServerHostname(email.getHost());
-//      retVal.setSmtpServerPort(email.getPort());
-//      retVal.setSmtpServerUsername(email.getUsername());
-//      retVal.setSmtpServerPassword(email.getPassword());
-//      retVal.setAuth(email.getAuth());
-//      retVal.setStartTlsEnable(email.getStartTlsEnable());
-//      retVal.setStartTlsRequired(email.getStartTlsRequired());
-//      retVal.setQuitWait(email.getQuitWait());
-//
-//      if(subscriptionDeliveryHandlerFactory.isPresent())
-//       subscriptionDeliveryHandlerFactory.get().setEmailSender(retVal);
-//
-//      return retVal;
-//    }
+    if (appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null) {
+		 MailConfig mailConfig = new MailConfig();
+
+      AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
+      mailConfig.setSmtpHostname(email.getHost());
+      mailConfig.setSmtpPort(email.getPort());
+      mailConfig.setSmtpUsername(email.getUsername());
+      mailConfig.setSmtpPassword(email.getPassword());
+      mailConfig.setSmtpUseStartTLS(email.getStartTlsEnable());
+
+		 IEmailSender emailSender = new EmailSenderImpl(mailConfig);
+
+      if(subscriptionDeliveryHandlerFactory.isPresent())
+       subscriptionDeliveryHandlerFactory.get().setEmailSender(emailSender);
+
+      return emailSender;
+    }
 
     return null;
   }

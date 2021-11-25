@@ -8,8 +8,7 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
-import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
-import ca.uhn.fhir.util.BundleUtil;
+
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -21,47 +20,40 @@ import org.hl7.fhir.r4.model.Subscription;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
 import static java.lang.Thread.sleep;
-import static java.util.Comparator.comparing;
 import static org.awaitility.Awaitility.await;
 import static org.awaitility.Awaitility.pollInSameThread;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
-	{
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties = {
 		"spring.batch.job.enabled=false",
 		"spring.datasource.url=jdbc:h2:mem:dbr4",
 		"hapi.fhir.enable_repository_validating_interceptor=true",
 		"hapi.fhir.fhir_version=r4",
 		"hapi.fhir.subscription.websocket_enabled=true",
 		"hapi.fhir.mdm_enabled=true",
-		//Override is currently required when using MDM as the construction of the MDM beans are ambiguous as they are constructed multiple places. This is evident when running in a spring boot environment
-		"spring.main.allow-bean-definition-overriding=true"
-	})
-public class ExampleServerR4IT {
+		// Override is currently required when using MDM as the construction of the MDM
+		// beans are ambiguous as they are constructed multiple places. This is evident
+		// when running in a spring boot environment
+		"spring.main.allow-bean-definition-overriding=true" })
+class ExampleServerR4IT {
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
 	private IGenericClient ourClient;
 	private FhirContext ourCtx;
 
 	@LocalServerPort
 	private int port;
-
 
 	@Test
 	@Order(0)
@@ -79,27 +71,17 @@ public class ExampleServerR4IT {
 		Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
 		assertEquals(methodName, pt2.getName().get(0).getFamily());
 
-
 		// Wait until the MDM message has been processed
-		await().until(() -> {
-			sleep(1000);
-			return getGoldenResourcePatient() != null;
-		});
+		await().atMost(1, TimeUnit.MINUTES).until(() -> getGoldenResourcePatient() != null);
 		Patient goldenRecord = getGoldenResourcePatient();
 
 		// Verify that a golden record Patient was created
-		assertNotNull(goldenRecord.getMeta().getTag("http://hapifhir.io/fhir/NamingSystem/mdm-record-status", "GOLDEN_RECORD"));
+		assertNotNull(
+			goldenRecord.getMeta().getTag("http://hapifhir.io/fhir/NamingSystem/mdm-record-status", "GOLDEN_RECORD"));
 	}
 
-	private List<Patient> getPatients() {
-		Bundle bundle = ourClient.search().forResource(Patient.class).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute();
-		List<Patient> retVal = BundleUtil.toListOfResourcesOfType(ourCtx, bundle, Patient.class);
-		retVal.sort(comparing(o -> ((Patient) o).getMeta().getLastUpdated()).reversed());
-		return retVal;
-	}
 	private Patient getGoldenResourcePatient() {
-		Bundle bundle = ourClient.search()
-			.forResource(Patient.class)
+		Bundle bundle = ourClient.search().forResource(Patient.class)
 			.withTag("http://hapifhir.io/fhir/NamingSystem/mdm-record-status", "GOLDEN_RECORD")
 			.cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute();
 		if (bundle.getEntryFirstRep() != null) {
@@ -111,7 +93,7 @@ public class ExampleServerR4IT {
 
 	@Test
 	@Order(1)
-	public void testWebsocketSubscription() throws Exception {
+	void testWebsocketSubscription() throws Exception {
 		/*
 		 * Create subscription
 		 */
@@ -129,14 +111,15 @@ public class ExampleServerR4IT {
 		IIdType mySubscriptionId = methodOutcome.getId();
 
 		// Wait for the subscription to be activated
-		await().until(() -> activeSubscriptionCount() == 3);
+		await().atMost(1, TimeUnit.MINUTES).until(() -> activeSubscriptionCount() == 3);
 
 		/*
 		 * Attach websocket
 		 */
 
 		WebSocketClient myWebSocketClient = new WebSocketClient();
-		SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
+		SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(),
+			EncodingEnum.JSON);
 
 		myWebSocketClient.start();
 		URI echoUri = new URI("ws://localhost:" + port + "/websocket");
@@ -154,9 +137,6 @@ public class ExampleServerR4IT {
 		obs.setStatus(Observation.ObservationStatus.FINAL);
 		ourClient.create().resource(obs).execute();
 
-		// Give some time for the subscription to deliver
-		sleep(2000);
-
 		/*
 		 * Ensure that we receive a ping on the websocket
 		 */
@@ -169,9 +149,10 @@ public class ExampleServerR4IT {
 	}
 
 	private int activeSubscriptionCount() {
-		return ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size();
+		return ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active"))
+			.cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry()
+			.size();
 	}
-
 
 	@BeforeEach
 	void beforeEach() {
@@ -181,6 +162,10 @@ public class ExampleServerR4IT {
 		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
 		String ourServerBase = "http://localhost:" + port + "/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-//		ourClient.registerInterceptor(new LoggingInterceptor(false));
+
+		await().atMost(2, TimeUnit.MINUTES).until(() -> {
+			sleep(1000); // execute below function every 1 second
+			return activeSubscriptionCount() == 2; // 2 subscription based on mdm-rules.json
+		});
 	}
 }

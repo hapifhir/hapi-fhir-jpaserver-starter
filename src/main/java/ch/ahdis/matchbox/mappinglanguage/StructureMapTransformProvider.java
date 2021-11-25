@@ -153,7 +153,7 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
   public void transfrom(org.hl7.fhir.r5.model.StructureMap map, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse, ConvertingWorkerContext fhirContext) throws IOException {
 
     String contentType = theServletRequest.getContentType();
-    org.hl7.fhir.r5.elementmodel.Element src = Manager.parse(fhirContext, theServletRequest.getInputStream(),
+    org.hl7.fhir.r5.elementmodel.Element src = Manager.parseSingle(fhirContext, theServletRequest.getInputStream(),
         contentType.contains("xml") ? FhirFormat.XML : FhirFormat.JSON);
     Set<String> highestRankedAcceptValues = RestfulServerUtils
         .parseAcceptHeaderAndReturnHighestRankedOptions(theServletRequest);

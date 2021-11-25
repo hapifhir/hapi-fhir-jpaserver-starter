@@ -1,6 +1,9 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "hapi-fhir-jpaserver.fullname" . -}}
+<<<<<<< HEAD
 {{- $svcPort := .Values.service.port -}}
+=======
+>>>>>>> master
 {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion }}
 apiVersion: networking.k8s.io/v1
 {{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion }}
@@ -44,10 +47,17 @@ spec:
               service:
                 name: {{ $fullName }}
                 port:
+<<<<<<< HEAD
                   number: {{ $svcPort }}
               {{ else }}
               serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
+=======
+                  name: http
+              {{ else }}
+              serviceName: {{ $fullName }}
+              servicePort: http
+>>>>>>> master
               {{- end }}
         {{- end }}
   {{- end }}

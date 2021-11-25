@@ -1,0 +1,27 @@
+{{- if .Values.networkPolicy.enabled }}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "hapi-fhir-jpaserver.fullname" . }}
+  labels:
+    {{- include "hapi-fhir-jpaserver.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "hapi-fhir-jpaserver.selectorLabels" . | nindent 6 }}
+  ingress:
+    # Allow inbound connections from pods with the "hapi-fhir-jpaserver-client: true" label
+    - ports:
+        - port: http
+      from:
+        - podSelector:
+            matchLabels:
+              {{ include "hapi-fhir-jpaserver.fullname" . }}-client: "true"
+          {{- with .Values.networkPolicy.explicitNamespacesSelector }}
+          namespaceSelector:
+            {{ toYaml . | nindent 12 }}
+          {{- end }}
+        {{- with .Values.networkPolicy.allowedFrom }}
+            {{ tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+{{- end }}

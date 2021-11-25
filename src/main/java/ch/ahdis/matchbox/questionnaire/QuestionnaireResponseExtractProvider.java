@@ -75,7 +75,7 @@ public class QuestionnaireResponseExtractProvider  {
     String contentType = theServletRequest.getContentType();   
 
     // parse QuestionnaireResponse from request body
-    org.hl7.fhir.r5.elementmodel.Element src = Manager.parse(baseWorkerContext, theServletRequest.getInputStream(),
+    org.hl7.fhir.r5.elementmodel.Element src = Manager.parseSingle(baseWorkerContext, theServletRequest.getInputStream(),
         contentType.contains("xml") ? FhirFormat.XML : FhirFormat.JSON);
     extract(baseWorkerContext, src, theServletRequest, theServletResponse); 
   }
@@ -177,7 +177,7 @@ public class QuestionnaireResponseExtractProvider  {
 		 String inStr = FhirContext.forR4Cached().newJsonParser().encodeResourceToString(inputResource);
 		 
 		 try {
-	       return Manager.parse(workerContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.JSON);
+	       return Manager.parseSingle(workerContext, new ByteArrayInputStream(inStr.getBytes()), FhirFormat.JSON);
 		 } catch (IOException e) {
 			 throw new UnprocessableEntityException("Cannot convert resource to element model");
 		 }	 

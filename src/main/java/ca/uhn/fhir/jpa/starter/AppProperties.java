@@ -1,22 +1,20 @@
 package ca.uhn.fhir.jpa.starter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import org.hl7.fhir.r4.model.Bundle;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.api.config.DaoConfig.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
 import ca.uhn.fhir.rest.api.EncodingEnum;
+import com.google.common.collect.ImmutableList;
+import org.hl7.fhir.r4.model.Bundle;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
@@ -24,6 +22,7 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 public class AppProperties {
 
   private Boolean cql_enabled = false;
+  private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
@@ -31,6 +30,7 @@ public class AppProperties {
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
+  private Boolean delete_expunge_enabled = false;
   private Boolean enable_index_missing_fields = false;
   private Boolean enable_index_contained_resource = false;
   private Boolean enable_repository_validating_interceptor = false;
@@ -64,6 +64,7 @@ public class AppProperties {
   private Subscription subscription = new Subscription();
   private Cors cors = null;
   private Partitioning partitioning = null;
+  private Boolean install_transitive_ig_dependencies = true;
   private Map<String, ImplementationGuide> implementationGuides = null;
 
   private Boolean lastn_enabled = false;
@@ -89,6 +90,7 @@ public class AppProperties {
   public void setUse_apache_address_strategy_https(Boolean use_apache_address_strategy_https) {
     this.use_apache_address_strategy_https = use_apache_address_strategy_https;
   }
+  
   private Integer search_coord_core_pool_size = 20;
   private Integer search_coord_max_pool_size = 100;
   private Integer search_coord_queue_capacity = 200;
@@ -261,6 +263,14 @@ public class AppProperties {
     this.default_page_size = default_page_size;
   }
 
+  public Boolean getDelete_expunge_enabled() {
+    return delete_expunge_enabled;
+  }
+
+  public void setDelete_expunge_enabled(Boolean delete_expunge_enabled) {
+    this.delete_expunge_enabled = delete_expunge_enabled;
+  }
+
   public Boolean getEnable_index_missing_fields() {
     return enable_index_missing_fields;
   }
@@ -281,11 +291,11 @@ public class AppProperties {
 		return enable_repository_validating_interceptor;
 	}
 
-  public void setEnable_repository_validating_interceptor(Boolean theEnable_repository_validating_interceptor) {
-    enable_repository_validating_interceptor = theEnable_repository_validating_interceptor;
-  }
+	public void setEnable_repository_validating_interceptor(Boolean theEnable_repository_validating_interceptor) {
+		enable_repository_validating_interceptor = theEnable_repository_validating_interceptor;
+	}
 
-  public Boolean getEnforce_referential_integrity_on_delete() {
+	public Boolean getEnforce_referential_integrity_on_delete() {
     return enforce_referential_integrity_on_delete;
   }
 
@@ -467,7 +477,23 @@ public class AppProperties {
   	 this.search_coord_queue_capacity = search_coord_queue_capacity;
   }
 
-public static class Cors {
+	public boolean getInstall_transitive_ig_dependencies() {
+		return install_transitive_ig_dependencies;
+	}
+
+	public void setInstall_transitive_ig_dependencies(boolean install_transitive_ig_dependencies) {
+		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
+	}
+	
+  public Boolean getOpenapi_enabled() {
+    return openapi_enabled;
+  }
+
+  public void setOpenapi_enabled(Boolean openapi_enabled) {
+    this.openapi_enabled = openapi_enabled;
+  }
+
+	public static class Cors {
     private Boolean allow_Credentials = true;
     private List<String> allowed_origin = ImmutableList.of("*");
 

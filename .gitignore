@@ -119,6 +119,13 @@ local.properties
 
 # STS (Spring Tool Suite)
 .springBeans
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
 # Code Recommenders
 .recommenders/
@@ -166,3 +173,6 @@ Temporary Items
 **/charts/*.tgz
 database/h2.mv.db
 database/h2.trace.db
+
+# Helm Chart dependencies
+**/charts/*.tgz
