@@ -51,7 +51,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			}
 
 			if (!isOAuthEnabled() && !isApiKeyEnabled() && !isBasicAuthEnabled()) {
-				logger.warn("APIKEY, BasicAuth and OAuth2 authentication are disabled");
+				logger.warn("APIKEY, basicAuth and OAuth2 authentication are disabled");
 				return allowAll();
 			}
 
@@ -65,7 +65,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 				return authorizeApiKey(theRequest);
 			}
 			if (isBasicAuthEnabled() && isBasicAuthHeaderPresent(theRequest)) {
-				logger.info("Auhorizing via BasicAuth");
+				logger.info("Auhorizing via basic auth");
 				return authorizeBasicAuth(theRequest);
 			}
 		} catch (Exception e) {
