@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter;
 import java.security.PublicKey;
 import java.util.List;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.hl7.fhir.r4.model.IdType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,7 +155,13 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	}
 	
 	private Boolean isBasicAuthEnabled() {
-		return ((BASIC_AUTH_ENABLED != null) && Boolean.parseBoolean(BASIC_AUTH_ENABLED));
+		if ((BASIC_AUTH_ENABLED != null) && Boolean.parseBoolean(BASIC_AUTH_ENABLED)) {
+			if (ObjectUtils.isEmpty(BASIC_AUTH_USERNAME) || ObjectUtils.isEmpty(BASIC_AUTH_PASS)) {
+				logger.warn("Using basic auth without setting username and password");
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	private Boolean isBasicAuthHeaderPresent(RequestDetails theRequest) {
