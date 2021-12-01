@@ -22,6 +22,7 @@ import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
+import ca.uhn.fhir.jpa.provider.ValueSetOperationProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
@@ -91,6 +92,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
   BulkDataExportProvider bulkDataExportProvider;
   @Autowired
   PartitionManagementProvider partitionManagementProvider;
+  @Autowired
+  ValueSetOperationProvider valueSetOperationProvider;
   @Autowired
   BinaryStorageInterceptor binaryStorageInterceptor;
   @Autowired
@@ -366,6 +369,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
     if (appProperties.getBulk_export_enabled()) {
       registerProvider(bulkDataExportProvider);
     }
+
+    // valueSet Operations i.e $expand
+    registerProvider(valueSetOperationProvider);
 
     // Partitioning
     if (appProperties.getPartitioning() != null) {
