@@ -3,7 +3,6 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
-import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ca.uhn.fhir.jpa.starter.cql.StarterCqlR4Config;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @Conditional(OnR4Condition.class)
-@Import(StarterCqlR4Config.class)
+@Import({StarterCqlR4Config.class, ElasticsearchConfig.class})
 public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 
   @Autowired
@@ -81,22 +80,6 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
     JpaTransactionManager retVal = new JpaTransactionManager();
     retVal.setEntityManagerFactory(entityManagerFactory);
     return retVal;
-  }
-
-  @Bean()
-  public ElasticsearchSvcImpl elasticsearchSvc() {
-    if (EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment)) {
-		 String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
-		 if (elasticsearchUrl.startsWith("http")) {
-			 elasticsearchUrl =elasticsearchUrl.substring(elasticsearchUrl.indexOf("://") + 3);
-		 }
-
-      String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
-      String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
-      return new ElasticsearchSvcImpl(elasticsearchUrl, elasticsearchUsername, elasticsearchPassword);
-    } else {
-      return null;
-    }
   }
 
 }

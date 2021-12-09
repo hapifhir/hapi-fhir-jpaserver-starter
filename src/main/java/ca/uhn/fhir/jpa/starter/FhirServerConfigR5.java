@@ -5,12 +5,10 @@ import ca.uhn.fhir.jpa.config.BaseJavaConfigR5;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.annotations.OnR5Condition;
+import ca.uhn.fhir.jpa.starter.cql.StarterCqlR4Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -21,6 +19,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @Conditional(OnR5Condition.class)
+@Import({ElasticsearchConfig.class})
 public class FhirServerConfigR5 extends BaseJavaConfigR5 {
 
   @Autowired
@@ -83,21 +82,5 @@ public class FhirServerConfigR5 extends BaseJavaConfigR5 {
     retVal.setEntityManagerFactory(entityManagerFactory);
     return retVal;
   }
-
-  @Bean()
-  public ElasticsearchSvcImpl elasticsearchSvc() {
-    if (EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment)) {
-      String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
-		 if (elasticsearchUrl.startsWith("http")) {
-			 elasticsearchUrl =elasticsearchUrl.substring(elasticsearchUrl.indexOf("://") + 3);
-		 }
-      String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
-      String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
-      return new ElasticsearchSvcImpl(elasticsearchUrl, elasticsearchUsername, elasticsearchPassword);
-    } else {
-      return null;
-    }
-  }
-
 
 }
