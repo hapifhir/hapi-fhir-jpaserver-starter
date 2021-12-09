@@ -25,6 +25,7 @@ hapi:
 #    default_encoding: JSON
 #    default_pretty_print: true
 #    default_page_size: 20
+#    delete_expunge_enabled: true
 #    enable_index_missing_fields: false
 #    enforce_referential_integrity_on_delete: false
 #    enforce_referential_integrity_on_write: false

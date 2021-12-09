@@ -26,7 +26,8 @@ import java.util.*;
 
 public class EnvironmentHelper {
 
-	public static Properties getHibernateProperties(ConfigurableEnvironment environment, ConfigurableListableBeanFactory theBeanFactory) {
+	public static Properties getHibernateProperties(ConfigurableEnvironment environment,
+		ConfigurableListableBeanFactory myConfigurableListableBeanFactory) {
 		Properties properties = new Properties();
 		Map<String, Object> jpaProps = getPropertiesStartingWith(environment, "spring.jpa.properties");
 		for (Map.Entry<String, Object> entry : jpaProps.entrySet()) {
@@ -42,7 +43,7 @@ public class EnvironmentHelper {
 		//properties.putIfAbsent(AvailableSettings.BEAN_CONTAINER, new SpringBeanContainer(beanFactory));
 
 		//hapi-fhir-jpaserver-base "sensible defaults"
-		Map<String, Object> hapiJpaPropertyMap = new HapiFhirLocalContainerEntityManagerFactoryBean(theBeanFactory).getJpaPropertyMap();
+		Map<String, Object> hapiJpaPropertyMap = new HapiFhirLocalContainerEntityManagerFactoryBean(myConfigurableListableBeanFactory).getJpaPropertyMap();
 		hapiJpaPropertyMap.forEach(properties::putIfAbsent);
 
 		//hapi-fhir-jpaserver-starter defaults

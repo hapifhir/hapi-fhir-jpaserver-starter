@@ -59,8 +59,9 @@ public class FhirServerConfigDstu2 extends BaseJavaConfigDstu2 {
 
   @Override
   @Bean()
-  public LocalContainerEntityManagerFactoryBean entityManagerFactory(ConfigurableListableBeanFactory theBeanFactory) {
-    LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory(theBeanFactory);
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+	  ConfigurableListableBeanFactory myConfigurableListableBeanFactory) {
+    LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory(myConfigurableListableBeanFactory);
     retVal.setPersistenceUnitName("HAPI_PU");
 
     try {
@@ -68,7 +69,7 @@ public class FhirServerConfigDstu2 extends BaseJavaConfigDstu2 {
     } catch (Exception e) {
       throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
     }
-    retVal.setJpaProperties(EnvironmentHelper.getHibernateProperties(configurableEnvironment, theBeanFactory));
+    retVal.setJpaProperties(EnvironmentHelper.getHibernateProperties(configurableEnvironment, myConfigurableListableBeanFactory));
     return retVal;
   }
 

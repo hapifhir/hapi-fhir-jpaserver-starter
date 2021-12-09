@@ -12,6 +12,9 @@ spring:
     # database connection pool size
     hikari:
       maximum-pool-size: 10
+  flyway:
+    check-location: false
+    baselineOnMigrate: true
   jpa:
     properties:
       hibernate.format_sql: false
@@ -35,6 +38,8 @@ spring:
       enabled: false
 hapi:
   fhir:
+    ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
+    openapi_enabled: true
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
 ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
@@ -70,6 +75,7 @@ hapi:
 #    default_encoding: JSON
 #    default_pretty_print: true
 #    default_page_size: 20
+#    delete_expunge_enabled: true
 #    enable_repository_validating_interceptor: false
 #    enable_index_missing_fields: false
 #    enable_index_contained_resource: false

@@ -29,8 +29,6 @@ public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
 
-
-    System.setProperty("spring.batch.job.enabled", "false");
     SpringApplication.run(Application.class, args);
 
     //Server is now accessible at eg. http://localhost:8080/fhir/metadata

@@ -19,6 +19,7 @@ import java.util.*;
 public class AppProperties {
 
   private Boolean cql_enabled = false;
+  private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
   private boolean advanced_lucene_indexing = false;
   private Boolean allow_cascading_deletes = false;
@@ -27,6 +28,7 @@ public class AppProperties {
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
+  private Boolean delete_expunge_enabled = false;
   private Boolean enable_index_missing_fields = false;
   private Boolean enable_index_contained_resource = false;
   private Boolean enable_repository_validating_interceptor = false;
@@ -72,9 +74,17 @@ public class AppProperties {
   private Boolean use_apache_address_strategy = false;
   private Boolean use_apache_address_strategy_https = false;
 
-	private Integer bundle_batch_pool_size = 20;
-	private Integer bundle_batch_pool_max_size = 100;
-	private List<String> local_base_urls = new ArrayList<>();
+  private Integer bundle_batch_pool_size = 20;
+  private Integer bundle_batch_pool_max_size = 100;
+  private List<String> local_base_urls = new ArrayList<>();
+
+	public Boolean getOpenapi_enabled() {
+		return openapi_enabled;
+	}
+
+	public void setOpenapi_enabled(Boolean openapi_enabled) {
+		this.openapi_enabled = openapi_enabled;
+	}
 
 	public Boolean getUse_apache_address_strategy() {
     return use_apache_address_strategy;
@@ -273,6 +283,14 @@ public class AppProperties {
 
   public void setDefault_page_size(Integer default_page_size) {
     this.default_page_size = default_page_size;
+  }
+
+  public Boolean getDelete_expunge_enabled() {
+    return delete_expunge_enabled;
+  }
+
+  public void setDelete_expunge_enabled(Boolean delete_expunge_enabled) {
+    this.delete_expunge_enabled = delete_expunge_enabled;
   }
 
   public Boolean getEnable_index_missing_fields() {

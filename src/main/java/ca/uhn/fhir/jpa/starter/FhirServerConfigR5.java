@@ -60,8 +60,9 @@ public class FhirServerConfigR5 extends BaseJavaConfigR5 {
 
   @Override
   @Bean()
-  public LocalContainerEntityManagerFactoryBean entityManagerFactory(ConfigurableListableBeanFactory theBeanFactory) {
-    LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory(theBeanFactory);
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+	  ConfigurableListableBeanFactory myConfigurableListableBeanFactory) {
+    LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory(myConfigurableListableBeanFactory);
     retVal.setPersistenceUnitName("HAPI_PU");
 
     try {
@@ -70,7 +71,8 @@ public class FhirServerConfigR5 extends BaseJavaConfigR5 {
       throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
     }
 
-    retVal.setJpaProperties(EnvironmentHelper.getHibernateProperties(configurableEnvironment, theBeanFactory));
+    retVal.setJpaProperties(EnvironmentHelper.getHibernateProperties(configurableEnvironment,
+		 myConfigurableListableBeanFactory));
     return retVal;
   }
 
