@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
+import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
@@ -84,7 +85,7 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
   }
 
   @Bean()
-  public ElasticsearchSvcImpl elasticsearchSvc() {
+  public ElasticsearchSvcImpl elasticsearchSvc(PartitionSettings thePartitionSetings) {
 	  if (Boolean.TRUE.equals(EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment))) {
 		  String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
 		  String elasticsearchHost = elasticsearchUrl;
@@ -95,7 +96,7 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 		  }
 		  String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
 		  String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
-		  return new ElasticsearchSvcImpl(elasticsearchProtocol, elasticsearchHost, elasticsearchUsername, elasticsearchPassword);
+		  return new ElasticsearchSvcImpl(thePartitionSetings, elasticsearchUrl, elasticsearchUsername, elasticsearchPassword);
 	  } else {
 		  return null;
 	  }
