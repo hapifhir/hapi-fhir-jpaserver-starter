@@ -89,20 +89,20 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
 
   @Bean()
   public ElasticsearchSvcImpl elasticsearchSvc() {
-    if (EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment)) {
-      String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
-      String elasticsearchHost;
-      if (elasticsearchUrl.startsWith("http")) {
-        elasticsearchHost = elasticsearchUrl.substring(elasticsearchUrl.indexOf("://") + 3, elasticsearchUrl.lastIndexOf(":"));
-      } else {
-        elasticsearchHost = elasticsearchUrl.substring(0, elasticsearchUrl.indexOf(":"));
-      }
-      String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
-      String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
-      return new ElasticsearchSvcImpl(elasticsearchHost, elasticsearchUsername, elasticsearchPassword);
-    } else {
-      return null;
-    }
+	  if (Boolean.TRUE.equals(EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment))) {
+		  String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
+		  String elasticsearchHost = elasticsearchUrl;
+		  String elasticsearchProtocol = EnvironmentHelper.getElasticsearchServerProtocol(configurableEnvironment);
+		  if (elasticsearchUrl.startsWith("http")) {
+			  elasticsearchProtocol = elasticsearchUrl.split("://")[0];
+			  elasticsearchHost = elasticsearchUrl.split("://")[1];
+		  }
+		  String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
+		  String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
+		  return new ElasticsearchSvcImpl(elasticsearchProtocol, elasticsearchHost, elasticsearchUsername, elasticsearchPassword);
+	  } else {
+		  return null;
+	  }
   }
 
 }
