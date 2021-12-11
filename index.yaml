@@ -7,6 +7,36 @@ entries:
         # added, changed, deprecated, removed, fixed, and security.
         - kind: changed
           description: |
+            updated HAPI FHIR starter image to 5.6.0
+        - kind: added
+          description: |
+            added support for configuring PodDisruptionBudget for the server pods
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/prerelease: "true"
+    apiVersion: v2
+    appVersion: v5.6.0
+    created: "2021-12-11T15:15:39.575017673Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.12.2
+    description: A Helm chart for deploying the HAPI FHIR JPA server starter on Kubernetes.
+    digest: 7142ee81b4d6dc86a0714c6ed614f6f80c885912e4caf130bdc601441845d9e8
+    home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    name: hapi-fhir-jpaserver
+    sources:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    type: application
+    urls:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.7.0/hapi-fhir-jpaserver-0.7.0.tgz
+    version: 0.7.0
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
+          description: |
             updated HAPI FHIR starter image to 5.5.1
       artifacthub.io/license: Apache-2.0
       artifacthub.io/prerelease: "true"
@@ -28,4 +58,4 @@ entries:
     urls:
     - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.6.0/hapi-fhir-jpaserver-0.6.0.tgz
     version: 0.6.0
-generated: "2021-10-07T10:03:13.803084605Z"
+generated: "2021-12-11T15:15:39.575025773Z"
