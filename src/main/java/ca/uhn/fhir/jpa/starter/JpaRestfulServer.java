@@ -4,6 +4,7 @@ import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import org.hl7.fhir.r4.model.Location;
 import org.smartregister.extension.model.*;
 import org.smartregister.extension.rest.LocationHierarchyResourceProvider;
+import org.smartregister.extension.rest.PractitionerDetailsResourceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
@@ -28,6 +29,7 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
 
     // Add your own customization here
 	  registerLocationHierarchyTypes();
+	  registerPracitionerDetailsTypes();
   }
 
   private void registerLocationHierarchyTypes() {
@@ -44,5 +46,15 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
 	  getFhirContext().registerCustomType(TreeNode.class);
 	  getFhirContext().registerCustomType(ChildTreeNode.class);
   }
+
+	private void registerPracitionerDetailsTypes() {
+//		IFhirResourceDao<Location> locationIFhirResourceDao = daoRegistry.getResourceDao(LOCATION);
+		PractitionerDetailsResourceProvider practitionerDetailsResourceProvider = new PractitionerDetailsResourceProvider();
+
+		registerProvider(practitionerDetailsResourceProvider);
+		getFhirContext().registerCustomType(PractitionerDetails.class);
+		getFhirContext().registerCustomType(KeycloakUserDetails.class);
+		getFhirContext().registerCustomType(UserBioData.class);
+	}
 
 }
