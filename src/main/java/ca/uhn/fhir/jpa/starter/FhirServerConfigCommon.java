@@ -160,8 +160,8 @@ public class FhirServerConfigCommon {
   }
 
   @Bean
-  public ModelConfig modelConfig(AppProperties appProperties) {
-    ModelConfig modelConfig = new ModelConfig();
+  public ModelConfig modelConfig(AppProperties appProperties, DaoConfig daoConfig) {
+    ModelConfig modelConfig = daoConfig.getModelConfig();
     modelConfig.setAllowContainsSearches(appProperties.getAllow_contains_searches());
     modelConfig.setAllowExternalReferences(appProperties.getAllow_external_references());
     modelConfig.setDefaultSearchParamsCanBeOverridden(appProperties.getAllow_override_default_search_params());

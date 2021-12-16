@@ -1,6 +1,8 @@
 spring:
   flyway:
     enabled: false
+    check-location: false
+    baselineOnMigrate: true
   datasource:
     url: 'jdbc:h2:file:./target/database/h2'
     #url: jdbc:h2:mem:test_mem
@@ -12,9 +14,6 @@ spring:
     # database connection pool size
     hikari:
       maximum-pool-size: 10
-  flyway:
-    check-location: false
-    baselineOnMigrate: true
   jpa:
     properties:
       hibernate.format_sql: false
@@ -92,6 +91,8 @@ hapi:
 #    graphql_enabled: true
 #    narrative_enabled: true
 #    mdm_enabled: true
+#    local_base_urls:
+#      - https://hapi.fhir.org/baseR4
 #    partitioning:
 #      allow_references_across_partitions: false
 #      partitioning_include_in_search_hashes: false
