@@ -410,6 +410,11 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setLastNEnabled(true);
     }
 
+	 if (appProperties.getStore_resource_in_lucene_index_enabled()) {
+		 // fixme after hapi-fhir version bump and published
+		 //daoConfig.setStoreResourceInLuceneIndex(true);
+	 }
+
     daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 
 		daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
