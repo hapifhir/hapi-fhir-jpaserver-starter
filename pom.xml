@@ -1,6 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
@@ -14,7 +13,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-		  <version>5.6.0</version>
+        <version>5.6.0</version>
     </parent>
 
     <artifactId>matchbox</artifactId>
@@ -22,7 +21,8 @@
     <properties>
         <java.version>11</java.version>
         <spring_boot_version>2.5.6</spring_boot_version>
-		<fhir.core.version>5.5.7</fhir.core.version>
+        <fhir.core.version>5.5.7</fhir.core.version>
+        <log4j_to_slf4j_version>2.16.0</log4j_to_slf4j_version>
     </properties>
 
     <prerequisites>
@@ -156,9 +156,17 @@
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
             is used here, but log4j would also be fine. -->
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>1.2.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-to-slf4j</artifactId>
+            <version>${log4j_to_slf4j_version}</version>
         </dependency>
 
         <!-- Needed for JEE/Servlet support -->
@@ -289,12 +297,12 @@
             <scope>test</scope>
         </dependency>
 
-		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-client</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.hl7.fhir.testcases</groupId>
             <artifactId>fhir-test-cases</artifactId>
@@ -367,7 +375,7 @@
         </pluginManagement>
 
         <!-- Tells Maven to name the generated WAR file as ROOT.war -->
-		<finalName>matchbox</finalName>
+        <finalName>matchbox</finalName>
 
         <plugins>
             <plugin>
@@ -559,8 +567,8 @@
         <!-- Use the boot profile for development and debugging options when using your IDE -->
         <profile>
             <id>boot</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
+            <activation>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <dependencies>
                 <dependency>

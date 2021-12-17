@@ -406,6 +406,13 @@ Content-Type: application/fhir+json
 
 < ./examples/medicationcardfix.json
 
+
+### https://github.com/ehealthsuisse/ch-emed/issues/68
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationdispense HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/1-2-MedicationDispense-fr-CH.xml
+
 ### CH-Core Franz Muster (No issues detected)
 POST {{host}}/$validate HTTP/1.1
 Content-Type: application/fhir+xml

@@ -65,3 +65,10 @@ hapi:
       cheprmhealth:
         name: ch.fhir.ig.ch-epr-mhealth
         version: 0.2.0
+      challergyintolerance:
+        name: ch.fhir.ig.ch-allergyintolerance
+        version": 0.2.0
+      chradorderpox:
+        url: https://build.fhir.org/ig/ahdis/ch-rad-poc/package.tgz
+        name: ch.ahdis.ig.ch-rad-poc
+        version: 0.1.0

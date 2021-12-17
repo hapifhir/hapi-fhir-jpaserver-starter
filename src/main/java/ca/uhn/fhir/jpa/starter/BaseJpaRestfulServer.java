@@ -40,6 +40,7 @@ import ca.uhn.fhir.jpa.provider.JpaCapabilityStatementProvider;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
+import ca.uhn.fhir.jpa.provider.ValueSetOperationProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
@@ -143,6 +144,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
   
   @Autowired
   private ImplementationGuideResourceProvider implementationGuideResourceProvider;
+  
+  @Autowired
+  private ValueSetOperationProvider valueSetOperationProvider;
 
   
 	@Autowired
@@ -458,7 +462,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setLastNEnabled(true);
     }
 
-    registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider);
+    registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider, valueSetOperationProvider);
     // Repository Validating Interceptor
 //	if (Boolean.TRUE.equals(appProperties.getEnable_repository_validating_interceptor())) {
 //		 RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory = myApplicationContext.getBean(RepositoryValidationInterceptorFactory.class);

@@ -1,0 +1,41 @@
+{
+  "resourceType": "Questionnaire",
+  "name": "InitialValue",
+  "title": "Initial Values",
+  "status": "active",
+  "description": "Test form with that uses initial values",
+  "item": [
+    {
+      "linkId": "1",
+      "text": "Root Group",
+      "type": "group",
+      "item": [
+        {
+          "linkId": "init-val-string",
+          "text": "String with initial value YUP",
+          "type": "string",
+          "initial": [
+            {
+              "valueString": "YUP"
+            }
+          ]
+        },
+        {
+          "extension" : [
+            {
+              "url" : "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+              "valueExpression" : {
+                "description" : "current date",
+                "language" : "text/fhirpath",
+                "expression" : "now().toString().substring(19).replace('T','').replace('-','').replace('-','').replace(':','').replace(':','')+'3'"
+              }
+            }
+          ],
+          "linkId" : "2.7",
+          "text" : "Current Date:",
+          "type" : "string"
+        } 
+      ]
+    }
+  ]
+}
