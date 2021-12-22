@@ -1,0 +1,67 @@
+name: Cucumber Integration Test
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Setup postgres
+        uses: harmon758/postgresql-action@v1
+        with:
+          postgresql version: '13'
+          postgresql db: 'hapi_fhir'
+          postgresql user: 'postgres'
+          postgresql password: 'root'
+
+      - name: Install postgres client
+        run: |
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo apt-get -y update
+          sudo apt-get -y install postgresql-client-13
+
+      - name: Download hapi fhir server database dump
+        run: wget -q https://opensrp-stage.s3.eu-west-1.amazonaws.com/hapi-fhir-integration-test/hapi_fhir.dump -O hapi_fhir.dump
+
+      - name: Import database dump
+        run: pg_restore -h localhost -U postgres -d hapi_fhir -xOW --role=postgres hapi_fhir.dump
+        env:
+          PGPASSWORD: 'root'
+
+      - name: Update integration test application properties
+        run: |
+          sed -i 's/LogTestRail=false/LogTestRail=true/g' tools/api-automation/src/test/resources/application.properties
+          sed -i 's/baseUrl=<fhir_baseUrl>/baseUrl=http:\/\/localhost:8080\/fhir/g' tools/api-automation/src/test/resources/application.properties
+          sed -i 's/TestRailusername=<testrail_username>/TestRailusername='$(echo $TEST_RAIL_USERNAME)'/g' tools/api-automation/src/test/resources/application.properties
+          sed -i 's/TestRailpassword=<testrail_password>/TestRailpassword='$(echo $TEST_RAIL_PASSWORD)'/g' tools/api-automation/src/test/resources/application.properties
+          sed -i 's/TestRailurl=<testrail_url>/TestRailurl='$(echo $TEST_RAIL_URL)'/g' tools/api-automation/src/test/resources/application.properties
+        env:
+          TEST_RAIL_USERNAME: ${{ secrets.TEST_RAIL_USERNAME }}
+          TEST_RAIL_PASSWORD: ${{ secrets.TEST_RAIL_PASSWORD }}
+          TEST_RAIL_URL: ${{ secrets.TEST_RAIL_URL }}
+
+      - name: Disable hapi fhir keycloak authentication
+        run: |
+          sed -i 's/keycloak:/keycloak:\n\ \ \enabled:\ false/g' src/main/resources/application.yaml
+
+      - name: Run hapi fhir server
+        run: mvn clean spring-boot:run -Pboot > /dev/null 2>&1 &
+
+      - name: Wait for hapi fhir server to be reachable
+        run: while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:8080/fhir/Patient)" != "200" ]]; do sleep 5; done
+
+      - name: Run integration test
+        run: mvn -f tools/api-automation/ clean test
