@@ -5,7 +5,19 @@ services:
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
     ports:
-      - "8080:8080"
+      - '8080:8080'
+    environment:
+      datasource.driver: 'com.mysql.jdbc.Driver'
+      datasource.password: 'admin'
+      datasource.url: 'jdbc:mysql://hapi-fhir-mysql/hapi'
+      datasource.username: 'admin'
+      fhir_version: 'R4'
+      hapi.fhir.server_address: 'http://localhost:8080/fhir/'
+      hibernate.dialect: 'org.hibernate.dialect.MySQL5InnoDBDialect'
+      reuse_cached_search_results_millis: '0'
+      spring.config.location: '/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/application-custom.yaml'
+      subscription.resthook.enabled: 'true'
+      subscription.websocket.enabled: 'true'
   hapi-fhir-mysql:
     image: mysql:latest
     container_name: hapi-fhir-mysql

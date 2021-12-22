@@ -24,8 +24,8 @@ CMD ["/app/main.war"]
 
 FROM tomcat:9.0.53-jdk11-openjdk-slim-bullseye
 
-RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles && rm -rf /usr/local/tomcat/webapps/ROOT
-COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/*.war /usr/local/tomcat/webapps/ROOT.war
+RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles
+COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/*.war /usr/local/tomcat/webapps/
 
 COPY catalina.properties /usr/local/tomcat/conf/catalina.properties
 COPY server.xml /usr/local/tomcat/conf/server.xml
