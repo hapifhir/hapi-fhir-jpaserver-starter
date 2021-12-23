@@ -8,7 +8,6 @@ import org.hl7.fhir.r4.model.IdType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
-import org.springframework.util.StringUtils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -88,7 +87,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 
 	private List<IAuthRule> authorizeOAuth(RequestDetails theRequest) throws Exception {
 		String token = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
-		if (StringUtils.isEmpty(token)) {
+		if (ObjectUtils.isEmpty(token)) {
 			logger.info("Authorization failure - missing authorization header");
 			return denyAll();
 		}
@@ -103,7 +102,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 		try {
 			DecodedJWT jwt = JWT.decode(token);
 			String kid = oAuth2Helper.getJwtKeyId(token);
-			publicKey = StringUtils.isEmpty(publicKey) ? oAuth2Helper.getJwtPublicKey(kid, OAUTH_URL) : publicKey;
+			publicKey = ObjectUtils.isEmpty(publicKey) ? oAuth2Helper.getJwtPublicKey(kid, OAUTH_URL) : publicKey;
 			JWTVerifier verifier = oAuth2Helper.getJWTVerifier(jwt, publicKey);
 			jwt = verifier.verify(token);
 			if (oAuth2Helper.verifyClientId(jwt, OAUTH_CLIENT_ID)) {			  
@@ -113,7 +112,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			    }
 			  } else if (oAuth2Helper.hasClientRole(jwt, OAUTH_CLIENT_ID, OAUTH_USER_ROLE)) {
 			    String patientId = getPatientFromToken(theRequest);
-			    return StringUtils.isEmpty(patientId) ? allowAll() : allowForClaimResourceId(theRequest,patientId);
+			    return ObjectUtils.isEmpty(patientId) ? allowAll() : allowForClaimResourceId(theRequest,patientId);
 			  }
 			}
 		} catch (TokenExpiredException e) {
@@ -166,7 +165,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	
 	private Boolean isBasicAuthHeaderPresent(RequestDetails theRequest) {
 		String token = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
-		return (!StringUtils.isEmpty(token) && token.toUpperCase().contains(BASIC_AUTH_TOKEN_PREFIX));
+		return (!ObjectUtils.isEmpty(token) && token.toUpperCase().contains(BASIC_AUTH_TOKEN_PREFIX));
 	}
 	
 	private Boolean isApiKeyEnabled() {
@@ -175,12 +174,12 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 
 	private Boolean isApiKeyHeaderPresent(RequestDetails theRequest) {
 		String apiKey = theRequest.getHeader(APIKEY_HEADER);
-		return (!StringUtils.isEmpty(apiKey));
+		return (!ObjectUtils.isEmpty(apiKey));
 	}
 
 	private List<IAuthRule> authorizeApiKey(RequestDetails theRequest) {
 		String apiKey = theRequest.getHeader(APIKEY_HEADER);
-		if (StringUtils.isEmpty(apiKey)) {
+		if (ObjectUtils.isEmpty(apiKey)) {
 			logger.info("Authorization failure - missing X-API-KEY header");
 			return denyAll();
 		}
@@ -195,7 +194,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	
 	private List<IAuthRule> authorizeBasicAuth(RequestDetails theRequest) {
 		String basicAuthToken = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
-		if (StringUtils.isEmpty(basicAuthToken)) {
+		if (ObjectUtils.isEmpty(basicAuthToken)) {
 			logger.info("Authorization failure - missing authorization header");
 			return denyAll();
 		}

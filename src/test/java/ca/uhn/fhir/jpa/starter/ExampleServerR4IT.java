@@ -6,161 +6,161 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
-import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
-import ca.uhn.fhir.util.BundleUtil;
+
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Observation;
+import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Subscription;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
+import static java.lang.Thread.sleep;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
-  {
-    "spring.batch.job.enabled=false",
-    "spring.datasource.url=jdbc:h2:mem:dbr4",
-    "hapi.fhir.fhir_version=r4",
-    "hapi.fhir.subscription.websocket_enabled=true",
-    "hapi.fhir.empi_enabled=true",
-    //Override is currently required when using Empi as the construction of the Empi beans are ambiguous as they are constructed multiple places. This is evident when running in a spring boot environment
-    "spring.main.allow-bean-definition-overriding=true"
-  })
-public class ExampleServerR4IT {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties = {
+		"spring.batch.job.enabled=false",
+		"spring.datasource.url=jdbc:h2:mem:dbr4",
+		"hapi.fhir.enable_repository_validating_interceptor=true",
+		"hapi.fhir.fhir_version=r4",
+		"hapi.fhir.subscription.websocket_enabled=true",
+		"hapi.fhir.mdm_enabled=true",
+		// Override is currently required when using MDM as the construction of the MDM
+		// beans are ambiguous as they are constructed multiple places. This is evident
+		// when running in a spring boot environment
+		"spring.main.allow-bean-definition-overriding=true" })
+class ExampleServerR4IT {
+	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
+	private IGenericClient ourClient;
+	private FhirContext ourCtx;
 
-  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
-  private IGenericClient ourClient;
-  private FhirContext ourCtx;
+	@LocalServerPort
+	private int port;
 
-  @LocalServerPort
-  private int port;
+	@Test
+	@Order(0)
+	void testCreateAndRead() {
+		String methodName = "testCreateAndRead";
+		ourLog.info("Entering " + methodName + "()...");
 
+		Patient pt = new Patient();
+		pt.setActive(true);
+		pt.getBirthDateElement().setValueAsString("2020-01-01");
+		pt.addIdentifier().setSystem("http://foo").setValue("12345");
+		pt.addName().setFamily(methodName);
+		IIdType id = ourClient.create().resource(pt).execute().getId();
 
-  @Test
-  void testCreateAndRead() {
+		Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
+		assertEquals(methodName, pt2.getName().get(0).getFamily());
 
-    String methodName = "testCreateResourceConditional";
+		// Wait until the MDM message has been processed
+		await().atMost(1, TimeUnit.MINUTES).until(() -> getGoldenResourcePatient() != null);
+		Patient goldenRecord = getGoldenResourcePatient();
 
-    Patient pt = new Patient();
-    pt.setActive(true);
-    pt.getBirthDateElement().setValueAsString("2020-01-01");
-    pt.addIdentifier().setSystem("http://foo").setValue("12345");
-    pt.addName().setFamily(methodName);
-    IIdType id = ourClient.create().resource(pt).execute().getId();
+		// Verify that a golden record Patient was created
+		assertNotNull(
+			goldenRecord.getMeta().getTag("http://hapifhir.io/fhir/NamingSystem/mdm-record-status", "GOLDEN_RECORD"));
+	}
 
-    Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
-    assertEquals(methodName, pt2.getName().get(0).getFamily());
+	private Patient getGoldenResourcePatient() {
+		Bundle bundle = ourClient.search().forResource(Patient.class)
+			.withTag("http://hapifhir.io/fhir/NamingSystem/mdm-record-status", "GOLDEN_RECORD")
+			.cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute();
+		if (bundle.getEntryFirstRep() != null) {
+			return (Patient) bundle.getEntryFirstRep().getResource();
+		} else {
+			return null;
+		}
+	}
 
-    // Test EMPI
+	@Test
+	@Order(1)
+	void testWebsocketSubscription() throws Exception {
+		/*
+		 * Create subscription
+		 */
+		Subscription subscription = new Subscription();
+		subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
+		subscription.setStatus(Subscription.SubscriptionStatus.REQUESTED);
+		subscription.setCriteria("Observation?status=final");
 
-    // Wait until the EMPI message has been processed
-    await().until(() -> getPeople().size() > 0);
-    List<Person> persons = getPeople();
+		Subscription.SubscriptionChannelComponent channel = new Subscription.SubscriptionChannelComponent();
+		channel.setType(Subscription.SubscriptionChannelType.WEBSOCKET);
+		channel.setPayload("application/json");
+		subscription.setChannel(channel);
 
-    // Verify a Person was created that links to our Patient
-    Optional<String> personLinkToCreatedPatient = persons.stream()
-      .map(Person::getLink)
-      .flatMap(Collection::stream)
-      .map(Person.PersonLinkComponent::getTarget)
-      .map(Reference::getReference)
-      .filter(pid -> id.toUnqualifiedVersionless().getValue().equals(pid))
-      .findAny();
-    assertTrue(personLinkToCreatedPatient.isPresent());
-  }
+		MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
+		IIdType mySubscriptionId = methodOutcome.getId();
 
-  private List<Person> getPeople() {
-    Bundle bundle = ourClient.search().forResource(Person.class).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute();
-    return BundleUtil.toListOfResourcesOfType(ourCtx, bundle, Person.class);
-  }
+		// Wait for the subscription to be activated
+		await().atMost(1, TimeUnit.MINUTES).until(() -> activeSubscriptionCount() == 3);
 
-  @Test
-  public void testWebsocketSubscription() throws Exception {
-    /*
-     * Create subscription
-     */
-    Subscription subscription = new Subscription();
-    subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
-    subscription.setStatus(Subscription.SubscriptionStatus.REQUESTED);
-    subscription.setCriteria("Observation?status=final");
+		/*
+		 * Attach websocket
+		 */
 
-    Subscription.SubscriptionChannelComponent channel = new Subscription.SubscriptionChannelComponent();
-    channel.setType(Subscription.SubscriptionChannelType.WEBSOCKET);
-    channel.setPayload("application/json");
-    subscription.setChannel(channel);
+		WebSocketClient myWebSocketClient = new WebSocketClient();
+		SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(),
+			EncodingEnum.JSON);
 
-    MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
-    IIdType mySubscriptionId = methodOutcome.getId();
+		myWebSocketClient.start();
+		URI echoUri = new URI("ws://localhost:" + port + "/websocket");
+		ClientUpgradeRequest request = new ClientUpgradeRequest();
+		ourLog.info("Connecting to : {}", echoUri);
+		Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
+		Session session = connection.get(2, TimeUnit.SECONDS);
 
-    // Wait for the subscription to be activated
-    await().until(() -> activeSubscriptionCount() == 3);
+		ourLog.info("Connected to WS: {}", session.isOpen());
 
-    /*
-     * Attach websocket
-     */
+		/*
+		 * Create a matching resource
+		 */
+		Observation obs = new Observation();
+		obs.setStatus(Observation.ObservationStatus.FINAL);
+		ourClient.create().resource(obs).execute();
 
-    WebSocketClient myWebSocketClient = new WebSocketClient();
-    SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
+		/*
+		 * Ensure that we receive a ping on the websocket
+		 */
+		waitForSize(1, () -> mySocketImplementation.myPingCount);
 
-    myWebSocketClient.start();
-    URI echoUri = new URI("ws://localhost:" + port + "/websocket");
-    ClientUpgradeRequest request = new ClientUpgradeRequest();
-    ourLog.info("Connecting to : {}", echoUri);
-    Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
-    Session session = connection.get(2, TimeUnit.SECONDS);
+		/*
+		 * Clean up
+		 */
+		ourClient.delete().resourceById(mySubscriptionId).execute();
+	}
 
-    ourLog.info("Connected to WS: {}", session.isOpen());
+	private int activeSubscriptionCount() {
+		return ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active"))
+			.cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry()
+			.size();
+	}
 
-    /*
-     * Create a matching resource
-     */
-    Observation obs = new Observation();
-    obs.setStatus(Observation.ObservationStatus.FINAL);
-    ourClient.create().resource(obs).execute();
+	@BeforeEach
+	void beforeEach() {
 
-    // Give some time for the subscription to deliver
-    Thread.sleep(2000);
+		ourCtx = FhirContext.forR4();
+		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
+		String ourServerBase = "http://localhost:" + port + "/fhir/";
+		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
 
-    /*
-     * Ensure that we receive a ping on the websocket
-     */
-    waitForSize(1, () -> mySocketImplementation.myPingCount);
-
-    /*
-     * Clean up
-     */
-    ourClient.delete().resourceById(mySubscriptionId).execute();
-  }
-
-  private int activeSubscriptionCount() {
-    return ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size();
-  }
-
-
-  @BeforeEach
-  void beforeEach() {
-
-    ourCtx = FhirContext.forR4();
-    ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-    ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-    String ourServerBase = "http://localhost:" + port + "/fhir/";
-    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-    ourClient.registerInterceptor(new LoggingInterceptor(true));
-  }
+		await().atMost(2, TimeUnit.MINUTES).until(() -> {
+			sleep(1000); // execute below function every 1 second
+			return activeSubscriptionCount() == 2; // 2 subscription based on mdm-rules.json
+		});
+	}
 }

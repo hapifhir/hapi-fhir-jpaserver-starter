@@ -1,0 +1,135 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hapi-fhir-jpaserver.fullname" . }}
+  labels:
+    {{- include "hapi-fhir-jpaserver.labels" . | nindent 4 }}
+  {{- with .Values.deploymentAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "hapi-fhir-jpaserver.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "hapi-fhir-jpaserver.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: wait-for-db-to-be-ready
+          image: "{{ .Values.postgresql.image.registry }}/{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          env:
+            - name: PGHOST
+              value: "{{ include "hapi-fhir-jpaserver.database.host" . }}"
+            - name: PGPORT
+              value: "{{ include "hapi-fhir-jpaserver.database.port" . }}"
+            - name: PGUSER
+              value: "{{ include "hapi-fhir-jpaserver.database.user" . }}"
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              until pg_isready; do
+                echo "Waiting for DB ${PGUSER}@${PGHOST}:${PGPORT} to be up";
+                sleep 15;
+              done;
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ include "hapi-fhir-jpaserver.imageTag" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          {{- with .Values.readinessProbe }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            successThreshold: {{ .successThreshold }}
+            failureThreshold: {{ .failureThreshold }}
+          {{- end }}
+          startupProbe:
+            httpGet:
+              path: /fhir/metadata
+              port: http
+          {{- with .Values.startupProbe }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            successThreshold: {{ .successThreshold }}
+            failureThreshold: {{ .failureThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: {{ include "hapi-fhir-jpaserver.database.jdbcUrl" $ }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ include "hapi-fhir-jpaserver.database.user" $ }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hapi-fhir-jpaserver.postgresql.secretName" . }}
+                  key: {{ include "hapi-fhir-jpaserver.postgresql.secretKey" . }}
+            - name: SPRING_DATASOURCE_DRIVERCLASSNAME
+              value: org.postgresql.Driver
+            - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+              value: org.hibernate.dialect.PostgreSQL10Dialect
+            - name: HAPI_FHIR_USE_APACHE_ADDRESS_STRATEGY
+              value: "true"
+            - name: SPRING_JPA_DATABASE_PLATFORM
+              value: org.hibernate.dialect.PostgreSQLDialect
+            {{- if .Values.extraEnv }}
+            {{ toYaml .Values.extraEnv | nindent 12 }}
+            {{- end }}
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp-volume
+            - mountPath: /app/target
+              name: lucenefiles-volume
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
+        - name: lucenefiles-volume
+          emptyDir: {}

@@ -12,7 +12,7 @@ import ca.uhn.fhir.rest.server.interceptor.consent.ConsentInterceptor;
 
 @Import(AppProperties.class)
 public class JpaRestfulServer extends BaseJpaRestfulServer {
-	
+
 	private static final String FHIR_VERSION = System.getenv("fhir_version");
 	private static final String OAUTH_ENABLED = System.getenv("OAUTH_ENABLED");
 
@@ -30,12 +30,11 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     super.initialize();
 
     // Add your own customization here
-    
+
     /* Custom ServerConformanceProvider will be triggered when fhir version is R4 and Oauth is enabled. */
     if (FHIR_VERSION.equals(FhirVersionEnum.R4.name()) && Boolean.parseBoolean(OAUTH_ENABLED)) {
-    	CustomServerCapabilityStatementProviderR4 customCapabilityStatementProviderR4 = new CustomServerCapabilityStatementProviderR4(this, fhirSystemDao,
-    	          daoConfig, searchParamRegistry);
-    	setServerConformanceProvider(customCapabilityStatementProviderR4);
+    	CustomServerCapabilityStatementProviderR4 capabilityStatementProviderR4 = new CustomServerCapabilityStatementProviderR4(this);
+    	setServerConformanceProvider(capabilityStatementProviderR4);
     }
     SearchNarrowingInterceptor customSearchNarrowingInterceptor = new CustomSearchNarrowingInterceptor();
     this.registerInterceptor(customSearchNarrowingInterceptor);

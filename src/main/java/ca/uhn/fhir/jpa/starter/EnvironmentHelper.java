@@ -1,152 +1,186 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.jpa.config.HapiFhirLocalContainerEntityManagerFactoryBean;
+import ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer;
 import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
-import org.hibernate.search.elasticsearch.cfg.ElasticsearchIndexStatus;
-import org.hibernate.search.elasticsearch.cfg.IndexSchemaManagementStrategy;
+import org.apache.lucene.util.Version;
+import org.hibernate.cfg.AvailableSettings;
+import org.hibernate.search.backend.elasticsearch.cfg.ElasticsearchBackendSettings;
+import org.hibernate.search.backend.elasticsearch.index.IndexStatus;
+import org.hibernate.search.backend.lucene.cfg.LuceneBackendSettings;
+import org.hibernate.search.backend.lucene.cfg.LuceneIndexSettings;
+import org.hibernate.search.backend.lucene.lowlevel.directory.impl.LocalFileSystemDirectoryProvider;
+import org.hibernate.search.engine.cfg.BackendSettings;
+import org.hibernate.search.mapper.orm.automaticindexing.session.AutomaticIndexingSynchronizationStrategyNames;
+import org.hibernate.search.mapper.orm.cfg.HibernateOrmMapperSettings;
+import org.hibernate.search.mapper.orm.schema.management.SchemaManagementStrategyName;
+import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
+import org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy;
 import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.PropertySource;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class EnvironmentHelper {
 
-  public static Properties getHibernateProperties(ConfigurableEnvironment environment) {
-    Properties properties = new Properties();
+	public static Properties getHibernateProperties(ConfigurableEnvironment environment) {
+		Properties properties = new Properties();
+		Map<String, Object> jpaProps = getPropertiesStartingWith(environment, "spring.jpa.properties");
+		for (Map.Entry<String, Object> entry : jpaProps.entrySet()) {
+			String strippedKey = entry.getKey().replace("spring.jpa.properties.", "");
+			properties.put(strippedKey, entry.getValue().toString());
+		}
 
-    if (environment.getProperty("spring.jpa.properties", String.class) == null) {
-      properties.put("hibernate.search.model_mapping", "ca.uhn.fhir.jpa.search.LuceneSearchMappingFactory");
-      properties.put("hibernate.format_sql", "false");
-      properties.put("hibernate.show_sql", "false");
-      properties.put("hibernate.hbm2ddl.auto", "update");
-      properties.put("hibernate.jdbc.batch_size", "20");
-      properties.put("hibernate.cache.use_query_cache", "false");
-      properties.put("hibernate.cache.use_second_level_cache", "false");
-      properties.put("hibernate.cache.use_structured_entries", "false");
-      properties.put("hibernate.cache.use_minimal_puts", "false");
-      properties.put("hibernate.search.default.directory_provider", "filesystem");
-      properties.put("hibernate.search.default.indexBase", "target/lucenefiles");
-      properties.put("hibernate.search.lucene_version", "LUCENE_CURRENT");
-    } else {
-      Arrays.asList(environment.getProperty("spring.jpa.properties", String.class).split(" ")).stream().forEach(s ->
-      {
-        String[] values = s.split("=");
-        properties.put(values[0], values[1]);
-      });
-    }
+		//Spring Boot Autoconfiguration defaults
+		properties.putIfAbsent(AvailableSettings.SCANNER, "org.hibernate.boot.archive.scan.internal.DisabledScanner");
+		properties.putIfAbsent(AvailableSettings.IMPLICIT_NAMING_STRATEGY, SpringImplicitNamingStrategy.class.getName());
+		properties.putIfAbsent(AvailableSettings.PHYSICAL_NAMING_STRATEGY, SpringPhysicalNamingStrategy.class.getName());
+		//TODO The bean factory should be added as parameter but that requires that it can be injected from the entityManagerFactory bean from xBaseConfig
+		//properties.putIfAbsent(AvailableSettings.BEAN_CONTAINER, new SpringBeanContainer(beanFactory));
 
-    if (environment.getProperty("elasticsearch.enabled", Boolean.class) != null
-          && environment.getProperty("elasticsearch.enabled", Boolean.class) == true ){
-      ElasticsearchHibernatePropertiesBuilder builder = new ElasticsearchHibernatePropertiesBuilder();
-      ElasticsearchIndexStatus requiredIndexStatus = environment.getProperty("elasticsearch.required_index_status", ElasticsearchIndexStatus.class);
-      if (requiredIndexStatus == null) {
-        builder.setRequiredIndexStatus(ElasticsearchIndexStatus.YELLOW);
-      } else {
-        builder.setRequiredIndexStatus(requiredIndexStatus);
-      }
+		//hapi-fhir-jpaserver-base "sensible defaults"
+		Map<String, Object> hapiJpaPropertyMap = new HapiFhirLocalContainerEntityManagerFactoryBean().getJpaPropertyMap();
+		hapiJpaPropertyMap.forEach(properties::putIfAbsent);
 
-      builder.setRestUrl(getElasticsearchServerUrl(environment));
-      builder.setUsername(getElasticsearchServerUsername(environment));
-      builder.setPassword(getElasticsearchServerPassword(environment));
-      IndexSchemaManagementStrategy indexSchemaManagementStrategy = environment.getProperty("elasticsearch.schema_management_strategy", IndexSchemaManagementStrategy.class);
-      if (indexSchemaManagementStrategy == null) {
-        builder.setIndexSchemaManagementStrategy(IndexSchemaManagementStrategy.CREATE);
-      } else {
-        builder.setIndexSchemaManagementStrategy(indexSchemaManagementStrategy);
-      }
-      //    pretty_print_json_log: false
-      Boolean refreshAfterWrite = environment.getProperty("elasticsearch.debug.refresh_after_write", Boolean.class);
-      if (refreshAfterWrite == null) {
-        builder.setDebugRefreshAfterWrite(false);
-      } else {
-        builder.setDebugRefreshAfterWrite(refreshAfterWrite);
-      }
-      //    pretty_print_json_log: false
-      Boolean prettyPrintJsonLog = environment.getProperty("elasticsearch.debug.pretty_print_json_log", Boolean.class);
-      if (prettyPrintJsonLog == null) {
-        builder.setDebugPrettyPrintJsonLog(false);
-      } else {
-        builder.setDebugPrettyPrintJsonLog(prettyPrintJsonLog);
-      }
-      builder.apply(properties);
-    }
+		//hapi-fhir-jpaserver-starter defaults
+		properties.putIfAbsent(AvailableSettings.FORMAT_SQL, false);
+		properties.putIfAbsent(AvailableSettings.SHOW_SQL, false);
+		properties.putIfAbsent(AvailableSettings.HBM2DDL_AUTO, "update");
+		properties.putIfAbsent(AvailableSettings.STATEMENT_BATCH_SIZE, 20);
+		properties.putIfAbsent(AvailableSettings.USE_QUERY_CACHE, false);
+		properties.putIfAbsent(AvailableSettings.USE_SECOND_LEVEL_CACHE, false);
+		properties.putIfAbsent(AvailableSettings.USE_STRUCTURED_CACHE, false);
+		properties.putIfAbsent(AvailableSettings.USE_MINIMAL_PUTS, false);
 
-    return properties;
-  }
+		//Hibernate Search defaults
+		properties.putIfAbsent(HibernateOrmMapperSettings.ENABLED, false);
+		if (Boolean.parseBoolean(String.valueOf(properties.get(HibernateOrmMapperSettings.ENABLED)))) {
+			if (isElasticsearchEnabled(environment)) {
+				properties.putIfAbsent(BackendSettings.backendKey(BackendSettings.TYPE), ElasticsearchBackendSettings.TYPE_NAME);
+			} else {
+				properties.putIfAbsent(BackendSettings.backendKey(BackendSettings.TYPE), LuceneBackendSettings.TYPE_NAME);
+			}
 
-  public static String getElasticsearchServerUrl(ConfigurableEnvironment environment) {
-    return environment.getProperty("elasticsearch.rest_url", String.class);
-  }
+			if (properties.get(BackendSettings.backendKey(BackendSettings.TYPE)).equals(LuceneBackendSettings.TYPE_NAME)) {
+				properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_TYPE), LocalFileSystemDirectoryProvider.NAME);
+				properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_ROOT), "target/lucenefiles");
+				properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.ANALYSIS_CONFIGURER), HapiLuceneAnalysisConfigurer.class.getName());
+				properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.LUCENE_VERSION), Version.LATEST);
 
-  public static String getElasticsearchServerUsername(ConfigurableEnvironment environment) {
-    return environment.getProperty("elasticsearch.username");
-  }
+			} else if (properties.get(BackendSettings.backendKey(BackendSettings.TYPE)).equals(ElasticsearchBackendSettings.TYPE_NAME)) {
+				ElasticsearchHibernatePropertiesBuilder builder = new ElasticsearchHibernatePropertiesBuilder();
+				IndexStatus requiredIndexStatus = environment.getProperty("elasticsearch.required_index_status", IndexStatus.class);
+				builder.setRequiredIndexStatus(requireNonNullElse(requiredIndexStatus, IndexStatus.YELLOW));
+				builder.setRestUrl(getElasticsearchServerUrl(environment));
+				builder.setUsername(getElasticsearchServerUsername(environment));
+				builder.setPassword(getElasticsearchServerPassword(environment));
+				builder.setProtocol(getElasticsearchServerProtocol(environment));
+				SchemaManagementStrategyName indexSchemaManagementStrategy = environment.getProperty("elasticsearch.schema_management_strategy", SchemaManagementStrategyName.class);
+				builder.setIndexSchemaManagementStrategy(requireNonNullElse(indexSchemaManagementStrategy, SchemaManagementStrategyName.CREATE));
+				Boolean refreshAfterWrite = environment.getProperty("elasticsearch.debug.refresh_after_write", Boolean.class);
+				if (refreshAfterWrite == null || !refreshAfterWrite) {
+					builder.setDebugIndexSyncStrategy(AutomaticIndexingSynchronizationStrategyNames.ASYNC);
+				} else {
+					builder.setDebugIndexSyncStrategy(AutomaticIndexingSynchronizationStrategyNames.READ_SYNC);
+				}
+				builder.setDebugPrettyPrintJsonLog(requireNonNullElse(environment.getProperty("elasticsearch.debug.pretty_print_json_log", Boolean.class), false));
+				builder.apply(properties);
 
-  public static String getElasticsearchServerPassword(ConfigurableEnvironment environment) {
-    return environment.getProperty("elasticsearch.password");
-  }
+			} else {
+				throw new UnsupportedOperationException("Unsupported Hibernate Search backend: " + properties.get(BackendSettings.backendKey(BackendSettings.TYPE)));
+			}
+		}
 
-  public static Boolean isElasticsearchEnabled(ConfigurableEnvironment environment) {
-    if (environment.getProperty("elasticsearch.enabled", Boolean.class) != null) {
-      return environment.getProperty("elasticsearch.enabled", Boolean.class);
-    } else {
-      return false;
-    }
-  }
+		return properties;
+	}
 
-  public static Map<String, Object> getPropertiesStartingWith(ConfigurableEnvironment aEnv,
-                                                              String aKeyPrefix) {
-    Map<String, Object> result = new HashMap<>();
+	//TODO Removed when we're up on Java 11
+	private static <T> T requireNonNullElse(T obj, T defaultObj) {
+		return (obj != null) ? obj : requireNonNull(defaultObj, "defaultObj");
+	}
 
-    Map<String, Object> map = getAllProperties(aEnv);
+	//TODO Removed when we're up on Java 11
+	private static <T> T requireNonNull(T obj, String message) {
+		if (obj == null)
+			throw new NullPointerException(message);
+		return obj;
+	}
 
-    for (Map.Entry<String, Object> entry : map.entrySet()) {
-      String key = entry.getKey();
+	public static String getElasticsearchServerUrl(ConfigurableEnvironment environment) {
+		return environment.getProperty("elasticsearch.rest_url", String.class);
+	}
 
-      if (key.startsWith(aKeyPrefix)) {
-        result.put(key, entry.getValue());
-      }
-    }
+	public static String getElasticsearchServerProtocol(ConfigurableEnvironment environment) {
+		return environment.getProperty("elasticsearch.protocol", String.class, "http");
+	}
 
-    return result;
-  }
+	public static String getElasticsearchServerUsername(ConfigurableEnvironment environment) {
+		return environment.getProperty("elasticsearch.username");
+	}
 
-  public static Map<String, Object> getAllProperties(ConfigurableEnvironment aEnv) {
-    Map<String, Object> result = new HashMap<>();
-    aEnv.getPropertySources().forEach(ps -> addAll(result, getAllProperties(ps)));
-    return result;
-  }
+	public static String getElasticsearchServerPassword(ConfigurableEnvironment environment) {
+		return environment.getProperty("elasticsearch.password");
+	}
 
-  public static Map<String, Object> getAllProperties(PropertySource<?> aPropSource) {
-    Map<String, Object> result = new HashMap<>();
+	public static Boolean isElasticsearchEnabled(ConfigurableEnvironment environment) {
+		if (environment.getProperty("elasticsearch.enabled", Boolean.class) != null) {
+			return environment.getProperty("elasticsearch.enabled", Boolean.class);
+		} else {
+			return false;
+		}
+	}
 
-    if (aPropSource instanceof CompositePropertySource) {
-      CompositePropertySource cps = (CompositePropertySource) aPropSource;
-      cps.getPropertySources().forEach(ps -> addAll(result, getAllProperties(ps)));
-      return result;
-    }
+	public static Map<String, Object> getPropertiesStartingWith(ConfigurableEnvironment aEnv,
+																					String aKeyPrefix) {
+		Map<String, Object> result = new HashMap<>();
 
-    if (aPropSource instanceof EnumerablePropertySource<?>) {
-      EnumerablePropertySource<?> ps = (EnumerablePropertySource<?>) aPropSource;
-      Arrays.asList(ps.getPropertyNames()).forEach(key -> result.put(key, ps.getProperty(key)));
-      return result;
-    }
+		Map<String, Object> map = getAllProperties(aEnv);
 
-    return result;
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			String key = entry.getKey();
 
-  }
+			if (key.startsWith(aKeyPrefix)) {
+				result.put(key, entry.getValue());
+			}
+		}
 
-  private static void addAll(Map<String, Object> aBase, Map<String, Object> aToBeAdded) {
-    for (Map.Entry<String, Object> entry : aToBeAdded.entrySet()) {
-      if (aBase.containsKey(entry.getKey())) {
-        continue;
-      }
+		return result;
+	}
 
-      aBase.put(entry.getKey(), entry.getValue());
-    }
-  }
+	public static Map<String, Object> getAllProperties(ConfigurableEnvironment aEnv) {
+		Map<String, Object> result = new HashMap<>();
+		aEnv.getPropertySources().forEach(ps -> addAll(result, getAllProperties(ps)));
+		return result;
+	}
+
+	public static Map<String, Object> getAllProperties(PropertySource<?> aPropSource) {
+		Map<String, Object> result = new HashMap<>();
+
+		if (aPropSource instanceof CompositePropertySource) {
+			CompositePropertySource cps = (CompositePropertySource) aPropSource;
+			cps.getPropertySources().forEach(ps -> addAll(result, getAllProperties(ps)));
+			return result;
+		}
+
+		if (aPropSource instanceof EnumerablePropertySource<?>) {
+			EnumerablePropertySource<?> ps = (EnumerablePropertySource<?>) aPropSource;
+			Arrays.asList(ps.getPropertyNames()).forEach(key -> result.put(key, ps.getProperty(key)));
+			return result;
+		}
+
+		return result;
+
+	}
+
+	private static void addAll(Map<String, Object> aBase, Map<String, Object> aToBeAdded) {
+		for (Map.Entry<String, Object> entry : aToBeAdded.entrySet()) {
+			if (aBase.containsKey(entry.getKey())) {
+				continue;
+			}
+
+			aBase.put(entry.getKey(), entry.getValue());
+		}
+	}
 }

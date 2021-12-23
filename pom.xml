@@ -14,14 +14,13 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>5.2.0</version>
+		  <version>5.5.1</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
 
     <properties>
         <java.version>8</java.version>
-        <spring_boot_version>2.3.4.RELEASE</spring_boot_version>
     </properties>
 
     <prerequisites>
@@ -56,13 +55,13 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.16</version>
+            <version>8.0.25</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.9</version>
+            <version>42.2.23</version>
         </dependency>
 
         <!-- Needed for Email subscriptions -->
@@ -117,10 +116,16 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- This dependency includes the JPA EMPI Server -->
+        <!-- This dependency includes the JPA CQL Server -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-jpaserver-empi</artifactId>
+            <artifactId>hapi-fhir-jpaserver-cql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- This dependency includes the JPA MDM Server -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-jpaserver-mdm</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- This dependency is used for the "FHIR Tester" web app overlay -->
@@ -136,7 +141,6 @@
             <artifactId>hapi-fhir-testpage-overlay</artifactId>
             <version>${project.version}</version>
             <classifier>classes</classifier>
-
         </dependency>
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
@@ -157,6 +161,13 @@
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>
+        </dependency>
+
+        <!-- Needed for parsing the config -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.29</version>
         </dependency>
 
         <!-- Used for CORS support -->
@@ -189,7 +200,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>3.3.7</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
@@ -251,6 +262,21 @@
             <artifactId>jetty-webapp</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
 
 
         <!--
@@ -272,7 +298,7 @@
         <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
-            <version>4.0.0-rc1</version>
+            <version>4.1.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -282,17 +308,16 @@
             <version>${spring_boot_version}</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.6.2</version>
+            <version>5.7.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.6.2</version>
+            <version>5.7.2</version>
             <scope>test</scope>
         </dependency>
 
@@ -307,6 +332,16 @@
     </dependencies>
 
     <build>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
 
         <!-- Tells Maven to name the generated WAR file as ROOT.war -->
         <finalName>ROOT</finalName>
@@ -361,6 +396,7 @@
                             <Build-Time>${maven.build.timestamp}</Build-Time>
                         </manifestEntries>
                     </archive>
+                    <attachClasses>true</attachClasses>
                     <overlays>
                         <overlay>
                             <groupId>ca.uhn.hapi.fhir</groupId>
@@ -403,7 +439,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <failBuildInCaseOfConflict>true</failBuildInCaseOfConflict>
+                    <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
                     <checkTestClasspath>false</checkTestClasspath>
                     <!--
                     <printEqualFiles>false</printEqualFiles>
