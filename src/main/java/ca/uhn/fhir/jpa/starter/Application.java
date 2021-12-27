@@ -57,11 +57,12 @@ public class Application extends SpringBootServletInitializer {
   @Bean
   @Conditional(OnEitherVersion.class)
   public ServletRegistrationBean hapiServletRegistration() {
+    String urlMapping = System.getenv("url_pattern");
     ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
     JpaRestfulServer jpaRestfulServer = new JpaRestfulServer();
     beanFactory.autowireBean(jpaRestfulServer);
     servletRegistrationBean.setServlet(jpaRestfulServer);
-    servletRegistrationBean.addUrlMappings("/fhir/*");
+    servletRegistrationBean.addUrlMappings(urlMapping);
     servletRegistrationBean.setLoadOnStartup(1);
 
     return servletRegistrationBean;
