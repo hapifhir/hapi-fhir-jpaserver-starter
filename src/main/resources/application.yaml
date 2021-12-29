@@ -1,10 +1,9 @@
 spring:
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
-    #url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
+    url: 'jdbc:postgresql://localhost:5432/hapi_dstu3'
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
     max-active: 15
 
     # database connection pool size
