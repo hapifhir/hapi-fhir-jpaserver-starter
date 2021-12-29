@@ -1,0 +1,19 @@
+name: Build JuniperCDS container images
+
+on:
+  pull_request:
+    branches:
+      - junipercds
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up checkout
+        uses: actions/checkout@v2
+
+      - name: Spin up containers
+        run: |
+          docker compose up -d
