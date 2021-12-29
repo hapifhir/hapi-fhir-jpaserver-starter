@@ -1,4 +1,4 @@
-# HAPI-FHIR Starter Project
+# JuniperCDS Configured HAPI-FHIR Project
 
 This project is a complete starter project you can use to deploy a FHIR server using HAPI FHIR JPA.
 
