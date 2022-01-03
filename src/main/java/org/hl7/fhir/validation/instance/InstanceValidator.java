@@ -4012,6 +4012,10 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
 
   // checkSpecials = we're only going to run these tests if we are actually validating this content (as opposed to we looked it up)
   private void start(ValidatorHostContext hostContext, List<ValidationMessage> errors, Element resource, Element element, StructureDefinition defn, NodeStack stack) throws FHIRException {
+    
+    // https://github.com/ahdis/matchbox/issues/21
+    hostContext.setCheckSpecials(false);
+      
     checkLang(resource, stack);
     if (crumbTrails) {
       element.addMessage(signpost(errors, IssueType.INFORMATIONAL, element.line(), element.col(), stack.getLiteralPath(), I18nConstants.VALIDATION_VAL_PROFILE_SIGNPOST, defn.getUrl()));
