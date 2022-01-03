@@ -1,7 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
-import org.hl7.fhir.r4.model.Location;
+import org.hl7.fhir.r4.model.*;
 import org.smartregister.extension.model.*;
 import org.smartregister.extension.rest.LocationHierarchyResourceProvider;
 import org.smartregister.extension.rest.PractitionerDetailsResourceProvider;
@@ -47,14 +47,32 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
 	  getFhirContext().registerCustomType(ChildTreeNode.class);
   }
 
+
 	private void registerPracitionerDetailsTypes() {
-//		IFhirResourceDao<Location> locationIFhirResourceDao = daoRegistry.getResourceDao(LOCATION);
+		IFhirResourceDao<Practitioner> practitionerIFhirResourceDao = daoRegistry.getResourceDao("Practitioner");
+		IFhirResourceDao<PractitionerRole> practitionerRoleIFhirResourceDao = daoRegistry.getResourceDao("PractitionerRole");
+		IFhirResourceDao<CareTeam> careTeamIFhirResourceDao = daoRegistry.getResourceDao("CareTeam");
+		IFhirResourceDao<OrganizationAffiliation> organizationAffiliationIFhirResourceDao = daoRegistry.getResourceDao("OrganizationAffiliation");
+		IFhirResourceDao<Organization> organizationIFhirResourceDao = daoRegistry.getResourceDao("Organization");
+		IFhirResourceDao<Location> locationIFhirResourceDao = daoRegistry.getResourceDao(LOCATION);
+		LocationHierarchyResourceProvider locationHierarchyResourceProvider = new LocationHierarchyResourceProvider();
+		locationHierarchyResourceProvider.setLocationIFhirResourceDao(locationIFhirResourceDao);
 		PractitionerDetailsResourceProvider practitionerDetailsResourceProvider = new PractitionerDetailsResourceProvider();
+		practitionerDetailsResourceProvider.setPractitionerIFhirResourceDao(practitionerIFhirResourceDao);
+		practitionerDetailsResourceProvider.setPractitionerRoleIFhirResourceDao(practitionerRoleIFhirResourceDao);
+		practitionerDetailsResourceProvider.setCareTeamIFhirResourceDao(careTeamIFhirResourceDao);
+		practitionerDetailsResourceProvider.setOrganizationAffiliationIFhirResourceDao(organizationAffiliationIFhirResourceDao);
+		practitionerDetailsResourceProvider.setLocationHierarchyResourceProvider(locationHierarchyResourceProvider);
+		practitionerDetailsResourceProvider.setOrganizationIFhirResourceDao(organizationIFhirResourceDao);
+		practitionerDetailsResourceProvider.setLocationIFhirResourceDao(locationIFhirResourceDao);
 
 		registerProvider(practitionerDetailsResourceProvider);
 		getFhirContext().registerCustomType(PractitionerDetails.class);
 		getFhirContext().registerCustomType(KeycloakUserDetails.class);
 		getFhirContext().registerCustomType(UserBioData.class);
+		getFhirContext().registerCustomType(FhirPractitionerDetails.class);
+		getFhirContext().registerCustomType(FhirCareTeamExtension.class);
+		getFhirContext().registerCustomType(FhirOrganizationExtension.class);
 	}
 
 }
