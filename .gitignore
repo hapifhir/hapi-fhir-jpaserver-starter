@@ -168,3 +168,7 @@ Temporary Items
 
 # Helm Chart dependencies
 **/charts/*.tgz
+
+# Custom
+provision/provision.dev.sh
+provision/provision.prod.sh
