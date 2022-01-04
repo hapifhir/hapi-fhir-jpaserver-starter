@@ -90,7 +90,7 @@ docker run -d --name matchbox-swissepr -p 8080:8080 matchbox-swissepr
 
 ### making container available
 ```
-docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v150
+docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v160
 
 docker push eu.gcr.io/fhir-ch/matchbox:v150
 docker push eu.gcr.io/fhir-ch/matchbox-swissepr:v150
@@ -110,3 +110,5 @@ Kubernetes
 ==========
 
 kubectl cp matchbox-test-0:fhir.logdir_IS_UNDEFINED ./fhir.logdir/
+
+kubectl cp matchbox-test-app-d684cf865 ./fhir.logdir/

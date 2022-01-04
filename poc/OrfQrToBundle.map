@@ -201,6 +201,9 @@ group ReceiverPractitionerItems(source src : BackboneElement, target practitione
 
 group ReceiverOrganizationItems(source src : BackboneElement, target organization : Organization) {
    src.item as item where (linkId.value = 'receiver.organization.name' and answer.exists()) -> organization.name = (item.answer.value);
+   src.item as item where (linkId.value = 'receiver.organization.gln' and answer.exists()) -> organization.identifier as value, 
+                                                                                   value.system = 'urn:oid:2.51.1.3',
+                                                                                   value.value=(item.answer.value) "receiver.organization.gln"; 
    src.item as item where (linkId.value = 'receiver.organization.streetAddressLine' and answer.exists()) -> organization.address as address share orgAddress then {
      item.answer as answer -> address.line = (answer.value) "receiver.organization.streetAddressLine";
    } "item.answer";
@@ -449,6 +452,9 @@ group SenderAuthorPractitionerItems(source src : BackboneElement, target practit
 
 group SenderAuthorOrganizationItems(source src : BackboneElement, target organization: Organization) {
    src.item as item where (linkId.value = 'sender.author.organization.name' and answer.exists()) -> organization.name = (item.answer.value);
+   src.item as item where (linkId.value = 'sender.author.organization.gln' and answer.exists()) -> organization.identifier as value, 
+                                                                                   value.system = 'urn:oid:2.51.1.3',
+                                                                                   value.value=(item.answer.value) "sender.author.organization.gln"; 
    src.item as item where (linkId.value = 'sender.author.organization.streetAddressLine' and answer.exists()) -> organization.address as address share orgAddress then {
      item.answer as answer -> address.line = (answer.value) "sender.author.organization.streetAddressLine";
    } "item.answer";

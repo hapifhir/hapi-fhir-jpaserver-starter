@@ -1,7 +1,14 @@
+2022/01/04 Release 1.6.0
+- extend FHIR API based on Implementation Guide NPM packages [#23](https://github.com/ahdis/matchbox/issues/23)
+- add spring actuator for health checks [#22](https://github.com/ahdis/matchbox/issues/22)
+- disable special questionnaire validation [#21](https://github.com/ahdis/matchbox/issues/21)
+- base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v160
+
 2021/12/17 Release 1.5.0
 - updated hapi-fhir to 5.6.0
 - patched slicing validation problems in [bundle](https://github.com/ahdis/matchbox/issues/15)
 - activated $expand operation on ValueSet
+- base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v150
 
 2021/09/14 Release 1.4.0
 - updated hapi-fhir to 5.5.1, no more dependencies on forked packages
