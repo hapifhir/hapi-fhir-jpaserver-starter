@@ -13,7 +13,7 @@ To start the server
 Copy the `application.example.yml` file
 
 ```shell
-cp src/main/resources/application.example.yml src/main/resources/application.yml
+cp src/main/resources/application.example.yaml src/main/resources/application.yaml
 ```
 
 #### Spining up containers
