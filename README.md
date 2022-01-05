@@ -8,13 +8,21 @@ We have configured the server to use PostgreSQL.
 
 To start the server
 
-# Dev
+### Dev
+
+Copy the `application.example.yml` file
+
+```shell
+cp src/main/resources/application.example.yml src/main/resources/application.yml
+```
+
+#### Spining up containers
 
 ```shell
 docker compose up -f docker-compose.yml -f docker-compose.dev.yml
 ```
 
-To load the default resources
+(Optional) To load the default resources
 
 ```shell
 chmod +x provision/provision.sh
