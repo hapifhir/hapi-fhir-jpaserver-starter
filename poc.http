@@ -1,24 +1,30 @@
 
-@host = http://localhost:8080/matchbox/fhir
-### @host = https://test.ahdis.ch/matchbox/fhir
+### @host = http://localhost:8080/matchbox/fhir
+@host = https://test.ahdis.ch/matchbox/fhir
 ### @host = https://test.ahdis.ch/matchbox/fhir
 
-@example-qr-id = 6002
+@example-qr-id = 1378
 
 ### Get Capability Statement
 GET {{host}}/metadata HTTP/1.1
 
 ### Reload all implementation Guides
-POST {{host}}/ImplementationGuide HTTP/1.1
+POST {{host}}/ImplementationGuide/$load-all HTTP/1.1
 Content-Type: application/json+fhir
 
 < poc/ig-r4-conceptmaps.json
 
 ### Reload all implementation Guides
-POST {{host}}/ImplementationGuide/$load-all HTTP/1.1
+POST {{host}}/ImplementationGuide HTTP/1.1
 Content-Type: application/json+fhir
 
-< poc/empty-params.json
+{
+    "resourceType": "ImplementationGuide",
+    "name": "ch.fhir.ig.ch-alis",
+    "version": "0.2.0",
+    "packageId": "ch.fhir.ig.ch-alis",
+    "url": "https://www.alis-connect.ch/fhir/package.tgz"
+}
 
 ### Load Questionnaire (as Bundle)
 GET {{host}}/Questionnaire?url=http://fhir.ch/ig/ch-rad-order/Questionnaire/QuestionnaireRadiologyOrder HTTP/1.1
@@ -37,7 +43,7 @@ Content-Type: application/json+fhir
 < poc/example-radorder.json
 
 ### Load QuestionnaireResponses
-GET {{host}}/QuestionnaireResponse?questionnaire=http://fhir.ch/ig/ch-rad-order/Questionnaire/QuestionnaireRadiologyOrder HTTP/1.1
+GET {{host}}/QuestionnaireResponse?questionnaire=http://fhir.ch/ig/ch-rad-order/Questionnaire/QuestionnaireRadiologyOrderPoC HTTP/1.1
 Accept: application/json+fhir
 
 ### Validate QuestionnaireResponse (by sending)
@@ -300,3 +306,11 @@ Accept: application/fhir+json;fhirVersion=4.0
 # public boolean conformsToProfile(Object appContext, Base item, String url) throws FHIRException {
 # The value provided ('MORN') is not in the value set http://hl7.org/fhir/ValueSet/event-timing|4.0.1 (http://hl7.org/fhir/ValueSet/event-timing), and a code is required from this value set) (error message = Validation failed)], 
 # ValidationMessage[level=ERROR,type=CODEINVALID,location=Bundle.entry[6].resource.dosage[1].route,message=None of the codings provided are in the value set http://fhir.ch/ig/ch-emed/ValueSet/edqm-routeofadministration (http://fhir.ch/ig/ch-emed/ValueSet/edqm-routeofadministration), and a coding from this value set is required) (codes = urn:oid:0.4.0.127.0.16.1.1.2.1#20053000)], ValidationMessage[level=ERROR,type=CODEINVALID,location=Bundle.entry[6].resource.dosage[1].doseAndRate[0].dose.ofType(Quantity).code,message=The value provided ('732936001') is not in the value set http://fhir.ch/ig/ch-emed/ValueSet/UnitCode (http://fhir.ch/ig/ch-emed/ValueSet/UnitCode), and a code is required from this value set) (error message = Validation failed)]]
+
+
+
+### Populate
+POST {{host}}/Questionnaire HTTP/1.1
+Content-Type: application/json+fhir
+
+< poc/qrsimplerequired.json

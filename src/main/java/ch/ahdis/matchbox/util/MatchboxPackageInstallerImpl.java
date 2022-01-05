@@ -18,6 +18,7 @@ import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.packages.ImplementationGuideInstallationException;
 import ca.uhn.fhir.jpa.packages.JpaPackageCache;
+import ca.uhn.fhir.jpa.packages.PackageDeleteOutcomeJson;
 import ca.uhn.fhir.jpa.packages.PackageInstallOutcomeJson;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.SystemRequestDetails;
@@ -129,6 +130,20 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 			}
 		}
 	}
+	
+  // MODIFIED: added
+  public PackageDeleteOutcomeJson uninstall(PackageInstallationSpec theInstallationSpec) throws ImplementationGuideInstallationException {
+    PackageInstallOutcomeJson retVal = new PackageInstallOutcomeJson();
+    boolean exists = new TransactionTemplate(myTxManager).execute(tx -> {
+      Optional<NpmPackageVersionEntity> existing = myPackageVersionDao.findByPackageIdAndVersion(theInstallationSpec.getName(), theInstallationSpec.getVersion());
+      return existing.isPresent();
+    });
+    if (exists) {
+        ourLog.info("Remove Package {}#{} because it is a package based on an external url", theInstallationSpec.getName(), theInstallationSpec.getVersion());
+        return myPackageCacheManager.uninstallPackage(theInstallationSpec.getName(), theInstallationSpec.getVersion());
+    }
+    return null;
+  }
 
 	/**
 	 * Loads and installs an IG from a file on disk or the Simplifier repo using
@@ -156,6 +171,11 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 				});
 				if (exists) {
 					ourLog.info("Package {}#{} is already installed", theInstallationSpec.getName(), theInstallationSpec.getVersion());
+				  // MODIFIED: This has been added to add remove packages based on url
+					if (theInstallationSpec.getPackageUrl()!=null) {
+					  ourLog.info("Remove Package {}#{} because it is a package based on an external url", theInstallationSpec.getName(), theInstallationSpec.getVersion());
+					  myPackageCacheManager.uninstallPackage(theInstallationSpec.getName(), theInstallationSpec.getVersion());
+					}
 				}
 
 				NpmPackage npmPackage = myPackageCacheManager.installPackage(theInstallationSpec);
@@ -226,10 +246,16 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 			}
 
 		}
-		ourLog.info(String.format("Finished installation of package %s#%s:", name, version));
+    // Modified add log
+    String log = String.format("Finished installation of package %s#%s:", name, version);
+    ourLog.info(log);
+    theOutcome.getMessage().add(log);
 
 		for (int i = 0; i < count.length; i++) {
-			ourLog.info(String.format("-- Created or updated %s resources of type %s", count[i], installTypes.get(i)));
+		  // Modified add log
+		  log = String.format("-- Created or updated %s resources of type %s", count[i], installTypes.get(i));
+			ourLog.info(log);
+			theOutcome.getMessage().add(log);
 		}
 	}
 

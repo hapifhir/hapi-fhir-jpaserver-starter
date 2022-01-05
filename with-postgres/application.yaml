@@ -3,7 +3,7 @@ server:
     context-path: /matchbox
 spring:
   datasource:
-    url: 'jdbc:postgresql://matchbox-test-db:5432/matchbox'
+    url: 'jdbc:postgresql://localhost:5432/matchbox'
     username: matchbox
     password: matchbox
     driverClassName: org.postgresql.Driver
@@ -31,7 +31,7 @@ hapi:
         version: 1.0.0
 #      terminology:
 #       name: hl7.terminology.r4
-#       version: 2.1.0
+#       version: 2.1.0      
       eprterm:
         name: ch.fhir.ig.ch-epr-term
         version: 2.0.5
@@ -51,8 +51,13 @@ hapi:
         name: hl7.fhir.uv.sdc
         version: 2.7.0
       chorf:
+        url: http://build.fhir.org/ig/hl7ch/ch-orf/package.tgz
         name: ch.fhir.ig.ch-orf
-        version: 0.10.0
+        version: 0.11.0
+      chradorder:
+        url: http://build.fhir.org/ig/hl7ch/ch-rad-order/package.tgz
+        name: ch.fhir.ig.ch-rad-order
+        version: 0.1.0
       chradorder:
         name: ch.fhir.ig.ch-rad-order
         version: 0.1.0
