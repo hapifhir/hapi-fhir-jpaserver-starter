@@ -11,6 +11,7 @@ import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHan
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.EmailSenderImpl;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
 import ca.uhn.fhir.rest.server.mail.MailConfig;
+import ca.uhn.fhir.rest.server.mail.MailSvc;
 import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu2.model.Subscription;
@@ -69,7 +70,7 @@ public class FhirServerConfigCommon {
     if (appProperties.getSubscription().getEmail() != null) {
       ourLog.info("Email subscriptions enabled");
     }
-    
+
     if (appProperties.getEnable_index_contained_resource() == Boolean.TRUE) {
         ourLog.info("Indexed on contained resource enabled");
       }
@@ -145,7 +146,7 @@ public class FhirServerConfigCommon {
       if(appProperties.getPartitioning().getAllow_references_across_partitions()) {
         retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.ALLOWED_UNQUALIFIED);
       } else {
-        retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.NOT_ALLOWED); 
+        retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.NOT_ALLOWED);
       }
     }
 
@@ -178,7 +179,7 @@ public class FhirServerConfigCommon {
     }
 
     modelConfig.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
-    
+
     modelConfig.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
     return modelConfig;
   }
@@ -225,10 +226,9 @@ public class FhirServerConfigCommon {
       mailConfig.setSmtpPassword(email.getPassword());
       mailConfig.setSmtpUseStartTLS(email.getStartTlsEnable());
 
-		 IEmailSender emailSender = new EmailSenderImpl(mailConfig);
+		IEmailSender emailSender = new EmailSenderImpl(new MailSvc(mailConfig));
 
-      if(subscriptionDeliveryHandlerFactory.isPresent())
-       subscriptionDeliveryHandlerFactory.get().setEmailSender(emailSender);
+		subscriptionDeliveryHandlerFactory.ifPresent(theSubscriptionDeliveryHandlerFactory -> theSubscriptionDeliveryHandlerFactory.setEmailSender(emailSender));
 
       return emailSender;
     }
