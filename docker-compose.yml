@@ -6,19 +6,3 @@ services:
     restart: on-failure
     ports:
       - "8080:8080"
-    links:
-      - hapi-fhir-postgres
-  hapi-fhir-postgres:
-    image: postgres:latest
-    container_name: hapi-fhir-postgres
-    restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: 'hapi_dstu3'
-      POSTGRES_USER: 'admin'
-      POSTGRES_PASSWORD: 'admin'
-    volumes:
-      - hapi-fhir-postgres:/var/lib/postgres
-volumes:
-  hapi-fhir-postgres:

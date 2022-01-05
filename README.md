@@ -8,8 +8,10 @@ We have configured the server to use PostgreSQL.
 
 To start the server
 
+# Dev
+
 ```shell
-docker compose up
+docker compose up -f docker-compose.yml -f docker-compose.dev.yml
 ```
 
 To load the default resources

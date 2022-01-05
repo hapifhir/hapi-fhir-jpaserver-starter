@@ -172,3 +172,4 @@ Temporary Items
 # Custom
 provision/provision.dev.sh
 provision/provision.prod.sh
+src/main/resources/application.yaml
