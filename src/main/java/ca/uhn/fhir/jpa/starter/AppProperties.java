@@ -66,6 +66,7 @@ public class AppProperties {
   private Map<String, ImplementationGuide> implementationGuides = null;
 
   private Boolean lastn_enabled = false;
+  private Boolean store_resource_in_lucene_index_enabled = false;
   private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
 
   private Integer search_coord_core_pool_size = 20;
@@ -469,7 +470,15 @@ public class AppProperties {
     this.lastn_enabled = lastn_enabled;
   }
 
-  public NormalizedQuantitySearchLevel getNormalized_quantity_search_level() {
+	public Boolean getStore_resource_in_lucene_index_enabled() {
+		return store_resource_in_lucene_index_enabled;
+	}
+
+	public void setStore_resource_in_lucene_index_enabled(Boolean store_resource_in_lucene_index_enabled) {
+		this.store_resource_in_lucene_index_enabled = store_resource_in_lucene_index_enabled;
+	}
+
+	public NormalizedQuantitySearchLevel getNormalized_quantity_search_level() {
 	return this.normalized_quantity_search_level;
   }
 
