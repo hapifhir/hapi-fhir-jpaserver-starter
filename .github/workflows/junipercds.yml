@@ -1,7 +1,7 @@
 name: Build JuniperCDS container images
 
 on:
-  pull_request:
+  push:
     branches:
       - junipercds
 
@@ -14,6 +14,31 @@ jobs:
       - name: Set up checkout
         uses: actions/checkout@v2
 
-      - name: Spin up containers
+      - name: Get files from S3 bucket
+        uses: keithweaver/aws-s3-github-action@master
+        with:
+          command: cp
+          source: ./src/main/resources/application.yaml
+          destination: s3://junipercds-hapi-fhir/env/application.yaml
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+          aws-region: us-east-1
+
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: junipercds-hapi-fhir
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker compose up -d
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
