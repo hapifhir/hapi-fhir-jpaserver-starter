@@ -19,7 +19,7 @@ cp src/main/resources/application.example.yaml src/main/resources/application.ya
 #### Spining up containers
 
 ```shell
-docker compose up -f docker-compose.yml -f docker-compose.dev.yml
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
 (Optional) To load the default resources
