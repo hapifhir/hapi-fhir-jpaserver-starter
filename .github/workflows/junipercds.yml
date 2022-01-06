@@ -18,8 +18,8 @@ jobs:
         uses: keithweaver/aws-s3-github-action@master
         with:
           command: cp
-          source: ./src/main/resources/application.yaml
-          destination: s3://junipercds-hapi-fhir/env/application.yaml
+          source: s3://junipercds-hapi-fhir/env/application.yaml
+          destination: ./src/main/resources/application.yaml
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
 
