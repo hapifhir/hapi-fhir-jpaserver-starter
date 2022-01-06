@@ -24,8 +24,7 @@ jobs:
       - name: Get files from S3 bucket
         run: |
           aws s3 sync s3://junipercds-hapi-fhir/env/application.yaml ./src/main/resources/application.yaml
-          ls -al
-          ls -al ./src/main/resources/application.yaml
+          ls -al ./src/main/resources
 
       - name: Login to Amazon ECR
         id: login-ecr
