@@ -23,6 +23,7 @@ spring:
       hibernate.search.backend.directory.type: local-filesystem
       hibernate.search.backend.directory.root: target/lucenefiles
       hibernate.search.backend.lucene_version: lucene_current
+      hibernate.physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   batch:
     job:
       enabled: false
