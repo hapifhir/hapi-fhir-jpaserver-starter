@@ -22,7 +22,10 @@ jobs:
           aws-region: us-east-1
 
       - name: Get files from S3 bucket
-        run: aws s3 sync s3://junipercds-hapi-fhir/env/application.yaml ./src/main/resources/application.yaml
+        run: |
+          aws s3 sync s3://junipercds-hapi-fhir/env/application.yaml ./src/main/resources/application.yaml
+          ls -al
+          ls -al ./src/main/resources/application.yaml
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -34,6 +37,5 @@ jobs:
           ECR_REPOSITORY: junipercds-hapi-fhir
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
