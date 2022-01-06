@@ -16,7 +16,7 @@ Copy the `application.example.yml` file
 cp src/main/resources/application.example.yaml src/main/resources/application.yaml
 ```
 
-#### Spining up containers
+#### Spinning up containers
 
 ```shell
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
