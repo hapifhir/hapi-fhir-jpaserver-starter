@@ -63,23 +63,24 @@ public class ValidationProvider {
   protected IInstanceValidatorModule instanceValidator;
   
   @Autowired
-  protected JpaValidationSupportChain validationSupportChain;
+  protected IValidationSupport support;
 
   @Autowired
   protected FhirContext myFhirCtx;
 
-  @Autowired
-  protected DefaultProfileValidationSupport defaultProfileValidationSuport;
-
+  //@Autowired
+ // protected DefaultProfileValidationSupport defaultProfileValidationSuport;
+/*
 	@Autowired
 	@Qualifier("myJpaValidationSupport")
 	protected IValidationSupport myJpaValidationSupport;
-	
+	*/
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ValidationProvider.class);
 
   @Operation(name = "$validate", manualRequest = true, idempotent = true, returnParameters = {
       @OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
   public IBaseResource validate(HttpServletRequest theRequest) {
+
     log.info("$validate");
     ArrayList<SingleValidationMessage> addedValidationMessages = new ArrayList<>();
 
@@ -94,13 +95,12 @@ public class ValidationProvider {
     }
 
     if (profile != null) {
-      if (myJpaValidationSupport.fetchStructureDefinition(profile) == null
-          && defaultProfileValidationSuport.fetchStructureDefinition(profile) == null) {
+      if (support.fetchStructureDefinition(profile) == null) {
         return getValidationMessageProfileNotSupported(profile);
       }
       validationOptions.addProfileIfNotBlank(profile);
     }
-
+    
     byte[] bytes = null;
     String contentString = "";
     try {
@@ -158,6 +158,7 @@ public class ValidationProvider {
     } catch (DataFormatException e) {
       return getValidationMessageDataFormatException(e);
     }
+   
     if (resource!=null && "Parameters".equals(resource.fhirType()) && profile == null) {
 //      IBaseParameters parameters = (IBaseParameters) resource;
 // https://github.com/ahdis/matchbox/issues/11
@@ -200,11 +201,12 @@ public class ValidationProvider {
 //          log.info(serialized);
 //        }
 //      }
+      
       if (resourceInParam != null) {
         validationOptions = new ValidationOptions();
         if (profile != null) {
-          if (myJpaValidationSupport.fetchStructureDefinition(profile) == null
-              && defaultProfileValidationSuport.fetchStructureDefinition(profile) == null) {
+          if (support.fetchStructureDefinition(profile) == null
+              ) {
             return getValidationMessageProfileNotSupported(profile);
           }
           validationOptions.addProfileIfNotBlank(profile);
