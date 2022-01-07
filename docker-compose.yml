@@ -2,7 +2,7 @@ version: "3"
 services:
   matchbox-test-app:
     build: .
-    container_name: matchbox-test-app
+    container_name: matchbox
     restart: on-failure
     ports:
       - "8080:8080"
@@ -12,7 +12,7 @@ services:
       - ./with-postgres:/config      
   matchbox-test-db:
     image: postgres:latest
-    container_name: matchbox-test-db
+    container_name: matchbox-db
     restart: always
     ports:
       - "5432:5432"

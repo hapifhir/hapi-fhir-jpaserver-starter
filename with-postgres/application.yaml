@@ -3,7 +3,7 @@ server:
     context-path: /matchbox
 spring:
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/matchbox'
+    url: 'jdbc:postgresql://matchbox-db:5432/matchbox'
     username: matchbox
     password: matchbox
     driverClassName: org.postgresql.Driver
@@ -12,68 +12,5 @@ spring:
     hikari:
       maximum-pool-size: 10
   jpa:
-    properties:      
+    properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
-
-hapi:
-  fhir:
-    implementationguides:
-      cda:
-        url: https://github.com/ahdis/cda-core-2.0/releases/download/v0.0.3-dev/package.tgz
-        name: hl7.fhir.cda
-        version: 2.1.0
-      cdach:
-        name: ch.fhir.ig.cda-fhir-maps
-        version: 0.2.0
-      iheformatcodefhir:
-        url: https://profiles.ihe.net/fhir/ihe.formatcode.fhir/package.tgz
-        name: ihe.formatcode.fhir
-        version: 1.0.0
-#      terminology:
-#       name: hl7.terminology.r4
-#       version: 2.1.0      
-      eprterm:
-        name: ch.fhir.ig.ch-epr-term
-        version: 2.0.5
-      core:
-        name: ch.fhir.ig.ch-core
-        version: 2.0.0
-      emed:
-        name: ch.fhir.ig.ch-emed
-        version: 1.0.0
-      vacd:
-        name: ch.fhir.ig.ch-vacd
-        version: 1.0.0
-      atc:
-        name: ch.fhir.ig.ch-atc
-        version: 3.1.0
-      sdc:
-        name: hl7.fhir.uv.sdc
-        version: 2.7.0
-      chorf:
-        url: http://build.fhir.org/ig/hl7ch/ch-orf/package.tgz
-        name: ch.fhir.ig.ch-orf
-        version: 0.11.0
-      chradorder:
-        url: http://build.fhir.org/ig/hl7ch/ch-rad-order/package.tgz
-        name: ch.fhir.ig.ch-rad-order
-        version: 0.1.0
-      chradorder:
-        name: ch.fhir.ig.ch-rad-order
-        version: 0.1.0
-      chetoc:
-        name: ch.fhir.ig.ch-etoc
-        version: 0.1.0
-      mhd:
-        name: ihe.mhd.fhir
-        version: 4.0.1
-      cheprmhealth:
-        name: ch.fhir.ig.ch-epr-mhealth
-        version: 0.2.0
-      challergyintolerance:
-        name: ch.fhir.ig.ch-allergyintolerance
-        version": 0.2.0
-      chradorderpox:
-        url: https://build.fhir.org/ig/ahdis/ch-rad-poc/package.tgz
-        name: ch.ahdis.ig.ch-rad-poc
-        version: 0.1.0
