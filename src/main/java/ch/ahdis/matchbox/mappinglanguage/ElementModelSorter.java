@@ -39,11 +39,11 @@ class ElementSortComparator implements Comparator<Element> {
 		children = new ArrayList<String>();
 		if (sd != null && !sd.getAbstract())
 			for (ElementDefinition def : sd.getSnapshot().getElement()) {
-				children.add(def.getName());
+				children.add(def.getPath());
 			}
 		else
 			for (ElementDefinition def : property.getStructure().getSnapshot().getElement()) {
-				children.add(def.getName());
+				children.add(def.getPath());
 			}
 	}
 
@@ -55,7 +55,7 @@ class ElementSortComparator implements Comparator<Element> {
 	}
 
 	private int find(Element e0) {
-		int i = e0.getElementProperty() != null ? children.indexOf(e0.getElementProperty().getDefinition().getName()) : children.indexOf(e0.getProperty().getDefinition().getName());
+		int i = e0.getElementProperty() != null ? children.indexOf(e0.getElementProperty().getDefinition().getPath()) : children.indexOf(e0.getProperty().getDefinition().getPath());
 		return i;
 	}
 
