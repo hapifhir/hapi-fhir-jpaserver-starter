@@ -33,8 +33,8 @@ public class JpaExtendedValidationSupportChain extends JpaValidationSupportChain
 	private IValidationSupport myDefaultProfileValidationSupport;
 	@Autowired
 	private ITermReadSvc myTerminologyService;
-	@Autowired
-	private NpmJpaValidationSupport myNpmJpaValidationSupport;
+	//@Autowired
+	//private NpmJpaValidationSupport myNpmJpaValidationSupport;
 	@Autowired
 	private ITermConceptMappingSvc myConceptMappingSvc;
 	@Autowired
@@ -63,23 +63,24 @@ public class JpaExtendedValidationSupportChain extends JpaValidationSupportChain
 //		addValidationSupport(new CommonCodeSystemsTerminologyService(myFhirContext));
 //		addValidationSupport(myConceptMappingSvc);
 		addValidationSupport(myDefaultProfileValidationSupport);
-		addValidationSupport(myJpaValidationSupport);
+		
 		//TODO MAKE SURE THAT THIS IS BEING CAL
 		addValidationSupport(myTerminologyService);
 		snapshotGeneratingValidationSupport = new SnapshotGeneratingValidationSupport(myFhirContext);
 		addValidationSupport(snapshotGeneratingValidationSupport);
 		extInMemoryTerminologyServerValidationSupport = new ExtInMemoryTerminologyServerValidationSupport(myFhirContext);
 		addValidationSupport(extInMemoryTerminologyServerValidationSupport);
-		addValidationSupport(myNpmJpaValidationSupport);
+		//addValidationSupport(myNpmJpaValidationSupport);
 		commonCodeSystemsTerminologyService = new CommonCodeSystemsTerminologyService(myFhirContext);
 		addValidationSupport(commonCodeSystemsTerminologyService);
 		addValidationSupport(myConceptMappingSvc);
+		addValidationSupport(myJpaValidationSupport);
 	}
 	
   public IValidationSupport getValidationSupport() {
     return new CachingValidationSupport(
-        new ValidationSupportChain(myDefaultProfileValidationSupport, myJpaValidationSupport, myTerminologyService,
+        new ValidationSupportChain(myDefaultProfileValidationSupport, myTerminologyService,
             snapshotGeneratingValidationSupport, extInMemoryTerminologyServerValidationSupport,
-            myNpmJpaValidationSupport, commonCodeSystemsTerminologyService, myConceptMappingSvc));
+            /*myNpmJpaValidationSupport,*/ commonCodeSystemsTerminologyService, myConceptMappingSvc, myJpaValidationSupport));
   }
 }

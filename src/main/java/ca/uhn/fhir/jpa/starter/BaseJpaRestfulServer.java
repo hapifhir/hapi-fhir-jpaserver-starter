@@ -473,7 +473,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
 		daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
 		
-
+		ourLog.info("Start prefetching");		
+        baseWorkerContext.allStructures();        
+        myValidationSupport.fetchAllStructureDefinitions();
+        ourLog.info("End prefetching");       
 		
   }
 }
