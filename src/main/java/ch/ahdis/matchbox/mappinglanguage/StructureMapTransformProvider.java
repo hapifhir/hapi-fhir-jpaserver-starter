@@ -172,7 +172,8 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
       throw new UnprocessableEntityException("Target Structure can not be resolved from map, is the corresponding implmentation guide provided?");
     }
     
-    StructureMapUtilities utils = new StructureMapUtilities(fhirContext, new TransformSupportServices(fhirContext, new ArrayList<Base>()));
+//    StructureMapUtilities utils = new StructureMapUtilities(fhirContext, new TransformSupportServices(fhirContext, new ArrayList<Base>()));
+    StructureMapUtilities utils = new MatchboxStructureMapUtilities(fhirContext, new TransformSupportServices(fhirContext, new ArrayList<Base>()));
     utils.transform(null, src, map, r);
     ElementModelSorter.sort(r);
     if (r.isResource() && "Bundle".contentEquals(r.getType())) {
