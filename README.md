@@ -368,7 +368,7 @@ using the `gcr.io/distroless/java-debian10:11` base image:
 docker build --target=release-distroless -t hapi-fhir:distroless .
 ```
 
-Note that distroless images are also automatically build and pushed to the container registry,
+Note that distroless images are also automatically built and pushed to the container registry,
 see the `-distroless` suffix in the image tags.
 
 ## Adding custom operations
