@@ -1,4 +1,5 @@
 data
+fhir.logdir
 fhir.logdir_IS_UNDEFINED
 mydump
 
