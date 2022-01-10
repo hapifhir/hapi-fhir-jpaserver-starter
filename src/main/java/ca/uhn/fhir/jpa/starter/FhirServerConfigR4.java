@@ -7,7 +7,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.hl7.fhir.common.hapi.validation.support.UnknownCodeSystemWarningValidationSupport;
-import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.hl7.fhir.r5.utils.IResourceValidator;
 import org.springframework.beans.factory.annotation.Autowire;
@@ -36,6 +35,7 @@ import ch.ahdis.fhir.hapi.jpa.validation.CachingValidationSupport;
 import ch.ahdis.fhir.hapi.jpa.validation.ExtTermReadSvcR4;
 import ch.ahdis.fhir.hapi.jpa.validation.ExtUnknownCodeSystemWarningValidationSupport;
 import ch.ahdis.fhir.hapi.jpa.validation.JpaExtendedValidationSupportChain;
+import ch.ahdis.fhir.hapi.jpa.validation.JpaPersistedResourceValidationSupport;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
@@ -210,10 +210,17 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
     return new CachingValidationSupport(jpaValidationSupportChain(), cacheTimeouts);
   }
   
+  @Override
+  public IValidationSupport jpaValidationSupport() {
+    return new JpaPersistedResourceValidationSupport(fhirContext());
+  }
+
+  
   @Bean
   public MatchboxPackageInstallerImpl packageInstaller() {
 	  return new MatchboxPackageInstallerImpl();
   }
+  
 }
 
 
