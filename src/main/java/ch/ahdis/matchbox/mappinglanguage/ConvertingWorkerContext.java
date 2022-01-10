@@ -4,7 +4,9 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
@@ -33,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.context.support.ValidationSupportContext;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
@@ -44,6 +47,7 @@ import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.param.StringParam;
 import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.UriParam;
+import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 
 /**
  * Adaptions for StructrueMaps transformation in 5 using
@@ -51,6 +55,32 @@ import ca.uhn.fhir.rest.param.UriParam;
  *
  */
 public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper {
+
+  private List<org.hl7.fhir.r5.model.StructureDefinition> myAllStructures = null;
+
+
+  // see Issue https://github.com/ahdis/matchbox/issues/31  
+  // this function gets now only the base StructureDefinition for R4 which the FHIRPathEngine is using to initialize itself
+  @Override
+  public List<org.hl7.fhir.r5.model.StructureDefinition> allStructures() {
+
+    List<org.hl7.fhir.r5.model.StructureDefinition> retVal = myAllStructures;
+    if (retVal == null) {
+      DefaultProfileValidationSupport defaultProfileValidationSupport = new DefaultProfileValidationSupport(FhirContext.forR4Cached());
+      retVal = new ArrayList<>();
+      for (IBaseResource next : defaultProfileValidationSupport.fetchAllStructureDefinitions()) {
+        try {
+          Resource converted = myModelConverter.toCanonical(next);
+          retVal.add((org.hl7.fhir.r5.model.StructureDefinition) converted);
+        } catch (FHIRException e) {
+          throw new InternalErrorException(e);
+        }
+      }
+      myAllStructures = retVal;
+    }
+
+    return retVal;
+  }
 
 
   private static final Logger ourLog = LoggerFactory.getLogger(ConvertingWorkerContext.class);
