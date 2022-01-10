@@ -196,13 +196,8 @@ public class QuestionnairePopulateProvider {
 	    if (targetTypeUrl == null)
 	      throw new FHIRException("Unable to determine resource URL for target type");
 	
-	    StructureDefinition structureDefinition = null;
-	    for (StructureDefinition sd : workerContext.getStructures()) {
-	      if (sd.getUrl().equalsIgnoreCase(targetTypeUrl)) {
-	        structureDefinition = sd;
-	        break;
-	      }
-	    }
+	    StructureDefinition structureDefinition = workerContext.fetchResource(StructureDefinition.class, targetTypeUrl);
+
 	    if (structureDefinition == null)
 	      throw new FHIRException("Unable to determine StructureDefinition for target type");
 	

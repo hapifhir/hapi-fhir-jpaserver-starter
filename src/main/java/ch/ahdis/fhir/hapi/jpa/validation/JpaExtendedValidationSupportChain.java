@@ -2,7 +2,6 @@ package ch.ahdis.fhir.hapi.jpa.validation;
 
 import javax.annotation.PostConstruct;
 
-import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.CommonCodeSystemsTerminologyService;
 import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.RemoteTerminologyServiceValidationSupport;
@@ -11,6 +10,8 @@ import org.hl7.fhir.common.hapi.validation.support.UnknownCodeSystemWarningValid
 import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.IValidationSupport;
@@ -77,10 +78,5 @@ public class JpaExtendedValidationSupportChain extends JpaValidationSupportChain
 		addValidationSupport(myJpaValidationSupport);
 	}
 	
-  public IValidationSupport getValidationSupport() {
-    return new CachingValidationSupport(
-        new ValidationSupportChain(myDefaultProfileValidationSupport, myTerminologyService,
-            snapshotGeneratingValidationSupport, extInMemoryTerminologyServerValidationSupport,
-            /*myNpmJpaValidationSupport,*/ commonCodeSystemsTerminologyService, myConceptMappingSvc, myJpaValidationSupport));
-  }
+		
 }

@@ -59,6 +59,8 @@ hapi:
     delete_expunge_enabled: true
     retain_cached_searches_mins: 1
     reuse_cached_search_results_millis: 1000
+    bulk_export_enabled: false
+    allow_external_references: true
 ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
 ### to determine the FHIR server address
 #   use_apache_address_strategy: false
@@ -83,7 +85,6 @@ hapi:
 #      - Observation
 #    allow_cascading_deletes: true
 #    allow_contains_searches: true
-#    allow_external_references: true
 #    allow_multiple_delete: true
 #    allow_override_default_search_params: true
 #    auto_create_placeholder_reference_targets: false
@@ -146,7 +147,6 @@ hapi:
 #      requests_enabled: true
 #      responses_enabled: true
 #    binary_storage_enabled: true
-#    bulk_export_enabled: true
 #    subscription:
 #      resthook_enabled: true
 #      websocket_enabled: false

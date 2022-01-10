@@ -7,6 +7,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.hl7.fhir.common.hapi.validation.support.UnknownCodeSystemWarningValidationSupport;
+import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
+import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
+import org.hl7.fhir.r5.utils.IResourceValidator;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -21,12 +24,15 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ca.uhn.fhir.jpa.starter.cql.StarterCqlR4Config;
 import ca.uhn.fhir.jpa.term.api.ITermReadSvcR4;
+import ca.uhn.fhir.validation.IInstanceValidatorModule;
+import ch.ahdis.fhir.hapi.jpa.validation.CachingValidationSupport;
 import ch.ahdis.fhir.hapi.jpa.validation.ExtTermReadSvcR4;
 import ch.ahdis.fhir.hapi.jpa.validation.ExtUnknownCodeSystemWarningValidationSupport;
 import ch.ahdis.fhir.hapi.jpa.validation.JpaExtendedValidationSupportChain;
@@ -155,7 +161,7 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
   @Bean
   public ConvertingWorkerContext simpleWorkerContext() {
     try {
-		  ConvertingWorkerContext conv = new ConvertingWorkerContext(this.jpaValidationSupportChain().getValidationSupport());
+		  ConvertingWorkerContext conv = new ConvertingWorkerContext(this.validationSupportChain());
 		  return conv;
 	  } catch (IOException e) {
 		  throw new RuntimeException(e);
@@ -185,6 +191,24 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 	public JpaExtendedValidationSupportChain jpaValidationSupportChain() {
 		return new JpaExtendedValidationSupportChain(fhirContext());
 	}
+  
+  @Bean(name = "myInstanceValidator")
+  public IInstanceValidatorModule instanceValidator() {
+    FhirInstanceValidator val = new FhirInstanceValidator(validationSupportChain());
+    val.setValidatorResourceFetcher(jpaValidatorResourceFetcher());
+    val.setBestPracticeWarningLevel(IResourceValidator.BestPracticeWarningLevel.Warning);
+    val.setValidationSupport(validationSupportChain());
+    return val;
+  }
+  
+  @Override
+  public IValidationSupport validationSupportChain() {
+
+    CachingValidationSupport.CacheTimeouts cacheTimeouts = CachingValidationSupport.CacheTimeouts.defaultValues()
+        .setTranslateCodeMillis(1000).setMiscMillis(10000).setValidateCodeMillis(10000);
+
+    return new CachingValidationSupport(jpaValidationSupportChain(), cacheTimeouts);
+  }
   
   @Bean
   public MatchboxPackageInstallerImpl packageInstaller() {
