@@ -22,8 +22,11 @@ import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.ImplementationGuide;
 import org.hl7.fhir.r4.model.Questionnaire;
 import org.hl7.fhir.r4.model.StructureDefinition;
+import org.hl7.fhir.r4.model.StructureDefinition.TypeDerivationRule;
 import org.hl7.fhir.r4.model.ValueSet;
+import org.hl7.fhir.r4.utils.ToolingExtensions;
 import org.hl7.fhir.r5.context.SimpleWorkerContext.IValidatorFactory;
+import org.hl7.fhir.r5.formats.FormatUtilities;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.r5.model.StructureMap;
 import org.hl7.fhir.r5.utils.IResourceValidator;
@@ -44,6 +47,7 @@ import ca.uhn.fhir.rest.annotation.ResourceParam;
 import ca.uhn.fhir.rest.api.SortOrderEnum;
 import ca.uhn.fhir.rest.api.SortSpec;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
+import ca.uhn.fhir.rest.gclient.UriClientParam;
 import ca.uhn.fhir.rest.param.StringParam;
 import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.UriParam;
@@ -57,7 +61,7 @@ import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper {
 
   private List<org.hl7.fhir.r5.model.StructureDefinition> myAllStructures = null;
-
+ 
 
   // see Issue https://github.com/ahdis/matchbox/issues/31  
   // this function gets now only the base StructureDefinition for R4 which the FHIRPathEngine is using to initialize itself
@@ -81,6 +85,53 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
 
     return retVal;
   }
+
+
+  // Logical Models can be defined by the type, we ch
+  @Override
+  public org.hl7.fhir.r5.model.StructureDefinition fetchTypeDefinition(String typeName) {
+    if (typeName == null) {
+      return null;
+    }
+    String ns = null;
+    String type = null;
+    if (typeName.contains("|")) {
+      ns = typeName.substring(0, typeName.indexOf("|"));
+      type = typeName.substring(typeName.indexOf("|")+1);
+    } else {
+      type = typeName;
+    }
+    for (org.hl7.fhir.r5.model.StructureDefinition sd : this.allStructures()) {
+      if (sd.getDerivation() == org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule.SPECIALIZATION && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
+        if(type.equals(sd.getType()) && (ns == null || ns.equals(FormatUtilities.FHIR_NS)) && !org.hl7.fhir.r5.utils.ToolingExtensions.hasExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"))
+          return sd;
+        String sns = org.hl7.fhir.r5.utils.ToolingExtensions.readStringExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace");
+        if ((type.equals(sd.getType()) || type.equals(sd.getName())) && ns != null && ns.equals(sns))
+          return sd;
+      }
+    } 
+    IBundleProvider search = null;
+    SearchParameterMap params = new SearchParameterMap();
+    params.setLoadSynchronousUpTo(100);
+    params.add(org.hl7.fhir.r4.model.StructureDefinition.SP_TYPE, new UriParam(type));
+    search = myDaoRegistry.getResourceDao("StructureDefinition").search(params);
+    Integer size = search.size();
+    if (size == null || size == 0) {
+      return null;
+    }
+    for (IBaseResource resource : search.getAllResources()) {
+      org.hl7.fhir.r4.model.StructureDefinition sd = (org.hl7.fhir.r4.model.StructureDefinition) resource;
+      if (sd.getDerivation() == TypeDerivationRule.SPECIALIZATION && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
+        if(type.equals(sd.getType()) && (ns == null || ns.equals(FormatUtilities.FHIR_NS)) && !ToolingExtensions.hasExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"))
+          return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
+        String sns = ToolingExtensions.readStringExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace");
+        if ((type.equals(sd.getType()) || type.equals(sd.getName())) && ns != null && ns.equals(sns))
+          return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
+      }
+    } 
+    return null;
+  }
+  
 
 
   private static final Logger ourLog = LoggerFactory.getLogger(ConvertingWorkerContext.class);

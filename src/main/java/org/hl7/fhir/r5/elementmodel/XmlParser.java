@@ -1,4 +1,4 @@
-package ch.ahdis.matchbox.mappinglanguage;
+package org.hl7.fhir.r5.elementmodel;
 
 /*
   Copyright (c) 2011+, HL7, Inc.
@@ -52,15 +52,13 @@ import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.FHIRFormatError;
 import org.hl7.fhir.r5.conformance.ProfileUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
-import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.Element.SpecialElement;
-import org.hl7.fhir.r5.elementmodel.ParserBase;
-import org.hl7.fhir.r5.elementmodel.ParserBase.ValidationPolicy;
-import org.hl7.fhir.r5.elementmodel.Property;
+import org.hl7.fhir.r5.elementmodel.ParserBase.NamedElement;
 import org.hl7.fhir.r5.formats.FormatUtilities;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.DateTimeType;
 import org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation;
+import org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule;
 import org.hl7.fhir.r5.model.Enumeration;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
@@ -77,6 +75,7 @@ import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.hl7.fhir.utilities.xhtml.XhtmlParser;
 import org.hl7.fhir.utilities.xml.IXMLWriter;
 import org.hl7.fhir.utilities.xml.XMLUtil;
+import org.hl7.fhir.utilities.xml.XMLWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -109,7 +108,8 @@ public class XmlParser extends ParserBase {
     this.allowXsiLocation = allowXsiLocation;
   }
 
-  public Element parseSingle(InputStream stream) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
+  public List<NamedElement> parse(InputStream stream) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
+    List<NamedElement> res = new ArrayList<>();
 		Document doc = null;
   	try {
   		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -160,10 +160,13 @@ public class XmlParser extends ParserBase {
       logError(0, 0, "(syntax)", IssueType.INVALID, e.getMessage(), IssueSeverity.FATAL);
       doc = null;
   	}
-  	if (doc == null)
-  		return null;
-  	else
-      return parse(doc);
+  	if (doc != null) {
+  	  Element e = parse(doc);
+      if (e != null) {
+        res.add(new NamedElement(null, e));
+      }
+  	}
+  	return res;
   }
 
 
@@ -194,6 +197,25 @@ public class XmlParser extends ParserBase {
     checkForProcessingInstruction(doc);
     org.w3c.dom.Element element = doc.getDocumentElement();
     return parse(element);
+  }
+  
+  // Fixed for https://github.com/ahdis/matchbox/issues/31
+  @Override
+  protected StructureDefinition getDefinition(int line, int col, String ns, String name) throws FHIRFormatError {
+    if (ns == null) {
+      logError(line, col, name, IssueType.STRUCTURE, context.formatMessage(I18nConstants.THIS__CANNOT_BE_PARSED_AS_A_FHIR_OBJECT_NO_NAMESPACE, name), IssueSeverity.FATAL);
+      return null;
+    }
+    if (name == null) {
+      logError(line, col, name, IssueType.STRUCTURE, context.formatMessage(I18nConstants.THIS_CANNOT_BE_PARSED_AS_A_FHIR_OBJECT_NO_NAME), IssueSeverity.FATAL);
+      return null;
+    }
+    StructureDefinition sd = context.fetchTypeDefinition(ns + "|"+name);
+    if (sd!=null) {
+      return sd;
+    }
+    logError(line, col, name, IssueType.STRUCTURE, context.formatMessage(I18nConstants.THIS_DOES_NOT_APPEAR_TO_BE_A_FHIR_RESOURCE_UNKNOWN_NAMESPACENAME_, ns, name), IssueSeverity.FATAL);
+    return null;
   }
   
   public Element parse(org.w3c.dom.Element element) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
@@ -278,11 +300,7 @@ public class XmlParser extends ParserBase {
   private void parseChildren(String path, org.w3c.dom.Element node, Element element) throws FHIRFormatError, FHIRException, IOException, DefinitionException {
   	// this parsing routine retains the original order in a the XML file, to support validation
   	reapComments(node, element);
-    // FIXME: cannot use it for parsing List<Property> properties = element.getProperty().getChildProperties(element.getName(), XMLUtil.getXsiType(node));
-  	if (true) {
-  	  throw new RuntimeException("Patch only for serializing");
-  	}
-  	List<Property> properties = null;
+    List<Property> properties = element.getProperty().getChildProperties(element.getName(), XMLUtil.getXsiType(node));
 
   	String text = XMLUtil.getDirectText(node).trim();
     int line = line(node);
@@ -790,15 +808,6 @@ public class XmlParser extends ParserBase {
       logError(0, 0, "XML", IssueType.INVALID, e.getMessage(), IssueSeverity.ERROR);
     }
     return "?xml-p2?";
-  }
-  @Override
-  public List<NamedElement> parse(InputStream stream)
-      throws IOException, FHIRFormatError, DefinitionException, FHIRException {
-    // FIXME: cannot use it for parsing List<Property> properties = element.getProperty().getChildProperties(element.getName(), XMLUtil.getXsiType(node));
-    if (true) {
-      throw new RuntimeException("Patch only for serializing");
-    }
-    return null;
   }
 
 }

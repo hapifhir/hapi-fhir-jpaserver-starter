@@ -190,7 +190,7 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
         if (output != null && responseContentType.equals(Constants.CT_FHIR_JSON_NEW))
           new org.hl7.fhir.r5.elementmodel.JsonParser(fhirContext).compose(r, output, OutputStyle.PRETTY, null);
         else
-          new ch.ahdis.matchbox.mappinglanguage.XmlParser(fhirContext).compose(r, output, OutputStyle.PRETTY, null);
+          new org.hl7.fhir.r5.elementmodel.XmlParser(fhirContext).compose(r, output, OutputStyle.PRETTY, null);
       }
     } catch(org.hl7.fhir.exceptions.FHIRException e) {
       log.error("Transform exception", e);
