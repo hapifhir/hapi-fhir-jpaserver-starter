@@ -17,10 +17,14 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Identifier;
 import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.rules.SpringClassRule;
+import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.MapDifference.ValueDifference;
@@ -40,10 +44,10 @@ public class CdaTransformTests {
   private FhirContext contextR4 = FhirVersionEnum.R4.newContext();
   private GenericFhirClient genericClient = new GenericFhirClient(contextR4);
 
-
+//
 //  @ClassRule
 //  public static final SpringClassRule scr = new SpringClassRule();
-
+//
 //  @Rule
 //  public final SpringMethodRule smr = new SpringMethodRule();
 
@@ -82,19 +86,6 @@ public class CdaTransformTests {
     assertNotNull(bundleReceived);
     return bundleReceived;
   }  
-
-
-  @Test
-  public void convertChSetId() throws IOException {
-    InputStream inputStream =   getClass().getResourceAsStream("/transform/ch-emed/ch-setId.xml");
-    
-    Bundle bundle = (Bundle) contextR4.newXmlParser().parseResource(inputStream);
-    assertNotNull(bundle);
-  
-    Bundle bundleReceived = convertBundleToCdaAndBack(bundle, "http://fhir.ch/ig/cda-fhir-maps/StructureMap/BundleToCdaCh", "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaChToBundle");
-  
-    compare(bundle, bundleReceived, true);
-  }
 
   public void convertBundleMedicationTreatmentPlanToCdaAndBack(String url) throws IOException {
     InputStream inputStream = new URL(url).openStream();
@@ -165,7 +156,7 @@ public class CdaTransformTests {
   
   @Test
   public void convert25MedicationTreatmentPlanToCdaAndBack() throws IOException {
-    convertBundleMedicationTreatmentPlanToCdaAndBack(" http://build.fhir.org/ig/ehealthsuisse/ch-emed/Bundle-2-5-MedicationTreatmentPlan.xml");
+    convertBundleMedicationTreatmentPlanToCdaAndBack("http://build.fhir.org/ig/ehealthsuisse/ch-emed/Bundle-2-5-MedicationTreatmentPlan.xml");
   }
   
   @Test
