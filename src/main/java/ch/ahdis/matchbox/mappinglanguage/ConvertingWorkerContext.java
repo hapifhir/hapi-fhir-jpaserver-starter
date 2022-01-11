@@ -110,25 +110,27 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
           return sd;
       }
     } 
-    IBundleProvider search = null;
-    SearchParameterMap params = new SearchParameterMap();
-    params.setLoadSynchronousUpTo(100);
-    params.add(org.hl7.fhir.r4.model.StructureDefinition.SP_TYPE, new UriParam(type));
-    search = myDaoRegistry.getResourceDao("StructureDefinition").search(params);
-    Integer size = search.size();
-    if (size == null || size == 0) {
-      return null;
-    }
-    for (IBaseResource resource : search.getAllResources()) {
-      org.hl7.fhir.r4.model.StructureDefinition sd = (org.hl7.fhir.r4.model.StructureDefinition) resource;
-      if (sd.getDerivation() == TypeDerivationRule.SPECIALIZATION && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
-        if(type.equals(sd.getType()) && (ns == null || ns.equals(FormatUtilities.FHIR_NS)) && !ToolingExtensions.hasExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"))
-          return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
-        String sns = ToolingExtensions.readStringExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace");
-        if ((type.equals(sd.getType()) || type.equals(sd.getName())) && ns != null && ns.equals(sns))
-          return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
+    if (myDaoRegistry != null) {
+      IBundleProvider search = null;
+      SearchParameterMap params = new SearchParameterMap();
+      params.setLoadSynchronousUpTo(100);
+      params.add(org.hl7.fhir.r4.model.StructureDefinition.SP_TYPE, new UriParam(type));
+      search = myDaoRegistry.getResourceDao("StructureDefinition").search(params);
+      Integer size = search.size();
+      if (size == null || size == 0) {
+        return null;
       }
-    } 
+      for (IBaseResource resource : search.getAllResources()) {
+        org.hl7.fhir.r4.model.StructureDefinition sd = (org.hl7.fhir.r4.model.StructureDefinition) resource;
+        if (sd.getDerivation() == TypeDerivationRule.SPECIALIZATION && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
+          if(type.equals(sd.getType()) && (ns == null || ns.equals(FormatUtilities.FHIR_NS)) && !ToolingExtensions.hasExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"))
+            return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
+          String sns = ToolingExtensions.readStringExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace");
+          if ((type.equals(sd.getType()) || type.equals(sd.getName())) && ns != null && ns.equals(sns))
+            return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
+        }
+      } 
+    }
     return null;
   }
   
