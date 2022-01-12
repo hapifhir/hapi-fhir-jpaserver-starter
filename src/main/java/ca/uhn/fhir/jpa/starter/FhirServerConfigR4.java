@@ -39,6 +39,7 @@ import ch.ahdis.fhir.hapi.jpa.validation.JpaPersistedResourceValidationSupport;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnairePopulateProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
@@ -132,6 +133,11 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
   @Bean
   public QuestionnairePopulateProvider questionnaireProvider() {
 	  return new QuestionnairePopulateProvider();
+  }
+  
+  @Bean
+  public QuestionnaireAssembleProvider assembleProvider() {
+	  return new QuestionnaireAssembleProvider();
   }
 
   @Bean

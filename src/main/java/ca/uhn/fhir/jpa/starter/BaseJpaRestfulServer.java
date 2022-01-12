@@ -71,6 +71,7 @@ import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProvider;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.interceptor.MappingLanguageInterceptor;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnairePopulateProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
@@ -126,6 +127,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
   
   @Autowired
   QuestionnairePopulateProvider questionnaireProvider;
+  
+  @Autowired
+  QuestionnaireAssembleProvider assembleProvider;
   
   @Autowired
   QuestionnaireResponseExtractProvider questionnaireResponseProvider;
