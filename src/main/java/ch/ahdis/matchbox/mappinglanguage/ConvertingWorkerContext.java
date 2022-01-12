@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -29,6 +30,7 @@ import org.hl7.fhir.r5.context.SimpleWorkerContext.IValidatorFactory;
 import org.hl7.fhir.r5.formats.FormatUtilities;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.r5.model.StructureMap;
+import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
 import org.hl7.fhir.r5.utils.IResourceValidator;
 import org.hl7.fhir.r5.utils.XVerExtensionManager;
 import org.hl7.fhir.utilities.OIDUtils;
@@ -134,6 +136,16 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
     return null;
   }
   
+  @Override
+  public List<String> getTypeNames() {
+    List<String> result = new ArrayList<String>();
+    for (org.hl7.fhir.r5.model.StructureDefinition sd : getStructures()) {
+      if (sd.getKind() != StructureDefinitionKind.LOGICAL && sd.getDerivation() == org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule.SPECIALIZATION)
+        result.add(sd.getName());
+    }
+    Collections.sort(result);
+    return result;
+  }
 
 
   private static final Logger ourLog = LoggerFactory.getLogger(ConvertingWorkerContext.class);
