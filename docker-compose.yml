@@ -1,16 +1,27 @@
-version: "3"
+version: "4"
 services:
-  matchbox-test-app:
+  matchbox-formfiller:
+    image: eu.gcr.io/fhir-ch/matchbox-formfiller:v172
+    restart: on-failure
+    ports:
+      - '4300:80'
+    links:
+      - matchbox
+    environment:
+      DOMAIN: 'localhost'
+      MAG: 'https://test.ahdis.ch/mag-pmp'
+      MATCHBOX: 'http://matchbox:8080/matchbox'
+  matchbox:
     build: .
     container_name: matchbox
     restart: on-failure
     ports:
       - "8080:8080"
     links:
-      - matchbox-test-db
+      - matchbox-db
     volumes:
       - ./with-postgres:/config      
-  matchbox-test-db:
+  matchbox-db:
     image: postgres:latest
     container_name: matchbox-db
     restart: always
