@@ -1,3 +1,13 @@
+2022/01/13 Release 1.7.1
+- JSON POST Requests have a size limit (filler issue) [#33](https://github.com/ahdis/matchbox/issues/33)
+- FHIRPathEnginge construction is expensive [#31](https://github.com/ahdis/matchbox/issues/31)
+- SNOMED CT Code validation problem for Quantity in Medication.amount [#30](https://github.com/ahdis/matchbox/issues/30)
+- Validation: Uploaded StructureDefinitions via NPM are not available in same session for $validate [#29](https://github.com/ahdis/matchbox/issues/29)
+- StructureMap transformation: Bundle request element not correctly ordered [#27](https://github.com/ahdis/matchbox/issues/27)
+- Error on release V1.6.0 [#24](https://github.com/ahdis/matchbox/issues/24), thanks [@delcroip](https://github.com/delcroip)
+- Integrated [PR](https://github.com/ahdis/matchbox/pull/25) and [PR](https://github.com/ahdis/matchbox/pull/32)  for translate in Structure Map, thanks [@aralych](https://github.com/ralych) 
+- base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v171
+
 2022/01/04 Release 1.6.0
 - extend FHIR API based on Implementation Guide NPM packages [#23](https://github.com/ahdis/matchbox/issues/23)
 - add spring actuator for health checks [#22](https://github.com/ahdis/matchbox/issues/22)

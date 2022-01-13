@@ -6,6 +6,7 @@ hapi:
         name: hl7.fhir.cda
         version: 2.1.0
       cdach:
+        url: http://build.fhir.org/ig/hl7ch/cda-fhir-maps/package.tgz
         name: ch.fhir.ig.cda-fhir-maps
         version: 0.2.0
       iheformatcodefhir:
@@ -17,7 +18,7 @@ hapi:
 #       version: 2.1.0
       eprterm:
         name: ch.fhir.ig.ch-epr-term
-        version: 2.0.5
+        version: 2.0.6
       core:
         name: ch.fhir.ig.ch-core
         version: 2.0.0
@@ -44,10 +45,22 @@ hapi:
         version: 0.1.0
       mhd:
         name: ihe.mhd.fhir
-        version: 4.0.1
+        version: 4.0.1      
+      pixm:
+        name: IHE.ITI.PIXm
+        version: 3.0.0
       cheprmhealth:
+        url: https://fhir.ch/ig/ch-epr-mhealth/package.tgz
         name: ch.fhir.ig.ch-epr-mhealth
-        version: 0.2.0
+        version: 1.0.0
       challergyintolerance:
         name: ch.fhir.ig.ch-allergyintolerance
+        version": 0.2.0
+      chradorderpoc:
+        url: https://build.fhir.org/ig/ahdis/ch-rad-poc/package.tgz
+        name: ch.ahdis.ig.ch-rad-poc
+        version: 0.1.0
+      chalis:
+        url: https://build.fhir.org/ig/ahdis/ch-alis/package.tgz
+        name: ch.fhir.ig.ch-alis
         version": 0.2.0

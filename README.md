@@ -55,6 +55,10 @@ mvn clean package -DskipTests
 docker-compose up
 ```
 
+matchbox will be available at [http://localhost:8080/matchbox/](http://localhost:8080/matchbox/)
+matchbox-formfiller will be available at [http://localhost:4300/matchbox-formfiller/#/](http://localhost:4300/matchbox-formfiller/#/)
+
+
 Export the DB data:
 ```
 docker-compose exec -T matchbox-test-db pg_dump -Fc -U matchbox matchbox > mydump
@@ -79,6 +83,7 @@ Server will then be accessible at http://localhost:8080/matchbox/fhir/metadata.
 
 To dynamically configure run in a kubernetes environment and add a kubernetes config map that provides /config/application.yaml file with implementation guide list like in "with-preload/application.yaml" 
 
+
 ### Image with preloaded implementation guides
 
 After building the base image:
@@ -90,10 +95,10 @@ docker run -d --name matchbox-swissepr -p 8080:8080 matchbox-swissepr
 
 ### making container available
 ```
-docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v160
+docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v171
 
-docker push eu.gcr.io/fhir-ch/matchbox:v150
-docker push eu.gcr.io/fhir-ch/matchbox-swissepr:v150
+docker push eu.gcr.io/fhir-ch/matchbox:v171
+docker push eu.gcr.io/fhir-ch/matchbox-swissepr:v170
 ```
 
 API
