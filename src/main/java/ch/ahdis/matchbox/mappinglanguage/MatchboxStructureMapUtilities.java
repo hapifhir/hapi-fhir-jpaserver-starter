@@ -1,5 +1,21 @@
-/**
+ /*
+ * #%L
+ * Matchbox
+ * %%
  * Copyright (c) 2022- by RALY GmbH. All rights reserved.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
  */
 package ch.ahdis.matchbox.mappinglanguage;
 
@@ -20,15 +36,18 @@ import org.hl7.fhir.r5.model.ConceptMap.SourceElementComponent;
 import org.hl7.fhir.r5.model.ConceptMap.TargetElementComponent;
 import org.hl7.fhir.r5.model.Enumerations.ConceptMapRelationship;
 import org.hl7.fhir.r5.model.Resource;
+import org.hl7.fhir.r5.model.StringType;
 import org.hl7.fhir.r5.model.StructureMap;
 import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.r5.utils.structuremap.ITransformerServices;
 import org.hl7.fhir.r5.utils.structuremap.SourceElementComponentWrapper;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.r5.utils.structuremap.TransformContext;
+import org.jboss.logging.Logger;
 
 /**
- * Class to overwrite tranlation method to fix certain problems with CDA2FHIR mapping
+ * Class to overwrite translation method to fix certain problems with CDA2FHIR
+ * mapping
  */
 public class MatchboxStructureMapUtilities extends StructureMapUtilities {
 
@@ -119,10 +138,15 @@ public class MatchboxStructureMapUtilities extends StructureMapUtilities {
 				List<SourceElementComponentWrapper> list = new ArrayList<SourceElementComponentWrapper>();
 				for (ConceptMapGroupComponent g : cmap.getGroup()) {
 					for (SourceElementComponent e : g.getElement()) {
-						if (!src.hasSystem() && src.getCode().equals(e.getCode()))
+						String srccode = src.getCode();
+						String srcsys = src.getSystem();
+						String ecode = e.getCode();
+						String gsys = g.getSource();
+						Logger.getLogger(getClass())
+								.info("Src: " + srcsys + "#" + srccode + " <-> " + gsys + "#" + ecode);
+						if (!src.hasSystem() && srccode.equals(ecode))
 							list.add(new SourceElementComponentWrapper(g, e));
-						else if (src.hasSystem() && src.getSystem().equals(g.getSource())
-								&& src.getCode().equals(e.getCode()))
+						else if (src.hasSystem() && srcsys.equals(gsys) && srccode.equals(ecode))
 							list.add(new SourceElementComponentWrapper(g, e));
 					}
 				}
@@ -137,7 +161,8 @@ public class MatchboxStructureMapUtilities extends StructureMapUtilities {
 						}
 						if (tgt.getRelationship() == null || EnumSet
 								.of(ConceptMapRelationship.RELATEDTO, ConceptMapRelationship.EQUIVALENT,
-										ConceptMapRelationship.SOURCEISNARROWERTHANTARGET)
+										ConceptMapRelationship.SOURCEISNARROWERTHANTARGET,
+										ConceptMapRelationship.SOURCEISBROADERTHANTARGET)
 								.contains(tgt.getRelationship())) {
 							if (done && "code".equals(fieldToReturn)) {
 								message = "Concept map " + su + " found multiple matches for " + src.getCode();
@@ -163,15 +188,43 @@ public class MatchboxStructureMapUtilities extends StructureMapUtilities {
 				throw new FHIRException(message);
 			if (outcome == null)
 				return null;
-			if ("code".equals(fieldToReturn) && (outcome instanceof Coding))
-				return new CodeType(((Coding) outcome).getCode());
-			else if ("code".equals(fieldToReturn) && (outcome instanceof CodeableConcept)
-					&& ((CodeableConcept) outcome).getCoding().size() > 0)
-				return new CodeType(((CodeableConcept) outcome).getCodingFirstRep().getCode());
-			else
-				return outcome;
-		}
+//			if ("code".equals(fieldToReturn) && (outcome instanceof Coding))
+//				return new CodeType(((Coding) outcome).getCode());
+//			else if ("code".equals(fieldToReturn) && (outcome instanceof CodeableConcept)
+//					&& ((CodeableConcept) outcome).getCoding().size() > 0)
+//				return new CodeType(((CodeableConcept) outcome).getCodingFirstRep().getCode());
+//			else
+//				return outcome;
 
+			// check if outcome is Coding
+			if (outcome instanceof Coding) {
+				if ("code".equals(fieldToReturn)) {
+					return new CodeType(((Coding) outcome).getCode()).setSystem(((Coding) outcome).getSystem());// new
+																												// CodeType(((Coding)
+																												// outcome).getCode());
+				} else if ("system".equals(fieldToReturn)) {
+					return new StringType(((Coding) outcome).getSystem());
+				} else if ("display".equals(fieldToReturn)) {
+					return new StringType(((Coding) outcome).getDisplay());
+				} else if ("CodeableConcept".equals(fieldToReturn)) {
+					return new CodeableConcept(((Coding) outcome));
+				}
+			}
+			// check if outcome is CodeableConcept and size>0
+			if ((outcome instanceof CodeableConcept) && ((CodeableConcept) outcome).getCoding().size() > 0) {
+				if ("code".equals(fieldToReturn)) {
+					return new CodeType(((CodeableConcept) outcome).getCodingFirstRep().getCode())
+							.setSystem(((CodeableConcept) outcome).getCodingFirstRep().getSystem());
+				} else if ("system".equals(fieldToReturn)) {
+					return new StringType(((CodeableConcept) outcome).getCodingFirstRep().getSystem());
+				} else if ("display".equals(fieldToReturn)) {
+					return new StringType(((CodeableConcept) outcome).getCodingFirstRep().getDisplay());
+				} else if ("Coding".equals(fieldToReturn)) {
+					return ((CodeableConcept) outcome).getCodingFirstRep();
+				}
+			}
+			return outcome;
+		}
 	}
 
 }
