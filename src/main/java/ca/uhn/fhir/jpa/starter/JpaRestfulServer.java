@@ -2,14 +2,15 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import org.hl7.fhir.r4.model.*;
-import org.smartregister.extension.model.*;
 import org.smartregister.extension.rest.LocationHierarchyResourceProvider;
 import org.smartregister.extension.rest.PractitionerDetailsResourceProvider;
+import org.smartregister.model.location.*;
+import org.smartregister.model.practitioner.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 import javax.servlet.ServletException;
-import static org.smartregister.extension.utils.Constants.LOCATION;
+import static org.smartregister.utils.Constants.LOCATION;
 
 @Import(AppProperties.class)
 public class JpaRestfulServer extends BaseJpaRestfulServer {
