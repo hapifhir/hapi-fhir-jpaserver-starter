@@ -1,0 +1,24 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "ProvideMoreInformation",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire"
+    ]
+  },
+  "url": "http://OUR-PLACEHOLDER-URL.com/Questionnaire/ProvideMoreInformation",
+  "version": "1.0.0",
+  "name": "ProvideMoreInformation",
+  "title": "Form for capturing additional information from the provider",
+  "status": "draft",
+  "subjectType": [
+    "Practitioner"
+  ],
+  "item": [
+    {
+      "linkId": "Unique id for item in questionnaire",
+      "text": "Primary text for the item",
+      "type": "display"
+    }
+  ]
+}

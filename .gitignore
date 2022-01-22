@@ -173,3 +173,4 @@ Temporary Items
 provision/provision.dev.sh
 provision/provision.prod.sh
 src/main/resources/application.yaml
+.vscode
