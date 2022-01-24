@@ -15,7 +15,7 @@ spring:
     baselineOnMigrate: true
   datasource:
     url: 'jdbc:h2:file:./target/database/h2;AUTO_SERVER=TRUE'
-    #url: jdbc:h2:mem:test_mem
+#    url: jdbc:h2:mem:test_mem
     username: sa
     password: null
     driverClassName: org.h2.Driver
@@ -40,8 +40,12 @@ spring:
   #      hibernate.cache.use_structured_entries: false
   #      hibernate.cache.use_minimal_puts: false
   ###    These settings will enable fulltext search with lucene
-  #      hibernate.search.enabled: true
+      hibernate.search.enabled: true
+#      hibernate.search.automatic_indexing.strategy: session
+#      hibernate.search.automatic_indexing.synchronization.strategy: sync
+      hibernate.search.backend.type: elasticsearch
   #      hibernate.search.backend.type: lucene
+      hibernate.search.backedn.analysis.configurer: ca.uhn.fhir.jpa.search.elastic.HapiElasticsearchAnalysisConfigurer
   #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
   #      hibernate.search.backend.directory.type: local-filesystem
   #      hibernate.search.backend.directory.root: target/lucenefiles
@@ -172,21 +176,21 @@ hapi:
 #        startTlsEnable:
 #        startTlsRequired:
 #        quitWait:
-#    lastn_enabled: true
-#    store_resource_in_lucene_index_enabled: true
+    lastn_enabled: true
+    store_resource_in_lucene_index_enabled: true
 ###  This is configuration for normalized quantity serach level default is 0
 ###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
 ###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
 ###   2: NORMALIZED_QUANTITY_SEARCH_SUPPORTED
 #    normalized_quantity_search_level: 2
-#elasticsearch:
-#  debug:
-#    pretty_print_json_log: false
-#    refresh_after_write: false
-#  enabled: false
-#  password: SomePassword
-#  required_index_status: YELLOW
-#  rest_url: 'localhost:9200'
-#  protocol: 'http'
-#  schema_management_strategy: CREATE
-#  username: SomeUsername
+elasticsearch:
+  debug:
+    pretty_print_json_log: true
+    refresh_after_write: false
+  enabled: true
+  password: smilecdr
+  required_index_status: YELLOW
+  rest_url: 'localhost:19200'
+  protocol: 'http'
+  schema_management_strategy: CREATE
+  username: elastic
