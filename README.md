@@ -14,7 +14,7 @@ A second docker file will create an image with fixed configuration and preloaded
 ## Prerequisites
 
 - [This project](https://github.com/ahdis/matchbox) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub. Check out the main branch (master is kept in sync with [hapi-fhir-jpaserver-starter](https://github.com/hapifhir/hapi-fhir-jpaserver-starter)
-- Oracle Java (JDK) installed: Minimum JDK8 or newer.
+- Oracle Java (JDK) installed: Minimum JDK11 or newer.
 - Apache Maven build tool (newest version)
 
 ## Running locally
