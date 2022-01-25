@@ -19,7 +19,7 @@
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
     <groupId>org.smartregister</groupId>
-    <version>5.5.2-SNAPSHOT</version>
+    <version>5.5.3-SNAPSHOT</version>
 
     <properties>
         <java.version>8</java.version>
@@ -133,16 +133,21 @@
         <dependency>
             <groupId>org.smartregister</groupId>
             <artifactId>hapi-fhir-keycloak</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.6-SNAPSHOT</version>
         </dependency>
 
         <!-- This dependency holds all the code extensions that OpenSRP will build on top of Hapi-Fhir-->
         <dependency>
             <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
             <artifactId>location</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.4-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
+            <artifactId>practitioner</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
+        </dependency>
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
             is used here, but log4j would also be fine. -->
