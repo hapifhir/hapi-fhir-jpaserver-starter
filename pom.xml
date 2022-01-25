@@ -146,7 +146,7 @@
         <dependency>
             <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
             <artifactId>practitioner</artifactId>
-            <version>0.0.4-SNAPSHOT</version>
+            <version>0.0.3-SNAPSHOT</version>
         </dependency>
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
