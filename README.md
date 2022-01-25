@@ -6,6 +6,9 @@ matchbox is a FHIR server based on the [hapifhir/hapi-fhir-jpaserver-starter](ht
 - FHIR Mapping Language endpoints for creation of StructureMaps and support for the [StructureMap/$transform](https://www.hl7.org/fhir/operation-structuremap-transform.html) operation
 - SDC (Structured Data Capture) [extraction](https://build.fhir.org/ig/HL7/sdc/extraction.html#map-extract) support based on the FHIR Mapping language and [Questionnaire/$extract](http://build.fhir.org/ig/HL7/sdc/OperationDefinition-QuestionnaireResponse-extract.html)
 
+
+a public test server is hosted at [https://test.ahdis.ch/matchbox/fhir](https://test.ahdis.ch/matchbox/fhir) with a corresponding gui [https://test.ahdis.ch/matchbox-formfiller/](https://test.ahdis.ch/matchbox-formfiller/)
+
 ## containers
 
 The docker file will create a docker image with no preloaded implementation guides. A list of implementation guides to load can be passed as config-map.
@@ -43,7 +46,7 @@ mvn clean install -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="-X
 
 Then, browse to the following link to use the server:
 
-[http://localhost:8080/matchbox/](http://localhost:8080/matchbox/)
+[http://localhost:8080/matchbox/fhir](http://localhost:8080/matchbox/fhir)
 
 ## Using docker-compose with a persistent postgreSQL database
 
@@ -55,7 +58,7 @@ mvn clean package -DskipTests
 docker-compose up
 ```
 
-matchbox will be available at [http://localhost:8080/matchbox/](http://localhost:8080/matchbox/)
+matchbox will be available at [http://localhost:8080/matchbox/fhir](http://localhost:8080/matchbox/fhir)
 matchbox-formfiller will be available at [http://localhost:4300/matchbox-formfiller/#/](http://localhost:4300/matchbox-formfiller/#/)
 
 
