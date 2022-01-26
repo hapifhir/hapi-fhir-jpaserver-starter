@@ -1,5 +1,5 @@
 {
-  "resourceType": "transaction",
+  "resourceType": "Bundle",
   "id": "LungCancerScreening_PlanDefinition-HypertensionCA_ANCDT01_bundle-2",
   "type": "transaction",
   "entry": [
