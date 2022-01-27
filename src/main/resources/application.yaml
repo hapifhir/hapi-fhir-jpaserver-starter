@@ -1,11 +1,16 @@
+server:
+     port: 6060
 spring:
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
-    #url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
+    url: 'jdbc:postgresql://localhost:5432/postgres'
+    username: postgres
+    driverClassName: org.postgresql.Driver  
     max-active: 15
+       
+    #url: 'jdbc:h2:file:./target/database/h2'
+    #username: sa
+    #password: null
+    #driverClassName: org.h2.Driver
 
     # database connection pool size
     hikari:
@@ -50,11 +55,11 @@ hapi:
     #    server_address: http://hapi.fhir.org/baseR4
     #    defer_indexing_for_codesystems_of_size: 101
     #    install_transitive_ig_dependencies: true
-    #    implementationguides:
-    ###    example from registry (packages.fhir.org)
-    #      swiss:
-    #        name: swiss.mednet.fhir
-    #        version: 0.8.0
+    implementationguides:
+       qicore:
+          name: hl7.fhir.us.qicore 
+          version: 4.9.0
+    enable_repository_validating_interceptor: true
     #      example not from registry
     #      ips_1_0_0:
     #        url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
@@ -74,7 +79,6 @@ hapi:
     #    default_pretty_print: true
     #    default_page_size: 20
     #    delete_expunge_enabled: true
-    #    enable_repository_validating_interceptor: false
     #    enable_index_missing_fields: false
     #    enable_index_contained_resource: false
     #    enforce_referential_integrity_on_delete: false
