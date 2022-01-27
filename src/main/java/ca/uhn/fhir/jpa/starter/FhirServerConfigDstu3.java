@@ -97,10 +97,13 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
 		  if (elasticsearchUrl.startsWith("http")) {
 			  elasticsearchProtocol = elasticsearchUrl.split("://")[0];
 			  elasticsearchHost = elasticsearchUrl.split("://")[1];
+		  }else {
+			  elasticsearchProtocol = "http";
+			  elasticsearchHost = elasticsearchUrl;
 		  }
 		  String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
 		  String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
-		  return new ElasticsearchSvcImpl(thePartitionSetings, elasticsearchUrl, elasticsearchUsername, elasticsearchPassword);
+		  return new ElasticsearchSvcImpl(thePartitionSetings, elasticsearchProtocol, elasticsearchHost, elasticsearchUsername, elasticsearchPassword);
 	  } else {
 		  return null;
 	  }
