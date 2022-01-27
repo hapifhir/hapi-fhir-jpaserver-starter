@@ -17,7 +17,7 @@ spring:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
-  #      hibernate.dialect: org.hibernate.dialect.h2dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
   #      hibernate.cache.use_query_cache: false
@@ -87,7 +87,7 @@ hapi:
     #    filter_search_enabled: true
     #    graphql_enabled: true
     #    narrative_enabled: true
-    #    mdm_enabled: true
+    mdm_enabled: true
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
