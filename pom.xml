@@ -19,11 +19,11 @@
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
     <groupId>org.smartregister</groupId>
-    <version>5.5.2-SNAPSHOT</version>
+    <version>5.6.0-SNAPSHOT</version>
 
     <properties>
         <java.version>8</java.version>
-        <hapi.fhir.version>5.5.1</hapi.fhir.version>
+        <hapi.fhir.version>5.6.0</hapi.fhir.version>
         <spring_boot_version>2.5.6</spring_boot_version>
     </properties>
 
