@@ -2,12 +2,15 @@ server:
      port: 6060
 spring:
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
-    #url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
+    url: 'jdbc:postgresql://localhost:5432/postgres'
+    username: postgres
+    driverClassName: org.postgresql.Driver  
     max-active: 15
+       
+    #url: 'jdbc:h2:file:./target/database/h2'
+    #username: sa
+    #password: null
+    #driverClassName: org.h2.Driver
 
     # database connection pool size
     hikari:
