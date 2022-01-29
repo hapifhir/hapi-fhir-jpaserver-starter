@@ -46,7 +46,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
      "hapi.fhir.subscription.websocket_enabled=true",
      "hapi.fhir.allow_external_references=true",
      "hapi.fhir.allow_placeholder_references=true",
-	  "spring.main.allow-bean-definition-overriding=true"
   })
 
 
