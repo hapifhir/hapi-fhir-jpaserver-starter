@@ -176,3 +176,5 @@ src/main/resources/application.yaml
 src/main/resources/application.dev.yaml
 src/main/resources/application.test.yaml
 .vscode
+.env
+.idea

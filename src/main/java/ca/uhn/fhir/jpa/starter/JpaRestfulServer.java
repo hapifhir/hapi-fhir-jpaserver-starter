@@ -22,6 +22,8 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     super.initialize();
 
     // Add your own customization here
+    BasicSecurityInterceptor basicSecurityInterceptor = new BasicSecurityInterceptor();
+    registerInterceptor(basicSecurityInterceptor);
 
   }
 
