@@ -18,6 +18,9 @@ annotations:
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
       description: |
-        updated HAPI FHIR starter image to 5.5.1
-appVersion: v5.5.1
-version: 0.6.0
+        updated HAPI FHIR starter image to 5.6.0
+    - kind: added
+      description: |
+        added support for configuring PodDisruptionBudget for the server pods
+appVersion: v5.6.0
+version: 0.7.0
