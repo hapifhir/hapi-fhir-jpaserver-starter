@@ -22,12 +22,14 @@ import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
+import ca.uhn.fhir.jpa.provider.ValueSetOperationProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative.INarrativeGenerator;
 import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
+import ca.uhn.fhir.rest.openapi.OpenApiInterceptor;
 import ca.uhn.fhir.rest.server.ApacheProxyAddressStrategy;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
 import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
@@ -90,6 +92,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
   BulkDataExportProvider bulkDataExportProvider;
   @Autowired
   PartitionManagementProvider partitionManagementProvider;
+  @Autowired
+  ValueSetOperationProvider valueSetOperationProvider;
   @Autowired
   BinaryStorageInterceptor binaryStorageInterceptor;
   @Autowired
@@ -357,10 +361,17 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     daoConfig.setDeferIndexingForCodesystemsOfSize(appProperties.getDefer_indexing_for_codesystems_of_size());
 
+	 if (appProperties.getOpenapi_enabled()) {
+		registerInterceptor(new OpenApiInterceptor());
+	}
+
     // Bulk Export
     if (appProperties.getBulk_export_enabled()) {
       registerProvider(bulkDataExportProvider);
     }
+
+    // valueSet Operations i.e $expand
+    registerProvider(valueSetOperationProvider);
 
     // Partitioning
     if (appProperties.getPartitioning() != null) {
