@@ -66,6 +66,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
 //  @Autowired
 //  ValueSetOperationProvider myValueSetOperationProvider;
   @Autowired
+  ValueSetOperationProvider myValueSetOperationProvider;
+  @Autowired
   IInterceptorBroadcaster interceptorBroadcaster;
   @Autowired
   DatabaseBackedPagingProvider databaseBackedPagingProvider;
