@@ -22,7 +22,16 @@ USER 65532:65532
 WORKDIR /app
 CMD ["/app/main.war"]
 
-FROM tomcat:9.0.53-jdk11-openjdk-slim-bullseye
+FROM tomcat:9.0.53
+
+RUN curl -O https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem \
+    && curl -O https://s3.amazonaws.com/rds-downloads/rds-ca-2019-us-east-1.pem \
+    && keytool -import -keystore $JAVA_HOME/lib/security/cacerts -trustcacerts -storepass "changeit" -alias "AWSrdsRootCACert" -file rds-ca-2019-root.pem --noprompt \
+    && keytool -import -keystore $JAVA_HOME/lib/security/cacerts -trustcacerts -storepass "changeit" -alias "AWSrdsIntCACert" -file rds-ca-2019-us-east-1.pem --noprompt \
+    && rm -rf /usr/local/tomcat/conf/logging.properties
+
+RUN curl -O https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip \
+    && unzip newrelic-java.zip
 
 RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles
 COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/*.war /usr/local/tomcat/webapps/

@@ -4,6 +4,8 @@ services:
     build: .
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
+    environment:
+      MYSQL_URL: "jdbc:mysql://hapi-fhir-mysql:3306/hapi"
     ports:
       - "8080:8080"
   hapi-fhir-mysql:

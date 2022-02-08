@@ -1,11 +1,12 @@
 server:
      port: 6060
+
 spring:
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/postgres'
-    username: postgres
-    driverClassName: org.postgresql.Driver  
-    max-active: 15
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/hapi_dstu3}
+    username: ${MYSQL_USER:admin}
+    password: ${MYSQL_ADMIN:admin}
+    driverClassName: com.mysql.jdbc.Driver
        
     #url: 'jdbc:h2:file:./target/database/h2'
     #username: sa
