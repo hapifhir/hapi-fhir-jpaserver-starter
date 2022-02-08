@@ -5,7 +5,7 @@ spring:
   datasource:
     url: ${MYSQL_URL:jdbc:mysql://localhost:3306/hapi_dstu3}
     username: ${MYSQL_USER:admin}
-    password: ${MYSQL_ADMIN:admin}
+    password: ${MYSQL_PASSWD:admin}
     driverClassName: com.mysql.jdbc.Driver
        
     #url: 'jdbc:h2:file:./target/database/h2'
