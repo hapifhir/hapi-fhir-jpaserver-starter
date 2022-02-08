@@ -98,7 +98,7 @@ docker run -d --name matchbox-swissepr -p 8080:8080 matchbox-swissepr
 
 ### making container available
 ```
-docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v171
+docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v180
 
 docker push eu.gcr.io/fhir-ch/matchbox:v171
 docker push eu.gcr.io/fhir-ch/matchbox-swissepr:v170
