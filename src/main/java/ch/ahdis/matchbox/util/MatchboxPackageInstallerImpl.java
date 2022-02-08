@@ -1,5 +1,45 @@
 package ch.ahdis.matchbox.util;
 
+import static org.apache.commons.lang3.StringUtils.defaultString;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.lang3.Validate;
+import org.hl7.fhir.Uri;
+import org.hl7.fhir.instance.model.api.IBase;
+import org.hl7.fhir.instance.model.api.IBaseExtension;
+import org.hl7.fhir.instance.model.api.IBaseHasExtensions;
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.instance.model.api.IPrimitiveType;
+import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.ImplementationGuide;
+import org.hl7.fhir.r4.model.ImplementationGuide.ImplementationGuideDefinitionComponent;
+import org.hl7.fhir.r4.model.ImplementationGuide.ImplementationGuideDefinitionResourceComponent;
+import org.hl7.fhir.utilities.npm.IPackageCacheManager;
+import org.hl7.fhir.utilities.npm.NpmPackage;
+import org.hl7.fhir.utilities.npm.NpmPackage.NpmPackageFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
 import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
 import ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition;
 import ca.uhn.fhir.context.BaseRuntimeElementDefinition;
@@ -24,45 +64,14 @@ import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.SystemRequestDetails;
 import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.jpa.searchparam.registry.ISearchParamRegistryController;
-import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.param.StringParam;
 import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.UriParam;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
+import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.fhir.util.FhirTerser;
 import ca.uhn.fhir.util.SearchParameterUtil;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import org.apache.commons.lang3.Validate;
-import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.instance.model.api.IPrimitiveType;
-import org.hl7.fhir.r4.model.Identifier;
-import org.hl7.fhir.utilities.npm.IPackageCacheManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.hl7.fhir.utilities.npm.NpmPackage;
-import org.hl7.fhir.utilities.npm.NpmPackage.NpmPackageFolder;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static org.apache.commons.lang3.StringUtils.defaultString;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * This is a copy of ca.uhn.fhir.jpa.packages.PackageInstallerSvcImpl
@@ -159,7 +168,6 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 	 * @param theInstallationSpec The details about what should be installed
 	 */
 	@SuppressWarnings("ConstantConditions")
-	@Override
 	public PackageInstallOutcomeJson install(PackageInstallationSpec theInstallationSpec) throws ImplementationGuideInstallationException {
 		PackageInstallOutcomeJson retVal = new PackageInstallOutcomeJson();
 		if (enabled) {
@@ -185,9 +193,9 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 
 				retVal.getMessage().addAll(JpaPackageCache.getProcessingMessages(npmPackage));
 
-				if (theInstallationSpec.isFetchDependencies()) {
-					fetchAndInstallDependencies(npmPackage, theInstallationSpec, retVal);
-				}
+// FIXME no dependencies				if (theInstallationSpec.isFetchDependencies()) {
+//					fetchAndInstallDependencies(npmPackage, theInstallationSpec, retVal);
+//				}
 
 				if (theInstallationSpec.getInstallMode() == PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL) {
 					install(npmPackage, theInstallationSpec, retVal);
@@ -203,6 +211,40 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 
 		return retVal;
 	}
+	
+	 private void addExtensionPackageUrl(IBaseResource newResource, String packageUrl ) {
+	    if (newResource instanceof IBaseHasExtensions) {
+	      IBaseExtension<?, ?> extension = ((IBaseHasExtensions) newResource).addExtension();
+	      extension.setUrl("http://ahdis.ch/fhir/extension/packageUrl");
+	      IPrimitiveType<Uri> retval = (IPrimitiveType<Uri>) myFhirContext.getElementDefinition("uri").newInstance();
+	      retval.setValueAsString(packageUrl);
+	      extension.setValue(retval);
+	    }
+	  }
+	 // FIXME should maybe work independent of model
+   // Resource Bundle/history-IHE-formatcode.valueset not found, specified in path: ImplementationGuide.definition.resource.reference
+	 private IBaseResource filterImplementationGuideResources(IBaseResource newResource, List<String> installTypes ) {
+	   ImplementationGuide ig = (ImplementationGuide) newResource;
+	   ImplementationGuideDefinitionComponent definition = ig.getDefinition();
+	   if (definition!=null) {
+	     List<ImplementationGuideDefinitionResourceComponent> resourceList = new ArrayList<ImplementationGuideDefinitionResourceComponent>(definition.getResource());
+	     for (ImplementationGuideDefinitionResourceComponent resource : resourceList) {
+	       if (resource.getReference()!=null && resource.getReference().getReference()!=null) {
+	         String reference = resource.getReference().getReference();
+	         int pos = reference.indexOf("/");
+	         if (pos>0) {
+	           String res = reference.substring(0,pos-1);
+	           if (installTypes.indexOf(res)==-1) {
+	             definition.getResource().remove(resource);
+	           }
+	         }
+	        
+	       }
+	     }
+	   }
+	   
+	   return newResource;
+	 }
 
 	/**
 	 * Installs a package and its dependencies.
@@ -228,24 +270,33 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 
 		ourLog.info("Installing package: {}#{}", name, version);
 		int[] count = new int[installTypes.size()];
+		
+		IBaseResource ig = null;
 
 		for (int i = 0; i < installTypes.size(); i++) {
 			Collection<IBaseResource> resources = parseResourcesOfType(installTypes.get(i), npmPackage);
 			count[i] = resources.size();
 
 			for (IBaseResource next : resources) {
-
 				try {
 			    next = isStructureDefinitionWithoutSnapshot(next) ? generateSnapshot(next) : next;
+			    // add package url as an extension if provided
+			    if (this.isImplementationGuide(next)) {
+			      ig = next;
+			      if (theInstallationSpec.getPackageUrl()!=null) {
+			        addExtensionPackageUrl(ig, theInstallationSpec.getPackageUrl());
+			      }
+			      filterImplementationGuideResources(ig, installTypes);
+			    }
 					create(next, theOutcome);
 				} catch (Exception e) {
 					ourLog.debug("Failed to upload resource of type {} with ID {} - Error: {}", myFhirContext.getResourceType(next), next.getIdElement().getValue(), e.toString());
 					throw new ImplementationGuideInstallationException(String.format("Error installing IG %s#%s: %s", name, version, e.toString()), e);
 				}
-
 			}
-
 		}
+		
+
     // Modified add log
     String log = String.format("Finished installation of package %s#%s:", name, version);
     ourLog.info(log);
@@ -257,6 +308,13 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 			ourLog.info(log);
 			theOutcome.getMessage().add(log);
 		}
+		
+		if (ig == null) {
+      log = String.format("No Implementaiton Guide provided for package %s#%s:", name, version);
+      ourLog.info(log);
+      theOutcome.getMessage().add(log);
+		}
+
 	}
 
 	private void fetchAndInstallDependencies(NpmPackage npmPackage, PackageInstallationSpec theInstallationSpec, PackageInstallOutcomeJson theOutcome) throws ImplementationGuideInstallationException {
@@ -469,6 +527,13 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 		}
 		return retVal;
 	}
+	
+	private boolean isImplementationGuide(IBaseResource  r) { 
+    if (r.getClass().getSimpleName().equals("ImplementationGuide")) {
+      return true;
+    }
+    return false;
+  }
 
 	private IBaseResource generateSnapshot(IBaseResource sd) {
 		try {

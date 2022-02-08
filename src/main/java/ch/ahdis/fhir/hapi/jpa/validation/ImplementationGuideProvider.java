@@ -65,7 +65,7 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
   public MethodOutcome create(HttpServletRequest theRequest, ImplementationGuide theResource, String theConditional,
     RequestDetails theRequestDetails) {
     OperationOutcome oo = load(theResource);
-    MethodOutcome outcome =  super.create(theRequest, theResource, theConditional, theRequestDetails);
+    MethodOutcome outcome =  new MethodOutcome();
     outcome.setOperationOutcome(oo);
     return outcome;
   }
@@ -125,10 +125,12 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
             "SearchParameter",
             "Subscription",
             "StructureMap",
-            "Questionnaire")
+            "Questionnaire",
+            "ImplementationGuide")
         .setName(theResource.getName())
         .setVersion(theResource.getVersion())
           .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
+    
     if (install != null) {
       install.getMessage().addAll(installOutcome.getMessage());
       return install;
@@ -147,7 +149,8 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
             "SearchParameter",
             "Subscription",
             "StructureMap",
-            "Questionnaire")
+            "Questionnaire",
+            "ImplementationGuide")
         .setName(theResource.getName())
         .setVersion(theResource.getVersion())
           .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
@@ -170,7 +173,6 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
           ig.setUrl(guide.getUrl());
           ig.setVersion(guide.getVersion());
           installOutcome = load(ig, installOutcome);
-          packageInstallerSvc.create(ig, installOutcome);
         }
       }
     }

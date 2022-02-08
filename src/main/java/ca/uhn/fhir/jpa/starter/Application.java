@@ -57,22 +57,4 @@ public class Application extends SpringBootServletInitializer {
     return servletRegistrationBean;
   }
 
-  @Bean
-  public ServletRegistrationBean overlayRegistrationBean() {
-
-    AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
-    annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
-
-    DispatcherServlet dispatcherServlet = new DispatcherServlet(
-      annotationConfigWebApplicationContext);
-    dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
-    dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
-
-    ServletRegistrationBean registrationBean = new ServletRegistrationBean();
-    registrationBean.setServlet(dispatcherServlet);
-    registrationBean.addUrlMappings("/*");
-    registrationBean.setLoadOnStartup(1);
-    return registrationBean;
-
-  }
 }

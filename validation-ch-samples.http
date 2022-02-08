@@ -154,6 +154,12 @@ Content-Type: application/fhir+xml
 < ./examples/PatientUnknownGender.xml
 
 
+### CH-Core UnknownGender warning (ch-pat-2: gender unknown is currently not used in Switzerland in eCH and the EPR [gender.empty() or (gender != 'unknown')])
+GET {{host}}/Patient/1352/$validate HTTP/1.1
+Content-Type: application/fhir+xml
+
+
+
 ### CH-Core Franz Muster validate with profile inside
 POST {{host}}/$validate HTTP/.1
 Content-Type: application/fhir+xml
@@ -313,6 +319,22 @@ Accept: application/fhir+json
 
 ### TODO same error as above, looks like an error in R5 itselft, however strange that it validates directly? different versions
 
+
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+json
+Accept: application/fhir+json
+
+{
+	"resourceType": "Patient",
+    "extension": [  {
+      "url": "http://hl7.org/fhir/StructureDefinition/patient-mothersMaidenName",
+      "valueString": "Daryl568 Casper496"
+    } ],
+	"text": {
+		"status": "generated",
+		"div": "<div xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"de\" lang=\"de\">42\n        </div>"
+	}
+}
 
 ###
 POST {{host}}/$validate HTTP/1.1

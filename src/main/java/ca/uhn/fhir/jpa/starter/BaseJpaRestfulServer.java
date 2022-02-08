@@ -33,6 +33,7 @@ import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.model.sched.ISchedulerService;
 import ca.uhn.fhir.jpa.model.sched.ScheduledJobDefinition;
+import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.GraphQLProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
@@ -69,6 +70,7 @@ import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProvider;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
+import ch.ahdis.matchbox.interceptor.ImplementationGuidePackageInterceptor;
 import ch.ahdis.matchbox.interceptor.MappingLanguageInterceptor;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProvider;
@@ -155,6 +157,12 @@ public class BaseJpaRestfulServer extends RestfulServer {
   
 	@Autowired
 	private IValidationSupport myValidationSupport;
+
+  @Autowired
+  private IHapiPackageCacheManager myPackageCacheManager;
+
+  @Autowired
+  protected FhirContext myFhirContext;
 
   @SuppressWarnings("unchecked")
   @Override
@@ -278,6 +286,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
     
     this.registerInterceptor(new MappingLanguageInterceptor());
+    this.registerInterceptor(new ImplementationGuidePackageInterceptor(myPackageCacheManager, myFhirContext));
 
     /*
      * Add some logging for each request
@@ -335,6 +344,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
       config.addAllowedHeader(HttpHeaders.AUTHORIZATION);
       config.addAllowedHeader(HttpHeaders.CACHE_CONTROL);
       config.addAllowedHeader("x-fhir-starter");
+      config.addAllowedHeader("x-cascade");
       config.addAllowedHeader("X-Requested-With");
       config.addAllowedHeader("Prefer");
 

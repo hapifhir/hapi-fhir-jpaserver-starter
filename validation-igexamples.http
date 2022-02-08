@@ -1,5 +1,5 @@
-###  @host = http://test.ahdis.ch/matchbox/fhir
-@host = http://localhost:8080/matchbox/fhir
+@host = http://test.ahdis.ch/matchbox/fhir
+### @host = http://localhost:8080/matchbox/fhir
 
 ## No issues detected during validation
 POST {{host}}/$validate HTTP/1.1
@@ -91,3 +91,8 @@ POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-emed/StructureDefinition/ch
 Content-Type: application/fhir+json
 
 < ./poc/medicationCardTest.json
+
+
+### Implementation Guide
+GET http://localhost:8080/matchbox/fhir/ImplementationGuide/ch.fhir.ig.ch-core
+Accept: application/gzip

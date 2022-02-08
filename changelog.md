@@ -1,3 +1,7 @@
+2022/02/08 Release 1.80
+- Integrate webapp running on matchbox port and root itself [#35](https://github.com/ahdis/matchbox/issues/35)
+- NPM can be downloaded with Accept:application/gzip on Implementation Guide Resource
+
 2022/01/13 Release 1.7.1
 - JSON POST Requests have a size limit (filler issue) [#33](https://github.com/ahdis/matchbox/issues/33)
 - FHIRPathEnginge construction is expensive [#31](https://github.com/ahdis/matchbox/issues/31)

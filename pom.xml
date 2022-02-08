@@ -131,7 +131,7 @@
 			<artifactId>hapi-fhir-server-openapi</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- This dependency is used for the "FHIR Tester" web app overlay -->
+		<!-- This dependency is used for the "FHIR Tester" web app overlay
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>hapi-fhir-testpage-overlay</artifactId>
@@ -144,7 +144,7 @@
 			<artifactId>hapi-fhir-testpage-overlay</artifactId>
 			<version>${project.version}</version>
 			<classifier>classes</classifier>
-		</dependency>
+		</dependency> -->
 
 		<!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback is used here, but log4j would also be fine. -->
 
@@ -167,11 +167,11 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well. Otherwise the following can be omitted. -->
+		<!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well. Otherwise the following can be omitted. 
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
 			<artifactId>thymeleaf</artifactId>
-		</dependency>
+		</dependency> -->
 
 		<!-- Needed for parsing the config -->
 		<dependency>
