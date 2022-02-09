@@ -1,7 +1,8 @@
-version: "5"
+version: "6"
 services:
   matchbox:
-    build: .
+    # build: .
+    image: matchbox:latest
     container_name: matchbox
     restart: on-failure
     ports:

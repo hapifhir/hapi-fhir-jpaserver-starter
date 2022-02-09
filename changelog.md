@@ -1,4 +1,4 @@
-2022/02/08 Release 1.80
+2022/02/08 Release 1.8.0
 - Integrate webapp running on matchbox port and root itself [#35](https://github.com/ahdis/matchbox/issues/35)
 - NPM can be downloaded with Accept:application/gzip on Implementation Guide Resource
 
