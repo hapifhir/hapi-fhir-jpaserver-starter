@@ -7,7 +7,7 @@ matchbox is a FHIR server based on the [hapifhir/hapi-fhir-jpaserver-starter](ht
 - SDC (Structured Data Capture) [extraction](https://build.fhir.org/ig/HL7/sdc/extraction.html#map-extract) support based on the FHIR Mapping language and [Questionnaire/$extract](http://build.fhir.org/ig/HL7/sdc/OperationDefinition-QuestionnaireResponse-extract.html)
 
 
-a public test server is hosted at [https://test.ahdis.ch/matchbox/fhir](https://test.ahdis.ch/matchbox/fhir) with a corresponding gui [https://test.ahdis.ch/matchbox-formfiller/](https://test.ahdis.ch/matchbox-formfiller/)
+a public test server is hosted at [https://test.ahdis.ch/matchbox/fhir](https://test.ahdis.ch/matchbox/fhir) with a corresponding gui [https://test.ahdis.ch/matchbox/](https://test.ahdis.ch/matchbox/#)
 
 ## containers
 
@@ -100,7 +100,7 @@ docker run -d --name matchbox-swissepr -p 8080:8080 matchbox-swissepr
 ```
 docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v180
 
-docker push eu.gcr.io/fhir-ch/matchbox:v171
+docker push eu.gcr.io/fhir-ch/matchbox:v180
 docker push eu.gcr.io/fhir-ch/matchbox-swissepr:v170
 ```
 
