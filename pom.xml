@@ -14,16 +14,17 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-		  <version>5.5.1</version>
+		  <version>5.6.0</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
     <groupId>org.smartregister</groupId>
-    <version>5.5.5-SNAPSHOT</version>
+    <version>5.6.0-SNAPSHOT</version>
 
     <properties>
         <java.version>8</java.version>
-        <hapi.fhir.version>5.5.1</hapi.fhir.version>
+        <hapi.fhir.version>5.6.0</hapi.fhir.version>
+        <spring_boot_version>2.5.6</spring_boot_version>
     </properties>
 
     <prerequisites>
@@ -72,6 +73,7 @@
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.activation</groupId>
@@ -113,6 +115,12 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-mdm</artifactId>
+            <version>${hapi.fhir.version}</version>
+        </dependency>
+        <!-- This dependency includes the OpenAPI Server -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-server-openapi</artifactId>
             <version>${hapi.fhir.version}</version>
         </dependency>
         <!-- This dependency is used for the "FHIR Tester" web app overlay -->

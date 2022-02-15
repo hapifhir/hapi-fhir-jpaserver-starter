@@ -2,10 +2,12 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigR5;
+import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.annotations.OnR5Condition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -59,8 +61,9 @@ public class FhirServerConfigR5 extends BaseJavaConfigR5 {
 
   @Override
   @Bean()
-  public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-    LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory();
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+	  ConfigurableListableBeanFactory myConfigurableListableBeanFactory) {
+    LocalContainerEntityManagerFactoryBean retVal = super.entityManagerFactory(myConfigurableListableBeanFactory);
     retVal.setPersistenceUnitName("HAPI_PU");
 
     try {
@@ -69,7 +72,8 @@ public class FhirServerConfigR5 extends BaseJavaConfigR5 {
       throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
     }
 
-    retVal.setJpaProperties(EnvironmentHelper.getHibernateProperties(configurableEnvironment));
+    retVal.setJpaProperties(EnvironmentHelper.getHibernateProperties(configurableEnvironment,
+		 myConfigurableListableBeanFactory));
     return retVal;
   }
 
@@ -82,19 +86,18 @@ public class FhirServerConfigR5 extends BaseJavaConfigR5 {
   }
 
   @Bean()
-  public ElasticsearchSvcImpl elasticsearchSvc() {
-    if (EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment)) {
+  public ElasticsearchSvcImpl elasticsearchSvc(PartitionSettings thePartitionSetings) {
+    if (Boolean.TRUE.equals(EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment))) {
       String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
       String elasticsearchHost;
+		String elasticsearchProtocol = EnvironmentHelper.getElasticsearchServerProtocol(configurableEnvironment);
       if (elasticsearchUrl.startsWith("http")) {
-        elasticsearchHost = elasticsearchUrl.substring(elasticsearchUrl.indexOf("://") + 3, elasticsearchUrl.lastIndexOf(":"));
-      } else {
-        elasticsearchHost = elasticsearchUrl.substring(0, elasticsearchUrl.indexOf(":"));
-      }
+        elasticsearchProtocol = elasticsearchUrl.split("://")[0];
+		  elasticsearchHost = elasticsearchUrl.split("://")[1];
+		}
       String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
       String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
-      int elasticsearchPort = Integer.parseInt(elasticsearchUrl.substring(elasticsearchUrl.lastIndexOf(":")+1));
-      return new ElasticsearchSvcImpl(elasticsearchHost, elasticsearchPort, elasticsearchUsername, elasticsearchPassword);
+		 return new ElasticsearchSvcImpl(thePartitionSetings, elasticsearchUrl, elasticsearchUsername, elasticsearchPassword);
     } else {
       return null;
     }
