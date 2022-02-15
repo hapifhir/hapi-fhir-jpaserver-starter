@@ -14,7 +14,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-		  <version>5.6.0</version>
+        <version>5.7.0-PRE9-SNAPSHOT</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -23,7 +23,7 @@
 
     <properties>
         <java.version>8</java.version>
-        <hapi.fhir.version>5.6.0</hapi.fhir.version>
+        <hapi.fhir.version>5.7.0-PRE9-SNAPSHOT</hapi.fhir.version>
         <spring_boot_version>2.5.6</spring_boot_version>
     </properties>
 
@@ -66,18 +66,17 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.23</version>
+            <version>42.2.25</version>
         </dependency>
 
         <!-- Needed for Email subscriptions -->
         <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
-            <version>1.6.2</version>
+            <groupId>org.simplejavamail</groupId>
+            <artifactId>simple-java-mail</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>javax.activation</groupId>
-                    <artifactId>activation</artifactId>
+                    <groupId>jakarta.annotation</groupId>
+                    <artifactId>jakarta.annotation-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -86,6 +85,12 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-base</artifactId>
+            <version>${hapi.fhir.version}</version>
+        </dependency>
+        <!-- This dependency includes the EmailSenderImpl we will be using instead of standard javamail.-->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-jpaserver-subscription</artifactId>
             <version>${hapi.fhir.version}</version>
         </dependency>
 
