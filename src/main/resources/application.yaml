@@ -1,4 +1,8 @@
 spring:
+  flyway:
+    enabled: false
+    check-location: false
+    baselineOnMigrate: true
   datasource:
     url: 'jdbc:postgresql://localhost:5432/hapi_fhir'
     #url: jdbc:h2:mem:test_mem
@@ -10,9 +14,6 @@ spring:
     # database connection pool size
     hikari:
       maximum-pool-size: 10
-  flyway:
-    check-location: false
-    baselineOnMigrate: true
   jpa:
     properties:
       hibernate.format_sql: false
@@ -77,7 +78,9 @@ hapi:
     #    enable_repository_validating_interceptor: false
     #    enable_index_missing_fields: false
     #    enable_index_contained_resource: false
-    #    enforce_referential_integrity_on_delete: false
+    #    advanced_lucene_indexing: false
+    advanced_lucene_indexing: true
+#    enforce_referential_integrity_on_delete: false
     #    enforce_referential_integrity_on_write: false
     #    etag_support_enabled: true
     #    expunge_enabled: true
@@ -88,6 +91,8 @@ hapi:
     #    graphql_enabled: true
     #    narrative_enabled: true
     #    mdm_enabled: true
+#    local_base_urls:
+#      - https://hapi.fhir.org/baseR4
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
@@ -102,7 +107,11 @@ hapi:
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
 
-    #    logger:
+    # Threadpool size for BATCH'ed GETs in a bundle.
+#    bundle_batch_pool_size: 10
+#    bundle_batch_pool_max_size: 50
+
+#    logger:
     #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
     #      format: >-
     #        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
@@ -145,6 +154,7 @@ hapi:
 #        startTlsRequired:
 #        quitWait:
 #    lastn_enabled: true
+#    store_resource_in_lucene_index_enabled: true
 ###  This is configuration for normalized quantity serach level default is 0
 ###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
 ###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
