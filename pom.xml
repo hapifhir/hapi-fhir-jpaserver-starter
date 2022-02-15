@@ -23,7 +23,7 @@
 
     <properties>
         <java.version>8</java.version>
-        <hapi.fhir.version>5.6.0</hapi.fhir.version>
+        <hapi.fhir.version>5.6.2</hapi.fhir.version>
         <spring_boot_version>2.5.6</spring_boot_version>
     </properties>
 
