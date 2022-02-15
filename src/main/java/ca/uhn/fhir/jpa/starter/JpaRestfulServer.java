@@ -73,8 +73,6 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
 		getFhirContext().registerCustomType(KeycloakUserDetails.class);
 		getFhirContext().registerCustomType(UserBioData.class);
 		getFhirContext().registerCustomType(FhirPractitionerDetails.class);
-		getFhirContext().registerCustomType(FhirCareTeamExtension.class);
-		getFhirContext().registerCustomType(FhirOrganizationExtension.class);
 	}
 
 }
