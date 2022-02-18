@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-circular-references: true
   flyway:
     enabled: false
     check-location: false
