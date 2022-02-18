@@ -384,6 +384,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
       daoConfig.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
     }
+    //Parallel Batch GET execution settings
+  	 daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
+  	 daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());
 
     if (appProperties.getImplementationGuides() != null) {
       Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
@@ -410,8 +413,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setLastNEnabled(true);
     }
 
+	 daoConfig.setStoreResourceInLuceneIndex(appProperties.getStore_resource_in_lucene_index_enabled());
     daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
-
-		daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
+	 daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
   }
 }
