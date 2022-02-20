@@ -55,6 +55,7 @@ The database will be stored in the "data" directory. The configuration can be fo
 ```
 mkdir data
 mvn clean package -DskipTests
+docker build -t matchbox .
 docker-compose up
 ```
 
@@ -98,9 +99,9 @@ docker run -d --name matchbox-swissepr -p 8080:8080 matchbox-swissepr
 
 ### making container available
 ```
-docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v180
+docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v181
 
-docker push eu.gcr.io/fhir-ch/matchbox:v180
+docker push eu.gcr.io/fhir-ch/matchbox:v181
 docker push eu.gcr.io/fhir-ch/matchbox-swissepr:v170
 ```
 

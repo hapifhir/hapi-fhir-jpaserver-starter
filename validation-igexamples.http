@@ -1,5 +1,7 @@
-@host = http://test.ahdis.ch/matchbox/fhir
-### @host = http://localhost:8080/matchbox/fhir
+### @host = http://test.ahdis.ch/matchbox/fhir
+@host = http://localhost:8080/matchbox/fhir
+
+### @host = http://hapi.fhir.org/baseR4
 
 ## No issues detected during validation
 POST {{host}}/$validate HTTP/1.1
@@ -96,3 +98,58 @@ Content-Type: application/fhir+json
 ### Implementation Guide
 GET http://localhost:8080/matchbox/fhir/ImplementationGuide/ch.fhir.ig.ch-core
 Accept: application/gzip
+
+
+
+### StructureDefintion
+POST {{host}} HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/BundleInTransaction.xml
+
+### StructureDefintion
+POST {{host}} HTTP/1.1
+Content-Type: application/fhir+json
+
+< ./examples/BundleInTransaction.json
+
+
+### StructureDefintion
+POST {{host}}/Bundle HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/BundleInPost.xml
+
+
+### GET
+GET {{host}}/Bundle/405 HTTP/1.1
+Content-Type: application/fhir+xml
+
+
+### GET
+GET {{host}}/Bundle/166 HTTP/1.1
+Content-Type: application/fhir+xml
+
+### StructureDefintion
+POST {{host}} HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/BundleInTransaction.xml
+
+### StructureDefintion
+POST {{host}}/Bundle HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/BundleInCollection.xml
+
+### StructureDefintion
+POST {{host}}/Bundle HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/BundleInBundleWithContained.xml
+
+### StructureDefintion
+POST {{host}} HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/BundleInTransactionId.xmlc

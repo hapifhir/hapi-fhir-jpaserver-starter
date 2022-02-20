@@ -1,0 +1,9 @@
+{
+  "errors": {
+    "required": "Dieses Feld ist erforderlich.",
+    "maxLength": "Dieses Feld darf maximal {{ maxLength }} Zeichen haben."
+  },
+  "hint": {
+    "supportLink": "Info"
+  }
+}

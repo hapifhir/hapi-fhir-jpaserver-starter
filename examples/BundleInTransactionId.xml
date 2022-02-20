@@ -1,0 +1,36 @@
+<Bundle xmlns="http://hl7.org/fhir">
+   <type value="transaction"/>
+   <entry>
+      <resource>
+         <Bundle xmlns="http://hl7.org/fhir">
+            <type value="document"/>
+            <entry>
+               <fullUrl value="http://example.org/Composition/1"/>
+               <id value="2" />
+               <resource>
+                  <Composition xmlns="http://hl7.org/fhir">
+                     <subject>
+                        <reference value="Patient/2"/>
+                     </subject>
+                  </Composition>
+               </resource>
+            </entry>
+            <entry>
+               <fullUrl value="http://example.org/Patient/2"/>
+               <id value="2" />
+               <resource>
+                  <Patient xmlns="http://hl7.org/fhir">
+                     <name>
+                        <family value="Test"/>
+                     </name>
+                  </Patient>
+               </resource>
+            </entry>
+         </Bundle>
+      </resource>
+      <request>
+         <method value="POST"/>
+         <url value="Bundle"/>
+      </request>
+   </entry>
+</Bundle>

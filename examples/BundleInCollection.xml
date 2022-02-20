@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bundle xmlns="http://hl7.org/fhir">
+    <type value="collection"/>
+    <entry>
+        <resource>
+            <Bundle>
+                <type value="document"/>
+                <entry>
+                    <fullUrl value="urn:uuid:6b6f6342-41df-4519-ae3a-eef5c68d5ea2"/>
+                    <resource>
+                        <Composition>
+                            <subject>
+                                <reference value="urn:uuid:8fbf9232-5a78-47d1-b909-128c32cc3c6c"/>
+                            </subject>
+                        </Composition>
+                    </resource>
+                </entry>
+                <entry>
+                    <fullUrl value="urn:uuid:8fbf9232-5a78-47d1-b909-128c32cc3c6c"/>
+                    <resource>
+                        <Patient>
+                            <name>
+                                <family value="Test"/>
+                            </name>
+                        </Patient>
+                    </resource>
+                </entry>
+            </Bundle>
+        </resource>
+        <request>
+            <method value="POST"/>
+            <url value="Bundle"/>
+        </request>
+    </entry>
+</Bundle>
