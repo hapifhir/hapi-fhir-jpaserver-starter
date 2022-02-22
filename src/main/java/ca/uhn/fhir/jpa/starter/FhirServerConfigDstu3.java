@@ -35,19 +35,6 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
   @Autowired
   AppProperties appProperties;
 
-  @PostConstruct
-  public void initSettings() {
-    if(appProperties.getSearch_coord_core_pool_size() != null) {
-		 setSearchCoordCorePoolSize(appProperties.getSearch_coord_core_pool_size());
-	 }
-	  if(appProperties.getSearch_coord_max_pool_size() != null) {
-		  setSearchCoordMaxPoolSize(appProperties.getSearch_coord_max_pool_size());
-	  }
-	  if(appProperties.getSearch_coord_queue_capacity() != null) {
-		  setSearchCoordQueueCapacity(appProperties.getSearch_coord_queue_capacity());
-	  }
-  }
-
 
   @Override
   public DatabaseBackedPagingProvider databaseBackedPagingProvider() {
