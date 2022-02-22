@@ -10,6 +10,7 @@ import ca.uhn.fhir.jpa.model.entity.ModelConfig;
 import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.EmailSenderImpl;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
+import ca.uhn.fhir.rest.server.mail.IMailSvc;
 import ca.uhn.fhir.rest.server.mail.MailConfig;
 import ca.uhn.fhir.rest.server.mail.MailSvc;
 import com.google.common.base.Strings;
@@ -220,7 +221,8 @@ public class FhirServerConfigCommon {
       mailConfig.setSmtpPassword(email.getPassword());
       mailConfig.setSmtpUseStartTLS(email.getStartTlsEnable());
 
-		IEmailSender emailSender = new EmailSenderImpl(new MailSvc(mailConfig));
+		 IMailSvc mailSvc = new MailSvc(mailConfig);
+		 IEmailSender emailSender = new EmailSenderImpl(mailSvc);
 
 		subscriptionDeliveryHandlerFactory.ifPresent(theSubscriptionDeliveryHandlerFactory -> theSubscriptionDeliveryHandlerFactory.setEmailSender(emailSender));
 
