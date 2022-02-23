@@ -1,15 +1,12 @@
 package ca.uhn.fhir.jpa.starter.mdm;
 
-import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.mdm.config.MdmConsumerConfig;
 import ca.uhn.fhir.jpa.mdm.config.MdmSubmitterConfig;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.mdm.api.IMdmSettings;
 import ca.uhn.fhir.mdm.rules.config.MdmRuleValidator;
 import ca.uhn.fhir.mdm.rules.config.MdmSettings;
-import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import com.google.common.base.Charsets;
-import java.io.IOException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
+
+import java.io.IOException;
 
 @Configuration
 @Conditional(MdmConfigCondition.class)
