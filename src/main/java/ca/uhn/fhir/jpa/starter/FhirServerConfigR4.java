@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
+import ca.uhn.fhir.jpa.config.HapiJpaConfig;
 import ca.uhn.fhir.jpa.config.r4.JpaR4Config;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
@@ -22,7 +23,11 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 @Configuration
 @Conditional(OnR4Condition.class)
-@Import({StarterCqlR4Config.class, ElasticsearchConfig.class})
+@Import({
+		StarterCqlR4Config.class,
+		ElasticsearchConfig.class
+	})
+@Import({JpaR4Config.class, HapiJpaConfig.class})
 public class FhirServerConfigR4 extends JpaR4Config {
 
   @Autowired
