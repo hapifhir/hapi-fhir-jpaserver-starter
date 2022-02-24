@@ -53,15 +53,18 @@ jobs:
           TEST_RAIL_PASSWORD: ${{ secrets.TEST_RAIL_PASSWORD }}
           TEST_RAIL_URL: ${{ secrets.TEST_RAIL_URL }}
 
-      - name: Disable hapi fhir keycloak authentication
+      - name: Update hapi fhir application yaml
         run: |
           sed -i 's/keycloak:/keycloak:\n\ \ \enabled:\ false/g' src/main/resources/application.yaml
+          sed -i 's/hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect/hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect/g' src/main/resources/application.yaml
+          sed -i 's/hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect/hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect\n\ \ \ \ \ \ \hibernate.hbm2ddl.auto: update/g' src/main/resources/application.yaml
 
       - name: Run hapi fhir server
         run: mvn clean spring-boot:run -Pboot > /dev/null 2>&1 &
 
-      - name: Wait for hapi fhir server to be reachable
-        run: while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:8080/fhir/Patient)" != "200" ]]; do sleep 5; done
+      - name: Wait (max 2 mins) for hapi fhir server to be reachable
+        run: |
+          count=0; while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:8080/fhir/Patient)" != "200" ]]; do if [[ count -lt 24 ]]; then ((count=count+1)); else exit 1; fi; sleep 5; done
 
       - name: Run integration test
         run: mvn -f tools/api-automation/ clean test
