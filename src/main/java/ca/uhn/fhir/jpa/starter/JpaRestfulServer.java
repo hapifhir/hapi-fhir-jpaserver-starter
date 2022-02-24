@@ -1,14 +1,17 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
-import org.hl7.fhir.r4.model.Location;
-import org.smartregister.extension.model.*;
+import org.hl7.fhir.r4.model.*;
 import org.smartregister.extension.rest.LocationHierarchyResourceProvider;
+import org.smartregister.extension.rest.PractitionerDetailsResourceProvider;
+import org.smartregister.model.location.*;
+import org.smartregister.model.practitioner.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 import javax.servlet.ServletException;
-import static org.smartregister.extension.utils.Constants.LOCATION;
+
+import static org.smartregister.utils.Constants.*;
 
 @Import(AppProperties.class)
 public class JpaRestfulServer extends BaseJpaRestfulServer {
@@ -28,6 +31,7 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
 
     // Add your own customization here
 	  registerLocationHierarchyTypes();
+	  registerPracitionerDetailsTypes();
   }
 
   private void registerLocationHierarchyTypes() {
@@ -44,5 +48,31 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
 	  getFhirContext().registerCustomType(TreeNode.class);
 	  getFhirContext().registerCustomType(ChildTreeNode.class);
   }
+
+
+	private void registerPracitionerDetailsTypes() {
+		IFhirResourceDao<Practitioner> practitionerIFhirResourceDao = daoRegistry.getResourceDao(_PRACTITIONER);
+		IFhirResourceDao<PractitionerRole> practitionerRoleIFhirResourceDao = daoRegistry.getResourceDao(PRACTITIONER_ROLE);
+		IFhirResourceDao<CareTeam> careTeamIFhirResourceDao = daoRegistry.getResourceDao(CARE_TEAM);
+		IFhirResourceDao<OrganizationAffiliation> organizationAffiliationIFhirResourceDao = daoRegistry.getResourceDao(ORGANIZATION_AFFILIATION);
+		IFhirResourceDao<Organization> organizationIFhirResourceDao = daoRegistry.getResourceDao(ORGANIZATION);
+		IFhirResourceDao<Location> locationIFhirResourceDao = daoRegistry.getResourceDao(LOCATION);
+		LocationHierarchyResourceProvider locationHierarchyResourceProvider = new LocationHierarchyResourceProvider();
+		locationHierarchyResourceProvider.setLocationIFhirResourceDao(locationIFhirResourceDao);
+		PractitionerDetailsResourceProvider practitionerDetailsResourceProvider = new PractitionerDetailsResourceProvider();
+		practitionerDetailsResourceProvider.setPractitionerIFhirResourceDao(practitionerIFhirResourceDao);
+		practitionerDetailsResourceProvider.setPractitionerRoleIFhirResourceDao(practitionerRoleIFhirResourceDao);
+		practitionerDetailsResourceProvider.setCareTeamIFhirResourceDao(careTeamIFhirResourceDao);
+		practitionerDetailsResourceProvider.setOrganizationAffiliationIFhirResourceDao(organizationAffiliationIFhirResourceDao);
+		practitionerDetailsResourceProvider.setLocationHierarchyResourceProvider(locationHierarchyResourceProvider);
+		practitionerDetailsResourceProvider.setOrganizationIFhirResourceDao(organizationIFhirResourceDao);
+		practitionerDetailsResourceProvider.setLocationIFhirResourceDao(locationIFhirResourceDao);
+
+		registerProvider(practitionerDetailsResourceProvider);
+		getFhirContext().registerCustomType(PractitionerDetails.class);
+		getFhirContext().registerCustomType(KeycloakUserDetails.class);
+		getFhirContext().registerCustomType(UserBioData.class);
+		getFhirContext().registerCustomType(FhirPractitionerDetails.class);
+	}
 
 }
