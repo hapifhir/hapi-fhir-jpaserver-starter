@@ -17,14 +17,18 @@ RUN mkdir /app && cp /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /app/main.
 ########### it can be built using eg. `docker build --target tomcat .`
 FROM bitnami/tomcat:9.0 as tomcat
 
-RUN rm -rf /opt/bitnami/tomcat/webapps/ROOT
-RUN rm -rf /opt/bitnami/tomcat/webapps_default/ROOT
+RUN rm -rf /opt/bitnami/tomcat/webapps/ROOT && \
+    rm -rf /opt/bitnami/tomcat/webapps_default/ROOT && \
+    mkdir -p /opt/bitnami/hapi/data/hapi/lucenefiles && \
+    chmod 775 /opt/bitnami/hapi/data/hapi/lucenefiles
 
-RUN mkdir -p /opt/bitnami/hapi/data/hapi/lucenefiles && chmod 775 /opt/bitnami/hapi/data/hapi/lucenefiles
-COPY --from=build-hapi --chown=1001:1001 /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /opt/bitnami/tomcat/webapps_default/ROOT.war
+USER root
+RUN mkdir -p /target && chown -R 1001:1001 target
+USER 1001
 
 COPY --chown=1001:1001 catalina.properties /opt/bitnami/tomcat/conf/catalina.properties
 COPY --chown=1001:1001 server.xml /opt/bitnami/tomcat/conf/server.xml
+COPY --from=build-hapi --chown=1001:1001 /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /opt/bitnami/tomcat/webapps_default/ROOT.war
 
 ENV ALLOW_EMPTY_PASSWORD=yes
 
