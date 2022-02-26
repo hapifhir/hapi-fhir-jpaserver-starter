@@ -1,11 +1,17 @@
 version: "3"
 services:
+  hapi-webserver:
+    image: nginx:latest
+    container_name: hapi-webserver
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
   hapi-fhir-jpaserver-start:
     build: .
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
-    ports:
-      - "8080:8080"
     deploy:
       resources:
         limits:
