@@ -15,11 +15,6 @@ services:
     build: .
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 900m
   hapi-fhir-mysql:
     image: mysql:latest
     container_name: hapi-fhir-mysql
