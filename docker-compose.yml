@@ -9,8 +9,8 @@ services:
       - 443:443
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/my-site.com.crt:/etc/nginx/my-site.com.crt
-      - ./nginx/my-site.com.key:/etc/nginx/my-site.com.key
+      - ./nginx/localhost.crt:/etc/nginx/localhost.crt
+      - ./nginx/localhost.key:/etc/nginx/localhost.key
   hapi-fhir-jpaserver-start:
     build: .
     container_name: hapi-fhir-jpaserver-start
