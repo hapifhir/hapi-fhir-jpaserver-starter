@@ -62,6 +62,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   IJpaSystemProvider jpaSystemProvider;
   @Autowired
+  ValueSetOperationProvider myValueSetOperationProvider;
+  @Autowired
   IInterceptorBroadcaster interceptorBroadcaster;
   @Autowired
   DatabaseBackedPagingProvider databaseBackedPagingProvider;
@@ -127,7 +129,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     registerProviders(resourceProviderFactory.createProviders());
     registerProvider(jpaSystemProvider);
-
+	 registerProvider(myValueSetOperationProvider);
     /*
      * The conformance provider exports the supported resources, search parameters, etc for
      * this server. The JPA version adds resourceProviders counts to the exported statement, so it
