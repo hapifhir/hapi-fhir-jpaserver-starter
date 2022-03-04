@@ -28,6 +28,7 @@ public class AppProperties {
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
+  private Boolean dao_scheduling_enabled = true;
   private Boolean delete_expunge_enabled = false;
   private Boolean enable_index_missing_fields = false;
   private Boolean enable_index_contained_resource = false;
@@ -284,6 +285,14 @@ public class AppProperties {
 
   public void setDefault_page_size(Integer default_page_size) {
     this.default_page_size = default_page_size;
+  }
+
+  public Boolean getDao_scheduling_enabled() {
+    return dao_scheduling_enabled;
+  }
+
+  public void setDao_scheduling_enabled(Boolean dao_scheduling_enabled) {
+    this.dao_scheduling_enabled = dao_scheduling_enabled;
   }
 
   public Boolean getDelete_expunge_enabled() {
