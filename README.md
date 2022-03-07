@@ -14,6 +14,11 @@ to develop open standards for the collection, representation, and access of heal
 Open Health Manager™ is a reference implementation of these standards and a demonstration platform for
 what these standards and a patient-controlled health record can enable.
 
+## FHIR Implementation Guides
+
+Open Health Manager™ implements the following FHIR IGs
+- [Patient Data Receipt](https://open-health-manager.github.io/patient-data-receipt-ig/) (under development)
+
 ## Contributing to Open Health Manager™
 
 We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:

@@ -1,30 +1,21 @@
 spring:
-  main:
-    allow-circular-references: true
-  flyway:
-    enabled: false
-    check-location: false
-    baselineOnMigrate: true
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
-    #url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
-    max-active: 15
+    url: 'jdbc:postgresql://localhost:5432/hapi_fhir_r4'
+    username: healthmanager
+    password:
+    driverClassName: org.postgresql.Driver
 
     # database connection pool size
     hikari:
       maximum-pool-size: 10
+  flyway:
+    check-location: false
+    baselineOnMigrate: true
   jpa:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
-      #Hibernate dialect is automatically detected except Postgres and H2.
-      #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
-      #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
-
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+  #      hibernate.dialect: org.hibernate.dialect.h2dialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
   #      hibernate.cache.use_query_cache: false
@@ -41,6 +32,12 @@ spring:
   batch:
     job:
       enabled: false
+  ###    These settings are not ideal and should be removed if possible
+  main:
+      ### added to allow overriding of mySystemDaoR4 bean
+      allow-bean-definition-overriding: true
+      ### added due to circular dependency in HAPI FHIR: fhirServerConfigR4 (field private ca.uhn.fhir.jpa.api.dao.DaoRegistry ca.uhn.fhir.jpa.config.BaseConfig.myDaoRegistry)
+      allow-circular-references: true
 hapi:
   fhir:
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
@@ -84,9 +81,7 @@ hapi:
     #    enable_repository_validating_interceptor: false
     #    enable_index_missing_fields: false
     #    enable_index_contained_resource: false
-    #    advanced_lucene_indexing: false
-    advanced_lucene_indexing: true
-#    enforce_referential_integrity_on_delete: false
+    #    enforce_referential_integrity_on_delete: false
     #    enforce_referential_integrity_on_write: false
     #    etag_support_enabled: true
     #    expunge_enabled: true
@@ -97,9 +92,6 @@ hapi:
     #    graphql_enabled: true
     #    narrative_enabled: true
     #    mdm_enabled: true
-#    local_base_urls:
-#      - https://hapi.fhir.org/baseR4
-    mdm_enabled: true
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
@@ -114,11 +106,7 @@ hapi:
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
 
-    # Threadpool size for BATCH'ed GETs in a bundle.
-#    bundle_batch_pool_size: 10
-#    bundle_batch_pool_max_size: 50
-
-#    logger:
+    #    logger:
     #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
     #      format: >-
     #        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
@@ -161,7 +149,6 @@ hapi:
 #        startTlsRequired:
 #        quitWait:
 #    lastn_enabled: true
-#    store_resource_in_lucene_index_enabled: true
 ###  This is configuration for normalized quantity serach level default is 0
 ###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
 ###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
