@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 
 import org.hl7.fhir.common.hapi.validation.support.UnknownCodeSystemWarningValidationSupport;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
-import org.hl7.fhir.r5.utils.IResourceValidator;
+import org.hl7.fhir.r5.utils.validation.constants.BestPracticeWarningLevel;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -26,7 +26,6 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigR4;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
-import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ca.uhn.fhir.jpa.starter.cql.StarterCqlR4Config;
 import ca.uhn.fhir.jpa.term.api.ITermReadSvcR4;
@@ -46,7 +45,7 @@ import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
 @Configuration
 @Conditional(OnR4Condition.class)
-@Import(StarterCqlR4Config.class)
+@Import({StarterCqlR4Config.class, ElasticsearchConfig.class})
 public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 
   @Autowired
@@ -174,25 +173,6 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
 	  }
   }
 
-  @Bean()
-  public ElasticsearchSvcImpl elasticsearchSvc() {
-    if (EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment)) {
-		 String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
-		 String elasticsearchHost;
-		 if (elasticsearchUrl.startsWith("http")) {
-			 elasticsearchHost = elasticsearchUrl.substring(elasticsearchUrl.indexOf("://") + 3, elasticsearchUrl.lastIndexOf(":"));
-		 } else {
-			 elasticsearchHost = elasticsearchUrl.substring(0, elasticsearchUrl.indexOf(":"));
-		 }
-
-      String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
-      String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
-      return new ElasticsearchSvcImpl(elasticsearchHost, elasticsearchUsername, elasticsearchPassword);
-    } else {
-      return null;
-    }
-  }
-
   @Bean(name = JPA_VALIDATION_SUPPORT_CHAIN)
 	public JpaExtendedValidationSupportChain jpaValidationSupportChain() {
 		return new JpaExtendedValidationSupportChain(fhirContext());
@@ -202,7 +182,7 @@ public class FhirServerConfigR4 extends BaseJavaConfigR4 {
   public IInstanceValidatorModule instanceValidator() {
     FhirInstanceValidator val = new FhirInstanceValidator(validationSupportChain());
     val.setValidatorResourceFetcher(jpaValidatorResourceFetcher());
-    val.setBestPracticeWarningLevel(IResourceValidator.BestPracticeWarningLevel.Warning);
+    val.setBestPracticeWarningLevel(BestPracticeWarningLevel.Warning);
     val.setValidationSupport(validationSupportChain());
     return val;
   }

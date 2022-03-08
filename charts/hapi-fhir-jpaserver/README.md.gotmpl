@@ -11,6 +11,21 @@ helm repo add hapifhir https://hapifhir.github.io/hapi-fhir-jpaserver-starter/
 helm install --render-subchart-notes hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 ```
 
+> ⚠ By default, the included [PostgreSQL Helm chart](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#upgrading)
+> auto-generates a random password for the database which may cause problems when upgrading the chart (see [here for details](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#upgrading)).
+
 {{ template "chart.valuesSection" . }}
+
+## Development
+
+To update the Helm chart when a new version of the `hapiproject/hapi` image is released, the [Chart.yaml](Chart.yaml)'s
+`appVersion` and `version` fields need to be updated accordingly. Afterwards, re-generate the [README.md](README.md)
+by running:
+
+```sh
+$ helm-docs
+INFO[2021-11-20T12:38:04Z] Found Chart directories [charts/hapi-fhir-jpaserver]
+INFO[2021-11-20T12:38:04Z] Generating README Documentation for chart /usr/src/app/charts/hapi-fhir-jpaserver
+```
 
 {{ template "helm-docs.versionFooter" . }}

@@ -140,7 +140,7 @@
               <code value="MR"/>
             </coding>
           </type>
-          <system value="urn:oid:2.999"/>
+          <system value="urn:oid:2.999.122"/>
           <value value="11111111"/>
         </identifier>
         <name>

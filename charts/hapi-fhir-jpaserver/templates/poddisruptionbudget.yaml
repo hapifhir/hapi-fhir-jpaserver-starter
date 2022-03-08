@@ -1,0 +1,18 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+kind: PodDisruptionBudget
+apiVersion: policy/v1
+metadata:
+  name: {{ include "hapi-fhir-jpaserver.fullname" . }}
+  labels:
+    {{- include "hapi-fhir-jpaserver.labels" . | nindent 4 }}
+spec:
+  {{- if .Values.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  {{- end }}
+  {{- if .Values.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "hapi-fhir-jpaserver.selectorLabels" . | nindent 6 }}
+{{- end }}

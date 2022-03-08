@@ -1,3 +1,7 @@
+2022/03/09 Release 1.9.0
+- Updated to hap-fhir 5.7.0, fhir.core.version (validator) 5.6.27
+- Extended Mobile Access Gateway support for PMP (replacing FHIR documents with selected Patient in Mobile Access Gateway, transforming to CDA and MDH publish)
+
 2022/02/21 Release 1.8.2
 - OAuth integration for [Mobile Access Gateway](https://github.com/i4mi/MobileAccessGateway) in webapp
   

@@ -30,12 +30,12 @@ import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.export.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.cache.IResourceChangeListenerRegistry;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
+import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.model.sched.ISchedulerService;
 import ca.uhn.fhir.jpa.model.sched.ScheduledJobDefinition;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
-import ca.uhn.fhir.jpa.provider.GraphQLProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
 import ca.uhn.fhir.jpa.provider.JpaCapabilityStatementProvider;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
@@ -63,6 +63,7 @@ import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.partition.RequestTenantPartitionInterceptor;
+import ca.uhn.fhir.rest.server.provider.ReindexProvider;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
 import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
@@ -79,92 +80,92 @@ import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
 public class BaseJpaRestfulServer extends RestfulServer {
-  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(BaseJpaRestfulServer.class);
+	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(BaseJpaRestfulServer.class);
 
 	private static final long serialVersionUID = 1L;
-  @Autowired
-  DaoRegistry daoRegistry;
-  @Autowired
-  DaoConfig daoConfig;
-  @Autowired
-  ISearchParamRegistry searchParamRegistry;
-  @Autowired
-  IFhirSystemDao fhirSystemDao;
-  @Autowired
-  ResourceProviderFactory resourceProviderFactory;
-  @Autowired
-  IJpaSystemProvider jpaSystemProvider;
-  @Autowired
-  IInterceptorBroadcaster interceptorBroadcaster;
-  @Autowired
-  DatabaseBackedPagingProvider databaseBackedPagingProvider;
-  @Autowired
-  IInterceptorService interceptorService;
-  @Autowired
-  IValidatorModule validatorModule;
-  @Autowired
-  ValidationProvider validationProvider;
+	@Autowired
+	DaoRegistry daoRegistry;
+	@Autowired
+	DaoConfig daoConfig;
+	@Autowired
+	ISearchParamRegistry searchParamRegistry;
+	@Autowired
+	IFhirSystemDao fhirSystemDao;
+	@Autowired
+	ResourceProviderFactory resourceProviderFactory;
+	@Autowired
+	IJpaSystemProvider jpaSystemProvider;
+	@Autowired
+	IInterceptorBroadcaster interceptorBroadcaster;
+	@Autowired
+	DatabaseBackedPagingProvider databaseBackedPagingProvider;
+	@Autowired
+	IInterceptorService interceptorService;
+	@Autowired
+	IValidatorModule validatorModule;
+	@Autowired
+	ValidationProvider validationProvider;
 
-  @Autowired
-  Optional<GraphQLProvider> graphQLProvider;
-  @Autowired
-  BulkDataExportProvider bulkDataExportProvider;
-  @Autowired
-  PartitionManagementProvider partitionManagementProvider;
-  @Autowired
-  BinaryStorageInterceptor binaryStorageInterceptor;
-  @Autowired
-  MatchboxPackageInstallerImpl packageInstallerSvc;
-  @Autowired
-  AppProperties appProperties;
-  @Autowired
-  ApplicationContext myApplicationContext;
-  @Autowired(required = false)
-  IRepositoryValidationInterceptorFactory factory;
-  // These are set only if the features are enabled
-  @Autowired
-  Optional<CqlProviderLoader> cqlProviderLoader;
-  @Autowired
-  Optional<MdmProviderLoader> mdmProviderProvider;
-  
-  @Autowired
-  QuestionnairePopulateProvider questionnaireProvider;
-  
-  @Autowired
-  QuestionnaireAssembleProvider assembleProvider;
-  
-  @Autowired
-  QuestionnaireResponseExtractProvider questionnaireResponseProvider;
-  
-  @Autowired
-  IResourceChangeListenerRegistry resourceChangeListenerRegistry;
-  
-  @Autowired
-  ConvertingWorkerContext baseWorkerContext;
-  
-  @Autowired
-  INpmPackageVersionDao myPackageVersionDao;
-  
-  @Autowired
-  private ISchedulerService mySvc;
-  
-  @Autowired
-  private ImplementationGuideResourceProvider implementationGuideResourceProvider;
-  
-  @Autowired
-  private ValueSetOperationProvider valueSetOperationProvider;
+	@Autowired
+	Optional<GraphQLProvider> graphQLProvider;
+	@Autowired
+	BulkDataExportProvider bulkDataExportProvider;
+	@Autowired
+	PartitionManagementProvider partitionManagementProvider;
+	@Autowired
+	ValueSetOperationProvider valueSetOperationProvider;
+	@Autowired
+	ReindexProvider reindexProvider;
+	@Autowired
+	BinaryStorageInterceptor binaryStorageInterceptor;
+	@Autowired
+	MatchboxPackageInstallerImpl packageInstallerSvc;
+	@Autowired
+	AppProperties appProperties;
+	@Autowired
+	ApplicationContext myApplicationContext;
+	@Autowired(required = false)
+	IRepositoryValidationInterceptorFactory factory;
+	// These are set only if the features are enabled
+	@Autowired
+	Optional<CqlProviderLoader> cqlProviderLoader;
+	@Autowired
+	Optional<MdmProviderLoader> mdmProviderProvider;
 
-  
+	@Autowired
+	QuestionnairePopulateProvider questionnaireProvider;
+
+	@Autowired
+	QuestionnaireAssembleProvider assembleProvider;
+
+	@Autowired
+	QuestionnaireResponseExtractProvider questionnaireResponseProvider;
+
+	@Autowired
+	IResourceChangeListenerRegistry resourceChangeListenerRegistry;
+
+	@Autowired
+	ConvertingWorkerContext baseWorkerContext;
+
+	@Autowired
+	INpmPackageVersionDao myPackageVersionDao;
+
+	@Autowired
+	private ISchedulerService mySvc;
+
+	@Autowired
+	private ImplementationGuideResourceProvider implementationGuideResourceProvider;
+
 	@Autowired
 	private IValidationSupport myValidationSupport;
 
-  @Autowired
-  private IHapiPackageCacheManager myPackageCacheManager;
+	@Autowired
+	private IHapiPackageCacheManager myPackageCacheManager;
 
-  @Autowired
-  protected FhirContext myFhirContext;
+	@Autowired
+	protected FhirContext myFhirContext;
 
-  @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
   @Override
   protected void initialize() throws ServletException {
     super.initialize();
@@ -363,7 +364,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
       registerInterceptor(interceptor);
     } else {
     	ourLog.info("CORS is disabled on this server");
-	 }
+    }
 
     // If subscriptions are enabled, we want to register the interceptor that
     // will activate them and match results against them
@@ -417,14 +418,20 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     daoConfig.setDeferIndexingForCodesystemsOfSize(appProperties.getDefer_indexing_for_codesystems_of_size());
 
-	 if (appProperties.getOpenapi_enabled()) {
-		registerInterceptor(new OpenApiInterceptor());
-	}
+    if (appProperties.getOpenapi_enabled()) {
+    	registerInterceptor(new OpenApiInterceptor());
+    }
 
     // Bulk Export
     if (appProperties.getBulk_export_enabled()) {
       registerProvider(bulkDataExportProvider);
     }
+
+    // valueSet Operations i.e $expand
+    registerProvider(valueSetOperationProvider);
+
+	 //reindex Provider $reindex
+	 registerProvider(reindexProvider);
 
     // Partitioning
     if (appProperties.getPartitioning() != null) {
@@ -444,6 +451,25 @@ public class BaseJpaRestfulServer extends RestfulServer {
           System.exit(0);
         }
     }
+    //Parallel Batch GET execution settings
+  	 daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
+  	 daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());
+
+    // if (appProperties.getImplementationGuides() != null) {
+    //   Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
+    //   for (Map.Entry<String, AppProperties.ImplementationGuide> guide : guides.entrySet()) {
+		// 	PackageInstallationSpec packageInstallationSpec = new PackageInstallationSpec()
+		// 		.setPackageUrl(guide.getValue().getUrl())
+		// 		.setName(guide.getValue().getName())
+		// 		.setVersion(guide.getValue().getVersion())
+		// 		.setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL);
+		// 	if(appProperties.getInstall_transitive_ig_dependencies()) {
+		// 		packageInstallationSpec.setFetchDependencies(true);
+		// 		packageInstallationSpec.setDependencyExcludes(ImmutableList.of("hl7.fhir.r2.core", "hl7.fhir.r3.core", "hl7.fhir.r4.core", "hl7.fhir.r5.core"));
+		// 	}
+		// 	packageInstallerSvc.install(packageInstallationSpec);
+    //   }
+    // }
     
     // if (appProperties.getImplementationGuides() != null) {
     //   Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
@@ -483,8 +509,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
 //		 RepositoryValidatingInterceptor interceptor = repositoryValidationInterceptorFactory.build();
 //		 interceptorService.registerInterceptor(interceptor);
 //	 }
-    daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
-
-		daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
+	 daoConfig.setStoreResourceInLuceneIndex(appProperties.getStore_resource_in_lucene_index_enabled());
+   daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
+	 daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
   }
 }

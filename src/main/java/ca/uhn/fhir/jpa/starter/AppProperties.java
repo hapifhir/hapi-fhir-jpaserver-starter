@@ -11,10 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
@@ -24,12 +21,14 @@ public class AppProperties {
   private Boolean cql_enabled = false;
   private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
+  private boolean advanced_lucene_indexing = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
   private Boolean allow_external_references = false;
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
+  private Boolean dao_scheduling_enabled = true;
   private Boolean delete_expunge_enabled = false;
   private Boolean enable_index_missing_fields = false;
   private Boolean enable_index_contained_resource = false;
@@ -68,6 +67,7 @@ public class AppProperties {
   private Map<String, ImplementationGuide> implementationGuides = null;
 
   private Boolean lastn_enabled = false;
+  private boolean store_resource_in_lucene_index_enabled = false;
   private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
 
   private Boolean only_install_packages = false;
@@ -75,7 +75,11 @@ public class AppProperties {
   private Boolean use_apache_address_strategy = false;
   private Boolean use_apache_address_strategy_https = false;
 
-  public Boolean getUse_apache_address_strategy() {
+  private Integer bundle_batch_pool_size = 20;
+  private Integer bundle_batch_pool_max_size = 100;
+  private List<String> local_base_urls = new ArrayList<>();
+
+	public Boolean getUse_apache_address_strategy() {
     return use_apache_address_strategy;
   }
 
@@ -191,7 +195,11 @@ public class AppProperties {
     this.supported_resource_types = supported_resource_types;
   }
 
-  public Logger getLogger() {
+	public List<String> getSupported_resource_types(List<String> supported_resource_types) {
+		return this.supported_resource_types;
+	}
+
+	public Logger getLogger() {
     return logger;
   }
 
@@ -207,7 +215,15 @@ public class AppProperties {
     this.client_id_strategy = client_id_strategy;
   }
 
-  public Boolean getAllow_cascading_deletes() {
+	public boolean getAdvanced_lucene_indexing() {
+		return this.advanced_lucene_indexing;
+	}
+
+	public void setAdvanced_lucene_indexing(boolean theAdvanced_lucene_indexing) {
+		advanced_lucene_indexing = theAdvanced_lucene_indexing;
+	}
+
+	public Boolean getAllow_cascading_deletes() {
     return allow_cascading_deletes;
   }
 
@@ -261,6 +277,14 @@ public class AppProperties {
 
   public void setDefault_page_size(Integer default_page_size) {
     this.default_page_size = default_page_size;
+  }
+
+  public Boolean getDao_scheduling_enabled() {
+    return dao_scheduling_enabled;
+  }
+
+  public void setDao_scheduling_enabled(Boolean dao_scheduling_enabled) {
+    this.dao_scheduling_enabled = dao_scheduling_enabled;
   }
 
   public Boolean getDelete_expunge_enabled() {
@@ -451,8 +475,16 @@ public class AppProperties {
     this.only_install_packages = only_install_packages;
   }
 
-  public NormalizedQuantitySearchLevel getNormalized_quantity_search_level() {
-    return this.normalized_quantity_search_level;
+	public boolean getStore_resource_in_lucene_index_enabled() {
+		return store_resource_in_lucene_index_enabled;
+	}
+
+	public void setStore_resource_in_lucene_index_enabled(Boolean store_resource_in_lucene_index_enabled) {
+		this.store_resource_in_lucene_index_enabled = store_resource_in_lucene_index_enabled;
+	}
+
+	public NormalizedQuantitySearchLevel getNormalized_quantity_search_level() {
+  	return this.normalized_quantity_search_level;
   }
 
   public void setNormalized_quantity_search_level(NormalizedQuantitySearchLevel normalized_quantity_search_level) {
@@ -492,6 +524,26 @@ public class AppProperties {
   public void setOpenapi_enabled(Boolean openapi_enabled) {
     this.openapi_enabled = openapi_enabled;
   }
+
+	public Integer getBundle_batch_pool_size() {
+		return this.bundle_batch_pool_size;
+	}
+
+	public void setBundle_batch_pool_size(Integer bundle_batch_pool_size) {
+		this.bundle_batch_pool_size = bundle_batch_pool_size;
+	}
+
+	public Integer getBundle_batch_pool_max_size() {
+		return bundle_batch_pool_max_size;
+	}
+
+	public void setBundle_batch_pool_max_size(Integer bundle_batch_pool_max_size) {
+		this.bundle_batch_pool_max_size = bundle_batch_pool_max_size;
+	}
+
+	public List<String> getLocal_base_urls() {
+		return local_base_urls;
+	}
 
 	public static class Cors {
     private Boolean allow_Credentials = true;

@@ -3,9 +3,12 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.jpa.partition.SystemRequestDetails;
+import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 
@@ -89,6 +92,57 @@ class ExampleServerR4IT {
 		} else {
 			return null;
 		}
+	}
+
+	@Test
+	public void testBatchPutWithIdenticalTags() {
+		String batchPuts = "{\n" +
+			"\t\"resourceType\": \"Bundle\",\n" +
+			"\t\"id\": \"patients\",\n" +
+			"\t\"type\": \"batch\",\n" +
+			"\t\"entry\": [\n" +
+			"\t\t{\n" +
+			"\t\t\t\"request\": {\n" +
+			"\t\t\t\t\"method\": \"PUT\",\n" +
+			"\t\t\t\t\"url\": \"Patient/pat-1\"\n" +
+			"\t\t\t},\n" +
+			"\t\t\t\"resource\": {\n" +
+			"\t\t\t\t\"resourceType\": \"Patient\",\n" +
+			"\t\t\t\t\"id\": \"pat-1\",\n" +
+			"\t\t\t\t\"meta\": {\n" +
+			"\t\t\t\t\t\"tag\": [\n" +
+			"\t\t\t\t\t\t{\n" +
+			"\t\t\t\t\t\t\t\"system\": \"http://mysystem.org\",\n" +
+			"\t\t\t\t\t\t\t\"code\": \"value2\"\n" +
+			"\t\t\t\t\t\t}\n" +
+			"\t\t\t\t\t]\n" +
+			"\t\t\t\t}\n" +
+			"\t\t\t},\n" +
+			"\t\t\t\"fullUrl\": \"/Patient/pat-1\"\n" +
+			"\t\t},\n" +
+			"\t\t{\n" +
+			"\t\t\t\"request\": {\n" +
+			"\t\t\t\t\"method\": \"PUT\",\n" +
+			"\t\t\t\t\"url\": \"Patient/pat-2\"\n" +
+			"\t\t\t},\n" +
+			"\t\t\t\"resource\": {\n" +
+			"\t\t\t\t\"resourceType\": \"Patient\",\n" +
+			"\t\t\t\t\"id\": \"pat-2\",\n" +
+			"\t\t\t\t\"meta\": {\n" +
+			"\t\t\t\t\t\"tag\": [\n" +
+			"\t\t\t\t\t\t{\n" +
+			"\t\t\t\t\t\t\t\"system\": \"http://mysystem.org\",\n" +
+			"\t\t\t\t\t\t\t\"code\": \"value2\"\n" +
+			"\t\t\t\t\t\t}\n" +
+			"\t\t\t\t\t]\n" +
+			"\t\t\t\t}\n" +
+			"\t\t\t},\n" +
+			"\t\t\t\"fullUrl\": \"/Patient/pat-2\"\n" +
+			"\t\t}\n" +
+			"\t]\n" +
+			"}";
+		Bundle bundle = FhirContext.forR4().newJsonParser().parseResource(Bundle.class, batchPuts);
+		ourClient.transaction().withBundle(bundle).execute();
 	}
 
 	@Test

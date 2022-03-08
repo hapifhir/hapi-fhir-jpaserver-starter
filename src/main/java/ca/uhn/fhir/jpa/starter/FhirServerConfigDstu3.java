@@ -3,7 +3,6 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.config.BaseJavaConfigDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
-import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.annotations.OnDSTU3Condition;
 import ca.uhn.fhir.jpa.starter.cql.StarterCqlDstu3Config;
 import javax.annotation.PostConstruct;
@@ -22,7 +21,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 @Configuration
 @Conditional(OnDSTU3Condition.class)
-@Import(StarterCqlDstu3Config.class)
+@Import({StarterCqlDstu3Config.class, ElasticsearchConfig.class})
 public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
 
   @Autowired
@@ -76,6 +75,7 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
 
     retVal.setJpaProperties(EnvironmentHelper.getHibernateProperties(configurableEnvironment,
 		 myConfigurableListableBeanFactory));
+
     return retVal;
   }
 
@@ -86,23 +86,4 @@ public class FhirServerConfigDstu3 extends BaseJavaConfigDstu3 {
     retVal.setEntityManagerFactory(entityManagerFactory);
     return retVal;
   }
-
-  @Bean()
-  public ElasticsearchSvcImpl elasticsearchSvc() {
-    if (EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment)) {
-      String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
-      String elasticsearchHost;
-      if (elasticsearchUrl.startsWith("http")) {
-        elasticsearchHost = elasticsearchUrl.substring(elasticsearchUrl.indexOf("://") + 3, elasticsearchUrl.lastIndexOf(":"));
-      } else {
-        elasticsearchHost = elasticsearchUrl.substring(0, elasticsearchUrl.indexOf(":"));
-      }
-      String elasticsearchUsername = EnvironmentHelper.getElasticsearchServerUsername(configurableEnvironment);
-      String elasticsearchPassword = EnvironmentHelper.getElasticsearchServerPassword(configurableEnvironment);
-      return new ElasticsearchSvcImpl(elasticsearchHost, elasticsearchUsername, elasticsearchPassword);
-    } else {
-      return null;
-    }
-  }
-
 }

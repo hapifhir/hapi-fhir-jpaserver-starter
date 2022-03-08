@@ -42,6 +42,7 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
     "spring.datasource.url=jdbc:h2:mem:dbr4",
     "hapi.fhir.fhir_version=r4",
     "hapi.fhir.lastn_enabled=true",
+	 "hapi.fhir.store_resource_in_lucene_index_enabled=true",
     "elasticsearch.enabled=true",
     // Because the port is set randomly, we will set the rest_url using the Initializer.
     // "elasticsearch.rest_url='http://localhost:9200'",

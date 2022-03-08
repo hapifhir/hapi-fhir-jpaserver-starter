@@ -1,4 +1,11 @@
 spring:
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+  flyway:
+    enabled: false
+    check-location: false
+    baselineOnMigrate: true
   datasource:
     url: 'jdbc:h2:file:./database/h2'
     username: sa
@@ -9,9 +16,6 @@ spring:
     # database connection pool size
     hikari:
       maximum-pool-size: 10
-  flyway:
-    check-location: false
-    baselineOnMigrate: true
   jpa:
     properties:
       hibernate.format_sql: false
@@ -33,9 +37,6 @@ spring:
   batch:
     job:
       enabled: false
-  main:
-#    TODO 5.6.0 -> Prevent duplicate bean definitions in the Spring batch config in HAPI: see:
-    allow-bean-definition-overriding: true
 server: 
   servlet:
     context-path: /matchbox
@@ -64,6 +65,7 @@ hapi:
     allow_cascading_deletes: true
     allow_multiple_delete: true
     narrative_enabled: false
+    advanced_lucene_indexing: true
 ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
 ### to determine the FHIR server address
 #   use_apache_address_strategy: false
@@ -118,19 +120,23 @@ hapi:
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
 
+    # Threadpool size for BATCH'ed GETs in a bundle.
+#    bundle_batch_pool_size: 10
+#    bundle_batch_pool_max_size: 50
+
 #    logger:
-#      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
-#      format: >-
-#        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
-#        Operation[${operationType} ${operationName} ${idOrResourceName}]
-#        UA[${requestHeader.user-agent}] Params[${requestParameters}]
-#        ResponseEncoding[${responseEncodingNoDefault}]
-#      log_exceptions: true
-#      name: fhirtest.access
-#    max_binary_size: 104857600
-#    max_page_size: 200
-#    retain_cached_searches_mins: 60
-#    reuse_cached_search_results_millis: 60000
+    #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
+    #      format: >-
+    #        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
+    #        Operation[${operationType} ${operationName} ${idOrResourceName}]
+    #        UA[${requestHeader.user-agent}] Params[${requestParameters}]
+    #        ResponseEncoding[${responseEncodingNoDefault}]
+    #      log_exceptions: true
+    #      name: fhirtest.access
+    #    max_binary_size: 104857600
+    #    max_page_size: 200
+    #    retain_cached_searches_mins: 60
+    #    reuse_cached_search_results_millis: 60000
     tester:
         home:
           name: Local Tester
@@ -160,6 +166,7 @@ hapi:
 #        startTlsRequired:
 #        quitWait:
 #    lastn_enabled: true
+#    store_resource_in_lucene_index_enabled: true
 ###  This is configuration for normalized quantity serach level default is 0
 ###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
 ###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
