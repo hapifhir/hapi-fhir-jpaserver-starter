@@ -35,16 +35,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties = {
-		"spring.batch.job.enabled=false",
-		"spring.datasource.url=jdbc:h2:mem:dbr4",
-		"hapi.fhir.enable_repository_validating_interceptor=true",
-		"hapi.fhir.fhir_version=r4",
-		"hapi.fhir.subscription.websocket_enabled=true",
-		"hapi.fhir.mdm_enabled=true",
-		// Override is currently required when using MDM as the construction of the MDM
-		// beans are ambiguous as they are constructed multiple places. This is evident
-		// when running in a spring boot environment
-		"spring.main.allow-bean-definition-overriding=true" })
+	"spring.batch.job.enabled=false",
+	"spring.datasource.url=jdbc:h2:mem:dbr4",
+	"spring.datasource.username=sa",
+	"spring.datasource.password=null",
+	"spring.datasource.driverClassName=org.h2.Driver",
+	"spring.jpa.properties.hibernate.dialect=ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect",
+	"hapi.fhir.enable_repository_validating_interceptor=true",
+	"hapi.fhir.fhir_version=r4",
+	"hapi.fhir.subscription.websocket_enabled=true",
+	"hapi.fhir.mdm_enabled=true",
+	// Override is currently required when using MDM as the construction of the MDM
+	// beans are ambiguous as they are constructed multiple places. This is evident
+	// when running in a spring boot environment
+	"spring.main.allow-bean-definition-overriding=true" })
 class ExampleServerR4IT {
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
 	private IGenericClient ourClient;
