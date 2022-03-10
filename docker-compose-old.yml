@@ -1,0 +1,33 @@
+version: "3"
+services:
+  hapi-webserver:
+    image: nginx:latest
+    container_name: hapi-webserver
+    restart: unless-stopped
+    ports:
+      - 8080:80
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/localhost.crt:/etc/nginx/localhost.crt
+      - ./nginx/localhost.key:/etc/nginx/localhost.key
+  hapi-fhir-jpaserver-start:
+    build: .
+    container_name: hapi-fhir-jpaserver-start
+    restart: on-failure
+  hapi-fhir-mysql:
+    image: mysql:latest
+    container_name: hapi-fhir-mysql
+    #https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html
+    command: --lower_case_table_names=1
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'hapi'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'admin'
+      MYSQL_ROOT_PASSWORD: 'admin'
+    volumes:
+      - hapi-fhir-mysql:/var/lib/mysql
+volumes:
+  hapi-fhir-mysql:

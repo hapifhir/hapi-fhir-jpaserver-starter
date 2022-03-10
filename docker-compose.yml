@@ -1,27 +1,72 @@
-version: "3"
+# This docker-compose file can be used to bring up an example instance of oauth2-proxy
+# for manual testing and exploration of features.
+# Alongside OAuth2-Proxy, this file also starts Dex to act as the identity provider,
+# etcd for storage for Dex  and HTTPBin as an example upstream.
+#
+# This can either be created using docker-compose
+#    docker-compose -f docker-compose.yaml <command>
+# Or:
+#    make <command> (eg. make up, make down)
+#
+# Access http://localhost:4180 to initiate a login cycle
+version: '3.0'
 services:
-  hapi-webserver:
-    image: nginx:latest
-    container_name: hapi-webserver
-    restart: unless-stopped
+  oauth2-proxy:
+    container_name: oauth2-proxy
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.2.1
+    command: --config /oauth2-proxy.cfg
     ports:
-      - 8080:80
-      - 80:80
-      - 443:443
+      - 4180:4180/tcp
+    hostname: oauth2-proxy
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/localhost.crt:/etc/nginx/localhost.crt
-      - ./nginx/localhost.key:/etc/nginx/localhost.key
+      - "./oauth2-proxy.cfg:/oauth2-proxy.cfg"
+    restart: unless-stopped
+    networks:
+      dex: {}
+      fhir: {}
+    depends_on:
+      - dex
+      - hapi-fhir-jpaserver-start
+  dex:
+    container_name: dex
+    image: quay.io/dexidp/dex:v2.23.0
+    command: serve /dex.yaml
+    ports:
+      - 4190:4190/tcp
+    hostname: dex
+    volumes:
+      - "./dex.yaml:/dex.yaml"
+    restart: unless-stopped
+    networks:
+      dex:
+        aliases:
+        - dex.localhost
+      etcd: {}
+    depends_on:
+      - etcd
+  etcd:
+    container_name: etcd
+    image: gcr.io/etcd-development/etcd:v3.4.7
+    entrypoint: /usr/local/bin/etcd
+    command:
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --advertise-client-urls=http://etcd:2379
+    networks:
+      etcd: {}
   hapi-fhir-jpaserver-start:
     build: .
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
+    networks:
+      fhir: {}
   hapi-fhir-mysql:
     image: mysql:latest
     container_name: hapi-fhir-mysql
     #https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html
     command: --lower_case_table_names=1
     restart: always
+    networks:
+      fhir: {}
     environment:
       MYSQL_DATABASE: 'hapi'
       MYSQL_USER: 'admin'
@@ -31,3 +76,7 @@ services:
       - hapi-fhir-mysql:/var/lib/mysql
 volumes:
   hapi-fhir-mysql:
+networks:
+  dex: {}
+  etcd: {}
+  fhir: {}
