@@ -1,7 +1,7 @@
 # This docker-compose file can be used to bring up an example instance of oauth2-proxy
 # for manual testing and exploration of features.
 # Alongside OAuth2-Proxy, this file also starts Dex to act as the identity provider,
-# etcd for storage for Dex  and HTTPBin as an example upstream.
+# etcd for storage for Dex  and hapi-fhir as an example upstream.
 #
 # This can either be created using docker-compose
 #    docker-compose -f docker-compose.yaml <command>
@@ -19,7 +19,7 @@ services:
       - 4180:4180/tcp
     hostname: oauth2-proxy
     volumes:
-      - "./oauth2-proxy.cfg:/oauth2-proxy.cfg"
+      - "./oauth/oauth2-proxy.cfg:/oauth2-proxy.cfg"
     restart: unless-stopped
     networks:
       dex: {}
@@ -35,7 +35,7 @@ services:
       - 4190:4190/tcp
     hostname: dex
     volumes:
-      - "./dex.yaml:/dex.yaml"
+      - "./dex/dex.yaml:/dex.yaml"
     restart: unless-stopped
     networks:
       dex:
