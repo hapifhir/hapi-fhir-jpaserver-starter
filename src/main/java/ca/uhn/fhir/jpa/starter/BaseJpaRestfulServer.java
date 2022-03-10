@@ -368,10 +368,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     // If subscriptions are enabled, we want to register the interceptor that
     // will activate them and match results against them
-    if (appProperties.getSubscription() != null) {
+    // FIXME not specified but is still triggered: if (appProperties.getSubscription() != null) {
       // Subscription debug logging
-      interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
-    }
+      // interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
+    // }
 
     // Cascading deletes
 

@@ -1,0 +1,27 @@
+services:
+  matchbox:
+    # build: .
+    image: matchbox:latest
+    container_name: matchbox
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    links:
+      - matchbox-db
+    volumes:
+      - ./with-preload:/config      
+  matchbox-db:
+    image: postgres:latest
+    container_name: matchbox-db
+    restart: always
+    # Comment out to not log queries
+    command: ["postgres", "-c", "log_statement=all"]
+    # End comment out
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: 'matchbox'
+      POSTGRES_USER: 'matchbox'
+      POSTGRES_PASSWORD: 'matchbox'     
+    volumes:
+      - ./data:/var/lib/postgresql/data

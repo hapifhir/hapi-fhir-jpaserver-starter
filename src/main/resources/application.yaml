@@ -20,7 +20,7 @@ spring:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
-  #      hibernate.dialect: org.hibernate.dialect.h2dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
   #      hibernate.cache.use_query_cache: false
