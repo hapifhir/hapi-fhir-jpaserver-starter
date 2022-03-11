@@ -114,6 +114,43 @@ class ProcessMessageTests {
             }
         }
 
+        // look for the message header
+        val messageHeaderResults : Bundle = testClient
+            .search<IBaseBundle>()
+            .forResource(MessageHeader::class.java)
+            //.where(Patient.IDENTIFIER.exactly().systemAndIdentifier("urn:mitre:healthmanager:account:username", "aKutch271"))
+            .returnBundle(Bundle::class.java)
+            .execute()
+        Assertions.assertEquals(1, messageHeaderResults.entry.size)
+        when (val messageHeader = messageHeaderResults.entry[0].resource) {
+            is MessageHeader -> {
+                var foundPatient = false
+                var foundBundle = false
+                // 2 focuses: patient and bundle
+                Assertions.assertEquals(2, messageHeader.focus)
+                messageHeader.focus.forEach { aFocus ->
+                    when {
+
+                        (aFocus.referenceElement.resourceType == "Patient") -> {
+                            Assertions.assertEquals(patientId, aFocus.referenceElement.idPart)
+                            foundPatient = true
+                        }
+                        (aFocus.referenceElement.resourceType == "Bundle") -> {
+                            foundBundle = true
+                        }
+                        else -> {
+                            Assertions.fail("unexpected focus")
+                        }
+                    }
+                }
+                Assertions.assertTrue(foundBundle)
+                Assertions.assertTrue(foundPatient)
+            }
+            else -> {
+                Assertions.fail("not a message header")
+            }
+        }
+
         // check other resources
         val patientEverythingResult : Parameters = testClient
             .operation()
