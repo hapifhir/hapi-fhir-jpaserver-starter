@@ -26,8 +26,8 @@ services:
       - 80:80/tcp
       - 443:443/tcp
     volumes:
-      # - "./nginx/nginx-new.conf:/etc/nginx/conf.d/default.conf"
-      - ./nginx/nginx-new.conf:/etc/nginx/nginx.conf
+      - "./nginx/nginx-new.conf:/etc/nginx/conf.d/default.conf"
+      # - ./nginx/nginx-new.conf:/etc/nginx/nginx.conf
       - ./nginx/localhost.crt:/etc/nginx/localhost.crt
       - ./nginx/localhost.key:/etc/nginx/localhost.key
     hostname: nginx
