@@ -1,14 +1,3 @@
-# This docker-compose file can be used to bring up an example instance of oauth2-proxy
-# for manual testing and exploration of features.
-# Alongside OAuth2-Proxy, this file also starts Dex to act as the identity provider,
-# etcd for storage for Dex  and hapi-fhir as an example upstream.
-#
-# This can either be created using docker-compose
-#    docker-compose -f docker-compose.yaml <command>
-# Or:
-#    make <command> (eg. make up, make down)
-#
-# Access http://localhost:4180 to initiate a login cycle
 version: '3.0'
 services:
   oauth2-proxy:
@@ -24,9 +13,27 @@ services:
     networks:
       dex: {}
       fhir: {}
+      oauth2: {}
     depends_on:
       - dex
       - hapi-fhir-jpaserver-start
+  hapi-webserver:
+    image: nginx:1.18
+    container_name: hapi-webserver
+    restart: unless-stopped
+    ports:
+      - 8080:80/tcp
+      - 80:80/tcp
+      - 443:443/tcp
+    volumes:
+      # - "./nginx/nginx-new.conf:/etc/nginx/conf.d/default.conf"
+      - ./nginx/nginx-new.conf:/etc/nginx/nginx.conf
+      - ./nginx/localhost.crt:/etc/nginx/localhost.crt
+      - ./nginx/localhost.key:/etc/nginx/localhost.key
+    hostname: nginx
+    networks:
+      fhir: {}
+      oauth2: {}
   dex:
     container_name: dex
     image: quay.io/dexidp/dex:v2.23.0
@@ -80,3 +87,4 @@ networks:
   dex: {}
   etcd: {}
   fhir: {}
+  oauth2: {}
