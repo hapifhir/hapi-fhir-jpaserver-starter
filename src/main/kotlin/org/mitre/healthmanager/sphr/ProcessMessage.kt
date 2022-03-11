@@ -26,14 +26,8 @@ import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException
 import ca.uhn.fhir.util.BundleUtil
 import org.hl7.fhir.instance.model.api.IBaseBundle
-import org.hl7.fhir.r4.model.Bundle
-import org.hl7.fhir.r4.model.CodeableConcept
-import org.hl7.fhir.r4.model.MessageHeader
-import org.hl7.fhir.r4.model.ResourceType
-import org.hl7.fhir.r4.model.StringType
-import org.hl7.fhir.r4.model.UriType
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
-import org.hl7.fhir.r4.model.Patient
+import org.hl7.fhir.r4.model.*
 import org.springframework.beans.factory.annotation.Autowired
 
 
@@ -52,6 +46,15 @@ open class ProcessMessage : FhirSystemDaoR4() {
         val fhirContext : FhirContext= myDaoRegistry?.systemDao?.context
             ?: throw InternalErrorException("no fhircontext")
 
+        // A new bundle instance will be created from the contents of theMessage
+        val messageBundle = fhirContext.newRestfulGenericClient(theRequestDetails.fhirServerBase)
+            .create()
+            .resource(theMessage)
+            .prettyPrint()
+            .encodedJson()
+            .withAdditionalHeader("Referer", theRequestDetails.fhirServerBase)
+            .execute()
+
         // Validation and initial processing
         // 1. must be a bundle with type 'message'
         // 2. must have at least two entries (header plus content)
@@ -61,6 +64,11 @@ open class ProcessMessage : FhirSystemDaoR4() {
         // 5. username extension must be present
         val username = getUsernameFromHeader(theHeader)
 
+        // Check for the existence of an account with the username specified in the MessageHeader
+        // 1. If one does exist, note the resource id, which will be used later
+        // 2. If one does not exist, find the unique Patient instance in the message bundle (error if none or multiple)
+        // and use it to create a new patient instance (make sure the username is present in the identifier list with system
+        // "urn:mitre:healthmanager:account:username"). Record the resource id for use later
         // check if username exists already. If not, create skeleton record
         val patientSearchClient: IGenericClient = fhirContext.newRestfulGenericClient(theRequestDetails.fhirServerBase)
         val patientResultsBundle = patientSearchClient
@@ -91,17 +99,49 @@ open class ProcessMessage : FhirSystemDaoR4() {
             }
         }
 
-        // store the bundle as a bundle
-        val results = fhirContext.newRestfulGenericClient(theRequestDetails.fhirServerBase)
+        // Store the MessageHeader (theHeader) as its own instance with the following changes
+        // The focus list of the message header will be updated to contain only references to
+        // - The bundle instance containing the message contents (id via results.id.idPart)
+        // - The patient instance representing the account (id via patientInternalId)
+        theHeader.focus.add(0, Reference("Bundle/" + messageBundle.id.idPart.toString()))
+        theHeader.focus.add(1, Reference("Patient/" + patientInternalId.toString()))
+        val createMessageHeaderResults = fhirContext.newRestfulGenericClient(theRequestDetails.fhirServerBase)
             .create()
-            .resource(theMessage)
+            .resource(theHeader)
             .prettyPrint()
             .encodedJson()
-            .withAdditionalHeader("Referer", theRequestDetails.fhirServerBase)
             .execute()
 
         // store individual entries
-        // TODO
+        // take the theMessage (which is passed in) and make the following changes/checks:
+        // - type is transaction
+        // - remove MessageHeader entry
+        // - make sure request details for Patient is put with the ID from step 2 (patientInternalId)
+        // - make sure request details for all other types is post with whatever that type is
+        // - TODO: check that there is a patient entry (which is either an already existing patient or a new patient the ID needs to be updated by using the messageHeader focus list from above)
+        if (theMessage is Bundle) {
+            theMessage.type = Bundle.BundleType.TRANSACTION
+            var indexToRemove: Int? = null
+            for ((i, e) in theMessage.entry.withIndex()) {
+                when (e.resource.resourceType) {
+                    ResourceType.MessageHeader -> {
+                        indexToRemove = i
+                    }
+                    ResourceType.Patient -> {
+                        e.request.method = Bundle.HTTPVerb.PUT
+                        e.request.url = "Patient/" + patientInternalId
+                    }
+                    else -> {
+                        e.request.method = Bundle.HTTPVerb.POST
+                        e.request.url = e.resource.resourceType.toString()
+                    }
+                }
+            }
+            // remove the MessageHeader entry
+            if (indexToRemove is Int) {
+                theMessage.entry.removeAt(indexToRemove)
+            }
+        }
 
         // NOTE: this line is the reason the provider doesn't do this itself
         // -- it doesn't know its own address (HapiProperties is JPA server only)
