@@ -6,13 +6,11 @@ services:
     command: --config /oauth2-proxy.cfg --ssl-insecure-skip-verify
     ports: []
     hostname: oauth2-proxy
+    networks:
+      fhir: {}
     volumes:
       - "./oauth/oauth2-proxy.cfg:/oauth2-proxy.cfg"
     restart: unless-stopped
-    networks:
-      dex: {}
-      fhir: {}
-      oauth2: {}
     depends_on:
       - dex
       - hapi-fhir-jpaserver-start
@@ -20,6 +18,8 @@ services:
     image: nginx:1.18
     container_name: hapi-webserver
     restart: unless-stopped
+    networks:
+      fhir: {}
     ports:
     - 8080:80/tcp
     - 80:80/tcp
@@ -30,9 +30,6 @@ services:
       - ./ssl/localhost.crt:/etc/nginx/localhost.crt
       - ./ssl/localhost.key:/etc/nginx/localhost.key
     hostname: nginx
-    networks:
-      fhir: {}
-      oauth2: {}
   dex:
     container_name: dex
     image: quay.io/dexidp/dex:v2.23.0
@@ -46,21 +43,20 @@ services:
       - ./ssl/localhost.key:/etc/dex.localhost.key
     restart: unless-stopped
     networks:
-      dex:
+      fhir:
         aliases:
         - dex.localhost
-      etcd: {}
     depends_on:
       - etcd
   etcd:
     container_name: etcd
     image: gcr.io/etcd-development/etcd:v3.4.7
     entrypoint: /usr/local/bin/etcd
+    networks:
+      fhir: {}
     command:
       - --listen-client-urls=http://0.0.0.0:2379
       - --advertise-client-urls=http://etcd:2379
-    networks:
-      etcd: {}
   hapi-fhir-jpaserver-start:
     build: .
     container_name: hapi-fhir-jpaserver-start
@@ -85,7 +81,4 @@ services:
 volumes:
   hapi-fhir-mysql:
 networks:
-  dex: {}
-  etcd: {}
   fhir: {}
-  oauth2: {}
