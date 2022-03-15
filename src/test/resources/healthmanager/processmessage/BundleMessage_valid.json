@@ -16,13 +16,10 @@
             "url": "https://github.com/Open-Health-Manager/patient-data-receipt-ig/StructureDefinition/AccountExtension",
             "valueString": "aKutch271"
           }
-        ],
-        "focus": [
-          { "reference": "urn:uuid:71a8b156-760b-df6b-859e-eefc7932a526"}
         ]
       }
-    },{
-      "fullUrl": "urn:uuid:71a8b156-760b-df6b-859e-eefc7932a526",
+    },
+    {
       "resource": {
         "resourceType": "Patient",
         "id": "71a8b156-760b-df6b-859e-eefc7932a526",
@@ -187,10 +184,9 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:ee6beac6-aaaa-957c-767e-1e1caa5c816c",
       "resource": {
         "resourceType": "Encounter",
-        "id": "ee6beac6-aaaa-957c-767e-1e1caa5c816c",
+        "id": "10",
         "meta": {
           "profile": [ "http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter" ]
         },
@@ -223,10 +219,8 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:ee6beac6-aaaa-957c-767e-1e1c925c816c",
       "resource": {
         "resourceType": "Procedure",
-        "id": "ee6beac6-aaaa-957c-767e-1e1c925c816c",
         "text": {
           "status": "generated",
           "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Colonoscopy with complication</div>"
@@ -250,7 +244,7 @@
           "display": "Mrs. Adriana394 Kutch271"
         },
         "encounter": {
-          "reference": "urn:uuid:ee6beac6-aaaa-957c-767e-1e1caa5c816c"
+          "reference": "Encounter/10"
         },
         "performedDateTime" : "2022-02-15T10:20:13-05:00"
       }

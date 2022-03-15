@@ -18,17 +18,16 @@ package org.mitre.healthmanager.sphr
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry
-import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao
 import ca.uhn.fhir.jpa.dao.r4.FhirSystemDaoR4
 import ca.uhn.fhir.jpa.starter.AppProperties
 import ca.uhn.fhir.rest.api.server.RequestDetails
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException
-import ca.uhn.fhir.util.BundleUtil
+import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException
 import org.hl7.fhir.instance.model.api.IBaseBundle
-import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
 import org.hl7.fhir.r4.model.*
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.*
 
 
 @Autowired
@@ -112,6 +111,8 @@ open class ProcessMessage : FhirSystemDaoR4() {
             .encodedJson()
             .execute()
 
+
+
         // store individual entries
         // take the theMessage (which is passed in) and make the following changes/checks:
         // - type is transaction
@@ -120,18 +121,48 @@ open class ProcessMessage : FhirSystemDaoR4() {
         // - make sure request details for all other types is post with whatever that type is
         // - TODO: check that there is a patient entry (which is either an already existing patient or a new patient the ID needs to be updated by using the messageHeader focus list from above)
         if (theMessage is Bundle) {
+
+            if (theHeader.source.endpoint == "urn:apple:health-kit") {
+                // specific temporary logic to handle apple health kit issues, including
+                // 1. no patient entry, which is needed to make the references work
+                // 2. links to encounter records, but encounters aren't present
+                fixAppleHealthKitBundle(theMessage, patientInternalId)
+            }
+
             theMessage.type = Bundle.BundleType.TRANSACTION
             var indexToRemove: Int? = null
             for ((i, e) in theMessage.entry.withIndex()) {
+
+                /// make sure a fullUrl is present
+                if ((e.fullUrl == null) || (e.fullUrl == "")) {
+                    val entryId = e.resource.idElement.idPart
+                    e.fullUrl = when {
+                        entryId == null -> {
+                            ""
+                        }
+                        isGUID(entryId) -> {
+                            "urn:uuid:$entryId"
+                        }
+                        entryId != "" -> {
+                            "${e.resource.resourceType}/$entryId"
+                        }
+                        else -> {
+                            ""
+                        }
+                    }
+                }
+
                 when (e.resource.resourceType) {
                     ResourceType.MessageHeader -> {
                         indexToRemove = i
                     }
                     ResourceType.Patient -> {
+                        // update this patient record, linkages will be updated by bundle processing
                         e.request.method = Bundle.HTTPVerb.PUT
                         e.request.url = "Patient/" + patientInternalId
                     }
                     else -> {
+                        // create
                         e.request.method = Bundle.HTTPVerb.POST
                         e.request.url = e.resource.resourceType.toString()
                     }
@@ -142,6 +173,13 @@ open class ProcessMessage : FhirSystemDaoR4() {
                 theMessage.entry.removeAt(indexToRemove)
             }
         }
+        else {
+            throw InternalErrorException("bundle not provided to \$process-message")
+        }
+        fhirContext.newRestfulGenericClient(theRequestDetails.fhirServerBase)
+            .transaction()
+            .withBundle(theMessage)
+            .execute()
 
         // NOTE: this line is the reason the provider doesn't do this itself
         // -- it doesn't know its own address (HapiProperties is JPA server only)
@@ -222,4 +260,64 @@ fun getUsernameFromHeader (header : MessageHeader) : String {
         throw UnprocessableEntityException("no username found in pdr message header")
     }
 
+}
+
+fun isGUID(theId : String?) : Boolean {
+    return try {
+        UUID.fromString(theId)
+        true
+    } catch (exception: IllegalArgumentException) {
+        false
+    }
+}
+
+fun fixAppleHealthKitBundle(theMessage : Bundle, internalPatientId : String) {
+    var messagePatientId : String? = null
+
+    theMessage.entry.forEach { entry ->
+        when (val resource = entry.resource) {
+            is Observation -> {
+
+                // replace patient reference with internal reference
+                resource.subject.reference = "Patient/$internalPatientId"
+                /*
+                val patientReference = resource.subject.reference
+
+                val referencedPatientId = patientReference.substringAfter("/")
+                if (messagePatientId == null) {
+                    messagePatientId = referencedPatientId
+                }
+                else if (messagePatientId != referencedPatientId) {
+                    throw UnprocessableEntityException("Health kit: multiple referenced patients provided, only one allowed")
+                }
+
+                 */
+                // remove encounter link
+                resource.encounter = null
+
+            }
+            is Procedure -> {
+                // replace patient reference with internal reference
+                resource.subject.reference = "Patient/$internalPatientId"
+                // remove encounter link
+                resource.encounter = null
+            }
+            is Condition -> {
+                // replace patient reference with internal reference
+                // NOTE: in DSTU-2 it is patient instead of subject, so probably can't get conditions currently
+                resource.subject.reference = "Patient/$internalPatientId"
+                resource.asserter = null
+            }
+            is AllergyIntolerance -> {
+                // replace patient reference with internal reference
+                resource.patient.reference = "Patient/$internalPatientId"
+            }
+            else -> {
+                // do nothing
+            }
+        }
+
+
+
+    }
 }

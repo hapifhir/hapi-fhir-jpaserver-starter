@@ -1,0 +1,555 @@
+{
+  "type" : "message",
+  "resourceType" : "Bundle",
+  "entry" : [
+    {
+      "resource": {
+        "resourceType": "MessageHeader",
+        "extension": [
+          {
+            "url": "https://github.com/Open-Health-Manager/patient-data-receipt-ig/StructureDefinition/AccountExtension",
+            "valueString": "test"
+          }
+        ],
+        "eventUri": "urn:mitre:healthmanager:pdr",
+        "source": {
+          "endpoint": "urn:apple:health-kit"
+        }
+      }
+    },
+    {
+      "resource" : {
+        "resourceType" : "Observation",
+        "subject" : {
+          "reference" : "Patient/1"
+        },
+        "id" : "4",
+        "encounter" : {
+          "reference" : "Encounter/355"
+        },
+        "category" : {
+          "text" : "Vital Signs",
+          "coding" : [
+            {
+              "system" : "http://hl7.org/fhir/observation-category",
+              "code" : "vital-signs"
+            }
+          ]
+        },
+        "code" : {
+          "text" : "BMI-body mass index",
+          "coding" : [
+            {
+              "system" : "http://loinc.org",
+              "code" : "39156-5"
+            }
+          ]
+        },
+        "issued" : "2017-03-18T00:00:00Z",
+        "status" : "final",
+        "valueQuantity" : {
+          "code" : "kg/m^2",
+          "system" : "http://unitsofmeasure.org",
+          "value" : 26.199999999999999,
+          "unit" : "kg/m^2"
+        }
+      },
+      "fullUrl" : "https://localhost:9090/resource/Observation/4"
+    },
+    {
+      "resource" : {
+        "encounter" : {
+          "reference" : "Encounter/355"
+        },
+        "status" : "final",
+        "code" : {
+          "text" : "Temperature",
+          "coding" : [
+            {
+              "system" : "http://loinc.org",
+              "code" : "8310-5"
+            }
+          ]
+        },
+        "resourceType" : "Observation",
+        "id" : "14",
+        "subject" : {
+          "reference" : "Patient/1"
+        },
+        "valueQuantity" : {
+          "code" : "Cel",
+          "system" : "http://unitsofmeasure.org",
+          "value" : 37.600000000000001,
+          "unit" : "Cel"
+        },
+        "category" : {
+          "text" : "Vital Signs",
+          "coding" : [
+            {
+              "system" : "http://hl7.org/fhir/observation-category",
+              "code" : "vital-signs"
+            }
+          ]
+        },
+        "issued" : "2017-03-18T00:00:00Z"
+      },
+      "fullUrl" : "https://localhost:9090/resource/Observation/14"
+    },
+    {
+      "resource" : {
+        "id" : "7",
+        "status" : "final",
+        "issued" : "2017-03-18T00:00:00Z",
+        "category" : {
+          "text" : "Vital Signs",
+          "coding" : [
+            {
+              "system" : "http://hl7.org/fhir/observation-category",
+              "code" : "vital-signs"
+            }
+          ]
+        },
+        "valueQuantity" : {
+          "code" : "/min",
+          "system" : "http://unitsofmeasure.org",
+          "value" : 77,
+          "unit" : "/min"
+        },
+        "resourceType" : "Observation",
+        "subject" : {
+          "reference" : "Patient/1"
+        },
+        "encounter" : {
+          "reference" : "Encounter/355"
+        },
+        "code" : {
+          "text" : "Pulse",
+          "coding" : [
+            {
+              "system" : "http://loinc.org",
+              "code" : "8867-4"
+            }
+          ]
+        }
+      },
+      "fullUrl" : "https://localhost:9090/resource/Observation/7"
+    },
+    {
+      "resource" : {
+        "status" : "final",
+        "resourceType" : "Observation",
+        "issued" : "2017-10-18T00:00:00Z",
+        "subject" : {
+          "reference" : "Patient/1"
+        },
+        "category" : {
+          "text" : "Laboratory",
+          "coding" : [
+            {
+              "system" : "http://hl7.org/fhir/observation-category",
+              "code" : "laboratory"
+            }
+          ]
+        },
+        "code" : {
+          "text" : "CBC panel - Blood by Automated count",
+          "coding" : [
+            {
+              "system" : "http://loinc.org",
+              "code" : "58410-2"
+            }
+          ]
+        },
+        "encounter" : {
+          "reference" : "Encounter/355"
+        },
+        "id" : "2634785",
+        "component" : [
+          {
+            "valueQuantity" : {
+              "code" : "10*3/uL",
+              "system" : "http://unitsofmeasure.org",
+              "value" : 111,
+              "unit" : "10*3/uL"
+            },
+            "code" : {
+              "text" : "Leukocytes [#/volume] in Blood by Automated count",
+              "coding" : [
+                {
+                  "display" : "Leukocytes [#/volume] in Blood by Automated count",
+                  "system" : "http://loinc.org",
+                  "code" : "6690-2"
+                }
+              ]
+            }
+          },
+          {
+            "valueQuantity" : {
+              "code" : "10*6/uL",
+              "system" : "http://unitsofmeasure.org",
+              "value" : 222,
+              "unit" : "10*6/uL"
+            },
+            "code" : {
+              "text" : "Erythrocytes [#/volume] in Blood by Automated count",
+              "coding" : [
+                {
+                  "display" : "Erythrocytes [#/volume] in Blood by Automated count",
+                  "system" : "http://loinc.org",
+                  "code" : "789-8"
+                }
+              ]
+            }
+          },
+          {
+            "valueQuantity" : {
+              "code" : "10*3/uL",
+              "system" : "http://unitsofmeasure.org",
+              "value" : 333,
+              "unit" : "10*3/uL"
+            },
+            "code" : {
+              "text" : "Platelets [#/volume] in Blood by Automated count",
+              "coding" : [
+                {
+                  "display" : "Platelets [#/volume] in Blood by Automated count",
+                  "system" : "http://loinc.org",
+                  "code" : "777-3"
+                }
+              ]
+            }
+          },
+          {
+            "referenceRange" : [
+              {
+                "low" : {
+                  "code" : "g/dL",
+                  "system" : "http://unitsofmeasure.org",
+                  "value" : 500,
+                  "unit" : "g/dL"
+                },
+                "high" : {
+                  "code" : "g/dL",
+                  "system" : "http://unitsofmeasure.org",
+                  "value" : 400,
+                  "unit" : "g/dL"
+                },
+                "text" : "400 to 500 g/dL"
+              }
+            ],
+            "valueQuantity" : {
+              "code" : "g/dL",
+              "system" : "http://unitsofmeasure.org",
+              "value" : 444,
+              "unit" : "g/dL"
+            },
+            "code" : {
+              "text" : "Hemoglobin [Mass/volume] in Blood",
+              "coding" : [
+                {
+                  "display" : "Hemoglobin [Mass/volume] in Blood",
+                  "system" : "http://loinc.org",
+                  "code" : "718-7"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "fullUrl" : "https://localhost:9090/resource/Observation/2634785"
+    },
+    {
+      "resource" : {
+        "category" : {
+          "text" : "Laboratory",
+          "coding" : [
+            {
+              "system" : "http://hl7.org/fhir/observation-category",
+              "code" : "laboratory"
+            }
+          ]
+        },
+        "code" : {
+          "text" : "Triglycerides",
+          "coding" : [
+            {
+              "system" : "http://loinc.org",
+              "code" : "3043-7"
+            }
+          ]
+        },
+        "referenceRange" : [
+          {
+            "low" : {
+              "code" : "mg/dL",
+              "system" : "http://unitsofmeasure.org",
+              "value" : 10,
+              "unit" : "mg/dL"
+            },
+            "high" : {
+              "code" : "mg/dL",
+              "system" : "http://unitsofmeasure.org",
+              "value" : 250,
+              "unit" : "mg/dL"
+            },
+            "text" : "10 to 250 mg/dL"
+          }
+        ],
+        "valueQuantity" : {
+          "code" : "mg/dL",
+          "system" : "http://unitsofmeasure.org",
+          "value" : 86,
+          "unit" : "mg/dL"
+        },
+        "issued" : "2017-03-18T00:00:00Z",
+        "id" : "12",
+        "encounter" : {
+          "reference" : "Encounter/355"
+        },
+        "status" : "final",
+        "resourceType" : "Observation"
+      },
+      "fullUrl" : "https://localhost:9090/resource/Observation/12"
+    },
+    {
+      "resource" : {
+        "encounter" : {
+          "reference" : "Encounter/355"
+        },
+        "referenceRange" : [
+          {
+            "high" : {
+              "code" : "mg/dL",
+              "system" : "http://unitsofmeasure.org",
+              "value" : 59,
+              "unit" : "mg/dL"
+            },
+            "text" : "35 to 59 mg/dL"
+          }
+        ],
+        "resourceType" : "Observation",
+        "code" : {
+          "text" : "Cholesterol HDL",
+          "coding" : [
+            {
+              "system" : "http://loinc.org",
+              "code" : "2085-9"
+            }
+          ]
+        },
+        "valueQuantity" : {
+          "code" : "mg/dL",
+          "system" : "http://unitsofmeasure.org",
+          "value" : 95.5,
+          "unit" : "mg/dL"
+        },
+        "status" : "final",
+        "issued" : "2017-03-18T00:00:00Z",
+        "category" : {
+          "text" : "Laboratory",
+          "coding" : [
+            {
+              "system" : "http://hl7.org/fhir/observation-category",
+              "code" : "laboratory"
+            }
+          ]
+        },
+        "id" : "21"
+      },
+      "fullUrl" : "https://localhost:9090/resource/Observation/21"
+    },
+    {
+      "resource" : {
+        "code" : {
+          "text" : "Appendectomy",
+          "coding" : [
+            {
+              "system" : "http://snomed.info/sct",
+              "code" : "80146002"
+            }
+          ]
+        },
+        "performedDateTime" : "2007-05-25",
+        "status" : "completed",
+        "subject" : {
+          "display" : "Candace Salinas",
+          "reference" : "Patient/1"
+        },
+        "resourceType" : "Procedure",
+        "id" : "9"
+      },
+      "fullUrl" : "https://localhost:9090/resource/Procedure/9"
+    },
+    {
+      "resource" : {
+        "resourceType" : "Procedure",
+        "status" : "completed",
+        "performedDateTime" : "2014-06-09",
+        "code" : {
+          "text" : "ACL repair",
+          "coding" : [
+            {
+              "display" : "Repair of anterior cruciate ligament of knee joint (procedure)",
+              "system" : "http://snomed.info/sct",
+              "code" : "239426007"
+            }
+          ]
+        },
+        "id" : "10",
+        "subject" : {
+          "display" : "Candace Salinas",
+          "reference" : "Patient/1"
+        },
+        "encounter" : {
+          "reference" : "Encounter/2089375"
+        }
+      },
+      "fullUrl" : "https://localhost:9090/resource/Procedure/10"
+    },
+    {
+      "fullUrl" : "https://localhost:9090/resource/Condition/1",
+      "resource" : {
+        "clinicalStatus" : "active",
+        "asserter" : {
+          "display" : "Daren Estrada",
+          "reference" : "Practitioner/20"
+        },
+        "code" : {
+          "text" : "Asthma",
+          "coding" : [
+            {
+              "display" : "Asthma",
+              "system" : "http://snomed.info/sct",
+              "code" : "195967001"
+            }
+          ]
+        },
+        "category" : {
+          "coding" : [
+            {
+              "system" : "http://hl7.org/fhir/condition-category",
+              "code" : "diagnosis"
+            }
+          ]
+        },
+        "verificationStatus" : "confirmed",
+        "dateRecorded" : "2012-01-02",
+        "notes" : "2 brief hospitalizations when a child, symptoms much improved as an adult",
+        "patient" : {
+          "display" : "Salinas, Candace",
+          "reference" : "Patient/1"
+        },
+        "id" : "1",
+        "resourceType" : "Condition",
+        "onsetDateTime" : "1985-09-09"
+      }
+    },
+    {
+      "resource" : {
+        "asserter" : {
+          "display" : "Daren Estrada",
+          "reference" : "Practitioner/20"
+        },
+        "code" : {
+          "text" : "Seasonal Allergic Rhinitis",
+          "coding" : [
+            {
+              "display" : "Seasonal allergic rhinitis",
+              "system" : "http://snomed.info/sct",
+              "code" : "367498001"
+            }
+          ]
+        },
+        "onsetDateTime" : "1994-05-12",
+        "dateRecorded" : "2012-01-02",
+        "clinicalStatus" : "active",
+        "verificationStatus" : "confirmed",
+        "id" : "2",
+        "patient" : {
+          "reference" : "Patient/1"
+        },
+        "category" : {
+          "coding" : [
+            {
+              "system" : "http://hl7.org/fhir/condition-category",
+              "code" : "diagnosis"
+            }
+          ]
+        },
+        "resourceType" : "Condition",
+        "notes" : "Worse when visiting family in NC during the spring"
+      },
+      "fullUrl" : "https://localhost:9090/resource/Condition/2"
+    },
+    {
+      "resource" : {
+        "id" : "4",
+        "verificationStatus" : "confirmed",
+        "code" : {
+          "text" : "Sinusitis",
+          "coding" : [
+            {
+              "display" : "Sinusitis (disorder)",
+              "system" : "http://snomed.info/sct",
+              "code" : "36971009"
+            }
+          ]
+        },
+        "resourceType" : "Condition",
+        "patient" : {
+          "display" : "Candace Salinas",
+          "reference" : "Patient/1"
+        },
+        "category" : {
+          "coding" : [
+            {
+              "system" : "http://hl7.org/fhir/condition-category",
+              "code" : "diagnosis"
+            }
+          ]
+        },
+        "dateRecorded" : "2016-11-25",
+        "asserter" : {
+          "display" : "Daren Estrada",
+          "reference" : "Practitioner/20"
+        },
+        "clinicalStatus" : "active"
+      },
+      "fullUrl" : "https://localhost:9090/resource/Condition/4"
+    },
+    {
+      "resource" : {
+        "substance" : {
+          "text" : "Peanuts",
+          "coding" : [
+            {
+              "system" : "http://snomed.info/sct",
+              "code" : "256349002"
+            }
+          ]
+        },
+        "id" : "2",
+        "onset" : "1995",
+        "reaction" : [
+          {
+            "onset" : "2015-02-17",
+            "manifestation" : [
+              {
+                "text" : "Wheezing"
+              }
+            ],
+            "severity" : "severe"
+          }
+        ],
+        "status" : "active",
+        "recordedDate" : "2015-02-18",
+        "patient" : {
+          "display" : "Candace Salinas",
+          "reference" : "Patient/1"
+        },
+        "resourceType" : "AllergyIntolerance"
+      },
+      "fullUrl" : "https://localhost:9090/resource/AllergyIntolerance/2"
+    }
+  ]
+}
