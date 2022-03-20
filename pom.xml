@@ -85,6 +85,12 @@
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-subscription</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.zaxxer</groupId>
+                    <artifactId>HikariCP-java7</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- This dependency includes the JPA server itself, which is packaged separately from the rest of HAPI FHIR -->
@@ -300,6 +306,19 @@
             <artifactId>spring-boot-autoconfigure</artifactId>
             <version>${spring_boot_version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <version>${spring_boot_version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.1</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
