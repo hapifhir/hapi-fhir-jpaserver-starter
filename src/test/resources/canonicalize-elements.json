@@ -1,0 +1,38 @@
+{
+	"address": [
+		{
+			"line": [
+				"Wiesenstr. 12"
+			],
+			"city": "Zürich",
+			"postalCode": "8003",
+			"country": "CH"
+		}
+	],
+	"birthDate": "1943-05-15",
+	"gender": "female",
+	"id": "elementssorted",
+	"identifier": [
+		{
+			"type": {
+				"coding": [
+					{
+						"system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+						"code": "MR"
+					}
+				]
+			},
+			"system": "urn:oid:2.999.1",
+			"value": "11111111"
+		}
+	],
+	"name": [
+		{
+			"family": "Wegmüller",
+			"given": [
+				"Monika"
+			]
+		}
+	],
+	"resourceType": "Patient"
+}

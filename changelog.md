@@ -1,3 +1,7 @@
+2022/03/21 Release 1.9.1
+- custom log banner, thanks [ralych](https://github.com/ralych)
+- Fixed StructureMap transformation [issue core](https://github.com/hapifhir/org.hl7.fhir.core/issues/771) and [issue#37](https://github.com/ahdis/matchbox/issues/37)
+
 2022/03/10 Release 1.9.0
 - Updated to hap-fhir 5.7.0, fhir.core.version (validator) 5.6.27
 - Extended Mobile Access Gateway support for PMP (replacing FHIR documents with selected Patient in Mobile Access Gateway, transforming to CDA and MDH publish)

@@ -61,21 +61,41 @@ public class ValidationProvider {
 
   @Autowired
   protected IInstanceValidatorModule instanceValidator;
-  
+
   @Autowired
   protected IValidationSupport support;
 
   @Autowired
   protected FhirContext myFhirCtx;
 
-  //@Autowired
- // protected DefaultProfileValidationSupport defaultProfileValidationSuport;
-/*
-	@Autowired
-	@Qualifier("myJpaValidationSupport")
-	protected IValidationSupport myJpaValidationSupport;
-	*/
+  // @Autowired
+  // protected DefaultProfileValidationSupport defaultProfileValidationSuport;
+  /*
+   * @Autowired
+   * 
+   * @Qualifier("myJpaValidationSupport") protected IValidationSupport
+   * myJpaValidationSupport;
+   */
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ValidationProvider.class);
+
+  @Operation(name = "$canonical", manualRequest = true, idempotent = true, returnParameters = {
+      @OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
+  public IBaseResource canonical(HttpServletRequest theRequest) {
+    String contentString = getContentString(theRequest, null);
+    EncodingEnum encoding = EncodingEnum.forContentType(theRequest.getContentType());
+    if (encoding == null) {
+      encoding = EncodingEnum.detectEncoding(contentString);
+    }
+    IBaseResource resource = null;
+    try {
+      // we still parse to catch wrongli formatted
+      resource = encoding.newParser(myFhirCtx).parseResource(contentString);
+      Canonicalizer canonicalizer= new Canonicalizer(this.myFhirCtx);
+      return canonicalizer.canonicalize(resource);
+    } catch (DataFormatException e) {
+      return getValidationMessageDataFormatException(e);
+    }
+  }
 
   @Operation(name = "$validate", manualRequest = true, idempotent = true, returnParameters = {
       @OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
@@ -100,26 +120,8 @@ public class ValidationProvider {
       }
       validationOptions.addProfileIfNotBlank(profile);
     }
-    
-    byte[] bytes = null;
-    String contentString = "";
-    try {
-      bytes = IOUtils.toByteArray(theRequest.getInputStream());
-      if (bytes.length > 2 && bytes[0] == -17 && bytes[1] == -69 && bytes[2] == -65) {
-        byte[] dest = new byte[bytes.length - 3];
-        System.arraycopy(bytes, 3, dest, 0, bytes.length - 3);
-        bytes = dest;
-        SingleValidationMessage m = new SingleValidationMessage();
-        m.setSeverity(ResultSeverityEnum.WARNING);
-        m.setMessage(
-            "Resource content has a UTF-8 BOM marking, skipping BOM, see https://en.wikipedia.org/wiki/Byte_order_mark");
-        m.setLocationCol(0);
-        m.setLocationLine(0);
-        addedValidationMessages.add(m);
-      }
-      contentString = new String(bytes);
-    } catch (IOException e) {
-    }
+
+    String contentString = getContentString(theRequest, addedValidationMessages);
 
     if (contentString.length() == 0) {
       SingleValidationMessage m = new SingleValidationMessage();
@@ -139,7 +141,7 @@ public class ValidationProvider {
     if (encoding == null) {
       encoding = EncodingEnum.detectEncoding(contentString);
     }
-    
+
     FhirValidator validator = myFhirCtx.newValidator();
     validator.registerValidatorModule(instanceValidator);
 
@@ -153,33 +155,33 @@ public class ValidationProvider {
     ValidationResult result = null;
     IBaseResource resource = null;
     try {
-      // we still parse to catch wrongli formatted 
+      // we still parse to catch wrongli formatted
       resource = encoding.newParser(myFhirCtx).parseResource(contentString);
     } catch (DataFormatException e) {
       return getValidationMessageDataFormatException(e);
     }
-   
-    if (resource!=null && "Parameters".equals(resource.fhirType()) && profile == null) {
+
+    if (resource != null && "Parameters".equals(resource.fhirType()) && profile == null) {
 //      IBaseParameters parameters = (IBaseParameters) resource;
 // https://github.com/ahdis/matchbox/issues/11
       Parameters parameters = (Parameters) resource;
       IBaseResource resourceInParam = null;
-      for (ParametersParameterComponent compoment: parameters.getParameter()) {
+      for (ParametersParameterComponent compoment : parameters.getParameter()) {
         if ("resource".equals(compoment.getName())) {
           resourceInParam = compoment.getResource();
           break;
         }
       }
-      if (resourceInParam!=null && resourceInParam.fhirType().contentEquals("Bundle") ) {
-         Bundle bundle = (Bundle) resourceInParam;
-         for (BundleEntryComponent entry : bundle.getEntry()) {
-            if (entry.getResource()!=null && entry.getResource().getId()==null) {
-              if (entry.getFullUrl()!=null && entry.getFullUrl().startsWith("urn:uuid:")) {
-                entry.setId(entry.getFullUrl().substring(9));
-              }
+      if (resourceInParam != null && resourceInParam.fhirType().contentEquals("Bundle")) {
+        Bundle bundle = (Bundle) resourceInParam;
+        for (BundleEntryComponent entry : bundle.getEntry()) {
+          if (entry.getResource() != null && entry.getResource().getId() == null) {
+            if (entry.getFullUrl() != null && entry.getFullUrl().startsWith("urn:uuid:")) {
+              entry.setId(entry.getFullUrl().substring(9));
             }
-           
-         }
+          }
+
+        }
       }
       List<String> profiles = ParametersUtil.getNamedParameterValuesAsString(myFhirCtx, parameters, "profile");
       if (profiles != null && profiles.size() == 1) {
@@ -201,12 +203,11 @@ public class ValidationProvider {
 //          log.info(serialized);
 //        }
 //      }
-      
+
       if (resourceInParam != null) {
         validationOptions = new ValidationOptions();
         if (profile != null) {
-          if (support.fetchStructureDefinition(profile) == null
-              ) {
+          if (support.fetchStructureDefinition(profile) == null) {
             return getValidationMessageProfileNotSupported(profile);
           }
           validationOptions.addProfileIfNotBlank(profile);
@@ -217,7 +218,8 @@ public class ValidationProvider {
         ParametersUtil.addParameterToParameters(myFhirCtx, returnParameters, "return", operationOutcome);
         return returnParameters;
       } else {
-        // we have a validation for a Parameter but not a resource inside, fall back to validate only Parameter
+        // we have a validation for a Parameter but not a resource inside, fall back to
+        // validate only Parameter
         result = validator.validateWithResult(contentString, validationOptions);
       }
     } else {
@@ -226,11 +228,37 @@ public class ValidationProvider {
     return getOperationOutcome(sha3Hex, addedValidationMessages, sw, profile, result);
   }
 
+  private String getContentString(HttpServletRequest theRequest,
+      ArrayList<SingleValidationMessage> addedValidationMessages) {
+    byte[] bytes = null;
+    String contentString = "";
+    try {
+      bytes = IOUtils.toByteArray(theRequest.getInputStream());
+      if (bytes.length > 2 && bytes[0] == -17 && bytes[1] == -69 && bytes[2] == -65) {
+        byte[] dest = new byte[bytes.length - 3];
+        System.arraycopy(bytes, 3, dest, 0, bytes.length - 3);
+        bytes = dest;
+        if (addedValidationMessages != null) {
+          SingleValidationMessage m = new SingleValidationMessage();
+          m.setSeverity(ResultSeverityEnum.WARNING);
+          m.setMessage(
+              "Resource content has a UTF-8 BOM marking, skipping BOM, see https://en.wikipedia.org/wiki/Byte_order_mark");
+          m.setLocationCol(0);
+          m.setLocationLine(0);
+          addedValidationMessages.add(m);
+        }
+      }
+      contentString = new String(bytes);
+    } catch (IOException e) {
+    }
+    return contentString;
+  }
+
   private IBaseResource getOperationOutcome(String id, ArrayList<SingleValidationMessage> addedValidationMessages,
       StopWatch sw, String profile, ValidationResult result) {
     sw.endCurrentTask();
-    
-    log.info("Validation time: "+sw.toString());
+
+    log.info("Validation time: " + sw.toString());
 
     if (profile != null) {
       SingleValidationMessage m = new SingleValidationMessage();
@@ -246,7 +274,7 @@ public class ValidationProvider {
     IBaseResource operationOutcome = new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages)
         .toOperationOutcome();
     operationOutcome.setId(id);
-    
+
     log.info(this.myFhirCtx.newXmlParser().encodeResourceToString(operationOutcome));
 
     return operationOutcome;

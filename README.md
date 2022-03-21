@@ -99,9 +99,9 @@ To dynamically configure run in a kubernetes environment and add a kubernetes co
 
 ### making container available
 ```
-docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v190
+docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v191
 
-docker push eu.gcr.io/fhir-ch/matchbox:v190
+docker push eu.gcr.io/fhir-ch/matchbox:v191
 ```
 
 API
