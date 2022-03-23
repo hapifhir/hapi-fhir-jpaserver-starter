@@ -1,10 +1,10 @@
-#Adds the option to go to eg. http://localhost:8080/actuator/env for seeing the running configuration
+#Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
+#see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
-        exclude: "beans"
+        include: "health"
 spring:
   main:
     allow-circular-references: true
