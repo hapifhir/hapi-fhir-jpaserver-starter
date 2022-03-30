@@ -7,11 +7,15 @@ spring:
     check-location: false
     baselineOnMigrate: true
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
+    #url: 'jdbc:h2:file:./target/database/h2'
     #url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
+    #username: sa
+    #password: null
+    #driverClassName: org.h2.Driver
+    url: jdbc:mysql://aist-partner.projekte.fh-hagenberg.at:8081/hapi #'jdbc:mysql://hapi-fhir-mysql:3306/hapi'
+    username: admin
+    password: admin
+    driverClassName: com.mysql.jdbc.Driver
     max-active: 15
 
     # database connection pool size
@@ -135,7 +139,7 @@ hapi:
     tester:
       home:
         name: AIST Server (R4 FHIR)
-        server_address: 'http://aist-partner.projekte.fh-hagenberg.at:8080'
+        server_address: 'http://aist-partner.projekte.fh-hagenberg.at:8080' #'http://localhost:8080/fhir'
         refuse_to_fetch_third_party_urls: false
         fhir_version: R4
       global:
