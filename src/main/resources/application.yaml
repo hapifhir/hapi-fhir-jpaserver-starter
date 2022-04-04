@@ -191,3 +191,14 @@ keycloak:
 #  use-resource-role-mappings: true,
 logging.level.org.springframework.web: trace
 logging.level.org.apache: trace
+
+#sentry:
+#  enabled: false
+#  options:
+#    dsn:
+#    release:
+#    environment:
+#    tags:
+#    debug: false
+#  minimumEventLevel: ERROR
+#  minimumBreadcrumbLevel: INFO

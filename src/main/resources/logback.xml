@@ -16,6 +16,17 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
+<!-- Start Sentry Appender Configuration -->
+<!-- Sentry appender disabled by default, to enable set sentry.enabled property to true on the application.yaml-->
+	<springProperty name="sentry.enabled" source="sentry.enabled" />
+	<property name="sentry.appender.enabled" value="${sentry.enabled}" />
+	<if condition='property("sentry.appender.enabled").equals("true")'>
+		<then>
+			<include optional="true" resource="sentry-logback.xml" />
+		</then>
+	</if>
+<!-- End Sentry Appender Configuration -->
+
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
 	</root>
