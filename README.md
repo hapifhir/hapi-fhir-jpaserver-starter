@@ -215,6 +215,26 @@ spring:
 
 Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
 
+### Microsoft SQL Server configuration
+
+To configure the starter app to use MS SQL Server, instead of the default H2, update the application.yaml file to have the following:
+
+```yaml
+spring:
+  datasource:
+    url: 'jdbc:sqlserver://<server>:<port>;databaseName=<databasename>'
+    username: admin
+    password: admin
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+```
+
+
+Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
+
+
+NOTE: MS SQL Server by default uses a case-insensitive codepage. This will cause errors with some operations - such as when expanding case-sensitive valuesets (UCUM) as there are unique indexes defined on the terminology tables for codes. 
+It is recommended to deploy a case-sensitive database prior to running HAPI FHIR when using MS SQL Server to avoid these and potentially other issues. 
+
 ## Customizing The Web Testpage UI
 
 The UI that comes with this server is an exact clone of the server available at [http://hapi.fhir.org](http://hapi.fhir.org). You may skin this UI if you'd like. For example, you might change the introductory text or replace the logo with your own.
