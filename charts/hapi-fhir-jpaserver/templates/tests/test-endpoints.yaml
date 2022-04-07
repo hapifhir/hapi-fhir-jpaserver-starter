@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "hapi-fhir-jpaserver.fullname" . }}-test-connection"
+  name: "{{ include "hapi-fhir-jpaserver.fullname" . }}-test-endpoints"
   labels:
     {{- include "hapi-fhir-jpaserver.labels" . | nindent 4 }}
     {{ include "hapi-fhir-jpaserver.fullname" . }}-client: "true"
@@ -10,7 +10,32 @@ metadata:
 spec:
   restartPolicy: Never
   containers:
-    - name: wget
+    - name: test-metadata-endpoint
+      image: busybox:1
+      command: ['wget', '-O', '-']
+      args: ['http://{{ include "hapi-fhir-jpaserver.fullname" . }}:{{ .Values.service.port }}/fhir/metadata']
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: true
+        runAsUser: 22222
+        runAsNonRoot: true
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      livenessProbe:
+        exec:
+          command: ["true"]
+      readinessProbe:
+        exec:
+          command: ["true"]
+    - name: test-patient-endpoint
       image: busybox:1
       command: ['wget', '-O', '-']
       args: ['http://{{ include "hapi-fhir-jpaserver.fullname" . }}:{{ .Values.service.port }}/fhir/Patient?_count=1']
