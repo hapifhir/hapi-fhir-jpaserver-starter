@@ -100,7 +100,6 @@ hapi:
     #    mdm_enabled: true
 #    local_base_urls:
 #      - https://hapi.fhir.org/baseR4
-    mdm_enabled: true
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
