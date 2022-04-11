@@ -15,6 +15,6 @@ public class Demo {
     System.setProperty("spring.batch.job.enabled", "false");
     SpringApplication.run(Demo.class, args);
 
-    //Server is now accessible at eg. http://localhost:8080/metadata
+    //Server is now accessible at eg. http://localhost:8080/fhir/metadata
   }
 }
