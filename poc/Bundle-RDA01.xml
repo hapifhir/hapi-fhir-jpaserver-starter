@@ -1,0 +1,1388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Bundle xmlns="http://hl7.org/fhir">
+  <id value="RDA01"/>
+  <meta>
+    <profile value="http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-document-vaccination-record"/>
+  </meta>
+  <identifier>
+    <system value="urn:ietf:rfc:3986"/>
+    <value value="urn:uuid:9aba4e33-12e0-46b3-958b-b856861d67f2"/>
+  </identifier>
+  <type value="document"/>
+  <timestamp value="2021-08-10T00:00:00.390+02:00"/>
+  <entry>
+    <fullUrl value="http://test.fhir.ch/r4/Composition/RDA01-Composition"/>
+    <resource>
+      <Composition>
+        <id value="RDA01-Composition"/>
+        <meta>
+          <profile value="http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-composition-vaccination-record"/>
+        </meta>
+        <language value="en-US"/>
+        <text>
+          <status value="generated"/>
+          <div xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+            <h3>Vaccination Record</h3>
+            <p>
+              <b>Id: </b>RDA01-Composition</p>
+            <p>
+              <b>Identifier: </b>
+              <span>urn:ietf:rfc:3986#urn:uuid:bed3782e-a64c-422d-bc29-ae517071fdea</span>
+            </p>
+            <p>
+              <b>Status: </b>Final</p>
+            <p>
+              <b>Code: </b>
+              <span>Immunization record (http://snomed.info/sct#41000179103)</span>
+            </p>
+            <p>
+              <b>Patient: </b>
+              <a href="Patient-TC-patient.html">Patient/TC-patient</a> Wegmueller Monika</p>
+            <p>
+              <b>Date: </b>August 10, 2021</p>
+            <p>
+              <b>Authors:</b>
+            </p>
+            <table>
+              <tr>
+                <td>
+                  <p>
+                    <a href="Patient-TC-patient.html">Patient/TC-patient</a> Wegmueller Monika</p>
+                </td>
+              </tr>
+            </table>
+            <p>
+              <b>Confidentiality: </b>null<span> Normal (qualifier value) (http://snomed.info/sct#17621005)</span>
+            </p>
+            <p>
+              <b>Sections:</b>
+            </p>
+            <table>
+              <tr>
+                <td>Immunization Administration</td>
+              </tr>
+              <tr>
+                <td>Comments</td>
+              </tr>
+            </table>
+          </div>
+        </text>
+        <extension id="versionNumber" url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-versionnumber">
+          <valueUnsignedInt value="1"/>
+        </extension>
+        <identifier>
+          <system value="urn:ietf:rfc:3986"/>
+          <value value="urn:uuid:bed3782e-a64c-422d-bc29-ae517071fdea"/>
+        </identifier>
+        <status value="final"/>
+        <type>
+          <coding>
+            <system value="http://snomed.info/sct"/>
+            <code value="41000179103"/>
+            <display value="Immunization record"/>
+          </coding>
+        </type>
+        <subject>
+          <reference value="Patient/TC-patient"/>
+        </subject>
+        <date value="2021-08-10T00:00:00.390+02:00"/>
+        <author>
+          <reference value="Patient/TC-patient"/>
+        </author>
+        <title value="Vaccination Record"/>
+        <confidentiality value="N">
+          <extension url="http://fhir.ch/ig/ch-core/StructureDefinition/ch-ext-epr-confidentialitycode">
+            <valueCodeableConcept>
+              <coding>
+                <system value="http://snomed.info/sct"/>
+                <code value="17621005"/>
+                <display value="Normal (qualifier value)"/>
+              </coding>
+            </valueCodeableConcept>
+          </extension>
+        </confidentiality>
+        <custodian>
+          <reference value="Organization/TC-ORG1"/>
+        </custodian>
+        <section id="administration">
+          <title value="Immunization Administration"/>
+          <code>
+            <coding>
+              <system value="http://loinc.org"/>
+              <code value="11369-6"/>
+              <display value="Hx of Immunization"/>
+            </coding>
+          </code>
+          <text>
+            <status value="generated"/>
+            <div xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+              <p>
+                <b>Code: </b>
+                <span>Hx of Immunization (http://loinc.org#11369-6)</span>
+              </p>
+              <p>
+                <b>Entries:</b>
+              </p>
+              <table>
+                <tr>
+                  <td>
+                    <a href="Immunization-TCA01-IMMUN1-patient.html">Immunization/TCA01-IMMUN1-patient</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="Immunization-TCA01-IMMUN2-HCP1-ORG1-ROLE.html">Immunization/TCA01-IMMUN2-HCP1-ORG1-ROLE</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="Immunization-TCA01-IMMUN3-HCP2-ORG2-ROLE.html">Immunization/TCA01-IMMUN3-HCP2-ORG2-ROLE</a>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </text>
+          <entry>
+            <reference value="Immunization/TCA01-IMMUN1-patient"/>
+          </entry>
+          <entry>
+            <reference value="Immunization/TCA01-IMMUN2-HCP1-ORG1-ROLE"/>
+          </entry>
+          <entry>
+            <reference value="Immunization/TCA01-IMMUN3-HCP2-ORG2-ROLE"/>
+          </entry>
+        </section>
+        <section id="annotation">
+          <title value="Comments"/>
+          <code>
+            <coding>
+              <system value="http://loinc.org"/>
+              <code value="48767-8"/>
+              <display value="Annotation comment [Interpretation] Narrative"/>
+            </coding>
+          </code>
+          <text>
+            <status value="generated"/>
+            <div xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+              <p>
+                <b>Code: </b>
+                <span>Annotation comment [Interpretation] Narrative (http://loinc.org#48767-8)</span>
+              </p>
+            </div>
+          </text>
+        </section>
+      </Composition>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="http://test.fhir.ch/r4/Patient/TC-patient"/>
+    <resource>
+      <Patient>
+        <id value="TC-patient"/>
+        <meta>
+          <profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient-epr"/>
+        </meta>
+        <text>
+          <status value="generated"/>
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            <p>
+              <b>Generated Narrative</b>
+            </p>
+            <div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+              <p style="margin-bottom: 0px">Resource "TC-patient" </p>
+              <p style="margin-bottom: 0px">Profile: <a href="http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-patient-epr.html">CH Core Patient Profile EPR</a>
+              </p>
+            </div>
+            <p>
+              <b>identifier</b>: id: 123.71.332.115, id: 8077560000000000000000</p>
+            <p>
+              <b>name</b>: Monika Wegmueller </p>
+            <p>
+              <b>telecom</b>: ph: tel:+41.32.685.12.34(HOME)</p>
+            <p>
+              <b>gender</b>: female</p>
+            <p>
+              <b>birthDate</b>: 1967-02-10</p>
+            <p>
+              <b>address</b>: Leidensweg 10 Specimendorf 9876 CH </p>
+          </div>
+        </text>
+        <identifier>
+          <system value="urn:oid:2.16.756.5.31"/>
+          <value value="123.71.332.115"/>
+        </identifier>
+        <identifier>
+          <system value="urn:oid:2.16.756.5.30.1.123.100.1.1.1"/>
+          <value value="8077560000000000000000"/>
+        </identifier>
+        <name>
+          <family value="Wegmueller"/>
+          <given value="Monika"/>
+        </name>
+        <telecom>
+          <system value="phone"/>
+          <value value="tel:+41.32.685.12.34"/>
+          <use value="home"/>
+        </telecom>
+        <gender value="female"/>
+        <birthDate value="1967-02-10"/>
+        <address>
+          <type value="both"/>
+          <line value="Leidensweg 10"/>
+          <city value="Specimendorf"/>
+          <postalCode value="9876"/>
+          <country value="CH"/>
+        </address>
+      </Patient>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="http://test.fhir.ch/r4/Practitioner/TC-HCP1-C1"/>
+    <resource>
+      <Practitioner>
+        <id value="TC-HCP1-C1"/>
+        <meta>
+          <profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-practitioner-epr"/>
+        </meta>
+        <text>
+          <status value="generated"/>
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            <p>
+              <b>Generated Narrative</b>
+            </p>
+            <div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+              <p style="margin-bottom: 0px">Resource "TC-HCP1-C1" </p>
+              <p style="margin-bottom: 0px">Profile: <a href="http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-practitioner-epr.html">CH Core Practitioner Profile EPR</a>
+              </p>
+            </div>
+            <p>
+              <b>identifier</b>: id: 7608888888888</p>
+            <p>
+              <b>active</b>: true</p>
+            <p>
+              <b>name</b>: Allzeit Bereit </p>
+            <p>
+              <b>telecom</b>: ph: tel:+41.32.234.55.66(WORK), fax: fax:+41.32.234.55.67(WORK), <a href="mailto:mailto:allzeit.bereit@gruppenpraxis.ch">mailto:allzeit.bereit@gruppenpraxis.ch</a>,              <a href="http://www.gruppenpraxis.ch">http://www.gruppenpraxis.ch</a>
+            </p>
+            <p>
+              <b>address</b>: Doktorgasse 2 Musterhausen 8888 CH </p>
+          </div>
+        </text>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7608888888888"/>
+        </identifier>
+        <active value="true"/>
+        <name>
+          <family value="Bereit"/>
+          <given value="Allzeit"/>
+          <prefix value="Dr. med."/>
+        </name>
+        <telecom>
+          <system value="phone"/>
+          <value value="tel:+41.32.234.55.66"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="fax"/>
+          <value value="fax:+41.32.234.55.67"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="email"/>
+          <value value="mailto:allzeit.bereit@gruppenpraxis.ch"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="url"/>
+          <value value="http://www.gruppenpraxis.ch"/>
+          <use value="work"/>
+        </telecom>
+        <address>
+          <type value="physical"/>
+          <line value="Doktorgasse 2"/>
+          <city value="Musterhausen"/>
+          <postalCode value="8888"/>
+          <country value="CH"/>
+        </address>
+      </Practitioner>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="http://test.fhir.ch/r4/Organization/TC-ORG1"/>
+    <resource>
+      <Organization>
+        <id value="TC-ORG1"/>
+        <meta>
+          <profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-organization-epr"/>
+        </meta>
+        <text>
+          <status value="generated"/>
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            <p>
+              <b>Generated Narrative</b>
+            </p>
+            <div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+              <p style="margin-bottom: 0px">Resource "TC-ORG1" </p>
+              <p style="margin-bottom: 0px">Profile: <a href="http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-organization-epr.html">CH Core Organization Profile EPR</a>
+              </p>
+            </div>
+            <p>
+              <b>identifier</b>: id: 7608888888888</p>
+            <p>
+              <b>name</b>: Gruppenpraxis CH</p>
+            <p>
+              <b>telecom</b>: ph: tel:+41.32.234.55.66(WORK), fax: fax:+41.32.234.55.67(WORK), <a href="mailto:mailto:bereit@gruppenpraxis.ch">mailto:bereit@gruppenpraxis.ch</a>,              <a href="http://www.gruppenpraxis.ch">http://www.gruppenpraxis.ch</a>
+            </p>
+            <p>
+              <b>address</b>: Doktorgasse 2 Musterhausen ZH 8888 CH </p>
+          </div>
+        </text>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7608888888888"/>
+        </identifier>
+        <name value="Gruppenpraxis CH"/>
+        <telecom>
+          <system value="phone"/>
+          <value value="tel:+41.32.234.55.66"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="fax"/>
+          <value value="fax:+41.32.234.55.67"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="email"/>
+          <value value="mailto:bereit@gruppenpraxis.ch"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="url"/>
+          <value value="http://www.gruppenpraxis.ch"/>
+          <use value="work"/>
+        </telecom>
+        <address>
+          <line value="Doktorgasse 2"/>
+          <city value="Musterhausen"/>
+          <state value="ZH"/>
+          <postalCode value="8888"/>
+          <country value="CH"/>
+        </address>
+      </Organization>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="http://test.fhir.ch/r4/PractitionerRole/TC-HCP1-ORG1-ROLE-performer"/>
+    <resource>
+      <PractitionerRole>
+        <id value="TC-HCP1-ORG1-ROLE-performer"/>
+        <meta>
+          <profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-practitionerrole-epr"/>
+        </meta>
+        <text>
+          <status value="generated"/>
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            <p>
+              <b>Generated Narrative</b>
+            </p>
+            <div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+              <p style="margin-bottom: 0px">Resource "TC-HCP1-ORG1-ROLE-performer" </p>
+              <p style="margin-bottom: 0px">Profile: <a href="http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-practitionerrole-epr.html">CH Core Practitioner Role Profile EPR</a>
+              </p>
+            </div>
+            <p>
+              <b>active</b>: true</p>
+            <p>
+              <b>practitioner</b>:              <a href="#Practitioner_TC-HCP1-C1">See above (Practitioner/TC-HCP1-C1)</a>
+            </p>
+            <p>
+              <b>organization</b>:              <a href="#Organization_TC-ORG1">See above (Organization/TC-ORG1)</a>
+            </p>
+          </div>
+        </text>
+        <active value="true"/>
+        <practitioner>
+          <reference value="Practitioner/TC-HCP1-C1"/>
+        </practitioner>
+        <organization>
+          <reference value="Organization/TC-ORG1"/>
+        </organization>
+      </PractitionerRole>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="http://test.fhir.ch/r4/PractitionerRole/TC-HCP1-ORG1-ROLE-author"/>
+    <resource>
+      <PractitionerRole>
+        <id value="TC-HCP1-ORG1-ROLE-author"/>
+        <meta>
+          <profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-practitionerrole-epr"/>
+        </meta>
+        <text>
+          <status value="generated"/>
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            <p>
+              <b>Generated Narrative</b>
+            </p>
+            <div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+              <p style="margin-bottom: 0px">Resource "TC-HCP1-ORG1-ROLE-author" </p>
+              <p style="margin-bottom: 0px">Profile: <a href="http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-practitionerrole-epr.html">CH Core Practitioner Role Profile EPR</a>
+              </p>
+            </div>
+            <p>
+              <b>active</b>: true</p>
+            <p>
+              <b>practitioner</b>:              <a href="#Practitioner_TC-HCP1-C1">See above (Practitioner/TC-HCP1-C1)</a>
+            </p>
+            <p>
+              <b>organization</b>:              <a href="#Organization_TC-ORG1">See above (Organization/TC-ORG1)</a>
+            </p>
+          </div>
+        </text>
+        <active value="true"/>
+        <practitioner>
+          <reference value="Practitioner/TC-HCP1-C1"/>
+        </practitioner>
+        <organization>
+          <reference value="Organization/TC-ORG1"/>
+        </organization>
+      </PractitionerRole>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="http://test.fhir.ch/r4/Practitioner/TC-HCP2-C2"/>
+    <resource>
+      <Practitioner>
+        <id value="TC-HCP2-C2"/>
+        <meta>
+          <profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-practitioner-epr"/>
+        </meta>
+        <text>
+          <status value="generated"/>
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            <p>
+              <b>Generated Narrative</b>
+            </p>
+            <div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+              <p style="margin-bottom: 0px">Resource "TC-HCP2-C2" </p>
+              <p style="margin-bottom: 0px">Profile: <a href="http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-practitioner-epr.html">CH Core Practitioner Profile EPR</a>
+              </p>
+            </div>
+            <p>
+              <b>identifier</b>: id: 7609999999990</p>
+            <p>
+              <b>active</b>: true</p>
+            <p>
+              <b>name</b>: Meist Gesund </p>
+            <p>
+              <b>telecom</b>: ph: tel:+41.32.234.77.88(WORK), fax: fax:+41.32.234.77.89(WORK), <a href="mailto:mailto:leitung@praxis-gesund.ch">mailto:leitung@praxis-gesund.ch</a>,              <a href="http://www.praxis-gesund.ch">http://www.praxis-gesund.ch</a>
+            </p>
+            <p>
+              <b>address</b>: Aerztehaus Beispielen ZH 7890 CH </p>
+          </div>
+        </text>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7609999999990"/>
+        </identifier>
+        <active value="true"/>
+        <name>
+          <family value="Gesund"/>
+          <given value="Meist"/>
+          <prefix value="Dr. med."/>
+        </name>
+        <telecom>
+          <system value="phone"/>
+          <value value="tel:+41.32.234.77.88"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="fax"/>
+          <value value="fax:+41.32.234.77.89"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="email"/>
+          <value value="mailto:leitung@praxis-gesund.ch"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="url"/>
+          <value value="http://www.praxis-gesund.ch"/>
+          <use value="work"/>
+        </telecom>
+        <address>
+          <type value="physical"/>
+          <line value="Aerztehaus"/>
+          <city value="Beispielen"/>
+          <state value="ZH"/>
+          <postalCode value="7890"/>
+          <country value="CH"/>
+        </address>
+      </Practitioner>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="http://test.fhir.ch/r4/Organization/TC-ORG2"/>
+    <resource>
+      <Organization>
+        <id value="TC-ORG2"/>
+        <meta>
+          <profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-organization-epr"/>
+        </meta>
+        <text>
+          <status value="generated"/>
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            <p>
+              <b>Generated Narrative</b>
+            </p>
+            <div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+              <p style="margin-bottom: 0px">Resource "TC-ORG2" </p>
+              <p style="margin-bottom: 0px">Profile: <a href="http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-organization-epr.html">CH Core Organization Profile EPR</a>
+              </p>
+            </div>
+            <p>
+              <b>identifier</b>: id: 7609999999991</p>
+            <p>
+              <b>name</b>: Praxis Dr. Gesund</p>
+            <p>
+              <b>telecom</b>: ph: tel:+41.32.234.77.88(WORK), fax: fax:+41.32.234.77.89(WORK), <a href="mailto:mailto:leitung@praxis-gesund.ch">mailto:leitung@praxis-gesund.ch</a>,              <a href="http://www.praxis-gesund.ch">http://www.praxis-gesund.ch</a>
+            </p>
+            <p>
+              <b>address</b>: Aerztehaus Beispielen ZH 7890 CH </p>
+          </div>
+        </text>
+        <identifier>
+          <system value="urn:oid:2.51.1.3"/>
+          <value value="7609999999991"/>
+        </identifier>
+        <name value="Praxis Dr. Gesund"/>
+        <telecom>
+          <system value="phone"/>
+          <value value="tel:+41.32.234.77.88"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="fax"/>
+          <value value="fax:+41.32.234.77.89"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="email"/>
+          <value value="mailto:leitung@praxis-gesund.ch"/>
+          <use value="work"/>
+        </telecom>
+        <telecom>
+          <system value="url"/>
+          <value value="http://www.praxis-gesund.ch"/>
+          <use value="work"/>
+        </telecom>
+        <address>
+          <line value="Aerztehaus"/>
+          <city value="Beispielen"/>
+          <state value="ZH"/>
+          <postalCode value="7890"/>
+          <country value="CH"/>
+        </address>
+      </Organization>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="http://test.fhir.ch/r4/PractitionerRole/TC-HCP2-ORG2-ROLE-performer"/>
+    <resource>
+      <PractitionerRole>
+        <id value="TC-HCP2-ORG2-ROLE-performer"/>
+        <meta>
+          <profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-practitionerrole-epr"/>
+        </meta>
+        <text>
+          <status value="generated"/>
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            <p>
+              <b>Generated Narrative</b>
+            </p>
+            <div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+              <p style="margin-bottom: 0px">Resource "TC-HCP2-ORG2-ROLE-performer" </p>
+              <p style="margin-bottom: 0px">Profile: <a href="http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-practitionerrole-epr.html">CH Core Practitioner Role Profile EPR</a>
+              </p>
+            </div>
+            <p>
+              <b>active</b>: true</p>
+            <p>
+              <b>practitioner</b>:              <a href="#Practitioner_TC-HCP2-C2">See above (Practitioner/TC-HCP2-C2)</a>
+            </p>
+            <p>
+              <b>organization</b>:              <a href="#Organization_TC-ORG2">See above (Organization/TC-ORG2)</a>
+            </p>
+          </div>
+        </text>
+        <active value="true"/>
+        <practitioner>
+          <reference value="Practitioner/TC-HCP2-C2"/>
+        </practitioner>
+        <organization>
+          <reference value="Organization/TC-ORG2"/>
+        </organization>
+      </PractitionerRole>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="http://test.fhir.ch/r4/PractitionerRole/TC-HCP2-ORG2-ROLE-author"/>
+    <resource>
+      <PractitionerRole>
+        <id value="TC-HCP2-ORG2-ROLE-author"/>
+        <meta>
+          <profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-practitionerrole-epr"/>
+        </meta>
+        <text>
+          <status value="generated"/>
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            <p>
+              <b>Generated Narrative</b>
+            </p>
+            <div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+              <p style="margin-bottom: 0px">Resource "TC-HCP2-ORG2-ROLE-author" </p>
+              <p style="margin-bottom: 0px">Profile: <a href="http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-practitionerrole-epr.html">CH Core Practitioner Role Profile EPR</a>
+              </p>
+            </div>
+            <p>
+              <b>active</b>: true</p>
+            <p>
+              <b>practitioner</b>:              <a href="#Practitioner_TC-HCP2-C2">See above (Practitioner/TC-HCP2-C2)</a>
+            </p>
+            <p>
+              <b>organization</b>:              <a href="#Organization_TC-ORG2">See above (Organization/TC-ORG2)</a>
+            </p>
+          </div>
+        </text>
+        <active value="true"/>
+        <practitioner>
+          <reference value="Practitioner/TC-HCP2-C2"/>
+        </practitioner>
+        <organization>
+          <reference value="Organization/TC-ORG2"/>
+        </organization>
+      </PractitionerRole>
+    </resource>
+  </entry>
+  <entry>
+    <fullUrl value="http://test.fhir.ch/r4/Immunization/TCA01-IMMUN1-patient"/>
+    <resource>
+      <Immunization>
+        <id value="TCA01-IMMUN1-patient"/>
+        <meta>
+          <profile value="http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-immunization"/>
+        </meta>
+        <text>
+          <status value="extensions"/>
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            <p>
+              <b>Generated Narrative</b>
+            </p>
+            <div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+              <p style="margin-bottom: 0px">Resource "TCA01-IMMUN1-patient" </p>
+              <p style="margin-bottom: 0px">Profile: <a href="StructureDefinition-ch-vacd-immunization.html">CH VACD Immunization Profile</a>
+              </p>
+            </div>
+            <p>
+              <b>CH VACD Extension Immunization Recorder Reference</b>:              <a href="#Patient_TC-patient">See above (Patient/TC-patient)</a>
+            </p>
+            <p>
+              <b>CH VACD Extension Immunization Medication Reference</b>:              <a href="#Medication_TC-IMMUN-MEDIC-HAVRIX1440">See above (Medication/TC-IMMUN-MEDIC-HAVRIX1440)</a>
+            </p>
+            <p>
+              <b>identifier</b>: id: acc1f090-5e0c-45ae-b283-521d57c3aa2f</p>
+            <p>
+              <b>status</b>: completed</p>
+            <p>
+              <b>vaccineCode</b>: Havrix 1440 <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (              <a href="CodeSystem-ch-vacd-swissmedic-cs.html">Swiss Medic Authorized Vaccines Codesystem</a>#558)</span>
+          </p>
+          <p>
+            <b>patient</b>:            <a href="#Patient_TC-patient">See above (Patient/TC-patient)</a>
+          </p>
+          <p>
+            <b>occurrence</b>: 2021-06-01</p>
+          <p>
+            <b>recorded</b>: 2021-06-01T00:00:00.39+02:00</p>
+          <p>
+            <b>lotNumber</b>: AHAVB946A</p>
+          <p>
+            <b>route</b>: Intramuscular use <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (standardterms.edqm.eu#20035000)</span>
+          </p>
+          <h3>Performers</h3>
+          <table class="grid">
+            <tr>
+              <td>-</td>
+              <td>
+                <b>Actor</b>
+              </td>
+            </tr>
+            <tr>
+              <td>*</td>
+              <td>
+                <a href="#PractitionerRole_TC-HCP1-ORG1-ROLE-performer">See above (PractitionerRole/TC-HCP1-ORG1-ROLE-performer)</a>
+              </td>
+            </tr>
+          </table>
+          <h3>ProtocolApplieds</h3>
+          <table class="grid">
+            <tr>
+              <td>-</td>
+              <td>
+                <b>TargetDisease</b>
+              </td>
+              <td>
+                <b>DoseNumber[x]</b>
+              </td>
+            </tr>
+            <tr>
+              <td>*</td>
+              <td>Viral hepatitis, type A (disorder) <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (                <a href="https://browser.ihtsdotools.org/">SNOMED CT</a>#40468003)</span>
+            </td>
+            <td>1</td>
+          </tr>
+        </table>
+      </div>
+    </text>
+    <extension url="http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-ext-immunization-recorder-reference">
+      <valueReference>
+        <reference value="Patient/TC-patient"/>
+      </valueReference>
+    </extension>
+    <extension url="http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-ext-immunization-medication-reference">
+      <valueReference>
+        <reference value="Medication/TC-IMMUN-MEDIC-HAVRIX1440"/>
+      </valueReference>
+    </extension>
+    <identifier>
+      <system value="urn:oid:2.16.756.5.30.1.402.1.3.1.1.1"/>
+      <value value="acc1f090-5e0c-45ae-b283-521d57c3aa2f"/>
+    </identifier>
+    <status value="completed"/>
+    <vaccineCode>
+      <coding>
+        <system value="http://fhir.ch/ig/ch-vacd/CodeSystem/ch-vacd-swissmedic-cs"/>
+        <code value="558"/>
+        <display value="Havrix 1440"/>
+      </coding>
+    </vaccineCode>
+    <patient>
+      <reference value="Patient/TC-patient"/>
+    </patient>
+    <occurrenceDateTime value="2021-06-01"/>
+    <recorded value="2021-06-01T00:00:00.390+02:00"/>
+    <lotNumber value="AHAVB946A"/>
+    <route>
+      <coding>
+        <system value="http://standardterms.edqm.eu"/>
+        <code value="20035000"/>
+        <display value="Intramuscular use"/>
+      </coding>
+    </route>
+    <performer>
+      <actor>
+        <reference value="PractitionerRole/TC-HCP1-ORG1-ROLE-performer"/>
+      </actor>
+    </performer>
+    <protocolApplied>
+      <targetDisease>
+        <coding>
+          <system value="http://snomed.info/sct"/>
+          <code value="40468003"/>
+          <display value="Viral hepatitis, type A (disorder)"/>
+        </coding>
+      </targetDisease>
+      <doseNumberPositiveInt value="1"/>
+    </protocolApplied>
+  </Immunization>
+</resource>
+</entry>
+<entry>
+<fullUrl value="http://test.fhir.ch/r4/Immunization/TCA01-IMMUN2-HCP1-ORG1-ROLE"/>
+<resource>
+  <Immunization>
+    <id value="TCA01-IMMUN2-HCP1-ORG1-ROLE"/>
+    <meta>
+      <profile value="http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-immunization"/>
+    </meta>
+    <text>
+      <status value="extensions"/>
+      <div xmlns="http://www.w3.org/1999/xhtml">
+        <p>
+          <b>Generated Narrative</b>
+        </p>
+        <div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+          <p style="margin-bottom: 0px">Resource "TCA01-IMMUN2-HCP1-ORG1-ROLE" </p>
+          <p style="margin-bottom: 0px">Profile: <a href="StructureDefinition-ch-vacd-immunization.html">CH VACD Immunization Profile</a>
+          </p>
+        </div>
+        <p>
+          <b>CH VACD Extension Immunization Recorder Reference</b>:          <a href="#PractitionerRole_TC-HCP1-ORG1-ROLE-author">See above (PractitionerRole/TC-HCP1-ORG1-ROLE-author)</a>
+        </p>
+        <p>
+          <b>identifier</b>: id: 11853642-8ff4-45ae-af98-44c58b3bf0b7</p>
+        <p>
+          <b>status</b>: completed</p>
+        <p>
+          <b>vaccineCode</b>: Boostrix <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (          <a href="CodeSystem-ch-vacd-swissmedic-cs.html">Swiss Medic Authorized Vaccines Codesystem</a>#637)</span>
+      </p>
+      <p>
+        <b>patient</b>:        <a href="#Patient_TC-patient">See above (Patient/TC-patient)</a>
+      </p>
+      <p>
+        <b>occurrence</b>: 2021-06-15</p>
+      <p>
+        <b>recorded</b>: 2021-06-15T00:00:00.39+02:00</p>
+      <p>
+        <b>lotNumber</b>: 14-34218</p>
+      <p>
+        <b>route</b>: Intramuscular use <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (standardterms.edqm.eu#20035000)</span>
+      </p>
+      <h3>Performers</h3>
+      <table class="grid">
+        <tr>
+          <td>-</td>
+          <td>
+            <b>Actor</b>
+          </td>
+        </tr>
+        <tr>
+          <td>*</td>
+          <td>
+            <a href="#PractitionerRole_TC-HCP1-ORG1-ROLE-performer">See above (PractitionerRole/TC-HCP1-ORG1-ROLE-performer)</a>
+          </td>
+        </tr>
+      </table>
+      <h3>ProtocolApplieds</h3>
+      <table class="grid">
+        <tr>
+          <td>-</td>
+          <td>
+            <b>TargetDisease</b>
+          </td>
+          <td>
+            <b>DoseNumber[x]</b>
+          </td>
+        </tr>
+        <tr>
+          <td>*</td>
+          <td>Diphtheria caused by Corynebacterium diphtheriae (disorder) <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (            <a href="https://browser.ihtsdotools.org/">SNOMED CT</a>#397430003)</span>, Tetanus (disorder) <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (          <a href="https://browser.ihtsdotools.org/">SNOMED CT</a>#76902006)</span>, Pertussis (disorder) <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (        <a href="https://browser.ihtsdotools.org/">SNOMED CT</a>#27836007)</span>
+    </td>
+    <td>1</td>
+  </tr>
+</table>
+</div>
+</text>
+<extension url="http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-ext-immunization-recorder-reference">
+<valueReference>
+<reference value="PractitionerRole/TC-HCP1-ORG1-ROLE-author"/>
+</valueReference>
+</extension>
+<identifier>
+<system value="urn:oid:2.16.756.5.30.1.402.1.3.1.1.1"/>
+<value value="11853642-8ff4-45ae-af98-44c58b3bf0b7"/>
+</identifier>
+<status value="completed"/>
+<vaccineCode>
+<coding>
+<system value="http://fhir.ch/ig/ch-vacd/CodeSystem/ch-vacd-swissmedic-cs"/>
+<code value="637"/>
+<display value="Boostrix"/>
+</coding>
+</vaccineCode>
+<patient>
+<reference value="Patient/TC-patient"/>
+</patient>
+<occurrenceDateTime value="2021-06-15"/>
+<recorded value="2021-06-15T00:00:00.390+02:00"/>
+<lotNumber value="14-34218"/>
+<route>
+<coding>
+<system value="http://standardterms.edqm.eu"/>
+<code value="20035000"/>
+<display value="Intramuscular use"/>
+</coding>
+</route>
+<performer>
+<actor>
+<reference value="PractitionerRole/TC-HCP1-ORG1-ROLE-performer"/>
+</actor>
+</performer>
+<protocolApplied>
+<targetDisease>
+<coding>
+  <system value="http://snomed.info/sct"/>
+  <code value="397430003"/>
+  <display value="Diphtheria caused by Corynebacterium diphtheriae (disorder)"/>
+</coding>
+</targetDisease>
+<targetDisease>
+<coding>
+  <system value="http://snomed.info/sct"/>
+  <code value="76902006"/>
+  <display value="Tetanus (disorder)"/>
+</coding>
+</targetDisease>
+<targetDisease>
+<coding>
+  <system value="http://snomed.info/sct"/>
+  <code value="27836007"/>
+  <display value="Pertussis (disorder)"/>
+</coding>
+</targetDisease>
+<doseNumberPositiveInt value="1"/>
+</protocolApplied>
+</Immunization>
+</resource>
+</entry>
+<entry>
+<fullUrl value="http://test.fhir.ch/r4/Immunization/TCA01-IMMUN3-HCP2-ORG2-ROLE"/>
+<resource>
+<Immunization>
+<id value="TCA01-IMMUN3-HCP2-ORG2-ROLE"/>
+<meta>
+<profile value="http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-immunization"/>
+</meta>
+<text>
+<status value="extensions"/>
+<div xmlns="http://www.w3.org/1999/xhtml">
+<p>
+  <b>Generated Narrative</b>
+</p>
+<div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+  <p style="margin-bottom: 0px">Resource "TCA01-IMMUN3-HCP2-ORG2-ROLE" </p>
+  <p style="margin-bottom: 0px">Profile: <a href="StructureDefinition-ch-vacd-immunization.html">CH VACD Immunization Profile</a>
+  </p>
+</div>
+<p>
+  <b>CH VACD Extension Immunization Recorder Reference</b>:  <a href="#PractitionerRole_TC-HCP2-ORG2-ROLE-author">See above (PractitionerRole/TC-HCP2-ORG2-ROLE-author)</a>
+</p>
+<p>
+  <b>CH VACD Extension Immunization Medication Reference</b>:  <a href="#Medication_TC-IMMUN-MEDIC-FSMEIMMCC">See above (Medication/TC-IMMUN-MEDIC-FSMEIMMCC)</a>
+</p>
+<p>
+  <b>identifier</b>: id: 7f7a308a-63f7-4be1-a329-0a33e08b4645</p>
+<p>
+  <b>status</b>: completed</p>
+<p>
+  <b>vaccineCode</b>: FSME-Immun CC <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (  <a href="CodeSystem-ch-vacd-swissmedic-cs.html">Swiss Medic Authorized Vaccines Codesystem</a>#450)</span>
+</p>
+<p>
+<b>patient</b>:<a href="#Patient_TC-patient">See above (Patient/TC-patient)</a>
+</p>
+<p>
+<b>occurrence</b>: 2021-08-01</p>
+<p>
+<b>recorded</b>: 2021-08-01T00:00:00.39+02:00</p>
+<p>
+<b>lotNumber</b>: 12-34244</p>
+<p>
+<b>route</b>: Intramuscular use <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (standardterms.edqm.eu#20035000)</span>
+</p>
+<h3>Performers</h3>
+<table class="grid">
+<tr>
+  <td>-</td>
+  <td>
+    <b>Actor</b>
+  </td>
+</tr>
+<tr>
+  <td>*</td>
+  <td>
+    <a href="#PractitionerRole_TC-HCP2-ORG2-ROLE-performer">See above (PractitionerRole/TC-HCP2-ORG2-ROLE-performer)</a>
+  </td>
+</tr>
+</table>
+<h3>ProtocolApplieds</h3>
+<table class="grid">
+<tr>
+  <td>-</td>
+  <td>
+    <b>TargetDisease</b>
+  </td>
+  <td>
+    <b>DoseNumber[x]</b>
+  </td>
+</tr>
+<tr>
+  <td>*</td>
+  <td>Central European encephalitis (disorder) <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (    <a href="https://browser.ihtsdotools.org/">SNOMED CT</a>#16901001)</span>
+</td>
+<td>1</td>
+</tr>
+</table>
+</div>
+</text>
+<extension url="http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-ext-immunization-recorder-reference">
+<valueReference>
+<reference value="PractitionerRole/TC-HCP2-ORG2-ROLE-author"/>
+</valueReference>
+</extension>
+<extension url="http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-ext-immunization-medication-reference">
+<valueReference>
+<reference value="Medication/TC-IMMUN-MEDIC-FSMEIMMCC"/>
+</valueReference>
+</extension>
+<identifier>
+<system value="urn:oid:2.16.756.5.30.1.402.1.3.1.1.1"/>
+<value value="7f7a308a-63f7-4be1-a329-0a33e08b4645"/>
+</identifier>
+<status value="completed"/>
+<vaccineCode>
+<coding>
+<system value="http://fhir.ch/ig/ch-vacd/CodeSystem/ch-vacd-swissmedic-cs"/>
+<code value="450"/>
+<display value="FSME-Immun CC"/>
+</coding>
+</vaccineCode>
+<patient>
+<reference value="Patient/TC-patient"/>
+</patient>
+<occurrenceDateTime value="2021-08-01"/>
+<recorded value="2021-08-01T00:00:00.390+02:00"/>
+<lotNumber value="12-34244"/>
+<route>
+<coding>
+<system value="http://standardterms.edqm.eu"/>
+<code value="20035000"/>
+<display value="Intramuscular use"/>
+</coding>
+</route>
+<performer>
+<actor>
+<reference value="PractitionerRole/TC-HCP2-ORG2-ROLE-performer"/>
+</actor>
+</performer>
+<protocolApplied>
+<targetDisease>
+<coding>
+<system value="http://snomed.info/sct"/>
+<code value="16901001"/>
+<display value="Central European encephalitis (disorder)"/>
+</coding>
+</targetDisease>
+<doseNumberPositiveInt value="1"/>
+</protocolApplied>
+</Immunization>
+</resource>
+</entry>
+<entry>
+<fullUrl value="http://test.fhir.ch/r4/Medication/TC-IMMUN-MEDIC-HAVRIX1440"/>
+<resource>
+<Medication>
+<id value="TC-IMMUN-MEDIC-HAVRIX1440"/>
+<meta>
+<profile value="http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-medication-for-immunization"/>
+</meta>
+<text>
+<status value="generated"/>
+<div xmlns="http://www.w3.org/1999/xhtml">
+<p>
+<b>Generated Narrative</b>
+</p>
+<div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+<p style="margin-bottom: 0px">Resource "TC-IMMUN-MEDIC-HAVRIX1440" </p>
+<p style="margin-bottom: 0px">Profile: <a href="StructureDefinition-ch-vacd-medication-for-immunization.html">CH VACD Medication For Immunization Profile</a>
+</p>
+</div>
+<p>
+<b>identifier</b>: id: 7680005580054</p>
+<p>
+<b>code</b>: Immunologic substance (substance) <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (<a href="https://browser.ihtsdotools.org/">SNOMED CT</a>#106181007)</span>
+</p>
+<p>
+<b>status</b>: active</p>
+<p>
+<b>manufacturer</b>:<a href="#Organization_TC-ORG-GSK">See above (Organization/TC-ORG-GSK)</a>
+</p>
+<p>
+<b>form</b>: Suspension for injection <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (<a href="https://browser.ihtsdotools.org/">SNOMED CT</a>#385220007)</span>
+</p>
+<p>
+<b>amount</b>: 1 milliliter<span style="background: LightGoldenRodYellow"> (Details: UCUM code ml = 'ml')</span>/1 Syringe (unit of presentation)<span style="background: LightGoldenRodYellow"> (Details: SNOMED CT code 733020007 = 'Syringe')</span>
+</p>
+<h3>Batches</h3>
+<table class="grid">
+<tr>
+<td>-</td>
+<td>
+<b>LotNumber</b>
+</td>
+</tr>
+<tr>
+<td>*</td>
+<td>AHAVB946A</td>
+</tr>
+</table>
+</div>
+</text>
+<identifier>
+<system value="urn:oid:2.51.1.1"/>
+<value value="7680005580054"/>
+</identifier>
+<code>
+<coding>
+<system value="http://snomed.info/sct"/>
+<code value="106181007"/>
+<display value="Immunologic substance (substance)"/>
+</coding>
+</code>
+<status value="active"/>
+<manufacturer>
+<reference value="Organization/TC-ORG-GSK"/>
+</manufacturer>
+<form>
+<coding>
+<system value="http://snomed.info/sct"/>
+<code value="385220007"/>
+<display value="Suspension for injection"/>
+</coding>
+</form>
+<amount>
+<numerator>
+<value value="1"/>
+<unit value="milliliter"/>
+<system value="http://unitsofmeasure.org"/>
+<code value="ml"/>
+</numerator>
+<denominator>
+<value value="1"/>
+<unit value="Syringe (unit of presentation)"/>
+<system value="http://snomed.info/sct"/>
+<code value="733020007"/>
+</denominator>
+</amount>
+<batch>
+<lotNumber value="AHAVB946A"/>
+</batch>
+</Medication>
+</resource>
+</entry>
+<entry>
+<fullUrl value="http://test.fhir.ch/r4/Organization/TC-ORG-GSK"/>
+<resource>
+<Organization>
+<id value="TC-ORG-GSK"/>
+<meta>
+<profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-organization"/>
+</meta>
+<text>
+<status value="generated"/>
+<div xmlns="http://www.w3.org/1999/xhtml">
+<p>
+<b>Generated Narrative</b>
+</p>
+<div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+<p style="margin-bottom: 0px">Resource "TC-ORG-GSK" </p>
+<p style="margin-bottom: 0px">Profile: <a href="http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-organization.html">CH Core Organization Profile</a>
+</p>
+</div>
+<p>
+<b>identifier</b>: id: 7601001000674</p>
+<p>
+<b>name</b>: GlaxoSmithKline AG</p>
+<p>
+<b>telecom</b>: ph: tel:+41 31 862 21 11(WORK), fax: fax:+41 31 862 22 00(WORK), <a href="mailto:mailto:swiss.info@gsk.com">mailto:swiss.info@gsk.com</a>,<a href="https://www.gsk.com">https://www.gsk.com</a>
+</p>
+<p>
+<b>address</b>: Talstrasse 3-5 Münchenbuchsee BE 3053 CH </p>
+</div>
+</text>
+<identifier>
+<system value="urn:oid:2.51.1.3"/>
+<value value="7601001000674"/>
+</identifier>
+<name value="GlaxoSmithKline AG"/>
+<telecom>
+<system value="phone"/>
+<value value="tel:+41 31 862 21 11"/>
+<use value="work"/>
+</telecom>
+<telecom>
+<system value="fax"/>
+<value value="fax:+41 31 862 22 00"/>
+<use value="work"/>
+</telecom>
+<telecom>
+<system value="email"/>
+<value value="mailto:swiss.info@gsk.com"/>
+<use value="work"/>
+</telecom>
+<telecom>
+<system value="url"/>
+<value value="https://www.gsk.com"/>
+<use value="work"/>
+</telecom>
+<address>
+<line value="Talstrasse 3-5"/>
+<city value="Münchenbuchsee"/>
+<state value="BE"/>
+<postalCode value="3053"/>
+<country value="CH"/>
+</address>
+</Organization>
+</resource>
+</entry>
+<entry>
+<fullUrl value="http://test.fhir.ch/r4/Medication/TC-IMMUN-MEDIC-FSMEIMMCC"/>
+<resource>
+<Medication>
+<id value="TC-IMMUN-MEDIC-FSMEIMMCC"/>
+<meta>
+<profile value="http://fhir.ch/ig/ch-vacd/StructureDefinition/ch-vacd-medication-for-immunization"/>
+</meta>
+<text>
+<status value="generated"/>
+<div xmlns="http://www.w3.org/1999/xhtml">
+<p>
+<b>Generated Narrative</b>
+</p>
+<div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+<p style="margin-bottom: 0px">Resource "TC-IMMUN-MEDIC-FSMEIMMCC" </p>
+<p style="margin-bottom: 0px">Profile: <a href="StructureDefinition-ch-vacd-medication-for-immunization.html">CH VACD Medication For Immunization Profile</a>
+</p>
+</div>
+<p>
+<b>identifier</b>: id: 7680004500039</p>
+<p>
+<b>code</b>: Immunologic substance (substance) <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (<a href="https://browser.ihtsdotools.org/">SNOMED CT</a>#106181007)</span>
+</p>
+<p>
+<b>status</b>: active</p>
+<p>
+<b>manufacturer</b>:<a href="#Organization_TC-ORG-PFIZER">See above (Organization/TC-ORG-PFIZER)</a>
+</p>
+<p>
+<b>form</b>: Suspension for injection <span style="background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki"> (<a href="https://browser.ihtsdotools.org/">SNOMED CT</a>#385220007)</span>
+</p>
+<p>
+<b>amount</b>: 0.5 milliliter<span style="background: LightGoldenRodYellow"> (Details: UCUM code ml = 'ml')</span>/1 Syringe (unit of presentation)<span style="background: LightGoldenRodYellow"> (Details: SNOMED CT code 733020007 = 'Syringe')</span>
+</p>
+<h3>Batches</h3>
+<table class="grid">
+<tr>
+<td>-</td>
+<td>
+<b>LotNumber</b>
+</td>
+</tr>
+<tr>
+<td>*</td>
+<td>VNR1T10C</td>
+</tr>
+</table>
+</div>
+</text>
+<identifier>
+<system value="urn:oid:2.51.1.1"/>
+<value value="7680004500039"/>
+</identifier>
+<code>
+<coding>
+<system value="http://snomed.info/sct"/>
+<code value="106181007"/>
+<display value="Immunologic substance (substance)"/>
+</coding>
+</code>
+<status value="active"/>
+<manufacturer>
+<reference value="Organization/TC-ORG-PFIZER"/>
+</manufacturer>
+<form>
+<coding>
+<system value="http://snomed.info/sct"/>
+<code value="385220007"/>
+<display value="Suspension for injection"/>
+</coding>
+</form>
+<amount>
+<numerator>
+<value value="0.5"/>
+<unit value="milliliter"/>
+<system value="http://unitsofmeasure.org"/>
+<code value="ml"/>
+</numerator>
+<denominator>
+<value value="1"/>
+<unit value="Syringe (unit of presentation)"/>
+<system value="http://snomed.info/sct"/>
+<code value="733020007"/>
+</denominator>
+</amount>
+<batch>
+<lotNumber value="VNR1T10C"/>
+</batch>
+</Medication>
+</resource>
+</entry>
+<entry>
+<fullUrl value="http://test.fhir.ch/r4/Organization/TC-ORG-PFIZER"/>
+<resource>
+<Organization>
+<id value="TC-ORG-PFIZER"/>
+<meta>
+<profile value="http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-organization"/>
+</meta>
+<text>
+<status value="generated"/>
+<div xmlns="http://www.w3.org/1999/xhtml">
+<p>
+<b>Generated Narrative</b>
+</p>
+<div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%">
+<p style="margin-bottom: 0px">Resource "TC-ORG-PFIZER" </p>
+<p style="margin-bottom: 0px">Profile: <a href="http://fhir.ch/ig/ch-core/StructureDefinition-ch-core-organization.html">CH Core Organization Profile</a>
+</p>
+</div>
+<p>
+<b>identifier</b>: id: 7601001010604</p>
+<p>
+<b>name</b>: Pfizer AG</p>
+<p>
+<b>telecom</b>: ph: tel:+41 800 562 825(WORK), fax: fax:+41 44 583 07 00(WORK), <a href="mailto:mailto:customer.ch@pfizer.com">mailto:customer.ch@pfizer.com</a>,<a href="https://www.pfizer.ch">https://www.pfizer.ch</a>
+</p>
+<p>
+<b>address</b>: Schärenmoosstrasse 99 Postfach Zürich ZH 8052 CH </p>
+</div>
+</text>
+<identifier>
+<system value="urn:oid:2.51.1.3"/>
+<value value="7601001010604"/>
+</identifier>
+<name value="Pfizer AG"/>
+<telecom>
+<system value="phone"/>
+<value value="tel:+41 800 562 825"/>
+<use value="work"/>
+</telecom>
+<telecom>
+<system value="fax"/>
+<value value="fax:+41 44 583 07 00"/>
+<use value="work"/>
+</telecom>
+<telecom>
+<system value="email"/>
+<value value="mailto:customer.ch@pfizer.com"/>
+<use value="work"/>
+</telecom>
+<telecom>
+<system value="url"/>
+<value value="https://www.pfizer.ch"/>
+<use value="work"/>
+</telecom>
+<address>
+<line value="Schärenmoosstrasse 99"/>
+<line value="Postfach"/>
+<city value="Zürich"/>
+<state value="ZH"/>
+<postalCode value="8052"/>
+<country value="CH"/>
+</address>
+</Organization>
+</resource>
+</entry>
+</Bundle>

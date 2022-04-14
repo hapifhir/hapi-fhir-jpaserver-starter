@@ -35,7 +35,7 @@ public class CanonicalizerTests {
     try {
       contentString = this.getContent("canonicalize-elements.json");
     } catch(Exception e) {
-      assertTrue("catched excepiton", false);
+      assertTrue("catched exception", false);
     }
     
     FhirContext contextR4 = FhirVersionEnum.R4.newContext();
@@ -65,7 +65,7 @@ public class CanonicalizerTests {
     try {
       contentString = this.getContent("canonicalize-patient.json");
     } catch(Exception e) {
-      assertTrue("catched excepiton", false);
+      assertTrue("catched exception", false);
     }
     
     FhirContext contextR4 = FhirVersionEnum.R4.newContext();
@@ -78,8 +78,30 @@ public class CanonicalizerTests {
 
     assertEquals("http://hl7.org/fhir/StructureDefinition/patient-birthPlace", fhirPath.evaluateFirst(result, "extension[0].url", IPrimitiveType.class).get().getValueAsString());
     assertEquals("http://hl7.org/fhir/StructureDefinition/patient-citizenship", fhirPath.evaluateFirst(result, "extension[1].url", IPrimitiveType.class).get().getValueAsString());
+    assertEquals("code", fhirPath.evaluateFirst(result, "extension[1].extension[0].url", IPrimitiveType.class).get().getValueAsString());
+    assertEquals("period", fhirPath.evaluateFirst(result, "extension[1].extension[1].url", IPrimitiveType.class).get().getValueAsString());
     
   }
+  
+  @Test
+  public void chargeItem() {
+    
+    String contentString = "";
+    try {
+      contentString = this.getContent("canonicalize-chargeitem.json");
+    } catch(Exception e) {
+      assertTrue("catched exception", false);
+    }
+    
+    FhirContext contextR4 = FhirVersionEnum.R4.newContext();
+    IBaseResource resource = contextR4.newJsonParser().parseResource(contentString);
+    
+    Canonicalizer canonicalizer= new Canonicalizer(contextR4);
+    IBaseResource result =  canonicalizer.canonicalize(resource);
+    IFhirPath fhirPath = contextR4.newFhirPath();
+
+  }
+
 
   
   private static BaseRuntimeChildDefinition getBaseRuntimeChildDefinition(FhirContext theFhirContext, String theFieldName, IBaseResource theFrom) {

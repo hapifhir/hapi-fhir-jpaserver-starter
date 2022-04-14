@@ -15,6 +15,12 @@
       "url": "http://hl7.org/fhir/StructureDefinition/patient-citizenship",
       "extension": [
         {
+          "url" : "period",
+          "valuePeriod" : {
+             "start" : "2009-03-14"
+           }
+        },
+        {
           "url": "code",
           "valueCodeableConcept": {
             "coding": [
