@@ -26,7 +26,7 @@ import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
-import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
+import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.export.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.cache.IResourceChangeListenerRegistry;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
@@ -44,6 +44,8 @@ import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.ValueSetOperationProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider;
+import ca.uhn.fhir.jpa.provider.*;
+import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
@@ -51,19 +53,9 @@ import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative.INarrativeGenerator;
 import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
 import ca.uhn.fhir.rest.openapi.OpenApiInterceptor;
-import ca.uhn.fhir.rest.server.ApacheProxyAddressStrategy;
-import ca.uhn.fhir.rest.server.ETagSupportEnum;
-import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
-import ca.uhn.fhir.rest.server.IncomingRequestAddressStrategy;
-import ca.uhn.fhir.rest.server.RestfulServer;
-import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.FhirPathFilterInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
+import ca.uhn.fhir.rest.server.*;
+import ca.uhn.fhir.rest.server.interceptor.*;
 import ca.uhn.fhir.rest.server.interceptor.partition.RequestTenantPartitionInterceptor;
-import ca.uhn.fhir.rest.server.provider.ReindexProvider;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
 import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
@@ -78,11 +70,24 @@ import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnairePopulateProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
+import org.hl7.fhir.r4.model.Bundle.BundleType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.cors.CorsConfiguration;
+import ca.uhn.fhir.batch2.jobs.reindex.ReindexProvider;
+
+import javax.servlet.ServletException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BaseJpaRestfulServer extends RestfulServer {
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(BaseJpaRestfulServer.class);
 
 	private static final long serialVersionUID = 1L;
+
 	@Autowired
 	DaoRegistry daoRegistry;
 	@Autowired
@@ -95,6 +100,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
 	ResourceProviderFactory resourceProviderFactory;
 	@Autowired
 	IJpaSystemProvider jpaSystemProvider;
+  @Autowired
+  ValueSetOperationProvider myValueSetOperationProvider;
 	@Autowired
 	IInterceptorBroadcaster interceptorBroadcaster;
 	@Autowired
@@ -166,6 +173,61 @@ public class BaseJpaRestfulServer extends RestfulServer {
 	protected FhirContext myFhirContext;
 
 	@SuppressWarnings("unchecked")
+// incoming change
+  // @Autowired
+  // DaoRegistry daoRegistry;
+  // @Autowired
+  // DaoConfig daoConfig;
+  // @Autowired
+  // ISearchParamRegistry searchParamRegistry;
+  // @Autowired
+  // IFhirSystemDao fhirSystemDao;
+  // @Autowired
+  // ResourceProviderFactory resourceProviderFactory;
+  // @Autowired
+  // IJpaSystemProvider jpaSystemProvider;
+  // @Autowired
+  // ValueSetOperationProvider myValueSetOperationProvider;
+  // @Autowired
+  // IInterceptorBroadcaster interceptorBroadcaster;
+  // @Autowired
+  // DatabaseBackedPagingProvider databaseBackedPagingProvider;
+  // @Autowired
+  // IInterceptorService interceptorService;
+  // @Autowired
+  // IValidatorModule validatorModule;
+  // @Autowired
+  // Optional<GraphQLProvider> graphQLProvider;
+  // @Autowired
+  // BulkDataExportProvider bulkDataExportProvider;
+  // @Autowired
+  // PartitionManagementProvider partitionManagementProvider;
+  // @Autowired
+  // ValueSetOperationProvider valueSetOperationProvider;
+  // @Autowired
+  // BinaryStorageInterceptor binaryStorageInterceptor;
+  // @Autowired
+  // IPackageInstallerSvc packageInstallerSvc;
+  // @Autowired
+  // AppProperties appProperties;
+  // @Autowired
+  // ApplicationContext myApplicationContext;
+  // @Autowired(required = false)
+  // IRepositoryValidationInterceptorFactory factory;
+  // // These are set only if the features are enabled
+  // @Autowired
+  // Optional<CqlProviderLoader> cqlProviderLoader;
+  // @Autowired
+  // Optional<MdmProviderLoader> mdmProviderProvider;
+
+  // @Autowired
+  // private IValidationSupport myValidationSupport;
+
+  // public BaseJpaRestfulServer() {
+  // }
+
+  // @SuppressWarnings("unchecked")
+  //rel_6_0_0
   @Override
   protected void initialize() throws ServletException {
     super.initialize();
@@ -193,7 +255,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     registerProviders(resourceProviderFactory.createProviders());
     registerProvider(jpaSystemProvider);
-
+	 registerProvider(myValueSetOperationProvider);
     /*
      * The conformance provider exports the supported resources, search parameters, etc for
      * this server. The JPA version adds resourceProviders counts to the exported statement, so it

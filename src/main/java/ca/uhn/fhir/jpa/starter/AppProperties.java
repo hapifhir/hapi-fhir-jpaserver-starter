@@ -11,7 +11,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
@@ -489,24 +492,6 @@ public class AppProperties {
 
   public void setNormalized_quantity_search_level(NormalizedQuantitySearchLevel normalized_quantity_search_level) {
     this.normalized_quantity_search_level = normalized_quantity_search_level;
-  }
-
-  public Integer getSearch_coord_core_pool_size() { return search_coord_core_pool_size; }
-
-  public void setSearch_coord_core_pool_size(Integer search_coord_core_pool_size) {
-    this.search_coord_core_pool_size = search_coord_core_pool_size;
-  }
-
-  public Integer getSearch_coord_max_pool_size() { return search_coord_max_pool_size; }
-
-  public void setSearch_coord_max_pool_size(Integer search_coord_max_pool_size) {
-    this.search_coord_max_pool_size = search_coord_max_pool_size;
-  }
-
-  public Integer getSearch_coord_queue_capacity() { return search_coord_queue_capacity; }
-
-  public void setSearch_coord_queue_capacity(Integer search_coord_queue_capacity) {
-  	 this.search_coord_queue_capacity = search_coord_queue_capacity;
   }
 
 	public boolean getInstall_transitive_ig_dependencies() {

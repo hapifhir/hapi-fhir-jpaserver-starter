@@ -1,8 +1,8 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
+import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.binstore.DatabaseBlobBinaryStorageSvcImpl;
-import ca.uhn.fhir.jpa.binstore.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
@@ -14,8 +14,6 @@ import ca.uhn.fhir.rest.server.mail.IMailSvc;
 import ca.uhn.fhir.rest.server.mail.MailConfig;
 import ca.uhn.fhir.rest.server.mail.MailSvc;
 import com.google.common.base.Strings;
-import java.util.HashSet;
-import java.util.Optional;
 import org.hl7.fhir.dstu2.model.Subscription;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +22,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.util.HashSet;
+import java.util.Optional;
 
 /**
  * This is the primary configuration file for the example server
@@ -75,7 +76,7 @@ public class FhirServerConfigCommon {
   /**
    * Configure FHIR properties around the the JPA server via this bean
    */
-  @Bean()
+  @Bean
   public DaoConfig daoConfig(AppProperties appProperties) {
     DaoConfig retVal = new DaoConfig();
 
@@ -211,7 +212,7 @@ public class FhirServerConfigCommon {
     return binaryStorageSvc;
   }
 
-  @Bean()
+  @Bean
   public IEmailSender emailSender(AppProperties appProperties, Optional<SubscriptionDeliveryHandlerFactory> subscriptionDeliveryHandlerFactory) {
     if (appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null) {
 		 MailConfig mailConfig = new MailConfig();

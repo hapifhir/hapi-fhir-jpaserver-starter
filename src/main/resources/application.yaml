@@ -99,16 +99,22 @@ hapi:
 #    enable_index_missing_fields: false
 #    enable_index_contained_resource: false
 #    enforce_referential_integrity_on_delete: false
-#    enforce_referential_integrity_on_write: false
-#    etag_support_enabled: true
-#    expunge_enabled: true
-#    daoconfig_client_id_strategy: null
-#    client_id_strategy: ALPHANUMERIC
-#    filter_search_enabled: true
-#    graphql_enabled: true
-#    partitioning:
-#      allow_references_across_partitions: false
-#      partitioning_include_in_search_hashes: false
+    #    enforce_referential_integrity_on_write: false
+    #    etag_support_enabled: true
+    #    expunge_enabled: true
+    #    daoconfig_client_id_strategy: null
+    #    client_id_strategy: ALPHANUMERIC
+    #    fhirpath_interceptor_enabled: false
+    #    filter_search_enabled: true
+    #    graphql_enabled: true
+    #    narrative_enabled: true
+    #    mdm_enabled: true
+#    local_base_urls:
+#      - https://hapi.fhir.org/baseR4
+    mdm_enabled: false
+    #    partitioning:
+    #      allow_references_across_partitions: false
+    #      partitioning_include_in_search_hashes: false
     cors:
       allow_Credentials: true
       # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
