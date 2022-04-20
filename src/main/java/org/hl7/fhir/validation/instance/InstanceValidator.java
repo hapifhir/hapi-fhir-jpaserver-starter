@@ -1874,8 +1874,14 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     if ("http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type".equals(extUrl)) {
       list.get(0).setExpression("ElementDefinition.type");
     }
+    // the history of this is a mess - see https://jira.hl7.org/browse/FHIR-13328
+    // we in practice we will support it in either place, but the specification says on ElementDefinition, not on ElementDefinition.type
+    // but this creates validation errors people can't fix all over the place if we don't do this.
     if ("http://hl7.org/fhir/StructureDefinition/regex".equals(extUrl)) {
-      list.get(1).setExpression("ElementDefinition.type");
+      StructureDefinitionContextComponent e = new StructureDefinitionContextComponent();
+      e.setExpression("ElementDefinition.type");
+      e.setType(ExtensionContextType.ELEMENT);
+      list.add(e);
     }
     if ("http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version".equals(extUrl)) {
       list.get(0).setExpression("Element"); // well, it can't be used anywhere but the list of places it can be used is quite long
@@ -2070,6 +2076,16 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       }
     }
     String regex = context.getExtensionString(ToolingExtensions.EXT_REGEX);
+    // there's a messy history here - this extension snhould only be on the element definition itself, but for historical reasons 
+    //( see task 13328) it might also be found on one the types
+    if (regex != null) {
+      for (TypeRefComponent tr : context.getType()) {
+        if (tr.hasExtension(ToolingExtensions.EXT_REGEX)) {
+          regex = tr.getExtensionString(ToolingExtensions.EXT_REGEX);
+          break;
+        }
+      }      
+    }
     if (regex != null) {
       rule(errors, IssueType.INVALID, e.line(), e.col(), path, e.primitiveValue().matches(regex), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_PRIMITIVE_REGEX, e.primitiveValue(), regex);
     }
@@ -2109,7 +2125,9 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         rule(errors, IssueType.INVALID, e.line(), e.col(), path, Utilities.isValidUUID(url.substring(9)), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_UUID_VALID);
       }
       if (url != null && url.startsWith("urn:oid:")) {
-        rule(errors, IssueType.INVALID, e.line(), e.col(), path, Utilities.isOid(url.substring(8)), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_OID_VALID);
+        String cc = url.substring(8);
+        // OIDs shorter than 5 chars are almost never valid for namespaces, except for the special OID 1.3.88
+        rule(errors, IssueType.INVALID, e.line(), e.col(), path, Utilities.isOid(cc) && (cc.lastIndexOf('.') >= 5 || "1.3.88".equals(cc)), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_OID_VALID, cc);
       }
 
       if (isCanonicalURLElement(e)) {
@@ -2129,7 +2147,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     }
     if (type.equalsIgnoreCase("string") && e.hasPrimitiveValue()) {
       if (rule(errors, IssueType.INVALID, e.line(), e.col(), path, e.primitiveValue() == null || e.primitiveValue().length() > 0, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_PRIMITIVE_NOTEMPTY)) {
-        warning(errors, IssueType.INVALID, e.line(), e.col(), path, e.primitiveValue() == null || e.primitiveValue().trim().equals(e.primitiveValue()), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_STRING_WS);
+        warning(errors, IssueType.INVALID, e.line(), e.col(), path, e.primitiveValue() == null || e.primitiveValue().trim().equals(e.primitiveValue()), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_STRING_WS, prepWSPresentation(e.primitiveValue()));
         if (rule(errors, IssueType.INVALID, e.line(), e.col(), path, e.primitiveValue().length() <= 1048576, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_STRING_LENGTH)) {
           rule(errors, IssueType.INVALID, e.line(), e.col(), path, !context.hasMaxLength() || context.getMaxLength() == 0 || e.primitiveValue().length() <= context.getMaxLength(), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_PRIMITIVE_LENGTH, context.getMaxLength());
         }
@@ -2280,6 +2298,30 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     }
 
     // for nothing to check
+  }
+
+  private Object prepWSPresentation(String s) {
+    if (Utilities.noString(s)) {
+      return "";
+    }
+    if (!StringUtils.containsWhitespace(s.trim())) {
+      return s;
+    }
+    int b = 0;
+    while (Character.isWhitespace(s.charAt(b))) {
+      b++;
+    }
+    while (!Character.isWhitespace(s.charAt(b))) {
+      b++;
+    }
+    int e = s.length() - 1;
+    while (Character.isWhitespace(s.charAt(e))) {
+      e--;
+    }
+    while (!Character.isWhitespace(s.charAt(e))) {
+      e--;
+    }
+    return s.substring(0, b)+"..."+s.substring(e+1);
   }
 
   public void validateReference(ValidatorHostContext hostContext, List<ValidationMessage> errors, String path, String type, ElementDefinition context, Element e, String url) {
@@ -3363,13 +3405,17 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       return elements;
     }
 
+    boolean dontFollowReference = false;
+    
     if (removeResolve) {  // if we're doing profile slicing, we don't want to walk into the last resolve.. we need the profile on the source not the target
       if (discriminator.equals("resolve()")) {
         elements.add(element);
         return elements;
       }
-      if (discriminator.endsWith(".resolve()"))
+      if (discriminator.endsWith(".resolve()")) {
         discriminator = discriminator.substring(0, discriminator.length() - 10);
+        dontFollowReference = true;
+      }
     }
 
     TypedElementDefinition ted = null;
@@ -3382,7 +3428,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       throw new FHIRException(context.formatMessage(I18nConstants.DISCRIMINATOR_BAD_PATH, e.getMessage(), fp), e);
     }
     long t2 = System.nanoTime();
-    ted = fpe.evaluateDefinition(expr, profile, new TypedElementDefinition(element), srcProfile);
+    ted = fpe.evaluateDefinition(expr, profile, new TypedElementDefinition(element), srcProfile, dontFollowReference);
     timeTracker.sd(t2);
     if (ted != null)
       elements.add(ted.getElement());
@@ -3407,7 +3453,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         }
         expr = fpe.parse(fp);
         t2 = System.nanoTime();
-        ted = fpe.evaluateDefinition(expr, profile, new TypedElementDefinition(element), srcProfile);
+        ted = fpe.evaluateDefinition(expr, profile, new TypedElementDefinition(element), srcProfile, dontFollowReference);
         timeTracker.sd(t2);
         if (ted != null)
           elements.add(ted.getElement());
@@ -4314,7 +4360,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
   // checkSpecials = we're only going to run these tests if we are actually validating this content (as opposed to we looked it up)
   private void start(ValidatorHostContext hostContext, List<ValidationMessage> errors, Element resource, Element element, StructureDefinition defn, NodeStack stack) throws FHIRException {
     
-    // https://github.com/ahdis/matchbox/issues/21
+    // OE https://github.com/ahdis/matchbox/issues/21
     hostContext.setCheckSpecials(false);
       
     checkLang(resource, stack);

@@ -40,10 +40,9 @@ import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r4.formats.IParser;
 import org.hl7.fhir.r4.formats.ParserFactory;
-import org.hl7.fhir.r4.model.Extension;
-import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StructureMap;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
+import org.hl7.fhir.r5.context.SimpleWorkerContext.SimpleWorkerContextBuilder;
 import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r5.utils.structuremap.ITransformerServices;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
@@ -125,7 +124,7 @@ public class MappingLanguageInterceptor extends InterceptorAdapter implements IT
   public StructureMap parseMap(String content) throws FHIRException {
     SimpleWorkerContext contextR5 = null;
     try {
-      contextR5 = new SimpleWorkerContext();
+      contextR5 = new SimpleWorkerContextBuilder().fromNothing();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {

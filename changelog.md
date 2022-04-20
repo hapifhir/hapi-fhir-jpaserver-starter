@@ -1,3 +1,7 @@
+2022/04/xx Release 2.0.0
+- version of ig, validator and matchbox should be provided in the validation report [#40](validation report #40)
+- hapi-fhir 6.0.0-PRE10-SNAPSHOT and org.hl7.fhir.core 5.6.36
+  
 2022/03/21 Release 1.9.1
 - custom log banner, thanks [ralych](https://github.com/ralych)
 - Fixed StructureMap transformation [issue core](https://github.com/hapifhir/org.hl7.fhir.core/issues/771) and [issue#37](https://github.com/ahdis/matchbox/issues/37)
