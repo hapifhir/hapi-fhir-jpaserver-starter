@@ -189,6 +189,13 @@ spring:
     password: admin
     driverClassName: com.mysql.jdbc.Driver
 ```
+
+Also, make sure you are not setting the Hibernate dialect explicitly, in other words remove any lines similar to:
+
+```
+hibernate.dialect: {some none MySQL dialect}
+```
+
 On some systems, it might be necessary to override hibernate's default naming strategy. The naming strategy must be set using spring.jpa.hibernate.physical_naming_strategy. 
 
 ```yaml
@@ -298,6 +305,8 @@ spring:
     password: admin
     driverClassName: com.mysql.jdbc.Driver
 ```
+
+Also, make sure you are not setting the Hibernate Dialect explicitly, see more details in the section about MySQL.
 
 ## Running hapi-fhir-jpaserver directly from IntelliJ as Spring Boot
 Make sure you run with the maven profile called ```boot``` and NOT also ```jetty```. Then you are ready to press debug the project directly without any extra Application Servers.
