@@ -34,13 +34,11 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.Parameters.ParametersParameterComponent;
+import org.hl7.fhir.r4.model.StructureDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.context.support.IValidationSupport;
-import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
@@ -53,6 +51,7 @@ import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import ca.uhn.fhir.validation.ValidationOptions;
 import ca.uhn.fhir.validation.ValidationResult;
+import ch.ahdis.matchbox.util.VersionUtil;
 
 /**
  * Operation $validate
@@ -114,8 +113,11 @@ public class ValidationProvider {
       profile = theRequest.getParameter("profile");
     }
 
+    StructureDefinition structDef = null;
+
     if (profile != null) {
-      if (support.fetchStructureDefinition(profile) == null) {
+      structDef = (StructureDefinition )support.fetchStructureDefinition(profile);
+      if (structDef == null) {
         return getValidationMessageProfileNotSupported(profile);
       }
       validationOptions.addProfileIfNotBlank(profile);
@@ -207,13 +209,14 @@ public class ValidationProvider {
       if (resourceInParam != null) {
         validationOptions = new ValidationOptions();
         if (profile != null) {
-          if (support.fetchStructureDefinition(profile) == null) {
+          structDef = (StructureDefinition )support.fetchStructureDefinition(profile);
+          if (structDef == null) {
             return getValidationMessageProfileNotSupported(profile);
           }
           validationOptions.addProfileIfNotBlank(profile);
         }
         result = validator.validateWithResult(resourceInParam, validationOptions);
-        IBaseResource operationOutcome = getOperationOutcome(sha3Hex, addedValidationMessages, sw, profile, result);
+        IBaseResource operationOutcome = getOperationOutcome(sha3Hex, addedValidationMessages, sw, structDef, result);
         IBaseParameters returnParameters = ParametersUtil.newInstance(myFhirCtx);
         ParametersUtil.addParameterToParameters(myFhirCtx, returnParameters, "return", operationOutcome);
         return returnParameters;
@@ -225,7 +228,7 @@ public class ValidationProvider {
     } else {
       result = validator.validateWithResult(contentString, validationOptions);
     }
-    return getOperationOutcome(sha3Hex, addedValidationMessages, sw, profile, result);
+    return getOperationOutcome(sha3Hex, addedValidationMessages, sw, structDef, result);
   }
 
   private String getContentString(HttpServletRequest theRequest,
@@ -255,20 +258,20 @@ public class ValidationProvider {
   }
 
   private IBaseResource getOperationOutcome(String id, ArrayList<SingleValidationMessage> addedValidationMessages,
-      StopWatch sw, String profile, ValidationResult result) {
+      StopWatch sw, StructureDefinition profile, ValidationResult result) {
     sw.endCurrentTask();
 
     log.info("Validation time: " + sw.toString());
 
-    if (profile != null) {
-      SingleValidationMessage m = new SingleValidationMessage();
-      m.setSeverity(ResultSeverityEnum.INFORMATION);
-      m.setMessage("Validation for profile " + profile + " "
-          + (result.getMessages().size() == 0 ? "No Issues detected. " : "") + sw.formatTaskDurations());
-      m.setLocationCol(0);
-      m.setLocationLine(0);
-      addedValidationMessages.add(m);
-    }
+    SingleValidationMessage m = new SingleValidationMessage();
+    m.setSeverity(ResultSeverityEnum.INFORMATION);
+    m.setMessage("Validation "+(profile !=null ? "for profile " + profile.getUrl() + "|" + profile.getVersion()+" " + (profile.getDateElement()!=null ? "("+profile.getDateElement().asStringValue()+") " : "") : "")
+        + (result.getMessages().size() == 0 ? "No Issues detected. " : "") + sw.formatTaskDurations()
+        + " "+VersionUtil.getPoweredBy());
+    m.setLocationCol(0);
+    m.setLocationLine(0);
+    addedValidationMessages.add(m);
+
     addedValidationMessages.addAll(result.getMessages());
 
     IBaseResource operationOutcome = new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages)

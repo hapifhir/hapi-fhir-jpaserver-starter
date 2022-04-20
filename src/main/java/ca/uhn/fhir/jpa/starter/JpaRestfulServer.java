@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Import;
 
 import ca.uhn.fhir.rest.api.RequestTypeEnum;
 import ch.ahdis.matchbox.spring.boot.autoconfigure.MutableHttpServletRequest;
+import ch.ahdis.matchbox.util.VersionUtil;
 
 import java.io.IOException;
 
@@ -14,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 
 @Import(AppProperties.class)
 public class JpaRestfulServer extends BaseJpaRestfulServer {
+  
+  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(JpaRestfulServer.class);
+
 
   @Autowired
   AppProperties appProperties;
@@ -34,9 +38,7 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
   @Override
   protected void initialize() throws ServletException {
     super.initialize();
-
-    // Add your own customization here
-
+    ourLog.info(VersionUtil.getPoweredBy());
   }
 
 }
