@@ -92,6 +92,8 @@ hapi:
     #    enable_repository_validating_interceptor: false
     #    enable_index_missing_fields: false
     #    enable_index_contained_resource: false
+    ###  !!Extended Lucene/Elasticsearch Indexing is still a experimental feature, expect some features (e.g. _total=accurate) to not work as expected!!
+    ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
     #    advanced_lucene_indexing: false
     #    enforce_referential_integrity_on_delete: false
     #    enforce_referential_integrity_on_write: false
