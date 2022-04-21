@@ -65,7 +65,8 @@ hapi:
     allow_cascading_deletes: true
     allow_multiple_delete: true
     narrative_enabled: false
-    advanced_lucene_indexing: true
+# This is an experimental feature, and does not fully support _total and other FHIR features.
+    advanced_lucene_indexing: false
 ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
 ### to determine the FHIR server address
 #   use_apache_address_strategy: false

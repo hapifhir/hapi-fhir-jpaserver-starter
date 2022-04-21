@@ -1,6 +1,7 @@
-2022/04/xx Release 2.0.0
-- version of ig, validator and matchbox should be provided in the validation report [#40](validation report #40)
+2022/04/xx Release 2.0.0-SNAPHSOT
+- version of ig, validator and matchbox should be provided in the validation report [#40](https://github.com/ahdis/matchbox/issues/40)
 - hapi-fhir 6.0.0-PRE10-SNAPSHOT and org.hl7.fhir.core 5.6.36
+- allow xml in gui for validation [#38](https://github.com/ahdis/matchbox/issues/38)
   
 2022/03/21 Release 1.9.1
 - custom log banner, thanks [ralych](https://github.com/ralych)
