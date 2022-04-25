@@ -611,6 +611,7 @@ public class AppProperties {
     private String server_address;
     private Boolean refuse_to_fetch_third_party_urls = true;
     private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
+    private Auth auth;
 
     public FhirVersionEnum getFhir_version() {
       return fhir_version;
@@ -643,9 +644,144 @@ public class AppProperties {
     public void setRefuse_to_fetch_third_party_urls(Boolean refuse_to_fetch_third_party_urls) {
       this.refuse_to_fetch_third_party_urls = refuse_to_fetch_third_party_urls;
     }
+
+	  public void setAuth(Auth auth) {
+		  this.auth = auth;
+	  }
+
+	  public Auth getAuth() {
+		  return this.auth;
+	  }
   }
 
-  public static class ImplementationGuide
+	public static class Auth {
+		private String type;
+		private String username;
+		private String password;
+		private String token;
+		private String header;
+		private KeycloakConfig keycloakConfig;
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+
+		public String getUsername() {
+			return username;
+		}
+
+		public void setUsername(String username) {
+			this.username = username;
+		}
+
+		public String getPassword() {
+			return password;
+		}
+
+		public void setPassword(String password) {
+			this.password = password;
+		}
+
+		public String getToken() {
+			return token;
+		}
+
+		public void setToken(String token) {
+			this.token = token;
+		}
+
+		public String getHeader() {
+			return header;
+		}
+
+		public void setHeader(String header) {
+			this.header = header;
+		}
+
+		public KeycloakConfig getKeycloakConfig() {
+			return keycloakConfig;
+		}
+
+		public void setKeycloakConfig(KeycloakConfig keycloakConfig) {
+			this.keycloakConfig = keycloakConfig;
+		}
+	}
+
+	public static class KeycloakConfig {
+		private String serverUrl;
+		private String realm;
+		private String resource;
+		private KeycloakCredentials credentials;
+
+
+		public String getServerUrl() {
+			return serverUrl;
+		}
+
+		public void setServerUrl(String serverUrl) {
+			this.serverUrl = serverUrl;
+		}
+
+		public String getRealm() {
+			return realm;
+		}
+
+		public void setRealm(String realm) {
+			this.realm = realm;
+		}
+
+		public String getResource() {
+			return resource;
+		}
+
+		public void setResource(String resource) {
+			this.resource = resource;
+		}
+
+		public KeycloakCredentials getCredentials() {
+			return credentials;
+		}
+
+		public void setCredentials(KeycloakCredentials credentials) {
+			this.credentials = credentials;
+		}
+	}
+
+	public static class KeycloakCredentials {
+		private String secret;
+		private String username;
+		private String password;
+
+		public String getSecret() {
+			return secret;
+		}
+
+		public void setSecret(String secret) {
+			this.secret = secret;
+		}
+
+		public String getUsername() {
+			return username;
+		}
+
+		public void setUsername(String username) {
+			this.username = username;
+		}
+
+		public String getPassword() {
+			return password;
+		}
+
+		public void setPassword(String password) {
+			this.password = password;
+		}
+	}
+
+	public static class ImplementationGuide
   {
     private String url;
     private String name;

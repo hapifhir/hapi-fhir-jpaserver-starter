@@ -186,3 +186,8 @@ hapi:
 #  protocol: 'http'
 #  schema_management_strategy: CREATE
 #  username: SomeUsername
+# configure keycloak authentication which handles authentication of the FHIR api of this server
+keycloak:
+  enabled: false
+logging.level.org.springframework.web: trace
+logging.level.org.apache: trace

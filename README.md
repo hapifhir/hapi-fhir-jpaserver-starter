@@ -324,11 +324,7 @@ IMPORTANT: The specified Keycloak client must support 'CLient Credentials Grant'
 ```yaml
 tester:
   home:
-    name: Local Tester
-    server_address: "http://localhost:8080/fhir"
-    refuse_to_fetch_third_party_urls: false
-    fhir_version: R4
-    # if the server needs authentication, configure it:
+    ...
     auth:
       type: KEYCLOAK
       keycloakConfig:

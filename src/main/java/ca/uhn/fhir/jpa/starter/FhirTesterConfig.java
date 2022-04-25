@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.jpa.starter.tester.FhirClientFactory;
 import ca.uhn.fhir.to.FhirTesterMvcConfig;
 import ca.uhn.fhir.to.TesterConfig;
 import org.springframework.context.annotation.Bean;
@@ -36,17 +37,19 @@ public class FhirTesterConfig {
   @Bean
   public TesterConfig testerConfig(AppProperties appProperties) {
     TesterConfig retVal = new TesterConfig();
-    appProperties.getTester().entrySet().stream().forEach(t -> {
-      retVal
-        .addServer()
-        .withId(t.getKey())
-        .withFhirVersion(t.getValue().getFhir_version())
-        .withBaseUrl(t.getValue().getServer_address())
-        .withName(t.getValue().getName());
-      retVal.setRefuseToFetchThirdPartyUrls(
-        t.getValue().getRefuse_to_fetch_third_party_urls());
-
-    });
+    if (appProperties.getTester() != null) {
+		 appProperties.getTester().forEach((key, value) -> {
+			 retVal
+				 .addServer()
+				 .withId(key)
+				 .withFhirVersion(value.getFhir_version())
+				 .withBaseUrl(value.getServer_address())
+				 .withName(value.getName());
+			 retVal.setRefuseToFetchThirdPartyUrls(
+				 value.getRefuse_to_fetch_third_party_urls());
+			 retVal.setClientFactory(new FhirClientFactory(value));
+		 });
+	 }
     return retVal;
   }
 

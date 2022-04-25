@@ -18,9 +18,14 @@
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
+    <groupId>org.helict</groupId>
+    <version>5.7.2-SNAPSHOT</version>
 
     <properties>
         <java.version>8</java.version>
+        <hapi.fhir.version>5.7.2</hapi.fhir.version>
+        <keycloak.version>17.0.1</keycloak.version>
+        <resteasy.version>4.7.5.Final</resteasy.version>
     </properties>
 
     <prerequisites>
@@ -41,6 +46,25 @@
         </repository>
     </repositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring_boot_version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.keycloak.bom</groupId>
+                <artifactId>keycloak-adapter-bom</artifactId>
+                <version>${keycloak.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -82,13 +106,13 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-base</artifactId>
-            <version>${project.version}</version>
+            <version>${hapi.fhir.version}</version>
         </dependency>
         <!-- This dependency includes the EmailSenderImpl we will be using instead of standard javamail.-->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-subscription</artifactId>
-            <version>${project.version}</version>
+            <version>${hapi.fhir.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.zaxxer</groupId>
@@ -101,7 +125,7 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-base</artifactId>
-            <version>${project.version}</version>
+            <version>${hapi.fhir.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -117,34 +141,101 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-cql</artifactId>
-            <version>${project.version}</version>
+            <version>${hapi.fhir.version}</version>
         </dependency>
         <!-- This dependency includes the JPA MDM Server -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-mdm</artifactId>
-            <version>${project.version}</version>
+            <version>${hapi.fhir.version}</version>
         </dependency>
         <!-- This dependency includes the OpenAPI Server -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-server-openapi</artifactId>
-            <version>${project.version}</version>
+            <version>${hapi.fhir.version}</version>
         </dependency>
         <!-- This dependency is used for the "FHIR Tester" web app overlay -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-testpage-overlay</artifactId>
-            <version>${project.version}</version>
+            <version>${hapi.fhir.version}</version>
             <type>war</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-testpage-overlay</artifactId>
-            <version>${project.version}</version>
+            <version>${hapi.fhir.version}</version>
             <classifier>classes</classifier>
         </dependency>
+
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>${keycloak.version}</version>
+            <!-- https://github.com/keycloak/keycloak/issues/9599 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>resteasy-multipart-provider</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>resteasy-jackson2-provider</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>resteasy-jaxb-provider</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-multipart-provider</artifactId>
+            <version>${resteasy_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson2-provider</artifactId>
+            <version>${resteasy_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jaxb-provider</artifactId>
+            <version>${resteasy_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+<!--        &lt;!&ndash; This dependency holds all the code extensions that OpenSRP will build on top of Hapi-Fhir&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>-->
+<!--            <artifactId>location</artifactId>-->
+<!--            <version>0.0.4-SNAPSHOT</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>-->
+<!--            <artifactId>practitioner</artifactId>-->
+<!--            <version>0.0.4-SNAPSHOT</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>-->
+<!--            <artifactId>configuration</artifactId>-->
+<!--            <version>0.0.1-SNAPSHOT</version>-->
+<!--        </dependency>-->
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
             is used here, but log4j would also be fine. -->
@@ -294,7 +385,7 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-test-utilities</artifactId>
-            <version>${project.version}</version>
+            <version>${hapi.fhir.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -566,6 +657,17 @@
         <profile>
             <id>jetty</id>
             <dependencies>
+                <dependency>
+                    <groupId>org.keycloak</groupId>
+                    <artifactId>keycloak-spring-boot-starter</artifactId>
+                    <version>${keycloak.version}</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-tomcat</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-web</artifactId>
