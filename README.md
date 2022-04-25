@@ -242,6 +242,28 @@ Because the integration tests within the project rely on the default H2 database
 NOTE: MS SQL Server by default uses a case-insensitive codepage. This will cause errors with some operations - such as when expanding case-sensitive valuesets (UCUM) as there are unique indexes defined on the terminology tables for codes. 
 It is recommended to deploy a case-sensitive database prior to running HAPI FHIR when using MS SQL Server to avoid these and potentially other issues. 
 
+## Securing with Keycloak
+
+The FHIR REST API provided by the server can be secured by Keycloak OpenID. 
+As a prerequisite, a Keycloak server must be running and configured with a Realm and Client. The project's docker-compose.yml runs a local docker container of Keycloak,
+where you can create such a configuration, using the admin console, as described in [Keycloak on Docker - Getting started](https://www.keycloak.org/getting-started/getting-started-docker).
+
+If Keycloak is ready, the configuration, according to [Keycloak Docs](https://www.keycloak.org/docs/latest/securing_apps/#_spring_boot_adapter), must be provided in the application.yaml file, e.g.:
+
+```yaml
+keycloak:
+  auth-server-url: "http://hapi-fhir-keycloak:8081/auth"
+  realm: hapi-fhir
+  resource: local-hapi-fhir
+  credentials:
+    secret: "********"
+  ssl-required: none
+  principal-attribute: preferred_username
+  use-resource-role-mappings: true
+```
+
+If you are using the Web Testpage UI, consider customizing the appropriate configuration in the tester config section (see [Configuring Secured FHIR APIs](#configuring-secured-fhir-apis)!
+
 ## Customizing The Web Testpage UI
 
 The UI that comes with this server is an exact clone of the server available at [http://hapi.fhir.org](http://hapi.fhir.org). You may skin this UI if you'd like. For example, you might change the introductory text or replace the logo with your own.
@@ -249,6 +271,73 @@ The UI that comes with this server is an exact clone of the server available at 
 The UI is customized using [Thymeleaf](https://www.thymeleaf.org/) template files. You might want to learn more about Thymeleaf, but you don't necessarily need to: they are quite easy to figure out.
 
 Several template files that can be customized are found in the following directory: [https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates)
+
+### Configuring Secured FHIR APIs
+
+If a test server, accessed by the UI, is secured, the used REST client can be configured accordingly, using the application.yaml.
+The following configurations are currently supported:
+
+#### 1. BASIC Auth with username and password
+
+```yaml
+tester:
+  home:
+    ...
+    auth:
+      type: BASIC
+      username: 'johndoe'
+      password: '********'
+```
+
+Here, the Tester Client will add the header `Authorization: Basic Base64CodeOf(johndoe:********)` to each request.
+
+#### 2. Api-Key, i.e. fixed BEARER token
+
+```yaml
+tester:
+  home:
+    ...
+    auth:
+      type: BEARER
+      token: '********'
+```
+
+#### 3. Authorization Header
+
+```yaml
+tester:
+  home:
+    ...
+    auth:
+      type: HEADER
+      header: '********'
+```
+Here, the Tester Client will add the header `Authorization: ********` to each request.
+
+#### 4. Keycloak Secured API
+
+e.g., if the FHIR REST API of this server is secured by Keycloak. The Tester will use a Keycloak Admin Client to retrieve/refresh a
+valid token from Keycloak.
+
+IMPORTANT: The specified Keycloak client must support 'CLient Credentials Grant' according to OAuth2 Specification, i.e. Service Accounts Enabled.
+
+```yaml
+tester:
+  home:
+    name: Local Tester
+    server_address: "http://localhost:8080/fhir"
+    refuse_to_fetch_third_party_urls: false
+    fhir_version: R4
+    # if the server needs authentication, configure it:
+    auth:
+      type: KEYCLOAK
+      keycloakConfig:
+        serverUrl: "http://hapi-fhir-keycloak:8081/auth"
+        realm: hapi-fhir
+        resource: local-hapi-fhir
+        credentials:
+          secret: '********'
+```
 
 ## Deploying to an Application Server
 
