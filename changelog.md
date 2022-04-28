@@ -1,7 +1,9 @@
-2022/04/xx Release 2.0.0-SNAPHSOT
+2022/04/28 Release 2.0.0
 - version of ig, validator and matchbox should be provided in the validation report [#40](https://github.com/ahdis/matchbox/issues/40)
-- hapi-fhir 6.0.0-PRE10-SNAPSHOT and org.hl7.fhir.core 5.6.36
+- hapi-fhir 6.0.0-PRE10-SNAPSHOT and org.hl7.fhir.core 5.6.43
 - allow xml in gui for validation [#38](https://github.com/ahdis/matchbox/issues/38)
+- mobile access gateway gui: prefix DocumentEntry.identifier with urn:uuid in GUI [#41](https://github.com/ahdis/matchbox/issues/41)
+- base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v200
   
 2022/03/21 Release 1.9.1
 - custom log banner, thanks [ralych](https://github.com/ralych)

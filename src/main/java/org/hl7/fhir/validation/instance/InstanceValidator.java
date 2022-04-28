@@ -132,6 +132,7 @@ import org.hl7.fhir.r5.model.ValueSet;
 import org.hl7.fhir.r5.model.ValueSet.ValueSetExpansionContainsComponent;
 import org.hl7.fhir.r5.renderers.DataRenderer;
 import org.hl7.fhir.r5.terminologies.ValueSetExpander.TerminologyServiceErrorClass;
+import org.hl7.fhir.r5.utils.BuildExtensions;
 import org.hl7.fhir.r5.utils.FHIRLexer.FHIRLexerException;
 import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.hl7.fhir.r5.utils.FHIRPathEngine.IEvaluationContext;
@@ -1686,6 +1687,8 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         }
       } else if (SpecialExtensions.isKnownExtension(url)) {
         ex = SpecialExtensions.getDefinition(url);
+      } else if (Utilities.existsInList(url, BuildExtensions.allConsts())) {
+        // nothing
       } else if (rule(errors, IssueType.STRUCTURE, element.line(), element.col(), path, allowUnknownExtension(url), I18nConstants.EXTENSION_EXT_UNKNOWN_NOTHERE, url)) {
         hint(errors, IssueType.STRUCTURE, element.line(), element.col(), path, isKnownExtension(url), I18nConstants.EXTENSION_EXT_UNKNOWN, url);
       }
@@ -1760,6 +1763,11 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       for (TypeRefComponent tr : vd.getType()) {
         res.add(tr.getWorkingCode());
       }
+    }
+    // special hacks 
+    if (ex.getUrl().equals("http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type")) {
+      res.add("uri");
+      res.add("url");
     }
     return res;
   }
@@ -1871,7 +1879,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     for (StructureDefinitionContextComponent ctxt : list) {
       res.add(ctxt.copy());
     }
-    if ("http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type".equals(extUrl)) {
+    if (ToolingExtensions.EXT_FHIR_TYPE.equals(extUrl)) {
       list.get(0).setExpression("ElementDefinition.type");
     }
     // the history of this is a mess - see https://jira.hl7.org/browse/FHIR-13328
@@ -2135,7 +2143,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         // the URL must be an IRI if present
         rule(errors, IssueType.INVALID, e.line(), e.col(), path, Utilities.isAbsoluteUrl(url), 
             node.isContained() ? I18nConstants.TYPE_SPECIFIC_CHECKS_CANONICAL_CONTAINED : I18nConstants.TYPE_SPECIFIC_CHECKS_CANONICAL_ABSOLUTE, url);                  
-      } else {
+      } else if (!e.getProperty().getDefinition().getPath().equals("Bundle.entry.fullUrl")) { // we don't check fullUrl here; it's not a reference, it's a definition. It'll get checked as part of checking the bundle
         validateReference(hostContext, errors, path, type, context, e, url);
       }
     }
@@ -4359,11 +4367,11 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
 
   // checkSpecials = we're only going to run these tests if we are actually validating this content (as opposed to we looked it up)
   private void start(ValidatorHostContext hostContext, List<ValidationMessage> errors, Element resource, Element element, StructureDefinition defn, NodeStack stack) throws FHIRException {
-    
+   
     // OE https://github.com/ahdis/matchbox/issues/21
     hostContext.setCheckSpecials(false);
       
-    checkLang(resource, stack);
+     checkLang(resource, stack);
     if (crumbTrails) {
       element.addMessage(signpost(errors, IssueType.INFORMATIONAL, element.line(), element.col(), stack.getLiteralPath(), I18nConstants.VALIDATION_VAL_PROFILE_SIGNPOST, defn.getUrl()));
     }
@@ -5761,6 +5769,17 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       return "htmlChecks2()";
     }
 
+    // clarification in FHIRPath spec
+    if (expr.equals("name.matches('[A-Z]([A-Za-z0-9_]){0,254}')")) {
+      return "name.matches('^[A-Z]([A-Za-z0-9_]){0,254}$')";
+    }
+    if ("eld-19".equals(key)) {
+      return "path.matches('^[^\\\\s\\\\.,:;\\\\\\'\"\\\\/|?!@#$%&*()\\\\[\\\\]{}]{1,64}(\\\\.[^\\\\s\\\\.,:;\\\\\\'\"\\\\/|?!@#$%&*()\\\\[\\\\]{}]{1,64}(\\\\[x\\\\])?(\\\\:[^\\\\s\\\\.]+)?)*$')";
+    }
+    if ("eld-20".equals(key)) {
+      return "path.matches('^[A-Za-z][A-Za-z0-9]*(\\\\.[a-z][A-Za-z0-9]*(\\\\[x])?)*$')";
+    }
+  
     // handled in 4.0.1
     if ("(component.empty() and hasMember.empty()) implies (dataAbsentReason or value)".equals(expr)) {
       return "(component.empty() and hasMember.empty()) implies (dataAbsentReason.exists() or value.exists())";
