@@ -4,7 +4,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "health"
+        include: "health,prometheus"
 spring:
   main:
     allow-circular-references: true
