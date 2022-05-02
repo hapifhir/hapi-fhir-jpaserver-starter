@@ -1,4 +1,4 @@
 #!/bin/sh
 
-docker build -t hapi-fhir/hapi-fhir-jpaserver-starter .
-
+mvn package spring-boot:repackage -Pboot
+docker build -t hapi-fhir-service .

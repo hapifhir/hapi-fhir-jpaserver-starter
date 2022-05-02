@@ -1,0 +1,9 @@
+#Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
+#see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+
+  jpa:
+    properties:
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
