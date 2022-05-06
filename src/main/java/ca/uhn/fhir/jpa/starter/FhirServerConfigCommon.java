@@ -178,6 +178,7 @@ public class FhirServerConfigCommon {
     modelConfig.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 
     modelConfig.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
+    modelConfig.setIndexIdentifierOfType(appProperties.getEnable_index_of_type());
     return modelConfig;
   }
 
