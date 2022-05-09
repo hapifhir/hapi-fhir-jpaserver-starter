@@ -131,8 +131,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
     // Customize supported resource types
     List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
 
-    if (!supportedResourceTypes.isEmpty() && !supportedResourceTypes.contains("SearchParameter")) {
-      supportedResourceTypes.add("SearchParameter");
+    if (!supportedResourceTypes.isEmpty()) {
+      if (!supportedResourceTypes.contains("SearchParameter")) {
+        supportedResourceTypes.add("SearchParameter");
+      }
       daoRegistry.setSupportedResourceTypes(supportedResourceTypes);
     }
 
