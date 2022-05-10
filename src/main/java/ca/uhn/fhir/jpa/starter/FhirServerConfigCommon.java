@@ -44,6 +44,7 @@ public class FhirServerConfigCommon {
     ourLog.info("Server configured to " + (appProperties.getExpunge_enabled() ? "enable" : "disable") + " expunges");
     ourLog.info("Server configured to " + (appProperties.getAllow_override_default_search_params() ? "allow" : "deny") + " overriding default search params");
     ourLog.info("Server configured to " + (appProperties.getAuto_create_placeholder_reference_targets() ? "allow" : "disable") + " auto-creating placeholder references");
+    ourLog.info("Server configured to {} log listener", (appProperties.getLogger().isEnabled()?"enable":"disable"));
 
     if (appProperties.getSubscription().getEmail() != null) {
       AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();

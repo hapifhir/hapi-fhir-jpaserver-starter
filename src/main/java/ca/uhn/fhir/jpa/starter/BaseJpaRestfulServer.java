@@ -21,8 +21,8 @@ import ca.uhn.fhir.jpa.provider.JpaCapabilityStatementProvider;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
 import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
-import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.ValueSetOperationProvider;
+import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
@@ -240,12 +240,14 @@ public class BaseJpaRestfulServer extends RestfulServer {
     /*
      * Add some logging for each request
      */
-    LoggingInterceptor loggingInterceptor = new LoggingInterceptor();
-    loggingInterceptor.setLoggerName(appProperties.getLogger().getName());
-    loggingInterceptor.setMessageFormat(appProperties.getLogger().getFormat());
-    loggingInterceptor.setErrorMessageFormat(appProperties.getLogger().getError_format());
-    loggingInterceptor.setLogExceptions(appProperties.getLogger().getLog_exceptions());
-    this.registerInterceptor(loggingInterceptor);
+      if (appProperties.getLogger().isEnabled()) {
+          LoggingInterceptor loggingInterceptor = new LoggingInterceptor();
+          loggingInterceptor.setLoggerName(appProperties.getLogger().getName());
+          loggingInterceptor.setMessageFormat(appProperties.getLogger().getFormat());
+          loggingInterceptor.setErrorMessageFormat(appProperties.getLogger().getError_format());
+          loggingInterceptor.setLogExceptions(appProperties.getLogger().getLog_exceptions());
+          this.registerInterceptor(loggingInterceptor);
+      }
 
     /*
      * If you are hosting this server at a specific DNS name, the server will try to

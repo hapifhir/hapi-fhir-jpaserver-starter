@@ -6,12 +6,11 @@ import ca.uhn.fhir.jpa.api.config.DaoConfig.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import com.google.common.collect.ImmutableList;
+import java.util.*;
 import org.hl7.fhir.r4.model.Bundle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.*;
 
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
@@ -570,6 +569,7 @@ public class AppProperties {
     private String error_format = "ERROR - ${requestVerb} ${requestUrl}";
     private String format = "Path[${servletPath}] Source[${requestHeader.x-forwarded-for}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}]";
     private Boolean log_exceptions = true;
+    private boolean enabled = false;
 
     public String getName() {
       return name;
@@ -602,6 +602,15 @@ public class AppProperties {
     public void setLog_exceptions(Boolean log_exceptions) {
       this.log_exceptions = log_exceptions;
     }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
   }
 
 
