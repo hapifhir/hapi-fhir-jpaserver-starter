@@ -28,6 +28,7 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+    {{ if $.Values.postgresql.enabled }}
       initContainers:
         - name: wait-for-db-to-be-ready
           image: "{{ .Values.postgresql.image.registry }}/{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
@@ -56,6 +57,7 @@ spec:
                 echo "Waiting for DB ${PGUSER}@${PGHOST}:${PGPORT} to be up";
                 sleep 15;
               done;
+    {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
