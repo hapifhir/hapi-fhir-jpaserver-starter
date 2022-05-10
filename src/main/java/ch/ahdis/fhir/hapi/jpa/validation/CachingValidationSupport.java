@@ -88,15 +88,15 @@ public class CachingValidationSupport extends BaseValidationSupportWrapper imple
 	      public long expireAfterCreate(String key, Object graph, long currentTime) {
 	        return TimeUnit.MILLISECONDS.toNanos(theCacheTimeouts.getMiscMillis());
 	      }
-	      public long expireAfterUpdate(String key, Object graph, 
-	          long currentTime, long currentDuration) {
+	      public long expireAfterUpdate(String key, Object graph, long currentTime, long currentDuration) {
 	        return currentDuration;
 	      }
-	      public long expireAfterRead(String key, Object graph,
-	          long currentTime, long currentDuration) {
+	      public long expireAfterRead(String key, Object graph, long currentTime, long currentDuration) {
 	        return currentDuration;
 	      }
 	    })
+//   NB: expireAfterWrite leads to the problem described in the issue #4,
+//   therefore it is replaced with expireAfter above
 //      .expireAfterWrite(theCacheTimeouts.getMiscMillis(), TimeUnit.MILLISECONDS)
 			.maximumSize(5000)
 			.build();

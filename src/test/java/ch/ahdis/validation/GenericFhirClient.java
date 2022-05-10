@@ -7,10 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.method.*;
 import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.Bundle;
 
 import com.google.common.base.Charsets;
 
@@ -19,10 +20,8 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.impl.BaseHttpClientInvocation;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
-import ca.uhn.fhir.rest.client.method.HttpPostClientInvocation;
-import ca.uhn.fhir.rest.client.method.IClientResponseHandler;
-import ca.uhn.fhir.rest.client.method.MethodUtil;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
+import org.hl7.fhir.r4.model.CapabilityStatement;
 
 
 /**
@@ -32,13 +31,13 @@ import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
  */
 public class GenericFhirClient extends GenericClient{
 
-  static final public String testServer = "http://localhost:8080/matchbox/fhir";  
-  
+  static final public String testServer = "http://localhost:8080/matchbox/fhir";
+
   public GenericFhirClient(FhirContext theContext, String theServerBase) {
     super(theContext, null, theServerBase, null);
     setDontValidateConformance(true);
   }
-  
+
   public GenericFhirClient(FhirContext theContext) {
     this(theContext, testServer);
   }
@@ -58,7 +57,7 @@ public class GenericFhirClient extends GenericClient{
     }
   }
 
-  public static BaseHttpClientInvocation createValidationInvocation(FhirContext theContext, String theOperationName, String theInput, Map<String, List<String>> urlParams) {
+	public static BaseHttpClientInvocation createOperationInvocation(FhirContext theContext, String theOperationName, String theInput, Map<String, List<String>> urlParams) {
 		StringBuilder b = new StringBuilder();
 		if (b.length() > 0) {
 			b.append('/');
@@ -70,7 +69,7 @@ public class GenericFhirClient extends GenericClient{
 		BaseHttpClientInvocation.appendExtraParamsWithQuestionMark(urlParams, b, b.indexOf("?") == -1);
 		return new HttpPostClientInvocation(theContext, theInput, false, b.toString());
 	}
-  
+
   /**
    * Performs the $validate operation with a direct POST (see http://hl7.org/fhir/resource-operation-validate.html#examples)
    * and the profile specified as a parameter (not the Parameters syntact).
@@ -88,12 +87,12 @@ public class GenericFhirClient extends GenericClient{
       theExtraParams.put("profile", profiles);
     }
     OutcomeResponseHandler binding = new OutcomeResponseHandler();
-    BaseHttpClientInvocation clientInvoke = createValidationInvocation(getFhirContext(), "$validate", theContents, theExtraParams);
+    BaseHttpClientInvocation clientInvoke = createOperationInvocation(getFhirContext(), "$validate", theContents, theExtraParams);
     MethodOutcome resp = invokeClient(getFhirContext(), binding, clientInvoke, null, null, false, null, null, null, null, null);
     return resp.getOperationOutcome();
   }
-  
-  
+
+
   private String getStructureMapTransformOperation(Map<String, List<String>> urlParams) {
     StringBuilder b = new StringBuilder();
     b.append("StructureMap/$transform");
@@ -104,14 +103,14 @@ public class GenericFhirClient extends GenericClient{
   public BaseHttpClientInvocation createStructureMapTransformInvocation(FhirContext theContext, String theInput, Map<String, List<String>> urlParams) {
     return new HttpPostClientInvocation(theContext, theInput, false, getStructureMapTransformOperation(urlParams));
   }
- 
+
   public BaseHttpClientInvocation createStructureMapTransformInvocation(FhirContext theContext, IBaseResource resource, Map<String, List<String>> urlParams) {
     return new HttpPostClientInvocation(theContext, resource, getStructureMapTransformOperation(urlParams));
   }
 
-  
+
   /**
-   * Performs the $transform operation with a direct POST and returning a Resource 
+   * Performs the $transform operation with a direct POST and returning a Resource
    * @return
    */
   public IBaseResource convert(String theContents, EncodingEnum contentEndoding, String sourceMapUrl, String acceptHeader) {
@@ -127,7 +126,7 @@ public class GenericFhirClient extends GenericClient{
     BaseHttpClientInvocation clientInvoke = createStructureMapTransformInvocation(getFhirContext(), theContents, theExtraParams);
     return invokeClient(getFhirContext(), binding, clientInvoke, null, null, false, null, null, null, acceptHeader, null);
   }
-  
+
   private final class StringResponseHandler implements IClientResponseHandler<String> {
 
     @Override
@@ -153,5 +152,11 @@ public class GenericFhirClient extends GenericClient{
     BaseHttpClientInvocation clientInvoke = createStructureMapTransformInvocation(getFhirContext(), resource, theExtraParams);
     return invokeClient(getFhirContext(), new StringResponseHandler(), clientInvoke, null, null, false, null, null, null, acceptHeader, null);
   }
+  
+	public CapabilityStatement retrieveCapabilityStatement() {
+		IGenericClient client = getFhirContext().newRestfulGenericClient(testServer);
+		CapabilityStatement capabilityStatement = client.capabilities().ofType(CapabilityStatement.class).execute();
+		return capabilityStatement;
+	}
 
 }

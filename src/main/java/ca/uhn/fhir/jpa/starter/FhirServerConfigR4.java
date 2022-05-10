@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 
+import ca.uhn.fhir.context.support.IValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.UnknownCodeSystemWarningValidationSupport;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.hl7.fhir.r5.utils.validation.constants.BestPracticeWarningLevel;
@@ -180,10 +181,13 @@ public class FhirServerConfigR4 {
     return new ValidatorPolicyAdvisor();
   }
 
-  public CachingValidationSupport validationSupportChain() {
+  @Bean
+  @Primary
+  public IValidationSupport validationSupportChain() {
     CachingValidationSupport.CacheTimeouts cacheTimeouts = CachingValidationSupport.CacheTimeouts.defaultValues()
-        .setTranslateCodeMillis(1000).setMiscMillis(10000).setValidateCodeMillis(10000);
+        .setTranslateCodeMillis(1000).setMiscMillis(1000).setValidateCodeMillis(1000);
     return new CachingValidationSupport(jpaValidationSupportChain(), cacheTimeouts);
+	  //return jpaValidationSupportChain();
   }
 
 

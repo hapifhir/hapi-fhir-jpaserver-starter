@@ -31,6 +31,9 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
   @Override
   protected void handleRequest(RequestTypeEnum theRequestType, HttpServletRequest theRequest,
       HttpServletResponse theResponse) throws ServletException, IOException {
+
+	  getServerConformanceMethod().setCacheMillis(0L);
+
     MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(theRequest);
     super.handleRequest(theRequestType, mutableRequest, theResponse);
   }

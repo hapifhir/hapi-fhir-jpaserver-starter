@@ -38,7 +38,7 @@ public class Canonicalizer {
   private static Comparator<String> nullSafeStringComparator = Comparator.nullsFirst(String::compareTo);
 
   private static Comparator<IBaseExtension<?, ?>> extensionComparator = Comparator
-      .comparing(IBaseExtension<?, ?>::getUrl, nullSafeStringComparator);
+      .comparing(IBaseExtension::getUrl, nullSafeStringComparator);
   
   public void sortExtensionRecursive(IBase ibase) {
     IBaseHasExtensions baseHasExtensions = validateExtensionSupport(ibase);
