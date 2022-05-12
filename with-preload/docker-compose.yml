@@ -15,7 +15,7 @@ services:
     container_name: matchbox-db
     restart: always
     # Comment out to not log queries
-    command: ["postgres", "-c", "log_statement=all"]
+    # command: ["postgres", "-c", "log_statement=all"]
     # End comment out
     ports:
       - "5432:5432"
