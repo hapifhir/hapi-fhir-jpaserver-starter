@@ -1,6 +1,7 @@
 # matchbox 
 
-matchbox is a FHIR server based on the [hapifhir/hapi-fhir-jpaserver-starter](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) 
+
+[matchbox](https://matchbox.health) is a FHIR server based on the [hapifhir/hapi-fhir-jpaserver-starter](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) 
 - (pre-)load FHIR implementation guides from the package server for conformance resources (StructureMap, Questionnaire, CodeSystem, ValueSet, ConceptMap, NamingSystem, StructureDefinition). The "with-preload" subfolder contains an example with the implementation guides provided for the [public test server](https://test.ahdis.ch/matchbox/fhir).
 - validation support: [server]/$validate for checking FHIR resources conforming to the loaded implementation guides
 - FHIR Mapping Language endpoints for creation of StructureMaps and support for the [StructureMap/$transform](https://www.hl7.org/fhir/operation-structuremap-transform.html) operation
@@ -111,8 +112,7 @@ Use VSCode, REST Client to work with the API:
 - [FHIR Mapping language](fml.http)
 - [Load Implementation Guide onto server](ig.http)
 - [Validation examples](validation-igexamples.http)
-- SDC TODO
-
+- [SDC examples](sdc.http)
 
 Kubernetes
 ==========
