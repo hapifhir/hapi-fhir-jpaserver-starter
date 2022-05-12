@@ -564,7 +564,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setLastNEnabled(true);
     }
 
-    registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider, valueSetOperationProvider);
+    registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider, valueSetOperationProvider, assembleProvider);
     // Repository Validating Interceptor
 //	if (Boolean.TRUE.equals(appProperties.getEnable_repository_validating_interceptor())) {
 //		 RepositoryValidationInterceptorFactory repositoryValidationInterceptorFactory = myApplicationContext.getBean(RepositoryValidationInterceptorFactory.class);

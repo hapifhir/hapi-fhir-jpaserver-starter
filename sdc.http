@@ -1,6 +1,6 @@
-### @host = http://localhost:8080/matchbox/fhir
+@host = http://localhost:8080/matchbox/fhir
 ### @host = https://test.ahdis.ch/matchbox-order/fhir
-@host = https://test.ahdis.ch/matchbox/fhir
+### @host = https://test.ahdis.ch/matchbox/fhir
 
 ### you need the preloaded ig's for this setup
 
@@ -26,3 +26,9 @@ Content-Type: application/json+fhir
 GET {{host}}/QuestionnaireResponse/85fdc2b0-ad46-4456-8200-99d8a28fccb3/$extract HTTP/1.1
 Accept: application/json+fhir
 
+### Check that questionnaire is setup
+POST {{host}}/Questionnaire/$assemble HTTP/1.1
+Accept: application/json+fhir
+Content-Type: application/json+fhir
+
+< ../ch-orf/output/Questionnaire-order-referral-form-modular.json
