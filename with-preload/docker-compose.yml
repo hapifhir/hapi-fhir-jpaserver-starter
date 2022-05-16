@@ -9,7 +9,7 @@ services:
     links:
       - matchbox-db
     volumes:
-      - ./with-preload:/config      
+      - ./:/config      
   matchbox-db:
     image: postgres:latest
     container_name: matchbox-db

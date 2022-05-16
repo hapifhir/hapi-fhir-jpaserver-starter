@@ -22,7 +22,6 @@ hapi:
         name: hl7.fhir.cda
         version: 2.1.0
       cdach:
-        url: http://build.fhir.org/ig/hl7ch/cda-fhir-maps/package.tgz
         name: ch.fhir.ig.cda-fhir-maps
         version: 0.3.0
       iheformatcodefhir:
