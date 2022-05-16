@@ -49,6 +49,7 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
     // "elasticsearch.rest_url='http://localhost:9200'",
     "elasticsearch.username=SomeUsername",
     "elasticsearch.password=SomePassword",
+    "elasticsearch.debug.refresh_after_write=true",
 	 "elasticsearch.protocol=http",
 	  "spring.main.allow-bean-definition-overriding=true",
 	  "spring.jpa.properties.hibernate.search.enabled=true",
