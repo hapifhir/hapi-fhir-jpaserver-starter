@@ -43,6 +43,7 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
     "hapi.fhir.fhir_version=r4",
     "hapi.fhir.lastn_enabled=true",
 	 "hapi.fhir.store_resource_in_lucene_index_enabled=true",
+	 "hapi.fhir.advanced_lucene_indexing=true",
     "elasticsearch.enabled=true",
     // Because the port is set randomly, we will set the rest_url using the Initializer.
     // "elasticsearch.rest_url='http://localhost:9200'",
@@ -57,10 +58,9 @@ public class ElasticsearchLastNR4IT {
   private IGenericClient ourClient;
   private FhirContext ourCtx;
 
-  private static final String ELASTIC_VERSION = "7.10.2";
-	private static final String ELASTIC_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:" + ELASTIC_VERSION;
-
-	private static ElasticsearchContainer embeddedElastic;
+  private static final String ELASTIC_VERSION = "7.16.3";
+  private static final String ELASTIC_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:" + ELASTIC_VERSION;
+  private static ElasticsearchContainer embeddedElastic;
 
   @Autowired
   private ElasticsearchSvcImpl myElasticsearchSvc;
@@ -90,8 +90,10 @@ public class ElasticsearchLastNR4IT {
     obs.getSubject().setReferenceElement(id);
     String observationCode = "testobservationcode";
     String codeSystem = "http://testobservationcodesystem";
+
     obs.getCode().addCoding().setCode(observationCode).setSystem(codeSystem);
     obs.setValue(new StringType(observationCode));
+
     Date effectiveDtm = new GregorianCalendar().getTime();
     obs.setEffective(new DateTimeType(effectiveDtm));
     obs.getCategoryFirstRep().addCoding().setCode("testcategorycode").setSystem("http://testcategorycodesystem");
@@ -103,6 +105,7 @@ public class ElasticsearchLastNR4IT {
       .withParameter(Parameters.class, "max", new IntegerType(1))
       .andParameter("subject", new StringType("Patient/" + id.getIdPart()))
       .execute();
+
     Bundle b = (Bundle) output.getParameter().get(0).getResource();
     assertEquals(1, b.getTotal());
     assertEquals(obsId, b.getEntry().get(0).getResource().getIdElement().toUnqualifiedVersionless());
