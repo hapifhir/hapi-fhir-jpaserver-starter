@@ -50,7 +50,10 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
     "elasticsearch.username=SomeUsername",
     "elasticsearch.password=SomePassword",
 	 "elasticsearch.protocol=http",
-	  "spring.main.allow-bean-definition-overriding=true"
+	  "spring.main.allow-bean-definition-overriding=true",
+	  "spring.jpa.properties.hibernate.search.enabled=true",
+	  "spring.jpa.properties.hibernate.search.backend.type=elasticsearch",
+	  "spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.elastic.HapiElasticsearchAnalysisConfigurer"
   })
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
 public class ElasticsearchLastNR4IT {
@@ -80,7 +83,8 @@ public class ElasticsearchLastNR4IT {
   private int port;
 
   @Test
-  void testLastN() throws IOException {
+  void testLastN() throws IOException, InterruptedException {
+	  Thread.sleep(2000);
 
     Patient pt = new Patient();
     pt.addName().setFamily("Lastn").addGiven("Arthur");
@@ -105,7 +109,6 @@ public class ElasticsearchLastNR4IT {
       .withParameter(Parameters.class, "max", new IntegerType(1))
       .andParameter("subject", new StringType("Patient/" + id.getIdPart()))
       .execute();
-
     Bundle b = (Bundle) output.getParameter().get(0).getResource();
     assertEquals(1, b.getTotal());
     assertEquals(obsId, b.getEntry().get(0).getResource().getIdElement().toUnqualifiedVersionless());
