@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.batch2.jobs.reindex.ReindexProvider;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
@@ -28,7 +29,6 @@ import ca.uhn.fhir.rest.openapi.OpenApiInterceptor;
 import ca.uhn.fhir.rest.server.*;
 import ca.uhn.fhir.rest.server.interceptor.*;
 import ca.uhn.fhir.rest.server.interceptor.partition.RequestTenantPartitionInterceptor;
-import ca.uhn.fhir.rest.server.provider.ReindexProvider;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
 import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
@@ -81,8 +81,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
 	//TODO GGG RE-ADD ONCE FIXED IN HAPI-FHIR
 //	@Autowired
 //  ValueSetOperationProvider valueSetOperationProvider;
-  @Autowired
-  ReindexProvider reindexProvider;
+   @Autowired
+	ReindexProvider reindexProvider;
   @Autowired
   BinaryStorageInterceptor binaryStorageInterceptor;
   @Autowired
