@@ -1,6 +1,7 @@
 2022/05/xx Release 2.1.0
 - Validation: CapabilityStatement caching fixed [#43](https://github.com/ahdis/matchbox/issues/43)
 - prototype [SDC $assembly operation](http://hl7.org/fhir/uv/sdc/OperationDefinition-Questionnaire-assemble.html) [#46](https://github.com/ahdis/matchbox/issues/46)
+- Enable SDC extraction with unknown ValueSets [#48](https://github.com/ahdis/matchbox/issues/48)
 
 2022/04/28 Release 2.0.0
 - version of ig, validator and matchbox should be provided in the validation report [#40](https://github.com/ahdis/matchbox/issues/40)

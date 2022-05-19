@@ -1,0 +1,43 @@
+{
+  "resourceType": "QuestionnaireResponse",
+  "id": "SDOHCC-QuestionnaireHungerVitalSign",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2022-05-18T19:46:12.090+00:00",
+    "source": "#kdKjK17TNvKXXKH6"
+  },
+  "questionnaire": "http://hl7.org/fhir/uv/sdc/Questionnaire/SDOHCC-QuestionnaireHungerVitalSign",
+  "status": "completed",
+  "authored": "2022-05-18T19:41:00.272Z",
+  "item": [ {
+    "linkId": "/88122-7",
+    "text": "(I/We) worried whether (my/our) food would run out before (I/we) got money to buy more.",
+    "answer": [ {
+      "valueCoding": {
+        "system": "http://loinc.org",
+        "code": "LA28397-0",
+        "display": "Often true"
+      }
+    } ]
+  }, {
+    "linkId": "/88123-5",
+    "text": "The food that (I/we) bought just didn't last, and (I/we) didn't have money to get more.",
+    "answer": [ {
+      "valueCoding": {
+        "system": "http://loinc.org",
+        "code": "LA6729-3",
+        "display": "Sometimes true"
+      }
+    } ]
+  }, {
+    "linkId": "/88124-3",
+    "text": "Food insecurity risk",
+    "answer": [ {
+      "valueCoding": {
+        "system": "http://loinc.org",
+        "code": "LA19952-3",
+        "display": "At risk"
+      }
+    } ]
+  } ]
+}

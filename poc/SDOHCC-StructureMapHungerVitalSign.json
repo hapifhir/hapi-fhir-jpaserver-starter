@@ -1,0 +1,2764 @@
+{
+  "resourceType": "StructureMap",
+  "id": "1602",
+  "meta": {
+    "versionId": "2",
+    "lastUpdated": "2022-05-18T23:36:35.282+02:00"
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>map &quot;http://hl7.org/fhir/uv/sdc/StructureMap/SDOHCC-StructureMapHungerVitalSignMap&quot; = &quot;SDOHCCStructureMapHungerVitalSign&quot;\r\n\r\n// A map that converts an SDOCC hunger vital sign questionnaire to a Bundle of Conditions and Observations\r\n\r\nuses &quot;http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse&quot; alias questionnaireResponse as source\r\nuses &quot;http://hl7.org/fhir/StructureDefinition/Bundle&quot; as target\r\nuses &quot;http://hl7.org/fhir/StructureDefinition/Observation&quot; as target\r\nuses &quot;http://hl7.org/fhir/StructureDefinition/Condition&quot; alias sdohccCondition as target\r\nuses &quot;http://hl7.org/fhir/StructureDefinition/Observation&quot; alias sdohccObservation as target\r\n\r\ngroup sdohMapping(source src : questionnaireResponse, target bundle : Bundle) {\r\n  src -&gt; bundle.id = 'SDOHCC-BundleHungerVitalSignExample' &quot;rule-1&quot;;\r\n  src -&gt; bundle.type = 'transaction' &quot;rule-2&quot;;\r\n  src.item as answerItem1 where linkId = '/88122-7' -&gt;  bundle.entry as entry,  entry.resource = create('sdohccObservation') as observation1 then TransformObservation(src, answerItem1, observation1, entry), TransformObservation1(src, answerItem1, observation1, entry) &quot;rule-3&quot;;\r\n  src.item as answerItem2 where linkId = '/88123-5' -&gt;  bundle.entry as entry,  entry.resource = create('sdohccObservation') as observation2 then TransformObservation(src, answerItem2, observation2, entry), TransformObservation2(src, answerItem2, observation2, entry) &quot;rule-4&quot;;\r\n  src.item as answerItem3 where linkId = '/88124-3' -&gt;  bundle.entry as entry,  entry.resource = create('sdohccObservation') as observation3 then TransformObservation(src, answerItem3, observation3, entry), TransformObservation3(src, answerItem3, bundle, observation3, entry) &quot;rule-5&quot;;\r\n  src -&gt;  bundle.entry as entry,  entry.resource = create('sdohccObservation') as groupObservation then TransformGroupObservation(src, bundle, groupObservation, entry) &quot;rule-6&quot;;\r\n  src.item where linkId = '/88124-3' and answer.valueCoding.code ='LA19952-3' -&gt;  bundle.entry as entry,  entry.resource = create('sdohccCondition') as condition then TransformCondition(src, bundle, condition, entry) &quot;rule-7&quot;;\r\n}\r\n\r\ngroup TransformObservation(source src : questionnaireResponse, source answerItem : Any, target observation : sdohccObservation, target entry : Any) {\r\n  src -&gt; observation.status = 'final' &quot;rule-8&quot;;\r\n  src -&gt; observation.meta = create('Meta') as newMeta then {\r\n    src -&gt; newMeta.profile = 'http://hl7.org/fhir/us/sdoh-clinicalcare/StructureDefinition/SDOHCC-ObservationScreeningResponse' &quot;rule-10&quot;;\r\n  } &quot;rule-9&quot;;\r\n  src -&gt; observation.category = cc('http://terminology.hl7.org/CodeSystem/observation-category', 'social-history', 'Social History') &quot;rule-11&quot;;\r\n  src -&gt; observation.category = cc('http://terminology.hl7.org/CodeSystem/observation-category', 'survey', 'Survey') &quot;rule-12&quot;;\r\n  src -&gt; observation.category = create('CodeableConcept') as newCC then {\r\n    src -&gt; newCC.coding = create('Coding') as newCoding then {\r\n      src -&gt; newCoding.system = 'http://hl7.org/fhir/us/sdoh-clinicalcare/CodeSystem/SDOHCC-CodeSystemTemporaryCodes' &quot;rule-15&quot;;\r\n      src -&gt; newCoding.code = 'food-insecurity' &quot;rule-16&quot;;\r\n      src -&gt; newCoding.display = 'Food Insecurity' &quot;rule-17&quot;;\r\n    } &quot;rule-14&quot;;\r\n  } &quot;rule-13&quot;;\r\n  src.authored as authored -&gt;  observation.issued = authored,  observation.effective = authored &quot;rule-18&quot;;\r\n  answerItem.answer as answer -&gt; observation.value = create('CodeableConcept') as newCC then {\r\n    answer.valueCoding as coding -&gt; newCC.coding = coding as newCoding &quot;rule-20&quot;;\r\n  } &quot;rule-19&quot;;\r\n  src.subject as qSubject -&gt; observation.subject = create('Reference') as newReference then {\r\n    qSubject.reference as qReference -&gt; newReference.reference = qReference &quot;rule-22&quot;;\r\n    qSubject.display as qDisplay -&gt; newReference.display = qDisplay &quot;rule-23&quot;;\r\n  } &quot;rule-21&quot;;\r\n}\r\n\r\ngroup TransformObservation1(source src : questionnaireResponse, source item : Any, target observation : sdohccObservation, target entry : Any) {\r\n  src -&gt; observation.id = 'SDOHCC-ObservationResponseHungerVitalSignQuestion1Example' then SetObservationFullUrl(observation, entry) &quot;rule-24&quot;;\r\n  item as i -&gt; observation.code = cc('http://loinc.org', '88122-7') as code &quot;rule-25&quot;;\r\n  src.subject as qSubject -&gt; observation.performer = create('Reference') as newReference then {\r\n    qSubject.reference as qReference -&gt; newReference.reference = qReference &quot;rule-27&quot;;\r\n    qSubject.display as qDisplay -&gt; newReference.display = qDisplay &quot;rule-28&quot;;\r\n  } &quot;rule-26&quot;;\r\n  src.id as id -&gt; observation.derivedFrom = create('Reference') as newReference then {\r\n    id -&gt; newReference.reference = append('QuestionnaireResponse/', id) &quot;rule-30&quot;;\r\n  } &quot;rule-29&quot;;\r\n}\r\n\r\ngroup TransformObservation2(source src : questionnaireResponse, source item : Any, target observation : sdohccObservation, target entry : Any) {\r\n  src -&gt; observation.id = 'SDOHCC-ObservationResponseHungerVitalSignQuestion2Example' then SetObservationFullUrl(observation, entry) &quot;rule-31&quot;;\r\n  item as i -&gt; observation.code = cc('http://loinc.org', '88123-5') as code &quot;rule-32&quot;;\r\n  src.subject as qSubject -&gt; observation.performer = create('Reference') as newReference then {\r\n    qSubject.reference as qReference -&gt; newReference.reference = qReference &quot;rule-34&quot;;\r\n    qSubject.display as qDisplay -&gt; newReference.display = qDisplay &quot;rule-35&quot;;\r\n  } &quot;rule-33&quot;;\r\n  src.id as id -&gt; observation.derivedFrom = create('Reference') as newReference then {\r\n    id -&gt; newReference.reference = append('QuestionnaireResponse/', id) &quot;rule-37&quot;;\r\n  } &quot;rule-36&quot;;\r\n}\r\n\r\ngroup TransformObservation3(source src : questionnaireResponse, source item : Any, source bundle : Any, target observation : sdohccObservation, target entry : Any) {\r\n  src -&gt; observation.id = 'SDOHCC-ObservationResponseHungerVitalSignQuestion3Example' then SetObservationFullUrl(observation, entry) &quot;rule-38&quot;;\r\n  item as i -&gt; observation.code = cc('http://loinc.org', '88124-3') as code &quot;rule-39&quot;;\r\n  bundle.entry as entries -&gt; observation.derivedFrom = create('Reference') as df then TransformObservationDerived(entries, df) &quot;rule-40&quot;;\r\n}\r\n\r\ngroup TransformObservationDerived(source entries : Any, target df : Any) {\r\n  entries.resource as obs1 where code.coding.code = '88122-7' -&gt; df.reference = reference(obs1) &quot;rule-41&quot;;\r\n  entries.resource as obs2 where code.coding.code = '88123-5' -&gt; df.reference = reference(obs2) &quot;rule-42&quot;;\r\n}\r\n\r\ngroup TransformGroupObservation(source src : questionnaireResponse, source bundle : Bundle, target groupObservation : Observation, target entry : Any) {\r\n  src -&gt; groupObservation.meta = create('Meta') as newMeta then {\r\n    src -&gt; newMeta.profile = 'http://hl7.org/fhir/us/sdoh-clinicalcare/StructureDefinition/SDOHCC-ObservationScreeningResponse' &quot;rule-44&quot;;\r\n  } &quot;rule-43&quot;;\r\n  src -&gt; groupObservation.id = 'SDOHCC-ObservationResponseHungerVitalSignGroupingExample' then SetObservationFullUrl(groupObservation, entry) &quot;rule-45&quot;;\r\n  src -&gt; groupObservation.status = 'final' &quot;rule-46&quot;;\r\n  src -&gt; groupObservation.category = cc('http://terminology.hl7.org/CodeSystem/observation-category', 'social-history', 'Social History') &quot;rule-47&quot;;\r\n  src -&gt; groupObservation.category = cc('http://terminology.hl7.org/CodeSystem/observation-category', 'survey', 'Survey') &quot;rule-48&quot;;\r\n  src -&gt; groupObservation.category = create('CodeableConcept') as newCC then {\r\n    src -&gt; newCC.coding = create('Coding') as newCoding then {\r\n      src -&gt; newCoding.system = 'http://hl7.org/fhir/us/sdoh-clinicalcare/CodeSystem/SDOHCC-CodeSystemTemporaryCodes' &quot;rule-51&quot;;\r\n      src -&gt; newCoding.code = 'food-insecurity' &quot;rule-52&quot;;\r\n      src -&gt; newCoding.display = 'Food Insecurity' &quot;rule-53&quot;;\r\n    } &quot;rule-50&quot;;\r\n  } &quot;rule-49&quot;;\r\n  src.authored as authored -&gt; groupObservation.effective = authored &quot;rule-54&quot;;\r\n  src.subject as qSubject -&gt; groupObservation.subject = create('Reference') as newReference then {\r\n    qSubject.reference as qReference -&gt; newReference.reference = qReference &quot;rule-56&quot;;\r\n    qSubject.display as qDisplay -&gt; newReference.display = qDisplay &quot;rule-57&quot;;\r\n  } &quot;rule-55&quot;;\r\n  src -&gt; groupObservation.code = cc('http://loinc.org', '88121-9', 'Hunger Vital Sign [HVS]') &quot;rule-58&quot;;\r\n  bundle.entry as entries -&gt; groupObservation.hasMember = create('Reference') as df then {\r\n    entries.resource as obs1 where code.coding.code = '88122-7' -&gt; df.reference = reference(obs1) &quot;rule-60&quot;;\r\n    entries.resource as obs2 where code.coding.code = '88123-5' -&gt; df.reference = reference(obs2) &quot;rule-61&quot;;\r\n    entries.resource as obs3 where code.coding.code = '88124-3' -&gt; df.reference = reference(obs3) &quot;rule-62&quot;;\r\n  } &quot;rule-59&quot;;\r\n  src.id as id -&gt; groupObservation.derivedFrom = create('Reference') as newReference then {\r\n    id -&gt; newReference.reference = append('QuestionnaireResponse/', id) &quot;rule-64&quot;;\r\n  } &quot;rule-63&quot;;\r\n}\r\n\r\ngroup SetObservationFullUrl(source observation : Observation, target entry : Any) {\r\n  observation.id as id -&gt; entry.fullUrl = append('http://hl7.org/fhir/us/sdoh-clinicalcare/Observation/', id) &quot;rule-65&quot;;\r\n}\r\n\r\ngroup TransformCondition(source src : questionnaireResponse, source bundle : Any, target condition : sdohccCondition, target entry : Any) {\r\n  src -&gt; condition.id = 'SDOHCC-ConditionFoodInsecurityExample' then SetConditionFullUrl(condition, entry) &quot;rule-66&quot;;\r\n  src -&gt; condition.meta = create('Meta') as newMeta then {\r\n    src -&gt; newMeta.profile = 'http://hl7.org/fhir/us/sdoh-clinicalcare/StructureDefinition/SDOHCC-Condition' &quot;rule-68&quot;;\r\n  } &quot;rule-67&quot;;\r\n  src -&gt; condition.clinicalStatus = cc('http://terminology.hl7.org/CodeSystem/condition-clinical', 'active', 'Active') &quot;rule-69&quot;;\r\n  src -&gt; condition.verificationStatus = cc('http://terminology.hl7.org/CodeSystem/condition-ver-status', 'unconfirmed', 'Unconfirmed') &quot;rule-70&quot;;\r\n  src -&gt; condition.category = create('CodeableConcept') as newCC then {\r\n    src -&gt; newCC.coding = create('Coding') as newCoding then {\r\n      src -&gt; newCoding.system = 'http://hl7.org/fhir/us/core/CodeSystem/condition-category' &quot;rule-73&quot;;\r\n      src -&gt; newCoding.code = 'health-concern' &quot;rule-74&quot;;\r\n      src -&gt; newCoding.display = 'Health Concern' &quot;rule-75&quot;;\r\n    } &quot;rule-72&quot;;\r\n  } &quot;rule-71&quot;;\r\n  src -&gt; condition.category = create('CodeableConcept') as newCC then {\r\n    src -&gt; newCC.coding = create('Coding') as newCoding then {\r\n      src -&gt; newCoding.system = 'http://hl7.org/fhir/us/sdoh-clinicalcare/CodeSystem/SDOHCC-CodeSystemTemporaryCodes' &quot;rule-78&quot;;\r\n      src -&gt; newCoding.code = 'food-insecurity' &quot;rule-79&quot;;\r\n      src -&gt; newCoding.display = 'Food Insecurity' &quot;rule-80&quot;;\r\n    } &quot;rule-77&quot;;\r\n  } &quot;rule-76&quot;;\r\n  src -&gt; condition.code = create('CodeableConcept') as newCodeCC then {\r\n    src -&gt; newCodeCC.coding = create('Coding') as newCoding then {\r\n      src -&gt; newCoding.system = 'http://snomed.info/sct' &quot;rule-83&quot;;\r\n      src -&gt; newCoding.code = '733423003' &quot;rule-84&quot;;\r\n      src -&gt; newCoding.display = 'Food insecurity' &quot;rule-85&quot;;\r\n    } &quot;rule-82&quot;;\r\n    src -&gt; newCodeCC.coding = create('Coding') as newCoding2 then {\r\n      src -&gt; newCoding2.system = 'http://hl7.org/fhir/sid/icd-10-cm' &quot;rule-87&quot;;\r\n      src -&gt; newCoding2.code = 'Z59.4' &quot;rule-88&quot;;\r\n      src -&gt; newCoding2.display = 'Lack of adequate food and safe drinking water' &quot;rule-89&quot;;\r\n    } &quot;rule-86&quot;;\r\n  } &quot;rule-81&quot;;\r\n  src.authored as authored -&gt;  condition.onset = create('Period') as period,  period.start = authored &quot;rule-90&quot;;\r\n  bundle.entry as entries -&gt;  condition.evidence as evidence,  evidence.detail = create('Reference') as detailReference then {\r\n    entries.resource as obs3 where code.coding.code = '88124-3' -&gt; detailReference.reference = reference(obs3) &quot;rule-92&quot;;\r\n  } &quot;rule-91&quot;;\r\n  src.subject as qSubject -&gt; condition.subject = create('Reference') as newReference then {\r\n    qSubject.reference as qReference -&gt; newReference.reference = qReference &quot;rule-94&quot;;\r\n    qSubject.display as qDisplay -&gt; newReference.display = qDisplay &quot;rule-95&quot;;\r\n  } &quot;rule-93&quot;;\r\n}\r\n\r\ngroup SetConditionFullUrl(source condition : sdohccCondition, target entry : Any) {\r\n  condition.id as id -&gt; entry.fullUrl = append('http://hl7.org/fhir/us/sdoh-clinicalcare/Condition/', id) &quot;rule-96&quot;;\r\n}\r\n\r\n</pre></div>"
+  },
+  "url": "http://hl7.org/fhir/uv/sdc/StructureMap/SDOHCC-StructureMapHungerVitalSignMap",
+  "version": "3.0.0",
+  "name": "SDOHCCStructureMapHungerVitalSign",
+  "title": "SDOHCC StructureMap Hunger Vital Sign",
+  "status": "draft",
+  "experimental": false,
+  "date": "2022-03-08T18:33:14+00:00",
+  "publisher": "HL7 International - FHIR Infrastructure Work Group",
+  "contact": [
+    {
+      "telecom": [
+        {
+          "system": "url",
+          "value": "http://hl7.org/Special/committees/fiwg"
+        }
+      ]
+    }
+  ],
+  "description": "A map that converts an SDOCC hunger vital sign questionnaire to a Bundle of Conditions and Observations",
+  "jurisdiction": [
+    {
+      "coding": [
+        {
+          "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+          "code": "001"
+        }
+      ]
+    }
+  ],
+  "structure": [
+    {
+      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse",
+      "mode": "source",
+      "alias": "questionnaireResponse"
+    },
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/Bundle",
+      "mode": "target"
+    },
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/Observation",
+      "mode": "target"
+    },
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/Condition",
+      "mode": "target",
+      "alias": "sdohccCondition"
+    },
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/Observation",
+      "mode": "target",
+      "alias": "sdohccObservation"
+    }
+  ],
+  "group": [
+    {
+      "name": "sdohMapping",
+      "typeMode": "none",
+      "input": [
+        {
+          "name": "src",
+          "type": "questionnaireResponse",
+          "mode": "source"
+        },
+        {
+          "name": "bundle",
+          "type": "Bundle",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "name": "rule-1",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "bundle",
+              "contextType": "variable",
+              "element": "id",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueString": "SDOHCC-BundleHungerVitalSignExample"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-2",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "bundle",
+              "contextType": "variable",
+              "element": "type",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueString": "transaction"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-3",
+          "source": [
+            {
+              "context": "src",
+              "element": "item",
+              "variable": "answerItem1",
+              "condition": "linkId = '/88122-7'"
+            }
+          ],
+          "target": [
+            {
+              "context": "bundle",
+              "contextType": "variable",
+              "element": "entry",
+              "variable": "entry"
+            },
+            {
+              "context": "entry",
+              "contextType": "variable",
+              "element": "resource",
+              "variable": "observation1",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "sdohccObservation"
+                }
+              ]
+            }
+          ],
+          "dependent": [
+            {
+              "name": "TransformObservation",
+              "variable": [
+                "src",
+                "answerItem1",
+                "observation1",
+                "entry"
+              ]
+            },
+            {
+              "name": "TransformObservation1",
+              "variable": [
+                "src",
+                "answerItem1",
+                "observation1",
+                "entry"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-4",
+          "source": [
+            {
+              "context": "src",
+              "element": "item",
+              "variable": "answerItem2",
+              "condition": "linkId = '/88123-5'"
+            }
+          ],
+          "target": [
+            {
+              "context": "bundle",
+              "contextType": "variable",
+              "element": "entry",
+              "variable": "entry"
+            },
+            {
+              "context": "entry",
+              "contextType": "variable",
+              "element": "resource",
+              "variable": "observation2",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "sdohccObservation"
+                }
+              ]
+            }
+          ],
+          "dependent": [
+            {
+              "name": "TransformObservation",
+              "variable": [
+                "src",
+                "answerItem2",
+                "observation2",
+                "entry"
+              ]
+            },
+            {
+              "name": "TransformObservation2",
+              "variable": [
+                "src",
+                "answerItem2",
+                "observation2",
+                "entry"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-5",
+          "source": [
+            {
+              "context": "src",
+              "element": "item",
+              "variable": "answerItem3",
+              "condition": "linkId = '/88124-3'"
+            }
+          ],
+          "target": [
+            {
+              "context": "bundle",
+              "contextType": "variable",
+              "element": "entry",
+              "variable": "entry"
+            },
+            {
+              "context": "entry",
+              "contextType": "variable",
+              "element": "resource",
+              "variable": "observation3",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "sdohccObservation"
+                }
+              ]
+            }
+          ],
+          "dependent": [
+            {
+              "name": "TransformObservation",
+              "variable": [
+                "src",
+                "answerItem3",
+                "observation3",
+                "entry"
+              ]
+            },
+            {
+              "name": "TransformObservation3",
+              "variable": [
+                "src",
+                "answerItem3",
+                "bundle",
+                "observation3",
+                "entry"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-6",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "bundle",
+              "contextType": "variable",
+              "element": "entry",
+              "variable": "entry"
+            },
+            {
+              "context": "entry",
+              "contextType": "variable",
+              "element": "resource",
+              "variable": "groupObservation",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "sdohccObservation"
+                }
+              ]
+            }
+          ],
+          "dependent": [
+            {
+              "name": "TransformGroupObservation",
+              "variable": [
+                "src",
+                "bundle",
+                "groupObservation",
+                "entry"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-7",
+          "source": [
+            {
+              "context": "src",
+              "element": "item",
+              "condition": "linkId = '/88124-3' and answer.valueCoding.code ='LA19952-3'"
+            }
+          ],
+          "target": [
+            {
+              "context": "bundle",
+              "contextType": "variable",
+              "element": "entry",
+              "variable": "entry"
+            },
+            {
+              "context": "entry",
+              "contextType": "variable",
+              "element": "resource",
+              "variable": "condition",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "sdohccCondition"
+                }
+              ]
+            }
+          ],
+          "dependent": [
+            {
+              "name": "TransformCondition",
+              "variable": [
+                "src",
+                "bundle",
+                "condition",
+                "entry"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TransformObservation",
+      "typeMode": "none",
+      "input": [
+        {
+          "name": "src",
+          "type": "questionnaireResponse",
+          "mode": "source"
+        },
+        {
+          "name": "answerItem",
+          "type": "Any",
+          "mode": "source"
+        },
+        {
+          "name": "observation",
+          "type": "sdohccObservation",
+          "mode": "target"
+        },
+        {
+          "name": "entry",
+          "type": "Any",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "name": "rule-8",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "status",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueString": "final"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-9",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "meta",
+              "variable": "newMeta",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Meta"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-10",
+              "source": [
+                {
+                  "context": "src"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newMeta",
+                  "contextType": "variable",
+                  "element": "profile",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueString": "http://hl7.org/fhir/us/sdoh-clinicalcare/StructureDefinition/SDOHCC-ObservationScreeningResponse"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-11",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "category",
+              "transform": "cc",
+              "parameter": [
+                {
+                  "valueString": "http://terminology.hl7.org/CodeSystem/observation-category"
+                },
+                {
+                  "valueString": "social-history"
+                },
+                {
+                  "valueString": "Social History"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-12",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "category",
+              "transform": "cc",
+              "parameter": [
+                {
+                  "valueString": "http://terminology.hl7.org/CodeSystem/observation-category"
+                },
+                {
+                  "valueString": "survey"
+                },
+                {
+                  "valueString": "Survey"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-13",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "category",
+              "variable": "newCC",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "CodeableConcept"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-14",
+              "source": [
+                {
+                  "context": "src"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newCC",
+                  "contextType": "variable",
+                  "element": "coding",
+                  "variable": "newCoding",
+                  "transform": "create",
+                  "parameter": [
+                    {
+                      "valueString": "Coding"
+                    }
+                  ]
+                }
+              ],
+              "rule": [
+                {
+                  "name": "rule-15",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "system",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "http://hl7.org/fhir/us/sdoh-clinicalcare/CodeSystem/SDOHCC-CodeSystemTemporaryCodes"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "rule-16",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "code",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "food-insecurity"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "rule-17",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "display",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "Food Insecurity"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-18",
+          "source": [
+            {
+              "context": "src",
+              "element": "authored",
+              "variable": "authored"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "issued",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueId": "authored"
+                }
+              ]
+            },
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "effective",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueId": "authored"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-19",
+          "source": [
+            {
+              "context": "answerItem",
+              "element": "answer",
+              "variable": "answer"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "value",
+              "variable": "newCC",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "CodeableConcept"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-20",
+              "source": [
+                {
+                  "context": "answer",
+                  "element": "valueCoding",
+                  "variable": "coding"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newCC",
+                  "contextType": "variable",
+                  "element": "coding",
+                  "variable": "newCoding",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "coding"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-21",
+          "source": [
+            {
+              "context": "src",
+              "element": "subject",
+              "variable": "qSubject"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "subject",
+              "variable": "newReference",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Reference"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-22",
+              "source": [
+                {
+                  "context": "qSubject",
+                  "element": "reference",
+                  "variable": "qReference"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "reference",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "qReference"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "rule-23",
+              "source": [
+                {
+                  "context": "qSubject",
+                  "element": "display",
+                  "variable": "qDisplay"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "display",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "qDisplay"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TransformObservation1",
+      "typeMode": "none",
+      "input": [
+        {
+          "name": "src",
+          "type": "questionnaireResponse",
+          "mode": "source"
+        },
+        {
+          "name": "item",
+          "type": "Any",
+          "mode": "source"
+        },
+        {
+          "name": "observation",
+          "type": "sdohccObservation",
+          "mode": "target"
+        },
+        {
+          "name": "entry",
+          "type": "Any",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "name": "rule-24",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "id",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueString": "SDOHCC-ObservationResponseHungerVitalSignQuestion1Example"
+                }
+              ]
+            }
+          ],
+          "dependent": [
+            {
+              "name": "SetObservationFullUrl",
+              "variable": [
+                "observation",
+                "entry"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-25",
+          "source": [
+            {
+              "context": "item",
+              "variable": "i"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "code",
+              "variable": "code",
+              "transform": "cc",
+              "parameter": [
+                {
+                  "valueString": "http://loinc.org"
+                },
+                {
+                  "valueString": "88122-7"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-26",
+          "source": [
+            {
+              "context": "src",
+              "element": "subject",
+              "variable": "qSubject"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "performer",
+              "variable": "newReference",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Reference"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-27",
+              "source": [
+                {
+                  "context": "qSubject",
+                  "element": "reference",
+                  "variable": "qReference"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "reference",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "qReference"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "rule-28",
+              "source": [
+                {
+                  "context": "qSubject",
+                  "element": "display",
+                  "variable": "qDisplay"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "display",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "qDisplay"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-29",
+          "source": [
+            {
+              "context": "src",
+              "element": "id",
+              "variable": "id"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "derivedFrom",
+              "variable": "newReference",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Reference"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-30",
+              "source": [
+                {
+                  "context": "id"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "reference",
+                  "transform": "append",
+                  "parameter": [
+                    {
+                      "valueString": "QuestionnaireResponse/"
+                    },
+                    {
+                      "valueId": "id"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TransformObservation2",
+      "typeMode": "none",
+      "input": [
+        {
+          "name": "src",
+          "type": "questionnaireResponse",
+          "mode": "source"
+        },
+        {
+          "name": "item",
+          "type": "Any",
+          "mode": "source"
+        },
+        {
+          "name": "observation",
+          "type": "sdohccObservation",
+          "mode": "target"
+        },
+        {
+          "name": "entry",
+          "type": "Any",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "name": "rule-31",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "id",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueString": "SDOHCC-ObservationResponseHungerVitalSignQuestion2Example"
+                }
+              ]
+            }
+          ],
+          "dependent": [
+            {
+              "name": "SetObservationFullUrl",
+              "variable": [
+                "observation",
+                "entry"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-32",
+          "source": [
+            {
+              "context": "item",
+              "variable": "i"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "code",
+              "variable": "code",
+              "transform": "cc",
+              "parameter": [
+                {
+                  "valueString": "http://loinc.org"
+                },
+                {
+                  "valueString": "88123-5"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-33",
+          "source": [
+            {
+              "context": "src",
+              "element": "subject",
+              "variable": "qSubject"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "performer",
+              "variable": "newReference",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Reference"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-34",
+              "source": [
+                {
+                  "context": "qSubject",
+                  "element": "reference",
+                  "variable": "qReference"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "reference",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "qReference"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "rule-35",
+              "source": [
+                {
+                  "context": "qSubject",
+                  "element": "display",
+                  "variable": "qDisplay"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "display",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "qDisplay"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-36",
+          "source": [
+            {
+              "context": "src",
+              "element": "id",
+              "variable": "id"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "derivedFrom",
+              "variable": "newReference",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Reference"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-37",
+              "source": [
+                {
+                  "context": "id"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "reference",
+                  "transform": "append",
+                  "parameter": [
+                    {
+                      "valueString": "QuestionnaireResponse/"
+                    },
+                    {
+                      "valueId": "id"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TransformObservation3",
+      "typeMode": "none",
+      "input": [
+        {
+          "name": "src",
+          "type": "questionnaireResponse",
+          "mode": "source"
+        },
+        {
+          "name": "item",
+          "type": "Any",
+          "mode": "source"
+        },
+        {
+          "name": "bundle",
+          "type": "Any",
+          "mode": "source"
+        },
+        {
+          "name": "observation",
+          "type": "sdohccObservation",
+          "mode": "target"
+        },
+        {
+          "name": "entry",
+          "type": "Any",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "name": "rule-38",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "id",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueString": "SDOHCC-ObservationResponseHungerVitalSignQuestion3Example"
+                }
+              ]
+            }
+          ],
+          "dependent": [
+            {
+              "name": "SetObservationFullUrl",
+              "variable": [
+                "observation",
+                "entry"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-39",
+          "source": [
+            {
+              "context": "item",
+              "variable": "i"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "code",
+              "variable": "code",
+              "transform": "cc",
+              "parameter": [
+                {
+                  "valueString": "http://loinc.org"
+                },
+                {
+                  "valueString": "88124-3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-40",
+          "source": [
+            {
+              "context": "bundle",
+              "element": "entry",
+              "variable": "entries"
+            }
+          ],
+          "target": [
+            {
+              "context": "observation",
+              "contextType": "variable",
+              "element": "derivedFrom",
+              "variable": "df",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Reference"
+                }
+              ]
+            }
+          ],
+          "dependent": [
+            {
+              "name": "TransformObservationDerived",
+              "variable": [
+                "entries",
+                "df"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TransformObservationDerived",
+      "typeMode": "none",
+      "input": [
+        {
+          "name": "entries",
+          "type": "Any",
+          "mode": "source"
+        },
+        {
+          "name": "df",
+          "type": "Any",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "name": "rule-41",
+          "source": [
+            {
+              "context": "entries",
+              "element": "resource",
+              "variable": "obs1",
+              "condition": "code.coding.code = '88122-7'"
+            }
+          ],
+          "target": [
+            {
+              "context": "df",
+              "contextType": "variable",
+              "element": "reference",
+              "transform": "reference",
+              "parameter": [
+                {
+                  "valueId": "obs1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-42",
+          "source": [
+            {
+              "context": "entries",
+              "element": "resource",
+              "variable": "obs2",
+              "condition": "code.coding.code = '88123-5'"
+            }
+          ],
+          "target": [
+            {
+              "context": "df",
+              "contextType": "variable",
+              "element": "reference",
+              "transform": "reference",
+              "parameter": [
+                {
+                  "valueId": "obs2"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TransformGroupObservation",
+      "typeMode": "none",
+      "input": [
+        {
+          "name": "src",
+          "type": "questionnaireResponse",
+          "mode": "source"
+        },
+        {
+          "name": "bundle",
+          "type": "Bundle",
+          "mode": "source"
+        },
+        {
+          "name": "groupObservation",
+          "type": "Observation",
+          "mode": "target"
+        },
+        {
+          "name": "entry",
+          "type": "Any",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "name": "rule-43",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "groupObservation",
+              "contextType": "variable",
+              "element": "meta",
+              "variable": "newMeta",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Meta"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-44",
+              "source": [
+                {
+                  "context": "src"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newMeta",
+                  "contextType": "variable",
+                  "element": "profile",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueString": "http://hl7.org/fhir/us/sdoh-clinicalcare/StructureDefinition/SDOHCC-ObservationScreeningResponse"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-45",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "groupObservation",
+              "contextType": "variable",
+              "element": "id",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueString": "SDOHCC-ObservationResponseHungerVitalSignGroupingExample"
+                }
+              ]
+            }
+          ],
+          "dependent": [
+            {
+              "name": "SetObservationFullUrl",
+              "variable": [
+                "groupObservation",
+                "entry"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-46",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "groupObservation",
+              "contextType": "variable",
+              "element": "status",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueString": "final"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-47",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "groupObservation",
+              "contextType": "variable",
+              "element": "category",
+              "transform": "cc",
+              "parameter": [
+                {
+                  "valueString": "http://terminology.hl7.org/CodeSystem/observation-category"
+                },
+                {
+                  "valueString": "social-history"
+                },
+                {
+                  "valueString": "Social History"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-48",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "groupObservation",
+              "contextType": "variable",
+              "element": "category",
+              "transform": "cc",
+              "parameter": [
+                {
+                  "valueString": "http://terminology.hl7.org/CodeSystem/observation-category"
+                },
+                {
+                  "valueString": "survey"
+                },
+                {
+                  "valueString": "Survey"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-49",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "groupObservation",
+              "contextType": "variable",
+              "element": "category",
+              "variable": "newCC",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "CodeableConcept"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-50",
+              "source": [
+                {
+                  "context": "src"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newCC",
+                  "contextType": "variable",
+                  "element": "coding",
+                  "variable": "newCoding",
+                  "transform": "create",
+                  "parameter": [
+                    {
+                      "valueString": "Coding"
+                    }
+                  ]
+                }
+              ],
+              "rule": [
+                {
+                  "name": "rule-51",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "system",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "http://hl7.org/fhir/us/sdoh-clinicalcare/CodeSystem/SDOHCC-CodeSystemTemporaryCodes"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "rule-52",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "code",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "food-insecurity"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "rule-53",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "display",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "Food Insecurity"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-54",
+          "source": [
+            {
+              "context": "src",
+              "element": "authored",
+              "variable": "authored"
+            }
+          ],
+          "target": [
+            {
+              "context": "groupObservation",
+              "contextType": "variable",
+              "element": "effective",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueId": "authored"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-55",
+          "source": [
+            {
+              "context": "src",
+              "element": "subject",
+              "variable": "qSubject"
+            }
+          ],
+          "target": [
+            {
+              "context": "groupObservation",
+              "contextType": "variable",
+              "element": "subject",
+              "variable": "newReference",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Reference"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-56",
+              "source": [
+                {
+                  "context": "qSubject",
+                  "element": "reference",
+                  "variable": "qReference"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "reference",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "qReference"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "rule-57",
+              "source": [
+                {
+                  "context": "qSubject",
+                  "element": "display",
+                  "variable": "qDisplay"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "display",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "qDisplay"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-58",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "groupObservation",
+              "contextType": "variable",
+              "element": "code",
+              "transform": "cc",
+              "parameter": [
+                {
+                  "valueString": "http://loinc.org"
+                },
+                {
+                  "valueString": "88121-9"
+                },
+                {
+                  "valueString": "Hunger Vital Sign [HVS]"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-59",
+          "source": [
+            {
+              "context": "bundle",
+              "element": "entry",
+              "variable": "entries"
+            }
+          ],
+          "target": [
+            {
+              "context": "groupObservation",
+              "contextType": "variable",
+              "element": "hasMember",
+              "variable": "df",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Reference"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-60",
+              "source": [
+                {
+                  "context": "entries",
+                  "element": "resource",
+                  "variable": "obs1",
+                  "condition": "code.coding.code = '88122-7'"
+                }
+              ],
+              "target": [
+                {
+                  "context": "df",
+                  "contextType": "variable",
+                  "element": "reference",
+                  "transform": "reference",
+                  "parameter": [
+                    {
+                      "valueId": "obs1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "rule-61",
+              "source": [
+                {
+                  "context": "entries",
+                  "element": "resource",
+                  "variable": "obs2",
+                  "condition": "code.coding.code = '88123-5'"
+                }
+              ],
+              "target": [
+                {
+                  "context": "df",
+                  "contextType": "variable",
+                  "element": "reference",
+                  "transform": "reference",
+                  "parameter": [
+                    {
+                      "valueId": "obs2"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "rule-62",
+              "source": [
+                {
+                  "context": "entries",
+                  "element": "resource",
+                  "variable": "obs3",
+                  "condition": "code.coding.code = '88124-3'"
+                }
+              ],
+              "target": [
+                {
+                  "context": "df",
+                  "contextType": "variable",
+                  "element": "reference",
+                  "transform": "reference",
+                  "parameter": [
+                    {
+                      "valueId": "obs3"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-63",
+          "source": [
+            {
+              "context": "src",
+              "element": "id",
+              "variable": "id"
+            }
+          ],
+          "target": [
+            {
+              "context": "groupObservation",
+              "contextType": "variable",
+              "element": "derivedFrom",
+              "variable": "newReference",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Reference"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-64",
+              "source": [
+                {
+                  "context": "id"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "reference",
+                  "transform": "append",
+                  "parameter": [
+                    {
+                      "valueString": "QuestionnaireResponse/"
+                    },
+                    {
+                      "valueId": "id"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SetObservationFullUrl",
+      "typeMode": "none",
+      "input": [
+        {
+          "name": "observation",
+          "type": "Observation",
+          "mode": "source"
+        },
+        {
+          "name": "entry",
+          "type": "Any",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "name": "rule-65",
+          "source": [
+            {
+              "context": "observation",
+              "element": "id",
+              "variable": "id"
+            }
+          ],
+          "target": [
+            {
+              "context": "entry",
+              "contextType": "variable",
+              "element": "fullUrl",
+              "transform": "append",
+              "parameter": [
+                {
+                  "valueString": "http://hl7.org/fhir/us/sdoh-clinicalcare/Observation/"
+                },
+                {
+                  "valueId": "id"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TransformCondition",
+      "typeMode": "none",
+      "input": [
+        {
+          "name": "src",
+          "type": "questionnaireResponse",
+          "mode": "source"
+        },
+        {
+          "name": "bundle",
+          "type": "Any",
+          "mode": "source"
+        },
+        {
+          "name": "condition",
+          "type": "sdohccCondition",
+          "mode": "target"
+        },
+        {
+          "name": "entry",
+          "type": "Any",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "name": "rule-66",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "condition",
+              "contextType": "variable",
+              "element": "id",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueString": "SDOHCC-ConditionFoodInsecurityExample"
+                }
+              ]
+            }
+          ],
+          "dependent": [
+            {
+              "name": "SetConditionFullUrl",
+              "variable": [
+                "condition",
+                "entry"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-67",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "condition",
+              "contextType": "variable",
+              "element": "meta",
+              "variable": "newMeta",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Meta"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-68",
+              "source": [
+                {
+                  "context": "src"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newMeta",
+                  "contextType": "variable",
+                  "element": "profile",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueString": "http://hl7.org/fhir/us/sdoh-clinicalcare/StructureDefinition/SDOHCC-Condition"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-69",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "condition",
+              "contextType": "variable",
+              "element": "clinicalStatus",
+              "transform": "cc",
+              "parameter": [
+                {
+                  "valueString": "http://terminology.hl7.org/CodeSystem/condition-clinical"
+                },
+                {
+                  "valueString": "active"
+                },
+                {
+                  "valueString": "Active"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-70",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "condition",
+              "contextType": "variable",
+              "element": "verificationStatus",
+              "transform": "cc",
+              "parameter": [
+                {
+                  "valueString": "http://terminology.hl7.org/CodeSystem/condition-ver-status"
+                },
+                {
+                  "valueString": "unconfirmed"
+                },
+                {
+                  "valueString": "Unconfirmed"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-71",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "condition",
+              "contextType": "variable",
+              "element": "category",
+              "variable": "newCC",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "CodeableConcept"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-72",
+              "source": [
+                {
+                  "context": "src"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newCC",
+                  "contextType": "variable",
+                  "element": "coding",
+                  "variable": "newCoding",
+                  "transform": "create",
+                  "parameter": [
+                    {
+                      "valueString": "Coding"
+                    }
+                  ]
+                }
+              ],
+              "rule": [
+                {
+                  "name": "rule-73",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "system",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "http://hl7.org/fhir/us/core/CodeSystem/condition-category"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "rule-74",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "code",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "health-concern"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "rule-75",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "display",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "Health Concern"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-76",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "condition",
+              "contextType": "variable",
+              "element": "category",
+              "variable": "newCC",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "CodeableConcept"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-77",
+              "source": [
+                {
+                  "context": "src"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newCC",
+                  "contextType": "variable",
+                  "element": "coding",
+                  "variable": "newCoding",
+                  "transform": "create",
+                  "parameter": [
+                    {
+                      "valueString": "Coding"
+                    }
+                  ]
+                }
+              ],
+              "rule": [
+                {
+                  "name": "rule-78",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "system",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "http://hl7.org/fhir/us/sdoh-clinicalcare/CodeSystem/SDOHCC-CodeSystemTemporaryCodes"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "rule-79",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "code",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "food-insecurity"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "rule-80",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "display",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "Food Insecurity"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-81",
+          "source": [
+            {
+              "context": "src"
+            }
+          ],
+          "target": [
+            {
+              "context": "condition",
+              "contextType": "variable",
+              "element": "code",
+              "variable": "newCodeCC",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "CodeableConcept"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-82",
+              "source": [
+                {
+                  "context": "src"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newCodeCC",
+                  "contextType": "variable",
+                  "element": "coding",
+                  "variable": "newCoding",
+                  "transform": "create",
+                  "parameter": [
+                    {
+                      "valueString": "Coding"
+                    }
+                  ]
+                }
+              ],
+              "rule": [
+                {
+                  "name": "rule-83",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "system",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "http://snomed.info/sct"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "rule-84",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "code",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "733423003"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "rule-85",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding",
+                      "contextType": "variable",
+                      "element": "display",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "Food insecurity"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "rule-86",
+              "source": [
+                {
+                  "context": "src"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newCodeCC",
+                  "contextType": "variable",
+                  "element": "coding",
+                  "variable": "newCoding2",
+                  "transform": "create",
+                  "parameter": [
+                    {
+                      "valueString": "Coding"
+                    }
+                  ]
+                }
+              ],
+              "rule": [
+                {
+                  "name": "rule-87",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding2",
+                      "contextType": "variable",
+                      "element": "system",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "http://hl7.org/fhir/sid/icd-10-cm"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "rule-88",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding2",
+                      "contextType": "variable",
+                      "element": "code",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "Z59.4"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "rule-89",
+                  "source": [
+                    {
+                      "context": "src"
+                    }
+                  ],
+                  "target": [
+                    {
+                      "context": "newCoding2",
+                      "contextType": "variable",
+                      "element": "display",
+                      "transform": "copy",
+                      "parameter": [
+                        {
+                          "valueString": "Lack of adequate food and safe drinking water"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-90",
+          "source": [
+            {
+              "context": "src",
+              "element": "authored",
+              "variable": "authored"
+            }
+          ],
+          "target": [
+            {
+              "context": "condition",
+              "contextType": "variable",
+              "element": "onset",
+              "variable": "period",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Period"
+                }
+              ]
+            },
+            {
+              "context": "period",
+              "contextType": "variable",
+              "element": "start",
+              "transform": "copy",
+              "parameter": [
+                {
+                  "valueId": "authored"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-91",
+          "source": [
+            {
+              "context": "bundle",
+              "element": "entry",
+              "variable": "entries"
+            }
+          ],
+          "target": [
+            {
+              "context": "condition",
+              "contextType": "variable",
+              "element": "evidence",
+              "variable": "evidence"
+            },
+            {
+              "context": "evidence",
+              "contextType": "variable",
+              "element": "detail",
+              "variable": "detailReference",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Reference"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-92",
+              "source": [
+                {
+                  "context": "entries",
+                  "element": "resource",
+                  "variable": "obs3",
+                  "condition": "code.coding.code = '88124-3'"
+                }
+              ],
+              "target": [
+                {
+                  "context": "detailReference",
+                  "contextType": "variable",
+                  "element": "reference",
+                  "transform": "reference",
+                  "parameter": [
+                    {
+                      "valueId": "obs3"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rule-93",
+          "source": [
+            {
+              "context": "src",
+              "element": "subject",
+              "variable": "qSubject"
+            }
+          ],
+          "target": [
+            {
+              "context": "condition",
+              "contextType": "variable",
+              "element": "subject",
+              "variable": "newReference",
+              "transform": "create",
+              "parameter": [
+                {
+                  "valueString": "Reference"
+                }
+              ]
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule-94",
+              "source": [
+                {
+                  "context": "qSubject",
+                  "element": "reference",
+                  "variable": "qReference"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "reference",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "qReference"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "rule-95",
+              "source": [
+                {
+                  "context": "qSubject",
+                  "element": "display",
+                  "variable": "qDisplay"
+                }
+              ],
+              "target": [
+                {
+                  "context": "newReference",
+                  "contextType": "variable",
+                  "element": "display",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "qDisplay"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SetConditionFullUrl",
+      "typeMode": "none",
+      "input": [
+        {
+          "name": "condition",
+          "type": "sdohccCondition",
+          "mode": "source"
+        },
+        {
+          "name": "entry",
+          "type": "Any",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "name": "rule-96",
+          "source": [
+            {
+              "context": "condition",
+              "element": "id",
+              "variable": "id"
+            }
+          ],
+          "target": [
+            {
+              "context": "entry",
+              "contextType": "variable",
+              "element": "fullUrl",
+              "transform": "append",
+              "parameter": [
+                {
+                  "valueString": "http://hl7.org/fhir/us/sdoh-clinicalcare/Condition/"
+                },
+                {
+                  "valueId": "id"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

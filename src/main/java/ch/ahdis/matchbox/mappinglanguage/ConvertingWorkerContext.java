@@ -62,7 +62,16 @@ import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper {
 
   private List<org.hl7.fhir.r5.model.StructureDefinition> myAllStructures = null;
- 
+
+  
+  @Override
+  // see Issue https://github.com/ahdis/matchbox/issues/48
+  // ca.uhn.fhir.rest.server.exceptions.InternalErrorException: HAPI-0389: Failed to call access method: org.hl7.fhir.exceptions.FHIRException: Exception executing transform observation.category = cc('http://terminology.hl7.org/CodeSystem/observation-category', 'social-history', 'Social History') on Rule "rule-11": HAPI-0667: Can not find resource of type ValueSet with uri http://terminology.hl7.org/CodeSystem/observation-category
+  // workaround, we don't through an exception when we don't find the uri
+  public <T extends Resource> T fetchResourceWithException(Class<T> theClass_, String theUri) throws FHIRException {
+    T retVal = fetchResource(theClass_, theUri);
+    return retVal;
+  }
 
   // see Issue https://github.com/ahdis/matchbox/issues/31  
   // this function gets now only the base StructureDefinition for R4 which the FHIRPathEngine is using to initialize itself

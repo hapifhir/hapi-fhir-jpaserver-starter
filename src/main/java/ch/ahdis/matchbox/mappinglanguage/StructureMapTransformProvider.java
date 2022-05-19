@@ -29,13 +29,13 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.IdType;
-import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r4.model.StructureMap;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element;
@@ -47,6 +47,8 @@ import org.hl7.fhir.r5.model.Property;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureMap.StructureMapStructureComponent;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
+import org.hl7.fhir.utilities.xhtml.NodeType;
+import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.uhn.fhir.rest.annotation.IdParam;
@@ -66,9 +68,19 @@ import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
  */
 public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.StructureMapResourceProvider {
   
+  public void createNarrative(StructureMap map) {
+    if (!map.hasText()) {
+      map.getText().setStatus(NarrativeStatus.GENERATED);
+      map.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
+      String render = StructureMapUtilities.render((org.hl7.fhir.r5.model.StructureMap) VersionConvertorFactory_40_50.convertResource(map));
+      map.getText().getDiv().addTag("pre").addText(render);
+    }
+  }
+  
   @Override
   public MethodOutcome create(HttpServletRequest theRequest, StructureMap theResource, String theConditional,
       RequestDetails theRequestDetails) {
+    createNarrative(theResource);
     if (theResource.getUrl()!=null) {
        org.hl7.fhir.r5.model.StructureMap existing = baseWorkerContext.getTransform(theResource.getUrl());
        if (existing !=null ) {
@@ -84,6 +96,7 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
   @Override
   public MethodOutcome update(HttpServletRequest theRequest, StructureMap theResource, IIdType theId,
       String theConditional, RequestDetails theRequestDetails) {
+    createNarrative(theResource);
     return super.update(theRequest, fixMap(theResource), theId, theConditional, theRequestDetails);
   }
 
@@ -231,7 +244,6 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
     log.debug("$convert");
     return content;
   }
-    
-	
+
 }
 

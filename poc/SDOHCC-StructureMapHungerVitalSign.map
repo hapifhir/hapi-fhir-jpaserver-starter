@@ -1,0 +1,159 @@
+map "http://hl7.org/fhir/uv/sdc/StructureMap/SDOHCC-StructureMapHungerVitalSignMap" = "SDOHCCStructureMapHungerVitalSign"
+// A map that converts an SDOCC hunger vital sign questionnaire to a Bundle of Conditions and Observations
+
+uses "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse" alias questionnaireResponse as source
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" as target
+uses "http://hl7.org/fhir/StructureDefinition/Observation" as target
+uses "http://hl7.org/fhir/StructureDefinition/Condition" alias sdohccCondition as target
+uses "http://hl7.org/fhir/StructureDefinition/Observation" alias sdohccObservation as target
+
+group sdohMapping(source src : questionnaireResponse, target bundle : Bundle) {
+  src -> bundle.id = 'SDOHCC-BundleHungerVitalSignExample' "rule-1";
+  src -> bundle.type = 'transaction' "rule-2";
+  src.item as answerItem1 where linkId = '/88122-7' ->  bundle.entry as entry,  entry.resource = create('sdohccObservation') as observation1 then TransformObservation(src, answerItem1, observation1, entry), TransformObservation1(src, answerItem1, observation1, entry) "rule-3";
+  src.item as answerItem2 where linkId = '/88123-5' ->  bundle.entry as entry,  entry.resource = create('sdohccObservation') as observation2 then TransformObservation(src, answerItem2, observation2, entry), TransformObservation2(src, answerItem2, observation2, entry) "rule-4";
+  src.item as answerItem3 where linkId = '/88124-3' ->  bundle.entry as entry,  entry.resource = create('sdohccObservation') as observation3 then TransformObservation(src, answerItem3, observation3, entry), TransformObservation3(src, answerItem3, bundle, observation3, entry) "rule-5";
+  src ->  bundle.entry as entry,  entry.resource = create('sdohccObservation') as groupObservation then TransformGroupObservation(src, bundle, groupObservation, entry) "rule-6";
+  src.item where linkId = '/88124-3' and answer.valueCoding.code ='LA19952-3' ->  bundle.entry as entry,  entry.resource = create('sdohccCondition') as condition then TransformCondition(src, bundle, condition, entry) "rule-7";
+}
+
+group TransformObservation(source src : questionnaireResponse, source answerItem : Any, target observation : sdohccObservation, target entry : Any) {
+  src -> observation.status = 'final' "rule-8";
+  src -> observation.meta = create('Meta') as newMeta then {
+    src -> newMeta.profile = 'http://hl7.org/fhir/us/sdoh-clinicalcare/StructureDefinition/SDOHCC-ObservationScreeningResponse' "rule-10";
+  } "rule-9";
+  src -> observation.category = cc('http://terminology.hl7.org/CodeSystem/observation-category', 'social-history', 'Social History') "rule-11";
+  src -> observation.category = cc('http://terminology.hl7.org/CodeSystem/observation-category', 'survey', 'Survey') "rule-12";
+  src -> observation.category = create('CodeableConcept') as newCC then {
+    src -> newCC.coding = create('Coding') as newCoding then {
+      src -> newCoding.system = 'http://hl7.org/fhir/us/sdoh-clinicalcare/CodeSystem/SDOHCC-CodeSystemTemporaryCodes' "rule-15";
+      src -> newCoding.code = 'food-insecurity' "rule-16";
+      src -> newCoding.display = 'Food Insecurity' "rule-17";
+    } "rule-14";
+  } "rule-13";
+  src.authored as authored ->  observation.issued = authored,  observation.effective = authored "rule-18";
+  answerItem.answer as answer -> observation.value = create('CodeableConcept') as newCC then {
+    answer.valueCoding as coding -> newCC.coding = coding as newCoding "rule-20";
+  } "rule-19";
+  src.subject as qSubject -> observation.subject = create('Reference') as newReference then {
+    qSubject.reference as qReference -> newReference.reference = qReference "rule-22";
+    qSubject.display as qDisplay -> newReference.display = qDisplay "rule-23";
+  } "rule-21";
+}
+
+group TransformObservation1(source src : questionnaireResponse, source item : Any, target observation : sdohccObservation, target entry : Any) {
+  src -> observation.id = 'SDOHCC-ObservationResponseHungerVitalSignQuestion1Example' then SetObservationFullUrl(observation, entry) "rule-24";
+  item as i -> observation.code = cc('http://loinc.org', '88122-7') as code "rule-25";
+  src.subject as qSubject -> observation.performer = create('Reference') as newReference then {
+    qSubject.reference as qReference -> newReference.reference = qReference "rule-27";
+    qSubject.display as qDisplay -> newReference.display = qDisplay "rule-28";
+  } "rule-26";
+  src.id as id -> observation.derivedFrom = create('Reference') as newReference then {
+    id -> newReference.reference = append('QuestionnaireResponse/', id) "rule-30";
+  } "rule-29";
+}
+
+group TransformObservation2(source src : questionnaireResponse, source item : Any, target observation : sdohccObservation, target entry : Any) {
+  src -> observation.id = 'SDOHCC-ObservationResponseHungerVitalSignQuestion2Example' then SetObservationFullUrl(observation, entry) "rule-31";
+  item as i -> observation.code = cc('http://loinc.org', '88123-5') as code "rule-32";
+  src.subject as qSubject -> observation.performer = create('Reference') as newReference then {
+    qSubject.reference as qReference -> newReference.reference = qReference "rule-34";
+    qSubject.display as qDisplay -> newReference.display = qDisplay "rule-35";
+  } "rule-33";
+  src.id as id -> observation.derivedFrom = create('Reference') as newReference then {
+    id -> newReference.reference = append('QuestionnaireResponse/', id) "rule-37";
+  } "rule-36";
+}
+
+group TransformObservation3(source src : questionnaireResponse, source item : Any, source bundle : Any, target observation : sdohccObservation, target entry : Any) {
+  src -> observation.id = 'SDOHCC-ObservationResponseHungerVitalSignQuestion3Example' then SetObservationFullUrl(observation, entry) "rule-38";
+  item as i -> observation.code = cc('http://loinc.org', '88124-3') as code "rule-39";
+  bundle.entry as entries -> observation.derivedFrom = create('Reference') as df then TransformObservationDerived(entries, df) "rule-40";
+}
+
+group TransformObservationDerived(source entries : Any, target df : Any) {
+  entries.resource as obs1 where code.coding.code = '88122-7' -> df.reference = reference(obs1) "rule-41";
+  entries.resource as obs2 where code.coding.code = '88123-5' -> df.reference = reference(obs2) "rule-42";
+}
+
+group TransformGroupObservation(source src : questionnaireResponse, source bundle : Bundle, target groupObservation : Observation, target entry : Any) {
+  src -> groupObservation.meta = create('Meta') as newMeta then {
+    src -> newMeta.profile = 'http://hl7.org/fhir/us/sdoh-clinicalcare/StructureDefinition/SDOHCC-ObservationScreeningResponse' "rule-44";
+  } "rule-43";
+  src -> groupObservation.id = 'SDOHCC-ObservationResponseHungerVitalSignGroupingExample' then SetObservationFullUrl(groupObservation, entry) "rule-45";
+  src -> groupObservation.status = 'final' "rule-46";
+  src -> groupObservation.category = cc('http://terminology.hl7.org/CodeSystem/observation-category', 'social-history', 'Social History') "rule-47";
+  src -> groupObservation.category = cc('http://terminology.hl7.org/CodeSystem/observation-category', 'survey', 'Survey') "rule-48";
+  src -> groupObservation.category = create('CodeableConcept') as newCC then {
+    src -> newCC.coding = create('Coding') as newCoding then {
+      src -> newCoding.system = 'http://hl7.org/fhir/us/sdoh-clinicalcare/CodeSystem/SDOHCC-CodeSystemTemporaryCodes' "rule-51";
+      src -> newCoding.code = 'food-insecurity' "rule-52";
+      src -> newCoding.display = 'Food Insecurity' "rule-53";
+    } "rule-50";
+  } "rule-49";
+  src.authored as authored -> groupObservation.effective = authored "rule-54";
+  src.subject as qSubject -> groupObservation.subject = create('Reference') as newReference then {
+    qSubject.reference as qReference -> newReference.reference = qReference "rule-56";
+    qSubject.display as qDisplay -> newReference.display = qDisplay "rule-57";
+  } "rule-55";
+  src -> groupObservation.code = cc('http://loinc.org', '88121-9', 'Hunger Vital Sign [HVS]') "rule-58";
+  bundle.entry as entries -> groupObservation.hasMember = create('Reference') as df then {
+    entries.resource as obs1 where code.coding.code = '88122-7' -> df.reference = reference(obs1) "rule-60";
+    entries.resource as obs2 where code.coding.code = '88123-5' -> df.reference = reference(obs2) "rule-61";
+    entries.resource as obs3 where code.coding.code = '88124-3' -> df.reference = reference(obs3) "rule-62";
+  } "rule-59";
+  src.id as id -> groupObservation.derivedFrom = create('Reference') as newReference then {
+    id -> newReference.reference = append('QuestionnaireResponse/', id) "rule-64";
+  } "rule-63";
+}
+
+group SetObservationFullUrl(source observation : Observation, target entry : Any) {
+  observation.id as id -> entry.fullUrl = append('http://hl7.org/fhir/us/sdoh-clinicalcare/Observation/', id) "rule-65";
+}
+
+group TransformCondition(source src : questionnaireResponse, source bundle : Any, target condition : sdohccCondition, target entry : Any) {
+  src -> condition.id = 'SDOHCC-ConditionFoodInsecurityExample' then SetConditionFullUrl(condition, entry) "rule-66";
+  src -> condition.meta = create('Meta') as newMeta then {
+    src -> newMeta.profile = 'http://hl7.org/fhir/us/sdoh-clinicalcare/StructureDefinition/SDOHCC-Condition' "rule-68";
+  } "rule-67";
+  src -> condition.clinicalStatus = cc('http://terminology.hl7.org/CodeSystem/condition-clinical', 'active', 'Active') "rule-69";
+  src -> condition.verificationStatus = cc('http://terminology.hl7.org/CodeSystem/condition-ver-status', 'unconfirmed', 'Unconfirmed') "rule-70";
+  src -> condition.category = create('CodeableConcept') as newCC then {
+    src -> newCC.coding = create('Coding') as newCoding then {
+      src -> newCoding.system = 'http://hl7.org/fhir/us/core/CodeSystem/condition-category' "rule-73";
+      src -> newCoding.code = 'health-concern' "rule-74";
+      src -> newCoding.display = 'Health Concern' "rule-75";
+    } "rule-72";
+  } "rule-71";
+  src -> condition.category = create('CodeableConcept') as newCC then {
+    src -> newCC.coding = create('Coding') as newCoding then {
+      src -> newCoding.system = 'http://hl7.org/fhir/us/sdoh-clinicalcare/CodeSystem/SDOHCC-CodeSystemTemporaryCodes' "rule-78";
+      src -> newCoding.code = 'food-insecurity' "rule-79";
+      src -> newCoding.display = 'Food Insecurity' "rule-80";
+    } "rule-77";
+  } "rule-76";
+  src -> condition.code = create('CodeableConcept') as newCodeCC then {
+    src -> newCodeCC.coding = create('Coding') as newCoding then {
+      src -> newCoding.system = 'http://snomed.info/sct' "rule-83";
+      src -> newCoding.code = '733423003' "rule-84";
+      src -> newCoding.display = 'Food insecurity' "rule-85";
+    } "rule-82";
+    src -> newCodeCC.coding = create('Coding') as newCoding2 then {
+      src -> newCoding2.system = 'http://hl7.org/fhir/sid/icd-10-cm' "rule-87";
+      src -> newCoding2.code = 'Z59.4' "rule-88";
+      src -> newCoding2.display = 'Lack of adequate food and safe drinking water' "rule-89";
+    } "rule-86";
+  } "rule-81";
+  src.authored as authored ->  condition.onset = create('Period') as period,  period.start = authored "rule-90";
+  bundle.entry as entries ->  condition.evidence as evidence,  evidence.detail = create('Reference') as detailReference then {
+    entries.resource as obs3 where code.coding.code = '88124-3' -> detailReference.reference = reference(obs3) "rule-92";
+  } "rule-91";
+  src.subject as qSubject -> condition.subject = create('Reference') as newReference then {
+    qSubject.reference as qReference -> newReference.reference = qReference "rule-94";
+    qSubject.display as qDisplay -> newReference.display = qDisplay "rule-95";
+  } "rule-93";
+}
+
+group SetConditionFullUrl(source condition : sdohccCondition, target entry : Any) {
+  condition.id as id -> entry.fullUrl = append('http://hl7.org/fhir/us/sdoh-clinicalcare/Condition/', id) "rule-96";
+}
