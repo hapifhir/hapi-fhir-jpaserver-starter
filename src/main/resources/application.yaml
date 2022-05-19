@@ -1,6 +1,14 @@
+#Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
+#see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
 spring:
   main:
     allow-circular-references: true
+    #allow-bean-definition-overriding: true
   flyway:
     enabled: false
     check-location: false
@@ -83,9 +91,13 @@ hapi:
     #    delete_expunge_enabled: true
     #    enable_repository_validating_interceptor: false
     #    enable_index_missing_fields: false
+    #    enable_index_of_type: true
     #    enable_index_contained_resource: false
-    # This is an experimental feature, and does not fully support _total and other FHIR features.
+    ###  !!Extended Lucene/Elasticsearch Indexing is still a experimental feature, expect some features (e.g. _total=accurate) to not work as expected!!
+    ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
     advanced_lucene_indexing: false
+    #    enforce_referential_integrity_on_delete: false
+    # This is an experimental feature, and does not fully support _total and other FHIR features.
 #    enforce_referential_integrity_on_delete: false
     #    enforce_referential_integrity_on_write: false
     #    etag_support_enabled: true

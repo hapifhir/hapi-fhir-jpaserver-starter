@@ -25,12 +25,14 @@ public class AppProperties {
   private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
   private boolean advanced_lucene_indexing = false;
+  private boolean enable_index_of_type = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
   private Boolean allow_external_references = false;
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
+  private Boolean dao_scheduling_enabled = true;
   private Boolean delete_expunge_enabled = false;
   private Boolean enable_index_missing_fields = false;
   private Boolean enable_index_contained_resource = false;
@@ -284,6 +286,14 @@ public class AppProperties {
 
   public void setDefault_page_size(Integer default_page_size) {
     this.default_page_size = default_page_size;
+  }
+
+  public Boolean getDao_scheduling_enabled() {
+    return dao_scheduling_enabled;
+  }
+
+  public void setDao_scheduling_enabled(Boolean dao_scheduling_enabled) {
+    this.dao_scheduling_enabled = dao_scheduling_enabled;
   }
 
   public Boolean getDelete_expunge_enabled() {
@@ -806,5 +816,13 @@ public class AppProperties {
       private Boolean startTlsRequired = false;
       private Boolean quitWait = false;
     }
+  }
+
+  public boolean getEnable_index_of_type() {
+    return enable_index_of_type;
+  }
+
+  public void setEnable_index_of_type(boolean enable_index_of_type) {
+    this.enable_index_of_type = enable_index_of_type;
   }
 }
