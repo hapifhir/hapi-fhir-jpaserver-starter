@@ -14,13 +14,13 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-		  <version>5.7.2</version>
+		  <version>6.0.0</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
 
     <properties>
-        <java.version>8</java.version>
+        <java.version>11</java.version>
     </properties>
 
     <prerequisites>
@@ -405,7 +405,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <release>8</release>
+                    <release>11</release>
                 </configuration>
             </plugin>
 

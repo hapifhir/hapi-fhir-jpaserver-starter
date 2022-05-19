@@ -95,8 +95,10 @@ hapi:
     #    enable_index_contained_resource: false
     ###  !!Extended Lucene/Elasticsearch Indexing is still a experimental feature, expect some features (e.g. _total=accurate) to not work as expected!!
     ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
-    #    advanced_lucene_indexing: false
+    advanced_lucene_indexing: false
     #    enforce_referential_integrity_on_delete: false
+    # This is an experimental feature, and does not fully support _total and other FHIR features.
+#    enforce_referential_integrity_on_delete: false
     #    enforce_referential_integrity_on_write: false
     #    etag_support_enabled: true
     #    expunge_enabled: true
@@ -109,6 +111,7 @@ hapi:
     #    mdm_enabled: true
 #    local_base_urls:
 #      - https://hapi.fhir.org/baseR4
+    mdm_enabled: false
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
