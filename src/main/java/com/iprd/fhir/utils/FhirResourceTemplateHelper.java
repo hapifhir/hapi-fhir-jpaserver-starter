@@ -2,17 +2,13 @@ package com.iprd.fhir.utils;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.lang.String;
 
-import org.hl7.fhir.instance.model.api.IBaseCoding;
-import org.hl7.fhir.r4.model.Address;
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.Identifier;
-import org.hl7.fhir.r4.model.Location;
+
+import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.r4.model.Location.LocationMode;
 import org.hl7.fhir.r4.model.Location.LocationStatus;
-import org.hl7.fhir.r4.model.Organization;
-import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
+import org.hl7.fhir.r4.model.ContactPoint;
 
 
 public class FhirResourceTemplateHelper {
@@ -24,6 +20,8 @@ public class FhirResourceTemplateHelper {
 	private static String CODE_CLINIC = "prov";
 	private static String DISPLAY_CLINIC = "Healthcare Provider";
 	private static String SYSTEM_CLINIC = "	http://hl7.org/fhir/ValueSet/organization-type";
+
+	private static String CONTACT_CLINIC = "+234-9087890123";
 	public static Location state(String name)
 	{
 		Location state = new Location();
@@ -85,7 +83,7 @@ public class FhirResourceTemplateHelper {
 		return ward;
 	}
 	
-	public static Organization clinic(String name, String address) {
+	public static Organization clinic(String name, String address,String facilityUID,String facilityCode,String contact) {
 		Organization clinic = new Organization();
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		List<Address> addresses = new ArrayList<>();
@@ -96,11 +94,15 @@ public class FhirResourceTemplateHelper {
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier identifier1 = new Identifier();
 		Identifier identifier2 = new Identifier();
-		identifier1.setId(CLINIC_FACILITYCODE);
-		identifier2.setId(CLINIC_FACILITYUID);
+		identifier1.setId(facilityCode);
+		identifier2.setId(facilityUID);
 		identifiers.add(identifier1);
 		identifiers.add(identifier2);
 		clinic.setIdentifier(identifiers);
+		List<ContactPoint> contactPoints = new ArrayList<>();
+		ContactPoint contactPoint = new ContactPoint();
+		contactPoint.setValue(String.valueOf(new org.hl7.fhir.String().withValue(contact)));
+		clinic.setTelecom(contactPoints);
 		CodeableConcept codeableConcept = new CodeableConcept();
 		Coding coding = new Coding();
 		coding.setCode(CODE_CLINIC);

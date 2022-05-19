@@ -43,13 +43,13 @@ public class FhirResourceTemplateHelperTest {
 		assertEquals(test.getMode(), "instance");
 	}
 	
-	@Test
-	public void testClinic() {
-		Organization test = FhirResourceTemplateHelper.clinic("St Lucia Hospital", "oyo");
-		assertEquals(test.getName(),"St Lucia Hospital");
-		assertEquals(test.getAddress(), "oyo");
-		assertEquals(test.getIdentifier(),"19145158");
-		assertEquals(test.getIdentifier(),"30/08/1/1/1/0019");
-		assertEquals(test.getType(),"prov");
-	}
+//	@Test
+//	public void testClinic() {
+//		Organization test = FhirResourceTemplateHelper.clinic("St Lucia Hospital", "oyo");
+//		assertEquals(test.getName(),"St Lucia Hospital");
+//		assertEquals(test.getAddress(), "oyo");
+//		assertEquals(test.getIdentifier(),"19145158");
+//		assertEquals(test.getIdentifier(),"30/08/1/1/1/0019");
+//		assertEquals(test.getType(),"prov");
+//	}
 }

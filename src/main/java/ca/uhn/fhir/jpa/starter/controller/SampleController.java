@@ -1,25 +1,22 @@
 package ca.uhn.fhir.jpa.starter.controller;
 
+import java.io.*;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Optional;
 
-import org.apache.jena.sparql.function.library.print;
+import org.hl7.fhir.r4.model.Location;
+import org.hl7.fhir.r4.model.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iprd.fhir.utils.FhirResourceTemplateHelper;
 
 import ca.uhn.fhir.jpa.starter.service.HelperService;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/iprd")
@@ -33,15 +30,30 @@ public class SampleController {
 		FhirResourceTemplateHelper.state("oyo");
 		FhirResourceTemplateHelper.lga("Ibadan South West", "oyo");
 		FhirResourceTemplateHelper.ward("Agbokojo", "oyo");
-		FhirResourceTemplateHelper.clinic("St Lucia Hospital", "oyo");
+		FhirResourceTemplateHelper.clinic("St Lucia Hospital", "oyo", "19145158", "30/08/1/1/1/0019", "+234-6789045655");
 		return "test";
 	}
 	
-	@RequestMapping(method = RequestMethod.POST,value = {"/create"})
-	public ResponseEntity<LinkedHashMap<String, Object>> create( 
-			@RequestParam(value = "id",required = false,defaultValue = "") String id, 
-			 @RequestParam(value = "name",required = false,defaultValue = "") String name) {
-		ResponseEntity resp = helperService.create(id, name);
-		return resp;
+	@RequestMapping(method = RequestMethod.POST,value = {"/uploadCsvFile"})
+	public ResponseEntity<LinkedHashMap<String, Object>> uploadCsvFile(@RequestParam("file") MultipartFile file) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
+		String s;
+		int iteration = 0;
+		while((s= String.valueOf(br.readLine()))!=null){
+			if(iteration == 0) {
+				iteration++;
+				continue;
+			}
+			String[] csvData = s.split(",");
+			Location state = FhirResourceTemplateHelper.state(csvData[0]);
+			helperService.create(state);
+			Location lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0]);
+			helperService.create(lga);
+			Location ward = FhirResourceTemplateHelper.ward(csvData[2], csvData[0]);
+			helperService.create(ward);
+			Organization clinic = FhirResourceTemplateHelper.clinic(csvData[5], csvData[0], csvData[3], csvData[4], csvData[7]);
+			helperService.create(clinic);
+		}
+		return new ResponseEntity(HttpStatus.OK);
 	}
 }

@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter.service;
 
 import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +18,7 @@ public class HelperService {
 	String serverBase = "http://localhost:8080/fhir";
     IGenericClient fhirClient = ctx.newRestfulGenericClient(serverBase);
 
-	public ResponseEntity<LinkedHashMap<String, Object>> create(String id, String name) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		Patient pt = new Patient();
-		pt.addName().setFamily(name);
-		pt.setId("123");
-		IIdType idFromCreate = fhirClient.create().resource(pt).execute().getId();
-		map.put("id",idFromCreate);
-        map.put("description", "Patient Created");
-        map.put("status", "Success");
-        map.put("state", "200");
-        
-		return new ResponseEntity<LinkedHashMap<String, Object>>(map, HttpStatus.OK);
+	public void create(Resource name) {
+		IIdType idFromCreate = fhirClient.create().resource(name).execute().getId();
 	}
 }
