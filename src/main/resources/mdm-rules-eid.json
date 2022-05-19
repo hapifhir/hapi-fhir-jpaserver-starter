@@ -1,0 +1,5 @@
+{
+  "version": "1",
+  "mdmTypes": ["Patient"],
+  "eidSystem": "http://example.com/fhir/identifier/my-eid-system"
+}
