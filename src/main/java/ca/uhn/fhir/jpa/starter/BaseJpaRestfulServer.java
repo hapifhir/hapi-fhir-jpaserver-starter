@@ -78,8 +78,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
   BulkDataExportProvider bulkDataExportProvider;
   @Autowired
   PartitionManagementProvider partitionManagementProvider;
-  @Autowired
-  ValueSetOperationProvider valueSetOperationProvider;
+	//TODO GGG RE-ADD ONCE FIXED IN HAPI-FHIR
+//	@Autowired
+//  ValueSetOperationProvider valueSetOperationProvider;
   @Autowired
   ReindexProvider reindexProvider;
   @Autowired
@@ -134,7 +135,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     registerProviders(resourceProviderFactory.createProviders());
     registerProvider(jpaSystemProvider);
-	 registerProvider(myValueSetOperationProvider);
+	 //TODO GGG RE-ADD ONCE FIXED IN HAPI-FHIR
+//	 registerProvider(myValueSetOperationProvider);
     /*
      * The conformance provider exports the supported resources, search parameters, etc for
      * this server. The JPA version adds resourceProviders counts to the exported statement, so it
@@ -361,7 +363,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     // valueSet Operations i.e $expand
-    registerProvider(valueSetOperationProvider);
+	  //TODO GGG RE-ADD ONCE FIXED IN HAPI-FHIR
+//	 registerProvider(myValueSetOperationProvider);
 
 	 //reindex Provider $reindex
 	 registerProvider(reindexProvider);
