@@ -4,9 +4,7 @@
   "candidateSearchParams": [
     {
       "resourceType": "Patient",
-      "searchParams": ["birthdate",
-      "given:nickname",
-      "family"]
+      "searchParams": ["birthdate", "given:nickname", "family"]
     },
     {
       "resourceType": "*",

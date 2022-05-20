@@ -1,11 +1,12 @@
-POST http://localhost:8080/fhir/Patient
+PUT http://localhost:8080/fhir/Patient/C1
 Content-Type: application/json
 
 {
   "resourceType": "Patient",
+  "id": "C1",
   "identifier": [
     {
-      "system": "http://example.com/fhir/identifier/my-eid-system",
+      "system": "http://hl7.org/fhir/sid/us-medicare",
       "value": "1EG4-TE5-MK73"
     }
   ],

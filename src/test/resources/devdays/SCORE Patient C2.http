@@ -1,8 +1,9 @@
-POST http://localhost:8080/fhir/Patient
+PUT http://localhost:8080/fhir/Patient/C2
 Content-Type: application/json
 
 {
   "resourceType": "Patient",
+  "id": "C2",
   "name": [
     {
       "family": "Agnew",
