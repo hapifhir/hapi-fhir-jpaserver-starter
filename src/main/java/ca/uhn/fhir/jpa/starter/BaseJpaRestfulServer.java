@@ -19,6 +19,7 @@ import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.*;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import ca.uhn.fhir.jpa.searchparam.nickname.NicknameInterceptor;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
@@ -97,6 +98,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
   @Autowired
   private IValidationSupport myValidationSupport;
+  @Autowired
+  private NicknameInterceptor myNicknameInterceptor;
 
   public BaseJpaRestfulServer() {
   }
@@ -302,7 +305,12 @@ public class BaseJpaRestfulServer extends RestfulServer {
       interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
     }
 
-    // Cascading deletes
+	  /**
+		* This interceptor adds support for nickname searching
+		*/
+	  interceptorService.registerInterceptor(myNicknameInterceptor);
+
+	  // Cascading deletes
 
 
     if (appProperties.getAllow_cascading_deletes()) {

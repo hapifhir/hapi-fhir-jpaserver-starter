@@ -1,0 +1,24 @@
+POST http://localhost:8080/fhir/Patient
+Content-Type: application/json
+
+{
+  "resourceType": "Patient",
+  "identifier": [
+    {
+      "system": "http://example.com/fhir/identifier/my-eid-system",
+      "value": "42"
+    }
+  ],
+  "name": [
+    {
+      "family": "Austen",
+      "given": [
+        "Jane"
+      ]
+    }
+  ],
+  "gender": "female",
+  "birthDate": "1775-12-16"
+}
+
+###
