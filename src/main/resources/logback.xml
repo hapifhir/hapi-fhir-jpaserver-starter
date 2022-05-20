@@ -12,7 +12,10 @@
 	<logger name="org.springframework.beans" level="INFO">
 		<appender-ref ref="STDOUT" />
 	</logger>
-	<logger name="ca.uhn.fhir.log.mdm_troubleshooting" level="DEBUG">
+	<logger name="org.springframework.core" level="INFO">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<logger name="ca.uhn.fhir.log.mdm_troubleshooting" level="DEBUG" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
 	<logger name="ca.uhn.fhir.log.mdm_troubleshooting" level="DEBUG" additivity="false">
