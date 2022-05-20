@@ -95,7 +95,7 @@ hapi:
     #    fhirpath_interceptor_enabled: false
     #    filter_search_enabled: true
     #    graphql_enabled: true
-    #    narrative_enabled: true
+    narrative_enabled: false
     #    mdm_enabled: true
 #    local_base_urls:
 #      - https://hapi.fhir.org/baseR4

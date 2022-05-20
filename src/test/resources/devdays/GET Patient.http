@@ -1,0 +1,4 @@
+GET http://localhost:8080/fhir/Patient
+Accept: application/json
+
+###

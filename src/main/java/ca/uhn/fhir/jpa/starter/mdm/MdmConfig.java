@@ -26,7 +26,7 @@ public class MdmConfig {
 	@Bean
 	IMdmSettings mdmSettings(@Autowired MdmRuleValidator theMdmRuleValidator, AppProperties appProperties) throws IOException {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
-		Resource resource = resourceLoader.getResource("mdm-rules-eid.json");
+		Resource resource = resourceLoader.getResource("mdm-rules-score.json");
 		String json = IOUtils.toString(resource.getInputStream(), Charsets.UTF_8);
 		return new MdmSettings(theMdmRuleValidator).setEnabled(appProperties.getMdm_enabled()).setScriptText(json);
 	}

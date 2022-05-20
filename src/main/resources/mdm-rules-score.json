@@ -1,0 +1,39 @@
+{
+  "version": "1",
+  "mdmTypes": ["Patient"],
+  "candidateSearchParams": [
+    {
+      "resourceType": "Patient",
+      "searchParams": ["birthdate",
+      "given:nickname",
+      "family"]
+    },
+    {
+      "resourceType": "*",
+      "searchParams": ["identifier"]
+    }
+  ],
+  "matchFields": [
+    {
+      "name": "nickname",
+      "resourceType": "*",
+      "resourcePath": "name.given",
+      "matcher": {
+        "algorithm": "NICKNAME"
+      }
+    },
+    {
+      "name": "medicare-id",
+      "resourceType": "Patient",
+      "resourcePath": "identifier",
+      "matcher": {
+        "algorithm": "IDENTIFIER",
+        "identifierSystem": "http://hl7.org/fhir/sid/us-medicare"
+      }
+    }
+  ],
+  "matchResultMap": {
+    "nickname" : "POSSIBLE_MATCH",
+    "nickname,medicare-id" : "MATCH"
+  }
+}
