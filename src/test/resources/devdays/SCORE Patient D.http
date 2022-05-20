@@ -1,0 +1,25 @@
+PUT http://localhost:8080/fhir/Patient/D
+Content-Type: application/json
+
+{
+  "resourceType": "Patient",
+  "id": "D",
+  "identifier": [
+    {
+      "system": "http://hl7.org/fhir/sid/us-medicare",
+      "value": "1EG4-TE5-MK73"
+    }
+  ],
+  "name": [
+    {
+      "family": "Powers",
+      "given": [
+        "Austin"
+      ]
+    }
+  ],
+  "gender": "male",
+  "birthDate": "1970-01-26"
+}
+
+###
