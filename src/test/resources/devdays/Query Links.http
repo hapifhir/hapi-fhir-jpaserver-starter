@@ -1,4 +1,5 @@
-GET http://localhost:8080/fhir/$mdm-query-links
-Accept: application/json
+GRAPHQL http://localhost:8080/fhir/$mdm-query-links
+Content-Type: application/graphql
+X-GraphQL-Variables:  {"id": 1}
 
 ###
