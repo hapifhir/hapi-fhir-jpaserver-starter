@@ -18,9 +18,6 @@
 	<logger name="ca.uhn.fhir.log.mdm_troubleshooting" level="DEBUG" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
-	<logger name="ca.uhn.fhir.log.mdm_troubleshooting" level="DEBUG" additivity="false">
-		<appender-ref ref="STDOUT" />
-	</logger>
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
