@@ -63,8 +63,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
   ResourceProviderFactory resourceProviderFactory;
   @Autowired
   IJpaSystemProvider jpaSystemProvider;
-  @Autowired
-  ValueSetOperationProvider myValueSetOperationProvider;
+//  @Autowired
+//  ValueSetOperationProvider myValueSetOperationProvider;
   @Autowired
   IInterceptorBroadcaster interceptorBroadcaster;
   @Autowired

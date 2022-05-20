@@ -40,7 +40,7 @@ spring:
   #      hibernate.cache.use_structured_entries: false
   #      hibernate.cache.use_minimal_puts: false
   ###    These settings will enable fulltext search with lucene
-  #      hibernate.search.enabled: true
+#      hibernate.search.enabled: true
   #      hibernate.search.backend.type: lucene
   #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
   #      hibernate.search.backend.directory.type: local-filesystem
