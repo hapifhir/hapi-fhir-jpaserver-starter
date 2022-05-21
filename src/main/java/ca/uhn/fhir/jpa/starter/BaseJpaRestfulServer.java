@@ -78,11 +78,11 @@ public class BaseJpaRestfulServer extends RestfulServer {
   BulkDataExportProvider bulkDataExportProvider;
   @Autowired
   PartitionManagementProvider partitionManagementProvider;
-	//TODO GGG RE-ADD ONCE FIXED IN HAPI-FHIR
-//	@Autowired
-//  ValueSetOperationProvider valueSetOperationProvider;
-   @Autowired
-	ReindexProvider reindexProvider;
+
+  @Autowired
+  ValueSetOperationProvider valueSetOperationProvider;
+  @Autowired
+  ReindexProvider reindexProvider;
   @Autowired
   BinaryStorageInterceptor binaryStorageInterceptor;
   @Autowired
