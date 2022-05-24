@@ -39,10 +39,9 @@ public class FhirResourceTemplateHelper {
 		state.setStatus(LocationStatus.ACTIVE);
 		state.setMode(LocationMode.INSTANCE);
 		state.setPhysicalType(statePhysicalType);
-	
 		return state;
 	}
-	public static Location lga(String name, String address) {
+	public static Location lga(String nameOfLga, String state) {
 		Location lga = new Location();
 		Address lgaAddress = new Address();
 		CodeableConcept lgaPhysicalType = new CodeableConcept();
@@ -52,17 +51,16 @@ public class FhirResourceTemplateHelper {
 		.setDisplay(DISPLAY_JURISDICTION)
 		.setSystem(SYSTEM_JURISDICTION);
 		lgaPhysicalType.addCoding(physicalTypeCoding);
-		lgaAddress.setState(address);
-		lga.setName(name);
+		lgaAddress.setState(state);
+		lgaAddress.setDistrict(nameOfLga);
+		lga.setName(nameOfLga);
 		lga.setAddress(lgaAddress);
 		lga.setStatus(LocationStatus.ACTIVE);
 		lga.setMode(LocationMode.INSTANCE);
 		lga.setPhysicalType(lgaPhysicalType);
-		lga.setName(name);
-		
 		return lga;
 	}
-	public static Location ward(String name, String address) {
+	public static Location ward(String state, String district, String city) {
 		Location ward = new Location();
 		Address wardAddress = new Address();
 		CodeableConcept wardPhysicalType = new CodeableConcept();
@@ -72,36 +70,39 @@ public class FhirResourceTemplateHelper {
 		.setDisplay(DISPLAY_JURISDICTION)
 		.setSystem(SYSTEM_JURISDICTION);
 		wardPhysicalType.addCoding(physicalTypeCoding);
-		wardAddress.setState(address);
-		ward.setName(name);
+		wardAddress.setState(state);
+		wardAddress.setCity(city);
+		wardAddress.setDistrict(district);
+		ward.setName(city);
 		ward.setAddress(wardAddress);
 		ward.setStatus(LocationStatus.ACTIVE);
 		ward.setMode(LocationMode.INSTANCE);
 		ward.setPhysicalType(wardPhysicalType);
-		ward.setName(name);
-		
 		return ward;
 	}
 	
-	public static Organization clinic(String name, String address,String facilityUID,String facilityCode,String contact) {
+	public static Organization clinic(String nameOfClinic,String facilityUID,String facilityCode,String countryCode,String contact,String state, String district, String city) {
 		Organization clinic = new Organization();
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		List<Address> addresses = new ArrayList<>();
-		Address address2 = new Address();
-		address2.setState(address);
-		addresses.add(address2);
+		Address address = new Address();
+		address.setState(state);
+		address.setDistrict(district);
+		address.setCity(city);
+		addresses.add(address);
 		clinic.setAddress(addresses);
 		List<Identifier> identifiers = new ArrayList<>();
-		Identifier identifier1 = new Identifier();
-		Identifier identifier2 = new Identifier();
-		identifier1.setId(facilityCode);
-		identifier2.setId(facilityUID);
-		identifiers.add(identifier1);
-		identifiers.add(identifier2);
+		Identifier facilityUIDIdentifier = new Identifier();
+		Identifier facilityCodeIdentifier = new Identifier();
+		facilityUIDIdentifier.setId(facilityCode);
+		facilityCodeIdentifier.setId(facilityUID);
+		identifiers.add(facilityUIDIdentifier);
+		identifiers.add(facilityCodeIdentifier);
 		clinic.setIdentifier(identifiers);
 		List<ContactPoint> contactPoints = new ArrayList<>();
 		ContactPoint contactPoint = new ContactPoint();
-		contactPoint.setValue(String.valueOf(new org.hl7.fhir.String().withValue(contact)));
+		contactPoint.setValue(countryCode+contact);
+		contactPoints.add(contactPoint);
 		clinic.setTelecom(contactPoints);
 		CodeableConcept codeableConcept = new CodeableConcept();
 		Coding coding = new Coding();
@@ -112,7 +113,7 @@ public class FhirResourceTemplateHelper {
 		codeableConcept.setText(DISPLAY_CLINIC);
 		codeableConcepts.add(codeableConcept);
 		clinic.setType(codeableConcepts);
-		clinic.setName(name);
+		clinic.setName(nameOfClinic);
 		return clinic;
 	}
 }

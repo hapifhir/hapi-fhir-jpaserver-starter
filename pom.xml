@@ -21,6 +21,7 @@
 
     <properties>
         <java.version>8</java.version>
+        <resteasy.version>4.3.1.Final</resteasy.version>
     </properties>
 
     <prerequisites>
@@ -48,6 +49,25 @@
             <artifactId>websocket-api</artifactId>
             <version>${jetty_version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-core -->
+		<dependency>
+  		  <groupId>org.keycloak</groupId>
+  		  <artifactId>keycloak-core</artifactId>
+  		  <version>18.0.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-client -->
+		<!-- 	
+		<dependency>
+		    <groupId>org.jboss.resteasy</groupId>
+		    <artifactId>resteasy-client</artifactId>
+		    <version>6.0.1.Final</version>
+		</dependency>-->
+		<!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
+		<dependency>
+    		<groupId>org.keycloak</groupId>
+    		<artifactId>keycloak-admin-client</artifactId>
+    		<version>18.0.0</version>
+		</dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-client</artifactId>
@@ -148,6 +168,28 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
+          <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-client</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+            
+   
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jackson2-provider</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-multipart-provider</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jaxb-provider</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
 
         <!-- Needed for JEE/Servlet support -->
         <dependency>
@@ -329,7 +371,6 @@
 
 
     </dependencies>
-
     <build>
 
         <pluginManagement>
