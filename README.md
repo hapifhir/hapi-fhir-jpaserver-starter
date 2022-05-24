@@ -120,3 +120,10 @@ Kubernetes
 kubectl cp matchbox-test-0:fhir.logdir_IS_UNDEFINED ./fhir.logdir/
 
 kubectl cp matchbox-test-app-d684cf865 ./fhir.logdir/
+
+
+
+MVN run unit tests
+==================
+
+mvn -Dtest=CapabilityStatementTests test

@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 
-import ca.uhn.fhir.context.support.IValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.UnknownCodeSystemWarningValidationSupport;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.hl7.fhir.r5.utils.validation.constants.BestPracticeWarningLevel;
@@ -19,6 +18,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 import ca.uhn.fhir.batch2.jobs.reindex.ReindexAppCtx;
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.config.JpaConfig;
@@ -74,11 +74,20 @@ public class FhirServerConfigR4 {
   @Autowired
   private ConfigurableEnvironment configurableEnvironment;
 
-  // FIXME OE 2022_600_notnecessaryanymore? @Override
   @Bean(autowire = Autowire.BY_TYPE)
   public ITermReadSvcR4 terminologyService() {
     return new ExtTermReadSvcR4();
   }
+  
+//  @Bean
+//  public ITermCodeSystemStorageSvc termCodeSystemStorageSvc() {
+//    return new NullTermCodeSystemStorageSvcImpl();
+//  }
+  
+//  @Bean
+//  public ITermConceptMappingSvc termConceptMappingSvc() {
+//    return new NullTermConceptMappingSvcImpl();
+//  }
 
   @Bean(autowire = Autowire.BY_TYPE)
   public ValidationProvider validationProvider() {
@@ -160,6 +169,11 @@ public class FhirServerConfigR4 {
   @Bean(name = JpaConfig.JPA_VALIDATION_SUPPORT_CHAIN)
   public JpaExtendedValidationSupportChain jpaValidationSupportChain() {
     return new JpaExtendedValidationSupportChain(fhirContext);
+  }
+  
+  @Bean(name = JpaConfig.JPA_VALIDATION_SUPPORT)
+  public IValidationSupport jpaValidationSupport(FhirContext theFhirContext) {
+    return new ch.ahdis.fhir.hapi.jpa.validation.JpaPersistedResourceValidationSupport(theFhirContext);
   }
 
   @Bean(name = "myInstanceValidator")

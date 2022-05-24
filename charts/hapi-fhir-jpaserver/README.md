@@ -1,6 +1,6 @@
 # HAPI FHIR JPA Server Starter Helm Chart
 
-![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v5.6.0](https://img.shields.io/badge/AppVersion-v5.6.0-informational?style=flat-square)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v5.7.0](https://img.shields.io/badge/AppVersion-v5.7.0-informational?style=flat-square)
 
 This helm chart will help you install the HAPI FHIR JPA Server in a Kubernetes environment.
 
@@ -29,11 +29,10 @@ helm install --render-subchart-notes hapi-fhir-jpaserver hapifhir/hapi-fhir-jpas
 | externalDatabase.user | string | `"fhir"` | username for the external database |
 | extraEnv | list | `[]` | extra environment variables to set on the server container |
 | fullnameOverride | string | `""` | override the chart fullname |
-| image.flavor | string | `"distroless"` | the flavor or variant of the image to use. appended to the image tag by `-`. |
 | image.pullPolicy | string | `"IfNotPresent"` | image pullPolicy to use |
 | image.registry | string | `"docker.io"` | registry where the HAPI FHIR server image is hosted |
 | image.repository | string | `"hapiproject/hapi"` | the path inside the repository |
-| image.tag | string | `""` | defaults to `Chart.appVersion` |
+| image.tag | string | `""` | defaults to `Chart.appVersion`. As of v5.7.0, this is the `distroless` flavor |
 | imagePullSecrets | list | `[]` | image pull secrets to use when pulling the image |
 | ingress.annotations | object | `{}` | provide any additional annotations which may be required. Evaluated as a template. |
 | ingress.enabled | bool | `false` | whether to create an Ingress to expose the FHIR server HTTP endpoint |
@@ -51,11 +50,11 @@ helm install --render-subchart-notes hapi-fhir-jpaserver hapifhir/hapi-fhir-jpas
 | podDisruptionBudget.maxUnavailable | string | `""` | maximum unavailable instances |
 | podDisruptionBudget.minAvailable | int | `1` | minimum available instances |
 | podSecurityContext | object | `{}` | pod security context |
-| postgresql.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
-| postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| postgresql.auth.database | string | `"fhir"` | name for a custom database to create |
+| postgresql.auth.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL credentials `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret The secret must contain the keys `postgres-password` (which is the password for "postgres" admin user), `password` (which is the password for the custom user to create when `auth.username` is set), and `replication-password` (which is the password for replication user). The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and picked from this secret in this case. The value is evaluated as a template. |
 | postgresql.enabled | bool | `true` | enable an included PostgreSQL DB. see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details if set to `false`, the values under `externalDatabase` are used |
-| postgresql.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL passwords. The secret has to contain the keys `postgresql-password` which is the password for `postgresqlUsername` when it is different of `postgres`, `postgresql-postgres-password` which will override `postgresqlPassword`, `postgresql-replication-password` which will override `replication.password` and `postgresql-ldap-password` which will be sed to authenticate on LDAP. The value is evaluated as a template. |
-| postgresql.postgresqlDatabase | string | `"fhir"` | name of the database to create see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run> |
+| postgresql.primary.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
+| postgresql.primary.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | readinessProbe.failureThreshold | int | `5` |  |
 | readinessProbe.initialDelaySeconds | int | `30` |  |
 | readinessProbe.periodSeconds | int | `20` |  |

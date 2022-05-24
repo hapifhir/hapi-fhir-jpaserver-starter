@@ -6,11 +6,8 @@ image:
   registry: docker.io
   # -- the path inside the repository
   repository: hapiproject/hapi
-  # -- defaults to `Chart.appVersion`
+  # -- defaults to `Chart.appVersion`. As of v5.7.0, this is the `distroless` flavor
   tag: ""
-  # -- the flavor or variant of the image to use.
-  # appended to the image tag by `-`.
-  flavor: "distroless"
   # -- image pullPolicy to use
   pullPolicy: IfNotPresent
 
@@ -96,22 +93,24 @@ postgresql:
   # see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
   # if set to `false`, the values under `externalDatabase` are used
   enabled: true
-  # -- name of the database to create
-  # see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run>
-  postgresqlDatabase: "fhir"
-  # -- Name of existing secret to use for PostgreSQL passwords.
-  # The secret has to contain the keys `postgresql-password`
-  # which is the password for `postgresqlUsername` when it is
-  # different of `postgres`, `postgresql-postgres-password` which
-  # will override `postgresqlPassword`, `postgresql-replication-password`
-  # which will override `replication.password` and `postgresql-ldap-password`
-  # which will be sed to authenticate on LDAP. The value is evaluated as a template.
-  existingSecret: ""
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-        - ALL
+  auth:
+    # -- name for a custom database to create
+    database: "fhir"
+    # -- Name of existing secret to use for PostgreSQL credentials
+    # `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret
+    # The secret must contain the keys `postgres-password` (which is the password for "postgres" admin user),
+    # `password` (which is the password for the custom user to create when `auth.username` is set),
+    # and `replication-password` (which is the password for replication user).
+    # The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and
+    # picked from this secret in this case.
+    # The value is evaluated as a template.
+    existingSecret: ""
+  primary:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
 
 readinessProbe:
   failureThreshold: 5

@@ -1,6 +1,7 @@
 package ch.ahdis.validation;
 
 import static org.junit.Assert.assertEquals;
+
 /**
  * Attention: if it is the first test run, an error about not connecting to port 8080 appears, running IgValidateR4 first works 
  */
@@ -12,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +30,7 @@ import ca.uhn.fhir.jpa.starter.Application;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(classes = { Application.class })
+@Ignore
 public class IgValidateRawProfileTest {
 
   @ClassRule

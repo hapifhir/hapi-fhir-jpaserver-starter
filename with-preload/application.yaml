@@ -17,6 +17,13 @@ spring:
 hapi:
   fhir:
     implementationguides:
+      terminology:
+        name: hl7.terminology
+        version: 3.1.0
+      ips:
+        url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
+        name: hl7.fhir.uv.ips
+        version: 1.0.0
       cda:
         url: https://github.com/ahdis/cda-core-2.0/releases/download/v0.0.3-dev/package.tgz
         name: hl7.fhir.cda
@@ -51,9 +58,6 @@ hapi:
       chradorder:
         name: ch.fhir.ig.ch-rad-order
         version: 1.0.0
-      hl7fhiruvips:
-        name: hl7.fhir.uv.ips
-        version": 1.0.0
       chetoc:
         name: ch.fhir.ig.ch-etoc
         version: 1.0.0

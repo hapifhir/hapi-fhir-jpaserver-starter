@@ -25,6 +25,7 @@ public class AppProperties {
   private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
   private boolean advanced_lucene_indexing = false;
+  private boolean enable_index_of_type = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
   private Boolean allow_external_references = false;
@@ -818,5 +819,13 @@ public class AppProperties {
       private Boolean startTlsRequired = false;
       private Boolean quitWait = false;
     }
+  }
+
+  public boolean getEnable_index_of_type() {
+    return enable_index_of_type;
+  }
+
+  public void setEnable_index_of_type(boolean enable_index_of_type) {
+    this.enable_index_of_type = enable_index_of_type;
   }
 }

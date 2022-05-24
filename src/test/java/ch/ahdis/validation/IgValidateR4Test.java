@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.Resource;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ import ca.uhn.fhir.jpa.starter.Application;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(classes = {Application.class})
 @RunWith(Parameterized.class)
+@Ignore
 public class IgValidateR4Test extends IgValidateR4TestStandalone{
 
   @ClassRule

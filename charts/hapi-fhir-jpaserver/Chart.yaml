@@ -7,20 +7,23 @@ sources:
   - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
 dependencies:
   - name: postgresql
-    version: 10.12.2
+    version: 11.1.19
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
 annotations:
   artifacthub.io/license: Apache-2.0
-  artifacthub.io/prerelease: "true"
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
       description: |
-        updated HAPI FHIR starter image to 5.6.0
-    - kind: added
+        updated HAPI FHIR starter image to 5.7.0
+    - kind: changed
       description: |
-        added support for configuring PodDisruptionBudget for the server pods
-appVersion: v5.6.0
-version: 0.7.0
+        BREAKING CHANGE: updated included PostgreSQL-subchart to v11
+    - kind: changed
+      description: |
+        BREAKING CHANGE: removed ability to override the image flavor.
+        The one based on distroless is now the new default.
+appVersion: v5.7.0
+version: 0.8.0
