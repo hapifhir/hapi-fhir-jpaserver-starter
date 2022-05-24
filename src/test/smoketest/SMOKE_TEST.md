@@ -44,7 +44,8 @@ Within IntelliJ, right click the file you wish to run tests in and select the `R
 
 **Important:** Tests may not work individually when run. Often times, tests need to be run sequentially, as they depend
 on resources/references from previous tests to complete. _(An example of this would be adding a Patient, saving the id, 
-then using that idea to test if we can successfully PATCH that Patient resource.)_
+then using that saved id to test if we can successfully PATCH that Patient resource. Without that saved id from the 
+previous test creating that patient, the PATCH test will fail.)_
 
 
 [Link-HAPI-FHIR-docs]: https://hapifhir.io/hapi-fhir/docs/
