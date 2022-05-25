@@ -26,8 +26,7 @@ REST-OPERATION ENDPOINT-URL
 // Verification Steps
 ```
 
-Users can setup custom environment variables for running tests locally against their own servers. This can be done by
-adding environment information within the `http-client.env.json` file. By default, we provide the following:
+To run these tests against a specific server, configure the server details within the `http-client.env.json` file. By default, we provide the following:
 ```json
 {
   "default": {
