@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.CodeSystem;
+import org.hl7.fhir.r4.model.CodeSystem.CodeSystemContentMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
@@ -39,6 +41,18 @@ public class ExtTermReadSvcR4 extends TermReadSvcR4 {
     if (isNotBlank(theValueSetUrl)) {
       return validateCodeInValueSet(theValidationSupportContext, theOptions, theValueSetUrl, theCodeSystem, theCode, theDisplay);
     }
+    
+    // matchbox 2.1.0: if the CodeSystem is not present (e.g. loinc, snomed ct) we assume the code to be valid
+    // that loinc can be fetched see patched ch.ahdis.fhir.hapi.jpa.validation.JpaPersistedResourceValidationSupport
+    // https://github.com/ahdis/matchbox/issues/50
+    if (theCodeSystem !=null ) {
+      CodeSystem codeSystem = fetchCanonicalCodeSystemFromCompleteContext(theCodeSystem);
+      if (codeSystem!=null && codeSystem.getContent() == CodeSystemContentMode.NOTPRESENT) {
+          return new CodeValidationResult()
+              .setCode(theCode)
+              .setDisplay(theDisplay);
+      }
+    }
 
     TransactionTemplate txTemplate = new TransactionTemplate(myTransactionManager);
     txTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
@@ -54,7 +68,7 @@ public class ExtTermReadSvcR4 extends TermReadSvcR4 {
         return createFailureCodeValidationResult(theCodeSystem, theCode, code.getSystemVersion(), " - Concept Display \"" + code.getDisplay() + "\" does not match expected \"" + code.getDisplay() + "\"").setDisplay(code.getDisplay());
       }
     }
-
+    
     return createFailureCodeValidationResult(theCodeSystem, theCode, null, " - Code can not be found in CodeSystem");
   }
 

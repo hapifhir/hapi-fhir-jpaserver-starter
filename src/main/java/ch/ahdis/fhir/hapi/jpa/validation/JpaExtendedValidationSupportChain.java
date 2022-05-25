@@ -63,7 +63,6 @@ public class JpaExtendedValidationSupportChain extends JpaValidationSupportChain
 //		addValidationSupport(myNpmJpaValidationSupport);
 //		addValidationSupport(new CommonCodeSystemsTerminologyService(myFhirContext));
 //		addValidationSupport(myConceptMappingSvc);
-		addValidationSupport(myDefaultProfileValidationSupport);
 		
 		//TODO MAKE SURE THAT THIS IS BEING CAL
 		addValidationSupport(myTerminologyService);
@@ -76,6 +75,10 @@ public class JpaExtendedValidationSupportChain extends JpaValidationSupportChain
 		addValidationSupport(commonCodeSystemsTerminologyService);
 		addValidationSupport(myConceptMappingSvc);
 		addValidationSupport(myJpaValidationSupport);
+		// matchbox 2.1.0 we moved DefaultValidaton Support down below, because it looks like myDefaultProfileValidationSupport contains a complete DICOM CodeSystem and
+		// we want the one from hl7.terminology 3.1.0 (check http://localhost:8080/matchbox/fhir/CodeSystem?url=http://dicom.nema.org/resources/ontology/DCM)
+		// https://github.com/ahdis/matchbox/issues/50
+    addValidationSupport(myDefaultProfileValidationSupport);
 	}
 	
 		

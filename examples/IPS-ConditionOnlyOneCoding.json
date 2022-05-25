@@ -1,0 +1,81 @@
+{
+    "resourceType": "Condition",
+    "id": "ad84b7a2-b4dd-474e-bef3-0779e6cb595f",
+    "text": {
+        "status": "generated",
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative</b></p><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource \"ad84b7a2-b4dd-474e-bef3-0779e6cb595f\" </p></div><p><b>identifier</b>: id: cacceb57-395f-48e1-9c88-e9c9704dc2d2</p><p><b>clinicalStatus</b>: Active <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> (<a href=\"http://terminology.hl7.org/3.1.0/CodeSystem-condition-clinical.html\">Condition Clinical Status Codes</a>#active)</span></p><p><b>verificationStatus</b>: Confirmed <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> (<a href=\"http://terminology.hl7.org/3.1.0/CodeSystem-condition-ver-status.html\">ConditionVerificationStatus</a>#confirmed)</span></p><p><b>category</b>: Problem <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> (<a href=\"https://loinc.org/\">LOINC</a>#75326-9)</span></p><p><b>severity</b>: Moderate <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> (<a href=\"https://loinc.org/\">LOINC</a>#LA6751-7)</span></p><p><b>code</b>: Menopausal flushing (finding) <span style=\"background: LightGoldenRodYellow; margin: 4px; border: 1px solid khaki\"> (<a href=\"https://browser.ihtsdotools.org/\">SNOMED CT</a>#198436008; <a href=\"http://terminology.hl7.org/3.1.0/CodeSystem-icd10.html\">ICD-10</a>#N95.1 \"Menopausal and female climacteric states\")</span></p><p><b>subject</b>: <a href=\"#Patient_7685713c-e29e-4a75-8a90-45be7ba3be94\">See above (Patient/7685713c-e29e-4a75-8a90-45be7ba3be94)</a></p><p><b>onset</b>: 2015</p><p><b>recordedDate</b>: 2016-10</p></div>"
+    },
+    "identifier": [
+        {
+            "system": "urn:oid:1.2.3.999",
+            "value": "cacceb57-395f-48e1-9c88-e9c9704dc2d2"
+        }
+    ],
+    "clinicalStatus": {
+        "coding": [
+            {
+                "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                "code": "active"
+            }
+        ]
+    },
+    "verificationStatus": {
+        "coding": [
+            {
+                "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                "code": "confirmed"
+            }
+        ]
+    },
+    "category": [
+        {
+            "coding": [
+                {
+                    "system": "http://loinc.org",
+                    "code": "75326-9",
+                    "display": "Problem"
+                }
+            ]
+        }
+    ],
+    "severity": {
+        "coding": [
+            {
+                "system": "http://loinc.org",
+                "code": "LA6751-7",
+                "display": "Moderate"
+            }
+        ]
+    },
+    "code": {
+        "coding": [
+            {
+                "system": "http://snomed.info/sct",
+                "code": "198436008",
+                "display": "Menopausal flushing (finding)",
+                "_display": {
+                    "extension": [
+                        {
+                            "extension": [
+                                {
+                                    "url": "lang",
+                                    "valueCode": "nl-NL"
+                                },
+                                {
+                                    "url": "content",
+                                    "valueString": "opvliegers"
+                                }
+                            ],
+                            "url": "http://hl7.org/fhir/StructureDefinition/translation"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "subject": {
+        "reference": "Patient/7685713c-e29e-4a75-8a90-45be7ba3be94"
+    },
+    "onsetDateTime": "2015",
+    "recordedDate": "2016-10"
+}

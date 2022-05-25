@@ -5902,7 +5902,10 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     if (checkMembership) {
       return context.validateCode(baseOptions.setLanguage(stack.getWorkingLang()).checkValueSetOnly(), c, valueset);   
     } else {
-      return context.validateCode(baseOptions.setLanguage(stack.getWorkingLang()).noCheckValueSetMembership(), c, valueset);
+// https://github.com/ahdis/matchbox/issues/50
+//      matchbox 2.1.0 check only the code and not the membership, if the codesystem is not-present assume valid      
+//      return context.validateCode(baseOptions.setLanguage(stack.getWorkingLang()).noCheckValueSetMembership(), c, valueset);
+    return context.validateCode(baseOptions.setLanguage(stack.getWorkingLang()).noCheckValueSetMembership(), c, null);
     }
   }
   

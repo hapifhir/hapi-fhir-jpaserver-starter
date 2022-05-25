@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.Validate;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.CodeSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -54,5 +55,19 @@ public class JpaPersistedResourceValidationSupport extends ca.uhn.fhir.jpa.dao.J
     return (List<T>) search.getResources(0, 5000);
   }
 
+  @Override
+  public IBaseResource fetchCodeSystem(String theSystem) {
+    // https://github.com/ahdis/matchbox/issues/50
+    // Couldn't find current version of CodeSystem: http://loinc.org hl7.terminology 3.1.0
+    // if (TermReadSvcUtil.isLoincUnversionedCodeSystem(theSystem)) {
+    //   Optional<IBaseResource> currentCSOpt = getCodeSystemCurrentVersion(new UriType(theSystem));
+    //  if (! currentCSOpt.isPresent()) {
+    //    ourLog.info("Couldn't find current version of CodeSystem: " + theSystem);
+    //  }
+    //  return currentCSOpt.orElse(null);
+    //}
+    // return fetchResource(myCodeSystemType, theSystem);
+    return fetchResource(CodeSystem.class, theSystem);
+  }
 
 }

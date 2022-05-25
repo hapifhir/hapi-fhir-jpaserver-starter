@@ -549,7 +549,10 @@ public class ExtInMemoryTerminologyServerValidationSupport extends InMemoryTermi
 				if (includeOrExcludeSystemResource == null || includeOrExcludeSystemResource.getContent() == CodeSystem.CodeSystemContentMode.NOTPRESENT) {
 
 					if (theWantCode != null) {
-						if (theValidationSupportContext.getRootValidationSupport().isCodeSystemSupported(theValidationSupportContext, includeOrExcludeConceptSystemUrl)) {
+            if (isCodeSystemSupported(theValidationSupportContext, includeOrExcludeConceptSystemUrl)) {
+//          https://github.com/ahdis/matchbox/issues/50
+//            if (theValidationSupportContext.getRootValidationSupport()
+//              .isCodeSystemSupported(theValidationSupportContext, includeOrExcludeConceptSystemUrl)) {
 							LookupCodeResult lookup = theValidationSupportContext.getRootValidationSupport().lookupCode(theValidationSupportContext, includeOrExcludeConceptSystemUrl, theWantCode);
 							if (lookup != null && lookup.isFound()) {
 								CodeSystem.ConceptDefinitionComponent conceptDefinition = new CodeSystem.ConceptDefinitionComponent()
