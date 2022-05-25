@@ -15,7 +15,7 @@ For more details on integrated tooling and request syntax, there is [documentati
 on the jetbrains website, in addition to the [API reference][Link-HTTP-Client-Req-API].
 
 ### Formatting
-As mentioned, each test file corresponds to a given section within the hapifhir documentation as close as possible. For 
+Each test file corresponds to a given section within the hapifhir documentation as close as possible. For 
 example, there is a `plain_server.rest` file, which attemps to smoke test all basic functionality outlined in the section
 [within the docs][Link-HAPI-FHIR-docs-plain-server].
 
