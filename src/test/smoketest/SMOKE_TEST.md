@@ -2,8 +2,7 @@
 
 ---
 
-When updating the supporting HAPI-FHIR version, or making changes to the JPA server starter code itself, it is sometimes 
-useful to run basic smoke tests to ensure the basic functionality of the server is maintained. The goal of these tests is
+When updating the supporting HAPI-FHIR version, or making changes to the JPA server starter code itself, it is recommended to run basic smoke tests to ensure the basic functionality of the server is maintained. The goal of these tests is
 to provide users a quick way to run groups of tests that correspond to various sections within the 
 [HAPI-FHIR documentation][Link-HAPI-FHIR-docs].
 
