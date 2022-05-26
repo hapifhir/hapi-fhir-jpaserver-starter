@@ -307,7 +307,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
     // will activate them and match results against them
     if (appProperties.getSubscription() != null) {
       // Subscription debug logging
-      interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
+//      interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
     }
 
 	  /**

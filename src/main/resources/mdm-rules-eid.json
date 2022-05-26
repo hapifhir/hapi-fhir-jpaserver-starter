@@ -1,5 +1,9 @@
 {
   "version": "1",
   "mdmTypes": ["Patient"],
+  "candidateSearchParams": [{
+      "resourceType": "Patient",
+      "searchParams": ["identifier"]
+    }],
   "eidSystem": "http://example.com/fhir/identifier/my-eid-system"
 }
