@@ -1,7 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.subscription.match.registry.SubscriptionLoader;
-import ca.uhn.fhir.jpa.subscription.match.registry.SubscriptionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
