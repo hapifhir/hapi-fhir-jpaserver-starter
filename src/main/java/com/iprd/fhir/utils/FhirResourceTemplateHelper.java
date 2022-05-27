@@ -1,8 +1,11 @@
 package com.iprd.fhir.utils;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.lang.String;
+
+import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Location.LocationMode;
@@ -33,17 +36,21 @@ public class FhirResourceTemplateHelper {
 		statePhysicalType.addCoding(physicalTypeCoding);
 		stateAddress.setState(name);
 		state.setName(name);
+		state.setId(UUID.randomUUID().toString());
 		state.setAddress(stateAddress);
 		state.setStatus(LocationStatus.ACTIVE);
 		state.setMode(LocationMode.INSTANCE);
 		state.setPhysicalType(statePhysicalType);
 		return state;
 	}
+	
 	public static Location lga(String nameOfLga, String state) {
 		Location lga = new Location();
 		Address lgaAddress = new Address();
 		CodeableConcept lgaPhysicalType = new CodeableConcept();
 		Coding physicalTypeCoding = new Coding();
+		IdType id = new IdType();
+		id.setId(UUID.randomUUID().toString());
 		physicalTypeCoding
 		.setCode(CODE_JDN)
 		.setDisplay(DISPLAY_JURISDICTION)
@@ -52,12 +59,14 @@ public class FhirResourceTemplateHelper {
 		lgaAddress.setState(state);
 		lgaAddress.setDistrict(nameOfLga);
 		lga.setName(nameOfLga);
+		lga.setId(id);
 		lga.setAddress(lgaAddress);
 		lga.setStatus(LocationStatus.ACTIVE);
 		lga.setMode(LocationMode.INSTANCE);
 		lga.setPhysicalType(lgaPhysicalType);
 		return lga;
 	}
+	
 	public static Location ward(String state, String district, String city) {
 		Location ward = new Location();
 		Address wardAddress = new Address();
@@ -72,6 +81,7 @@ public class FhirResourceTemplateHelper {
 		wardAddress.setCity(city);
 		wardAddress.setDistrict(district);
 		ward.setName(city);
+		ward.setId(UUID.randomUUID().toString());
 		ward.setAddress(wardAddress);
 		ward.setStatus(LocationStatus.ACTIVE);
 		ward.setMode(LocationMode.INSTANCE);
@@ -79,7 +89,7 @@ public class FhirResourceTemplateHelper {
 		return ward;
 	}
 	
-	public static Organization clinic(String nameOfClinic,String facilityUID,String facilityCode ,String countryCode, String contact, String state, String district, String city) {
+	public static Organization clinic(String nameOfClinic,String facilityUID,String facilityCode , String state, String district, String city) {
 		Organization clinic = new Organization();
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		List<Address> addresses = new ArrayList<>();
@@ -97,11 +107,11 @@ public class FhirResourceTemplateHelper {
 		identifiers.add(facilityUIDIdentifier);
 		identifiers.add(facilityCodeIdentifier);
 		clinic.setIdentifier(identifiers);
-		List<ContactPoint> contactPoints = new ArrayList<>();
-		ContactPoint contactPoint = new ContactPoint();
-		contactPoint.setValue(countryCode+contact);
-		contactPoints.add(contactPoint);
-		clinic.setTelecom(contactPoints);
+//		List<ContactPoint> contactPoints = new ArrayList<>();
+//		ContactPoint contactPoint = new ContactPoint();
+//		contactPoint.setValue(countryCode+contact);
+//		contactPoints.add(contactPoint);
+//		clinic.setTelecom(contactPoints);
 		CodeableConcept codeableConcept = new CodeableConcept();
 		Coding coding = new Coding();
 		coding.setCode(CODE_CLINIC);
@@ -112,6 +122,7 @@ public class FhirResourceTemplateHelper {
 		codeableConcepts.add(codeableConcept);
 		clinic.setType(codeableConcepts);
 		clinic.setName(nameOfClinic);
+		clinic.setId(UUID.randomUUID().toString());
 		return clinic;
 	}
 	
