@@ -3,6 +3,8 @@ package ca.uhn.fhir.jpa.starter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
+import ca.uhn.fhir.jpa.starter.service.HelperService;
+
 import javax.servlet.ServletException;
 
 @Import(AppProperties.class)
@@ -11,6 +13,9 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
   @Autowired
   AppProperties appProperties;
 
+  @Autowired
+  HelperService helperService;
+  
   private static final long serialVersionUID = 1L;
 
   public JpaRestfulServer() {
@@ -22,7 +27,7 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     super.initialize();
 
     // Add your own customization here
-
+    helperService.initializeKeycloak();
   }
 
 }

@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 
 import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Organization;
+import org.hl7.fhir.r4.model.Practitioner;
+import org.hl7.fhir.r4.model.PractitionerRole;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +31,6 @@ public class SampleController {
 	@Autowired
 	HelperService helperService;
 	
-	@RequestMapping(method = RequestMethod.GET,value = {"/read"})
-	public String read(String id) {
-		FhirResourceTemplateHelper.state("oyo");
-//		FhirResourceTemplateHelper.lga("Ibadan South West", "oyo");
-//		FhirResourceTemplateHelper.ward("Agbokojo", "oyo");
-//		FhirResourceTemplateHelper.clinic("St Lucia Hospital", "oyo", "19145158", "30/08/1/1/1/0019", "+234-6789045655");
-		return "test";
-	}
-	
 	@RequestMapping(method = RequestMethod.POST,value = {"/uploadCsvFile"})
 	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadClinicsAndStates(@RequestParam("file") MultipartFile file) throws IOException {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -49,30 +42,27 @@ public class SampleController {
 				iteration++;
 				continue;
 			}
-			String[] csvData = singleLine.split(","); //state,lga,ward,facilityUID,facilityCode,facilityName,facilityLevel,countryCode,phoneNumber
+			String[] csvData = singleLine.split(","); //state,lga,ward,facilityUID,facilityCode,countryCode,phoneNumber,facilityName,facilityLevel
 			if (Validation.validateClinicAndStateCsvLine(csvData))
 			{
 			Location state = FhirResourceTemplateHelper.state(csvData[0]);
-			helperService.create(state);
-			Location lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0]);
-			helperService.create(lga);
-			Location ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2]);
-			helperService.create(ward);
-			Organization clinic = FhirResourceTemplateHelper.clinic(csvData[5],  csvData[3], csvData[4], csvData[7], csvData[8], csvData[0], csvData[1], csvData[2]);
-			helperService.create(clinic);
+			helperService.createResource(state);
+			Location lga = FhirResourceTemplateHelper.lga(csvData[1],csvData[0]);
+			helperService.createResource(lga);
+			Location ward = FhirResourceTemplateHelper.ward(csvData[0],csvData[1],csvData[2]);
+			helperService.createResource(ward);
+			Organization clinic = FhirResourceTemplateHelper.clinic(csvData[5],csvData[3],csvData[4],csvData[5],csvData[6],csvData[0],csvData[1],csvData[2]);
+			helperService.createResource(clinic);
 			}
 		}
 		map.put("uploadCSV", "Successful");
 		return new ResponseEntity(map,HttpStatus.OK);
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = {"/keycloak"})
-	public void keycloakInitAndCreateGroup() {
-		helperService.initializeKeycloak();
+	
+	@RequestMapping(method = RequestMethod.POST,value = {"/hcwBulkImport"})
+	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadHcw(@RequestParam("file") MultipartFile file) throws Exception{
+		return helperService.createUsers(file);
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = {"/group"})
-	public void keycloakCreateGroups(String group) {
-		helperService.createGroup(group);
-	}
 }
