@@ -38,7 +38,7 @@ public class FhirResourceTemplateHelper {
 		statePhysicalType.addCoding(physicalTypeCoding);
 		stateAddress.setState(name);
 		state.setName(name);
-		state.setId(UUID.randomUUID().toString());
+		state.setId(new IdType("Location", generateUUID()));
 		state.setAddress(stateAddress);
 		state.setStatus(LocationStatus.ACTIVE);
 		state.setMode(LocationMode.INSTANCE);
@@ -61,7 +61,7 @@ public class FhirResourceTemplateHelper {
 		lgaAddress.setState(state);
 		lgaAddress.setDistrict(nameOfLga);
 		lga.setName(nameOfLga);
-		lga.setId(id);
+		lga.setId(new IdType("Location", generateUUID()));
 		lga.setAddress(lgaAddress);
 		lga.setStatus(LocationStatus.ACTIVE);
 		lga.setMode(LocationMode.INSTANCE);
@@ -83,7 +83,7 @@ public class FhirResourceTemplateHelper {
 		wardAddress.setCity(city);
 		wardAddress.setDistrict(district);
 		ward.setName(city);
-		ward.setId(UUID.randomUUID().toString());
+		ward.setId(new IdType("Location", generateUUID()));
 		ward.setAddress(wardAddress);
 		ward.setStatus(LocationStatus.ACTIVE);
 		ward.setMode(LocationMode.INSTANCE);
@@ -124,7 +124,7 @@ public class FhirResourceTemplateHelper {
 		codeableConcepts.add(codeableConcept);
 		clinic.setType(codeableConcepts);
 		clinic.setName(nameOfClinic);
-		clinic.setId(UUID.randomUUID().toString());
+		clinic.setId(new IdType("Organization", generateUUID()));
 		return clinic;
 	}
 	
@@ -163,7 +163,7 @@ public class FhirResourceTemplateHelper {
 		practitioner.setQualification(practitionerQualificationComponents);
 		Date dateOfBirth = new SimpleDateFormat("MM/dd/yyyy").parse(dob);
 		practitioner.setBirthDate(dateOfBirth);
-		practitioner.setId(new IdType("Practitioner", UUID.randomUUID().toString()));
+		practitioner.setId(new IdType("Practitioner", "40e60c3f-82d6-4d5d-a52e-7466774351df"));
 		return practitioner;
 	}
 	
@@ -181,9 +181,11 @@ public class FhirResourceTemplateHelper {
 		codeableConcepts.add(roleCoding);
 		practitionerRole.setCode(codeableConcepts);
 		practitionerRole.setPractitioner(PractitionerReference);
-		practitionerRole.setId(new IdType("Practitioner", UUID.randomUUID().toString()));
+		practitionerRole.setId(new IdType("Practitioner", "316ea29b-1245-4c8f-9645-aea1516adfc6"));
 		return practitionerRole;
 	}
 	
-//	private fun generateUUID()
+	private static String generateUUID() {
+		return UUID.randomUUID().toString();
+	}
 }

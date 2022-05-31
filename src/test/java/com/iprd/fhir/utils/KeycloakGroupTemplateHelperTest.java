@@ -2,6 +2,7 @@ package com.iprd.fhir.utils;
 
 import org.junit.Test;
 import org.keycloak.representations.idm.GroupRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
 
 import com.github.andrewoma.dexx.collection.HashMap;
 
@@ -14,7 +15,7 @@ public class KeycloakGroupTemplateHelperTest {
 
 	@Test
 	public void testStateGroup() {
-		GroupRepresentation stateGroupRep = KeycloakGroupTemplateHelper.stateGroup("Oyo","12345");
+		GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup("Oyo","12345");
 		Map<String, List<String>> attributes = stateGroupRep.getAttributes();
 		assertEquals(stateGroupRep.getName(), "Oyo");
 		assertEquals(attributes.get("type").get(0), "state");
@@ -23,7 +24,7 @@ public class KeycloakGroupTemplateHelperTest {
 	
 	@Test
 	public void testLgaGroup() {
-		GroupRepresentation lgaGroupRep = KeycloakGroupTemplateHelper.lgaGroup("Ibadan South West","parent123","location123");
+		GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup("Ibadan South West","parent123","location123");
 		Map<String, List<String>> attributes = lgaGroupRep.getAttributes();
 		assertEquals(lgaGroupRep.getName(), "Ibadan South West");
 		assertEquals(attributes.get("type").get(0), "lga");
@@ -33,7 +34,7 @@ public class KeycloakGroupTemplateHelperTest {
 	
 	@Test
 	public void testWardGroup() {
-		GroupRepresentation wardGroupRep = KeycloakGroupTemplateHelper.wardGroup("Agbokojo","parent124","location124");
+		GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup("Agbokojo","parent124","location124");
 		Map<String, List<String>> attributes = wardGroupRep.getAttributes();
 		assertEquals(wardGroupRep.getName(), "Agbokojo");
 		assertEquals(attributes.get("type").get(0), "ward");
@@ -43,7 +44,7 @@ public class KeycloakGroupTemplateHelperTest {
 	
 	@Test
 	public void facilityGroupTest() {
-		GroupRepresentation facilityGroupRep = KeycloakGroupTemplateHelper.facilityGroup("St Lucia Hospital" ,"parent125", "organization125", "primary", "public", "19145158", "30/08/1/1/1/0019");
+		GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup("St Lucia Hospital" ,"parent125", "organization125", "primary", "public", "19145158", "30/08/1/1/1/0019");
 		Map<String, List<String>> attributes = facilityGroupRep.getAttributes();
 		assertEquals(facilityGroupRep.getName(), "St Lucia Hospital");
 		assertEquals(attributes.get("type").get(0), "facility");

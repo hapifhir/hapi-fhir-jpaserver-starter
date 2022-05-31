@@ -4,6 +4,8 @@ import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.PractitionerRole;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Resource;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.keycloak.OAuth2Constants;
@@ -24,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ca.uhn.fhir.context.FhirContext;
 
+import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.Identifier;
@@ -31,13 +34,19 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.gclient.ICreateWithQueryTyped;
 import ca.uhn.fhir.rest.gclient.ICriterion;
+import ca.uhn.fhir.rest.gclient.IQuery;
+import ca.uhn.fhir.rest.gclient.IUpdateWithQueryTyped;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
+
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -48,7 +57,7 @@ public class HelperService {
 		FhirContext ctx = FhirContext.forR4();
 		String serverBase = "http://localhost:8080/fhir";
 		IGenericClient fhirClient = ctx.newRestfulGenericClient(serverBase);
-		Keycloak keycloak; 
+		Keycloak keycloak;
 		
 		public void initializeKeycloak() {
 			ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
@@ -67,6 +76,7 @@ public class HelperService {
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
 			
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
@@ -79,25 +89,25 @@ public class HelperService {
 				if (Validation.validateClinicAndStateCsvLine(csvData)) {
 					
 					Location state = FhirResourceTemplateHelper.state(csvData[0]);
-					String stateId = createResource(state, Location.NAME.matches().value(state.getName()));
+					String stateId = createResource(state,Location.class,Location.NAME.matches().value(state.getName()));
 					GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), stateId);
 					String stateGroupId = createGroup(stateGroupRep);
 					updateResource(stateGroupId, stateId, Location.class);
 					
 					Location lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0]);
-					String lgaId = createResource(lga, Location.NAME.matches().value(lga.getName()));
+					String lgaId = createResource(lga, Location.class, Location.NAME.matches().value(lga.getName()));
 					GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lgaId);
 					String lgaGroupId = createGroup(lgaGroupRep);
 					updateResource(lgaGroupId, lgaId, Location.class);
 					
 					Location ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2]);
-					String wardId = createResource(ward, Location.NAME.matches().value(ward.getName()));
-					GroupRepresentation wardGroupRep = KeycloakTemplateHelper.lgaGroup(ward.getName(), lgaGroupId, wardId);
+					String wardId = createResource(ward, Location.class, Location.NAME.matches().value(ward.getName()));
+					GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, wardId);
 					String wardGroupId = createGroup(wardGroupRep);
 					updateResource(wardGroupId, wardId, Location.class);
 					
 					Organization clinic = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[0], csvData[1], csvData[2]);
-					String facilityId = createResource(clinic, Organization.NAME.matches().value(clinic.getName()));
+					String facilityId = createResource(clinic, Organization.class, Organization.NAME.matches().value(clinic.getName()));
 					GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(
 								clinic.getName(),
 								wardGroupId,
@@ -125,37 +135,17 @@ public class HelperService {
 			return CreatedResponseUtil.getCreatedId(response);
 		}
 		
-		private String createResource(Resource resource ,ICriterion<?>...theCriterion) {
-			/*
-			 * ICreateQueryTYped q = fhirClient.create()
-					   .resource(resource)
-					   .conditional()
-					   .where(firstCriterion)
-					   
-			 * For criterion in list:
-			 * 	if not last criterion
-			 * 		q = q.and(criterion)
-			 * */
-			 ICreateWithQueryTyped query = fhirClient.create()
-					   .resource(resource)
-					   .conditional()
-					   .where(theCriterion[0]);
-			 for(int i=1;i<theCriterion.length;i++) {
-				 query = query.and(theCriterion[i]);
-			 }
-			 MethodOutcome outcome =  query.execute();
-			 return outcome.getId().getIdPart();
+		private String createResource(Resource resource, Class<? extends IBaseResource> theClass,ICriterion<?>...theCriterion ) {
+			IQuery<IBaseBundle> query = fhirClient.search().forResource(theClass).where(theCriterion[0]);
+			for(int i=1;i<theCriterion.length;i++)
+				query = query.and(theCriterion[i]);
+			Bundle bundle = query.returnBundle(Bundle.class).execute();
+			if(!bundle.hasEntry()) {
+				MethodOutcome outcome = fhirClient.update().resource(resource).execute();
+				 return outcome.getId().getIdPart();
+			}
+			return bundle.getEntry().get(0).getFullUrl().split("/")[5];
 		}
-		
-//		private void createResource(Resource resource, Class<? extends IBaseResource> theClass,ICriterion<?> theCriterion ) {
-//			Bundle bundle = fhirClient.search().forResource(theClass).where(theCriterion).returnBundle(Bundle.class).execute();
-//			bundle.getEntry()
-//			if(bundle.hasEntry()) {
-////				TODO: Return ID
-//			}else {
-////				TODO: Create and return
-//			}
-//		}
 		
 		private <R extends IBaseResource> void updateResource(String keycloakId, String resourceId, Class<R> resourceClass) {
 			 R resource = fhirClient.read().resource(resourceClass).withId(resourceId).execute();
@@ -207,12 +197,13 @@ public class HelperService {
 				{
 					Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14]);
 					String practitionerId = createResource(hcw,
+							Practitioner.class,
 							Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
 							Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
 							Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
 						); // Catch index out of bound
 					PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId);
-					String practitionerRoleId = createResource(practitionerRole, PractitionerRole.PRACTITIONER.hasId(practitionerId));
+					String practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
 					UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
 					String keycloakUserId = createUser(user);
 					updateResource(keycloakUserId, practitionerId, Practitioner.class);
