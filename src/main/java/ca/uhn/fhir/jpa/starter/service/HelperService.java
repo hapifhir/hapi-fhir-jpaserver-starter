@@ -67,7 +67,7 @@ public class HelperService {
 		    		.grantType(OAuth2Constants.PASSWORD)
 		    		.realm("master")
 		    		.clientId("fhir-hapi-realm")
-		    		.username ("managegroup")
+		    		.username ("manageuser")
 		    		.password("12345")
 		    		.resteasyClient(client)
 		    		.build();
@@ -76,7 +76,6 @@ public class HelperService {
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
 			
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
@@ -146,6 +145,15 @@ public class HelperService {
 			}
 			return bundle.getEntry().get(0).getFullUrl().split("/")[5];
 		}
+//		private String createResource(Resource resource, Class<? extends IBaseResource> theClass,ICriterion<?>...theCriterion ) {
+//			IQuery<IBaseBundle> query = fhirClient.search().forResource(theClass).where(theCriterion[0]);
+//			Bundle bundle = fhirClient.search().forResource(theClass).where(theCriterion[0]).and(theCriterion[1]).and(theCriterion[2]).returnBundle(Bundle.class).execute();
+//			if(!bundle.hasEntry()) {
+//				MethodOutcome outcome = fhirClient.update().resource(resource).execute();
+//				 return outcome.getId().getIdPart();
+//			}
+//			return bundle.getEntry().get(0).getFullUrl().split("/")[5];
+//		}
 		
 		private <R extends IBaseResource> void updateResource(String keycloakId, String resourceId, Class<R> resourceClass) {
 			 R resource = fhirClient.read().resource(resourceClass).withId(resourceId).execute();
@@ -184,9 +192,15 @@ public class HelperService {
 		
 		public ResponseEntity<LinkedHashMap<String, Object>> createUsers(@RequestParam("file") MultipartFile file) throws Exception{
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			List<String> practitioners = new ArrayList<>();
+			List<String> practitionersRoles = new ArrayList<>();
+			
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
+			String practitionerRoleId = "";
+			String practitionerId = "";
+			
 			while((singleLine = bufferedReader.readLine()) != null) {
 				if(iteration == 0 && singleLine.contains("firstName")) {
 					iteration++;
@@ -195,19 +209,24 @@ public class HelperService {
 				String hcwData[] = singleLine.split(","); //firstName,lastName,email,phoneNumber,countryCode,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier
 				if(Validation.validationHcwCsvLine(hcwData))
 				{
-					Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14]);
-					String practitionerId = createResource(hcw,
-							Practitioner.class,
-							Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
-							Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
-							Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
-						); // Catch index out of bound
-					PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId);
-					String practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
-					UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
-					String keycloakUserId = createUser(user);
-					updateResource(keycloakUserId, practitionerId, Practitioner.class);
-					updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
+					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[4]+hcwData[3]))) {
+						Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14]);
+						practitionerId = createResource(hcw,
+								Practitioner.class,
+								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
+								Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
+								Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
+							); // Catch index out of bound
+						practitioners.add(hcw.getName().get(0).getFamily());
+						practitioners.add(hcw.getName().get(0).getGivenAsSingleString());
+						practitioners.add(hcw.getTelecom().get(0).getValue());
+						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId);
+						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
+						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
+						String keycloakUserId = createUser(user);
+						updateResource(keycloakUserId, practitionerId, Practitioner.class);
+						updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
+					}
 				}
 			}
 			map.put("uploadCsv", "Successful");

@@ -163,7 +163,7 @@ public class FhirResourceTemplateHelper {
 		practitioner.setQualification(practitionerQualificationComponents);
 		Date dateOfBirth = new SimpleDateFormat("MM/dd/yyyy").parse(dob);
 		practitioner.setBirthDate(dateOfBirth);
-		practitioner.setId(new IdType("Practitioner", "40e60c3f-82d6-4d5d-a52e-7466774351df"));
+		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;
 	}
 	
@@ -181,7 +181,7 @@ public class FhirResourceTemplateHelper {
 		codeableConcepts.add(roleCoding);
 		practitionerRole.setCode(codeableConcepts);
 		practitionerRole.setPractitioner(PractitionerReference);
-		practitionerRole.setId(new IdType("Practitioner", "316ea29b-1245-4c8f-9645-aea1516adfc6"));
+		practitionerRole.setId(new IdType("PractitionerRole", generateUUID()));
 		return practitionerRole;
 	}
 	
