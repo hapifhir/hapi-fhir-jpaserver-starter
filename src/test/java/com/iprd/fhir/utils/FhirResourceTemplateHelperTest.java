@@ -67,10 +67,10 @@ public class FhirResourceTemplateHelperTest {
 		assertEquals(test.getQualification(), "Bachelor-of-Nursing");
 	}
 	
-	@Test
-	public void testPractitionerRole() {
-		PractitionerRole test = FhirResourceTemplateHelper.practitionerRole("Nurse", "Bachelor-of-Nursing");
-		assertEquals(test.getCode().get(0), "Nurse");
-		assertEquals(test.getCode().get(1), "Bachelor-of-Nursing");
-	}
+//	@Test
+//	public void testPractitionerRole() {
+//		PractitionerRole test = FhirResourceTemplateHelper.practitionerRole("Nurse", "Bachelor-of-Nursing");
+//		assertEquals(test.getCode().get(0), "Nurse");
+//		assertEquals(test.getCode().get(1), "Bachelor-of-Nursing");
+//	}
 }

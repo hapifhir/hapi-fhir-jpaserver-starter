@@ -11,47 +11,35 @@ import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.github.andrewoma.dexx.collection.Pair;
 import com.iprd.fhir.utils.FhirResourceTemplateHelper;
-import com.iprd.fhir.utils.KeycloakGroupTemplateHelper;
+import com.iprd.fhir.utils.KeycloakTemplateHelper;
 import com.iprd.fhir.utils.Validation;
 
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import com.iprd.fhir.utils.FhirResourceTemplateHelper;
 
 import ca.uhn.fhir.context.FhirContext;
 
-import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.Location;
+import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.Identifier;
-import org.hl7.fhir.r4.model.Organization;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import ca.uhn.fhir.rest.gclient.ICreateWithQueryTyped;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.instance.model.api.IIdType;
 import org.keycloak.representations.idm.UserRepresentation;
 
 @Service
@@ -76,7 +64,7 @@ public class HelperService {
 		    		.build();
 		}
 		
-		public ResponseEntity<LinkedHashMap<String, Object>> create(MultipartFile file) throws IOException {
+		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
 			
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
@@ -91,34 +79,33 @@ public class HelperService {
 				if (Validation.validateClinicAndStateCsvLine(csvData)) {
 					
 					Location state = FhirResourceTemplateHelper.state(csvData[0]);
-					String stateId = createResource(state, Location.NAME.matches().value(state.getName()) );
-//					createResource(state,Location.class,Location.NAME.matches().value(state.getName()));
-					GroupRepresentation stateGroupRep = KeycloakGroupTemplateHelper.stateGroup(state.getName(), stateId);
+					String stateId = createResource(state, Location.NAME.matches().value(state.getName()));
+					GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), stateId);
 					String stateGroupId = createGroup(stateGroupRep);
 					updateResource(stateGroupId, stateId, Location.class);
 					
 					Location lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0]);
 					String lgaId = createResource(lga, Location.NAME.matches().value(lga.getName()));
-					GroupRepresentation lgaGroupRep = KeycloakGroupTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lgaId);
+					GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lgaId);
 					String lgaGroupId = createGroup(lgaGroupRep);
 					updateResource(lgaGroupId, lgaId, Location.class);
-//					
+					
 					Location ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2]);
 					String wardId = createResource(ward, Location.NAME.matches().value(ward.getName()));
-					GroupRepresentation wardGroupRep = KeycloakGroupTemplateHelper.lgaGroup(ward.getName(), lgaGroupId, wardId);
+					GroupRepresentation wardGroupRep = KeycloakTemplateHelper.lgaGroup(ward.getName(), lgaGroupId, wardId);
 					String wardGroupId = createGroup(wardGroupRep);
 					updateResource(wardGroupId, wardId, Location.class);
 					
-					Organization clinic = FhirResourceTemplateHelper.clinic(csvData[5],  csvData[3], csvData[4], csvData[0], csvData[1], csvData[2]);
+					Organization clinic = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[0], csvData[1], csvData[2]);
 					String facilityId = createResource(clinic, Organization.NAME.matches().value(clinic.getName()));
-					GroupRepresentation facilityGroupRep = KeycloakGroupTemplateHelper.facilityGroup(
+					GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(
 								clinic.getName(),
 								wardGroupId,
 								facilityId,
-								csvData[6],
-								csvData[7],
-								csvData[4],
-								csvData[5]
+								csvData[8],
+								csvData[9],
+								csvData[3],
+								csvData[4]
 							);
 					String facilityGroupId = createGroup(facilityGroupRep);
 					updateResource(facilityGroupId, facilityId, Organization.class);
@@ -138,12 +125,25 @@ public class HelperService {
 			return CreatedResponseUtil.getCreatedId(response);
 		}
 		
-		private String createResource(Resource resource ,ICriterion<?> theCriterion) {
-			 MethodOutcome outcome = fhirClient.create()
+		private String createResource(Resource resource ,ICriterion<?>...theCriterion) {
+			/*
+			 * ICreateQueryTYped q = fhirClient.create()
 					   .resource(resource)
 					   .conditional()
-					   .where(theCriterion)
-					   .execute();
+					   .where(firstCriterion)
+					   
+			 * For criterion in list:
+			 * 	if not last criterion
+			 * 		q = q.and(criterion)
+			 * */
+			 ICreateWithQueryTyped query = fhirClient.create()
+					   .resource(resource)
+					   .conditional()
+					   .where(theCriterion[0]);
+			 for(int i=1;i<theCriterion.length;i++) {
+				 query = query.and(theCriterion[i]);
+			 }
+			 MethodOutcome outcome =  query.execute();
 			 return outcome.getId().getIdPart();
 		}
 		
@@ -157,12 +157,12 @@ public class HelperService {
 //			}
 //		}
 		
-		private <R extends IBaseResource> void updateResource(String groupId, String resourceId, Class<R> resourceClass) {
+		private <R extends IBaseResource> void updateResource(String keycloakId, String resourceId, Class<R> resourceClass) {
 			 R resource = fhirClient.read().resource(resourceClass).withId(resourceId).execute();
 			 try {
 				 Method addIdentifier = resource.getClass().getMethod("addIdentifier");
 				 Identifier obj = (Identifier) addIdentifier.invoke(resource);
-				 obj.setValue(groupId);
+				 obj.setValue(keycloakId);
 				 MethodOutcome outcome = fhirClient.update().resource(resource).execute();
 			 }
 			 catch (SecurityException e) {
@@ -178,23 +178,17 @@ public class HelperService {
 			}
 		}
 		
-		private String createUser(String firstName, String lastName, String email,String userName,String password,String phoneNumber,String practitionerId, String practitionerRoleId) {
-			UserRepresentation user = new UserRepresentation();
-			CredentialRepresentation credential = new CredentialRepresentation();
-			credential.setType(CredentialRepresentation.PASSWORD);
-			credential.setValue(password);
-			user.setCredentials(Arrays.asList(credential));
-			user.setUsername(userName);
-			user.setFirstName(firstName);
-			user.setLastName(lastName);
-			user.setEmail(email);
-			user.singleAttribute("phoneNumber", phoneNumber);
-			user.singleAttribute("type","HCW");
-			user.singleAttribute("fhirPractitionerLogicalId ", practitionerId);
-			user.singleAttribute("fhirPractitionerRoleLogicalId ", practitionerRoleId);
-			user.setEnabled(true);
+		private String createUser(UserRepresentation userRep) {
 			RealmResource realmResource = keycloak.realm("fhir-hapi");
-			Response response = realmResource.users().create(user);
+			for(UserRepresentation user: realmResource.users().list()) {
+				if(user.getFirstName().equals(userRep.getFirstName()) && 
+					user.getLastName().equals(userRep.getLastName()) && 
+					user.getEmail().equals(userRep.getEmail())
+				){
+					return user.getId();
+				}
+			}
+			Response response = realmResource.users().create(userRep);
 			return CreatedResponseUtil.getCreatedId(response);
 		}
 		
@@ -212,10 +206,15 @@ public class HelperService {
 				if(Validation.validationHcwCsvLine(hcwData))
 				{
 					Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14]);
-					PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14]);
-					String practitionerId = createResource(hcw, Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString())); // Catch index out of bound
-					String practitionerRoleId = createResource(practitionerRole, PractitionerRole.PRACTITIONER.hasId(hcw.getId()));
-					String keycloakUserId = createUser(hcwData[0],hcwData[1],hcwData[2],hcwData[7], hcwData[8], hcwData[3], practitionerId, practitionerRoleId);
+					String practitionerId = createResource(hcw,
+							Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
+							Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
+							Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
+						); // Catch index out of bound
+					PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId);
+					String practitionerRoleId = createResource(practitionerRole, PractitionerRole.PRACTITIONER.hasId(practitionerId));
+					UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
+					String keycloakUserId = createUser(user);
 					updateResource(keycloakUserId, practitionerId, Practitioner.class);
 					updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
 				}

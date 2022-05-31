@@ -5,8 +5,10 @@ import java.util.UUID;
 import java.util.ArrayList;
 import java.lang.String;
 
-import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.dstu2.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.codesystems.ContactentityType;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Location.LocationMode;
 import org.hl7.fhir.r4.model.Location.LocationStatus;
@@ -126,7 +128,7 @@ public class FhirResourceTemplateHelper {
 		return clinic;
 	}
 	
-	public static Practitioner hcw(String firstName, String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification) throws Exception {
+	public static Practitioner hcw(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification) throws Exception {
 		Practitioner practitioner = new Practitioner();
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier clinicId = new Identifier();
@@ -144,6 +146,7 @@ public class FhirResourceTemplateHelper {
 		List<ContactPoint> contactPoints = new ArrayList<>();
 		ContactPoint contactPoint = new ContactPoint();
 		contactPoint.setValue(countryCode+telecom);
+		contactPoint.setSystem(org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem.PHONE);
 		contactPoints.add(contactPoint);
 		practitioner.setTelecom(contactPoints);
 		practitioner.setGender(AdministrativeGender.fromCode(gender));
@@ -160,12 +163,14 @@ public class FhirResourceTemplateHelper {
 		practitioner.setQualification(practitionerQualificationComponents);
 		Date dateOfBirth = new SimpleDateFormat("MM/dd/yyyy").parse(dob);
 		practitioner.setBirthDate(dateOfBirth);
+		practitioner.setId(new IdType("Practitioner", UUID.randomUUID().toString()));
 		return practitioner;
 	}
 	
-	public static PractitionerRole practitionerRole(String role, String qualification)
+	public static PractitionerRole practitionerRole(String role, String qualification, String practitionerId)
 	{
 		PractitionerRole practitionerRole = new PractitionerRole();
+		Reference PractitionerReference = new  Reference("Practitioner/"+practitionerId);
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		CodeableConcept roleCoding = new CodeableConcept();
 		Coding coding2 = new Coding();
@@ -175,6 +180,10 @@ public class FhirResourceTemplateHelper {
 		roleCoding.addCoding(coding2);
 		codeableConcepts.add(roleCoding);
 		practitionerRole.setCode(codeableConcepts);
+		practitionerRole.setPractitioner(PractitionerReference);
+		practitionerRole.setId(new IdType("Practitioner", UUID.randomUUID().toString()));
 		return practitionerRole;
 	}
+	
+//	private fun generateUUID()
 }
