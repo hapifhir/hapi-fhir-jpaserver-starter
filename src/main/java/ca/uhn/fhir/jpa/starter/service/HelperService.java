@@ -5,7 +5,6 @@ import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Resource;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.keycloak.OAuth2Constants;
@@ -32,10 +31,8 @@ import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.Identifier;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.gclient.ICreateWithQueryTyped;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
-import ca.uhn.fhir.rest.gclient.IUpdateWithQueryTyped;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -67,7 +64,7 @@ public class HelperService {
 		    		.grantType(OAuth2Constants.PASSWORD)
 		    		.realm("master")
 		    		.clientId("fhir-hapi-realm")
-		    		.username ("manageuser")
+		    		.username ("managegroup")
 		    		.password("12345")
 		    		.resteasyClient(client)
 		    		.build();
@@ -76,9 +73,17 @@ public class HelperService {
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
 			
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			List<String> states = new ArrayList<>();
+			List<String> lgas = new ArrayList<>();
+			List<String> wards = new ArrayList<>();
+			List<String> clinics  = new ArrayList<>();
+			
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
+			String stateId="",lgaId="",wardId="",facilityId="";
+			String stateGroupId="", lgaGroupId="", wardGroupId="", facilityGroupId="";
+			
 			while((singleLine = bufferedReader.readLine())!=null){
 				if(iteration == 0 && singleLine.contains("state")) { //skip header of CSV file
 					iteration++;
@@ -86,38 +91,49 @@ public class HelperService {
 				}
 				String[] csvData = singleLine.split(","); //state,lga,ward,facilityUID,facilityCode,facilityName,facilityLevel,countryCode,phoneNumber
 				if (Validation.validateClinicAndStateCsvLine(csvData)) {
+					if(!states.contains(csvData[0])) {
+						Location state = FhirResourceTemplateHelper.state(csvData[0]);
+						stateId = createResource(state,Location.class,Location.NAME.matches().value(state.getName()));
+						states.add(state.getName());
+						GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), stateId);
+						stateGroupId = createGroup(stateGroupRep);
+						updateResource(stateGroupId, stateId, Location.class);
+					}
 					
-					Location state = FhirResourceTemplateHelper.state(csvData[0]);
-					String stateId = createResource(state,Location.class,Location.NAME.matches().value(state.getName()));
-					GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), stateId);
-					String stateGroupId = createGroup(stateGroupRep);
-					updateResource(stateGroupId, stateId, Location.class);
+					if(!lgas.contains(csvData[1])) {
+						Location lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0]);
+						lgaId = createResource(lga, Location.class, Location.NAME.matches().value(lga.getName()));
+						lgas.add(lga.getName());
+						GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lgaId);
+						lgaGroupId = createGroup(lgaGroupRep);
+						updateResource(lgaGroupId, lgaId, Location.class);
+					}
 					
-					Location lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0]);
-					String lgaId = createResource(lga, Location.class, Location.NAME.matches().value(lga.getName()));
-					GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lgaId);
-					String lgaGroupId = createGroup(lgaGroupRep);
-					updateResource(lgaGroupId, lgaId, Location.class);
+					if(!wards.contains(csvData[2])) {
+						Location ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2]);
+						wardId = createResource(ward, Location.class, Location.NAME.matches().value(ward.getName()));
+						wards.add(ward.getName());
+						GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, wardId);
+						wardGroupId = createGroup(wardGroupRep);
+						updateResource(wardGroupId, wardId, Location.class);
+					}
 					
-					Location ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2]);
-					String wardId = createResource(ward, Location.class, Location.NAME.matches().value(ward.getName()));
-					GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, wardId);
-					String wardGroupId = createGroup(wardGroupRep);
-					updateResource(wardGroupId, wardId, Location.class);
-					
-					Organization clinic = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[0], csvData[1], csvData[2]);
-					String facilityId = createResource(clinic, Organization.class, Organization.NAME.matches().value(clinic.getName()));
-					GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(
-								clinic.getName(),
-								wardGroupId,
-								facilityId,
-								csvData[8],
-								csvData[9],
-								csvData[3],
-								csvData[4]
-							);
-					String facilityGroupId = createGroup(facilityGroupRep);
-					updateResource(facilityGroupId, facilityId, Organization.class);
+					if(!clinics.contains(csvData[7])) {
+						Organization clinic = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[0], csvData[1], csvData[2]);
+						facilityId = createResource(clinic, Organization.class, Organization.NAME.matches().value(clinic.getName()));
+						clinics.add(clinic.getName());
+						GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(
+									clinic.getName(),
+									wardGroupId,
+									facilityId,
+									csvData[8],
+									csvData[9],
+									csvData[3],
+									csvData[4]
+								);
+						facilityGroupId = createGroup(facilityGroupRep);
+						updateResource(facilityGroupId, facilityId, Organization.class);
+					}
 				}
 			}
 			map.put("uploadCSV", "Successful");
@@ -145,15 +161,6 @@ public class HelperService {
 			}
 			return bundle.getEntry().get(0).getFullUrl().split("/")[5];
 		}
-//		private String createResource(Resource resource, Class<? extends IBaseResource> theClass,ICriterion<?>...theCriterion ) {
-//			IQuery<IBaseBundle> query = fhirClient.search().forResource(theClass).where(theCriterion[0]);
-//			Bundle bundle = fhirClient.search().forResource(theClass).where(theCriterion[0]).and(theCriterion[1]).and(theCriterion[2]).returnBundle(Bundle.class).execute();
-//			if(!bundle.hasEntry()) {
-//				MethodOutcome outcome = fhirClient.update().resource(resource).execute();
-//				 return outcome.getId().getIdPart();
-//			}
-//			return bundle.getEntry().get(0).getFullUrl().split("/")[5];
-//		}
 		
 		private <R extends IBaseResource> void updateResource(String keycloakId, String resourceId, Class<R> resourceClass) {
 			 R resource = fhirClient.read().resource(resourceClass).withId(resourceId).execute();
@@ -193,14 +200,13 @@ public class HelperService {
 		public ResponseEntity<LinkedHashMap<String, Object>> createUsers(@RequestParam("file") MultipartFile file) throws Exception{
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			List<String> practitioners = new ArrayList<>();
-			List<String> practitionersRoles = new ArrayList<>();
 			
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
 			String practitionerRoleId = "";
 			String practitionerId = "";
-			
+
 			while((singleLine = bufferedReader.readLine()) != null) {
 				if(iteration == 0 && singleLine.contains("firstName")) {
 					iteration++;
