@@ -204,7 +204,6 @@ public class HelperService {
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
-			String practitionerRoleId = "";
 			String practitionerId = "";
 
 			while((singleLine = bufferedReader.readLine()) != null) {
@@ -227,8 +226,8 @@ public class HelperService {
 						practitioners.add(hcw.getName().get(0).getGivenAsSingleString());
 						practitioners.add(hcw.getTelecom().get(0).getValue());
 						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId);
-						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
-						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
+						String practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
+						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],hcwData[4],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
 						String keycloakUserId = createUser(user);
 						updateResource(keycloakUserId, practitionerId, Practitioner.class);
 						updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
