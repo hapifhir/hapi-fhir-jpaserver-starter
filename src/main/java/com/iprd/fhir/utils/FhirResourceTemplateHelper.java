@@ -91,7 +91,7 @@ public class FhirResourceTemplateHelper {
 		return ward;
 	}
 	
-	public static Organization clinic(String nameOfClinic,String facilityUID,String facilityCode , String state, String district, String city) {
+	public static Organization clinic(String nameOfClinic,String facilityUID,String facilityCode ,String countryCode, String contact, String state, String district, String city) {
 		Organization clinic = new Organization();
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		List<Address> addresses = new ArrayList<>();
@@ -109,11 +109,11 @@ public class FhirResourceTemplateHelper {
 		identifiers.add(facilityUIDIdentifier);
 		identifiers.add(facilityCodeIdentifier);
 		clinic.setIdentifier(identifiers);
-//		List<ContactPoint> contactPoints = new ArrayList<>();
-//		ContactPoint contactPoint = new ContactPoint();
-//		contactPoint.setValue(countryCode+contact);
-//		contactPoints.add(contactPoint);
-//		clinic.setTelecom(contactPoints);
+		List<ContactPoint> contactPoints = new ArrayList<>();
+		ContactPoint contactPoint = new ContactPoint();
+		contactPoint.setValue(countryCode+contact);
+		contactPoints.add(contactPoint);
+		clinic.setTelecom(contactPoints);
 		CodeableConcept codeableConcept = new CodeableConcept();
 		Coding coding = new Coding();
 		coding.setCode(CODE_CLINIC);

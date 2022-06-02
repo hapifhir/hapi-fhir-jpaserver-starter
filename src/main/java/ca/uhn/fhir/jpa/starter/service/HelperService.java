@@ -124,7 +124,7 @@ public class HelperService {
 					}
 					
 					if(!clinics.contains(csvData[7])) {
-						Organization clinic = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[0], csvData[1], csvData[2]);
+						Organization clinic = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2]);
 						facilityId = createResource(clinic, Organization.class, Organization.NAME.matches().value(clinic.getName()));
 						clinics.add(clinic.getName());
 						GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(
@@ -176,7 +176,7 @@ public class HelperService {
 						practitioners.add(hcw.getTelecom().get(0).getValue());
 						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId);
 						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
-						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
+						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],hcwData[4],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
 						String keycloakUserId = createUser(user);
 						if(keycloakUserId != null) {
 							updateResource(keycloakUserId, practitionerId, Practitioner.class);
@@ -237,7 +237,7 @@ public class HelperService {
 			List<UserRepresentation> users = realmResource.users().search(userRep.getUsername(), 0, Integer.MAX_VALUE);
 			//if not empty, return id
 			if(!users.isEmpty())
-				return null;
+				users.get(0).getId();
 			try {
 				Response response = realmResource.users().create(userRep);
 				return CreatedResponseUtil.getCreatedId(response);
