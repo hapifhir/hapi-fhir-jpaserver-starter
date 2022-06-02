@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.batch2.jobs.reindex.ReindexProvider;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
@@ -77,8 +78,11 @@ public class BaseJpaRestfulServer extends RestfulServer {
   BulkDataExportProvider bulkDataExportProvider;
   @Autowired
   PartitionManagementProvider partitionManagementProvider;
+
   @Autowired
   ValueSetOperationProvider valueSetOperationProvider;
+  @Autowired
+  ReindexProvider reindexProvider;
   @Autowired
   BinaryStorageInterceptor binaryStorageInterceptor;
   @Autowired
@@ -113,8 +117,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
     // Customize supported resource types
     List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
 
-    if (!supportedResourceTypes.isEmpty() && !supportedResourceTypes.contains("SearchParameter")) {
-      supportedResourceTypes.add("SearchParameter");
+    if (!supportedResourceTypes.isEmpty()) {
+      if (!supportedResourceTypes.contains("SearchParameter")) {
+        supportedResourceTypes.add("SearchParameter");
+      }
       daoRegistry.setSupportedResourceTypes(supportedResourceTypes);
     }
 
@@ -129,7 +135,6 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     registerProviders(resourceProviderFactory.createProviders());
     registerProvider(jpaSystemProvider);
-	 registerProvider(myValueSetOperationProvider);
     /*
      * The conformance provider exports the supported resources, search parameters, etc for
      * this server. The JPA version adds resourceProviders counts to the exported statement, so it
@@ -356,7 +361,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     // valueSet Operations i.e $expand
-    registerProvider(valueSetOperationProvider);
+	 registerProvider(myValueSetOperationProvider);
+
+	 //reindex Provider $reindex
+	 registerProvider(reindexProvider);
 
     // Partitioning
     if (appProperties.getPartitioning() != null) {
