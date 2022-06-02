@@ -44,9 +44,12 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class HelperService {
@@ -55,6 +58,8 @@ public class HelperService {
 		String serverBase = "http://localhost:8080/fhir";
 		IGenericClient fhirClient = ctx.newRestfulGenericClient(serverBase);
 		Keycloak keycloak;
+		
+		private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
 		
 		public void initializeKeycloak() {
 			ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
@@ -140,11 +145,55 @@ public class HelperService {
 			return new ResponseEntity(map,HttpStatus.OK);
 		}
 		
+		public ResponseEntity<LinkedHashMap<String, Object>> createUsers(@RequestParam("file") MultipartFile file) throws Exception{
+			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			List<String> practitioners = new ArrayList<>();
+			
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
+			String singleLine;
+			int iteration = 0;
+			String practitionerRoleId = "";
+			String practitionerId = "";
+
+			while((singleLine = bufferedReader.readLine()) != null) {
+				if(iteration == 0 && singleLine.contains("firstName")) {
+					iteration++;
+					continue;
+				}
+				String hcwData[] = singleLine.split(","); //firstName,lastName,email,phoneNumber,countryCode,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier
+				if(Validation.validationHcwCsvLine(hcwData))
+				{
+					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[4]+hcwData[3]))) {
+						Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14]);
+						practitionerId = createResource(hcw,
+								Practitioner.class,
+								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
+								Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
+								Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
+							); // Catch index out of bound
+						practitioners.add(hcw.getName().get(0).getFamily());
+						practitioners.add(hcw.getName().get(0).getGivenAsSingleString());
+						practitioners.add(hcw.getTelecom().get(0).getValue());
+						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId);
+						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
+						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
+						String keycloakUserId = createUser(user);
+						if(keycloakUserId != null) {
+							updateResource(keycloakUserId, practitionerId, Practitioner.class);
+							updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
+						}
+					}
+				}
+			}
+			map.put("uploadCsv", "Successful");
+			return new ResponseEntity(map,HttpStatus.OK);
+		}
+		
 		private String createGroup(GroupRepresentation groupRep) {
 			RealmResource realmResource = keycloak.realm("fhir-hapi");
-			for(GroupRepresentation group: realmResource.groups().groups()) {
-				if(group.getName().equals(groupRep.getName()))
-					return group.getId();
+			List<GroupRepresentation> groups = realmResource.groups().groups(groupRep.getName(), 0, Integer.MAX_VALUE);
+			if(!groups.isEmpty()) {
+				return groups.get(0).getId();
 			}
 			Response response = realmResource.groups().add(groupRep);
 			return CreatedResponseUtil.getCreatedId(response);
@@ -185,60 +234,16 @@ public class HelperService {
 		
 		private String createUser(UserRepresentation userRep) {
 			RealmResource realmResource = keycloak.realm("fhir-hapi");
-			for(UserRepresentation user: realmResource.users().list()) {
-				if(user.getFirstName().equals(userRep.getFirstName()) && 
-					user.getLastName().equals(userRep.getLastName()) && 
-					user.getEmail().equals(userRep.getEmail())
-				){
-					return user.getId();
-				}
+			List<UserRepresentation> users = realmResource.users().search(userRep.getUsername(), 0, Integer.MAX_VALUE);
+			//if not empty, return id
+			if(!users.isEmpty())
+				return null;
+			try {
+				Response response = realmResource.users().create(userRep);
+				return CreatedResponseUtil.getCreatedId(response);
+			}catch(WebApplicationException e) {
+				logger.error("Cannot create user "+userRep.getUsername()+" with groups "+userRep.getGroups());
+				return null;
 			}
-			Response response = realmResource.users().create(userRep);
-			return CreatedResponseUtil.getCreatedId(response);
 		}
-		
-		public ResponseEntity<LinkedHashMap<String, Object>> createUsers(@RequestParam("file") MultipartFile file) throws Exception{
-			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			List<String> practitioners = new ArrayList<>();
-			
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
-			String singleLine;
-			int iteration = 0;
-			String practitionerRoleId = "";
-			String practitionerId = "";
-
-			while((singleLine = bufferedReader.readLine()) != null) {
-				if(iteration == 0 && singleLine.contains("firstName")) {
-					iteration++;
-					continue;
-				}
-				String hcwData[] = singleLine.split(","); //firstName,lastName,email,phoneNumber,countryCode,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier
-				if(Validation.validationHcwCsvLine(hcwData))
-				{
-					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[4]+hcwData[3]))) {
-						Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14]);
-						practitionerId = createResource(hcw,
-								Practitioner.class,
-								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
-								Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
-								Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
-							); // Catch index out of bound
-						practitioners.add(hcw.getName().get(0).getFamily());
-						practitioners.add(hcw.getName().get(0).getGivenAsSingleString());
-						practitioners.add(hcw.getTelecom().get(0).getValue());
-						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId);
-						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
-						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
-						String keycloakUserId = createUser(user);
-						updateResource(keycloakUserId, practitionerId, Practitioner.class);
-						updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
-					}
-				}
-			}
-			map.put("uploadCsv", "Successful");
-			return new ResponseEntity(map,HttpStatus.OK);
-		}
-		
-		
-
 }
