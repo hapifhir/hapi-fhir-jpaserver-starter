@@ -24,6 +24,7 @@ public class FhirResourceTemplateHelper {
 	private static String DISPLAY_CLINIC = "Healthcare Provider";
 	private static String SYSTEM_CLINIC = "	http://hl7.org/fhir/ValueSet/organization-type";
 	private static String SYSTEM_HCW = "https://www.iprdgroup.com/nigeria/oyo/ValueSet/Roles";
+	private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Indentifier/system";
 	
 	public static Location state(String name)
 	{
@@ -104,7 +105,9 @@ public class FhirResourceTemplateHelper {
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier facilityUIDIdentifier = new Identifier();
 		Identifier facilityCodeIdentifier = new Identifier();
+		facilityUIDIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityCode");
 		facilityUIDIdentifier.setId(facilityCode);
+		facilityCodeIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
 		facilityCodeIdentifier.setId(facilityUID);
 		identifiers.add(facilityUIDIdentifier);
 		identifiers.add(facilityCodeIdentifier);
@@ -131,9 +134,10 @@ public class FhirResourceTemplateHelper {
 	public static Practitioner hcw(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification) throws Exception {
 		Practitioner practitioner = new Practitioner();
 		List<Identifier> identifiers = new ArrayList<>();
-		Identifier clinicId = new Identifier();
-		clinicId.setId(facilityUID);
-		identifiers.add(clinicId);
+		Identifier clinicIdentifier = new Identifier();
+		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
+		clinicIdentifier.setId(facilityUID);
+		identifiers.add(clinicIdentifier);
 		practitioner.setIdentifier(identifiers);
 		List<HumanName> hcwName = new ArrayList<>();
 		HumanName humanName = new HumanName();

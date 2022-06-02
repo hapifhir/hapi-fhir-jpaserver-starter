@@ -60,6 +60,7 @@ public class HelperService {
 		Keycloak keycloak;
 		
 		private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
+		private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Indentifier/system";
 		
 		public void initializeKeycloak() {
 			ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
@@ -214,8 +215,14 @@ public class HelperService {
 		private <R extends IBaseResource> void updateResource(String keycloakId, String resourceId, Class<R> resourceClass) {
 			 R resource = fhirClient.read().resource(resourceClass).withId(resourceId).execute();
 			 try {
+				 Method getIdentifier = resource.getClass().getMethod("getIdentifier");
+				 List<Identifier> identifierList = (List<Identifier>) getIdentifier.invoke(resource);
+				 for(Identifier identifier: identifierList) {
+					 if(identifier.getSystem().equals(IDENTIFIER_SYSTEM+"/KeycloakId")) {return;}
+				 }
 				 Method addIdentifier = resource.getClass().getMethod("addIdentifier");
 				 Identifier obj = (Identifier) addIdentifier.invoke(resource);
+				 obj.setSystem(IDENTIFIER_SYSTEM+"/KeycloakId");
 				 obj.setValue(keycloakId);
 				 MethodOutcome outcome = fhirClient.update().resource(resource).execute();
 			 }
