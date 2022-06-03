@@ -1,9 +1,14 @@
 package com.iprd.fhir.utils;
 
 import java.lang.String;
-import org.keycloak.representations.idm.GroupRepresentation;
+import java.util.Arrays;
+import java.util.List;
 
-public class KeycloakGroupTemplateHelper {
+import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.GroupRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
+
+public class KeycloakTemplateHelper {
 	
 	private static String STATE = "state";
 	private static String LGA = "lga";
@@ -38,14 +43,33 @@ public class KeycloakGroupTemplateHelper {
 	
 	public static GroupRepresentation facilityGroup(String name ,String parentId, String fhirResourceId, String facilityLevel, String ownership, String facilityUID, String facilityCode) {
 		GroupRepresentation facilityGroupRep = new GroupRepresentation();
-		facilityGroupRep.setName(name);
+		facilityGroupRep.setName(facilityUID);
 		facilityGroupRep.singleAttribute("type", FACILITY);
+		facilityGroupRep.singleAttribute("facilityName",name);
 		facilityGroupRep.singleAttribute("parent", parentId);
 		facilityGroupRep.singleAttribute("facilityLevel",facilityLevel);
 		facilityGroupRep.singleAttribute("fhirOrganizationId",fhirResourceId);
 		facilityGroupRep.singleAttribute("ownership",ownership);
-		facilityGroupRep.singleAttribute("facilityUID",facilityUID);
 		facilityGroupRep.singleAttribute("facilityCode",facilityCode);
 		return facilityGroupRep;
+	}
+	
+	public static UserRepresentation user(String firstName,String lastName,String email,String userName,String password,String phoneNumber,String countryCode, String practitionerId, String practitionerRoleId, String stateGroup, String lgaGroup, String wardGroup, String facilityGroup) {
+		UserRepresentation user = new UserRepresentation();
+		CredentialRepresentation credential = new CredentialRepresentation();
+		credential.setType(CredentialRepresentation.PASSWORD);
+		credential.setValue(password);
+		user.setCredentials(Arrays.asList(credential));
+		user.setGroups(Arrays.asList(stateGroup, lgaGroup, wardGroup, facilityGroup));
+		user.setUsername(userName);
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		user.setEmail(email);
+		user.singleAttribute("phoneNumber", countryCode+phoneNumber);
+		user.singleAttribute("type","HCW");
+		user.singleAttribute("fhirPractitionerLogicalId ", practitionerId);
+		user.singleAttribute("fhirPractitionerRoleLogicalId ", practitionerRoleId);
+		user.setEnabled(true);
+		return user;
 	}
 }

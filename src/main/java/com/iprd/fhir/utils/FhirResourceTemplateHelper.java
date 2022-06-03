@@ -5,8 +5,10 @@ import java.util.UUID;
 import java.util.ArrayList;
 import java.lang.String;
 
-import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.dstu2.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.codesystems.ContactentityType;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Location.LocationMode;
 import org.hl7.fhir.r4.model.Location.LocationStatus;
@@ -22,6 +24,7 @@ public class FhirResourceTemplateHelper {
 	private static String DISPLAY_CLINIC = "Healthcare Provider";
 	private static String SYSTEM_CLINIC = "	http://hl7.org/fhir/ValueSet/organization-type";
 	private static String SYSTEM_HCW = "https://www.iprdgroup.com/nigeria/oyo/ValueSet/Roles";
+	private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Indentifier/system";
 	
 	public static Location state(String name)
 	{
@@ -36,7 +39,7 @@ public class FhirResourceTemplateHelper {
 		statePhysicalType.addCoding(physicalTypeCoding);
 		stateAddress.setState(name);
 		state.setName(name);
-		state.setId(UUID.randomUUID().toString());
+		state.setId(new IdType("Location", generateUUID()));
 		state.setAddress(stateAddress);
 		state.setStatus(LocationStatus.ACTIVE);
 		state.setMode(LocationMode.INSTANCE);
@@ -59,7 +62,7 @@ public class FhirResourceTemplateHelper {
 		lgaAddress.setState(state);
 		lgaAddress.setDistrict(nameOfLga);
 		lga.setName(nameOfLga);
-		lga.setId(id);
+		lga.setId(new IdType("Location", generateUUID()));
 		lga.setAddress(lgaAddress);
 		lga.setStatus(LocationStatus.ACTIVE);
 		lga.setMode(LocationMode.INSTANCE);
@@ -81,7 +84,7 @@ public class FhirResourceTemplateHelper {
 		wardAddress.setCity(city);
 		wardAddress.setDistrict(district);
 		ward.setName(city);
-		ward.setId(UUID.randomUUID().toString());
+		ward.setId(new IdType("Location", generateUUID()));
 		ward.setAddress(wardAddress);
 		ward.setStatus(LocationStatus.ACTIVE);
 		ward.setMode(LocationMode.INSTANCE);
@@ -89,7 +92,7 @@ public class FhirResourceTemplateHelper {
 		return ward;
 	}
 	
-	public static Organization clinic(String nameOfClinic,String facilityUID,String facilityCode , String state, String district, String city) {
+	public static Organization clinic(String nameOfClinic,String facilityUID,String facilityCode ,String countryCode, String contact, String state, String district, String city) {
 		Organization clinic = new Organization();
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		List<Address> addresses = new ArrayList<>();
@@ -102,16 +105,18 @@ public class FhirResourceTemplateHelper {
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier facilityUIDIdentifier = new Identifier();
 		Identifier facilityCodeIdentifier = new Identifier();
+		facilityUIDIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityCode");
 		facilityUIDIdentifier.setId(facilityCode);
+		facilityCodeIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
 		facilityCodeIdentifier.setId(facilityUID);
 		identifiers.add(facilityUIDIdentifier);
 		identifiers.add(facilityCodeIdentifier);
 		clinic.setIdentifier(identifiers);
-//		List<ContactPoint> contactPoints = new ArrayList<>();
-//		ContactPoint contactPoint = new ContactPoint();
-//		contactPoint.setValue(countryCode+contact);
-//		contactPoints.add(contactPoint);
-//		clinic.setTelecom(contactPoints);
+		List<ContactPoint> contactPoints = new ArrayList<>();
+		ContactPoint contactPoint = new ContactPoint();
+		contactPoint.setValue(countryCode+contact);
+		contactPoints.add(contactPoint);
+		clinic.setTelecom(contactPoints);
 		CodeableConcept codeableConcept = new CodeableConcept();
 		Coding coding = new Coding();
 		coding.setCode(CODE_CLINIC);
@@ -122,16 +127,17 @@ public class FhirResourceTemplateHelper {
 		codeableConcepts.add(codeableConcept);
 		clinic.setType(codeableConcepts);
 		clinic.setName(nameOfClinic);
-		clinic.setId(UUID.randomUUID().toString());
+		clinic.setId(new IdType("Organization", generateUUID()));
 		return clinic;
 	}
 	
-	public static Practitioner hcw(String firstName, String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification) throws Exception {
+	public static Practitioner hcw(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification) throws Exception {
 		Practitioner practitioner = new Practitioner();
 		List<Identifier> identifiers = new ArrayList<>();
-		Identifier clinicId = new Identifier();
-		clinicId.setId(facilityUID);
-		identifiers.add(clinicId);
+		Identifier clinicIdentifier = new Identifier();
+		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
+		clinicIdentifier.setId(facilityUID);
+		identifiers.add(clinicIdentifier);
 		practitioner.setIdentifier(identifiers);
 		List<HumanName> hcwName = new ArrayList<>();
 		HumanName humanName = new HumanName();
@@ -144,6 +150,7 @@ public class FhirResourceTemplateHelper {
 		List<ContactPoint> contactPoints = new ArrayList<>();
 		ContactPoint contactPoint = new ContactPoint();
 		contactPoint.setValue(countryCode+telecom);
+		contactPoint.setSystem(org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem.PHONE);
 		contactPoints.add(contactPoint);
 		practitioner.setTelecom(contactPoints);
 		practitioner.setGender(AdministrativeGender.fromCode(gender));
@@ -160,12 +167,14 @@ public class FhirResourceTemplateHelper {
 		practitioner.setQualification(practitionerQualificationComponents);
 		Date dateOfBirth = new SimpleDateFormat("MM/dd/yyyy").parse(dob);
 		practitioner.setBirthDate(dateOfBirth);
+		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;
 	}
 	
-	public static PractitionerRole practitionerRole(String role, String qualification)
+	public static PractitionerRole practitionerRole(String role, String qualification, String practitionerId)
 	{
 		PractitionerRole practitionerRole = new PractitionerRole();
+		Reference PractitionerReference = new  Reference("Practitioner/"+practitionerId);
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		CodeableConcept roleCoding = new CodeableConcept();
 		Coding coding2 = new Coding();
@@ -175,6 +184,12 @@ public class FhirResourceTemplateHelper {
 		roleCoding.addCoding(coding2);
 		codeableConcepts.add(roleCoding);
 		practitionerRole.setCode(codeableConcepts);
+		practitionerRole.setPractitioner(PractitionerReference);
+		practitionerRole.setId(new IdType("PractitionerRole", generateUUID()));
 		return practitionerRole;
+	}
+	
+	private static String generateUUID() {
+		return UUID.randomUUID().toString();
 	}
 }
