@@ -92,7 +92,7 @@ hapi:
     #    expunge_enabled: true
     #    daoconfig_client_id_strategy: null
     #    client_id_strategy: ALPHANUMERIC
-    #    fhirpath_interceptor_enabled: false
+    fhirpath_interceptor_enabled: true
     #    filter_search_enabled: true
     #    graphql_enabled: true
     #    narrative_enabled: true
