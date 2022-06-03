@@ -15,7 +15,7 @@ jobs:
       - name: Install helm-docs
         working-directory: /tmp
         env:
-          HELM_DOCS_URL: https://github.com/norwoodj/helm-docs/releases/download/v1.5.0/helm-docs_1.5.0_Linux_x86_64.tar.gz
+          HELM_DOCS_URL: https://github.com/norwoodj/helm-docs/releases/download/v1.9.1/helm-docs_1.9.1_Linux_x86_64.tar.gz
         run: |
           curl -LSs $HELM_DOCS_URL | tar xz && \
           mv ./helm-docs /usr/local/bin/helm-docs && \
