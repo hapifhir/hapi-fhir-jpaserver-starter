@@ -1,0 +1,223 @@
+### Create Single Patient
+# https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations.html#type_create
+POST http://{{host}}/fhir/Patient
+Content-Type: application/json
+
+< smoketestfiles/patient_create.json
+
+> {%
+    client.test("Patient created successfully", function() {
+        client.assert(response.status === 201, "Response status is not 201");
+    });
+    client.test("Response content-type is json", function() {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/fhir+json", "Expected 'application/fhir+json' but received '" + type + "'");
+    });
+    client.test("Response resourceType is Patient", function() {
+        const resourceType = response.body.resourceType;
+        client.assert(resourceType === "Patient", "Expected 'Patient' but received '" + resourceType + "'");
+    });
+    client.global.set("single_patient_id", response.body.id);
+    client.global.set("single_patient_family_name", response.body.name[0].family);
+%}
+
+### Search Single Patient
+# https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations.html#type_search
+GET http://{{host}}/fhir/Patient?name={{single_patient_family_name}}&_id={{single_patient_id}}
+
+> {%
+    client.test("Patient search successful", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.test("Response content-type is json", function() {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/fhir+json", "Expected 'application/fhir+json' but received '" + type + "'");
+    });
+    client.test("Response resourceType is Bundle", function() {
+        const resourceType = response.body.resourceType;
+        client.assert(resourceType === "Bundle", "Expected 'Bundle' but received '" + resourceType + "'");
+    });
+    client.test("Total patients found is 1", function() {
+        const totalFound = response.body.total;
+        client.assert(totalFound === 1, "Expected '1' match but found '" + totalFound + "'");
+    });
+   %}
+
+### Delete Patient
+# https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations.html#instance_delete
+DELETE http://{{host}}/fhir/Patient/{{single_patient_id}}
+
+> {%
+    client.test("Patient deleted successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.test("Response content-type is json", function() {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/fhir+json", "Expected 'application/fhir+json' but received '" + type + "'");
+    });
+    client.test("Response resourceType is OperationOutcome", function() {
+        const resourceType = response.body.resourceType;
+        client.assert(resourceType === "OperationOutcome", "Expected 'OperationOutcome' but received '" + resourceType + "'");
+    });
+%}
+
+### Batch Patient Create
+# https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations.html#system_transaction
+POST http://{{host}}/fhir/
+Content-Type: application/json
+
+< smoketestfiles/patient_batch_create.json
+
+> {%
+    client.test("Bundle transaction completed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.test("Response content-type is json", function() {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/fhir+json", "Expected 'application/fhir+json' but received '" + type + "'");
+    });
+    client.test("Response resourceType is Bundle", function() {
+        const resourceType = response.body.resourceType;
+        client.assert(resourceType === "Bundle", "Expected 'Bundle' but received '" + resourceType + "'");
+    });
+    client.test("All patient additions successful", function() {
+        for (var index = 0; index < response.body.entry.length; index++) {
+            client.assert(response.body.entry[index].response.status === "201 Created", "Expected '201 Created' for patient index " + index + " but received '" + response.body.entry[index].response.status + "'");
+        }
+    });
+    const batch_patient_location = response.body.entry[0].response.location;
+    const indexOfHistory = batch_patient_location.lastIndexOf("/_history");
+    trimmed_location = batch_patient_location.substring(0, indexOfHistory);
+    trimmed_location = trimmed_location.replace("Patient/", "")
+    client.global.set("batch_patient_id", trimmed_location);
+%}
+
+### Update - Instance
+# https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations.html#instance_update
+PUT http://{{host}}/fhir/Patient/{{batch_patient_id}}
+Content-Type: application/json
+
+< smoketestfiles/patient_update.json
+
+> {%
+    client.test("Bundle transaction completed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.test("Response content-type is json", function() {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/fhir+json", "Expected 'application/fhir+json' but received '" + type + "'");
+    });
+    client.test("Response resourceType is Patient", function() {
+        const resourceType = response.body.resourceType;
+        client.assert(resourceType === "Patient", "Expected 'Patient' but received '" + resourceType + "'");
+    });
+    client.test("Test last name updated", function() {
+        const familyName = response.body.name[0].family;
+        client.assert(familyName === "Iantoryes", "Expected updated family name 'Iantoryes' but received '" + familyName + "'");
+    });
+    client.test("Test version number updated", function() {
+        const versionId = response.body.meta.versionId;
+        client.assert(versionId === "2", "Expected updated versionId name '2' but received '" + versionId + "'");
+    });
+%}
+
+### Patch - Instance
+# https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations.html#instance-level-patch
+PATCH http://{{host}}/fhir/Patient/{{batch_patient_id}}
+Content-Type: application/json-patch+json
+
+< smoketestfiles/patient_patch.json
+
+> {%
+    client.test("Patch operation completed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.test("Response content-type is json", function() {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/fhir+json", "Expected 'application/fhir+json' but received '" + type + "'");
+    });
+    client.test("Response resourceType is Patient", function() {
+        const resourceType = response.body.resourceType;
+        client.assert(resourceType === "Patient", "Expected 'Patient' but received '" + resourceType + "'");
+    });
+    client.test("Test active field patched", function() {
+        const active = response.body.active;
+        client.assert(active === false, "Expected updated active 'false' but received '" + active + "'");
+    });
+%}
+
+### History - Server/Type/Instance
+# https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations.html#history
+GET http://{{host}}/fhir/Patient/{{batch_patient_id}}/_history
+
+> {%
+    client.test("History completed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.test("Response content-type is json", function() {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/fhir+json", "Expected 'application/fhir+json' but received '" + type + "'");
+    });
+    client.test("Response resourceType is Bundle", function() {
+        const resourceType = response.body.resourceType;
+        client.assert(resourceType === "Bundle", "Expected 'Bundle' but received '" + resourceType + "'");
+    });
+    client.test("Test receive history type", function() {
+        const type = response.body.type;
+        client.assert(type === "history", "Expected type 'history' but received '" + type + "'");
+    });
+%}
+
+### Capability Statement
+# https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations.html#system_capabilities
+GET http://{{host}}/fhir/metadata
+
+> {%
+    client.test("CapabilityStatement fetched successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.test("Response content-type is json", function() {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/fhir+json", "Expected 'application/fhir+json' but received '" + type + "'");
+    });
+    client.test("Response resourceType is CapabilityStatement", function() {
+        const resourceType = response.body.resourceType;
+        client.assert(resourceType === "CapabilityStatement", "Expected 'CapabilityStatement' but received '" + resourceType + "'");
+    });
+%}
+
+### Extended Operations - everything
+# https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations_operations.html
+GET http://{{host}}/fhir/Patient/{{batch_patient_id}}/$everything
+
+> {%
+    client.test("$everything operation successful", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.test("Response content-type is json", function() {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/fhir+json", "Expected 'application/fhir+json' but received '" + type + "'");
+    });
+    client.test("Response resourceType is Bundle", function() {
+        const resourceType = response.body.resourceType;
+        client.assert(resourceType === "Bundle", "Expected 'Bundle' but received '" + resourceType + "'");
+    });
+%}
+
+### Extended Operations - validate
+# https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations_operations.html
+POST http://{{host}}/fhir/Patient/{{batch_patient_id}}/$validate
+
+> {%
+    client.test("$validate operation successful", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+    client.test("Response content-type is json", function() {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/fhir+json", "Expected 'application/fhir+json' but received '" + type + "'");
+    });
+    client.test("Response resourceType is OperationOutcome", function() {
+        const resourceType = response.body.resourceType;
+        client.assert(resourceType === "OperationOutcome", "Expected 'OperationOutcome' but received '" + resourceType + "'");
+    });
+%}
