@@ -88,6 +88,18 @@ tolerations: []
 # -- pod affinity
 affinity: {}
 
+# -- pod topology spread configuration
+# see: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#api
+topologySpreadConstraints:
+  []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: ScheduleAnyway
+  #   labelSelector:
+  #     matchLabels:
+  #       app.kubernetes.io/instance: hapi-fhir-jpaserver
+  #       app.kubernetes.io/name: hapi-fhir-jpaserver
+
 postgresql:
   # -- enable an included PostgreSQL DB.
   # see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
@@ -126,6 +138,13 @@ startupProbe:
   successThreshold: 1
   timeoutSeconds: 30
 
+livenessProbe:
+  failureThreshold: 5
+  initialDelaySeconds: 30
+  periodSeconds: 20
+  successThreshold: 1
+  timeoutSeconds: 30
+
 externalDatabase:
   # -- external database host used with `postgresql.enabled=false`
   host: localhost
@@ -142,26 +161,6 @@ externalDatabase:
   # -- database name
   database: fhir
 
-networkPolicy:
-  # -- enable NetworkPolicy
-  enabled: false
-  # -- a Kubernetes LabelSelector to explicitly select namespaces from which ingress traffic could be allowed
-  explicitNamespacesSelector:
-    {}
-    # matchLabels:
-    #   team: one
-    #   test: foo
-
-  # -- Additional allowed NetworkPolicyPeer specs
-  # Evaluated as a template so you could do:
-  #
-  # Example:
-  # allowedFrom:
-  #   - podSelector:
-  #       matchLabels:
-  #         app.kubernetes.io/name: {{ $.Release.Name }}
-  allowedFrom: []
-
 # -- extra environment variables to set on the server container
 extraEnv:
   []
@@ -176,3 +175,15 @@ podDisruptionBudget:
   minAvailable: 1
   # -- maximum unavailable instances
   maxUnavailable: ""
+
+metrics:
+  serviceMonitor:
+    # -- if enabled, creates a ServiceMonitor instance for Prometheus Operator-based monitoring
+    enabled: false
+    # -- additional labels to apply to the ServiceMonitor object, e.g. `release: prometheus`
+    additionalLabels: {}
+    # namespace: monitoring
+    # interval: 30s
+    # scrapeTimeout: 10s
+  service:
+    port: 8081
