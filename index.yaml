@@ -7,6 +7,55 @@ entries:
         # added, changed, deprecated, removed, fixed, and security.
         - kind: changed
           description: |
+            BREAKING CHANGE: updated HAPI FHIR starter image to v6.0.1.
+            See <https://github.com/hapifhir/hapi-fhir/releases/tag/v6.0.0> for all application changes.
+        - kind: changed
+          description: |
+            updated included PostgreSQL-subchart to v11.6.2
+        - kind: fixed
+          description: |
+            use a fixed image for the wait-for-database container (docker.io/bitnami/postgresql:14.3.0-debian-10-r20)
+            instead of relying on the PostgreSQL sub-chart values
+        - kind: changed
+          description: |
+            expose actuator/metrics endpoint on a separate port (8081)
+        - kind: added
+          description: |
+            support for monitoring metrics using ServiceMonitor CRDs
+        - kind: changed
+          description: |
+            switched liveness and readiness probes to Spring Boot actuator endpoints
+        - kind: changed
+          description: |
+            BREAKING CHANGE: removed included `NetworkPolicy`, which is subject to more thorough rework
+        - kind: added
+          description: |
+            allow configuring `topologySpreadConstraints` for the deployment
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: v6.0.1
+    created: "2022-06-04T12:24:56.26149277Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.2
+    description: A Helm chart for deploying the HAPI FHIR JPA server starter on Kubernetes.
+    digest: bdb3ffe832521cb0cc0bf6159dfb2e53111a3513a69c3e42339d9f1145b44545
+    home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    name: hapi-fhir-jpaserver
+    sources:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    type: application
+    urls:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.9.0/hapi-fhir-jpaserver-0.9.0.tgz
+    version: 0.9.0
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
+          description: |
             updated HAPI FHIR starter image to 5.7.0
         - kind: changed
           description: |
@@ -91,4 +140,4 @@ entries:
     urls:
     - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.6.0/hapi-fhir-jpaserver-0.6.0.tgz
     version: 0.6.0
-generated: "2022-04-11T15:57:13.674784749Z"
+generated: "2022-06-04T12:24:56.26151047Z"
