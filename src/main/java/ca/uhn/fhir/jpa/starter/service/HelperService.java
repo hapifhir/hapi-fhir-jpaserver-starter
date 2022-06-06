@@ -1,39 +1,5 @@
 package ca.uhn.fhir.jpa.starter.service;
 
-import org.hl7.fhir.r4.model.Location;
-import org.hl7.fhir.r4.model.Organization;
-import org.hl7.fhir.r4.model.Practitioner;
-import org.hl7.fhir.r4.model.PractitionerRole;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Resource;
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
-import org.keycloak.OAuth2Constants;
-import org.keycloak.admin.client.CreatedResponseUtil;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
-import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.representations.idm.GroupRepresentation;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import com.iprd.fhir.utils.FhirResourceTemplateHelper;
-import com.iprd.fhir.utils.KeycloakTemplateHelper;
-import com.iprd.fhir.utils.Validation;
-
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
-import ca.uhn.fhir.context.FhirContext;
-
-import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.ContactPoint;
-import org.hl7.fhir.r4.model.Identifier;
-import ca.uhn.fhir.rest.api.MethodOutcome;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.gclient.ICriterion;
-import ca.uhn.fhir.rest.gclient.IQuery;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,31 +13,76 @@ import java.util.List;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
+
+import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.ContactPoint;
+import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.Location;
+import org.hl7.fhir.r4.model.Organization;
+import org.hl7.fhir.r4.model.Practitioner;
+import org.hl7.fhir.r4.model.PractitionerRole;
+import org.hl7.fhir.r4.model.Resource;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.keycloak.OAuth2Constants;
+import org.keycloak.admin.client.CreatedResponseUtil;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.iprd.fhir.utils.FhirResourceTemplateHelper;
+import com.iprd.fhir.utils.KeycloakTemplateHelper;
+import com.iprd.fhir.utils.Validation;
+
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.gclient.ICriterion;
+import ca.uhn.fhir.rest.gclient.IQuery;
+
+
+@Import(AppProperties.class)
 @Service
 public class HelperService {
-
-		FhirContext ctx = FhirContext.forR4();
-		String serverBase = "http://localhost:8080/fhir";
-		IGenericClient fhirClient = ctx.newRestfulGenericClient(serverBase);
+	
+		@Autowired
+		AppProperties appProperties;
 		Keycloak keycloak;
+
+		FhirContext ctx;
+		String serverBase;
+		IGenericClient fhirClient;
 		
 		private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
-		private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Indentifier/system";
+		private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
 		
 		public void initializeKeycloak() {
+			ctx = FhirContext.forR4();
+			serverBase = appProperties.getHapi_Server_address();
+			fhirClient = ctx.newRestfulGenericClient(serverBase);		
 			ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
 		    keycloak = KeycloakBuilder
 		    		.builder()
-		    		.serverUrl("http://localhost:8081/auth")
+		    		.serverUrl(appProperties.getKeycloak_Server_address())
 		    		.grantType(OAuth2Constants.PASSWORD)
-		    		.realm("master")
-		    		.clientId("fhir-hapi-realm")
-		    		.username ("managegroup")
-		    		.password("12345")
+		    		.realm(appProperties.getKeycloak_Realm())
+		    		.clientId(appProperties.getKeycloak_Client_Id())
+		    		.username (appProperties.getKeycloak_Username())
+		    		.password(appProperties.getKeycloak_Password())
 		    		.resteasyClient(client)
 		    		.build();
 		}
@@ -143,7 +154,7 @@ public class HelperService {
 				}
 			}
 			map.put("uploadCSV", "Successful");
-			return new ResponseEntity(map,HttpStatus.OK);
+			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
 		}
 		
 		public ResponseEntity<LinkedHashMap<String, Object>> createUsers(@RequestParam("file") MultipartFile file) throws Exception{
@@ -187,7 +198,7 @@ public class HelperService {
 				}
 			}
 			map.put("uploadCsv", "Successful");
-			return new ResponseEntity(map,HttpStatus.OK);
+			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
 		}
 		
 		private String createGroup(GroupRepresentation groupRep) {
@@ -240,7 +251,7 @@ public class HelperService {
 		}
 		
 		private String createUser(UserRepresentation userRep) {
-			RealmResource realmResource = keycloak.realm("fhir-hapi");
+			RealmResource realmResource = keycloak.realm(appProperties.getKeycloak_Client_Realm());
 			List<UserRepresentation> users = realmResource.users().search(userRep.getUsername(), 0, Integer.MAX_VALUE);
 			//if not empty, return id
 			if(!users.isEmpty())

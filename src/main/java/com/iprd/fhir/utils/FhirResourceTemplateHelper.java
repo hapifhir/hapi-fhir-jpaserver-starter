@@ -24,7 +24,7 @@ public class FhirResourceTemplateHelper {
 	private static String DISPLAY_CLINIC = "Healthcare Provider";
 	private static String SYSTEM_CLINIC = "	http://hl7.org/fhir/ValueSet/organization-type";
 	private static String SYSTEM_HCW = "https://www.iprdgroup.com/nigeria/oyo/ValueSet/Roles";
-	private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Indentifier/system";
+	private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
 	
 	public static Location state(String name)
 	{

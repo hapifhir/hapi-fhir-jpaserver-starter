@@ -1,180 +1,190 @@
 spring:
-  main:
-    allow-circular-references: true
-  flyway:
-    enabled: false
-    check-location: false
-    baselineOnMigrate: true
-  datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
-    #url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
-    max-active: 15
-
-    # database connection pool size
-    hikari:
-      maximum-pool-size: 10
-  jpa:
-    properties:
-      hibernate.format_sql: false
-      hibernate.show_sql: false
-      #Hibernate dialect is automatically detected except Postgres and H2.
-      #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
-      #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
-
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
-  #      hibernate.hbm2ddl.auto: update
-  #      hibernate.jdbc.batch_size: 20
-  #      hibernate.cache.use_query_cache: false
-  #      hibernate.cache.use_second_level_cache: false
-  #      hibernate.cache.use_structured_entries: false
-  #      hibernate.cache.use_minimal_puts: false
-  ###    These settings will enable fulltext search with lucene
-  #      hibernate.search.enabled: true
-  #      hibernate.search.backend.type: lucene
-  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
-  #      hibernate.search.backend.directory.type: local-filesystem
-  #      hibernate.search.backend.directory.root: target/lucenefiles
-  #      hibernate.search.backend.lucene_version: lucene_current
-  batch:
-    job:
+   main:
+      allow-circular-references: true
+   flyway:
       enabled: false
+      check-location: false
+      baselineOnMigrate: true
+   datasource:
+      url: jdbc:h2:file:./target/database/h2
+#url: jdbc:h2:mem:test_mem
+      username: sa
+      password: null
+      driverClassName: org.h2.Driver
+      max-active: 15
+
+      hikari:
+# database connection pool size
+         maximum-pool-size: 10
+   jpa:
+      properties:
+         hibernate.format_sql: false
+         hibernate.show_sql: false
+         hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+#Hibernate dialect is automatically detected except Postgres and H2.
+#If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+
+#If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+   batch:
+      job:
+#      hibernate.hbm2ddl.auto: update
+#      hibernate.jdbc.batch_size: 20
+#      hibernate.cache.use_query_cache: false
+#      hibernate.cache.use_second_level_cache: false
+#      hibernate.cache.use_structured_entries: false
+#      hibernate.cache.use_minimal_puts: false
+###    These settings will enable fulltext search with lucene
+#      hibernate.search.enabled: true
+#      hibernate.search.backend.type: lucene
+#      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
+#      hibernate.search.backend.directory.type: local-filesystem
+#      hibernate.search.backend.directory.root: target/lucenefiles
+#      hibernate.search.backend.lucene_version: lucene_current
+         enabled: false
 hapi:
-  fhir:
-    ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
-    openapi_enabled: true
-    ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
-    fhir_version: R4
-    ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
-    ### to determine the FHIR server address
-    #   use_apache_address_strategy: false
-    ### forces the use of the https:// protocol for the returned server address.
-    ### alternatively, it may be set using the X-Forwarded-Proto header.
-    #   use_apache_address_strategy_https: false
-    ### enable to set the Server URL
-    #    server_address: http://hapi.fhir.org/baseR4
-    #    defer_indexing_for_codesystems_of_size: 101
-    #    install_transitive_ig_dependencies: true
-    #    implementationguides:
-    ###    example from registry (packages.fhir.org)
-    #      swiss:
-    #        name: swiss.mednet.fhir
-    #        version: 0.8.0
-    #      example not from registry
-    #      ips_1_0_0:
-    #        url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
-    #        name: hl7.fhir.uv.ips
-    #        version: 1.0.0
-    #    supported_resource_types:
-    #      - Patient
-    #      - Observation
-    #    allow_cascading_deletes: true
-    #    allow_contains_searches: true
-    #    allow_external_references: true
-    #    allow_multiple_delete: true
-    #    allow_override_default_search_params: true
-    #    auto_create_placeholder_reference_targets: false
-    #    cql_enabled: true
-    #    default_encoding: JSON
-    #    default_pretty_print: true
-    #    default_page_size: 20
-    #    delete_expunge_enabled: true
-    #    enable_repository_validating_interceptor: false
-    #    enable_index_missing_fields: false
-    #    enable_index_contained_resource: false
-    #    advanced_lucene_indexing: false
-    advanced_lucene_indexing: true
+   fhir:
+      openapi_enabled: true
+      fhir_version: R4
+### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
+      keycloak_server_address: http://localhost:8081/auth
+### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
+      keycloak_realm: master
+      keycloak_client_realm: fhir-hapi
+      keycloak_client_Id: fhir-hapi-realm
+      keycloak_username: managegroup
+      keycloak_password: 12345
+      hapi_server_address: http://localhost:8080/fhir
+      advanced_lucene_indexing: true
+      fhirpath_interceptor_enabled: true
+### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
+### to determine the FHIR server address
+#   use_apache_address_strategy: false
+### forces the use of the https:// protocol for the returned server address.
+### alternatively, it may be set using the X-Forwarded-Proto header.
+#   use_apache_address_strategy_https: false
+### enable to set the Server URL
+#    server_address: http://hapi.fhir.org/baseR4
+#    defer_indexing_for_codesystems_of_size: 101
+#    install_transitive_ig_dependencies: true
+#    implementationguides:
+###    example from registry (packages.fhir.org)
+#      swiss:
+#        name: swiss.mednet.fhir
+#        version: 0.8.0
+#      example not from registry
+#      ips_1_0_0:
+#        url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
+#        name: hl7.fhir.uv.ips
+#        version: 1.0.0
+#    supported_resource_types:
+#      - Patient
+#      - Observation
+#    allow_cascading_deletes: true
+#    allow_contains_searches: true
+#    allow_external_references: true
+#    allow_multiple_delete: true
+#    allow_override_default_search_params: true
+#    auto_create_placeholder_reference_targets: false
+#    cql_enabled: true
+#    default_encoding: JSON
+#    default_pretty_print: true
+#    default_page_size: 20
+#    delete_expunge_enabled: true
+#    enable_repository_validating_interceptor: false
+#    enable_index_missing_fields: false
+#    enable_index_contained_resource: false
+#    advanced_lucene_indexing: false
+      mdm_enabled: false
 #    enforce_referential_integrity_on_delete: false
-    #    enforce_referential_integrity_on_write: false
-    #    etag_support_enabled: true
-    #    expunge_enabled: true
-    #    daoconfig_client_id_strategy: null
-    #    client_id_strategy: ALPHANUMERIC
-    fhirpath_interceptor_enabled: true
-    #    filter_search_enabled: true
-    #    graphql_enabled: true
-    #    narrative_enabled: true
-    #    mdm_enabled: true
+#    enforce_referential_integrity_on_write: false
+#    etag_support_enabled: true
+#    expunge_enabled: true
+#    daoconfig_client_id_strategy: null
+#    client_id_strategy: ALPHANUMERIC
+      cors:
+#    filter_search_enabled: true
+#    graphql_enabled: true
+#    narrative_enabled: true
+#    mdm_enabled: true
 #    local_base_urls:
 #      - https://hapi.fhir.org/baseR4
-    mdm_enabled: false
-    #    partitioning:
-    #      allow_references_across_partitions: false
-    #      partitioning_include_in_search_hashes: false
-    cors:
-      allow_Credentials: true
-      # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
-      allowed_origin:
-        - '*'
+         allow_Credentials: true
+#    partitioning:
+#      allow_references_across_partitions: false
+#      partitioning_include_in_search_hashes: false
+         allowed_origin:
+         - '*'
+# These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
 
-    # Search coordinator thread pool sizes
-    search-coord-core-pool-size: 20
-    search-coord-max-pool-size: 100
-    search-coord-queue-capacity: 200
+      search-coord-core-pool-size: 20
+      search-coord-max-pool-size: 100
+      search-coord-queue-capacity: 200
+# Search coordinator thread pool sizes
 
-    # Threadpool size for BATCH'ed GETs in a bundle.
+      tester:
+         home:
+            name: Local Tester
+
+            server_address: http://localhost:8080/fhir
+# Threadpool size for BATCH'ed GETs in a bundle.
 #    bundle_batch_pool_size: 10
 #    bundle_batch_pool_max_size: 50
-
+            refuse_to_fetch_third_party_urls: false
 #    logger:
-    #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
-    #      format: >-
-    #        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
-    #        Operation[${operationType} ${operationName} ${idOrResourceName}]
-    #        UA[${requestHeader.user-agent}] Params[${requestParameters}]
-    #        ResponseEncoding[${responseEncodingNoDefault}]
-    #      log_exceptions: true
-    #      name: fhirtest.access
-    #    max_binary_size: 104857600
-    #    max_page_size: 200
-    #    retain_cached_searches_mins: 60
-    #    reuse_cached_search_results_millis: 60000
-    tester:
-      home:
-        name: Local Tester
-        server_address: 'http://localhost:8080/fhir'
-        refuse_to_fetch_third_party_urls: false
-        fhir_version: R4
-      global:
-        name: Global Tester
-        server_address: "http://hapi.fhir.org/baseR4"
-        refuse_to_fetch_third_party_urls: false
-        fhir_version: R4
-#    validation:
-#      requests_enabled: true
-#      responses_enabled: true
-#    binary_storage_enabled: true
-#    bulk_export_enabled: true
-#    subscription:
-#      resthook_enabled: true
-#      websocket_enabled: false
-#      email:
-#        from: some@test.com
-#        host: google.com
-#        port:
-#        username:
-#        password:
-#        auth:
-#        startTlsEnable:
-#        startTlsRequired:
-#        quitWait:
-#    lastn_enabled: true
-#    store_resource_in_lucene_index_enabled: true
-###  This is configuration for normalized quantity serach level default is 0
-###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
-###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
-###   2: NORMALIZED_QUANTITY_SEARCH_SUPPORTED
-#    normalized_quantity_search_level: 2
-#elasticsearch:
-#  debug:
-#    pretty_print_json_log: false
-#    refresh_after_write: false
-#  enabled: false
-#  password: SomePassword
-#  required_index_status: YELLOW
-#  rest_url: 'localhost:9200'
-#  protocol: 'http'
-#  schema_management_strategy: CREATE
-#  username: SomeUsername
+#      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
+#      format: >-
+#        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
+#        Operation[${operationType} ${operationName} ${idOrResourceName}]
+#        UA[${requestHeader.user-agent}] Params[${requestParameters}]
+#        ResponseEncoding[${responseEncodingNoDefault}]
+#      log_exceptions: true
+#      name: fhirtest.access
+#    max_binary_size: 104857600
+#    max_page_size: 200
+#    retain_cached_searches_mins: 60
+#    reuse_cached_search_results_millis: 60000
+            fhir_version: R4
+         global:
+            name: Global Tester
+            server_address: http://hapi.fhir.org/baseR4
+            refuse_to_fetch_third_party_urls: false
+            fhir_version: R4
+# ------------------
+# Orphaned comments:
+# ------------------
+# Was at begin of line:152 :#    validation:
+# Was at begin of line:153 :#      requests_enabled: true
+# Was at begin of line:154 :#      responses_enabled: true
+# Was at begin of line:155 :#    binary_storage_enabled: true
+# Was at begin of line:156 :#    bulk_export_enabled: true
+# Was at begin of line:157 :#    subscription:
+# Was at begin of line:158 :#      resthook_enabled: true
+# Was at begin of line:159 :#      websocket_enabled: false
+# Was at begin of line:160 :#      email:
+# Was at begin of line:161 :#        from: some@test.com
+# Was at begin of line:162 :#        host: google.com
+# Was at begin of line:163 :#        port:
+# Was at begin of line:164 :#        username:
+# Was at begin of line:165 :#        password:
+# Was at begin of line:166 :#        auth:
+# Was at begin of line:167 :#        startTlsEnable:
+# Was at begin of line:168 :#        startTlsRequired:
+# Was at begin of line:169 :#        quitWait:
+# Was at begin of line:170 :#    lastn_enabled: true
+# Was at begin of line:171 :#    store_resource_in_lucene_index_enabled: true
+# Was at begin of line:172 :###  This is configuration for normalized quantity serach level default is 0
+# Was at begin of line:173 :###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
+# Was at begin of line:174 :###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
+# Was at begin of line:175 :###   2: NORMALIZED_QUANTITY_SEARCH_SUPPORTED
+# Was at begin of line:176 :#    normalized_quantity_search_level: 2
+# Was at begin of line:177 :#elasticsearch:
+# Was at begin of line:178 :#  debug:
+# Was at begin of line:179 :#    pretty_print_json_log: false
+# Was at begin of line:180 :#    refresh_after_write: false
+# Was at begin of line:181 :#  enabled: false
+# Was at begin of line:182 :#  password: SomePassword
+# Was at begin of line:183 :#  required_index_status: YELLOW
+# Was at begin of line:184 :#  rest_url: 'localhost:9200'
+# Was at begin of line:185 :#  protocol: 'http'
+# Was at begin of line:186 :#  schema_management_strategy: CREATE
+# Was at begin of line:187 :#  username: SomeUsername

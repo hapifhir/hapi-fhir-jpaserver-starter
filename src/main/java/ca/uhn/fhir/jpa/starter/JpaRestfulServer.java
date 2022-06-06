@@ -17,9 +17,6 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
 
   @Autowired
   AppProperties appProperties;
-  
-  @Autowired
-  HelperService heplerService;
 
   @Autowired
   HelperService helperService;
