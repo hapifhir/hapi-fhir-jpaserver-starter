@@ -30,6 +30,7 @@ import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
@@ -199,6 +200,12 @@ public class HelperService {
 			}
 			map.put("uploadCsv", "Successful");
 			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
+		}
+		
+		public List<GroupRepresentation> getGroupsByUser(String userId) {
+			RealmResource realmResource = keycloak.realm("fhir-hapi");
+			List<GroupRepresentation> groups =  realmResource.users().get(userId).groups();
+			return groups;
 		}
 		
 		private String createGroup(GroupRepresentation groupRep) {
