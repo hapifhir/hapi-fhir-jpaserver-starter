@@ -223,12 +223,12 @@ public class StructureMapTransformProvider extends ca.uhn.fhir.jpa.rp.r4.Structu
     }
 
     if (targetTypeUrl == null)
-      throw new FHIRException("Unable to determine resource URL for target type");
+      throw new FHIRException("Unable to determine resource URL for target type "+targetTypeUrl);
     
     StructureDefinition structureDefinition = fhirContext.fetchResource(StructureDefinition.class, targetTypeUrl);
     
     if (structureDefinition == null)
-      throw new FHIRException("Unable to determine StructureDefinition for target type");
+      throw new FHIRException("Unable to determine StructureDefinition for target type "+targetTypeUrl);
 
     return Manager.build(fhirContext, structureDefinition);
   }

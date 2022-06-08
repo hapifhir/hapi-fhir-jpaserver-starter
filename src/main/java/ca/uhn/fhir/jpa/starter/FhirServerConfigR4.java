@@ -20,6 +20,7 @@ import ca.uhn.fhir.batch2.jobs.reindex.ReindexAppCtx;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
+import ca.uhn.fhir.jpa.api.dao.IFhirResourceDaoStructureDefinition;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.config.JpaConfig;
 import ca.uhn.fhir.jpa.config.r4.JpaR4Config;
@@ -35,6 +36,7 @@ import ch.ahdis.fhir.hapi.jpa.validation.ExtUnknownCodeSystemWarningValidationSu
 import ch.ahdis.fhir.hapi.jpa.validation.JpaExtendedValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
+import ch.ahdis.matchbox.mappinglanguage.StructureDefinitionProvider;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnairePopulateProvider;
@@ -113,6 +115,29 @@ public class FhirServerConfigR4 {
   public QuestionnaireResponseExtractProvider questionnaireResponseProvider() {
     return new QuestionnaireResponseExtractProvider();
   }
+
+  
+  @Bean(name="myStructureDefinitionDaoR4")
+  public
+    IFhirResourceDaoStructureDefinition<org.hl7.fhir.r4.model.StructureDefinition>
+    daoStructureDefinitionR4() {
+      ca.uhn.fhir.jpa.dao.r4.FhirResourceDaoStructureDefinitionR4 retVal;
+    retVal = new ca.uhn.fhir.jpa.dao.r4.FhirResourceDaoStructureDefinitionR4();
+    retVal.setResourceType(org.hl7.fhir.r4.model.StructureDefinition.class);
+    retVal.setContext(fhirContext);
+    return retVal;
+  }
+
+  @Bean(name="myStructureDefinitionRpR4")
+  @Primary
+  public ca.uhn.fhir.jpa.rp.r4.StructureDefinitionResourceProvider rpStructureDefinitionR4() {
+    ca.uhn.fhir.jpa.rp.r4.StructureDefinitionResourceProvider retVal;
+    retVal = new StructureDefinitionProvider();
+    retVal.setContext(fhirContext);
+    retVal.setDao(daoStructureDefinitionR4());
+    return retVal;
+  }
+
 
   @Bean(name = "myStructureMapDaoR4")
   public IFhirResourceDao<org.hl7.fhir.r4.model.StructureMap> daoStructureMapR4() {

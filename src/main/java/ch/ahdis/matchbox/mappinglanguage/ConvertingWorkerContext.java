@@ -72,6 +72,7 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
     T retVal = fetchResource(theClass_, theUri);
     return retVal;
   }
+  
 
   // see Issue https://github.com/ahdis/matchbox/issues/31  
   // this function gets now only the base StructureDefinition for R4 which the FHIRPathEngine is using to initialize itself
@@ -140,6 +141,14 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
             return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
         }
       } 
+      // for json we don't have a namespace
+      for (IBaseResource resource : search.getAllResources()) {
+        org.hl7.fhir.r4.model.StructureDefinition sd = (org.hl7.fhir.r4.model.StructureDefinition) resource;
+        if (sd.getDerivation() == TypeDerivationRule.SPECIALIZATION && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
+          if(type.equals(sd.getType()) && (ns == null || ns.equals(FormatUtilities.FHIR_NS)))
+            return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
+        }
+      } 
     }
     return null;
   }
@@ -158,6 +167,8 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
 
   private static final Logger ourLog = LoggerFactory.getLogger(ConvertingWorkerContext.class);
   private final ValidationSupportContext myValidationSupportContext;
+
+
   private final IVersionTypeConverter myModelConverter;
   
   static private IValidatorFactory validatorFactory = null;
@@ -178,6 +189,10 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
     if (ConvertingWorkerContext.validatorFactory==null) {
       ConvertingWorkerContext.validatorFactory = new InstanceValidatorFactory();
     }
+  }
+
+  public ValidationSupportContext getMyValidationSupportContext() {
+    return myValidationSupportContext;
   }
 
   public <T extends org.hl7.fhir.r4.model.Resource> T fetchResourceAsR4(Class<T> class_, String uri) {
@@ -207,8 +222,8 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
     if (isBlank(uri)) {
       return null;
     }
-    if (class_!=null && "ConceptMap".equals(class_.getSimpleName())) {
-      return (T) myModelConverter
+   if (class_!=null && "ConceptMap".equals(class_.getSimpleName())) {
+        return (T) myModelConverter
           .toCanonical(doFetchResource(org.hl7.fhir.r4.model.ConceptMap.class, uri));
     }
     return super.fetchResource(class_, uri);
