@@ -1,3 +1,7 @@
+2022/06/08 Release 2.2.0
+- FHIR Mapping Language tutorial, xml and json issues [#51](https://github.com/ahdis/matchbox/issues/51)
+- base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v220
+
 2022/05/25 Release 2.1.0
 - hapi-fhir 6.0.0 and org.hl7.fhir.core 5.6.43
 - Validation: CapabilityStatement caching fixed [#43](https://github.com/ahdis/matchbox/issues/43)
