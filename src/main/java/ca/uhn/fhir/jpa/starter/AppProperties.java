@@ -45,6 +45,7 @@ public class AppProperties {
 	private Integer max_binary_size = null;
 	private Integer max_page_size = Integer.MAX_VALUE;
 	private Integer defer_indexing_for_codesystems_of_size = 100;
+	private Integer keycloak_max_group_count = 20;
 	private Long retain_cached_searches_mins = 60L;
 	private Long reuse_cached_search_results_millis = 60000L;
 	private String server_address = null;
@@ -115,6 +116,10 @@ public class AppProperties {
 
 	public void setDefer_indexing_for_codesystems_of_size(Integer defer_indexing_for_codesystems_of_size) {
 		this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
+	}
+	
+	public Integer getKeycloak_max_group_count() {
+		return keycloak_max_group_count;
 	}
 
 	public Map<String, ImplementationGuide> getImplementationGuides() {

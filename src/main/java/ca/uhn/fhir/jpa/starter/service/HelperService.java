@@ -214,7 +214,7 @@ public class HelperService {
 		
 		public List<GroupRepresentation> getGroupsByUser(String userId) {
 			RealmResource realmResource = keycloak.realm("fhir-hapi");
-			List<GroupRepresentation> groups =  realmResource.users().get(userId).groups(0,20,false);
+			List<GroupRepresentation> groups =  realmResource.users().get(userId).groups(0,appProperties.getKeycloak_max_group_count(),false);
 			return groups;
 		}
 		
