@@ -19,7 +19,7 @@ public class KeycloakTemplateHelper {
 		GroupRepresentation stateGroupRep = new GroupRepresentation();
 		stateGroupRep.setName(name);
 		stateGroupRep.singleAttribute("type", STATE);
-		stateGroupRep.singleAttribute("fhirLocationId", fhirResourceId);
+		stateGroupRep.singleAttribute("location_id", fhirResourceId);
 		return stateGroupRep;
 	}
 	
@@ -28,7 +28,7 @@ public class KeycloakTemplateHelper {
 		lgaGroupRep.setName(name);
 		lgaGroupRep.singleAttribute("type", LGA);
 		lgaGroupRep.singleAttribute("parent", parentId);
-		lgaGroupRep.singleAttribute("fhirLocationId",fhirResourceId);
+		lgaGroupRep.singleAttribute("location_id",fhirResourceId);
 		return lgaGroupRep;
 	}
 	
@@ -37,7 +37,7 @@ public class KeycloakTemplateHelper {
 		wardGroupRep.setName(name);
 		wardGroupRep.singleAttribute("type", WARD);
 		wardGroupRep.singleAttribute("parent", parentId);
-		wardGroupRep.singleAttribute("fhirLocationId",fhirResourceId);
+		wardGroupRep.singleAttribute("location_id",fhirResourceId);
 		return wardGroupRep;
 	}
 	
@@ -45,12 +45,12 @@ public class KeycloakTemplateHelper {
 		GroupRepresentation facilityGroupRep = new GroupRepresentation();
 		facilityGroupRep.setName(facilityUID);
 		facilityGroupRep.singleAttribute("type", FACILITY);
-		facilityGroupRep.singleAttribute("facilityName",name);
+		facilityGroupRep.singleAttribute("facility_name",name);
 		facilityGroupRep.singleAttribute("parent", parentId);
-		facilityGroupRep.singleAttribute("facilityLevel",facilityLevel);
-		facilityGroupRep.singleAttribute("fhirOrganizationId",fhirResourceId);
+		facilityGroupRep.singleAttribute("facility_level",facilityLevel);
+		facilityGroupRep.singleAttribute("organization_id",fhirResourceId);
 		facilityGroupRep.singleAttribute("ownership",ownership);
-		facilityGroupRep.singleAttribute("facilityCode",facilityCode);
+		facilityGroupRep.singleAttribute("facility_code",facilityCode);
 		return facilityGroupRep;
 	}
 	
@@ -65,10 +65,10 @@ public class KeycloakTemplateHelper {
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		user.setEmail(email);
-		user.singleAttribute("phoneNumber", countryCode+phoneNumber);
+		user.singleAttribute("phone_number", countryCode+phoneNumber);
 		user.singleAttribute("type","HCW");
-		user.singleAttribute("fhirPractitionerLogicalId ", practitionerId);
-		user.singleAttribute("fhirPractitionerRoleLogicalId ", practitionerRoleId);
+		user.singleAttribute("practitioner_id", practitionerId);
+		user.singleAttribute("practitioner_role_id", practitionerRoleId);
 		user.setEnabled(true);
 		return user;
 	}
