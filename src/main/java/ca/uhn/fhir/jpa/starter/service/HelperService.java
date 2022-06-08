@@ -5,15 +5,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Bundle;
@@ -25,12 +28,16 @@ import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.Resource;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.keycloak.KeycloakPrincipal;
+import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.representations.AccessToken;
+import org.keycloak.representations.UserInfo;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
@@ -62,6 +69,9 @@ public class HelperService {
 	
 		@Autowired
 		AppProperties appProperties;
+		@Autowired
+		HttpServletRequest request;
+		
 		Keycloak keycloak;
 
 		FhirContext ctx;
@@ -204,7 +214,7 @@ public class HelperService {
 		
 		public List<GroupRepresentation> getGroupsByUser(String userId) {
 			RealmResource realmResource = keycloak.realm("fhir-hapi");
-			List<GroupRepresentation> groups =  realmResource.users().get(userId).groups();
+			List<GroupRepresentation> groups =  realmResource.users().get(userId).groups(0,20,false);
 			return groups;
 		}
 		
