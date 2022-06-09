@@ -19,7 +19,7 @@ Content-Type: application/json
     }
   ],
   "gender": "male",
-  "birthDate": "1970-01-26"
+  "birthDate": "1970-01-01"
 }
 
 ###

@@ -6,12 +6,9 @@ import ca.uhn.fhir.mdm.api.MdmMatchResultEnum;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.Parameters;
-import org.hl7.fhir.r4.model.Type;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 public class MdmQueryLinks {
 	private static final Logger ourLog = LoggerFactory.getLogger(MdmQueryLinks.class);
@@ -25,19 +22,6 @@ public class MdmQueryLinks {
 		printMdmLinks(result);
 	}
 
-	private static void printMdmLinks(Parameters result) {
-		System.out.format("\n%15s\t%15s\t%15s\n", "Source", "Golden", "Result");
-		result.getParameter().stream()
-			.filter(parameter -> "link".equals(parameter.getName()))
-			.forEach(parameter ->
-			{
-				MdmLinkJson link = partsToLink(parameter);
-				System.out.format("%15s\t%15s\t%15s\n", link.getSourceId(), link.getGoldenResourceId(),
-					link.getLinkCreatedNewResource() ? "NEW" : link.getMatchResult());
-			});
-		System.out.println("");
-	}
-
 	private static Parameters getMdmLinks(IGenericClient fhirClient) {
 		Parameters result = fhirClient.operation()
 			.onServer()
@@ -45,6 +29,19 @@ public class MdmQueryLinks {
 			.withNoParameters(Parameters.class)
 			.execute();
 		return result;
+	}
+
+	private static void printMdmLinks(Parameters result) {
+		System.out.format("\n%15s\t%15s\t%15s\t%15s\n", "Source", "Golden", "Result", "Golden");
+		result.getParameter().stream()
+			.filter(parameter -> "link".equals(parameter.getName()))
+			.forEach(parameter ->
+			{
+				MdmLinkJson link = partsToLink(parameter);
+				System.out.format("%15s\t%15s\t%15s\t%15s\n", link.getSourceId(), link.getGoldenResourceId(),
+					link.getMatchResult(), link.getLinkCreatedNewResource() ? "NEW" : "EXISTING");
+			});
+		System.out.println("");
 	}
 
 	@NotNull
