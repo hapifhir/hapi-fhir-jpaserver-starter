@@ -1,0 +1,89 @@
+{
+  "entry": [
+    {
+      "request": {
+        "url": "Practitioner",
+        "method": "POST"
+      },
+      "resource": {
+        "resourceType": "Practitioner",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://synthetichealth.github.io/synthea/utilization-encounters-extension",
+            "valueInteger": 43
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://hl7.org/fhir/sid/us-npi",
+            "value": "9999984239"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "family": "Satterfield305",
+            "given": [
+              "Annie941"
+            ],
+            "prefix": [
+              "Dr."
+            ]
+          }
+        ],
+        "telecom": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-direct",
+                "valueBoolean": true
+              }
+            ],
+            "system": "email",
+            "value": "Annie941.Satterfield305@example.com",
+            "use": "work"
+          }
+        ],
+        "address": [
+          {
+            "line": [
+              "37 EDGERTON DR"
+            ],
+            "city": "NO FALMOUTH",
+            "state": "MA",
+            "postalCode": "02556-2821",
+            "country": "US"
+          }
+        ],
+        "gender": "female"
+      }
+    },
+    {
+      "request": {
+        "ifNoneExist": "url=http://some-magic-url/searchable-direct-number",
+        "url": "SearchParameter",
+        "method": "POST"
+      },
+      "resource": {
+        "resourceType": "SearchParameter",
+        "url": "http://some-magic-url/searchable-direct-number",
+        "name": "us-core-direct",
+        "status": "active",
+        "code": "us-core-direct",
+        "base": [
+          "Practitioner"
+        ],
+        "type": "token",
+        "expression": "Practitioner.telecom.extension.where(url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-direct')"
+      },
+      "fullUrl": "urn:uuid:8cb7e978-cb31-43d1-b5e2-9a286da6a3e4"
+    }
+  ],
+  "type": "transaction",
+  "resourceType": "Bundle"
+}

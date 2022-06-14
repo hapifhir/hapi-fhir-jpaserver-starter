@@ -21,6 +21,9 @@ import java.util.Objects;
 @EnableConfigurationProperties
 public class AppProperties {
 
+
+
+	private String transaction_file_path;
   private Boolean cql_enabled = false;
   private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
@@ -81,6 +84,13 @@ public class AppProperties {
   private Integer bundle_batch_pool_max_size = 100;
   private List<String> local_base_urls = new ArrayList<>();
 
+	public String getTransaction_file_path() {
+		return transaction_file_path;
+	}
+
+	public void setTransaction_file_path(String transaction_file_path) {
+		this.transaction_file_path = transaction_file_path;
+	}
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
 	}
