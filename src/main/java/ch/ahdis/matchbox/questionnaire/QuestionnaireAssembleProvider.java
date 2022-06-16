@@ -108,15 +108,17 @@ public class QuestionnaireAssembleProvider {
     if (items != null) {
       List<QuestionnaireItemComponent> expanded = new ArrayList<QuestionnaireItemComponent>();
       for (QuestionnaireItemComponent item : items) {
-        Extension extensionVariable = item.getExtensionByUrl("http://hl7.org/fhir/StructureDefinition/variable");
-        if (extensionVariable != null &&  extensionVariable.getValue() instanceof Expression) {
-          Expression expr = (Expression) extensionVariable.getValue();
-          if ("linkIdPrefix".equals(expr.getName())) {
-            FHIRPathEngine fp = new FHIRPathEngine(baseWorkerContext);
-            ExpressionNode exp = fp.parse(expr.getExpression());
-            // TODO: need to add linkIdPrefix as a variable to the FHIRPath expression, expression could also be    "expression" : "%linkIdPrefix + 'name.'", see https://build.fhir.org/ig/HL7/sdc/Parameters-sdc-modular-root-assembled.json.html
-            List<Base> result = fp.evaluate(null, exp);
-            subLinkdIdPrefix = result.get(0).primitiveValue();
+        List<Extension> extensionVariables = item.getExtensionsByUrl("http://hl7.org/fhir/StructureDefinition/variable");
+        if (extensionVariables !=null) {
+          for (Extension extensionVariable : extensionVariables) {
+            Expression expr = (Expression) extensionVariable.getValue();
+            if ("linkIdPrefix".equals(expr.getName())) {
+              FHIRPathEngine fp = new FHIRPathEngine(baseWorkerContext);
+              ExpressionNode exp = fp.parse(expr.getExpression());
+              // TODO: need to add linkIdPrefix as a variable to the FHIRPath expression, expression could also be    "expression" : "%linkIdPrefix + 'name.'", see https://build.fhir.org/ig/HL7/sdc/Parameters-sdc-modular-root-assembled.json.html
+              List<Base> result = fp.evaluate(null, exp);
+              subLinkdIdPrefix = result.get(0).primitiveValue();
+            }
           }
         }
         Extension extension = item.getExtensionByUrl("http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-subQuestionnaire");
