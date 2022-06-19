@@ -8,6 +8,7 @@ import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,5 +38,10 @@ public class UserAndGroupManagementController {
 	@RequestMapping(method = RequestMethod.GET, value = "/user/{userId}/groups")
 	public List<GroupRepresentation> getGroupsByUser(@PathVariable String userId) {
 		return helperService.getGroupsByUser(userId);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/generateDailyReport")
+	public ResponseEntity<byte[]> generateDailyReport(@RequestParam("date") String date, @RequestParam("organizationId") String organizationId, @RequestBody List<List<String>> fhirExpressions) {
+		return helperService.generateDailyReport(date, organizationId, fhirExpressions);
 	}
 }

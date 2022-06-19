@@ -40,17 +40,21 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.iprd.fhir.utils.FhirResourceTemplateHelper;
 import com.iprd.fhir.utils.KeycloakTemplateHelper;
 import com.iprd.fhir.utils.Validation;
+import com.iprd.report.FhirClientProvider;
+import com.iprd.report.ReportGeneratorFactory;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 
@@ -208,6 +212,12 @@ public class HelperService {
 			RealmResource realmResource = keycloak.realm("fhir-hapi");
 			List<GroupRepresentation> groups =  realmResource.users().get(userId).groups(0,appProperties.getKeycloak_max_group_count(),false);
 			return groups;
+		}
+		
+		public ResponseEntity<byte[]> generateDailyReport(String date, String organizationId, List<List<String>> fhirExpressions) {
+			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClient);
+			ReportGeneratorFactory.INSTANCE.reportGenerator().generateDailyReport(fhirClientProvider, date, organizationId, fhirExpressions);
+			return new ResponseEntity(HttpStatus.OK);
 		}
 		
 		private String createGroup(GroupRepresentation groupRep) {

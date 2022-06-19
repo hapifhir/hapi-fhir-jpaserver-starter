@@ -40,6 +40,13 @@
             </snapshots>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>mavenCentral</id>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <url>https://repo.maven.apache.org</url>
+        </repository>
     </repositories>
 
 
@@ -48,6 +55,11 @@
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-api</artifactId>
             <version>${jetty_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.iprd</groupId>
+            <artifactId>report-generator-jvm</artifactId>
+            <version>1.0.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-core -->
 		<dependency>
@@ -145,7 +157,7 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-server-openapi</artifactId>
-            <version>${project.version}</version>
+									<version>${project.version}</version>
         </dependency>
         <!-- This dependency is used for the "FHIR Tester" web app overlay -->
         <dependency>
