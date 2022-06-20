@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter.service;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
@@ -37,7 +38,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -213,10 +217,13 @@ public class HelperService {
 			return groups;
 		}
 		
-		public ResponseEntity<byte[]> generateDailyReport(String date, String organizationId, List<List<String>> fhirExpressions) {
+		public ResponseEntity<InputStreamResource> generateDailyReport(String date, String organizationId, List<List<String>> fhirExpressions) {
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClient);
-			ReportGeneratorFactory.INSTANCE.reportGenerator().generateDailyReport(fhirClientProvider, date, organizationId, fhirExpressions);
-			return new ResponseEntity(HttpStatus.OK);
+			byte[] pdfContent = ReportGeneratorFactory.INSTANCE.reportGenerator().generateDailyReport(fhirClientProvider, date, organizationId, fhirExpressions);
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(pdfContent);
+			HttpHeaders headers=  new HttpHeaders();
+			headers.add("Content-Disposition", "inline; filename=daily_report.pdf");
+			return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(new InputStreamResource(byteArrayInputStream));
 		}
 		
 		private String createGroup(GroupRepresentation groupRep) {
