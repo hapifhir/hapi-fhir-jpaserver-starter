@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,7 +42,7 @@ public class UserAndGroupManagementController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/generateDailyReport")
-	public ResponseEntity<byte[]> generateDailyReport(@RequestParam("date") String date, @RequestParam("organizationId") String organizationId, @RequestBody List<List<String>> fhirExpressions) {
+	public ResponseEntity<InputStreamResource> generateDailyReport(@RequestParam("date") String date, @RequestParam("organizationId") String organizationId, @RequestBody List<List<String>> fhirExpressions) {
 		return helperService.generateDailyReport(date, organizationId, fhirExpressions);
 	}
 }
