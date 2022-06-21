@@ -1,3 +1,6 @@
+2022/07/xx Release 2.3.0
+- favicon fixed [#53]((https://github.com/ahdis/matchbox/issues/53)
+- 
 2022/06/08 Release 2.2.0
 - FHIR Mapping Language tutorial, xml and json issues [#51](https://github.com/ahdis/matchbox/issues/51)
 - base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v220
