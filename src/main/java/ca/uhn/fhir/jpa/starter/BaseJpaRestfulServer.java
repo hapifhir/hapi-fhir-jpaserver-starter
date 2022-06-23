@@ -320,7 +320,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     // Binary Storage
-    if (appProperties.getBinary_storage_enabled()) {
+    if (appProperties.getBinary_storage_enabled() && binaryAccessProvider.isPresent()) {
       registerProvider(binaryAccessProvider.get());
       getInterceptorService().registerInterceptor(binaryStorageInterceptor);
     }
