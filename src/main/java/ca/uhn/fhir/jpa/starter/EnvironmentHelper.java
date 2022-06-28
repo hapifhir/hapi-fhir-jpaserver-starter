@@ -1,7 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.config.HapiFhirLocalContainerEntityManagerFactoryBean;
-import ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer;
+import ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers;
 import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
 import org.apache.lucene.util.Version;
 import org.hibernate.cfg.AvailableSettings;
@@ -71,7 +71,8 @@ public class EnvironmentHelper {
 			if (properties.get(BackendSettings.backendKey(BackendSettings.TYPE)).equals(LuceneBackendSettings.TYPE_NAME)) {
 				properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_TYPE), LocalFileSystemDirectoryProvider.NAME);
 				properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_ROOT), "target/lucenefiles");
-				properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.ANALYSIS_CONFIGURER), HapiLuceneAnalysisConfigurer.class.getName());
+				properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.ANALYSIS_CONFIGURER),
+					HapiHSearchAnalysisConfigurers.HapiLuceneAnalysisConfigurer.class.getName());
 				properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.LUCENE_VERSION), Version.LATEST);
 
 			} else if (properties.get(BackendSettings.backendKey(BackendSettings.TYPE)).equals(ElasticsearchBackendSettings.TYPE_NAME)) {

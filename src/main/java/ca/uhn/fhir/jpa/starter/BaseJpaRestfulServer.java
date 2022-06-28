@@ -11,6 +11,7 @@ import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
+import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.bulk.export.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
@@ -85,6 +86,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
   ReindexProvider reindexProvider;
   @Autowired
   BinaryStorageInterceptor binaryStorageInterceptor;
+  @Autowired
+  Optional<BinaryAccessProvider> binaryAccessProvider;
   @Autowired
   IPackageInstallerSvc packageInstallerSvc;
   @Autowired
@@ -317,7 +320,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     // Binary Storage
-    if (appProperties.getBinary_storage_enabled()) {
+    if (appProperties.getBinary_storage_enabled() && binaryAccessProvider.isPresent()) {
+      registerProvider(binaryAccessProvider.get());
       getInterceptorService().registerInterceptor(binaryStorageInterceptor);
     }
 
@@ -406,7 +410,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setLastNEnabled(true);
     }
 
-	 daoConfig.setStoreResourceInLuceneIndex(appProperties.getStore_resource_in_lucene_index_enabled());
+	 daoConfig.setStoreResourceInHSearchIndex(appProperties.getStore_resource_in_lucene_index_enabled());
     daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 	 daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
   }
