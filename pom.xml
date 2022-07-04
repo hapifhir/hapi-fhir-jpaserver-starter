@@ -197,6 +197,8 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+        <!-- pw: 04.07.22: this is fixed in latest hapi snapshot, can be removed when switchung to hapi 6.1.0-->         
+            <version>2.1.212</version>
         </dependency>
 
         <!-- webjars -->
