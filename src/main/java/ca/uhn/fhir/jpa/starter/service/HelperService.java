@@ -18,13 +18,18 @@ import javax.ws.rs.core.Response;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
+import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Organization;
+import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.PractitionerRole;
+import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
+
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.CreatedResponseUtil;
@@ -49,6 +54,7 @@ import com.iprd.fhir.utils.Validation;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
+//import ca.uhn.fhir.model.dstu2.resource.Parameters;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.gclient.ICriterion;
@@ -272,5 +278,103 @@ public class HelperService {
 				logger.error("Cannot create user "+userRep.getUsername()+" with groups "+userRep.getGroups());
 				return null;
 			}
+		}
+		
+//		@Scheduled(fixedDelay = 1000, initialDelay = 3000)
+		public void mapResourcesToPatient() {
+			
+			//Searching for patient create with OCL-ID
+			Bundle tempPatientBundle = new Bundle();
+			getBundleBySearchUrl(tempPatientBundle, serverBase+"/Patient?family=ghost");
+			
+			for(BundleEntryComponent entry: tempPatientBundle.getEntry()) {
+				Patient tempPatient = (Patient)entry.getResource();
+				String tempPatientId = tempPatient.getIdElement().getIdPart();
+				String oclId = tempPatient.getIdentifier().get(0).getValue();
+				
+				//Searching for actual patient with OCL-ID
+				String actualPatientId = getActualPatientId(oclId);
+				
+				Bundle resourceBundle = new Bundle();
+				getBundleBySearchUrl(resourceBundle, serverBase+"/Patient/"+tempPatientId+"/$everything");
+
+				for(BundleEntryComponent resourceEntry: resourceBundle.getEntry()) {
+					Resource resource = resourceEntry.getResource();
+					if(resource.fhirType().equals("Patient")) {
+						continue;
+					}
+					try {
+						Method getSubject = resource.getClass().getMethod("getSubject");
+						Reference subject = (Reference)getSubject.invoke(resource);
+						subject.setReference("Patient/"+actualPatientId);
+						MethodOutcome outcome = fhirClient.update()
+								   .resource(resource)
+								   .execute();
+					} catch (NoSuchMethodException | SecurityException e) {
+						System.out.println("NO SUCH METHOD "+resource.fhirType());
+						continue;
+//						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						System.out.println("ILLEGAL ACCESS "+resource.fhirType());
+						continue;
+//						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						System.out.println("ILLEGAL ARGUMENT "+resource.fhirType());
+						continue;
+//						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						System.out.println("INVOCATION TARGET "+resource.fhirType());
+						continue;
+//						e.printStackTrace();
+					}
+				}
+//				MethodOutcome outcome = fhirClient.delete().resource(tempPatient).execute();
+				
+			}
+		}
+		
+		private String getActualPatientId(String oclId) {
+			Bundle patientBundle = new Bundle();
+			getBundleBySearchUrl(patientBundle, serverBase+"/Patient?identifierPartial:contains="+oclId);
+			for(BundleEntryComponent entry: patientBundle.getEntry()) {
+				Patient patient = (Patient)entry.getResource();
+				for(Identifier i:patient.getIdentifier()) {
+					if(i.getValue().contains("ID      : "+oclId)) {
+						return patient.getIdElement().getIdPart();
+					}
+				}
+			}
+			return "";
+		}
+		
+		private void getBundleBySearchUrl(Bundle bundle, String url) {
+			Bundle searchBundle = fhirClient.search()
+					   .byUrl(url)
+					   .returnBundle(Bundle.class)
+					   .execute();
+			bundle.getEntry().addAll(searchBundle.getEntry());
+			if(searchBundle.hasLink() && bundleContainsNext(searchBundle)) {
+				getBundleBySearchUrl(bundle, getNextUrl(searchBundle.getLink()));
+			}
+		}
+		
+		private boolean bundleContainsNext(Bundle bundle) {
+			for(BundleLinkComponent link: bundle.getLink()) {
+				if(link.getRelation().equals("next"))
+					return true;
+			}
+			return false;
+		}
+		
+		private String getNextUrl(List<BundleLinkComponent> bundleLinks) {
+			String url = "";
+			for(BundleLinkComponent link: bundleLinks) {
+				if(link.getRelation().equals("next")) {
+					url = link.getUrl();
+				}
+			}
+			if(url.contains("http://"))
+				url = url.replace("http://", "https://");
+			return url;
 		}
 }
