@@ -287,7 +287,7 @@ public class HelperService {
 		public void mapResourcesToPatient() {
 			//Searching for patient created with OCL-ID
 			Bundle tempPatientBundle = new Bundle();
-			getBundleBySearchUrl(tempPatientBundle, serverBase+"/Patient?family=ghost");
+			getBundleBySearchUrl(tempPatientBundle, "/Patient?family=ghost");
 			
 			for(BundleEntryComponent entry: tempPatientBundle.getEntry()) {
 				Patient tempPatient = (Patient)entry.getResource();
@@ -296,9 +296,11 @@ public class HelperService {
 				
 				//Searching for actual patient with OCL-ID
 				String actualPatientId = getActualPatientId(oclId);
-				
+				if(actualPatientId == null){
+					continue;
+				}
 				Bundle resourceBundle = new Bundle();
-				getBundleBySearchUrl(resourceBundle, serverBase+"/Patient/"+tempPatientId+"/$everything");
+				getBundleBySearchUrl(resourceBundle, "/Patient/"+tempPatientId+"/$everything");
 
 				for(BundleEntryComponent resourceEntry: resourceBundle.getEntry()) {
 					Resource resource = resourceEntry.getResource();
@@ -329,16 +331,25 @@ public class HelperService {
 		
 		private String getActualPatientId(String oclId) {
 			Bundle patientBundle = new Bundle();
-			getBundleBySearchUrl(patientBundle, serverBase+"/Patient?identifierPartial:contains="+oclId);
+			getBundleBySearchUrl(patientBundle, "/Patient?identifierPartial:contains="+oclId);
 			for(BundleEntryComponent entry: patientBundle.getEntry()) {
 				Patient patient = (Patient)entry.getResource();
-				for(Identifier i:patient.getIdentifier()) {
-					if(i.getValue().contains("ID      : "+oclId)) {
-						return patient.getIdElement().getIdPart();
-					}
+				if(isActualPatient(patient, oclId))
+					return patient.getIdElement().getIdPart();
+			}
+			return null;
+		}
+
+		private boolean isActualPatient(Patient patient, String oclId) {
+			if((patient.hasName() && patient.getName().get(0).getFamily().equals("ghost"))){
+				return false;
+			}
+			for(Identifier identifier:patient.getIdentifier()) {
+				if (identifier.getValue().contains(oclId)) {
+					return true;
 				}
 			}
-			return "";
+			return false;
 		}
 		
 		private void getBundleBySearchUrl(Bundle bundle, String url) {
