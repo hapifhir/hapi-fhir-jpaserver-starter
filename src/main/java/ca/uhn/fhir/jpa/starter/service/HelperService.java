@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,8 +65,7 @@ import ca.uhn.fhir.rest.gclient.IQuery;
 @Import(AppProperties.class)
 @Service
 public class HelperService {
-	
-		@Autowired
+	@Autowired
 		AppProperties appProperties;
 		@Autowired
 		HttpServletRequest request;
@@ -78,7 +78,10 @@ public class HelperService {
 		
 		private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
 		private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
-		
+
+		private static final long INITIAL_DELAY = 3000L;
+		private static final long FIXED_DELAY = 60000L;
+
 		public void initializeKeycloak() {
 			ctx = FhirContext.forR4();
 			serverBase = appProperties.getHapi_Server_address();
@@ -280,10 +283,9 @@ public class HelperService {
 			}
 		}
 		
-//		@Scheduled(fixedDelay = 1000, initialDelay = 3000)
+		@Scheduled(fixedDelay = FIXED_DELAY, initialDelay = INITIAL_DELAY )
 		public void mapResourcesToPatient() {
-			
-			//Searching for patient create with OCL-ID
+			//Searching for patient created with OCL-ID
 			Bundle tempPatientBundle = new Bundle();
 			getBundleBySearchUrl(tempPatientBundle, serverBase+"/Patient?family=ghost");
 			
@@ -311,25 +313,17 @@ public class HelperService {
 								   .resource(resource)
 								   .execute();
 					} catch (NoSuchMethodException | SecurityException e) {
-						System.out.println("NO SUCH METHOD "+resource.fhirType());
-						continue;
-//						e.printStackTrace();
+						System.out.println(e.getMessage());
 					} catch (IllegalAccessException e) {
-						System.out.println("ILLEGAL ACCESS "+resource.fhirType());
-						continue;
-//						e.printStackTrace();
+						System.out.println(e.getMessage());
 					} catch (IllegalArgumentException e) {
-						System.out.println("ILLEGAL ARGUMENT "+resource.fhirType());
-						continue;
-//						e.printStackTrace();
+						System.out.println(e.getMessage());
 					} catch (InvocationTargetException e) {
-						System.out.println("INVOCATION TARGET "+resource.fhirType());
-						continue;
-//						e.printStackTrace();
+						System.out.println(e.getMessage());
 					}
 				}
-//				MethodOutcome outcome = fhirClient.delete().resource(tempPatient).execute();
-				
+				tempPatient.getName().get(0).setFamily("ghost_____DELETE");
+				MethodOutcome outcome = fhirClient.update().resource(tempPatient).execute();				
 			}
 		}
 		
