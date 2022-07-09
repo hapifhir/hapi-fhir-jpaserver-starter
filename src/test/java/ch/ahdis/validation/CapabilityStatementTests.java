@@ -47,11 +47,13 @@ public class CapabilityStatementTests {
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		Path dir = Paths.get("database");
-		for (Path file : Files.list(dir).collect(Collectors.toList())) {
-			if (Files.isRegularFile(file)) {
-				Files.delete(file);
-			}
-		}	
+		if (Files.exists(dir)) {
+			for (Path file : Files.list(dir).collect(Collectors.toList())) {
+				if (Files.isRegularFile(file)) {
+					Files.delete(file);
+				}
+			}	
+		}
 	}
 
 	/**

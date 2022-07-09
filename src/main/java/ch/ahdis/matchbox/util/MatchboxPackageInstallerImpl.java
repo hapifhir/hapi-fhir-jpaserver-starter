@@ -441,7 +441,7 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 						id.setParts(id.getBaseUrl(), id.getResourceType(), newIdPart, id.getVersionIdPart());
 					}
 					updateResource(dao, theResource);
-					ourLog.debug("Created resource with existing id");
+					ourLog.info("Created resource with existing id "+id.toString());
 				}
 			} else {
 			ourLog.debug("Updating existing resource matching {}", map.toNormalizedQueryString(myFhirContext));

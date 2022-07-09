@@ -12,39 +12,81 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.Application;
 
+import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
+import ca.uhn.fhir.jpa.starter.Application;
+import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
+
+
+@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-@ContextConfiguration(classes = { Application.class })
-@Ignore
+@ContextConfiguration(classes = {Application.class})
+@ActiveProfiles("test1")
+@Slf4j
 public class IgValidateRawProfileTest {
 
-  @ClassRule
-  public static final SpringClassRule scr = new SpringClassRule();
 
-  @Rule
-  public final SpringMethodRule smr = new SpringMethodRule();
-
+  @Autowired
+	private MatchboxPackageInstallerImpl packageInstallerSvc;
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(IgValidateRawProfileTest.class);
 
   private String targetServer = "http://localhost:8080/matchbox/fhir";
 
+  @BeforeClass
+	public static void beforeClass() throws Exception {
+		Path dir = Paths.get("database");
+		if (Files.exists(dir)) {
+			for (Path file : Files.list(dir).collect(Collectors.toList())) {
+				if (Files.isRegularFile(file)) {
+					Files.delete(file);
+				}
+			}	
+		}
+  }
+
   @Test
   public void validateRaw() {
+
+    PackageInstallationSpec packageSpec = new PackageInstallationSpec()
+    .setName("hl7.fhir.r4.core")
+    .setVersion("4.0.1")
+    .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL);
+
+    packageInstallerSvc.install(packageSpec);
+		try {
+      Thread.sleep(2000L);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    
     FhirContext contextR4 = FhirVersionEnum.R4.newContext();
     ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);
     String patient = "<Patient xmlns=\"http://hl7.org/fhir\">\n" + "            <id value=\"example\"/>\n"
@@ -61,6 +103,7 @@ public class IgValidateRawProfileTest {
   }
 
   @Test
+  @Ignore
   //  https://gazelle.ihe.net/jira/browse/EHS-431
   public void validateEhs431() throws IOException {
     // 
@@ -74,6 +117,7 @@ public class IgValidateRawProfileTest {
   }
 
   @Test
+  @Ignore
   //  https://gazelle.ihe.net/jira/browse/EHS-419
   public void validateEhs419() throws IOException {
     // 
