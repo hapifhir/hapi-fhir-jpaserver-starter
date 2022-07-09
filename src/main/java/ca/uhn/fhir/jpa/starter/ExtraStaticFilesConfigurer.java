@@ -1,4 +1,3 @@
-@@ -0,0 +1,22 @@
 package ca.uhn.fhir.jpa.starter;
 
 import org.springframework.beans.factory.annotation.Autowired;
