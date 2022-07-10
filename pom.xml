@@ -91,11 +91,11 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
-     <!--    <dependency>
+        <dependency>
             <groupId>org.smartregister</groupId>
             <artifactId>hapi-fhir-keycloak</artifactId>
             <version>0.0.7-SNAPSHOT</version>
-        </dependency>-->
+        </dependency>
 
         <!-- Needed for Email subscriptions -->
         <dependency>
