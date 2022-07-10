@@ -1,0 +1,186 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "org.iprd.report",
+    "module": "report-generator",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "metadataApiElements",
+      "attributes": {
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.5.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "report-generator-metadata-1.0.0-all.jar",
+          "url": "report-generator-1.0.0-all.jar",
+          "size": 5316,
+          "sha512": "35abfa7fb7208ca4059f3c615119e8267edac4d8b3e38893d7d08de017ee31f6bd941bdcf6ef3e79c82c3765a165efb1c1b86832b147d7d4538c160152686c51",
+          "sha256": "98314d9809f942b31d8c8147331e5f3fac21e5b8e0645e95a69af41b599e82f1",
+          "sha1": "4eefaec977c670cdeb5f778bdcaceb02f895f8b4",
+          "md5": "6a63c1992687a06c237df04b756b26f7"
+        }
+      ]
+    },
+    {
+      "name": "commonMainMetadataElements",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.5.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "report-generator-1.0.0.jar",
+          "url": "report-generator-1.0.0.jar",
+          "size": 3955,
+          "sha512": "0eaee6aaef9c81032b83096f7fcc5e8050571e864fdd049a829f093af8c43520b26fd2faaad5cd0cac748bf15c56ffb1d2e23bc6016b240d712448de293815e1",
+          "sha256": "4afd4718bf98fc84d7dcc57720df61f60975af92d59e69f7ce936a4fc8cb8eec",
+          "sha1": "1eeb24bfb4eb24d6e15288f26c4c4f78cb396b99",
+          "md5": "a607672fe495d3aea801db643a5b789f"
+        }
+      ]
+    },
+    {
+      "name": "jsLegacyApiElements-published",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.js.compiler": "legacy",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../report-generator-js/1.0.0/report-generator-js-1.0.0.module",
+        "group": "org.iprd.report",
+        "module": "report-generator-js",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "name": "jsLegacyRuntimeElements-published",
+      "attributes": {
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "legacy",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../report-generator-js/1.0.0/report-generator-js-1.0.0.module",
+        "group": "org.iprd.report",
+        "module": "report-generator-js",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "name": "jsIrApiElements-published",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../report-generator-js/1.0.0/report-generator-js-1.0.0.module",
+        "group": "org.iprd.report",
+        "module": "report-generator-js",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "name": "jsIrRuntimeElements-published",
+      "attributes": {
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "available-at": {
+        "url": "../../report-generator-js/1.0.0/report-generator-js-1.0.0.module",
+        "group": "org.iprd.report",
+        "module": "report-generator-js",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../report-generator-jvm/1.0.0/report-generator-jvm-1.0.0.module",
+        "group": "org.iprd.report",
+        "module": "report-generator-jvm",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../report-generator-jvm/1.0.0/report-generator-jvm-1.0.0.module",
+        "group": "org.iprd.report",
+        "module": "report-generator-jvm",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "name": "nativeApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "mingw_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../report-generator-native/1.0.0/report-generator-native-1.0.0.module",
+        "group": "org.iprd.report",
+        "module": "report-generator-native",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "name": "nativeMetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "mingw_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "available-at": {
+        "url": "../../report-generator-native/1.0.0/report-generator-native-1.0.0.module",
+        "group": "org.iprd.report",
+        "module": "report-generator-native",
+        "version": "1.0.0"
+      }
+    }
+  ]
+}

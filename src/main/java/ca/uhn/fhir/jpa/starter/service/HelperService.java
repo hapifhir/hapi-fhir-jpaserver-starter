@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter.service;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
@@ -42,7 +43,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -52,12 +56,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.iprd.fhir.utils.FhirResourceTemplateHelper;
 import com.iprd.fhir.utils.KeycloakTemplateHelper;
 import com.iprd.fhir.utils.Validation;
+import com.iprd.report.FhirClientProvider;
+import com.iprd.report.ReportGeneratorFactory;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 //import ca.uhn.fhir.model.dstu2.resource.Parameters;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 
@@ -217,6 +224,15 @@ public class HelperService {
 			RealmResource realmResource = keycloak.realm("fhir-hapi");
 			List<GroupRepresentation> groups =  realmResource.users().get(userId).groups(0,appProperties.getKeycloak_max_group_count(),false);
 			return groups;
+		}
+		
+		public ResponseEntity<InputStreamResource> generateDailyReport(String date, String organizationId, List<List<String>> fhirExpressions) {
+			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClient);
+			byte[] pdfContent = ReportGeneratorFactory.INSTANCE.reportGenerator().generateDailyReport(fhirClientProvider, date, organizationId, fhirExpressions);
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(pdfContent);
+			HttpHeaders headers=  new HttpHeaders();
+			headers.add("Content-Disposition", "inline; filename=daily_report.pdf");
+			return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(new InputStreamResource(byteArrayInputStream));
 		}
 		
 		private String createGroup(GroupRepresentation groupRep) {
