@@ -54,7 +54,7 @@ hapi:
       keycloak_username: managegroup
       keycloak_password: 12345
       fhir_user: nitin-sabale
-      fhir_user: iprd@2022!0y0$
+      fhir_password: iprd@2022!0y0$
       hapi_server_address: http://localhost:8080/fhir
       advanced_lucene_indexing: true
       fhirpath_interceptor_enabled: true
