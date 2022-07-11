@@ -1,4 +1,4 @@
-2022/07/xx Release 2.3.0
+2022/07/11 Release 2.3.0
 - favicon fixed [#53]((https://github.com/ahdis/matchbox/issues/53)
 - add possiblity to add a static file location [#57](https://github.com/ahdis/matchbox/issues/57]
 

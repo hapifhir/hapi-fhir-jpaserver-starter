@@ -91,7 +91,7 @@ docker-compose exec -T matchbox-test-db pg_restore -c -U matchbox -d matchbox < 
 ```bash
 mvn package -DskipTests
 docker build -t matchbox .
-docker run -d --name matchbox -p 8080:8080 matchbox
+docker run -d --name matchbox -p 8080:8080 -v /Users/oliveregger/apps/:/apps/ matchbox
 ```
 Server will then be accessible at http://localhost:8080/matchbox/fhir/metadata. 
 
@@ -100,9 +100,9 @@ To dynamically configure run in a kubernetes environment and add a kubernetes co
 
 ### making container available
 ```
-docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v220
+docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v230
 
-docker push eu.gcr.io/fhir-ch/matchbox:v220
+docker push eu.gcr.io/fhir-ch/matchbox:v230
 ```
 
 API
