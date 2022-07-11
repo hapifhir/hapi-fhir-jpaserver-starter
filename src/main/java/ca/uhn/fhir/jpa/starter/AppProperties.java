@@ -56,7 +56,7 @@ public class AppProperties {
 	private String keycloak_username = "managegroup";
 	private String keycloak_password = "12345";
 	private String fhir_user = "nitin_sabale";
-	private String fhir_password = "iprd@2022!0y0$";
+	private String fhir_password = "xyz";
 	private String hapi_server_address = null;
 	private EncodingEnum default_encoding = EncodingEnum.JSON;
 	private FhirVersionEnum fhir_version = FhirVersionEnum.R4;

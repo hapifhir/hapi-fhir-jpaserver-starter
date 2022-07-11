@@ -37,6 +37,7 @@ import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.token.TokenManager;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
@@ -67,6 +68,7 @@ import ca.uhn.fhir.rest.client.api.IClientInterceptor;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
+import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 
@@ -94,9 +96,7 @@ public class HelperService {
 		public void initializeKeycloak() {
 			ctx = FhirContext.forR4();
 			serverBase = appProperties.getHapi_Server_address();
-			IClientInterceptor authInterceptor = new BasicAuthInterceptor(appProperties.getFhir_user(), appProperties.getFhir_password());
-			fhirClient = ctx.newRestfulGenericClient(serverBase);
-			fhirClient.registerInterceptor(authInterceptor);
+			
 			ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
 		    keycloak = KeycloakBuilder
 		    		.builder()
@@ -108,6 +108,14 @@ public class HelperService {
 		    		.password(appProperties.getKeycloak_Password())
 		    		.resteasyClient(client)
 		    		.build();
+		   
+		    Keycloak instance = Keycloak.getInstance(appProperties.getKeycloak_Server_address(), appProperties.getKeycloak_Client_Realm(),appProperties.getFhir_user(), appProperties.getFhir_password(), "fhir-hapi-server", "d9ce06c8-9d26-48b6-a2ac-5f1069afc691");                                                                                                      
+		    TokenManager tokenmanager = instance.tokenManager();
+		    String accessToken = tokenmanager.getAccessTokenString();
+			
+			BearerTokenAuthInterceptor authInterceptor = new BearerTokenAuthInterceptor(accessToken);
+			fhirClient = ctx.newRestfulGenericClient(serverBase);
+			fhirClient.registerInterceptor(authInterceptor);
 		}
 		
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
@@ -307,7 +315,7 @@ public class HelperService {
 		public void mapResourcesToPatient() {
 			//Searching for patient created with OCL-ID
 			Bundle tempPatientBundle = new Bundle();
-			getBundleBySearchUrl(tempPatientBundle, "Patient?family=ghost");
+			getBundleBySearchUrl(tempPatientBundle, serverBase+"/Patient?family=ghost");
 			
 			for(BundleEntryComponent entry: tempPatientBundle.getEntry()) {
 				Patient tempPatient = (Patient)entry.getResource();
@@ -320,7 +328,7 @@ public class HelperService {
 					continue;
 				}
 				Bundle resourceBundle = new Bundle();
-				getBundleBySearchUrl(resourceBundle, "Patient/"+tempPatientId+"/$everything");
+				getBundleBySearchUrl(resourceBundle, serverBase+"/Patient/"+tempPatientId+"/$everything");
 
 				for(BundleEntryComponent resourceEntry: resourceBundle.getEntry()) {
 					Resource resource = resourceEntry.getResource();
@@ -351,7 +359,7 @@ public class HelperService {
 		
 		private String getActualPatientId(String oclId) {
 			Bundle patientBundle = new Bundle();
-			getBundleBySearchUrl(patientBundle, "Patient?identifierPartial:contains="+oclId);
+			getBundleBySearchUrl(patientBundle, serverBase+"/Patient?identifierPartial:contains="+oclId);
 			for(BundleEntryComponent entry: patientBundle.getEntry()) {
 				Patient patient = (Patient)entry.getResource();
 				if(isActualPatient(patient, oclId))
