@@ -63,8 +63,10 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 //import ca.uhn.fhir.model.dstu2.resource.Parameters;
 import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.client.api.IClientInterceptor;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
+import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 
@@ -92,7 +94,9 @@ public class HelperService {
 		public void initializeKeycloak() {
 			ctx = FhirContext.forR4();
 			serverBase = appProperties.getHapi_Server_address();
-			fhirClient = ctx.newRestfulGenericClient(serverBase);		
+			IClientInterceptor authInterceptor = new BasicAuthInterceptor(appProperties.getFhir_user(), appProperties.getFhir_password());
+			fhirClient = ctx.newRestfulGenericClient(serverBase);
+			fhirClient.registerInterceptor(authInterceptor);
 			ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
 		    keycloak = KeycloakBuilder
 		    		.builder()
