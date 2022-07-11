@@ -303,7 +303,7 @@ public class HelperService {
 		public void mapResourcesToPatient() {
 			//Searching for patient created with OCL-ID
 			Bundle tempPatientBundle = new Bundle();
-			getBundleBySearchUrl(tempPatientBundle, "/Patient?family=ghost");
+			getBundleBySearchUrl(tempPatientBundle, "Patient?family=ghost");
 			
 			for(BundleEntryComponent entry: tempPatientBundle.getEntry()) {
 				Patient tempPatient = (Patient)entry.getResource();
@@ -316,7 +316,7 @@ public class HelperService {
 					continue;
 				}
 				Bundle resourceBundle = new Bundle();
-				getBundleBySearchUrl(resourceBundle, "/Patient/"+tempPatientId+"/$everything");
+				getBundleBySearchUrl(resourceBundle, "Patient/"+tempPatientId+"/$everything");
 
 				for(BundleEntryComponent resourceEntry: resourceBundle.getEntry()) {
 					Resource resource = resourceEntry.getResource();
@@ -347,7 +347,7 @@ public class HelperService {
 		
 		private String getActualPatientId(String oclId) {
 			Bundle patientBundle = new Bundle();
-			getBundleBySearchUrl(patientBundle, "/Patient?identifierPartial:contains="+oclId);
+			getBundleBySearchUrl(patientBundle, "Patient?identifierPartial:contains="+oclId);
 			for(BundleEntryComponent entry: patientBundle.getEntry()) {
 				Patient patient = (Patient)entry.getResource();
 				if(isActualPatient(patient, oclId))
