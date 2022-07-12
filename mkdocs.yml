@@ -1,0 +1,15 @@
+site_name: matchbox
+theme:
+  name: material
+  logo: assets/matchbox_logo_color.png
+  favicon: assets/favicon-96x96.png
+  palette:
+    scheme: matchbox
+extra_css:
+  - stylesheets/extra.css
+nav:
+  - index.md
+  - features.md
+  - changelog.md
+  - api.md
+  - docker.md
