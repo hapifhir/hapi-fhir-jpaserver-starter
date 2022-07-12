@@ -405,12 +405,11 @@ public class HelperService {
 		}
 		
 		private String getNextUrl(List<BundleLinkComponent> bundleLinks) {
-			String url = "";
 			for(BundleLinkComponent link: bundleLinks) {
 				if(link.getRelation().equals("next")) {
-					url = link.getUrl();
+					return link.getUrl();
 				}
 			}
-			return url;
+			return null;
 		}
 }
