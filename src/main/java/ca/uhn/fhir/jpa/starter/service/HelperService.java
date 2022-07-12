@@ -80,23 +80,26 @@ public class HelperService {
 		AppProperties appProperties;
 		@Autowired
 		HttpServletRequest request;
-		
+
 		Keycloak keycloak;
 
 		FhirContext ctx;
 		String serverBase;
 		IGenericClient fhirClient;
-		
+
 		private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
 		private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
 
 		private static final long INITIAL_DELAY = 3000L;
 		private static final long FIXED_DELAY = 60000L;
 
+		private static final long AUTH_INITIAL_DELAY = 25 * 60000L;
+		private static final long AUTH_FIXED_DELAY = 50 * 60000L;
+
 		public void initializeKeycloak() {
 			ctx = FhirContext.forR4();
 			serverBase = appProperties.getHapi_Server_address();
-			
+
 			ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
 		    keycloak = KeycloakBuilder
 		    		.builder()
@@ -108,18 +111,31 @@ public class HelperService {
 		    		.password(appProperties.getKeycloak_Password())
 		    		.resteasyClient(client)
 		    		.build();
-		   
-		    Keycloak instance = Keycloak.getInstance(appProperties.getKeycloak_Server_address(), appProperties.getKeycloak_Client_Realm(),appProperties.getFhir_user(), appProperties.getFhir_password(), "fhir-hapi-server", "d9ce06c8-9d26-48b6-a2ac-5f1069afc691");                                                                                                      
-		    TokenManager tokenmanager = instance.tokenManager();
-		    String accessToken = tokenmanager.getAccessTokenString();
-			
+
+			registerClientAuthInterceptor();
+		}
+
+		@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
+		private void registerClientAuthInterceptor() {
+			Keycloak instance = Keycloak.
+				getInstance(
+					appProperties.getKeycloak_Server_address(),
+					appProperties.getKeycloak_Client_Realm(),
+					appProperties.getFhir_user(),
+					appProperties.getFhir_password(),
+					appProperties.getFhir_hapi_client_id(),
+					appProperties.getFhir_hapi_client_secret()
+				);
+			TokenManager tokenmanager = instance.tokenManager();
+			String accessToken = tokenmanager.getAccessTokenString();
+
 			BearerTokenAuthInterceptor authInterceptor = new BearerTokenAuthInterceptor(accessToken);
 			fhirClient = ctx.newRestfulGenericClient(serverBase);
 			fhirClient.registerInterceptor(authInterceptor);
 		}
-		
+
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
-			
+
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			List<String> states = new ArrayList<>();
 			List<String> lgas = new ArrayList<>();
@@ -147,7 +163,7 @@ public class HelperService {
 						stateGroupId = createGroup(stateGroupRep);
 						updateResource(stateGroupId, stateId, Location.class);
 					}
-					
+
 					if(!lgas.contains(csvData[1])) {
 						Location lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0]);
 						lgaId = createResource(lga, Location.class, Location.NAME.matches().value(lga.getName()));
@@ -156,7 +172,7 @@ public class HelperService {
 						lgaGroupId = createGroup(lgaGroupRep);
 						updateResource(lgaGroupId, lgaId, Location.class);
 					}
-					
+
 					if(!wards.contains(csvData[2])) {
 						Location ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2]);
 						wardId = createResource(ward, Location.class, Location.NAME.matches().value(ward.getName()));
@@ -165,7 +181,7 @@ public class HelperService {
 						wardGroupId = createGroup(wardGroupRep);
 						updateResource(wardGroupId, wardId, Location.class);
 					}
-					
+
 					if(!clinics.contains(csvData[7])) {
 						Organization clinic = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2]);
 						facilityId = createResource(clinic, Organization.class, Organization.NAME.matches().value(clinic.getName()));
@@ -187,11 +203,11 @@ public class HelperService {
 			map.put("uploadCSV", "Successful");
 			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
 		}
-		
+
 		public ResponseEntity<LinkedHashMap<String, Object>> createUsers(@RequestParam("file") MultipartFile file) throws Exception{
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			List<String> practitioners = new ArrayList<>();
-			
+
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
@@ -231,13 +247,13 @@ public class HelperService {
 			map.put("uploadCsv", "Successful");
 			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
 		}
-		
+
 		public List<GroupRepresentation> getGroupsByUser(String userId) {
 			RealmResource realmResource = keycloak.realm("fhir-hapi");
 			List<GroupRepresentation> groups =  realmResource.users().get(userId).groups(0,appProperties.getKeycloak_max_group_count(),false);
 			return groups;
 		}
-		
+
 		public ResponseEntity<InputStreamResource> generateDailyReport(String date, String organizationId, List<List<String>> fhirExpressions) {
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClient);
 			byte[] pdfContent = ReportGeneratorFactory.INSTANCE.reportGenerator().generateDailyReport(fhirClientProvider, date, organizationId, fhirExpressions);
@@ -246,7 +262,7 @@ public class HelperService {
 			headers.add("Content-Disposition", "inline; filename=daily_report.pdf");
 			return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(new InputStreamResource(byteArrayInputStream));
 		}
-		
+
 		private String createGroup(GroupRepresentation groupRep) {
 			RealmResource realmResource = keycloak.realm("fhir-hapi");
 			List<GroupRepresentation> groups = realmResource.groups().groups(groupRep.getName(), 0, Integer.MAX_VALUE);
@@ -256,7 +272,7 @@ public class HelperService {
 			Response response = realmResource.groups().add(groupRep);
 			return CreatedResponseUtil.getCreatedId(response);
 		}
-		
+
 		private String createResource(Resource resource, Class<? extends IBaseResource> theClass,ICriterion<?>...theCriterion ) {
 			IQuery<IBaseBundle> query = fhirClient.search().forResource(theClass).where(theCriterion[0]);
 			for(int i=1;i<theCriterion.length;i++)
@@ -268,7 +284,7 @@ public class HelperService {
 			}
 			return bundle.getEntry().get(0).getFullUrl().split("/")[5];
 		}
-		
+
 		private <R extends IBaseResource> void updateResource(String keycloakId, String resourceId, Class<R> resourceClass) {
 			 R resource = fhirClient.read().resource(resourceClass).withId(resourceId).execute();
 			 try {
@@ -283,19 +299,14 @@ public class HelperService {
 				 obj.setValue(keycloakId);
 				 MethodOutcome outcome = fhirClient.update().resource(resource).execute();
 			 }
-			 catch (SecurityException e) {
+			 catch (SecurityException | NoSuchMethodException | InvocationTargetException e) {
 				 e.printStackTrace();
-			 }
-			  catch (NoSuchMethodException e) { 
+			 } catch (IllegalAccessException e) {
 				  e.printStackTrace();
-			  } catch (IllegalAccessException e) {
-				  e.printStackTrace();
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		private String createUser(UserRepresentation userRep) {
 			RealmResource realmResource = keycloak.realm(appProperties.getKeycloak_Client_Realm());
 			List<UserRepresentation> users = realmResource.users().search(userRep.getUsername(), 0, Integer.MAX_VALUE);
@@ -339,24 +350,18 @@ public class HelperService {
 						Method getSubject = resource.getClass().getMethod("getSubject");
 						Reference subject = (Reference)getSubject.invoke(resource);
 						subject.setReference("Patient/"+actualPatientId);
-						MethodOutcome outcome = fhirClient.update()
+						fhirClient.update()
 								   .resource(resource)
 								   .execute();
-					} catch (NoSuchMethodException | SecurityException e) {
-						System.out.println(e.getMessage());
-					} catch (IllegalAccessException e) {
-						System.out.println(e.getMessage());
-					} catch (IllegalArgumentException e) {
-						System.out.println(e.getMessage());
-					} catch (InvocationTargetException e) {
+					} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 						System.out.println(e.getMessage());
 					}
 				}
 				tempPatient.getName().get(0).setFamily("ghost_____DELETE");
-				MethodOutcome outcome = fhirClient.update().resource(tempPatient).execute();				
+				fhirClient.update().resource(tempPatient).execute();
 			}
 		}
-		
+
 		private String getActualPatientId(String oclId) {
 			Bundle patientBundle = new Bundle();
 			getBundleBySearchUrl(patientBundle, serverBase+"/Patient?identifierPartial:contains="+oclId);
@@ -379,7 +384,7 @@ public class HelperService {
 			}
 			return false;
 		}
-		
+
 		private void getBundleBySearchUrl(Bundle bundle, String url) {
 			Bundle searchBundle = fhirClient.search()
 					   .byUrl(url)

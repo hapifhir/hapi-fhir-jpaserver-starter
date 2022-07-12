@@ -51,6 +51,8 @@ hapi:
       keycloak_realm: master
       keycloak_client_realm: fhir-hapi
       keycloak_client_Id: fhir-hapi-realm
+      fhir_hapi_client_id: fhir-hapi-server
+      fhir_hapi_client_secret: xyz
       keycloak_username: managegroup
       keycloak_password: 12345
       fhir_user: nitin_sabale
