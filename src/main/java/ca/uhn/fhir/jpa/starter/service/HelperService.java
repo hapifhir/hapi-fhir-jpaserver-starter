@@ -411,8 +411,6 @@ public class HelperService {
 					url = link.getUrl();
 				}
 			}
-			if(url.contains("http://"))
-				url = url.replace("http://", "https://");
 			return url;
 		}
 }
