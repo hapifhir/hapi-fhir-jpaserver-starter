@@ -99,7 +99,6 @@ public class HelperService {
 		public void initializeKeycloak() {
 			ctx = FhirContext.forR4();
 			serverBase = appProperties.getHapi_Server_address();
-
 			ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
 		    keycloak = KeycloakBuilder
 		    		.builder()
@@ -326,7 +325,7 @@ public class HelperService {
 		public void mapResourcesToPatient() {
 			//Searching for patient created with OCL-ID
 			Bundle tempPatientBundle = new Bundle();
-			getBundleBySearchUrl(tempPatientBundle, serverBase+"/Patient?family=ghost");
+			getBundleBySearchUrl(tempPatientBundle, serverBase+"/Patient?identifier=patient_with_ocl");
 			
 			for(BundleEntryComponent entry: tempPatientBundle.getEntry()) {
 				Patient tempPatient = (Patient)entry.getResource();
@@ -357,7 +356,12 @@ public class HelperService {
 						System.out.println(e.getMessage());
 					}
 				}
-				tempPatient.getName().get(0).setFamily("ghost_____DELETE");
+
+				for(Identifier identifier: tempPatient.getIdentifier()){
+					if(identifier.getSystem().equals("http://iprdgroup.com/identifiers/patientWithOcl")){
+						identifier.setValue("patient_with_ocl_delete");
+					}
+				}
 				fhirClient.update().resource(tempPatient).execute();
 			}
 		}
@@ -374,15 +378,12 @@ public class HelperService {
 		}
 
 		private boolean isActualPatient(Patient patient, String oclId) {
-			if((patient.hasName() && patient.getName().get(0).getFamily().equals("ghost"))){
-				return false;
-			}
 			for(Identifier identifier:patient.getIdentifier()) {
-				if (identifier.getValue().contains(oclId)) {
-					return true;
+				if (identifier.getValue().equals("patient_with_ocl")) {
+					return false;
 				}
 			}
-			return false;
+			return true;
 		}
 
 		private void getBundleBySearchUrl(Bundle bundle, String url) {
@@ -403,7 +404,6 @@ public class HelperService {
 			}
 			return false;
 		}
-		
 		private String getNextUrl(List<BundleLinkComponent> bundleLinks) {
 			for(BundleLinkComponent link: bundleLinks) {
 				if(link.getRelation().equals("next")) {
