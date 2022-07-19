@@ -31,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
 import static java.lang.Thread.sleep;
 import static org.awaitility.Awaitility.await;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -76,6 +78,30 @@ class ExampleServerR4IT {
 		// Verify that a golden record Patient was created
 		assertNotNull(
 			goldenRecord.getMeta().getTag("http://hapifhir.io/fhir/NamingSystem/mdm-record-status", "GOLDEN_RECORD"));
+	}
+
+	@Test
+	public void testPagingBroken() {
+		for (int i = 0; i < 200; i++ ) {
+			Patient pt = new Patient();
+			pt.setActive(true);
+			pt.getBirthDateElement().setValueAsString("2020-01-01");
+			pt.addIdentifier().setSystem("http://foo").setValue("12345");
+			pt.setId("Patient/pat-" + i);
+			ourClient.create().resource(pt).execute().getId();
+		}
+
+		Bundle execute = ourClient.search().forResource(Patient.class).returnBundle(Bundle.class).execute();
+		int pages = 0;
+		do {
+			ourLog.error("Found next page link: " + execute.getLink("next"));
+			execute = ourClient.loadPage().next(execute).execute();
+			pages++;
+			ourLog.error("Found entries: " + execute.getEntry().size());
+
+		} while (execute.getLink("next") != null);
+
+		assertThat(pages, greaterThan(1));
 	}
 
 	private Patient getGoldenResourcePatient() {
