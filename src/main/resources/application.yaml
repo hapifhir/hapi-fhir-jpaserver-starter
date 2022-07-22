@@ -13,13 +13,21 @@ spring:
     enabled: false
     check-location: false
     baselineOnMigrate: true
+#  datasource:
+#    url: 'jdbc:h2:file:./target/database/h2'
+#    url: jdbc:h2:mem:test_mem
+#    username: sa
+#    password: null
+#    driverClassName: org.h2.Driver
+#    max-active: 15
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
-    #url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
-    max-active: 15
+    url: 'jdbc:postgresql://localhost:5432/fhir_r5_local'
+    username: cdr
+    password: password
+    driverClassName: org.postgresql.Driver
+    max-active: 32
+    type: org.springframework.jdbc.datasource.SimpleDriverDataSource
+
 
     # database connection pool size
     hikari:
@@ -32,7 +40,8 @@ spring:
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
 
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+#      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
   #      hibernate.cache.use_query_cache: false
