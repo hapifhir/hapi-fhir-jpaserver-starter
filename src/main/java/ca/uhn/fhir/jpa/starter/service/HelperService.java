@@ -76,11 +76,9 @@ import ca.uhn.fhir.rest.gclient.IQuery;
 @Import(AppProperties.class)
 @Service
 public class HelperService {
-	@Autowired
-		AppProperties appProperties;
 		@Autowired
-		HttpServletRequest request;
-
+		AppProperties appProperties;
+		
 		Keycloak keycloak;
 
 		FhirContext ctx;
