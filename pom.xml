@@ -19,7 +19,7 @@
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
     <groupId>org.smartregister</groupId>
-    <version>5.8.0-SNAPSHOT</version>
+    <version>5.8.1-SNAPSHOT</version>
 
     <properties>
         <java.version>8</java.version>
@@ -156,7 +156,7 @@
         <dependency>
             <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
             <artifactId>practitioner</artifactId>
-            <version>0.0.4-SNAPSHOT</version>
+            <version>0.0.5-SNAPSHOT</version>
         </dependency>
 
         <dependency>
