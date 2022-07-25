@@ -11,7 +11,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
@@ -22,6 +25,7 @@ public class AppProperties {
   private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
   private boolean advanced_lucene_indexing = false;
+  private boolean enable_index_of_type = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
   private Boolean allow_external_references = false;
@@ -70,9 +74,6 @@ public class AppProperties {
   private boolean store_resource_in_lucene_index_enabled = false;
   private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
 
-  private Integer search_coord_core_pool_size = 20;
-  private Integer search_coord_max_pool_size = 100;
-  private Integer search_coord_queue_capacity = 200;
   private Boolean use_apache_address_strategy = false;
   private Boolean use_apache_address_strategy_https = false;
 
@@ -495,24 +496,6 @@ public class AppProperties {
 	this.normalized_quantity_search_level = normalized_quantity_search_level;
   }
 
-  public Integer getSearch_coord_core_pool_size() { return search_coord_core_pool_size; }
-
-  public void setSearch_coord_core_pool_size(Integer search_coord_core_pool_size) {
-    this.search_coord_core_pool_size = search_coord_core_pool_size;
-  }
-
-  public Integer getSearch_coord_max_pool_size() { return search_coord_max_pool_size; }
-
-  public void setSearch_coord_max_pool_size(Integer search_coord_max_pool_size) {
-    this.search_coord_max_pool_size = search_coord_max_pool_size;
-  }
-
-  public Integer getSearch_coord_queue_capacity() { return search_coord_queue_capacity; }
-
-  public void setSearch_coord_queue_capacity(Integer search_coord_queue_capacity) {
-  	 this.search_coord_queue_capacity = search_coord_queue_capacity;
-  }
-
 	public boolean getInstall_transitive_ig_dependencies() {
 		return install_transitive_ig_dependencies;
 	}
@@ -833,5 +816,13 @@ public class AppProperties {
       private Boolean startTlsRequired = false;
       private Boolean quitWait = false;
     }
+  }
+
+  public boolean getEnable_index_of_type() {
+    return enable_index_of_type;
+  }
+
+  public void setEnable_index_of_type(boolean enable_index_of_type) {
+    this.enable_index_of_type = enable_index_of_type;
   }
 }

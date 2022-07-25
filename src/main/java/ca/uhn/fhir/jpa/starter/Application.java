@@ -1,7 +1,9 @@
 package ca.uhn.fhir.jpa.starter;
 
-import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
+import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
+import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
+import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
@@ -27,8 +29,17 @@ import org.springframework.web.servlet.DispatcherServlet;
 @ServletComponentScan(basePackageClasses = {
   JpaRestfulServer.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
-@Import({SubscriptionSubmitterConfig.class, SubscriptionProcessorConfig.class, SubscriptionChannelConfig.class, WebsocketDispatcherConfig.class, MdmConfig.class, OpenSRPExtensionConfiguration.class})
+@Import({
+	SubscriptionSubmitterConfig.class,
+	SubscriptionProcessorConfig.class,
+	SubscriptionChannelConfig.class,
+	WebsocketDispatcherConfig.class,
+	MdmConfig.class,
+	JpaBatch2Config.class,
+	Batch2JobsConfig.class
+})
 @EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class})
+
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
