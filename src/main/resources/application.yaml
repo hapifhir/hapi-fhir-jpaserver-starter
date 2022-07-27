@@ -9,6 +9,7 @@ spring:
   main:
     allow-circular-references: true
     #allow-bean-definition-overriding: true
+  batch.job.enabled: false
   flyway:
     enabled: false
     check-location: false
@@ -39,16 +40,18 @@ spring:
   #      hibernate.cache.use_second_level_cache: false
   #      hibernate.cache.use_structured_entries: false
   #      hibernate.cache.use_minimal_puts: false
-  ###    These settings will enable fulltext search with lucene
+  ###    These settings will enable fulltext search with lucene or elastic
       hibernate.search.enabled: false
-  #      hibernate.search.backend.type: lucene
-  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
-  #      hibernate.search.backend.directory.type: local-filesystem
-  #      hibernate.search.backend.directory.root: target/lucenefiles
-  #      hibernate.search.backend.lucene_version: lucene_current
-  batch:
-    job:
-      enabled: false
+  ### lucene parameters
+#      hibernate.search.backend.type: lucene
+#      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
+#      hibernate.search.backend.directory.type: local-filesystem
+#      hibernate.search.backend.directory.root: target/lucenefiles
+#      hibernate.search.backend.lucene_version: lucene_current
+  ### elastic parameters ===> see also elasticsearch section below <===
+#      hibernate.search.backend.type: elasticsearch
+#      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
+
 hapi:
   fhir:
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
