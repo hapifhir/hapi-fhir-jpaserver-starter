@@ -348,7 +348,7 @@ public class HelperService {
 						Immunization immunization = (Immunization) resource;
 						immunization.getPatient().setReference("Patient/"+actualPatientId);
 						fhirClient.update()
-						   .resource(resource)
+						   .resource(immunization)
 						   .execute();
 						continue;
 					}
