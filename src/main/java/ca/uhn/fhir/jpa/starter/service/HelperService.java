@@ -319,8 +319,7 @@ public class HelperService {
 				return null;
 			}
 		}
-		
-		/*
+
 		@Scheduled(fixedDelay = FIXED_DELAY, initialDelay = INITIAL_DELAY )
 		public void mapResourcesToPatient() {
 			//Searching for patient created with OCL-ID
@@ -373,7 +372,6 @@ public class HelperService {
 				fhirClient.update().resource(tempPatient).execute();
 			}
 		}
-		*/
 
 		private String getActualPatientId(String oclId) {
 			Bundle patientBundle = new Bundle();
