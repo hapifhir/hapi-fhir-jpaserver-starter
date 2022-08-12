@@ -23,6 +23,7 @@ import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.Immunization;
 import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Patient;
@@ -319,6 +320,7 @@ public class HelperService {
 			}
 		}
 		
+		/*
 		@Scheduled(fixedDelay = FIXED_DELAY, initialDelay = INITIAL_DELAY )
 		public void mapResourcesToPatient() {
 			//Searching for patient created with OCL-ID
@@ -343,6 +345,14 @@ public class HelperService {
 					if(resource.fhirType().equals("Patient")) {
 						continue;
 					}
+					if(resource.fhirType().equals("Immunization")) {
+						Immunization immunization = (Immunization) resource;
+						immunization.getPatient().setReference("Patient/"+actualPatientId);
+						fhirClient.update()
+						   .resource(resource)
+						   .execute();
+						continue;
+					}
 					try {
 						Method getSubject = resource.getClass().getMethod("getSubject");
 						Reference subject = (Reference)getSubject.invoke(resource);
@@ -351,7 +361,7 @@ public class HelperService {
 								   .resource(resource)
 								   .execute();
 					} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-						System.out.println(e.getMessage());
+						logger.error(e.getMessage());
 					}
 				}
 
@@ -363,6 +373,7 @@ public class HelperService {
 				fhirClient.update().resource(tempPatient).execute();
 			}
 		}
+		*/
 
 		private String getActualPatientId(String oclId) {
 			Bundle patientBundle = new Bundle();
