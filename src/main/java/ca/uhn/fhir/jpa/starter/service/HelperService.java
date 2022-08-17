@@ -151,7 +151,8 @@ public class HelperService {
 					iteration++;
 					continue;
 				}
-				String[] csvData = singleLine.split(","); //state,lga,ward,facilityUID,facilityCode,facilityName,facilityLevel,countryCode,phoneNumber
+				String[] csvData = singleLine.split(",");
+				//State, LGA, Ward, FacilityUID, FacilityCode, CountryCode, PhoneNumber, FacilityName, FacilityLevel, Ownership
 				if (Validation.validateClinicAndStateCsvLine(csvData)) {
 					if(!states.contains(csvData[0])) {
 						Location state = FhirResourceTemplateHelper.state(csvData[0]);
@@ -217,7 +218,8 @@ public class HelperService {
 					iteration++;
 					continue;
 				}
-				String hcwData[] = singleLine.split(","); //firstName,lastName,email,phoneNumber,countryCode,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier
+				String hcwData[] = singleLine.split(",");
+				//firstName,lastName,email,phoneNumber,countryCode,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier
 				if(Validation.validationHcwCsvLine(hcwData))
 				{
 					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[4]+hcwData[3]))) {

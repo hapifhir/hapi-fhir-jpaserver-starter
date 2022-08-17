@@ -21,28 +21,29 @@ import ca.uhn.fhir.jpa.starter.service.HelperService;
 @RestController
 @RequestMapping("/iprd")
 public class UserAndGroupManagementController {
-	
+
 	@Autowired
 	HelperService helperService;
-	
-	@RequestMapping(method = RequestMethod.POST,value = {"/organizationBulkImport"})
+
+	@RequestMapping(method = RequestMethod.POST, value = "/organizationBulkImport")
 	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadClinicsAndStates(@RequestParam("file") MultipartFile file) throws IOException {
 		return helperService.createGroups(file);
 	}
-	
-	
-	@RequestMapping(method = RequestMethod.POST,value = {"/hcwBulkImport"})
-	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadHcw(@RequestParam("file") MultipartFile file) throws Exception{
+
+	@RequestMapping(method = RequestMethod.POST, value = "/hcwBulkImport")
+	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadHcw(@RequestParam("file") MultipartFile file)
+			throws Exception {
 		return helperService.createUsers(file);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/user/{userId}/groups")
 	public List<GroupRepresentation> getGroupsByUser(@PathVariable String userId) {
 		return helperService.getGroupsByUser(userId);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/generateDailyReport")
-	public ResponseEntity<InputStreamResource> generateDailyReport(@RequestParam("date") String date, @RequestParam("organizationId") String organizationId, @RequestBody List<List<String>> fhirExpressions) {
+	public ResponseEntity<InputStreamResource> generateDailyReport(@RequestParam("date") String date,
+			@RequestParam("organizationId") String organizationId, @RequestBody List<List<String>> fhirExpressions) {
 		return helperService.generateDailyReport(date, organizationId, fhirExpressions);
 	}
 }
