@@ -147,7 +147,7 @@ public class HelperService {
 			String stateGroupId="", lgaGroupId="", wardGroupId="", facilityGroupId="";
 			
 			while((singleLine = bufferedReader.readLine())!=null){
-				if(iteration == 0 && singleLine.contains("state")) { //skip header of CSV file
+				if(iteration == 0) { //skip header of CSV file
 					iteration++;
 					continue;
 				}
@@ -214,7 +214,7 @@ public class HelperService {
 			String practitionerId = "";
 
 			while((singleLine = bufferedReader.readLine()) != null) {
-				if(iteration == 0 && singleLine.contains("firstName")) {
+				if(iteration == 0) { //Skip header of CSV
 					iteration++;
 					continue;
 				}
