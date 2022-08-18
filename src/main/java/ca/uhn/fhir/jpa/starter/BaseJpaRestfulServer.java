@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.batch2.jobs.imprt.BulkDataImportProvider;
 import ca.uhn.fhir.batch2.jobs.reindex.ReindexProvider;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
@@ -77,6 +78,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
   Optional<GraphQLProvider> graphQLProvider;
   @Autowired
   BulkDataExportProvider bulkDataExportProvider;
+  @Autowired
+  BulkDataImportProvider bulkDataImportProvider;
   @Autowired
   PartitionManagementProvider partitionManagementProvider;
 
@@ -362,6 +365,11 @@ public class BaseJpaRestfulServer extends RestfulServer {
     // Bulk Export
     if (appProperties.getBulk_export_enabled()) {
       registerProvider(bulkDataExportProvider);
+    }
+
+    //Bulk Import
+    if (appProperties.getBulk_import_enabled()) {
+      registerProvider(bulkDataImportProvider);
     }
 
     // valueSet Operations i.e $expand
