@@ -365,13 +365,6 @@ public class HelperService {
 						logger.error(e.getMessage());
 					}
 				}
-
-				for(Identifier identifier: tempPatient.getIdentifier()){
-					if(identifier.getSystem().equals("http://iprdgroup.com/identifiers/patientWithOcl")){
-						identifier.setValue("patient_with_ocl_delete");
-					}
-				}
-				fhirClient.update().resource(tempPatient).execute();
 			}
 		}
 
