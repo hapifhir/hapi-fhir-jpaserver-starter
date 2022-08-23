@@ -42,7 +42,7 @@ spring:
   ###    These settings will enable fulltext search with lucene
       hibernate.search.enabled: false
   #      hibernate.search.backend.type: lucene
-  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
+  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
   #      hibernate.search.backend.directory.type: local-filesystem
   #      hibernate.search.backend.directory.root: target/lucenefiles
   #      hibernate.search.backend.lucene_version: lucene_current

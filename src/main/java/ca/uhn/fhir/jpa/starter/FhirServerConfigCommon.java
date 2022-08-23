@@ -122,7 +122,7 @@ public class FhirServerConfigCommon {
     }
 
     retVal.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
-	 retVal.setAdvancedLuceneIndexing(appProperties.getAdvanced_lucene_indexing());
+	 retVal.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
 	 retVal.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
 
     return retVal;
