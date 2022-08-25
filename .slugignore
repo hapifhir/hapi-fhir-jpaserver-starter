@@ -1,0 +1,7 @@
+# Files to reomve from Heroku Slug
+*.psd
+*.pdf
+/test
+/spec
+/charts
+/src/test
