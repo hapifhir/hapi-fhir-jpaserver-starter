@@ -7,11 +7,11 @@ sources:
   - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
 dependencies:
   - name: postgresql
-    version: 11.6.2
+    version: 11.8.1
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
-appVersion: v6.0.1
-version: 0.9.0
+appVersion: v6.x
+version: 0.10.0
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/changes: |
@@ -19,27 +19,21 @@ annotations:
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
       description: |
-        BREAKING CHANGE: updated HAPI FHIR starter image to v6.0.1.
-        See <https://github.com/hapifhir/hapi-fhir/releases/tag/v6.0.0> for all application changes.
+        updated included PostgreSQL-subchart to v11.8.1.
+        Fixes `coalesce.go:220: warning: cannot overwrite table with non table for fhirserver.postgresql.primary.topologySpreadConstraints (map[])` warning
     - kind: changed
       description: |
-        updated included PostgreSQL-subchart to v11.6.2
-    - kind: fixed
-      description: |
-        use a fixed image for the wait-for-database container (docker.io/bitnami/postgresql:14.3.0-debian-10-r20)
-        instead of relying on the PostgreSQL sub-chart values
+        set `securityContext.seccompProfile.type=RuntimeDefault` for included PostgreSQL as well as all `initContainer` and Helm
+        test pods to comply with the "restricted" Pod Security Standard: <https://kubernetes.io/docs/concepts/security/pod-security-standards/>
     - kind: changed
       description: |
-        expose actuator/metrics endpoint on a separate port (8081)
+        use curl as the image for running Helm test pods
+    - kind: changed
+      description: |
+        renamed `metrics` port to `http-metrics` for istio compliant naming
     - kind: added
       description: |
-        support for monitoring metrics using ServiceMonitor CRDs
+        Helm test job to test metrics endpoint
     - kind: changed
       description: |
-        switched liveness and readiness probes to Spring Boot actuator endpoints
-    - kind: changed
-      description: |
-        BREAKING CHANGE: removed included `NetworkPolicy`, which is subject to more thorough rework
-    - kind: added
-      description: |
-        allow configuring `topologySpreadConstraints` for the deployment
+        use full digest instead of just a tag for the server image reference
