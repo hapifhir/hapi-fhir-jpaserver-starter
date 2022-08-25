@@ -7,6 +7,49 @@ entries:
         # added, changed, deprecated, removed, fixed, and security.
         - kind: changed
           description: |
+            updated included PostgreSQL-subchart to v11.8.1.
+            Fixes `coalesce.go:220: warning: cannot overwrite table with non table for fhirserver.postgresql.primary.topologySpreadConstraints (map[])` warning
+        - kind: changed
+          description: |
+            set `securityContext.seccompProfile.type=RuntimeDefault` for included PostgreSQL as well as all `initContainer` and Helm
+            test pods to comply with the "restricted" Pod Security Standard: <https://kubernetes.io/docs/concepts/security/pod-security-standards/>
+        - kind: changed
+          description: |
+            use curl as the image for running Helm test pods
+        - kind: changed
+          description: |
+            renamed `metrics` port to `http-metrics` for istio compliant naming
+        - kind: added
+          description: |
+            Helm test job to test metrics endpoint
+        - kind: changed
+          description: |
+            use full digest instead of just a tag for the server image reference
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: v6.x
+    created: "2022-08-25T19:18:41.428966063Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.8.1
+    description: A Helm chart for deploying the HAPI FHIR JPA server starter on Kubernetes.
+    digest: 8fba43b793a284d6af032345fee468d13b3e54bc4284b3071919720b32b5cd58
+    home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    name: hapi-fhir-jpaserver
+    sources:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    type: application
+    urls:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.10.0/hapi-fhir-jpaserver-0.10.0.tgz
+    version: 0.10.0
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
+          description: |
             BREAKING CHANGE: updated HAPI FHIR starter image to v6.0.1.
             See <https://github.com/hapifhir/hapi-fhir/releases/tag/v6.0.0> for all application changes.
         - kind: changed
@@ -140,4 +183,4 @@ entries:
     urls:
     - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.6.0/hapi-fhir-jpaserver-0.6.0.tgz
     version: 0.6.0
-generated: "2022-06-04T12:24:56.26151047Z"
+generated: "2022-08-25T19:18:41.428981464Z"
