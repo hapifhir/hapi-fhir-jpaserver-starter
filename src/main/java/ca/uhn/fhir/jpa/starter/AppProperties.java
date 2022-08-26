@@ -10,7 +10,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
@@ -569,6 +572,7 @@ public class AppProperties {
 	public void setSearch_coord_queue_capacity(Integer search_coord_queue_capacity) {
 		this.search_coord_queue_capacity = search_coord_queue_capacity;
 	}
+
 
 	public boolean getInstall_transitive_ig_dependencies() {
 		return install_transitive_ig_dependencies;

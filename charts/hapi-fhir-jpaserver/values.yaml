@@ -6,11 +6,8 @@ image:
   registry: docker.io
   # -- the path inside the repository
   repository: hapiproject/hapi
-  # -- defaults to `Chart.appVersion`
-  tag: ""
-  # -- the flavor or variant of the image to use.
-  # appended to the image tag by `-`.
-  flavor: "distroless"
+  # -- the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image.
+  tag: "v6.0.1@sha256:63c98d8be3dadc77b47dca3115490f22bf99512f363f779f7bbcb42f569aeac3"
   # -- image pullPolicy to use
   pullPolicy: IfNotPresent
 
@@ -42,6 +39,10 @@ securityContext:
   readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 65532
+  runAsGroup: 65532
+  privileged: false
+  seccompProfile:
+    type: RuntimeDefault
 
 # service to expose the server
 service:
@@ -91,27 +92,44 @@ tolerations: []
 # -- pod affinity
 affinity: {}
 
+# -- pod topology spread configuration
+# see: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#api
+topologySpreadConstraints:
+  []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: ScheduleAnyway
+  #   labelSelector:
+  #     matchLabels:
+  #       app.kubernetes.io/instance: hapi-fhir-jpaserver
+  #       app.kubernetes.io/name: hapi-fhir-jpaserver
+
 postgresql:
   # -- enable an included PostgreSQL DB.
   # see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
   # if set to `false`, the values under `externalDatabase` are used
   enabled: true
-  # -- name of the database to create
-  # see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run>
-  postgresqlDatabase: "fhir"
-  # -- Name of existing secret to use for PostgreSQL passwords.
-  # The secret has to contain the keys `postgresql-password`
-  # which is the password for `postgresqlUsername` when it is
-  # different of `postgres`, `postgresql-postgres-password` which
-  # will override `postgresqlPassword`, `postgresql-replication-password`
-  # which will override `replication.password` and `postgresql-ldap-password`
-  # which will be sed to authenticate on LDAP. The value is evaluated as a template.
-  existingSecret: ""
-  containerSecurityContext:
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-        - ALL
+  auth:
+    # -- name for a custom database to create
+    database: "fhir"
+    # -- Name of existing secret to use for PostgreSQL credentials
+    # `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret
+    # The secret must contain the keys `postgres-password` (which is the password for "postgres" admin user),
+    # `password` (which is the password for the custom user to create when `auth.username` is set),
+    # and `replication-password` (which is the password for replication user).
+    # The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and
+    # picked from this secret in this case.
+    # The value is evaluated as a template.
+    existingSecret: ""
+  primary:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
 
 readinessProbe:
   failureThreshold: 5
@@ -124,6 +142,13 @@ startupProbe:
   failureThreshold: 10
   initialDelaySeconds: 60
   periodSeconds: 30
+  successThreshold: 1
+  timeoutSeconds: 30
+
+livenessProbe:
+  failureThreshold: 5
+  initialDelaySeconds: 30
+  periodSeconds: 20
   successThreshold: 1
   timeoutSeconds: 30
 
@@ -143,26 +168,6 @@ externalDatabase:
   # -- database name
   database: fhir
 
-networkPolicy:
-  # -- enable NetworkPolicy
-  enabled: false
-  # -- a Kubernetes LabelSelector to explicitly select namespaces from which ingress traffic could be allowed
-  explicitNamespacesSelector:
-    {}
-    # matchLabels:
-    #   team: one
-    #   test: foo
-
-  # -- Additional allowed NetworkPolicyPeer specs
-  # Evaluated as a template so you could do:
-  #
-  # Example:
-  # allowedFrom:
-  #   - podSelector:
-  #       matchLabels:
-  #         app.kubernetes.io/name: {{ $.Release.Name }}
-  allowedFrom: []
-
 # -- extra environment variables to set on the server container
 extraEnv:
   []
@@ -177,3 +182,29 @@ podDisruptionBudget:
   minAvailable: 1
   # -- maximum unavailable instances
   maxUnavailable: ""
+
+metrics:
+  serviceMonitor:
+    # -- if enabled, creates a ServiceMonitor instance for Prometheus Operator-based monitoring
+    enabled: false
+    # -- additional labels to apply to the ServiceMonitor object, e.g. `release: prometheus`
+    additionalLabels: {}
+    # namespace: monitoring
+    # interval: 30s
+    # scrapeTimeout: 10s
+  service:
+    port: 8081
+
+# @ignore
+restrictedContainerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  privileged: false
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  seccompProfile:
+    type: RuntimeDefault

@@ -1,0 +1,85 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-transaction",
+  "meta": {
+    "lastUpdated": "2014-08-18T01:43:30Z"
+  },
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Some narrative</div>"
+        },
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": "Iantorno",
+            "given": [
+              "Mark"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1983-06-23"
+      },
+      "request": {
+        "method": "POST",
+        "url": "Patient"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Some narrative</div>"
+        },
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": "Iantorno",
+            "given": [
+              "Alexander"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1993-08-16"
+      },
+      "request": {
+        "method": "POST",
+        "url": "Patient"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Some narrative</div>"
+        },
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": "Cash",
+            "given": [
+              "Johnny"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1932-02-26"
+      },
+      "request": {
+        "method": "POST",
+        "url": "Patient"
+      }
+    }
+  ]
+}

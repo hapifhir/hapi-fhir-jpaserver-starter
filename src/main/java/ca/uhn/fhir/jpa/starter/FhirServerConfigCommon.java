@@ -1,8 +1,8 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
+import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.binstore.DatabaseBlobBinaryStorageSvcImpl;
-import ca.uhn.fhir.jpa.binstore.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
@@ -14,8 +14,6 @@ import ca.uhn.fhir.rest.server.mail.IMailSvc;
 import ca.uhn.fhir.rest.server.mail.MailConfig;
 import ca.uhn.fhir.rest.server.mail.MailSvc;
 import com.google.common.base.Strings;
-import java.util.HashSet;
-import java.util.Optional;
 import org.hl7.fhir.dstu2.model.Subscription;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +22,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.util.HashSet;
+import java.util.Optional;
 
 /**
  * This is the primary configuration file for the example server
@@ -39,6 +40,7 @@ public class FhirServerConfigCommon {
     ourLog.info("Server configured to " + (appProperties.getAllow_contains_searches() ? "allow" : "deny") + " contains searches");
     ourLog.info("Server configured to " + (appProperties.getAllow_multiple_delete() ? "allow" : "deny") + " multiple deletes");
     ourLog.info("Server configured to " + (appProperties.getAllow_external_references() ? "allow" : "deny") + " external references");
+    ourLog.info("Server configured to " + (appProperties.getDao_scheduling_enabled() ? "enable" : "disable") + " DAO scheduling");
     ourLog.info("Server configured to " + (appProperties.getDelete_expunge_enabled() ? "enable" : "disable") + " delete expunges");
     ourLog.info("Server configured to " + (appProperties.getExpunge_enabled() ? "enable" : "disable") + " expunges");
     ourLog.info("Server configured to " + (appProperties.getAllow_override_default_search_params() ? "allow" : "deny") + " overriding default search params");
@@ -74,7 +76,7 @@ public class FhirServerConfigCommon {
   /**
    * Configure FHIR properties around the the JPA server via this bean
    */
-  @Bean()
+  @Bean
   public DaoConfig daoConfig(AppProperties appProperties) {
     DaoConfig retVal = new DaoConfig();
 
@@ -85,6 +87,7 @@ public class FhirServerConfigCommon {
     retVal.setAllowContainsSearches(appProperties.getAllow_contains_searches());
     retVal.setAllowMultipleDelete(appProperties.getAllow_multiple_delete());
     retVal.setAllowExternalReferences(appProperties.getAllow_external_references());
+    retVal.setSchedulingDisabled(!appProperties.getDao_scheduling_enabled());
     retVal.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
     retVal.setExpungeEnabled(appProperties.getExpunge_enabled());
     if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
@@ -119,7 +122,7 @@ public class FhirServerConfigCommon {
     }
 
     retVal.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
-	 retVal.setAdvancedLuceneIndexing(appProperties.getAdvanced_lucene_indexing());
+	 retVal.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
 	 retVal.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
 
     return retVal;
@@ -176,6 +179,7 @@ public class FhirServerConfigCommon {
     modelConfig.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 
     modelConfig.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
+    modelConfig.setIndexIdentifierOfType(appProperties.getEnable_index_of_type());
     return modelConfig;
   }
 
@@ -209,7 +213,7 @@ public class FhirServerConfigCommon {
     return binaryStorageSvc;
   }
 
-  @Bean()
+  @Bean
   public IEmailSender emailSender(AppProperties appProperties, Optional<SubscriptionDeliveryHandlerFactory> subscriptionDeliveryHandlerFactory) {
     if (appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null) {
 		 MailConfig mailConfig = new MailConfig();

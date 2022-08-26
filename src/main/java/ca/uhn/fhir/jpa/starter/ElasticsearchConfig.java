@@ -14,7 +14,7 @@ public class ElasticsearchConfig {
 	@Autowired
 	private ConfigurableEnvironment configurableEnvironment;
 
-	@Bean()
+	@Bean
 	public ElasticsearchSvcImpl elasticsearchSvc() {
 		if (EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment)) {
 			String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
