@@ -46,18 +46,18 @@ hapi:
       openapi_enabled: true
       fhir_version: R4
 ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
-      keycloak_server_address: https://malaria1.opencampaignlink.org:8443/auth
+      keycloak_server_address: http://localhost:8081
 ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
       keycloak_realm: master
-      keycloak_client_realm: fhir-hapi
+      keycloak_client_realm: master
       keycloak_client_Id: fhir-hapi-realm
       fhir_hapi_client_id: fhir-hapi-server
-      fhir_hapi_client_secret: d9ce06c8-9d26-48b6-a2ac-5f1069afc691
-      keycloak_username: managegroup
-      keycloak_password: iprd!Gr0upManager!
-      fhir_user: kashyap_jois
-      fhir_password: iprd@2022+
-      hapi_server_address: https://malaria1.opencampaignlink.org/fhir
+      fhir_hapi_client_secret: xyz
+      keycloak_username: nitin
+      keycloak_password: 12345
+      fhir_user: 
+      fhir_password: 
+      hapi_server_address: http://localhost:8085
       advanced_lucene_indexing: true
       fhirpath_interceptor_enabled: true
 ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
