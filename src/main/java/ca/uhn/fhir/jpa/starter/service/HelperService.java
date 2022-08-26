@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,13 +23,17 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 
 import org.apache.jena.ext.xerces.util.URI.MalformedURIException;
+import org.codehaus.jettison.json.JSONObject;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
 import org.hl7.fhir.r4.model.ContactPoint;
+import org.hl7.fhir.r4.model.DateTimeType;
+import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Immunization;
@@ -68,6 +74,7 @@ import com.iprd.report.FhirClientProvider;
 import com.iprd.report.ReportGeneratorFactory;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.dao.BaseHapiFhirDao;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.model.primitive.BooleanDt;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
@@ -78,9 +85,12 @@ import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
+import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Request.Builder;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 
 @Import(AppProperties.class)
@@ -106,6 +116,7 @@ public class HelperService {
 
 		private static final long AUTH_INITIAL_DELAY = 25 * 60000L;
 		private static final long AUTH_FIXED_DELAY = 50 * 60000L;
+		private static final long DELAY = 10 * 1000;
 
 		public void initializeKeycloak() {
 			ctx = FhirContext.forR4();
@@ -145,41 +156,90 @@ public class HelperService {
 			fhirClient.registerInterceptor(authInterceptor);
 		}
 
-		@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
+		@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
 		private void searchPatients() throws IOException {
+			String date = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDateTime.now());
 			 Extension smsSent = new Extension();
 			 smsSent.castToCoding(new Coding().setSystem("http://iprdgroup.com/sms-sent"));
 			 smsSent.castToCoding(new Coding().setCode("sms-sent"));
 			 smsSent.castToCoding(new Coding().setDisplay("SMS Sent"));
-			 smsSent.setValue(new DateTimeDt());
-			 smsSent.setValue(new BooleanDt());
-			 ctx = FhirContext.forDstu2();
-			 serverBase = "https://malaria1.opencampaignlink.org/fhir";
-			 fhirClient = ctx.newRestfulGenericClient(serverBase);
-			 Bundle patientCreated = fhirClient.search().forResource(Patient.class).returnBundle(Bundle.class).execute();
-			 OkHttpClient client = new OkHttpClient().newBuilder().build();
-			 okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
-			 Patient patient = (Patient) patientCreated.getEntry();
-			 String oclId = patient.getIdentifier().get(1).toString();
-			 String patientOclId = getOclIdFromString(oclId);
-			 String mobile = patient.getTelecom().get(1).toString();
-			 String patientName = patient.getName().toString();
-			 String date = DateTimeFormatter.ofPattern("dd/MMM/yyyy").format(LocalDateTime.now());
-			 String message = "Thanks for visiting! Here are the details of your visit: \n Name: "+patientName+" + \n Date: "+date+" +\n Your OCL Id is:"+patientOclId+"";
-			 RequestBody body = RequestBody.create(mediaType, "");
-			 Request request = new Request.Builder().url("http://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&"+message+"=Hi&sender=IPRD-HACEY&mobiles="+mobile+"").method("GET", body).build();
-			 okhttp3.Response response = client.newCall(request).execute();
-			 if(response.isSuccessful())
-			 {
-				 for(int i=0;i<patientCreated.getEntry().size();i++) {
-					 patientCreated.getEntry().get(i).addExtension(smsSent);
+			 smsSent.setValue(new DateTimeType(date));
+			 smsSent.setValue(new BooleanType(true));
+			 smsSent.setUrl("http://iprdgroup.com/sms");
+			 String serviceType = "Patient%20Check%20In";
+			 String queryPath = "Patient?";
+			 queryPath+="_has:Encounter:patient:service-type="+serviceType+"&";
+			 queryPath+="_has:Encounter:patient:date=eq"+date+"";
+			 Bundle tempPatientBundle = new Bundle();
+			 getBundleBySearchUrl(tempPatientBundle, queryPath);
+			 
+			 String encounterQueryPath = "Encounter?service-type="+serviceType+"&";
+			 encounterQueryPath += "_date=eq"+date+"&subject=Patient/";
+			 
+			 for(BundleEntryComponent entry: tempPatientBundle.getEntry()) {
+				 Patient tempPatient = (Patient)entry.getResource();
+				 String patientId = tempPatient.getIdElement().getIdPart();
+				 Bundle encBundle = getCheckInEncounter(encounterQueryPath + patientId);
+				 if(encBundle.getEntry().isEmpty()) {
+					 continue;
 				 }
-				 System.out.println("SMS Sent Successfully");
-			 }
-			 else
-			 {
-				 System.out.println("Failed to send the SMS");
-			 }
+				 Encounter tempEncounter = (Encounter) encBundle.getEntry().get(0).getResource();
+				 String patientOclId = getOclIdentifier(tempPatient.getIdentifier());
+				 String patientName = tempPatient.getName().get(0).getNameAsSingleString();
+				 String mobile = tempPatient.getTelecom().get(0).getValue();
+				 Extension encounterExtension = tempEncounter.getExtensionByUrl("http://iprdgroup.com/sms");
+				 if(encounterExtension == null)
+				 {
+					 if(mobile.startsWith("+234-")&&mobile.length()>6){				 
+						 mobile = mobile.substring(5);
+						 if(mobile.startsWith("0"))
+						 {
+							mobile = mobile.substring(1); 
+						 }	
+						 OkHttpClient client = new OkHttpClient().newBuilder().build();
+						 okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
+						 String message = "Thanks for visiting! Here are the details of your visit: \n Name: "+patientName+" + \n Date: "+date+" +\n Your OCL Id is:"+patientOclId+"";
+						 RequestBody body = RequestBody.create(mediaType, "");
+						 Request request = new Request.Builder().url("http://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&"+message+"=Hi&sender=IPRD-HACEY&mobiles="+mobile+"").get().build();
+						 okhttp3.Response response = client.newCall(request).execute();
+						 if(response.isSuccessful())
+						 {
+							 tempEncounter.addExtension(smsSent);
+							 fhirClient.update()
+							   .resource(tempEncounter)
+							   .execute();
+						 }
+					 }
+				 }
+			}		 
+		}
+		
+		private String getOclIdentifier(List<Identifier> identifiers) {
+			String oclId = null;
+			for(Identifier identifier : identifiers ) {
+				if(identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/ocl")) {
+					oclId = identifier.getValue();
+					break;
+				}
+			}
+			try {
+				oclId = getOclIdFromString(oclId);
+			} catch (MalformedURIException e) {
+				logger.debug(e.getMessage());
+			}
+			return oclId;
+		}
+		private Bundle getCheckInEncounter(String url) {
+			Bundle encounter = fhirClient.search()
+					   .byUrl(url)
+					   .returnBundle(Bundle.class)
+					   .execute();
+			return encounter;
+		}
+
+		private ReferenceClientParam Reference(String string) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 		private Map<String, String> getQueryMap(String query){
