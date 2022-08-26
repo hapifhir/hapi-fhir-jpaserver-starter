@@ -1,28 +1,42 @@
 package ca.uhn.fhir.jpa.starter.service;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
+
+import org.apache.jena.ext.xerces.util.URI.MalformedURIException;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
+import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
 import org.hl7.fhir.r4.model.ContactPoint;
+import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.Immunization;
 import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Organization;
+import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.PractitionerRole;
+import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.keycloak.OAuth2Constants;
@@ -30,14 +44,19 @@ import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.token.TokenManager;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,13 +64,23 @@ import org.springframework.web.multipart.MultipartFile;
 import com.iprd.fhir.utils.FhirResourceTemplateHelper;
 import com.iprd.fhir.utils.KeycloakTemplateHelper;
 import com.iprd.fhir.utils.Validation;
+import com.iprd.report.FhirClientProvider;
+import com.iprd.report.ReportGeneratorFactory;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.model.primitive.BooleanDt;
+import ca.uhn.fhir.model.primitive.DateTimeDt;
+//import ca.uhn.fhir.model.dstu2.resource.Parameters;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.impl.GenericClient;
+import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 
 @Import(AppProperties.class)
@@ -71,7 +100,13 @@ public class HelperService {
 		
 		private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
 		private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
-		
+
+		private static final long INITIAL_DELAY = 3000L;
+		private static final long FIXED_DELAY = 60000L;
+
+		private static final long AUTH_INITIAL_DELAY = 25 * 60000L;
+		private static final long AUTH_FIXED_DELAY = 50 * 60000L;
+
 		public void initializeKeycloak() {
 			ctx = FhirContext.forR4();
 			serverBase = appProperties.getHapi_Server_address();
@@ -87,10 +122,86 @@ public class HelperService {
 		    		.password(appProperties.getKeycloak_Password())
 		    		.resteasyClient(client)
 		    		.build();
+
+			registerClientAuthInterceptor();
+		}
+
+		@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
+		private void registerClientAuthInterceptor() {
+			Keycloak instance = Keycloak.
+				getInstance(
+					appProperties.getKeycloak_Server_address(),
+					appProperties.getKeycloak_Client_Realm(),
+					appProperties.getFhir_user(),
+					appProperties.getFhir_password(),
+					appProperties.getFhir_hapi_client_id(),
+					appProperties.getFhir_hapi_client_secret()
+				);
+			TokenManager tokenmanager = instance.tokenManager();
+			String accessToken = tokenmanager.getAccessTokenString();
+
+			BearerTokenAuthInterceptor authInterceptor = new BearerTokenAuthInterceptor(accessToken);
+			fhirClient = ctx.newRestfulGenericClient(serverBase);
+			fhirClient.registerInterceptor(authInterceptor);
+		}
+
+		@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
+		private void searchPatients() throws IOException {
+			 Extension smsSent = new Extension();
+			 smsSent.castToCoding(new Coding().setSystem("http://iprdgroup.com/sms-sent"));
+			 smsSent.castToCoding(new Coding().setCode("sms-sent"));
+			 smsSent.castToCoding(new Coding().setDisplay("SMS Sent"));
+			 smsSent.setValue(new DateTimeDt());
+			 smsSent.setValue(new BooleanDt());
+			 ctx = FhirContext.forDstu2();
+			 serverBase = "https://malaria1.opencampaignlink.org/fhir";
+			 fhirClient = ctx.newRestfulGenericClient(serverBase);
+			 Bundle patientCreated = fhirClient.search().forResource(Patient.class).returnBundle(Bundle.class).execute();
+			 OkHttpClient client = new OkHttpClient().newBuilder().build();
+			 okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
+			 Patient patient = (Patient) patientCreated.getEntry();
+			 String oclId = patient.getIdentifier().get(1).toString();
+			 String patientOclId = getOclIdFromString(oclId);
+			 String mobile = patient.getTelecom().get(1).toString();
+			 String patientName = patient.getName().toString();
+			 String date = DateTimeFormatter.ofPattern("dd/MMM/yyyy").format(LocalDateTime.now());
+			 String message = "Thanks for visiting! Here are the details of your visit: \n Name: "+patientName+" + \n Date: "+date+" +\n Your OCL Id is:"+patientOclId+"";
+			 RequestBody body = RequestBody.create(mediaType, "");
+			 Request request = new Request.Builder().url("http://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&"+message+"=Hi&sender=IPRD-HACEY&mobiles="+mobile+"").method("GET", body).build();
+			 okhttp3.Response response = client.newCall(request).execute();
+			 if(response.isSuccessful())
+			 {
+				 for(int i=0;i<patientCreated.getEntry().size();i++) {
+					 patientCreated.getEntry().get(i).addExtension(smsSent);
+				 }
+				 System.out.println("SMS Sent Successfully");
+			 }
+			 else
+			 {
+				 System.out.println("Failed to send the SMS");
+			 }
+		}
+
+		private Map<String, String> getQueryMap(String query){
+			String[] params = query.split("&");
+	        Map<String, String> map = new HashMap<String, String>();
+
+	        for (String param : params) {
+	            String name = param.split("=")[0];
+	            String value = param.split("=")[1];
+	            map.put(name, value);
+	        }
+	        return map;
+		}
+
+		private String getOclIdFromString(String query) throws MalformedURIException {
+			Map<String, String> queryMap = getQueryMap(query);
+			if(queryMap.isEmpty() || !queryMap.containsKey("s")) return null;
+			return queryMap.get("s");
 		}
 		
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
-			
+
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			List<String> states = new ArrayList<>();
 			List<String> lgas = new ArrayList<>();
@@ -104,11 +215,12 @@ public class HelperService {
 			String stateGroupId="", lgaGroupId="", wardGroupId="", facilityGroupId="";
 			
 			while((singleLine = bufferedReader.readLine())!=null){
-				if(iteration == 0 && singleLine.contains("state")) { //skip header of CSV file
+				if(iteration == 0) { //skip header of CSV file
 					iteration++;
 					continue;
 				}
-				String[] csvData = singleLine.split(","); //state,lga,ward,facilityUID,facilityCode,facilityName,facilityLevel,countryCode,phoneNumber
+				String[] csvData = singleLine.split(",");
+				//State, LGA, Ward, FacilityUID, FacilityCode, CountryCode, PhoneNumber, FacilityName, FacilityLevel, Ownership
 				if (Validation.validateClinicAndStateCsvLine(csvData)) {
 					if(!states.contains(csvData[0])) {
 						Location state = FhirResourceTemplateHelper.state(csvData[0]);
@@ -118,7 +230,7 @@ public class HelperService {
 						stateGroupId = createGroup(stateGroupRep);
 						updateResource(stateGroupId, stateId, Location.class);
 					}
-					
+
 					if(!lgas.contains(csvData[1])) {
 						Location lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0]);
 						lgaId = createResource(lga, Location.class, Location.NAME.matches().value(lga.getName()));
@@ -127,7 +239,7 @@ public class HelperService {
 						lgaGroupId = createGroup(lgaGroupRep);
 						updateResource(lgaGroupId, lgaId, Location.class);
 					}
-					
+
 					if(!wards.contains(csvData[2])) {
 						Location ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2]);
 						wardId = createResource(ward, Location.class, Location.NAME.matches().value(ward.getName()));
@@ -136,7 +248,7 @@ public class HelperService {
 						wardGroupId = createGroup(wardGroupRep);
 						updateResource(wardGroupId, wardId, Location.class);
 					}
-					
+
 					if(!clinics.contains(csvData[7])) {
 						Organization clinic = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2]);
 						facilityId = createResource(clinic, Organization.class, Organization.NAME.matches().value(clinic.getName()));
@@ -158,11 +270,11 @@ public class HelperService {
 			map.put("uploadCSV", "Successful");
 			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
 		}
-		
+
 		public ResponseEntity<LinkedHashMap<String, Object>> createUsers(@RequestParam("file") MultipartFile file) throws Exception{
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			List<String> practitioners = new ArrayList<>();
-			
+
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
@@ -170,11 +282,12 @@ public class HelperService {
 			String practitionerId = "";
 
 			while((singleLine = bufferedReader.readLine()) != null) {
-				if(iteration == 0 && singleLine.contains("firstName")) {
+				if(iteration == 0) { //Skip header of CSV
 					iteration++;
 					continue;
 				}
-				String hcwData[] = singleLine.split(","); //firstName,lastName,email,phoneNumber,countryCode,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier
+				String hcwData[] = singleLine.split(",");
+				//firstName,lastName,email,phoneNumber,countryCode,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier
 				if(Validation.validationHcwCsvLine(hcwData))
 				{
 					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[4]+hcwData[3]))) {
@@ -202,13 +315,22 @@ public class HelperService {
 			map.put("uploadCsv", "Successful");
 			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
 		}
-		
+
 		public List<GroupRepresentation> getGroupsByUser(String userId) {
 			RealmResource realmResource = keycloak.realm("fhir-hapi");
 			List<GroupRepresentation> groups =  realmResource.users().get(userId).groups(0,appProperties.getKeycloak_max_group_count(),false);
 			return groups;
 		}
-		
+
+		public ResponseEntity<InputStreamResource> generateDailyReport(String date, String organizationId, List<List<String>> fhirExpressions) {
+			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClient);
+			byte[] pdfContent = ReportGeneratorFactory.INSTANCE.reportGenerator().generateDailyReport(fhirClientProvider, date, organizationId, fhirExpressions);
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(pdfContent);
+			HttpHeaders headers=  new HttpHeaders();
+			headers.add("Content-Disposition", "inline; filename=daily_report.pdf");
+			return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(new InputStreamResource(byteArrayInputStream));
+		}
+
 		private String createGroup(GroupRepresentation groupRep) {
 			RealmResource realmResource = keycloak.realm("fhir-hapi");
 			List<GroupRepresentation> groups = realmResource.groups().groups(groupRep.getName(), 0, Integer.MAX_VALUE);
@@ -218,7 +340,7 @@ public class HelperService {
 			Response response = realmResource.groups().add(groupRep);
 			return CreatedResponseUtil.getCreatedId(response);
 		}
-		
+
 		private String createResource(Resource resource, Class<? extends IBaseResource> theClass,ICriterion<?>...theCriterion ) {
 			IQuery<IBaseBundle> query = fhirClient.search().forResource(theClass).where(theCriterion[0]);
 			for(int i=1;i<theCriterion.length;i++)
@@ -230,7 +352,7 @@ public class HelperService {
 			}
 			return bundle.getEntry().get(0).getFullUrl().split("/")[5];
 		}
-		
+
 		private <R extends IBaseResource> void updateResource(String keycloakId, String resourceId, Class<R> resourceClass) {
 			 R resource = fhirClient.read().resource(resourceClass).withId(resourceId).execute();
 			 try {
@@ -245,19 +367,14 @@ public class HelperService {
 				 obj.setValue(keycloakId);
 				 MethodOutcome outcome = fhirClient.update().resource(resource).execute();
 			 }
-			 catch (SecurityException e) {
+			 catch (SecurityException | NoSuchMethodException | InvocationTargetException e) {
 				 e.printStackTrace();
-			 }
-			  catch (NoSuchMethodException e) { 
+			 } catch (IllegalAccessException e) {
 				  e.printStackTrace();
-			  } catch (IllegalAccessException e) {
-				  e.printStackTrace();
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		private String createUser(UserRepresentation userRep) {
 			RealmResource realmResource = keycloak.realm(appProperties.getKeycloak_Client_Realm());
 			List<UserRepresentation> users = realmResource.users().search(userRep.getUsername(), 0, Integer.MAX_VALUE);
@@ -271,5 +388,98 @@ public class HelperService {
 				logger.error("Cannot create user "+userRep.getUsername()+" with groups "+userRep.getGroups());
 				return null;
 			}
+		}
+
+		@Scheduled(fixedDelay = FIXED_DELAY, initialDelay = INITIAL_DELAY )
+		public void mapResourcesToPatient() {
+			//Searching for patient created with OCL-ID
+			Bundle tempPatientBundle = new Bundle();
+			getBundleBySearchUrl(tempPatientBundle, serverBase+"/Patient?identifier=patient_with_ocl");
+
+			for(BundleEntryComponent entry: tempPatientBundle.getEntry()) {
+				Patient tempPatient = (Patient)entry.getResource();
+				String tempPatientId = tempPatient.getIdElement().getIdPart();
+				String oclId = tempPatient.getIdentifier().get(0).getValue();
+
+				//Searching for actual patient with OCL-ID
+				String actualPatientId = getActualPatientId(oclId);
+				if(actualPatientId == null){
+					continue;
+				}
+				Bundle resourceBundle = new Bundle();
+				getBundleBySearchUrl(resourceBundle, serverBase+"/Patient/"+tempPatientId+"/$everything");
+
+				for(BundleEntryComponent resourceEntry: resourceBundle.getEntry()) {
+					Resource resource = resourceEntry.getResource();
+					if(resource.fhirType().equals("Patient")) {
+						continue;
+					}
+					if(resource.fhirType().equals("Immunization")) {
+						Immunization immunization = (Immunization) resource;
+						immunization.getPatient().setReference("Patient/"+actualPatientId);
+						fhirClient.update()
+						   .resource(immunization)
+						   .execute();
+						continue;
+					}
+					try {
+						Method getSubject = resource.getClass().getMethod("getSubject");
+						Reference subject = (Reference)getSubject.invoke(resource);
+						subject.setReference("Patient/"+actualPatientId);
+						fhirClient.update()
+								   .resource(resource)
+								   .execute();
+					} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						logger.error(e.getMessage());
+					}
+				}
+			}
+		}
+
+		private String getActualPatientId(String oclId) {
+			Bundle patientBundle = new Bundle();
+			getBundleBySearchUrl(patientBundle, serverBase+"/Patient?identifierPartial:contains="+oclId);
+			for(BundleEntryComponent entry: patientBundle.getEntry()) {
+				Patient patient = (Patient)entry.getResource();
+				if(isActualPatient(patient, oclId))
+					return patient.getIdElement().getIdPart();
+			}
+			return null;
+		}
+
+		private boolean isActualPatient(Patient patient, String oclId) {
+			for(Identifier identifier:patient.getIdentifier()) {
+				if (identifier.getValue().equals("patient_with_ocl")) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		private void getBundleBySearchUrl(Bundle bundle, String url) {
+			Bundle searchBundle = fhirClient.search()
+					   .byUrl(url)
+					   .returnBundle(Bundle.class)
+					   .execute();
+			bundle.getEntry().addAll(searchBundle.getEntry());
+			if(searchBundle.hasLink() && bundleContainsNext(searchBundle)) {
+				getBundleBySearchUrl(bundle, getNextUrl(searchBundle.getLink()));
+			}
+		}
+
+		private boolean bundleContainsNext(Bundle bundle) {
+			for(BundleLinkComponent link: bundle.getLink()) {
+				if(link.getRelation().equals("next"))
+					return true;
+			}
+			return false;
+		}
+		private String getNextUrl(List<BundleLinkComponent> bundleLinks) {
+			for(BundleLinkComponent link: bundleLinks) {
+				if(link.getRelation().equals("next")) {
+					return link.getUrl();
+				}
+			}
+			return null;
 		}
 }
