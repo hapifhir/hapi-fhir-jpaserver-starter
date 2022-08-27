@@ -55,6 +55,10 @@ public class AppProperties {
 	private String keycloak_client_Id = "fhir-hapi-realm";
 	private String keycloak_username = "managegroup";
 	private String keycloak_password = "12345";
+	private String fhir_user = "nitin_sabale";
+	private String fhir_password = "xyz";
+	private String fhir_hapi_client_id = "fhir-hapi-server";
+	private String fhir_hapi_client_secret = "xyz";
 	private String hapi_server_address = null;
 	private EncodingEnum default_encoding = EncodingEnum.JSON;
 	private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
@@ -224,6 +228,38 @@ public class AppProperties {
 
 	public void setKeycloak_Password(String keycloak_password) {
 		this.keycloak_password = keycloak_password;
+	}
+
+	public String getFhir_user() {
+		return fhir_user;
+	}
+
+	public void setFhir_user(String fhir_user) {
+		this.fhir_user = fhir_user;
+	}
+
+	public String getFhir_password() {
+		return fhir_password;
+	}
+
+	public void setFhir_password(String fhir_password) {
+		this.fhir_password = fhir_password;
+	}
+
+	public String getFhir_hapi_client_id() {
+		return fhir_hapi_client_id;
+	}
+
+	public void setFhir_hapi_client_id(String fhir_hapi_client_id) {
+		this.fhir_hapi_client_id = fhir_hapi_client_id;
+	}
+
+	public String getFhir_hapi_client_secret() {
+		return fhir_hapi_client_secret;
+	}
+
+	public void setFhir_hapi_client_secret(String fhir_hapi_client_secret) {
+		this.fhir_hapi_client_secret = fhir_hapi_client_secret;
 	}
 
 	public String getHapi_Server_address() {

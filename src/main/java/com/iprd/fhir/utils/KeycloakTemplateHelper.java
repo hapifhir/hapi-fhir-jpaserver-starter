@@ -65,7 +65,7 @@ public class KeycloakTemplateHelper {
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		user.setEmail(email);
-		user.singleAttribute("phone_number", countryCode+phoneNumber);
+		user.singleAttribute("phoneNumber", countryCode+phoneNumber);
 		user.singleAttribute("type","HCW");
 		user.singleAttribute("practitioner_id", practitionerId);
 		user.singleAttribute("practitioner_role_id", practitionerRoleId);

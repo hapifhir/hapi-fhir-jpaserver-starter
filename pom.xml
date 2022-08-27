@@ -40,28 +40,37 @@
             </snapshots>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>maven-central</id>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <url>https://repo.maven.apache.org</url>
+        </repository>
+        <repository>
+            <id>local-repo</id>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <url>file://root/.m2/repository</url>
+        </repository>
     </repositories>
-
-
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-api</artifactId>
             <version>${jetty_version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-core -->
+        <dependency>
+            <groupId>com.iprd.report</groupId>
+            <artifactId>report-generator-jvm</artifactId>
+            <version>1.0.1</version>
+        </dependency>
 		<dependency>
   		  <groupId>org.keycloak</groupId>
   		  <artifactId>keycloak-core</artifactId>
   		  <version>18.0.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-client -->
-		<!-- 	
-		<dependency>
-		    <groupId>org.jboss.resteasy</groupId>
-		    <artifactId>resteasy-client</artifactId>
-		    <version>6.0.1.Final</version>
-		</dependency>-->
 		<!-- https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
 		<dependency>
     		<groupId>org.keycloak</groupId>
@@ -81,13 +90,11 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
-
-     <!--    <dependency>
-            <groupId>org.smartregister</groupId>
-            <artifactId>hapi-fhir-keycloak</artifactId>
-            <version>0.0.7-SNAPSHOT</version>
-        </dependency>-->
-
+<!--        <dependency>-->
+<!--            <groupId>org.smartregister</groupId>-->
+<!--            <artifactId>hapi-fhir-keycloak</artifactId>-->
+<!--            <version>0.0.7-SNAPSHOT</version>-->
+<!--        </dependency>-->
         <!-- Needed for Email subscriptions -->
         <dependency>
             <groupId>org.simplejavamail</groupId>
@@ -145,7 +152,7 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-server-openapi</artifactId>
-            <version>${project.version}</version>
+									<version>${project.version}</version>
         </dependency>
         <!-- This dependency is used for the "FHIR Tester" web app overlay -->
         <dependency>
@@ -370,7 +377,43 @@
         </dependency>
 
 
+        <dependency>
+        	<groupId>org.keycloak</groupId>
+        	<artifactId>keycloak-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+        <dependency>
+        	<groupId>org.springframework.security</groupId>
+        	<artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
+        	<groupId>org.springframework.security</groupId>
+        	<artifactId>spring-security-web</artifactId>
+        </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring_boot_version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.keycloak.bom</groupId>
+                <artifactId>keycloak-adapter-bom</artifactId>
+                <version>13.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <build>
 
         <pluginManagement>

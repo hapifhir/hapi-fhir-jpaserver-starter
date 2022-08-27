@@ -1,0 +1,77 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../report-generator/1.0.1/report-generator-1.0.1.module",
+    "group": "com.iprd.report",
+    "module": "report-generator",
+    "version": "1.0.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "nativeApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "mingw_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.5.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "report-generator.klib",
+          "url": "report-generator-native-1.0.1.klib",
+          "size": 16686,
+          "sha512": "ec6cbe983cef13c35501a0e925c530fd5d93ef3e78f50ddfb1810ed218cb2a5eafcf0cc22c286d381592fa872f1e8402c0f05060b9031494508cdfe2fa62ab61",
+          "sha256": "444c1d634175d88a24a2e24fa1227f0dbbb2565f60cefcb99d4ca9be7c3d9a20",
+          "sha1": "ad7c97daa4b02c207c4499801235c3151ff86152",
+          "md5": "5826a661e7039070ee8b2820cf6429c9"
+        }
+      ]
+    },
+    {
+      "name": "nativeMetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "mingw_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.5.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "report-generator-native-1.0.1-metadata.jar",
+          "url": "report-generator-native-1.0.1-metadata.jar",
+          "size": 261,
+          "sha512": "31f309f083488d9ec579b36ee8ab5381b399f11ffc3f61d230f5821ec588d9ef743cb645878849c77cde60e978a24dadf1041146d31ce7f7f1628c802f0ab83c",
+          "sha256": "4886873c4bcb405b5d46a4196477c00dda99eb8fe217f10dd5bc3faf8221d74c",
+          "sha1": "9d9f01cc0e05c9bde7530346933a45e877b060b0",
+          "md5": "77d9ff4897a96e709c5f9708b5b37bc0"
+        }
+      ]
+    }
+  ]
+}

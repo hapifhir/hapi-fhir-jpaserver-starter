@@ -5,10 +5,8 @@ import java.util.UUID;
 import java.util.ArrayList;
 import java.lang.String;
 
-import org.hl7.fhir.dstu2.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.codesystems.ContactentityType;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Location.LocationMode;
 import org.hl7.fhir.r4.model.Location.LocationStatus;
