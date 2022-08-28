@@ -6,6 +6,33 @@ entries:
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
         - kind: changed
+          description: updated image version to v6.1.0
+        - kind: changed
+          description: added section on configuring the chart for distributed tracing to the README.md
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: v6.x
+    created: "2022-08-28T18:11:32.464733214Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.8.1
+    description: A Helm chart for deploying the HAPI FHIR JPA server starter on Kubernetes.
+    digest: 6f436b2c182fef661fca3d6c99e368922e59cec5a8b906468dfc57236da229bb
+    home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    name: hapi-fhir-jpaserver
+    sources:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    type: application
+    urls:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.10.1/hapi-fhir-jpaserver-0.10.1.tgz
+    version: 0.10.1
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
           description: |
             updated included PostgreSQL-subchart to v11.8.1.
             Fixes `coalesce.go:220: warning: cannot overwrite table with non table for fhirserver.postgresql.primary.topologySpreadConstraints (map[])` warning
@@ -183,4 +210,4 @@ entries:
     urls:
     - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.6.0/hapi-fhir-jpaserver-0.6.0.tgz
     version: 0.6.0
-generated: "2022-08-25T19:18:41.428981464Z"
+generated: "2022-08-28T18:11:32.465005729Z"
