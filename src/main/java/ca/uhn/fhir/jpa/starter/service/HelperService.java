@@ -7,7 +7,9 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,7 +112,7 @@ public class HelperService {
 		
 		private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
 		private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
-
+		private static String SMS_EXTENTION_URL = "http://iprdgroup.com/Extentions/sms-sent";
 		private static final long INITIAL_DELAY = 3000L;
 		private static final long FIXED_DELAY = 60000L;
 
@@ -158,36 +160,37 @@ public class HelperService {
 
 		@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
 		private void searchPatients() throws IOException {
-			String date = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDateTime.now());
-			 Extension smsSent = new Extension();
-			 smsSent.castToCoding(new Coding().setSystem("http://iprdgroup.com/sms-sent"));
-			 smsSent.castToCoding(new Coding().setCode("sms-sent"));
-			 smsSent.castToCoding(new Coding().setDisplay("SMS Sent"));
-			 smsSent.setValue(new DateTimeType(date));
-			 smsSent.setValue(new BooleanType(true));
-			 smsSent.setUrl("http://iprdgroup.com/sms");
+			String dateTime = DateTimeFormatter.ISO_INSTANT
+					.withZone(ZoneId.of("UTC"))
+					.format(Instant.now());
+			String date= DateTimeFormatter.ISO_INSTANT.format(Instant.now()).split("T")[0];
+
+			Extension smsSent = new Extension();
+			 smsSent.addExtension(
+					 SMS_EXTENTION_URL, 
+					 new DateTimeType(dateTime));
 			 String serviceType = "Patient%20Check%20In";
 			 String queryPath = "Patient?";
 			 queryPath+="_has:Encounter:patient:service-type="+serviceType+"&";
 			 queryPath+="_has:Encounter:patient:date=eq"+date+"";
-			 Bundle tempPatientBundle = new Bundle();
-			 getBundleBySearchUrl(tempPatientBundle, queryPath);
+			 Bundle patientBundle = new Bundle();
+			 getBundleBySearchUrl(patientBundle, queryPath);
 			 
 			 String encounterQueryPath = "Encounter?service-type="+serviceType+"&";
 			 encounterQueryPath += "_date=eq"+date+"&subject=Patient/";
 			 
-			 for(BundleEntryComponent entry: tempPatientBundle.getEntry()) {
-				 Patient tempPatient = (Patient)entry.getResource();
-				 String patientId = tempPatient.getIdElement().getIdPart();
+			 for(BundleEntryComponent entry: patientBundle.getEntry()) {
+				 Patient patient = (Patient)entry.getResource();
+				 String patientId = patient.getIdElement().getIdPart();
 				 Bundle encBundle = getCheckInEncounter(encounterQueryPath + patientId);
 				 if(encBundle.getEntry().isEmpty()) {
 					 continue;
 				 }
-				 Encounter tempEncounter = (Encounter) encBundle.getEntry().get(0).getResource();
-				 String patientOclId = getOclIdentifier(tempPatient.getIdentifier());
-				 String patientName = tempPatient.getName().get(0).getNameAsSingleString();
-				 String mobile = tempPatient.getTelecom().get(0).getValue();
-				 Extension encounterExtension = tempEncounter.getExtensionByUrl("http://iprdgroup.com/sms");
+				 Encounter encounter = (Encounter) encBundle.getEntry().get(0).getResource();
+				 String patientOclId = getOclIdentifier(patient.getIdentifier());
+				 String patientName = patient.getName().get(0).getNameAsSingleString();
+				 String mobile = patient.getTelecom().get(0).getValue();
+				 Extension encounterExtension = encounter.getExtensionByUrl(SMS_EXTENTION_URL);
 				 if(encounterExtension == null)
 				 {
 					 if(mobile.startsWith("+234-")&&mobile.length()>6){				 
@@ -199,14 +202,13 @@ public class HelperService {
 						 OkHttpClient client = new OkHttpClient().newBuilder().build();
 						 okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
 						 String message = "Thanks for visiting! Here are the details of your visit: \n Name: "+patientName+" + \n Date: "+date+" +\n Your OCL Id is:"+patientOclId+"";
-						 RequestBody body = RequestBody.create(mediaType, "");
-						 Request request = new Request.Builder().url("http://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&"+message+"=Hi&sender=IPRD-HACEY&mobiles="+mobile+"").get().build();
+						 Request request = new Request.Builder().url("https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&"+message+"=Hi&sender=IPRD-HACEY&mobiles="+mobile+"").get().build();
 						 okhttp3.Response response = client.newCall(request).execute();
 						 if(response.isSuccessful())
 						 {
-							 tempEncounter.addExtension(smsSent);
+							 encounter.addExtension(smsSent.getExtensionByUrl(SMS_EXTENTION_URL));
 							 fhirClient.update()
-							   .resource(tempEncounter)
+							   .resource(encounter)
 							   .execute();
 						 }
 					 }
