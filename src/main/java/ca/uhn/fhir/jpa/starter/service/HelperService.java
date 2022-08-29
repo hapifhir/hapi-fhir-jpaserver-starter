@@ -202,8 +202,9 @@ public class HelperService {
 						 OkHttpClient client = new OkHttpClient().newBuilder().build();
 						 okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
 						 String message = "Thanks for visiting! Here are the details of your visit: \n Name: "+patientName+" + \n Date: "+date+" +\n Your OCL Id is:"+patientOclId+"";
-						 Request request = new Request.Builder().url("https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&"+message+"=Hi&sender=IPRD-HACEY&mobiles="+mobile+"").get().build();
-						 okhttp3.Response response = client.newCall(request).execute();
+						 String finalurl="https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&message="+message+"&sender=IPRD-HACEY&mobiles="+mobile;
+						 Request request = new Request.Builder().url(finalurl).build();
+						 okhttp3.Response response = client.newCall(request).execute();					 
 						 if(response.isSuccessful())
 						 {
 							 encounter.addExtension(smsSent.getExtensionByUrl(SMS_EXTENTION_URL));
