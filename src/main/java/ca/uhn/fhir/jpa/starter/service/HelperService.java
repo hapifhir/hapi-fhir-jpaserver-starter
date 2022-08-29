@@ -185,7 +185,7 @@ public class HelperService {
 				 Bundle encBundle = getCheckInEncounter(encounterQueryPath + patientId);
 				 if(encBundle.getEntry().isEmpty()) {
 					 continue;
-				 }
+				 }	
 				 Encounter encounter = (Encounter) encBundle.getEntry().get(0).getResource();
 				 String patientOclId = getOclIdentifier(patient.getIdentifier());
 				 String patientName = patient.getName().get(0).getNameAsSingleString();
@@ -258,8 +258,8 @@ public class HelperService {
 
 		private String getOclIdFromString(String query) throws MalformedURIException {
 			Map<String, String> queryMap = getQueryMap(query);
-			if(queryMap.isEmpty() || !queryMap.containsKey("s")) return null;
-			return queryMap.get("s");
+			if(queryMap.isEmpty() || queryMap.containsKey("s")) return null;
+			return queryMap.get("https://opencampaignlink.org/ocl/?s");
 		}
 		
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
