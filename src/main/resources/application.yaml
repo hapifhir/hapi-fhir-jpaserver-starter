@@ -34,12 +34,12 @@ spring:
 
       hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
   #      hibernate.hbm2ddl.auto: update
-      #      hibernate.jdbc.batch_size: 20
-      #      hibernate.cache.use_query_cache: false
-      #      hibernate.cache.use_second_level_cache: false
-      #      hibernate.cache.use_structured_entries: false
-      #      hibernate.cache.use_minimal_puts: false
-      ###    These settings will enable fulltext search with lucene
+  #      hibernate.jdbc.batch_size: 20
+  #      hibernate.cache.use_query_cache: false
+  #      hibernate.cache.use_second_level_cache: false
+  #      hibernate.cache.use_structured_entries: false
+  #      hibernate.cache.use_minimal_puts: false
+  ###    These settings will enable fulltext search with lucene
       hibernate.search.enabled: false
   #      hibernate.search.backend.type: lucene
   #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
