@@ -15,8 +15,10 @@
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
         <version>6.1.0-IPS</version>
+        <relativePath>../..</relativePath> 
     </parent>
 
+    <groupId>crossroads.labs</groupId>
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
     <packaging>war</packaging>
 
@@ -33,6 +35,7 @@
     <repositories>
     	<repository>
             <id>ips-github-repo</id>
+            <name>Github Repo</name>
             <url>https://raw.githubusercontent/CrossroadsLabs/hapi-fhir-ips/</url>
             <releases>
                     <enabled>true</enabled>
