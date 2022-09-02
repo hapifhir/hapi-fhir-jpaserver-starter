@@ -14,9 +14,9 @@ spring:
     check-location: false
     baselineOnMigrate: true
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/hapi'
-    username: hapi
-    password: hapi
+    url: 'jdbc:postgresql://ec2-54-204-241-136.compute-1.amazonaws.com:5432/dd8o3lp0cv7l74'
+    username: casbtjgvzmtump
+    password: 6a4ebcc055ca0f4a39360d6bd43905d9717b90373246cc290fe94a6863f5ab8c
     driverClassName: org.postgresql.Driver
     platform: postgres
     max-active: 15
