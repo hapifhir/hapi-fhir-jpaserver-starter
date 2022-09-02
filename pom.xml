@@ -14,7 +14,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>6.1.0</version>
+        <version>6.1.0-IPS</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -36,12 +36,12 @@
             <url>https://raw.githubusercontent/CrossroadsLabs/hapi-fhir-ips/</url>
             <releases>
                     <enabled>true</enabled>
-                    <updatePolicy>daily</updatePolicy>
-                </releases>
+                    <updatePolicy>always</updatePolicy>
+            </releases>
             <snapshots>
                     <enabled>true</enabled>
                     <updatePolicy>always</updatePolicy>
-                </snapshots>
+            </snapshots>
         </repository>
         <repository>
             <id>oss-snapshots</id>
@@ -51,7 +51,6 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
     </repositories>
-
 
     <dependencies>
         <dependency>
