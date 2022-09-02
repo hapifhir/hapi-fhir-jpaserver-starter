@@ -1,1 +1,1 @@
-web: java -jar target/ROOT.war
+web: java -jar target/ROOT.war --server.port=$PORT
