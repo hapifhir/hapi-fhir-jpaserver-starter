@@ -1,0 +1,1 @@
+mvn -B -DskipTests -P boot clean dependency:list spring-boot:install
