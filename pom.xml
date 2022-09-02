@@ -31,6 +31,18 @@
     <name>HAPI FHIR JPA Server - Starter Project</name>
 
     <repositories>
+    	<repository>
+            <id>ips-github-repo</id>
+            <url>https://raw.githubusercontent/CrossroadsLabs/hapi-fhir-ips/</url>
+            <releases>
+                    <enabled>true</enabled>
+                    <updatePolicy>daily</updatePolicy>
+                </releases>
+            <snapshots>
+                    <enabled>true</enabled>
+                    <updatePolicy>always</updatePolicy>
+                </snapshots>
+        </repository>
         <repository>
             <id>oss-snapshots</id>
             <snapshots>
