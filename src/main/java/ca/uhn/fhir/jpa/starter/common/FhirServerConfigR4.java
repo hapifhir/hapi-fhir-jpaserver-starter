@@ -1,7 +1,6 @@
 package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.jpa.config.r4.JpaR4Config;
-import ca.uhn.fhir.jpa.starter.ElasticsearchConfig;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ca.uhn.fhir.jpa.starter.cql.StarterCqlR4Config;
 import org.springframework.context.annotation.Conditional;

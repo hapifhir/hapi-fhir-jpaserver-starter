@@ -9,6 +9,7 @@ import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
 import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
+import ca.uhn.fhir.rest.server.RestfulServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -24,8 +25,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-@ServletComponentScan(basePackageClasses = {
-  JpaRestfulServer.class})
+@ServletComponentScan(basePackageClasses = {RestfulServer.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
 @Import({
 	SubscriptionSubmitterConfig.class,
@@ -57,11 +57,10 @@ public class Application extends SpringBootServletInitializer {
 
   @Bean
   @Conditional(OnEitherVersion.class)
-  public ServletRegistrationBean hapiServletRegistration() {
+  public ServletRegistrationBean hapiServletRegistration(RestfulServer restfulServer) {
     ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
-    JpaRestfulServer jpaRestfulServer = new JpaRestfulServer();
-    beanFactory.autowireBean(jpaRestfulServer);
-    servletRegistrationBean.setServlet(jpaRestfulServer);
+    beanFactory.autowireBean(restfulServer);
+    servletRegistrationBean.setServlet(restfulServer);
     servletRegistrationBean.addUrlMappings("/fhir/*");
     servletRegistrationBean.setLoadOnStartup(1);
 
