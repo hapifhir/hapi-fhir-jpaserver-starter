@@ -1,9 +1,9 @@
-package ca.uhn.fhir.jpa.starter;
+package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.jpa.config.dstu3.JpaDstu3Config;
+import ca.uhn.fhir.jpa.starter.ElasticsearchConfig;
 import ca.uhn.fhir.jpa.starter.annotations.OnDSTU3Condition;
 import ca.uhn.fhir.jpa.starter.cql.StarterCqlDstu3Config;
-import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

@@ -16,6 +16,7 @@ import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.bulk.export.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
+import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
@@ -97,8 +98,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
   AppProperties appProperties;
   @Autowired
   ApplicationContext myApplicationContext;
+
   @Autowired(required = false)
-  IRepositoryValidationInterceptorFactory factory;
+  RepositoryValidatingInterceptor repositoryValidatingInterceptor;
   // These are set only if the features are enabled
   @Autowired
   Optional<CqlProviderLoader> cqlProviderLoader;
@@ -409,8 +411,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
       }
     }
 
-    if(factory != null) {
-		 interceptorService.registerInterceptor(factory.buildUsingStoredStructureDefinitions());
+    if(repositoryValidatingInterceptor != null) {
+		 interceptorService.registerInterceptor(repositoryValidatingInterceptor);
 	 }
 
 
