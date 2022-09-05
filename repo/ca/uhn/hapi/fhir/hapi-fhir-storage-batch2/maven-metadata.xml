@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>ca.uhn.hapi.fhir</groupId>
+  <artifactId>hapi-fhir-storage-batch2</artifactId>
+  <versioning>
+    <release>6.1.0-IPS</release>
+    <versions>
+      <version>6.1.0-IPS</version>
+    </versions>
+    <lastUpdated>20220905215624</lastUpdated>
+  </versioning>
+</metadata>

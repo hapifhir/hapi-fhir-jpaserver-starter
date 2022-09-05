@@ -5,13 +5,6 @@
   <profiles>
     <profile>
       <id>hapi-ips</id>
-      <repositories>
-        <repository>
-            <id>ips-github-repo</id>
-            <name>Github Repo</name>
-            <url>https://raw.githbusercontent.com/CrossroadsLabs/hapi-fhir-ips/main/</url>
-        </repository>
-      </repositories>
     </profile>
   </profiles>
 
