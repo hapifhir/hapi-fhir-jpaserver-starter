@@ -126,7 +126,7 @@
     	<repository>
             <id>ips-github-repo</id>
             <name>Github Repo</name>
-            <url>https://raw.githubusercontent/CrossroadsLabs/hapi-fhir-ips/</url>
+            <url>https://raw.githbusercontent.com/CrossroadsLabs/hapi-fhir-ips/main/</url>
             <releases>
                     <enabled>true</enabled>
                     <updatePolicy>always</updatePolicy>
