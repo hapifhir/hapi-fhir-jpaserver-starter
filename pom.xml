@@ -123,19 +123,11 @@
     <name>HAPI FHIR JPA Server - Starter Project</name>
 
     <repositories>
-    	<repository>
-            <id>ips-github-repo</id>
-            <name>Github Repo</name>
-            <url>https://raw.githbusercontent.com/CrossroadsLabs/hapi-fhir-ips/main/</url>
-            <releases>
-                    <enabled>true</enabled>
-                    <updatePolicy>always</updatePolicy>
-            </releases>
-            <snapshots>
-                    <enabled>true</enabled>
-                    <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
+		<repository>
+	      <id>project.local</id>
+        	<name>project</name>
+        	<url>file:${project.basedir}/repo</url>
+		</repository>
         <repository>
             <id>oss-snapshots</id>
             <snapshots>
