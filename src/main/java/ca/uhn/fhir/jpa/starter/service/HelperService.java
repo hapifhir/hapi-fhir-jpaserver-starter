@@ -118,7 +118,7 @@ public class HelperService {
 
 		private static final long AUTH_INITIAL_DELAY = 25 * 60000L;
 		private static final long AUTH_FIXED_DELAY = 50 * 60000L;
-		private static final long DELAY = 10 * 1000;
+		private static final long DELAY = 120 * 1000;
 
 		public void initializeKeycloak() {
 			ctx = FhirContext.forR4();
@@ -169,14 +169,14 @@ public class HelperService {
 			 smsSent.addExtension(
 					 SMS_EXTENTION_URL, 
 					 new DateTimeType(dateTime));
-			 String serviceType = "Patient%20Check%20In";
+			 String encounterClass = "IMP";
 			 String queryPath = "Patient?";
-			 queryPath+="_has:Encounter:patient:service-type="+serviceType+"&";
+			 queryPath+="_has:Encounter:patient:class="+encounterClass+"&";
 			 queryPath+="_has:Encounter:patient:date=eq"+date+"";
 			 Bundle patientBundle = new Bundle();
 			 getBundleBySearchUrl(patientBundle, queryPath);
 			 
-			 String encounterQueryPath = "Encounter?service-type="+serviceType+"&";
+			 String encounterQueryPath = "Encounter?class="+encounterClass+"&";
 			 encounterQueryPath += "_date=eq"+date+"&subject=Patient/";
 			 
 			 for(BundleEntryComponent entry: patientBundle.getEntry()) {
