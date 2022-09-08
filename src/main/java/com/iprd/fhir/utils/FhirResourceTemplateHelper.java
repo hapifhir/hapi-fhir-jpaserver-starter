@@ -129,13 +129,17 @@ public class FhirResourceTemplateHelper {
 		return clinic;
 	}
 	
-	public static Practitioner hcw(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification) throws Exception {
+	public static Practitioner hcw(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification, String stateIdentifierString) throws Exception {
 		Practitioner practitioner = new Practitioner();
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier clinicIdentifier = new Identifier();
 		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
 		clinicIdentifier.setId(facilityUID);
+		Identifier stateIdentifier = new Identifier();
+		stateIdentifier.setSystem(IDENTIFIER_SYSTEM+"/stateIdentifier");
+		stateIdentifier.setId(stateIdentifierString);
 		identifiers.add(clinicIdentifier);
+		identifiers.add(stateIdentifier);
 		practitioner.setIdentifier(identifiers);
 		List<HumanName> hcwName = new ArrayList<>();
 		HumanName humanName = new HumanName();
@@ -163,7 +167,7 @@ public class FhirResourceTemplateHelper {
 		qualificationComponent.setCode(codeableConcept);
 		practitionerQualificationComponents.add(qualificationComponent);
 		practitioner.setQualification(practitionerQualificationComponents);
-		Date dateOfBirth = new SimpleDateFormat("MM/dd/yyyy").parse(dob);
+		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
 		practitioner.setBirthDate(dateOfBirth);
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;
