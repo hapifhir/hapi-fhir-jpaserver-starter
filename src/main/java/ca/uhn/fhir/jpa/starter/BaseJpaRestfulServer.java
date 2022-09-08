@@ -1,5 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ca.uhn.fhir.batch2.jobs.imprt.BulkDataImportProvider;
+import ca.uhn.fhir.batch2.jobs.reindex.ReindexProvider;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
@@ -9,20 +11,16 @@ import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
-import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
+import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
+import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.bulk.export.provider.BulkDataExportProvider;
+import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
-import ca.uhn.fhir.jpa.provider.GraphQLProvider;
-import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
-import ca.uhn.fhir.jpa.provider.JpaCapabilityStatementProvider;
-import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
-import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
-import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
+import ca.uhn.fhir.jpa.provider.*;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
-import ca.uhn.fhir.jpa.provider.ValueSetOperationProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
@@ -30,17 +28,8 @@ import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative.INarrativeGenerator;
 import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
 import ca.uhn.fhir.rest.openapi.OpenApiInterceptor;
-import ca.uhn.fhir.rest.server.ApacheProxyAddressStrategy;
-import ca.uhn.fhir.rest.server.ETagSupportEnum;
-import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
-import ca.uhn.fhir.rest.server.IncomingRequestAddressStrategy;
-import ca.uhn.fhir.rest.server.RestfulServer;
-import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.FhirPathFilterInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
+import ca.uhn.fhir.rest.server.*;
+import ca.uhn.fhir.rest.server.interceptor.*;
 import ca.uhn.fhir.rest.server.interceptor.partition.RequestTenantPartitionInterceptor;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
@@ -49,18 +38,15 @@ import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.servlet.ServletException;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
+
+import javax.servlet.ServletException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BaseJpaRestfulServer extends RestfulServer {
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(BaseJpaRestfulServer.class);
@@ -79,6 +65,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   IJpaSystemProvider jpaSystemProvider;
   @Autowired
+  ValueSetOperationProvider myValueSetOperationProvider;
+  @Autowired
   IInterceptorBroadcaster interceptorBroadcaster;
   @Autowired
   DatabaseBackedPagingProvider databaseBackedPagingProvider;
@@ -91,11 +79,18 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   BulkDataExportProvider bulkDataExportProvider;
   @Autowired
+  BulkDataImportProvider bulkDataImportProvider;
+  @Autowired
   PartitionManagementProvider partitionManagementProvider;
+
   @Autowired
   ValueSetOperationProvider valueSetOperationProvider;
   @Autowired
+  ReindexProvider reindexProvider;
+  @Autowired
   BinaryStorageInterceptor binaryStorageInterceptor;
+  @Autowired
+  Optional<BinaryAccessProvider> binaryAccessProvider;
   @Autowired
   IPackageInstallerSvc packageInstallerSvc;
   @Autowired
@@ -128,8 +123,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
     // Customize supported resource types
     List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
 
-    if (!supportedResourceTypes.isEmpty() && !supportedResourceTypes.contains("SearchParameter")) {
-      supportedResourceTypes.add("SearchParameter");
+    if (!supportedResourceTypes.isEmpty()) {
+      if (!supportedResourceTypes.contains("SearchParameter")) {
+        supportedResourceTypes.add("SearchParameter");
+      }
       daoRegistry.setSupportedResourceTypes(supportedResourceTypes);
     }
 
@@ -144,7 +141,6 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     registerProviders(resourceProviderFactory.createProviders());
     registerProvider(jpaSystemProvider);
-
     /*
      * The conformance provider exports the supported resources, search parameters, etc for
      * this server. The JPA version adds resourceProviders counts to the exported statement, so it
@@ -327,7 +323,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     // Binary Storage
-    if (appProperties.getBinary_storage_enabled()) {
+    if (appProperties.getBinary_storage_enabled() && binaryAccessProvider.isPresent()) {
+      registerProvider(binaryAccessProvider.get());
       getInterceptorService().registerInterceptor(binaryStorageInterceptor);
     }
 
@@ -370,8 +367,16 @@ public class BaseJpaRestfulServer extends RestfulServer {
       registerProvider(bulkDataExportProvider);
     }
 
+    //Bulk Import
+    if (appProperties.getBulk_import_enabled()) {
+      registerProvider(bulkDataImportProvider);
+    }
+
     // valueSet Operations i.e $expand
-    registerProvider(valueSetOperationProvider);
+	 registerProvider(myValueSetOperationProvider);
+
+	 //reindex Provider $reindex
+	 registerProvider(reindexProvider);
 
     // Partitioning
     if (appProperties.getPartitioning() != null) {
@@ -384,6 +389,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
       daoConfig.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
     }
+    //Parallel Batch GET execution settings
+  	 daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
+  	 daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());
 
     if (appProperties.getImplementationGuides() != null) {
       Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
@@ -410,8 +418,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
       daoConfig.setLastNEnabled(true);
     }
 
+	 daoConfig.setStoreResourceInHSearchIndex(appProperties.getStore_resource_in_lucene_index_enabled());
     daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
-
-		daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
+	 daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
   }
 }

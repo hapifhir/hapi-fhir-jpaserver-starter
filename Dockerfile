@@ -1,33 +1,49 @@
-FROM maven:3.8.2-jdk-11-slim as build-hapi
+FROM maven:3.8-openjdk-17-slim as build-hapi
 WORKDIR /tmp/hapi-fhir-jpaserver-starter
+
+ARG OPENTELEMETRY_JAVA_AGENT_VERSION=1.17.0
+RUN curl -LSsO https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${OPENTELEMETRY_JAVA_AGENT_VERSION}/opentelemetry-javaagent.jar
 
 COPY pom.xml .
 COPY server.xml .
 RUN mvn -ntp dependency:go-offline
 
 COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
-RUN mvn clean install -DskipTests
+RUN mvn clean install -DskipTests -Djdk.lang.Process.launchMechanism=vfork
 
 FROM build-hapi AS build-distroless
 RUN mvn package spring-boot:repackage -Pboot
-RUN mkdir /app && \
-    cp /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /app/main.war
+RUN mkdir /app && cp /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /app/main.war
 
-FROM gcr.io/distroless/java-debian11:11 AS release-distroless
-COPY --chown=nonroot:nonroot --from=build-distroless /app /app
+
+########### bitnami tomcat version is suitable for debugging and comes with a shell
+########### it can be built using eg. `docker build --target tomcat .`
+FROM bitnami/tomcat:9.0 as tomcat
+
+RUN rm -rf /opt/bitnami/tomcat/webapps/ROOT && \
+    mkdir -p /opt/bitnami/hapi/data/hapi/lucenefiles && \
+    chmod 775 /opt/bitnami/hapi/data/hapi/lucenefiles
+
+USER root
+RUN mkdir -p /target && chown -R 1001:1001 target
+USER 1001
+
+COPY --chown=1001:1001 catalina.properties /opt/bitnami/tomcat/conf/catalina.properties
+COPY --chown=1001:1001 server.xml /opt/bitnami/tomcat/conf/server.xml
+COPY --from=build-hapi --chown=1001:1001 /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /opt/bitnami/tomcat/webapps/ROOT.war
+COPY --from=build-hapi --chown=1001:1001 /tmp/hapi-fhir-jpaserver-starter/opentelemetry-javaagent.jar /app
+
+ENV ALLOW_EMPTY_PASSWORD=yes
+
+########### distroless brings focus on security and runs on plain spring boot - this is the default image
+FROM gcr.io/distroless/java17-debian11:nonroot as default
 # 65532 is the nonroot user's uid
 # used here instead of the name to allow Kubernetes to easily detect that the container
 # is running as a non-root (uid != 0) user.
 USER 65532:65532
 WORKDIR /app
+
+COPY --chown=nonroot:nonroot --from=build-distroless /app /app
+COPY --chown=nonroot:nonroot --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/opentelemetry-javaagent.jar /app
+
 CMD ["/app/main.war"]
-
-FROM tomcat:9.0.53-jdk11-openjdk-slim-bullseye
-
-RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles
-COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/*.war /usr/local/tomcat/webapps/
-
-COPY catalina.properties /usr/local/tomcat/conf/catalina.properties
-COPY server.xml /usr/local/tomcat/conf/server.xml
-
-CMD ["catalina.sh", "run"]

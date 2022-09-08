@@ -1,4 +1,18 @@
+#Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
+#see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
 spring:
+  main:
+    allow-circular-references: true
+    #allow-bean-definition-overriding: true
+  flyway:
+    enabled: false
+    check-location: false
+    baselineOnMigrate: true
   datasource:
     url: 'jdbc:h2:file:./target/database/h2'
     #url: jdbc:h2:mem:test_mem
@@ -10,14 +24,15 @@ spring:
     # database connection pool size
     hikari:
       maximum-pool-size: 10
-  flyway:
-    check-location: false
-    baselineOnMigrate: true
   jpa:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
-  #      hibernate.dialect: org.hibernate.dialect.h2dialect
+      #Hibernate dialect is automatically detected except Postgres and H2.
+      #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
   #      hibernate.cache.use_query_cache: false
@@ -25,9 +40,9 @@ spring:
   #      hibernate.cache.use_structured_entries: false
   #      hibernate.cache.use_minimal_puts: false
   ###    These settings will enable fulltext search with lucene
-  #      hibernate.search.enabled: true
+      hibernate.search.enabled: false
   #      hibernate.search.backend.type: lucene
-  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
+  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
   #      hibernate.search.backend.directory.type: local-filesystem
   #      hibernate.search.backend.directory.root: target/lucenefiles
   #      hibernate.search.backend.lucene_version: lucene_current
@@ -77,18 +92,28 @@ hapi:
     #    delete_expunge_enabled: true
     #    enable_repository_validating_interceptor: false
     #    enable_index_missing_fields: false
+    #    enable_index_of_type: true
     #    enable_index_contained_resource: false
+    ###  !!Extended Lucene/Elasticsearch Indexing is still a experimental feature, expect some features (e.g. _total=accurate) to not work as expected!!
+    ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
+    advanced_lucene_indexing: false
+    bulk_export_enabled: false
+    bulk_import_enabled: false
     #    enforce_referential_integrity_on_delete: false
+    # This is an experimental feature, and does not fully support _total and other FHIR features.
+#    enforce_referential_integrity_on_delete: false
     #    enforce_referential_integrity_on_write: false
     #    etag_support_enabled: true
     #    expunge_enabled: true
-    #    daoconfig_client_id_strategy: null
     #    client_id_strategy: ALPHANUMERIC
     #    fhirpath_interceptor_enabled: false
     #    filter_search_enabled: true
     #    graphql_enabled: true
     #    narrative_enabled: true
     #    mdm_enabled: true
+#    local_base_urls:
+#      - https://hapi.fhir.org/baseR4
+    mdm_enabled: false
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
@@ -103,7 +128,11 @@ hapi:
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
 
-    #    logger:
+    # Threadpool size for BATCH'ed GETs in a bundle.
+#    bundle_batch_pool_size: 10
+#    bundle_batch_pool_max_size: 50
+
+#    logger:
     #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
     #      format: >-
     #        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
@@ -146,6 +175,7 @@ hapi:
 #        startTlsRequired:
 #        quitWait:
 #    lastn_enabled: true
+#    store_resource_in_lucene_index_enabled: true
 ###  This is configuration for normalized quantity serach level default is 0
 ###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
 ###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
