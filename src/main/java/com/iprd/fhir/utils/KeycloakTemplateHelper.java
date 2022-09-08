@@ -58,6 +58,7 @@ public class KeycloakTemplateHelper {
 		UserRepresentation user = new UserRepresentation();
 		CredentialRepresentation credential = new CredentialRepresentation();
 		credential.setType(CredentialRepresentation.PASSWORD);
+		credential.setTemporary(true);
 		credential.setValue(password);
 		user.setCredentials(Arrays.asList(credential));
 		user.setGroups(Arrays.asList(stateGroup, lgaGroup, wardGroup, facilityGroup));
