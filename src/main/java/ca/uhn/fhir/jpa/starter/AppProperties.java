@@ -45,6 +45,7 @@ public class AppProperties {
   private Boolean filter_search_enabled = true;
   private Boolean graphql_enabled = false;
   private Boolean binary_storage_enabled = false;
+  private Integer inline_resource_storage_below_size = 0;
   private Boolean bulk_export_enabled = false;
   private Boolean bulk_import_enabled = false;
   private Boolean default_pretty_print = true;
@@ -407,7 +408,15 @@ public class AppProperties {
     this.binary_storage_enabled = binary_storage_enabled;
   }
 
-  public Boolean getBulk_export_enabled() {
+	public Integer getInline_resource_storage_below_size() {
+		return inline_resource_storage_below_size;
+	}
+
+	public void setInline_resource_storage_below_size(Integer inline_resource_storage_below_size) {
+		this.inline_resource_storage_below_size = inline_resource_storage_below_size;
+	}
+
+	public Boolean getBulk_export_enabled() {
     return bulk_export_enabled;
   }
 
