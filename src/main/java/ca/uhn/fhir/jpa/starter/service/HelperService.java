@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -258,9 +260,19 @@ public class HelperService {
 		}
 
 		private String getOclIdFromString(String query) throws MalformedURIException {
-			Map<String, String> queryMap = getQueryMap(query);
-			if(queryMap.isEmpty() || queryMap.containsKey("s")) return null;
-			return queryMap.get("https://opencampaignlink.org/ocl/?s");
+			try {
+				URL url=new URL(query);
+				String queryUrl = url.getQuery();
+				if(queryUrl == null || queryUrl.isEmpty())
+					return null;
+				Map<String, String> queryMap = getQueryMap(queryUrl);
+				if(queryMap.isEmpty() || !queryMap.containsKey("s")) return null;
+				return queryMap.get("s");
+
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				return null;
+			}
 		}
 		
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
