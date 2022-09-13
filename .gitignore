@@ -170,3 +170,9 @@ Temporary Items
 
 # Helm Chart dependencies
 **/charts/*.tgz
+
+# Notes
+notes.txt
+
+# Env
+.env
