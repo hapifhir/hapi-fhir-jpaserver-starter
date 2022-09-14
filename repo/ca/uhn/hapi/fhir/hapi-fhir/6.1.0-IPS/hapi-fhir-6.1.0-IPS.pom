@@ -27,7 +27,8 @@
 		<repository>
 	      <id>project.local</id>
         	<name>project</name>
-        	<url>file:///Users/riobennin/work/hapi-fhir-jpaserver-starter/repo</url>
+			<!-- A relative path is instead currently set using altDeploymentRepository -->
+        	<!-- <url>file:///absolute/path/to/hapi-fhir-jpaserver-starter/repo</url> -->
 		</repository>
 		<!-- <snapshotRepository>
 			<id>ossrh</id>
@@ -2090,6 +2091,9 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>2.8.2</version>
+					<configuration>
+						<altDeploymentRepository>project.local::default::file:../hapi-fhir-jpaserver-starter/repo</altDeploymentRepository>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
