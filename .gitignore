@@ -25,6 +25,9 @@ target/
 *.tar.gz
 *.rar
 
+# Ignore large cli jpaserver war file
+repo/ca/uhn/hapi/fhir/hapi-fhir-cli-jpaserver/*/*.war
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 ### Windows template
