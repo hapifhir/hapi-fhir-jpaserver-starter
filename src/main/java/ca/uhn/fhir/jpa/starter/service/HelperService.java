@@ -111,6 +111,8 @@ public class HelperService {
 		FhirContext ctx;
 		String serverBase;
 		IGenericClient fhirClient;
+		Keycloak instance;
+		TokenManager tokenManager;
 		
 		private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
 		private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
@@ -137,24 +139,22 @@ public class HelperService {
 		    		.password(appProperties.getKeycloak_Password())
 		    		.resteasyClient(client)
 		    		.build();
-
+			instance = Keycloak.
+					getInstance(
+						appProperties.getKeycloak_Server_address(),
+						appProperties.getKeycloak_Client_Realm(),
+						appProperties.getFhir_user(),
+						appProperties.getFhir_password(),
+						appProperties.getFhir_hapi_client_id(),
+						appProperties.getFhir_hapi_client_secret()
+					);
+			tokenManager = instance.tokenManager();
 			registerClientAuthInterceptor();
 		}
 
 		@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
 		private void registerClientAuthInterceptor() {
-			Keycloak instance = Keycloak.
-				getInstance(
-					appProperties.getKeycloak_Server_address(),
-					appProperties.getKeycloak_Client_Realm(),
-					appProperties.getFhir_user(),
-					appProperties.getFhir_password(),
-					appProperties.getFhir_hapi_client_id(),
-					appProperties.getFhir_hapi_client_secret()
-				);
-			TokenManager tokenmanager = instance.tokenManager();
-			String accessToken = tokenmanager.getAccessTokenString();
-
+			String accessToken = tokenManager.getAccessTokenString();
 			BearerTokenAuthInterceptor authInterceptor = new BearerTokenAuthInterceptor(accessToken);
 			fhirClient = ctx.newRestfulGenericClient(serverBase);
 			fhirClient.registerInterceptor(authInterceptor);
