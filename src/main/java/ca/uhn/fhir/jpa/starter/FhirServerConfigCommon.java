@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * This is the primary configuration file for the example server
@@ -79,6 +80,11 @@ public class FhirServerConfigCommon {
   @Bean
   public DaoConfig daoConfig(AppProperties appProperties) {
     DaoConfig retVal = new DaoConfig();
+
+    // Set the id strategy to UUID so that the fullUrn reference strategy works
+    retVal.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
+
+    // Default FHIR server
 
     retVal.setIndexMissingFields(appProperties.getEnable_index_missing_fields() ? DaoConfig.IndexEnabledEnum.ENABLED : DaoConfig.IndexEnabledEnum.DISABLED);
     retVal.setAutoCreatePlaceholderReferenceTargets(appProperties.getAuto_create_placeholder_reference_targets());
