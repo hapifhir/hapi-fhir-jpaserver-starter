@@ -68,14 +68,14 @@ public class PatientResourceMapper implements IResourceMapper {
 
     if (id == null) {
       return String.format(
-          "INSERT INTO Patient (PatientGender, PatientDateOfBirth, PatientMaritalStatus) VALUES ('%s', '%s', '%s');",
+          "INSERT INTO Patient (PatientGender, PatientDateOfBirth, PatientMaritalStatus, fhir) VALUES ('%s', '%s', '%s', true);",
           gender, birthDate, maritalStatus);
     }
 
     String updateSql = String.format(
-        "UPDATE Patient SET PatientGender = '%s', PatientDateOfBirth = '%s', PatientMaritalStatus = '%s', deleted = %s WHERE PatientID = '%s' AND ts = '%s';", gender, birthDate, maritalStatus, deleted, id, lastUpdated);
+        "UPDATE Patient SET PatientGender = '%s', PatientDateOfBirth = '%s', PatientMaritalStatus = '%s', deleted = %s, fhir = true WHERE PatientID = '%s' AND ts = '%s';", gender, birthDate, maritalStatus, deleted, id, lastUpdated);
     String insertSql = String.format(
-        "INSERT INTO Patient (PatientID, PatientGender, PatientDateOfBirth, PatientMaritalStatus, deleted) VALUES ('%s', '%s', '%s', '%s', %s);",
+        "INSERT INTO Patient (PatientID, PatientGender, PatientDateOfBirth, PatientMaritalStatus, deleted, fhir) VALUES ('%s', '%s', '%s', '%s', %s, true);",
         id, gender, birthDate, maritalStatus, deleted);
     return String.format(
         "IF EXISTS (SELECT 1 FROM Patient WHERE PatientID = '%s') BEGIN %s END ELSE BEGIN %s END", id, updateSql, insertSql);

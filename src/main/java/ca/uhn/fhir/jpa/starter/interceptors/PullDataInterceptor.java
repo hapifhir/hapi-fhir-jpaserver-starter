@@ -39,7 +39,7 @@ public class PullDataInterceptor {
   @Hook(Pointcut.SERVER_INCOMING_REQUEST_PRE_PROCESSED)
   public boolean pullDataBeforeRequest(HttpServletRequest req, HttpServletResponse resp) {
     String resourceName = req.getContextPath().substring(1);
-    String selectSql = String.format("SELECT * FROM %s;", resourceName);
+    String selectSql = String.format("SELECT * FROM %s WHERE emr = true;", resourceName);
     try (Connection conn = DriverManager.getConnection(connectionString)) {
       /* 1 Pull mapping table */
       PreparedStatement stat = conn.prepareStatement(selectSql);
@@ -66,7 +66,7 @@ public class PullDataInterceptor {
 
       if (req.getMethod().equals(HttpMethod.GET.toString())) {
         /* 3 Delete Mapping table */
-        String deleteSql = String.format("DELETE FROM %s WHERE ts < ?", resourceName);
+        String deleteSql = String.format("DELETE FROM %s WHERE ts < ? AND emr = true", resourceName);
         PreparedStatement deleteStat = conn.prepareStatement(deleteSql);
         deleteStat.setDate(1, latest);
         deleteStat.executeUpdate();

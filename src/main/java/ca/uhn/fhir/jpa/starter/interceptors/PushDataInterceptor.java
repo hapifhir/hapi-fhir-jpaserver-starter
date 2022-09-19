@@ -30,7 +30,11 @@ public class PushDataInterceptor {
 
   @Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_CREATED)
   public void pushCreateData(IBaseResource resource, RequestDetails details) {
+    IResourceMapper mapper = mapperRegistry.getMapper(details.getResourceName());
+    String sql = mapper.mapToTable(resource, DatabaseOperation.INSERT);
     /* Push to mapping table */
+    /*
+     * 
     try (Connection conn = DriverManager.getConnection(connectionString)) {
       IResourceMapper mapper = mapperRegistry.getMapper(details.getResourceName());
       String sql = mapper.mapToTable(resource, DatabaseOperation.INSERT);
@@ -38,6 +42,8 @@ public class PushDataInterceptor {
       stat.executeUpdate();
     } catch (SQLException e) {
     }
+     */
+    System.out.println(sql);
     throw new AbortDatabaseOperationException();
   }
 
