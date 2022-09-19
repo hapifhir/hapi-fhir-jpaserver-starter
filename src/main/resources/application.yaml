@@ -192,3 +192,6 @@ hapi:
 #  protocol: 'http'
 #  schema_management_strategy: CREATE
 #  username: SomeUsername
+
+mappingtable:
+  jdbc: postgresql://localhost:5432/poc
