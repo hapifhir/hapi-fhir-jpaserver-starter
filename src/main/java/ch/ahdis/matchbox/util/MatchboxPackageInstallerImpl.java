@@ -86,14 +86,17 @@ import ca.uhn.fhir.util.SearchParameterUtil;
 public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(MatchboxPackageInstallerImpl.class);
+	// MODIFIED
 	public static List<String> DEFAULT_INSTALL_TYPES = Collections.unmodifiableList(Lists.newArrayList(
-		"NamingSystem",
-		"CodeSystem",
-		"ValueSet",
-		"StructureDefinition",
-		"ConceptMap",
-		"SearchParameter",
-		"Subscription"
+	    "NamingSystem",
+      "CodeSystem",
+      "ValueSet",
+      "StructureDefinition",
+      "ConceptMap",
+      "SearchParameter",
+      "StructureMap",
+      "Questionnaire",
+      "ImplementationGuide"
 	));
 
 	boolean enabled = true;
@@ -268,7 +271,10 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 			installTypes = DEFAULT_INSTALL_TYPES;
 		}
 
-		ourLog.info("Installing package: {}#{}", name, version);
+    String logstart = String.format("Installing package:  %s#%s", name, version);
+		ourLog.info(logstart);
+    theOutcome.getMessage().add(logstart);
+    
 		int[] count = new int[installTypes.size()];
 		
 		IBaseResource ig = null;
@@ -290,8 +296,9 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 			    }
 					create(next, theOutcome);
 				} catch (Exception e) {
-					ourLog.debug("Failed to upload resource of type {} with ID {} - Error: {}", myFhirContext.getResourceType(next), next.getIdElement().getValue(), e.toString());
-					throw new ImplementationGuideInstallationException(String.format("Error installing IG %s#%s: %s", name, version, e.toString()), e);
+		      String log = String.format("Failed to upload resource of type  %s with ID  %s - Error:  %s", myFhirContext.getResourceType(next), next.getIdElement().getValue(), e.toString());
+			    theOutcome.getMessage().add(log);
+          ourLog.debug(log);
 				}
 			}
 		}

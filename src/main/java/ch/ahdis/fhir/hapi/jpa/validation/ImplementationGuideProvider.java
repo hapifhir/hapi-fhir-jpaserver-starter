@@ -117,16 +117,7 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
   public PackageInstallOutcomeJson load(ImplementationGuide theResource, PackageInstallOutcomeJson install) {
     PackageInstallOutcomeJson installOutcome = packageInstallerSvc.install(new PackageInstallationSpec()
         .setPackageUrl(theResource.getUrl())
-        .addInstallResourceTypes("NamingSystem",
-            "CodeSystem",
-            "ValueSet",
-            "StructureDefinition",
-            "ConceptMap",
-            "SearchParameter",
-            "Subscription",
-            "StructureMap",
-            "Questionnaire",
-            "ImplementationGuide")
+        .addInstallResourceTypes(MatchboxPackageInstallerImpl.DEFAULT_INSTALL_TYPES.toArray(new String[0]))
         .setName(theResource.getName())
         .setVersion(theResource.getVersion())
           .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
@@ -141,16 +132,7 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
 	public OperationOutcome load(ImplementationGuide theResource) {
 	  PackageInstallOutcomeJson installOutcome = packageInstallerSvc.install(new PackageInstallationSpec()
         .setPackageUrl(theResource.getUrl())
-        .addInstallResourceTypes("NamingSystem",
-            "CodeSystem",
-            "ValueSet",
-            "StructureDefinition",
-            "ConceptMap",
-            "SearchParameter",
-            "Subscription",
-            "StructureMap",
-            "Questionnaire",
-            "ImplementationGuide")
+        .addInstallResourceTypes(MatchboxPackageInstallerImpl.DEFAULT_INSTALL_TYPES.toArray(new String[0]))
         .setName(theResource.getName())
         .setVersion(theResource.getVersion())
           .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
