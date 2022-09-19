@@ -1,11 +1,10 @@
 package ca.uhn.fhir.jpa.starter.interceptors;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,20 +26,26 @@ import ca.uhn.fhir.jpa.starter.mappers.ResourceMapperRegistry;
 @Interceptor
 public class PullDataInterceptor {
   private String connectionString;
+  private String username;
+  private String password;
   private DaoRegistry daoRegistry;
   private ResourceMapperRegistry mapperRegistry;
 
-  public PullDataInterceptor(@Value("${mappingtable.jdbc}") String connectionString, DaoRegistry daoRegistry, ResourceMapperRegistry mapperRegistry) {
+  public PullDataInterceptor(@Value("${mappingtable.jdbc}") String connectionString,
+      @Value("${mappingtable.username}") String username, @Value("${mappingtable.password}") String password,
+      DaoRegistry daoRegistry, ResourceMapperRegistry mapperRegistry) {
     this.connectionString = connectionString;
+    this.username = username;
+    this.password = password;
     this.daoRegistry = daoRegistry;
     this.mapperRegistry = mapperRegistry;
   }
 
   @Hook(Pointcut.SERVER_INCOMING_REQUEST_PRE_PROCESSED)
   public boolean pullDataBeforeRequest(HttpServletRequest req, HttpServletResponse resp) {
-    String resourceName = req.getContextPath().substring(1);
+    String resourceName = req.getRequestURI().split("/")[2];
     String selectSql = String.format("SELECT * FROM %s WHERE emr = true;", resourceName);
-    try (Connection conn = DriverManager.getConnection(connectionString)) {
+    try (Connection conn = DriverManager.getConnection(connectionString, username, password)) {
       /* 1 Pull mapping table */
       PreparedStatement stat = conn.prepareStatement(selectSql);
       ResultSet result = stat.executeQuery();
@@ -48,9 +53,9 @@ public class PullDataInterceptor {
       /* 2 Update Fhir Database using DAO and Mapper */
       IFhirResourceDao<IBaseResource> dao = daoRegistry.getResourceDao(resourceName);
       IResourceMapper mapper = mapperRegistry.getMapper(resourceName);
-      Date latest = null; /* Remember latest timestamp reflected */
+      Timestamp latest = null; /* Remember latest timestamp reflected */
       while (result.next()) {
-        Date timestamp = result.getDate("ts");
+        Timestamp timestamp = result.getTimestamp("ts");
         if (latest == null || latest.before(timestamp)) {
           latest = timestamp;
         }
@@ -66,13 +71,14 @@ public class PullDataInterceptor {
 
       if (req.getMethod().equals(HttpMethod.GET.toString())) {
         /* 3 Delete Mapping table */
-        String deleteSql = String.format("DELETE FROM %s WHERE ts < ? AND emr = true", resourceName);
+        String deleteSql = String.format("DELETE FROM %s WHERE ts <= ? AND emr = true", resourceName);
         PreparedStatement deleteStat = conn.prepareStatement(deleteSql);
-        deleteStat.setDate(1, latest);
+        deleteStat.setTimestamp(1, latest);
         deleteStat.executeUpdate();
       }
       return true;
-    } catch (SQLException e) {
+    } catch (Exception e) {
+      e.printStackTrace();
       return false;
     }
   }

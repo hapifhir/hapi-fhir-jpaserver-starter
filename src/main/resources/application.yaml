@@ -194,4 +194,6 @@ hapi:
 #  username: SomeUsername
 
 mappingtable:
-  jdbc: postgresql://localhost:5432/poc
+  jdbc: jdbc:postgresql://localhost:5432/poc
+  username: postgres
+  password: admin

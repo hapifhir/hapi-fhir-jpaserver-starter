@@ -21,41 +21,43 @@ import ca.uhn.fhir.rest.api.server.RequestDetails;
 @Interceptor
 public class PushDataInterceptor {
   private String connectionString;
+  private String username;
+  private String password;
   private ResourceMapperRegistry mapperRegistry;
 
-  public PushDataInterceptor(@Value("${mappingtable.jdbc}") String connectionString, ResourceMapperRegistry mapperRegistry) {
+  public PushDataInterceptor(@Value("${mappingtable.jdbc}") String connectionString,
+      @Value("${mappingtable.username}") String username, @Value("${mappingtable.password}") String password,
+      ResourceMapperRegistry mapperRegistry) {
     this.connectionString = connectionString;
+    this.username = username;
+    this.password = password;
     this.mapperRegistry = mapperRegistry;
   }
 
   @Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_CREATED)
   public void pushCreateData(IBaseResource resource, RequestDetails details) {
-    IResourceMapper mapper = mapperRegistry.getMapper(details.getResourceName());
-    String sql = mapper.mapToTable(resource, DatabaseOperation.INSERT);
     /* Push to mapping table */
-    /*
-     * 
-    try (Connection conn = DriverManager.getConnection(connectionString)) {
+    try (Connection conn = DriverManager.getConnection(connectionString, username, password)) {
       IResourceMapper mapper = mapperRegistry.getMapper(details.getResourceName());
       String sql = mapper.mapToTable(resource, DatabaseOperation.INSERT);
       PreparedStatement stat = conn.prepareStatement(sql);
       stat.executeUpdate();
     } catch (SQLException e) {
+      e.printStackTrace();
     }
-     */
-    System.out.println(sql);
     throw new AbortDatabaseOperationException();
   }
 
   @Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_UPDATED)
   public void pushUpdateData(IBaseResource resource, RequestDetails details) {
     /* Push to mapping table */
-    try (Connection conn = DriverManager.getConnection(connectionString)) {
+    try (Connection conn = DriverManager.getConnection(connectionString, username, password)) {
       IResourceMapper mapper = mapperRegistry.getMapper(details.getResourceName());
       String sql = mapper.mapToTable(resource, DatabaseOperation.UPDATE);
       PreparedStatement stat = conn.prepareStatement(sql);
       stat.executeUpdate();
     } catch (SQLException e) {
+      e.printStackTrace();
     }
     throw new AbortDatabaseOperationException();
   }
@@ -63,12 +65,13 @@ public class PushDataInterceptor {
   @Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_DELETED)
   public void pushDeleteData(IBaseResource resource, RequestDetails details) {
     /* Push to mapping table */
-    try (Connection conn = DriverManager.getConnection(connectionString)) {
+    try (Connection conn = DriverManager.getConnection(connectionString, username, password)) {
       IResourceMapper mapper = mapperRegistry.getMapper(details.getResourceName());
       String sql = mapper.mapToTable(resource, DatabaseOperation.DELETE);
       PreparedStatement stat = conn.prepareStatement(sql);
       stat.executeUpdate();
     } catch (SQLException e) {
+      e.printStackTrace();
     }
     throw new AbortDatabaseOperationException();
   }

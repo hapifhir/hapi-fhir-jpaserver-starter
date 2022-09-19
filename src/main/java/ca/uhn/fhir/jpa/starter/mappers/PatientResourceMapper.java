@@ -1,19 +1,21 @@
 package ca.uhn.fhir.jpa.starter.mappers;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r5.model.Patient;
+import org.hl7.fhir.r4.model.Patient;
+import org.json.simple.JSONObject;
+import org.springframework.stereotype.Component;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 
+@Component
 public class PatientResourceMapper implements IResourceMapper {
   private final FhirContext fhirContext;
 
@@ -28,7 +30,7 @@ public class PatientResourceMapper implements IResourceMapper {
   }
 
   @Override
-  public IBaseResource mapToResource(ResultSet table) throws SQLException {
+  public IBaseResource mapToResource(ResultSet table) throws SQLException, IOException {
     String patientID = table.getString("PatientID");
     String patientGender = table.getString("PatientGender");
     String patientDateOfBirth = table.getString("PatientDateOfBirth");
@@ -37,19 +39,22 @@ public class PatientResourceMapper implements IResourceMapper {
     String patientLanguage = table.getString("PatientLanguage");
     Double patientPopulationPercentageBelowPoverty = table.getDouble("PatientPopulationPercentageBelowPoverty");
 
-    JsonObject jsonObj = Json.createObjectBuilder()
-        .add("resourceType", "Patient")
-        .add("id", patientID)
-        .add("gender", patientGender)
-        .add("birthDate", patientDateOfBirth.substring(0, 10))
-        .add("maritalStatus", Json.createObjectBuilder().add("text", patientMaritalStatus).build())
-        .add("meta", Json.createObjectBuilder().add("lastUpdated", table.getDate("ts").toString()).build())
-        .build();
+    JSONObject jsonObj = new JSONObject();
+    jsonObj.put("resourceType", "Patient");
+    jsonObj.put("id", patientID);
+    jsonObj.put("gender", patientGender.toLowerCase());
+    jsonObj.put("birthDate", patientDateOfBirth.substring(0, 10));
+    JSONObject maritalObject = new JSONObject();
+    maritalObject.put("text", patientMaritalStatus);
+    jsonObj.put("maritalStatus", maritalObject);
+    JSONObject metaObject = new JSONObject();
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    Date lastUpdate = table.getDate("ts");
+    metaObject.put("lastUpdated", format.format(lastUpdate));
+    jsonObj.put("meta", metaObject);
     
     StringWriter stringWriter = new StringWriter();
-    JsonWriter writer = Json.createWriter(stringWriter);
-    writer.writeObject(jsonObj);
-    writer.close();
+    jsonObj.writeJSONString(stringWriter);
     String fhirText = stringWriter.getBuffer().toString();
 
     return fhirContext.newJsonParser().parseResource(Patient.class, fhirText);
@@ -60,9 +65,10 @@ public class PatientResourceMapper implements IResourceMapper {
     Patient patient = (Patient) resource;
     String id = patient.getIdElement() == null ? null : patient.getIdElement().getIdPart();
     String gender = patient.getGender().getDisplay();
-    String birthDate = patient.getBirthDate().toString();
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    String birthDate = format.format(patient.getBirthDate());
     String maritalStatus = patient.getMaritalStatus().getText();
-    String lastUpdated = patient.getMeta().getLastUpdated().toString();
+    String lastUpdated = patient.getMeta().getLastUpdated() == null ? "NULL" : patient.getMeta().getLastUpdated().toString();
 
     boolean deleted = op.equals(DatabaseOperation.DELETE);
 
