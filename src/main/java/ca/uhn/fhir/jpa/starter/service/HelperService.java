@@ -117,12 +117,12 @@ public class HelperService {
 		private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
 		private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
 		private static String SMS_EXTENTION_URL = "http://iprdgroup.com/Extentions/sms-sent";
-		private static final long INITIAL_DELAY = 3000L;
-		private static final long FIXED_DELAY = 60000L;
+		private static final long INITIAL_DELAY = 5*30000L;
+		private static final long FIXED_DELAY = 5*60000L;
 
 		private static final long AUTH_INITIAL_DELAY = 25 * 60000L;
 		private static final long AUTH_FIXED_DELAY = 50 * 60000L;
-		private static final long DELAY = 120 * 1000;
+		private static final long DELAY = 5 * 60000;
 
 		public void initializeKeycloak() {
 			ctx = FhirContext.forR4();
