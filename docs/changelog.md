@@ -1,3 +1,8 @@
+2022/09/xx Release 2.4.0
+
+- ihe.iti.pmir#1.5.0 cannot be uploaded to matchbox [#59](https://github.com/ahdis/matchbox/issues/59): removed Subscription from resources to import
+- show all cda2fhr and fhir2cda maps  [#58](https://github.com/ahdis/matchbox/issues/58)
+
 2022/07/11 Release 2.3.0
 
 - favicon fixed [#53](https://github.com/ahdis/matchbox/issues/53)
