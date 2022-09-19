@@ -113,6 +113,7 @@ public class HelperService {
 		IGenericClient fhirClient;
 		Keycloak instance;
 		TokenManager tokenManager;
+		BearerTokenAuthInterceptor authInterceptor;
 		
 		private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
 		private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
@@ -155,7 +156,12 @@ public class HelperService {
 		@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
 		private void registerClientAuthInterceptor() {
 			String accessToken = tokenManager.getAccessTokenString();
-			BearerTokenAuthInterceptor authInterceptor = new BearerTokenAuthInterceptor(accessToken);
+			try {
+				fhirClient.unregisterInterceptor(authInterceptor);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			authInterceptor = new BearerTokenAuthInterceptor(accessToken);
 			fhirClient = ctx.newRestfulGenericClient(serverBase);
 			fhirClient.registerInterceptor(authInterceptor);
 		}
@@ -489,7 +495,7 @@ public class HelperService {
 					if(resource.fhirType().equals("Patient")) {
 						continue;
 					}
-					if(resource.fhirType().equals("Immunization")) {
+					else if(resource.fhirType().equals("Immunization")) {
 						Immunization immunization = (Immunization) resource;
 						immunization.getPatient().setReference("Patient/"+actualPatientId);
 						fhirClient.update()
