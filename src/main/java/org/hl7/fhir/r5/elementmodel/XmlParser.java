@@ -53,12 +53,10 @@ import org.hl7.fhir.exceptions.FHIRFormatError;
 import org.hl7.fhir.r5.conformance.ProfileUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element.SpecialElement;
-import org.hl7.fhir.r5.elementmodel.ParserBase.NamedElement;
 import org.hl7.fhir.r5.formats.FormatUtilities;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.DateTimeType;
 import org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation;
-import org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule;
 import org.hl7.fhir.r5.model.Enumeration;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
@@ -198,8 +196,8 @@ public class XmlParser extends ParserBase {
     org.w3c.dom.Element element = doc.getDocumentElement();
     return parse(element);
   }
-  
-  // Fixed for https://github.com/ahdis/matchbox/issues/31
+
+  // MATCHBOX Fixed for https://github.com/ahdis/matchbox/issues/31
   @Override
   protected StructureDefinition getDefinition(int line, int col, String ns, String name) throws FHIRFormatError {
     if (ns == null) {
@@ -217,7 +215,7 @@ public class XmlParser extends ParserBase {
     logError(line, col, name, IssueType.STRUCTURE, context.formatMessage(I18nConstants.THIS_DOES_NOT_APPEAR_TO_BE_A_FHIR_RESOURCE_UNKNOWN_NAMESPACENAME_, ns, name), IssueSeverity.FATAL);
     return null;
   }
-  
+    
   public Element parse(org.w3c.dom.Element element) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
     String ns = element.getNamespaceURI();
     String name = element.getLocalName();
@@ -331,12 +329,13 @@ public class XmlParser extends ParserBase {
             while (n.getNextSibling() != null && n.getNodeType() != Node.ELEMENT_NODE) {
               n = n.getNextSibling();
             }
-            while (n.getPreviousSibling() != null && n.getNodeType() != Node.ELEMENT_NODE) {
-              n = n.getPreviousSibling();
+            Node nt = n;
+            while (nt.getPreviousSibling() != null && nt.getNodeType() != Node.ELEMENT_NODE) {
+              nt = nt.getPreviousSibling();
             }
-            line = line(n);
-            col = col(n);
-            logError(line, col, path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.TEXT_SHOULD_NOT_BE_PRESENT, text), IssueSeverity.ERROR);
+            line = line(nt);
+            col = col(nt);
+            logError(line, col, path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.TEXT_SHOULD_NOT_BE_PRESENT, Utilities.makeSingleLine(text)), IssueSeverity.ERROR);
           }
           n = n.getNextSibling();
         }
@@ -722,13 +721,13 @@ public class XmlParser extends ParserBase {
     } else {
       setXsiTypeIfIsTypeAttr(xml, element);
       for (Element child : element.getChildren()) {
-        if (isAttr(child.getProperty())) {
+        if (isAttr(child.getProperty()) && wantCompose(element.getPath(), child)) {
           if (linkResolver != null)
             xml.link(linkResolver.resolveType(child.getType()));
           String av = child.getValue();
           if (ToolingExtensions.hasExtension(child.getProperty().getDefinition(), "http://www.healthintersections.com.au/fhir/StructureDefinition/elementdefinition-dateformat"))
             av = convertForDateFormatToExternal(ToolingExtensions.readStringExtension(child.getProperty().getDefinition(), "http://www.healthintersections.com.au/fhir/StructureDefinition/elementdefinition-dateformat"), av);
-          // PATCH: adusting it for pharm
+          // MATCHBOX PATCH: adjusting it for pharm
           xml.attribute(child.getProperty().getXmlName(), av);
         }
       }
@@ -741,12 +740,14 @@ public class XmlParser extends ParserBase {
         xml.enter(element.getProperty().getXmlNamespace(),element.getType());
       }
       for (Element child : element.getChildren()) {
-        if (isText(child.getProperty())) {
-          if (linkResolver != null)
-            xml.link(linkResolver.resolveProperty(element.getProperty()));
-          xml.text(child.getValue());
-        } else if (!isAttr(child.getProperty()))
-          composeElement(xml, child, child.getName(), false);
+        if (wantCompose(element.getPath(), child)) {
+          if (isText(child.getProperty())) {
+            if (linkResolver != null)
+              xml.link(linkResolver.resolveProperty(element.getProperty()));
+            xml.text(child.getValue());
+          } else if (!isAttr(child.getProperty()))
+            composeElement(xml, child, child.getName(), false);
+        }
       }
 	    if (!root && element.getSpecial() != null)
         xml.exit(element.getProperty().getXmlNamespace(),element.getType());

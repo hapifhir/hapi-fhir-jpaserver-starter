@@ -26,7 +26,9 @@ import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.validation.IInstanceValidatorModule;
 import ca.uhn.fhir.validation.IValidationContext;
+// MATCHBOX added
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
+
 
 @SuppressWarnings({"PackageAccessibility", "Duplicates"})
 public class FhirInstanceValidator extends BaseValidatorBridge implements IInstanceValidatorModule {
@@ -247,17 +249,18 @@ public class FhirInstanceValidator extends BaseValidatorBridge implements IInsta
 	@Nonnull
 	protected VersionSpecificWorkerContextWrapper provideWorkerContext() {
 		VersionSpecificWorkerContextWrapper wrappedWorkerContext = myWrappedWorkerContext;
-		if (wrappedWorkerContext == null) {		  
-			// OE PATCH: using patched VersionSpecificWorkerContextWrapper
+		if (wrappedWorkerContext == null) {
+			// MATCHBOX using patched VersionSpecificWorkerContextWrapper instead of
+			// wrappedWorkerContext = VersionSpecificWorkerContextWrapper.newVersionSpecificWorkerContextWrapper(myValidationSupport);
 			try {
-        wrappedWorkerContext = new ConvertingWorkerContext(myValidationSupport);
-      } catch (FileNotFoundException e) {
-        e.printStackTrace();
-      } catch (FHIRException e) {
-        e.printStackTrace();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+				wrappedWorkerContext = new ConvertingWorkerContext(myValidationSupport);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (FHIRException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		myWrappedWorkerContext = wrappedWorkerContext;
 		return wrappedWorkerContext;
@@ -346,4 +349,6 @@ public class FhirInstanceValidator extends BaseValidatorBridge implements IInsta
 			return null;
 		}
 	}
+
+
 }

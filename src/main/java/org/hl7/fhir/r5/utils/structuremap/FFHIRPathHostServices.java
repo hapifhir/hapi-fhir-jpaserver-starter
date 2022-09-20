@@ -94,7 +94,7 @@ public class FFHIRPathHostServices implements FHIRPathEngine.IEvaluationContext 
     throw new NotImplementedException("Not done yet (FFHIRPathHostServices.conformsToProfile), when item is not element or not resource");
   }
 
-  // matchbox 2.1.0 https://github.com/ahdis/matchbox/issues/49 
+  // MATCHBOX 2.1.0 https://github.com/ahdis/matchbox/issues/49 
   @Override
   public ValueSet resolveValueSet(Object appContext, String url) {
     return structureMapUtilities.getWorker().fetchResource(ValueSet.class, url);

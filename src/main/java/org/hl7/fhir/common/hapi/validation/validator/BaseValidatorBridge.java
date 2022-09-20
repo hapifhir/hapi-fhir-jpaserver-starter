@@ -1,14 +1,13 @@
 package org.hl7.fhir.common.hapi.validation.validator;
 
-import java.util.List;
-
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.utilities.validation.ValidationMessage;
-
 import ca.uhn.fhir.validation.IValidationContext;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.utilities.validation.ValidationMessage;
+
+import java.util.List;
 
 /**
  * Base class for a bridge between the RI validation tools and HAPI
@@ -31,22 +30,26 @@ abstract class BaseValidatorBridge implements IValidatorModule {
 				hapiMessage.setLocationLine(riMessage.getLine());
 			}
 			hapiMessage.setLocationString(riMessage.getLocation());
+			hapiMessage.setMessage(riMessage.getMessage());
 			
-			// FIXME patched in
-      String message = riMessage.getMessage();
-      
-      ValidationMessage vm = riMessage;
-      if (vm != null && vm.sliceText != null) {
-        message += " Slice info:";
-        for (int i=0; i<vm.sliceText.length; ++i) {
-          String s = vm.sliceText[i];
-          message += " "+(i+1)+".) "+s;
-        }
-      }
-      
-      hapiMessage.setMessage(message);
+			// MATCHBOX added 
+			String message = riMessage.getMessage();
+      		ValidationMessage vm = riMessage;
+			if (vm != null && vm.sliceText != null) {
+				message += " Slice info:";
+				for (int i=0; i<vm.sliceText.length; ++i) {
+					String s = vm.sliceText[i];
+					message += " "+(i+1)+".) "+s;
+				}
+			}
+			
+			hapiMessage.setMessage(message);
+
 			if (riMessage.getLevel() != null) {
 				hapiMessage.setSeverity(ResultSeverityEnum.fromCode(riMessage.getLevel().toCode()));
+			}
+			if (riMessage.getMessageId() != null) {
+				hapiMessage.setMessageId(riMessage.getMessageId());
 			}
 			theCtx.addValidationMessage(hapiMessage);
 		}

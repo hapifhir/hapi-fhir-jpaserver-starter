@@ -55,7 +55,6 @@ import org.hl7.fhir.r5.formats.JsonCreatorCanonical;
 import org.hl7.fhir.r5.formats.JsonCreatorGson;
 import org.hl7.fhir.r5.model.ElementDefinition.TypeRefComponent;
 import org.hl7.fhir.r5.model.StructureDefinition;
-import org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule;
 import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.Utilities;
@@ -91,8 +90,8 @@ public class JsonParser extends ParserBase {
 
     this.profileUtilities = new ProfileUtilities(this.context, null, null, new FHIRPathEngine(context));
   }
-  
-  //Fixed for https://github.com/ahdis/matchbox/issues/31
+
+  // MATCHBOX Fixed for https://github.com/ahdis/matchbox/issues/31
   @Override
   protected StructureDefinition getDefinition(int line, int col, String name) throws FHIRFormatError {
     // orginal
@@ -127,6 +126,7 @@ public class JsonParser extends ParserBase {
     return null;
 
   }
+
 
   public Element parse(String source, String type) throws Exception {
     JsonObject obj = (JsonObject) new com.google.gson.JsonParser().parse(source);
@@ -514,15 +514,18 @@ public class JsonParser extends ParserBase {
   }
 
   private void compose(String path, Element e, Set<String> done, Element child) throws IOException {
-    boolean isList = child.hasElementProperty() ? child.getElementProperty().isList() : child.getProperty().isList();
-    if (!isList) {// for specials, ignore the cardinality of the stated type
-      compose(path, child);
-    } else if (!done.contains(child.getName())) {
-      done.add(child.getName());
-      List<Element> list = e.getChildrenByName(child.getName());
-      composeList(path, list);
+    if (wantCompose(path, child)) {
+      boolean isList = child.hasElementProperty() ? child.getElementProperty().isList() : child.getProperty().isList();
+      if (!isList) {// for specials, ignore the cardinality of the stated type
+        compose(path, child);
+      } else if (!done.contains(child.getName())) {
+        done.add(child.getName());
+        List<Element> list = e.getChildrenByName(child.getName());
+        composeList(path, list);
+      }
     }
   }
+
 
   private void composeList(String path, List<Element> list) throws IOException {
     // there will be at least one element
