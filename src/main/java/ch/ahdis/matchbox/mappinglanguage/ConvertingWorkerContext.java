@@ -113,7 +113,7 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
       type = typeName;
     }
     for (org.hl7.fhir.r5.model.StructureDefinition sd : this.allStructures()) {
-      if (sd.getDerivation() == org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule.SPECIALIZATION && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
+      if (((sd.getDerivation() == null) || (sd.getDerivation() == org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule.SPECIALIZATION)) && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
         if(type.equals(sd.getType()) && (ns == null || ns.equals(FormatUtilities.FHIR_NS)) && !org.hl7.fhir.r5.utils.ToolingExtensions.hasExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"))
           return sd;
         String sns = org.hl7.fhir.r5.utils.ToolingExtensions.readStringExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace");
