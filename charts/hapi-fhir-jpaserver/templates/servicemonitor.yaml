@@ -1,0 +1,30 @@
+{{- if .Values.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "hapi-fhir-jpaserver.fullname" . }}
+  {{- if .Values.metrics.serviceMonitor.namespace }}
+  namespace: {{ .Values.metrics.serviceMonitor.namespace }}
+  {{- end }}
+  labels:
+    {{- include "hapi-fhir-jpaserver.labels" . | nindent 4 }}
+    {{- if .Values.metrics.serviceMonitor.additionalLabels }}
+    {{- toYaml .Values.metrics.serviceMonitor.additionalLabels | nindent 4 }}
+    {{- end }}
+spec:
+  endpoints:
+    - port: http-metrics
+      path: /actuator/prometheus
+      {{- if .Values.metrics.serviceMonitor.interval }}
+      interval: {{ .Values.metrics.serviceMonitor.interval }}
+      {{- end }}
+      {{- if .Values.metrics.serviceMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ .Values.metrics.serviceMonitor.scrapeTimeout }}
+      {{- end }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+    {{- include "hapi-fhir-jpaserver.selectorLabels" . | nindent 6 }}
+{{- end }}

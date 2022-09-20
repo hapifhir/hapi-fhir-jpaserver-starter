@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.starter;
+package ca.uhn.fhir.jpa.starter.common;
 
 import java.io.IOException;
 
@@ -24,6 +24,7 @@ import ca.uhn.fhir.jpa.api.dao.IFhirResourceDaoStructureDefinition;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.config.JpaConfig;
 import ca.uhn.fhir.jpa.config.r4.JpaR4Config;
+import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ca.uhn.fhir.jpa.starter.cql.StarterCqlR4Config;
 import ca.uhn.fhir.jpa.term.api.ITermReadSvcR4;
@@ -35,6 +36,7 @@ import ch.ahdis.fhir.hapi.jpa.validation.ExtTermReadSvcR4;
 import ch.ahdis.fhir.hapi.jpa.validation.ExtUnknownCodeSystemWarningValidationSupport;
 import ch.ahdis.fhir.hapi.jpa.validation.JpaExtendedValidationSupportChain;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
+import ch.ahdis.matchbox.MatchboxJpaConfig;
 import ch.ahdis.matchbox.mappinglanguage.ConvertingWorkerContext;
 import ch.ahdis.matchbox.mappinglanguage.StructureDefinitionProvider;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
@@ -45,7 +47,7 @@ import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
 @Configuration
 @Conditional(OnR4Condition.class)
-@Import({ StarterJpaConfig.class, JpaR4Config.class, StarterCqlR4Config.class, ElasticsearchConfig.class, ReindexAppCtx.class, JpaBatch2Config.class })
+@Import({ MatchboxJpaConfig.class, JpaR4Config.class, StarterCqlR4Config.class, ElasticsearchConfig.class, ReindexAppCtx.class, JpaBatch2Config.class })
 public class FhirServerConfigR4 {
 
   /**
@@ -59,22 +61,6 @@ public class FhirServerConfigR4 {
   @Autowired
   FhirContext fhirContext;
 
-  @PostConstruct
-  public void initSettings() {
-    // FIXME OE 2022_600_notnecessaryanymore?
-//    if(appProperties.getSearch_coord_core_pool_size() != null) {
-//		 setSearchCoordCorePoolSize(appProperties.getSearch_coord_core_pool_size());
-//	 }
-//	  if(appProperties.getSearch_coord_max_pool_size() != null) {
-//		  setSearchCoordMaxPoolSize(appProperties.getSearch_coord_max_pool_size());
-//	  }
-//	  if(appProperties.getSearch_coord_queue_capacity() != null) {
-//		  setSearchCoordQueueCapacity(appProperties.getSearch_coord_queue_capacity());
-//	  }
-  }
-
-  @Autowired
-  private ConfigurableEnvironment configurableEnvironment;
 
   @Bean(autowire = Autowire.BY_TYPE)
   public ITermReadSvcR4 terminologyService() {
@@ -231,6 +217,7 @@ public class FhirServerConfigR4 {
 
 
   @Bean
+  @Primary
   public MatchboxPackageInstallerImpl packageInstaller() {
     return new MatchboxPackageInstallerImpl();
   }

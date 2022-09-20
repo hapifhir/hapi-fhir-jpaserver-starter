@@ -11,5 +11,9 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+    - port: {{ .Values.metrics.service.port }}
+      targetPort: http-metrics
+      protocol: TCP
+      name: http-metrics
   selector:
     {{- include "hapi-fhir-jpaserver.selectorLabels" . | nindent 4 }}

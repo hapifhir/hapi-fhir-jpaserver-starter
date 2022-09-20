@@ -1,11 +1,4 @@
-package ca.uhn.fhir.jpa.starter;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
-
-import ca.uhn.fhir.rest.api.RequestTypeEnum;
-import ch.ahdis.matchbox.spring.boot.autoconfigure.MutableHttpServletRequest;
-import ch.ahdis.matchbox.util.VersionUtil;
+package ch.ahdis.matchbox;
 
 import java.io.IOException;
 
@@ -13,19 +6,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Import(AppProperties.class)
-public class JpaRestfulServer extends BaseJpaRestfulServer {
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.api.RequestTypeEnum;
+import ca.uhn.fhir.rest.server.RestfulServer;
+import ch.ahdis.matchbox.spring.boot.autoconfigure.MutableHttpServletRequest;
+import ch.ahdis.matchbox.util.VersionUtil;
+
+public class MatchboxRestfulServer extends RestfulServer {
   
-  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(JpaRestfulServer.class);
+  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(MatchboxRestfulServer.class);
 
-
-  @Autowired
-  AppProperties appProperties;
 
   private static final long serialVersionUID = 1L;
 
-  public JpaRestfulServer() {
-    super();
+  public MatchboxRestfulServer(FhirContext fhirContext) {
+    super(fhirContext);
   }
 
   @Override

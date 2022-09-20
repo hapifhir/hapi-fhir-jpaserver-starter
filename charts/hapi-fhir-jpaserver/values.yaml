@@ -6,8 +6,8 @@ image:
   registry: docker.io
   # -- the path inside the repository
   repository: hapiproject/hapi
-  # -- defaults to `Chart.appVersion`. As of v5.7.0, this is the `distroless` flavor
-  tag: ""
+  # -- the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image.
+  tag: "v6.1.0@sha256:253f87bb1f5b7627f8e25f76a4b0aa7a83f31968c6e111ad74d3cc4ad9ae812e"
   # -- image pullPolicy to use
   pullPolicy: IfNotPresent
 
@@ -39,6 +39,10 @@ securityContext:
   readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 65532
+  runAsGroup: 65532
+  privileged: false
+  seccompProfile:
+    type: RuntimeDefault
 
 # service to expose the server
 service:
@@ -88,6 +92,18 @@ tolerations: []
 # -- pod affinity
 affinity: {}
 
+# -- pod topology spread configuration
+# see: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#api
+topologySpreadConstraints:
+  []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: ScheduleAnyway
+  #   labelSelector:
+  #     matchLabels:
+  #       app.kubernetes.io/instance: hapi-fhir-jpaserver
+  #       app.kubernetes.io/name: hapi-fhir-jpaserver
+
 postgresql:
   # -- enable an included PostgreSQL DB.
   # see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
@@ -111,6 +127,9 @@ postgresql:
       capabilities:
         drop:
           - ALL
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
 
 readinessProbe:
   failureThreshold: 5
@@ -126,20 +145,28 @@ startupProbe:
   successThreshold: 1
   timeoutSeconds: 30
 
-# only used if `postgresql.enabeld=false`
+livenessProbe:
+  failureThreshold: 5
+  initialDelaySeconds: 30
+  periodSeconds: 20
+  successThreshold: 1
+  timeoutSeconds: 30
+
 externalDatabase:
-  # Database host
+  # -- external database host used with `postgresql.enabled=false`
   host: localhost
-  # non-root Username for FHIR Database
-  user: fhir
-  # Database password
-  password: ""
-  # Name of an existing secret resource containing the DB password in a 'postgresql-password' key
-  existingSecret: ""
-  # Database name
-  database: fhir
-  # Database port number
+  # -- database port number
   port: 5432
+  # -- username for the external database
+  user: fhir
+  # -- database password
+  password: ""
+  # -- name of an existing secret resource containing the DB password in the `existingSecretKey` key
+  existingSecret: ""
+  # -- name of the key inside the `existingSecret`
+  existingSecretKey: "postgresql-password"
+  # -- database name
+  database: fhir
 
 # -- extra environment variables to set on the server container
 extraEnv:
@@ -155,4 +182,29 @@ podDisruptionBudget:
   minAvailable: 1
   # -- maximum unavailable instances
   maxUnavailable: ""
->>>>>>> master
+
+metrics:
+  serviceMonitor:
+    # -- if enabled, creates a ServiceMonitor instance for Prometheus Operator-based monitoring
+    enabled: false
+    # -- additional labels to apply to the ServiceMonitor object, e.g. `release: prometheus`
+    additionalLabels: {}
+    # namespace: monitoring
+    # interval: 30s
+    # scrapeTimeout: 10s
+  service:
+    port: 8081
+
+# @ignore
+restrictedContainerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  privileged: false
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  seccompProfile:
+    type: RuntimeDefault

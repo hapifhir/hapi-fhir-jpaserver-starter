@@ -30,18 +30,12 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: wait-for-db-to-be-ready
-          image: "{{ .Values.postgresql.image.registry }}/{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
+          image: docker.io/bitnami/postgresql:14.5.0@sha256:4355265e33e9c2a786aa145884d4b36ffd4c41c516b35d60df0b7495141ec738
           imagePullPolicy: IfNotPresent
+          {{- with .Values.restrictedContainerSecurityContext }}
           securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            privileged: false
-            capabilities:
-              drop:
-                - ALL
-            runAsNonRoot: true
-            runAsUser: 1001
-            runAsGroup: 1001
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
             - name: PGHOST
               value: "{{ include "hapi-fhir-jpaserver.database.host" . }}"
@@ -60,15 +54,29 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}
+          image: {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
+            - name: http-metrics
+              containerPort: 8081
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /readyz
+              port: http
+          {{- with .Values.startupProbe }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+            successThreshold: {{ .successThreshold }}
+            failureThreshold: {{ .failureThreshold }}
+          {{- end }}
           readinessProbe:
             httpGet:
-              path: /
+              path: /readyz
               port: http
           {{- with .Values.readinessProbe }}
             initialDelaySeconds: {{ .initialDelaySeconds }}
@@ -77,11 +85,11 @@ spec:
             successThreshold: {{ .successThreshold }}
             failureThreshold: {{ .failureThreshold }}
           {{- end }}
-          startupProbe:
+          livenessProbe:
             httpGet:
-              path: /fhir/metadata
+              path: /livez
               port: http
-          {{- with .Values.startupProbe }}
+          {{- with .Values.livenessProbe }}
             initialDelaySeconds: {{ .initialDelaySeconds }}
             periodSeconds: {{ .periodSeconds }}
             timeoutSeconds: {{ .timeoutSeconds }}
@@ -106,6 +114,10 @@ spec:
               value: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
             - name: HAPI_FHIR_USE_APACHE_ADDRESS_STRATEGY
               value: "true"
+            - name: MANAGEMENT_ENDPOINT_HEALTH_PROBES_ADD_ADDITIONAL_PATHS
+              value: "true"
+            - name: MANAGEMENT_SERVER_PORT
+              value: "8081"
             {{- if .Values.extraEnv }}
             {{ toYaml .Values.extraEnv | nindent 12 }}
             {{- end }}
@@ -124,6 +136,10 @@ spec:
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
