@@ -58,7 +58,7 @@ public class KeycloakGroupTemplateHelperTest {
 	
 	@Test
 	public void userTest() {
-		UserRepresentation userRep = KeycloakTemplateHelper.user("temp", "nurse", "temp@test.org", "temp", "1234", "+91", "8150038173", "5f613809-01cb-41d6-a041-10efb88e9167", "48482551-e023-4515-82e8-241fa1c91ffc", "stateGroup", "lgaGroup", "wardGrouo", "clinicGrouo");
+		UserRepresentation userRep = KeycloakTemplateHelper.user("temp", "nurse", "temp@test.org", "temp", "1234", "+91", "8150038173","nurse","5f613809-01cb-41d6-a041-10efb88e9167", "48482551-e023-4515-82e8-241fa1c91ffc", "stateGroup", "lgaGroup", "wardGrouo", "clinicGrouo");
 		Map<String, List<String>> attributes = userRep.getAttributes();
 		List<String> groups = userRep.getGroups();
 		assertEquals(userRep.getFirstName(), "temp");
