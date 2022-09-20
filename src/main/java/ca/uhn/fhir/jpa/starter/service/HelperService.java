@@ -123,7 +123,7 @@ public class HelperService {
 
 		private static final long AUTH_INITIAL_DELAY = 25 * 60000L;
 		private static final long AUTH_FIXED_DELAY = 50 * 60000L;
-		private static final long DELAY = 5 * 60000;
+		private static final long DELAY = 2 * 60000;
 
 		public void initializeKeycloak() {
 			ctx = FhirContext.forR4();
@@ -384,7 +384,7 @@ public class HelperService {
 						practitioners.add(hcw.getTelecom().get(0).getValue());
 						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId);
 						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
-						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[4],hcwData[3],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
+						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[4],hcwData[3],practitionerId,practitionerRoleId,hcwData[13],hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
 						String keycloakUserId = createUser(user);
 						if(keycloakUserId != null) {
 							updateResource(keycloakUserId, practitionerId, Practitioner.class);
