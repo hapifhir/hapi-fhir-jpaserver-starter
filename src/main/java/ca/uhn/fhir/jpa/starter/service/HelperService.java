@@ -156,12 +156,12 @@ public class HelperService {
 		@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
 		private void registerClientAuthInterceptor() {
 			String accessToken = tokenManager.getAccessTokenString();
-			authInterceptor = new BearerTokenAuthInterceptor(accessToken);
 			try {
 				fhirClient.unregisterInterceptor(authInterceptor);
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
+			authInterceptor = new BearerTokenAuthInterceptor(accessToken); // the reason this is below is to unregister interceptors to avoid memory leak. Null pointer is caught in try catch.
 			fhirClient = ctx.newRestfulGenericClient(serverBase);
 			fhirClient.registerInterceptor(authInterceptor);
 		}
@@ -211,20 +211,25 @@ public class HelperService {
 						 okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
 						 String patientDetailsMessage = "Thanks for visiting!\nHere are the details of your visit: \nName: "+patientName+" \nDate: "+date+" \nYour OCL Id is:\n"+patientOclId+"";
 						 String oclLinkMessage = "The QR image for OCL code:\n"+patientOclId+"\nis here:\n"+oclLink+"";
-						 String messageOne="https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&message="+patientDetailsMessage+"&sender=HACEY-IPRD&mobiles="+mobile;
-						 String messageTwo = "https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&message="+oclLinkMessage+"&sender=HACEY-IPRD&mobiles="+mobile;
-						 System.out.println(messageOne);
-						 System.out.println(messageTwo);
-						 Request requestOne = new Request.Builder().url(messageOne).build();
-						 Request requestTwo = new Request.Builder().url(messageTwo).build();
-						 okhttp3.Response responseOne = client.newCall(requestOne).execute();	
-						 okhttp3.Response responseTwo = client.newCall(requestTwo).execute();	
-						 if(responseOne.isSuccessful() && responseTwo.isSuccessful())
-						 {
-							 encounter.addExtension(smsSent.getExtensionByUrl(SMS_EXTENTION_URL));
-							 fhirClient.update()
-							   .resource(encounter)
-							   .execute();
+						 String messageVisitDetails ="https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&message="+patientDetailsMessage+"&sender=HACEY-IPRD&mobiles="+mobile;
+						 String messageQrImage = "https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&message="+oclLinkMessage+"&sender=HACEY-IPRD&mobiles="+mobile;	 
+						 Request requestVisitDetails = new Request.Builder().url(messageVisitDetails).build();
+						 Request requestQrImage = new Request.Builder().url(messageQrImage).build();
+						 okhttp3.Response responseVisitDetails = client.newCall(requestVisitDetails).execute();
+						 okhttp3.Response responseQrImage = client.newCall(requestQrImage).execute();	
+						 try {
+							 if(responseVisitDetails.isSuccessful() && responseQrImage.isSuccessful())
+							 {
+								 encounter.addExtension(smsSent.getExtensionByUrl(SMS_EXTENTION_URL));
+								 fhirClient.update()
+								   .resource(encounter)
+								   .execute();
+							 } 
+						 }catch(Exception e) {
+							 e.printStackTrace();
+						 }finally {
+							 responseVisitDetails.body().close();
+							 responseQrImage.body().close();
 						 }
 					 }
 				 }
