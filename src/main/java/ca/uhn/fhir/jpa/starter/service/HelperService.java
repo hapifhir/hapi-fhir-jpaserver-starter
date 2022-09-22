@@ -156,12 +156,12 @@ public class HelperService {
 		@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
 		private void registerClientAuthInterceptor() {
 			String accessToken = tokenManager.getAccessTokenString();
+			authInterceptor = new BearerTokenAuthInterceptor(accessToken);
 			try {
 				fhirClient.unregisterInterceptor(authInterceptor);
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
-			authInterceptor = new BearerTokenAuthInterceptor(accessToken);
 			fhirClient = ctx.newRestfulGenericClient(serverBase);
 			fhirClient.registerInterceptor(authInterceptor);
 		}
@@ -172,7 +172,6 @@ public class HelperService {
 					.withZone(ZoneId.of("UTC"))
 					.format(Instant.now());
 			String date= DateTimeFormatter.ISO_INSTANT.format(Instant.now()).split("T")[0];
-
 			Extension smsSent = new Extension();
 			 smsSent.addExtension(
 					 SMS_EXTENTION_URL, 
@@ -195,7 +194,8 @@ public class HelperService {
 					 continue;
 				 }	
 				 Encounter encounter = (Encounter) encBundle.getEntry().get(0).getResource();
-				 String patientOclId = getOclIdentifier(patient.getIdentifier());
+				 String patientOclId = getOclIdentifier(patient.getIdentifier()).replaceAll(".(?!$)", "$0 ").replaceAll(".{8}", "$0\n");
+				 String oclLink = getOclLink(patient.getIdentifier());
 				 String patientName = patient.getName().get(0).getNameAsSingleString();
 				 String mobile = patient.getTelecom().get(0).getValue();
 				 Extension encounterExtension = encounter.getExtensionByUrl(SMS_EXTENTION_URL);
@@ -209,11 +209,17 @@ public class HelperService {
 						 }	
 						 OkHttpClient client = new OkHttpClient().newBuilder().build();
 						 okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
-						 String message = "Thanks for visiting! Here are the details of your visit: \n Name: "+patientName+" + \n Date: "+date+" +\n Your OCL Id is:"+patientOclId+"";
-						 String finalurl="https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&message="+message+"&sender=IPRD-HACEY&mobiles="+mobile;
-						 Request request = new Request.Builder().url(finalurl).build();
-						 okhttp3.Response response = client.newCall(request).execute();					 
-						 if(response.isSuccessful())
+						 String patientDetailsMessage = "Thanks for visiting!\nHere are the details of your visit: \nName: "+patientName+" \nDate: "+date+" \nYour OCL Id is:\n"+patientOclId+"";
+						 String oclLinkMessage = "The QR image for OCL code:\n"+patientOclId+"\nis here:\n"+oclLink+"";
+						 String messageOne="https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&message="+patientDetailsMessage+"&sender=HACEY-IPRD&mobiles="+mobile;
+						 String messageTwo = "https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&message="+oclLinkMessage+"&sender=HACEY-IPRD&mobiles="+mobile;
+						 System.out.println(messageOne);
+						 System.out.println(messageTwo);
+						 Request requestOne = new Request.Builder().url(messageOne).build();
+						 Request requestTwo = new Request.Builder().url(messageTwo).build();
+						 okhttp3.Response responseOne = client.newCall(requestOne).execute();	
+						 okhttp3.Response responseTwo = client.newCall(requestTwo).execute();	
+						 if(responseOne.isSuccessful() && responseTwo.isSuccessful())
 						 {
 							 encounter.addExtension(smsSent.getExtensionByUrl(SMS_EXTENTION_URL));
 							 fhirClient.update()
@@ -237,6 +243,16 @@ public class HelperService {
 				oclId = getOclIdFromString(oclId);
 			} catch (MalformedURIException e) {
 				logger.debug(e.getMessage());
+			}
+			return oclId;
+		}
+		
+		private String getOclLink(List<Identifier> identifiers)	{
+			String oclId = null;
+			for(Identifier identifier: identifiers) {
+				if(identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/ocl")) {
+					oclId = identifier.getValue();
+				}
 			}
 			return oclId;
 		}
@@ -466,7 +482,7 @@ public class HelperService {
 				Response response = realmResource.users().create(userRep);
 				return CreatedResponseUtil.getCreatedId(response);
 			}catch(WebApplicationException e) {
-				logger.error("Cannot create user "+userRep.getUsername()+" with groups "+userRep.getGroups());
+				logger.error("Cannot create user "+userRep.getUsername()+" with groups "+userRep.getGroups()+"\n"+e.getStackTrace().toString());
 				return null;
 			}
 		}
