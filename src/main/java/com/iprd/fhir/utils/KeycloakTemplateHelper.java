@@ -54,11 +54,10 @@ public class KeycloakTemplateHelper {
 		return facilityGroupRep;
 	}
 	
-	public static UserRepresentation user(String firstName,String lastName,String email,String userName,String password,String phoneNumber,String countryCode, String practitionerId, String practitionerRoleId, String stateGroup, String lgaGroup, String wardGroup, String facilityGroup) {
+	public static UserRepresentation user(String firstName,String lastName,String email,String userName,String password,String phoneNumber,String countryCode, String practitionerId, String practitionerRoleId,String role, String stateGroup, String lgaGroup, String wardGroup, String facilityGroup) {
 		UserRepresentation user = new UserRepresentation();
 		CredentialRepresentation credential = new CredentialRepresentation();
 		credential.setType(CredentialRepresentation.PASSWORD);
-		credential.setTemporary(true);
 		credential.setValue(password);
 		user.setCredentials(Arrays.asList(credential));
 		user.setGroups(Arrays.asList(stateGroup, lgaGroup, wardGroup, facilityGroup));
@@ -67,7 +66,7 @@ public class KeycloakTemplateHelper {
 		user.setLastName(lastName);
 		user.setEmail(email);
 		user.singleAttribute("phoneNumber", countryCode+phoneNumber);
-		user.singleAttribute("type","HCW");
+		user.singleAttribute("type",role);
 		user.singleAttribute("practitioner_id", practitionerId);
 		user.singleAttribute("practitioner_role_id", practitionerRoleId);
 		user.setEnabled(true);

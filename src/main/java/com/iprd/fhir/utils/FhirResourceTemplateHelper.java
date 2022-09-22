@@ -11,6 +11,8 @@ import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Location.LocationMode;
 import org.hl7.fhir.r4.model.Location.LocationStatus;
 import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;  
 import java.util.Date;  
 
@@ -167,8 +169,12 @@ public class FhirResourceTemplateHelper {
 		qualificationComponent.setCode(codeableConcept);
 		practitionerQualificationComponents.add(qualificationComponent);
 		practitioner.setQualification(practitionerQualificationComponents);
-		Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
-		practitioner.setBirthDate(dateOfBirth);
+		try {
+			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
+			practitioner.setBirthDate(dateOfBirth);
+		}catch(ParseException exception) {
+			exception.printStackTrace();
+		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;
 	}
