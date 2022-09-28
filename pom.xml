@@ -12,7 +12,7 @@
     if you are using this file as a basis for your own project.
     --> 
 
-    <groupId>crossroads.labs</groupId>
+    <groupId>more.informatics</groupId>
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
     <packaging>war</packaging>
     <version>6.1.0-IPS</version>
