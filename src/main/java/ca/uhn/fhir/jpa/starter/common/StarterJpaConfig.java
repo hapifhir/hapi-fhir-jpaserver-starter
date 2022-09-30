@@ -38,6 +38,7 @@ import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.IStaleSearchDeletingSvc;
 import ca.uhn.fhir.jpa.search.StaleSearchDeletingSvcImpl;
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
@@ -214,7 +215,7 @@ public class StarterJpaConfig {
 
 
 	@Bean
-	@ConditionalOnProperty(prefix = "hapi.fhir", name = "cors")
+	@Conditional(OnCorsPresent.class)
 	public CorsInterceptor corsInterceptor(AppProperties appProperties) {
 		// Define your CORS configuration. This is an example
 		// showing a typical setup. You should customize this
