@@ -346,7 +346,7 @@ public class StarterJpaConfig {
 
 		corsInterceptor.ifPresent(fhirServer::registerInterceptor);
 
-		if (appProperties.getSubscription() != null) {
+		if (daoConfig.getSupportedSubscriptionTypes().size() > 0) {
 			// Subscription debug logging
 			fhirServer.registerInterceptor(new SubscriptionDebugLogInterceptor());
 		}
