@@ -202,15 +202,6 @@ public class FhirServerConfigCommon {
     if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
       modelConfig.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
 
-    // You can enable these if you want to support Subscriptions from your server
-    if (appProperties.getSubscription() != null && appProperties.getSubscription().getResthook_enabled() != null) {
-      modelConfig.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.RESTHOOK);
-    }
-
-    if (appProperties.getSubscription()  != null && appProperties.getSubscription().getEmail() != null) {
-      modelConfig.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
-    }
-
     modelConfig.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 
     modelConfig.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
