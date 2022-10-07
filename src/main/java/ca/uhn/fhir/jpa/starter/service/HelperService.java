@@ -8,14 +8,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,12 +24,10 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 
 import org.apache.jena.ext.xerces.util.URI.MalformedURIException;
-import org.codehaus.jettison.json.JSONObject;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.BooleanType;
+import org.hl7.fhir.r4.model.Appointment;
 import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
 import org.hl7.fhir.r4.model.ContactPoint;
@@ -78,7 +73,6 @@ import com.iprd.report.FhirClientProvider;
 import com.iprd.report.ReportGeneratorFactory;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.dao.BaseHapiFhirDao;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.model.primitive.BooleanDt;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
@@ -522,6 +516,14 @@ public class HelperService {
 						immunization.getPatient().setReference("Patient/"+actualPatientId);
 						fhirClient.update()
 						   .resource(immunization)
+						   .execute();
+						continue;
+					}
+					else if(resource.fhirType().equals("Appointment")) {
+						Appointment appointment = (Appointment) resource;
+						appointment.getParticipant().get(0).getActor().setReference("Patient/"+actualPatientId);
+						fhirClient.update()
+						   .resource(appointment)
 						   .execute();
 						continue;
 					}

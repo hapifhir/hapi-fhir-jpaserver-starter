@@ -91,7 +91,7 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .permitAll()
                 .mvcMatchers("/logout.do")
                 .permitAll()
-                .antMatchers("/fhir/**")
+                .antMatchers("/fhir/**","/iprd/**")
                 .authenticated()
                 .and()
                 .csrf()
