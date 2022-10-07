@@ -179,7 +179,8 @@ public class HelperService {
 			 String encounterClass = "IMP";
 			 String queryPath = "Patient?";
 			 queryPath+="_has:Encounter:patient:class="+encounterClass+"&";
-			 queryPath+="_has:Encounter:patient:date=eq"+date+"";
+			 queryPath+="_has:Encounter:patient:date=eq"+date+"&";
+			 queryPath+="identifier:not=patient_with_ocl";
 			 Bundle patientBundle = new Bundle();
 			 getBundleBySearchUrl(patientBundle, queryPath);
 			 
@@ -540,7 +541,15 @@ public class HelperService {
 
 		private String getActualPatientId(String oclId) {
 			Bundle patientBundle = new Bundle();
-			getBundleBySearchUrl(patientBundle, serverBase+"/Patient?identifierPartial:contains="+oclId);
+			String queryPath = "/Patient?";
+			queryPath += "identifierPartial:contains="+oclId+"&";
+			queryPath += "identifier:not=patient_with_ocl";
+			getBundleBySearchUrl(patientBundle, serverBase+queryPath);
+			if(patientBundle.hasEntry() && patientBundle.getEntry().size() > 0) {
+				Patient patient = (Patient)patientBundle.getEntry().get(0).getResource();
+				return patient.getIdElement().getIdPart();
+			}
+			
 			for(BundleEntryComponent entry: patientBundle.getEntry()) {
 				Patient patient = (Patient)entry.getResource();
 				if(isActualPatient(patient, oclId))
