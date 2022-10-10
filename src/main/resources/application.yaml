@@ -78,6 +78,10 @@ hapi:
     #    supported_resource_types:
     #      - Patient
     #      - Observation
+    ##################################################
+    # Allowed Bundle Types for persistence (defaults are: COLLECTION,DOCUMENT,MESSAGE)
+    ##################################################
+    #    allowed_bundle_types: COLLECTION,DOCUMENT,MESSAGE,TRANSACTION,TRANSACTIONRESPONSE,BATCH,BATCHRESPONSE,HISTORY,SEARCHSET
     #    allow_cascading_deletes: true
     #    allow_contains_searches: true
     #    allow_external_references: true
