@@ -42,7 +42,7 @@ spring:
   ###    These settings will enable fulltext search with lucene
       hibernate.search.enabled: false
   #      hibernate.search.backend.type: lucene
-  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
+  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
   #      hibernate.search.backend.directory.type: local-filesystem
   #      hibernate.search.backend.directory.root: target/lucenefiles
   #      hibernate.search.backend.lucene_version: lucene_current
@@ -89,7 +89,7 @@ hapi:
     #    default_pretty_print: true
     #    default_page_size: 20
     #    delete_expunge_enabled: true
-    #    enable_repository_validating_interceptor: false
+    #    enable_repository_validating_interceptor: true
     #    enable_index_missing_fields: false
     #    enable_index_of_type: true
     #    enable_index_contained_resource: false
@@ -100,7 +100,7 @@ hapi:
     bulk_import_enabled: false
     #    enforce_referential_integrity_on_delete: false
     # This is an experimental feature, and does not fully support _total and other FHIR features.
-#    enforce_referential_integrity_on_delete: false
+    #    enforce_referential_integrity_on_delete: false
     #    enforce_referential_integrity_on_write: false
     #    etag_support_enabled: true
     #    expunge_enabled: true
@@ -110,8 +110,8 @@ hapi:
     #    graphql_enabled: true
     #    narrative_enabled: true
     #    mdm_enabled: true
-#    local_base_urls:
-#      - https://hapi.fhir.org/baseR4
+    #    local_base_urls:
+    #      - https://hapi.fhir.org/baseR4
     mdm_enabled: false
     #    partitioning:
     #      allow_references_across_partitions: false
@@ -128,10 +128,10 @@ hapi:
     search-coord-queue-capacity: 200
 
     # Threadpool size for BATCH'ed GETs in a bundle.
-#    bundle_batch_pool_size: 10
-#    bundle_batch_pool_max_size: 50
+    #    bundle_batch_pool_size: 10
+    #    bundle_batch_pool_max_size: 50
 
-#    logger:
+    #    logger:
     #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
     #      format: >-
     #        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
@@ -155,10 +155,11 @@ hapi:
         server_address: "http://hapi.fhir.org/baseR4"
         refuse_to_fetch_third_party_urls: false
         fhir_version: R4
-#    validation:
-#      requests_enabled: true
-#      responses_enabled: true
-#    binary_storage_enabled: true
+    #    validation:
+    #      requests_enabled: true
+    #      responses_enabled: true
+    #    binary_storage_enabled: true
+    inline_resource_storage_below_size: 4000
 #    bulk_export_enabled: true
 #    subscription:
 #      resthook_enabled: true

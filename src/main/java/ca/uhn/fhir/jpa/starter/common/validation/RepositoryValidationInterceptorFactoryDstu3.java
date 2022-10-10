@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.starter;
+package ca.uhn.fhir.jpa.starter.common.validation;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory.ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR;
+
 /**
  * This class can be customized to enable the {@link RepositoryValidatingInterceptor}
  * on this server.
@@ -26,7 +28,7 @@ import java.util.stream.Collectors;
  * The <code>enable_repository_validating_interceptor</code> property must be enabled in <code>application.yaml</code>
  * in order to use this class.
  */
-@ConditionalOnProperty(prefix = "hapi.fhir", name = "enable_repository_validating_interceptor", havingValue = "true")
+@ConditionalOnProperty(prefix = "hapi.fhir", name = ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR, havingValue = "true")
 @Configuration
 @Conditional(OnDSTU3Condition.class)
 public class RepositoryValidationInterceptorFactoryDstu3 implements IRepositoryValidationInterceptorFactory {
@@ -50,10 +52,9 @@ public class RepositoryValidationInterceptorFactoryDstu3 implements IRepositoryV
 			.map(StructureDefinition.class::cast)
 			.collect(Collectors.groupingBy(StructureDefinition::getType));
 
-		structureDefintions.entrySet().forEach(structureDefinitionListEntry ->
-		{
-			String[] urls = structureDefinitionListEntry.getValue().stream().map(StructureDefinition::getUrl).toArray(String[]::new);
-			repositoryValidatingRuleBuilder.forResourcesOfType(structureDefinitionListEntry.getKey()).requireAtLeastOneProfileOf(urls).and().requireValidationToDeclaredProfiles();
+		structureDefintions.forEach((key, value) -> {
+			String[] urls = value.stream().map(StructureDefinition::getUrl).toArray(String[]::new);
+			repositoryValidatingRuleBuilder.forResourcesOfType(key).requireAtLeastOneProfileOf(urls).and().requireValidationToDeclaredProfiles();
 		});
 
 		List<IRepositoryValidatingRule> rules = repositoryValidatingRuleBuilder.build();
