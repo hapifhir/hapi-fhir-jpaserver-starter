@@ -28,6 +28,7 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.postgresql.enabled }}
       initContainers:
         - name: wait-for-db-to-be-ready
           image: docker.io/bitnami/postgresql:14.5.0@sha256:4355265e33e9c2a786aa145884d4b36ffd4c41c516b35d60df0b7495141ec738
@@ -50,6 +51,7 @@ spec:
                 echo "Waiting for DB ${PGUSER}@${PGHOST}:${PGPORT} to be up";
                 sleep 15;
               done;
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
