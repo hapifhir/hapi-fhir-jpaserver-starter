@@ -1,12 +1,16 @@
 package ca.uhn.fhir.jpa.starter;
 
-import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
+import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
+import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
+import ca.uhn.fhir.jpa.starter.common.FhirTesterConfig;
+import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
 import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
 import org.smartregister.extension.configuration.OpenSRPExtensionConfiguration;
+import ca.uhn.fhir.rest.server.RestfulServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -24,11 +28,19 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-@ServletComponentScan(basePackageClasses = {
-  JpaRestfulServer.class})
+@ServletComponentScan(basePackageClasses = {RestfulServer.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
-@Import({SubscriptionSubmitterConfig.class, SubscriptionProcessorConfig.class, SubscriptionChannelConfig.class, WebsocketDispatcherConfig.class, MdmConfig.class, OpenSRPExtensionConfiguration.class})
+@Import({
+	SubscriptionSubmitterConfig.class,
+	SubscriptionProcessorConfig.class,
+	SubscriptionChannelConfig.class,
+	WebsocketDispatcherConfig.class,
+	MdmConfig.class,
+	JpaBatch2Config.class,
+	Batch2JobsConfig.class
+})
 @EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class})
+
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
@@ -50,11 +62,10 @@ public class Application extends SpringBootServletInitializer {
 
   @Bean
   @Conditional(OnEitherVersion.class)
-  public ServletRegistrationBean hapiServletRegistration() {
+  public ServletRegistrationBean hapiServletRegistration(RestfulServer restfulServer) {
     ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
-    JpaRestfulServer jpaRestfulServer = new JpaRestfulServer();
-    beanFactory.autowireBean(jpaRestfulServer);
-    servletRegistrationBean.setServlet(jpaRestfulServer);
+    beanFactory.autowireBean(restfulServer);
+    servletRegistrationBean.setServlet(restfulServer);
     servletRegistrationBean.addUrlMappings("/fhir/*");
     servletRegistrationBean.setLoadOnStartup(1);
 

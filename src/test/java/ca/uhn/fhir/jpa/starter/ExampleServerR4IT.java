@@ -1,15 +1,11 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.partition.SystemRequestDetails;
-import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
-import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
-
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -41,6 +37,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 		"hapi.fhir.fhir_version=r4",
 		"hapi.fhir.subscription.websocket_enabled=true",
 		"hapi.fhir.mdm_enabled=true",
+		"hapi.fhir.implementationguides.dk-core.name=hl7.fhir.dk.core",
+		"hapi.fhir.implementationguides.dk-core.version=1.1.0",
 		// Override is currently required when using MDM as the construction of the MDM
 		// beans are ambiguous as they are constructed multiple places. This is evident
 		// when running in a spring boot environment

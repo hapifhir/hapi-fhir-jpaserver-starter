@@ -9,7 +9,6 @@ public class CqlConfigCondition implements Condition {
   @Override
   public boolean matches(ConditionContext theConditionContext, AnnotatedTypeMetadata theAnnotatedTypeMetadata) {
     String property = theConditionContext.getEnvironment().getProperty("hapi.fhir.cql_enabled");
-    boolean enabled = Boolean.parseBoolean(property);
-    return enabled;
+	  return Boolean.parseBoolean(property);
   }
 }
