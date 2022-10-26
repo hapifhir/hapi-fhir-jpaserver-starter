@@ -487,7 +487,7 @@ public class HelperService {
 			}
 		}
 
-		@Scheduled(fixedDelay = FIXED_DELAY, initialDelay = INITIAL_DELAY )
+		@Scheduled(fixedDelay = DELAY, initialDelay = DELAY )
 		public void mapResourcesToPatient() {
 			//Searching for patient created with OCL-ID
 			Bundle tempPatientBundle = new Bundle();
