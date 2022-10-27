@@ -4,6 +4,7 @@ import java.lang.String;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -40,17 +41,19 @@ public class KeycloakTemplateHelper {
 		wardGroupRep.singleAttribute("location_id",fhirResourceId);
 		return wardGroupRep;
 	}
-	
-	public static GroupRepresentation facilityGroup(String name ,String parentId, String fhirResourceId, String facilityLevel, String ownership, String facilityUID, String facilityCode) {
+
+	public static GroupRepresentation facilityGroup(String name , String parentId, String fhirOrganizationId, String fhirLocationId, String facilityLevel, String ownership, String facilityUID, String facilityCode) {
 		GroupRepresentation facilityGroupRep = new GroupRepresentation();
 		facilityGroupRep.setName(facilityUID);
 		facilityGroupRep.singleAttribute("type", FACILITY);
 		facilityGroupRep.singleAttribute("facility_name",name);
 		facilityGroupRep.singleAttribute("parent", parentId);
 		facilityGroupRep.singleAttribute("facility_level",facilityLevel);
-		facilityGroupRep.singleAttribute("organization_id",fhirResourceId);
+		facilityGroupRep.singleAttribute("organization_id",fhirOrganizationId);
+		facilityGroupRep.singleAttribute("location_id",fhirLocationId);
 		facilityGroupRep.singleAttribute("ownership",ownership);
 		facilityGroupRep.singleAttribute("facility_code",facilityCode);
+		facilityGroupRep.singleAttribute("facilityUID",facilityUID);
 		return facilityGroupRep;
 	}
 	

@@ -18,8 +18,10 @@ import java.util.Date;
 
 public class FhirResourceTemplateHelper {
 	private static String CODE_JDN = "jdn";
+	private static String CODE_BU = "bu";
+	private static String DISPLAY_BUILDING = "building";
 	private static String DISPLAY_JURISDICTION = "Jurisdiction";
-	private static String SYSTEM_JURISDICTION = "http://hl7.org/fhir/ValueSet/location-physical-type";
+	private static String SYSTEM_LOCATION_PHYSICAL_TYPE = "http://hl7.org/fhir/ValueSet/location-physical-type";
 	private static String CODE_CLINIC = "prov";
 	private static String DISPLAY_CLINIC = "Healthcare Provider";
 	private static String SYSTEM_CLINIC = "	http://hl7.org/fhir/ValueSet/organization-type";
@@ -35,7 +37,7 @@ public class FhirResourceTemplateHelper {
 		physicalTypeCoding
 		.setCode(CODE_JDN)
 		.setDisplay(DISPLAY_JURISDICTION)
-		.setSystem(SYSTEM_JURISDICTION);
+		.setSystem(SYSTEM_LOCATION_PHYSICAL_TYPE);
 		statePhysicalType.addCoding(physicalTypeCoding);
 		stateAddress.setState(name);
 		state.setName(name);
@@ -47,7 +49,7 @@ public class FhirResourceTemplateHelper {
 		return state;
 	}
 	
-	public static Location lga(String nameOfLga, String state) {
+	public static Location lga(String nameOfLga, String state, String stateId) {
 		Location lga = new Location();
 		Address lgaAddress = new Address();
 		CodeableConcept lgaPhysicalType = new CodeableConcept();
@@ -57,7 +59,7 @@ public class FhirResourceTemplateHelper {
 		physicalTypeCoding
 		.setCode(CODE_JDN)
 		.setDisplay(DISPLAY_JURISDICTION)
-		.setSystem(SYSTEM_JURISDICTION);
+		.setSystem(SYSTEM_LOCATION_PHYSICAL_TYPE);
 		lgaPhysicalType.addCoding(physicalTypeCoding);
 		lgaAddress.setState(state);
 		lgaAddress.setDistrict(nameOfLga);
@@ -67,10 +69,11 @@ public class FhirResourceTemplateHelper {
 		lga.setStatus(LocationStatus.ACTIVE);
 		lga.setMode(LocationMode.INSTANCE);
 		lga.setPhysicalType(lgaPhysicalType);
+		lga.setPartOf(new Reference("Location/" + stateId));
 		return lga;
 	}
 	
-	public static Location ward(String state, String district, String city) {
+	public static Location ward(String state, String district, String city, String lgaId) {
 		Location ward = new Location();
 		Address wardAddress = new Address();
 		CodeableConcept wardPhysicalType = new CodeableConcept();
@@ -78,7 +81,7 @@ public class FhirResourceTemplateHelper {
 		physicalTypeCoding
 		.setCode(CODE_JDN)
 		.setDisplay(DISPLAY_JURISDICTION)
-		.setSystem(SYSTEM_JURISDICTION);
+		.setSystem(SYSTEM_LOCATION_PHYSICAL_TYPE);
 		wardPhysicalType.addCoding(physicalTypeCoding);
 		wardAddress.setState(state);
 		wardAddress.setCity(city);
@@ -89,7 +92,31 @@ public class FhirResourceTemplateHelper {
 		ward.setStatus(LocationStatus.ACTIVE);
 		ward.setMode(LocationMode.INSTANCE);
 		ward.setPhysicalType(wardPhysicalType);
+		ward.setPartOf(new Reference("Location/" + lgaId));
 		return ward;
+	}
+	
+	public static Location clinic(String state, String district, String city, String clinic, String wardId) {
+		Location facility = new Location();
+		Address facilityAddress = new Address();
+		CodeableConcept facilityPhysicalType = new CodeableConcept();
+		Coding physicalTypeCoding = new Coding();
+		physicalTypeCoding
+		.setCode(CODE_BU)
+		.setDisplay(DISPLAY_BUILDING)
+		.setSystem(SYSTEM_LOCATION_PHYSICAL_TYPE);
+		facilityPhysicalType.addCoding(physicalTypeCoding);
+		facilityAddress.setState(state);
+		facilityAddress.setCity(city);
+		facilityAddress.setDistrict(district);
+		facility.setName(clinic);
+		facility.setId(new IdType("Location", generateUUID()));
+		facility.setAddress(facilityAddress);
+		facility.setStatus(LocationStatus.ACTIVE);
+		facility.setMode(LocationMode.INSTANCE);
+		facility.setPhysicalType(facilityPhysicalType);
+		facility.setPartOf(new Reference("Location/" + wardId));
+		return facility;
 	}
 	
 	public static Organization clinic(String nameOfClinic,String facilityUID,String facilityCode ,String countryCode, String contact, String state, String district, String city) {
