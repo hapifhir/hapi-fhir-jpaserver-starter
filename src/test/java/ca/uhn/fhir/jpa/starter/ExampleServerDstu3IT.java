@@ -113,7 +113,7 @@ public class ExampleServerDstu3IT implements IServerSupport {
       .execute();
 
     List<Parameters.ParametersParameterComponent> response = outParams.getParameter();
-    Assert.assertTrue(!response.isEmpty());
+	  Assert.assertFalse(response.isEmpty());
     Parameters.ParametersParameterComponent component = response.get(0);
     Assert.assertTrue(component.getResource() instanceof MeasureReport);
     MeasureReport report = (MeasureReport) component.getResource();
@@ -149,7 +149,7 @@ public class ExampleServerDstu3IT implements IServerSupport {
   private Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
     String json = stringFromResource(theLocation);
     Bundle bundle = (Bundle) theCtx.newJsonParser().parseResource(json);
-    Bundle result = (Bundle) theClient.transaction().withBundle(bundle).execute();
+    Bundle result = theClient.transaction().withBundle(bundle).execute();
     return result;
   }
 

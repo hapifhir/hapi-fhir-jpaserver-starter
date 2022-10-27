@@ -1,9 +1,10 @@
-package ca.uhn.fhir.jpa.starter;
+package ca.uhn.fhir.jpa.starter.util;
 
 import ca.uhn.fhir.jpa.config.HapiFhirLocalContainerEntityManagerFactoryBean;
 import ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers;
 import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
 import org.apache.lucene.util.Version;
+import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.search.backend.elasticsearch.cfg.ElasticsearchBackendSettings;
 import org.hibernate.search.backend.elasticsearch.index.IndexStatus;
@@ -27,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import static java.util.Objects.requireNonNullElse;
+
 public class EnvironmentHelper {
 
 	public static Properties getHibernateProperties(ConfigurableEnvironment environment,
@@ -41,7 +44,7 @@ public class EnvironmentHelper {
 		//Spring Boot Autoconfiguration defaults
 		properties.putIfAbsent(AvailableSettings.SCANNER, "org.hibernate.boot.archive.scan.internal.DisabledScanner");
 		properties.putIfAbsent(AvailableSettings.IMPLICIT_NAMING_STRATEGY, SpringImplicitNamingStrategy.class.getName());
-		properties.putIfAbsent(AvailableSettings.PHYSICAL_NAMING_STRATEGY, SpringPhysicalNamingStrategy.class.getName());
+		properties.putIfAbsent(AvailableSettings.PHYSICAL_NAMING_STRATEGY, CamelCaseToUnderscoresNamingStrategy.class.getName());
 		//TODO The bean factory should be added as parameter but that requires that it can be injected from the entityManagerFactory bean from xBaseConfig
 		//properties.putIfAbsent(AvailableSettings.BEAN_CONTAINER, new SpringBeanContainer(beanFactory));
 
@@ -100,18 +103,6 @@ public class EnvironmentHelper {
 		}
 
 		return properties;
-	}
-
-	//TODO Removed when we're up on Java 11
-	private static <T> T requireNonNullElse(T obj, T defaultObj) {
-		return (obj != null) ? obj : requireNonNull(defaultObj, "defaultObj");
-	}
-
-	//TODO Removed when we're up on Java 11
-	private static <T> T requireNonNull(T obj, String message) {
-		if (obj == null)
-			throw new NullPointerException(message);
-		return obj;
 	}
 
 	public static String getElasticsearchServerUrl(ConfigurableEnvironment environment) {

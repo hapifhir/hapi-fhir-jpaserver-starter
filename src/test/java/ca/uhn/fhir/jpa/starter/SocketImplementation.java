@@ -15,10 +15,10 @@ import java.util.List;
 public class SocketImplementation {
 
 	private static final Logger ourLog = org.slf4j.LoggerFactory.getLogger(SocketImplementation.class);
-	private String myCriteria;
+	private final String myCriteria;
 	protected String myError;
 	protected boolean myGotBound;
-	private List<String> myMessages = new ArrayList<String>();
+	private final List<String> myMessages = new ArrayList<String>();
 	protected int myPingCount;
 	protected String mySubsId;
 	private Session session;

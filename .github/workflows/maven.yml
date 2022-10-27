@@ -5,10 +5,14 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: 
-      - '**' 
+    branches:
+      - '**'
+    paths-ignore:
+      - "charts/**"
   pull_request:
     branches: [ master ]
+    paths-ignore:
+      - "charts/**"
 
 jobs:
   build:
