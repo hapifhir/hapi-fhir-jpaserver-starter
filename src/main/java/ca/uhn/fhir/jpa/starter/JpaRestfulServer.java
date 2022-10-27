@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 import ca.uhn.fhir.jpa.starter.service.HelperService;
+import ca.uhn.fhir.jpa.starter.service.ServerInterceptor;
 
 import javax.servlet.ServletException;
 import javax.ws.rs.client.ClientBuilder;
@@ -30,7 +31,8 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
   @Override
   protected void initialize() throws ServletException {
     super.initialize();
-
+    ServerInterceptor serverInterceptor = new ServerInterceptor();
+    registerInterceptor(serverInterceptor);
     // Add your own customization here
     helperService.initializeKeycloak();
   }

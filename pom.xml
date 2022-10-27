@@ -87,6 +87,11 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
+			<groupId>net.morimekta.utils</groupId>
+			<artifactId>android-util</artifactId>
+			<version>2.7.1</version>
+		</dependency>
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
@@ -106,6 +111,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+		<version>1.5_r3</version>
+		</dependency>
 
         <!-- This dependency includes the core HAPI-FHIR classes -->
         <dependency>
