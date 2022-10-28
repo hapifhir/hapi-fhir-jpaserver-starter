@@ -20,24 +20,31 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 @Import(AppProperties.class)
 @Interceptor
 public class ServerInterceptor {
-
+		
+	String imagePath;
+	
+	public ServerInterceptor(String path) {
+		imagePath = path;
+	}
 	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_CREATED)
 	public void insert(IBaseResource theResource) throws IOException {
 		if(theResource.fhirType().equals("Media")) {
-			byte[] bitmapdata = ((Media) theResource).getContent().getDataElement().getValue();
-			String mediaId = ((Media) theResource).getIdElement().getIdPart();
-			byte[] base64 = Base64.decode(bitmapdata, Base64.DEFAULT);
-			File image = new File("D:\\Images\\"+mediaId+".jpeg");
-			FileUtils.writeByteArrayToFile(image, base64);
-			String imagePath = image.getAbsolutePath();
-			long imageSize = Files.size(Paths.get("D:\\Images\\"+mediaId+".jpeg"));
-			long byteSize = base64.length;
-			if(imageSize == byteSize) {
-				((Media) theResource).getContent().setDataElement(null);
-	 			((Media) theResource).getContent().setUrl(imagePath);
-			}
-			else {
-				System.out.println("Image Not Proper");
+			if(((Media) theResource).getContent().hasData()) {
+				byte[] bitmapdata = ((Media) theResource).getContent().getDataElement().getValue();
+				String mediaId = ((Media) theResource).getIdElement().getIdPart();
+				byte[] base64 = Base64.decode(bitmapdata, Base64.DEFAULT);
+				File image = new File(imagePath+"//"+mediaId+".jpeg");
+				FileUtils.writeByteArrayToFile(image, base64);
+				String imagePath = image.getAbsolutePath();
+				long imageSize = Files.size(Paths.get(imagePath));
+				long byteSize = base64.length;
+				if(imageSize == byteSize) {
+					((Media) theResource).getContent().setDataElement(null);
+		 			((Media) theResource).getContent().setUrl(imagePath);
+				}
+				else {
+					System.out.println("Image Not Proper");
+				}	
 			}
 		}
 	}
@@ -45,21 +52,23 @@ public class ServerInterceptor {
 	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_UPDATED)
 	   public void update(IBaseResource theOldResource, IBaseResource theResource) throws IOException {
 		if(theResource.fhirType().equals("Media")) {
-			byte[] bitmapdata = ((Media) theResource).getContent().getDataElement().getValue();
-			String mediaId = ((Media) theResource).getIdElement().getIdPart();
-			byte[] base64 = Base64.decode(bitmapdata, Base64.DEFAULT);
-			File image = new File("D:\\Images\\"+mediaId+".jpeg");
-			FileUtils.writeByteArrayToFile(image, base64);
-			String imagePath = image.getAbsolutePath();
-			long imageSize = Files.size(Paths.get("D:\\Images\\"+mediaId+".jpeg"));
-			long byteSize = base64.length;
-			if(imageSize == byteSize) {
-				((Media) theResource).getContent().setDataElement(null);
-	 			((Media) theResource).getContent().setUrl(imagePath);
-			}
-			else {
-				System.out.println("Image Not Proper");
+			if(((Media) theResource).getContent().hasData()) {
+				byte[] bitmapdata = ((Media) theResource).getContent().getDataElement().getValue();
+				String mediaId = ((Media) theResource).getIdElement().getIdPart();
+				byte[] base64 = Base64.decode(bitmapdata, Base64.DEFAULT);
+				File image = new File(imagePath+"//"+mediaId+".jpeg");
+				FileUtils.writeByteArrayToFile(image, base64);
+				String imagePath = image.getAbsolutePath();
+				long imageSize = Files.size(Paths.get(imagePath));
+				long byteSize = base64.length;
+				if(imageSize == byteSize) {
+					((Media) theResource).getContent().setDataElement(null);
+		 			((Media) theResource).getContent().setUrl(imagePath);
+				}
+				else {
+					System.out.println("Image Not Proper");
+				}	
 			}
 		}
-	   }
+	}
 }

@@ -31,7 +31,7 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
   @Override
   protected void initialize() throws ServletException {
     super.initialize();
-    ServerInterceptor serverInterceptor = new ServerInterceptor();
+    ServerInterceptor serverInterceptor = new ServerInterceptor(appProperties.getImage_path());
     registerInterceptor(serverInterceptor);
     // Add your own customization here
     helperService.initializeKeycloak();

@@ -89,6 +89,7 @@ public class AppProperties {
 	private Integer bundle_batch_pool_size = 20;
 	private Integer bundle_batch_pool_max_size = 100;
 	private List<String> local_base_urls = new ArrayList<>();
+	private String image_path = null;
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
@@ -264,6 +265,14 @@ public class AppProperties {
 
 	public String getHapi_Server_address() {
 		return hapi_server_address;
+	}
+	
+	public String getImage_path() {
+		return image_path;
+	}
+	
+	public void setImage_path(String image_path) {
+		this.image_path = image_path;
 	}
 
 	public void setHapi_Server_address(String hapi_server_address) {
