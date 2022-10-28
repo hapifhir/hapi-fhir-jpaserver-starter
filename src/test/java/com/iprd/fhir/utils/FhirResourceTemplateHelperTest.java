@@ -1,9 +1,6 @@
 package com.iprd.fhir.utils;
 
-import org.hl7.fhir.r4.model.Location;
-import org.hl7.fhir.r4.model.Organization;
-import org.hl7.fhir.r4.model.Practitioner;
-import org.hl7.fhir.r4.model.PractitionerRole;
+import org.hl7.fhir.r4.model.*;
 import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -11,8 +8,7 @@ public class FhirResourceTemplateHelperTest {
 	@Test
 	public void testState() {
 		Location state = FhirResourceTemplateHelper.state("oyo");
-		assertEquals(state.getName(), "Oyo");
-		assertEquals(state.getAddress(), "Oyo");
+		assertEquals(state.getName(), "oyo");
 		assertEquals(state.getPhysicalType(), "jdn");
 		assertEquals(state.getStatus(), "active");
 		assertEquals(state.getMode(), "instance");
@@ -20,9 +16,9 @@ public class FhirResourceTemplateHelperTest {
 	
 	@Test
 	public void testLga() {
-		Location test = FhirResourceTemplateHelper.lga("Ibadan South West", "oyo");
+		Location test = FhirResourceTemplateHelper.lga("Ibadan South West", "oyo","12345");
 		assertEquals(test.getName(), "Ibadan South West");
-		assertEquals(test.getAddress().getState(), "Oyo");
+		assertEquals(test.getAddress().getState(), "oyo");
 		assertEquals(test.getPhysicalType(), "jdn");
 		assertEquals(test.getStatus(), "active");
 		assertEquals(test.getMode(), "instance");
@@ -30,9 +26,9 @@ public class FhirResourceTemplateHelperTest {
 	
 	@Test
 	public void testWard() {
-		Location test = FhirResourceTemplateHelper.ward("Agbokojo", "oyo", "Agbokojo");
+		Location test = FhirResourceTemplateHelper.ward("Agbokojo", "oyo", "Agbokojo","12345");
 		assertEquals(test.getName(), "Agbokojo");
-		assertEquals(test.getAddress().getState(), "Oyo");
+		assertEquals(test.getAddress().getState(), "oyo");
 		assertEquals(test.getAddress().getDistrict(), "Agbokojo");
 		assertEquals(test.getPhysicalType(), "jdn");
 		assertEquals(test.getStatus(), "active");
