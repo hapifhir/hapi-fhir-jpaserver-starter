@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Conditional(OnR4Condition.class)
 @Import({
-	StarterJpaConfig.class,
 	JpaR4Config.class,
+	StarterJpaConfig.class,
 	StarterCqlR4Config.class,
 	ElasticsearchConfig.class
 })
