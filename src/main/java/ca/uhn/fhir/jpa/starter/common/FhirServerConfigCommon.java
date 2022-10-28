@@ -137,10 +137,6 @@ public class FhirServerConfigCommon {
 		  daoConfig.setInlineResourceTextBelowSize(appProperties.getInline_resource_storage_below_size());
 	  }
 
-    retVal.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
-	 retVal.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
-	 retVal.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
-
 	  daoConfig.setStoreResourceInHSearchIndex(appProperties.getStore_resource_in_lucene_index_enabled());
 	  daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 	  daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
