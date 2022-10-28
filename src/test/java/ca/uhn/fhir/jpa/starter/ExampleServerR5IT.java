@@ -34,7 +34,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
   {
-     "spring.batch.job.enabled=false",
      "spring.datasource.url=jdbc:h2:mem:dbr5",
      "hapi.fhir.fhir_version=r5",
      "hapi.fhir.subscription.websocket_enabled=true",

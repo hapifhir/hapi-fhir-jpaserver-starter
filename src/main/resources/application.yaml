@@ -9,7 +9,6 @@ spring:
   main:
     allow-circular-references: true
     #allow-bean-definition-overriding: true
-  batch.job.enabled: false
   flyway:
     enabled: false
     check-location: false
