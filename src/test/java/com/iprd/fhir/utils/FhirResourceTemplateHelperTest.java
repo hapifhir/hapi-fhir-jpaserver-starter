@@ -7,45 +7,45 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FhirResourceTemplateHelperTest {
 	@Test
 	public void testState() {
-		Location state = FhirResourceTemplateHelper.state("oyo");
+		Organization state = FhirResourceTemplateHelper.state("oyo");
 		assertEquals(state.getName(), "oyo");
-		assertEquals(state.getPhysicalType(), "jdn");
-		assertEquals(state.getStatus(), "active");
-		assertEquals(state.getMode(), "instance");
+		assertEquals(state.getType().get(0).getText(), "Jurisdiction");
+		assertEquals(state.getAddress().get(0).getState(), "oyo");
 	}
 	
 	@Test
 	public void testLga() {
-		Location test = FhirResourceTemplateHelper.lga("Ibadan South West", "oyo","12345");
+		Organization test = FhirResourceTemplateHelper.lga("Ibadan South West", "oyo","12345");
 		assertEquals(test.getName(), "Ibadan South West");
-		assertEquals(test.getAddress().getState(), "oyo");
-		assertEquals(test.getPhysicalType(), "jdn");
-		assertEquals(test.getStatus(), "active");
-		assertEquals(test.getMode(), "instance");
+		assertEquals(test.getAddress().get(0).getState(), "oyo");
+		assertEquals(test.getAddress().get(0).getDistrict(),"Ibadan South West");
+		assertEquals(test.getType().get(0).getText(), "Jurisdiction");
+		assertEquals(test.getPartOf().getReference(),"Organization/"+"12345");
 	}
 	
 	@Test
 	public void testWard() {
-		Location test = FhirResourceTemplateHelper.ward("Agbokojo", "oyo", "Agbokojo","12345");
+		Organization test = FhirResourceTemplateHelper.ward("oyo", "Ibadan South West", "Agbokojo","12345");
 		assertEquals(test.getName(), "Agbokojo");
-		assertEquals(test.getAddress().getState(), "oyo");
-		assertEquals(test.getAddress().getDistrict(), "Agbokojo");
-		assertEquals(test.getPhysicalType(), "jdn");
-		assertEquals(test.getStatus(), "active");
-		assertEquals(test.getMode(), "instance");
+		assertEquals(test.getAddress().get(0).getState(), "oyo");
+		assertEquals(test.getAddress().get(0).getDistrict(),"Ibadan South West");
+		assertEquals(test.getAddress().get(0).getCity(),"Agbokojo");
+		assertEquals(test.getType().get(0).getText(), "Jurisdiction");
+		assertEquals(test.getPartOf().getReference(),"Organization/"+"12345");
 	}
 	
 	@Test
 	public void testClinic() {
-		Organization test = FhirResourceTemplateHelper.clinic("St Lucia Hospital", "19145158", "30/08/1/1/1/0019","+234","78945645796","oyo", "Ibadan South West", "Agbokojo");
+		Organization test = FhirResourceTemplateHelper.clinic("St Lucia Hospital", "19145158", "30/08/1/1/1/0019","+234","78945645796","oyo", "Ibadan South West", "Agbokojo","sds");
 		assertEquals(test.getName(),"St Lucia Hospital");
-		assertEquals(test.getAddress().get(0), "oyo");
-		assertEquals(test.getAddress().get(1), "Ibadan South West");
-		assertEquals(test.getAddress().get(2), "Agbokojo");
-		assertEquals(test.getIdentifier(),"19145158");
-		assertEquals(test.getIdentifier(),"30/08/1/1/1/0019");
-		assertEquals(test.getTelecom(), "+234"+"78945645796");
-		assertEquals(test.getType(),"prov");
+		assertEquals(test.getAddress().get(0).getState(), "oyo");
+		assertEquals(test.getAddress().get(0).getDistrict(), "Ibadan South West");
+		assertEquals(test.getAddress().get(0).getCity(), "Agbokojo");
+		assertEquals(test.getIdentifier().get(0).getId(),"30/08/1/1/1/0019");
+		assertEquals(test.getIdentifier().get(1).getId(),"19145158");
+		assertEquals(test.getTelecom().get(0).getValue(), "+234"+"78945645796");
+		assertEquals(test.getType().get(0).getText(),"Healthcare Provider");
+		assertEquals(test.getPartOf().getReference(),"Organization/"+"sds");
 	}
 	
 	@Test

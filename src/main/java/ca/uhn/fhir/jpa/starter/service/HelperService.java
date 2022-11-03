@@ -320,35 +320,35 @@ public class HelperService {
 				//State, LGA, Ward, FacilityUID, FacilityCode, CountryCode, PhoneNumber, FacilityName, FacilityLevel, Ownership
 				if (Validation.validateClinicAndStateCsvLine(csvData)) {
 					if(!states.contains(csvData[0])) {
-						Location state = FhirResourceTemplateHelper.state(csvData[0]);
-						stateId = createResource(state,Location.class,Location.NAME.matches().value(state.getName()));
+						Organization state = FhirResourceTemplateHelper.state(csvData[0]);
+						stateId = createResource(state,Organization.class,Organization.NAME.matches().value(state.getName()));
 						states.add(state.getName());
 						GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), stateId);
 						stateGroupId = createGroup(stateGroupRep);
-						updateResource(stateGroupId, stateId, Location.class);
+						updateResource(stateGroupId, stateId, Organization.class);
 					}
 
 					if(!lgas.contains(csvData[1])) {
-						Location lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0], stateId);
-						lgaId = createResource(lga, Location.class, Location.NAME.matches().value(lga.getName()));
+						Organization lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0], stateId);
+						lgaId = createResource(lga, Organization.class, Organization.NAME.matches().value(lga.getName()));
 						lgas.add(lga.getName());
 						GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lgaId);
 						lgaGroupId = createGroup(lgaGroupRep);
-						updateResource(lgaGroupId, lgaId, Location.class);
+						updateResource(lgaGroupId, lgaId, Organization.class);
 					}
 
 					if(!wards.contains(csvData[2])) {
-						Location ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2], lgaId);
-						wardId = createResource(ward, Location.class, Location.NAME.matches().value(ward.getName()));
+						Organization ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2], lgaId);
+						wardId = createResource(ward, Organization.class, Organization.NAME.matches().value(ward.getName()));
 						wards.add(ward.getName());
 						GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, wardId);
 						wardGroupId = createGroup(wardGroupRep);
-						updateResource(wardGroupId, wardId, Location.class);
+						updateResource(wardGroupId, wardId, Organization.class);
 					}
 
 					if(!clinics.contains(csvData[7])) {
-						Location clinicLocation = FhirResourceTemplateHelper.clinic(csvData[0], csvData[1], csvData[2], csvData[7], wardId);
-						Organization clinicOrganization = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2]);
+						Location clinicLocation = FhirResourceTemplateHelper.clinic(csvData[0], csvData[1], csvData[2], csvData[7]);
+						Organization clinicOrganization = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2], wardId);
 						facilityOrganizationId = createResource(clinicOrganization, Organization.class, Organization.NAME.matches().value(clinicOrganization.getName()));
 						facilityLocationId = createResource(clinicLocation, Location.class, Location.NAME.matches().value(clinicLocation.getName()));
 						clinics.add(clinicOrganization.getName());
