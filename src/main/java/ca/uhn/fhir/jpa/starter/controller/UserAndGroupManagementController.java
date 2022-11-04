@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ca.uhn.fhir.jpa.starter.service.HelperService;
+import ca.uhn.fhir.jpa.starter.service.NotificationService;
 
 @RestController
 @RequestMapping("/iprd")
@@ -24,6 +25,8 @@ public class UserAndGroupManagementController {
 
 	@Autowired
 	HelperService helperService;
+	@Autowired
+	NotificationService notificationService;
 
 	@RequestMapping(method = RequestMethod.POST, value = "/organizationBulkImport")
 	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadClinicsAndStates(@RequestParam("file") MultipartFile file) throws IOException {
