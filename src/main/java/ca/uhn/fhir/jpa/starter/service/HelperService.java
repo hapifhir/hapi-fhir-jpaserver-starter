@@ -254,13 +254,13 @@ public class HelperService {
 		}
 
 		public ResponseEntity<List<Map<String, String>>> getAncMetaDataByOrganizationId(String organizationId,String startDate, String endDate) {
-			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClient);
+			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
 			List<Map<String, String>> ancMetaData =  ReportGeneratorFactory.INSTANCE.reportGenerator().getAncMetaDataByOrganizationId(fhirClientProvider, new DateRange(startDate,endDate), organizationId);
 			return ResponseEntity.ok(ancMetaData);
 		}
 
 		public ResponseEntity<DataResult> getAncDailySummaryData(String organizationId,String startDate, String endDate) {
-			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClient);
+			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
 			DataResult dataResult =  ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate,endDate), organizationId);
 			return ResponseEntity.ok(dataResult);
 		}
@@ -272,19 +272,19 @@ public class HelperService {
 
 			while(locationIdIterator.hasNext()) {
 				List<String> tempList = new ArrayList<>();
-				getLocationsPartOf(tempList, serverBase+"/Location?partof=Location/"+locationIdIterator.next()+"&_elements=id");
+				getLocationsPartOf(tempList, FhirClientAuthenticatorService.serverBase+"/Location?partof=Location/"+locationIdIterator.next()+"&_elements=id");
 				tempList.forEach(item -> {
 					locationIdIterator.add(item);
 					locationIdIterator.previous();
 				});
 			}
 			Bundle batchBundle = generateBatchBundle("/Encounter?location="+String.join(",", locationIdsList));
-			Bundle responseBundle = fhirClient.transaction().withBundle(batchBundle).prettyPrint().encodedJson().execute();
+			Bundle responseBundle = FhirClientAuthenticatorService.getFhirClient().transaction().withBundle(batchBundle).prettyPrint().encodedJson().execute();
 			return responseBundle;
 		}
 
 		public void getLocationsPartOf(List<String> idsList, String url) {
-			Bundle searchBundle = fhirClient.search()
+			Bundle searchBundle = FhirClientAuthenticatorService.getFhirClient().search()
 					   .byUrl(url)
 					   .returnBundle(Bundle.class)
 					   .execute();
