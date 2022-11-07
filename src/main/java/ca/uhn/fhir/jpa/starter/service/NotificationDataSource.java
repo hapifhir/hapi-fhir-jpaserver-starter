@@ -76,8 +76,9 @@ public class NotificationDataSource {
 	public void deleteRecordsByTimePeriod(Date date) {
 		session = sf.openSession();
 		tx = session.beginTransaction();
-		Query query = session.createQuery("DELETE ComGenerator WHERE scheduledDate < :param1");
+		Query query = session.createQuery("DELETE ComGenerator WHERE scheduledDate < :param1 AND communicationStatus=:param2");
 		query.setParameter("param1", date);
+		query.setParameter("param2", MessageStatus.SENT.name());
 		query.executeUpdate();
 		tx.commit();
 		session.close();
