@@ -14,9 +14,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
@@ -29,7 +32,10 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Appointment;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
+import org.hl7.fhir.r4.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
+import org.hl7.fhir.r4.model.Bundle.BundleType;
+import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Encounter;
@@ -66,13 +72,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.JsonObject;
 import com.iprd.fhir.utils.FhirResourceTemplateHelper;
 import com.iprd.fhir.utils.KeycloakTemplateHelper;
 import com.iprd.fhir.utils.Validation;
+import com.iprd.report.DataResult;
+import com.iprd.report.DateRange;
 import com.iprd.report.FhirClientProvider;
 import com.iprd.report.ReportGeneratorFactory;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.model.primitive.BooleanDt;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
@@ -99,7 +109,7 @@ public class HelperService {
 		AppProperties appProperties;
 		@Autowired
 		HttpServletRequest request;
-		
+
 
 		FhirContext ctx;
 		Keycloak instance;
@@ -243,13 +253,60 @@ public class HelperService {
 			return groups;
 		}
 
-		public ResponseEntity<InputStreamResource> generateDailyReport(String date, String organizationId, List<List<String>> fhirExpressions) {
+		public ResponseEntity<List<Map<String, String>>> getAncMetaDataByOrganizationId(String organizationId,String startDate, String endDate) {
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-			byte[] pdfContent = ReportGeneratorFactory.INSTANCE.reportGenerator().generateDailyReport(fhirClientProvider, date, organizationId, fhirExpressions);
-			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(pdfContent);
-			HttpHeaders headers=  new HttpHeaders();
-			headers.add("Content-Disposition", "inline; filename=daily_report.pdf");
-			return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(new InputStreamResource(byteArrayInputStream));
+			List<Map<String, String>> ancMetaData =  ReportGeneratorFactory.INSTANCE.reportGenerator().getAncMetaDataByOrganizationId(fhirClientProvider, new DateRange(startDate,endDate), organizationId);
+			return ResponseEntity.ok(ancMetaData);
+		}
+
+		public ResponseEntity<DataResult> getAncDailySummaryData(String organizationId,String startDate, String endDate) {
+			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+			DataResult dataResult =  ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate,endDate), organizationId);
+			return ResponseEntity.ok(dataResult);
+		}
+
+		public Bundle getEncountersBelowLocation(String locationId) {
+			List<String> locationIdsList = new ArrayList<>();
+			locationIdsList.add(locationId);
+			ListIterator<String> locationIdIterator = locationIdsList.listIterator();
+
+			while(locationIdIterator.hasNext()) {
+				List<String> tempList = new ArrayList<>();
+				getLocationsPartOf(tempList, FhirClientAuthenticatorService.serverBase+"/Location?partof=Location/"+locationIdIterator.next()+"&_elements=id");
+				tempList.forEach(item -> {
+					locationIdIterator.add(item);
+					locationIdIterator.previous();
+				});
+			}
+			Bundle batchBundle = generateBatchBundle("/Encounter?location="+String.join(",", locationIdsList));
+			Bundle responseBundle = FhirClientAuthenticatorService.getFhirClient().transaction().withBundle(batchBundle).prettyPrint().encodedJson().execute();
+			return responseBundle;
+		}
+
+		public void getLocationsPartOf(List<String> idsList, String url) {
+			Bundle searchBundle = FhirClientAuthenticatorService.getFhirClient().search()
+					   .byUrl(url)
+					   .returnBundle(Bundle.class)
+					   .execute();
+			idsList.addAll(searchBundle.getEntry().stream().map(r -> r.getResource().getIdElement().getIdPart()).collect(Collectors.toList()));
+			if(searchBundle.hasLink() && bundleContainsNext(searchBundle)) {
+				getLocationsPartOf(idsList, getNextUrl(searchBundle.getLink()));
+			}
+		}
+
+		public Bundle generateBatchBundle(String url) {
+			Bundle bundle = new Bundle();
+			bundle.setId("batch-bundle");
+			bundle.setType(BundleType.BATCH);
+			BundleEntryComponent bundleEntryComponent = new BundleEntryComponent();
+
+			BundleEntryRequestComponent bundleEntryRequestComponent= new BundleEntryRequestComponent();
+			bundleEntryRequestComponent.setMethod(HTTPVerb.GET);
+			bundleEntryRequestComponent.setUrl(url);
+
+			bundleEntryComponent.setRequest(bundleEntryRequestComponent);
+			bundle.addEntry(bundleEntryComponent);
+			return bundle;
 		}
 
 		private String createGroup(GroupRepresentation groupRep) {

@@ -1,0 +1,166 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../report-generator/1.0.8/report-generator-1.0.8.module",
+    "group": "com.iprd.report",
+    "module": "report-generator",
+    "version": "1.0.8",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.itextpdf",
+          "module": "itext7-core",
+          "version": {
+            "requires": "7.2.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.5.10"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.5.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "report-generator-jvm-1.0.8.jar",
+          "url": "report-generator-jvm-1.0.8.jar",
+          "size": 169329,
+          "sha512": "31c639fa6eaa9166f42486796b2aacd7290e418c6337f8f745298e239f04eba45f125335cbb2626f5aa122b50040c062dead8f8733ae84786e639ee967d6d840",
+          "sha256": "f9ab03807a5a12e1e931c28f138673ebaafea79386e540e9929ad81b730d339d",
+          "sha1": "0c96f2ff3547b3d48ae8715bb36a76f122164305",
+          "md5": "7b8252a66fbc2d4c0efa169c47142841"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.itextpdf",
+          "module": "itext7-core",
+          "version": {
+            "requires": "7.2.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.5.10"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.5.10"
+          }
+        },
+        {
+          "group": "com.fasterxml.jackson.module",
+          "module": "jackson-module-kotlin",
+          "version": {
+            "requires": "2.9.8"
+          }
+        },
+        {
+          "group": "ca.uhn.hapi.fhir",
+          "module": "hapi-fhir-structures-r4",
+          "version": {
+            "requires": "5.7.0"
+          }
+        },
+        {
+          "group": "ca.uhn.hapi.fhir",
+          "module": "hapi-fhir-validation",
+          "version": {
+            "requires": "5.7.0"
+          }
+        },
+        {
+          "group": "com.google.truth",
+          "module": "truth",
+          "version": {
+            "requires": "1.0.1"
+          }
+        },
+        {
+          "group": "ca.uhn.hapi.fhir",
+          "module": "hapi-fhir-client",
+          "version": {
+            "requires": "5.7.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "org.json",
+          "module": "json",
+          "version": {
+            "requires": "20200518"
+          }
+        },
+        {
+          "group": "com.aspose",
+          "module": "aspose-pdf",
+          "version": {
+            "requires": "21.7"
+          }
+        },
+        {
+          "group": "com.aspose",
+          "module": "aspose-cells",
+          "version": {
+            "requires": "22.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "report-generator-jvm-1.0.8.jar",
+          "url": "report-generator-jvm-1.0.8.jar",
+          "size": 169329,
+          "sha512": "31c639fa6eaa9166f42486796b2aacd7290e418c6337f8f745298e239f04eba45f125335cbb2626f5aa122b50040c062dead8f8733ae84786e639ee967d6d840",
+          "sha256": "f9ab03807a5a12e1e931c28f138673ebaafea79386e540e9929ad81b730d339d",
+          "sha1": "0c96f2ff3547b3d48ae8715bb36a76f122164305",
+          "md5": "7b8252a66fbc2d4c0efa169c47142841"
+        }
+      ]
+    }
+  ]
+}
