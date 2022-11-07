@@ -109,12 +109,9 @@ public class HelperService {
 		AppProperties appProperties;
 		@Autowired
 		HttpServletRequest request;
-		
-		Keycloak keycloak;
+
 
 		FhirContext ctx;
-		String serverBase;
-		IGenericClient fhirClient;
 		Keycloak instance;
 		TokenManager tokenManager;
 		BearerTokenAuthInterceptor authInterceptor;
@@ -128,184 +125,6 @@ public class HelperService {
 		private static final long AUTH_INITIAL_DELAY = 25 * 60000L;
 		private static final long AUTH_FIXED_DELAY = 50 * 60000L;
 		private static final long DELAY = 2 * 60000;
-
-		public void initializeKeycloak() {
-			ctx = FhirContext.forR4();
-			serverBase = appProperties.getHapi_Server_address();
-			fhirClient = ctx.newRestfulGenericClient(serverBase);		
-			ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
-		    keycloak = KeycloakBuilder
-		    		.builder()
-		    		.serverUrl(appProperties.getKeycloak_Server_address())
-		    		.grantType(OAuth2Constants.PASSWORD)
-		    		.realm(appProperties.getKeycloak_Realm())
-		    		.clientId(appProperties.getKeycloak_Client_Id())
-		    		.username (appProperties.getKeycloak_Username())
-		    		.password(appProperties.getKeycloak_Password())
-		    		.resteasyClient(client)
-		    		.build();
-			instance = Keycloak.
-					getInstance(
-						appProperties.getKeycloak_Server_address(),
-						appProperties.getKeycloak_Client_Realm(),
-						appProperties.getFhir_user(),
-						appProperties.getFhir_password(),
-						appProperties.getFhir_hapi_client_id(),
-						appProperties.getFhir_hapi_client_secret()
-					);
-			tokenManager = instance.tokenManager();
-			registerClientAuthInterceptor();
-		}
-
-		@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
-		private void registerClientAuthInterceptor() {
-			String accessToken = tokenManager.getAccessTokenString();
-			try {
-				fhirClient.unregisterInterceptor(authInterceptor);
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-			authInterceptor = new BearerTokenAuthInterceptor(accessToken); // the reason this is below is to unregister interceptors to avoid memory leak. Null pointer is caught in try catch.
-			fhirClient = ctx.newRestfulGenericClient(serverBase);
-			fhirClient.registerInterceptor(authInterceptor);
-		}
-
-		@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
-		private void searchPatients() throws IOException {
-			String dateTime = DateTimeFormatter.ISO_INSTANT
-					.withZone(ZoneId.of("UTC"))
-					.format(Instant.now());
-			String date= DateTimeFormatter.ISO_INSTANT.format(Instant.now()).split("T")[0];
-			Extension smsSent = new Extension();
-			 smsSent.addExtension(
-					 SMS_EXTENTION_URL, 
-					 new DateTimeType(dateTime));
-			 String encounterClass = "IMP";
-			 String queryPath = "Patient?";
-			 queryPath+="_has:Encounter:patient:class="+encounterClass+"&";
-			 queryPath+="_has:Encounter:patient:date=eq"+date+"&";
-			 queryPath+="identifier:not=patient_with_ocl";
-			 Bundle patientBundle = new Bundle();
-			 getBundleBySearchUrl(patientBundle, queryPath);
-			 
-			 String encounterQueryPath = "Encounter?class="+encounterClass+"&";
-			 encounterQueryPath += "_date=eq"+date+"&subject=Patient/";
-			 
-			 for(BundleEntryComponent entry: patientBundle.getEntry()) {
-				 Patient patient = (Patient)entry.getResource();
-				 String patientId = patient.getIdElement().getIdPart();
-				 Bundle encBundle = getCheckInEncounter(encounterQueryPath + patientId);
-				 if(encBundle.getEntry().isEmpty()) {
-					 continue;
-				 }	
-				 Encounter encounter = (Encounter) encBundle.getEntry().get(0).getResource();
-				 String patientOclId = getOclIdentifier(patient.getIdentifier()).replaceAll(".(?!$)", "$0 ").replaceAll(".{8}", "$0\n");
-				 String oclLink = getOclLink(patient.getIdentifier());
-				 String patientName = patient.getName().get(0).getNameAsSingleString();
-				 String mobile = patient.getTelecom().get(0).getValue();
-				 Extension encounterExtension = encounter.getExtensionByUrl(SMS_EXTENTION_URL);
-				 if(encounterExtension == null)
-				 {
-					 if(mobile.startsWith("+234-")&&mobile.length()>6){				 
-						 mobile = mobile.substring(5);
-						 if(mobile.startsWith("0"))
-						 {
-							mobile = mobile.substring(1); 
-						 }	
-						 OkHttpClient client = new OkHttpClient().newBuilder().build();
-						 okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
-						 String patientDetailsMessage = "Thanks for visiting!\nHere are the details of your visit: \nName: "+patientName+" \nDate: "+date+" \nYour OCL Id is:\n"+patientOclId+"";
-						 String oclLinkMessage = "The QR image for OCL code:\n"+patientOclId+"\nis here:\n"+oclLink+"";
-						 String messageVisitDetails ="https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&message="+patientDetailsMessage+"&sender=HACEY-IPRD&mobiles="+mobile;
-						 String messageQrImage = "https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&message="+oclLinkMessage+"&sender=HACEY-IPRD&mobiles="+mobile;	 
-						 Request requestVisitDetails = new Request.Builder().url(messageVisitDetails).build();
-						 Request requestQrImage = new Request.Builder().url(messageQrImage).build();
-						 okhttp3.Response responseVisitDetails = client.newCall(requestVisitDetails).execute();
-						 okhttp3.Response responseQrImage = client.newCall(requestQrImage).execute();	
-						 try {
-							 if(responseVisitDetails.isSuccessful() && responseQrImage.isSuccessful())
-							 {
-								 encounter.addExtension(smsSent.getExtensionByUrl(SMS_EXTENTION_URL));
-								 fhirClient.update()
-								   .resource(encounter)
-								   .execute();
-							 } 
-						 }catch(Exception e) {
-							 e.printStackTrace();
-						 }finally {
-							 responseVisitDetails.body().close();
-							 responseQrImage.body().close();
-						 }
-					 }
-				 }
-			}		 
-		}
-		
-		private String getOclIdentifier(List<Identifier> identifiers) {
-			String oclId = null;
-			for(Identifier identifier : identifiers ) {
-				if(identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/ocl")) {
-					oclId = identifier.getValue();
-					break;
-				}
-			}
-			try {
-				oclId = getOclIdFromString(oclId);
-			} catch (MalformedURIException e) {
-				logger.debug(e.getMessage());
-			}
-			return oclId;
-		}
-		
-		private String getOclLink(List<Identifier> identifiers)	{
-			String oclId = null;
-			for(Identifier identifier: identifiers) {
-				if(identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/ocl")) {
-					oclId = identifier.getValue();
-				}
-			}
-			return oclId;
-		}
-		private Bundle getCheckInEncounter(String url) {
-			Bundle encounter = fhirClient.search()
-					   .byUrl(url)
-					   .returnBundle(Bundle.class)
-					   .execute();
-			return encounter;
-		}
-
-		private ReferenceClientParam Reference(String string) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		private Map<String, String> getQueryMap(String query){
-			String[] params = query.split("&");
-	        Map<String, String> map = new HashMap<String, String>();
-
-	        for (String param : params) {
-	            String name = param.split("=")[0];
-	            String value = param.split("=")[1];
-	            map.put(name, value);
-	        }
-	        return map;
-		}
-
-		private String getOclIdFromString(String query) throws MalformedURIException {
-			try {
-				URL url=new URL(query);
-				String queryUrl = url.getQuery();
-				if(queryUrl == null || queryUrl.isEmpty())
-					return null;
-				Map<String, String> queryMap = getQueryMap(queryUrl);
-				if(queryMap.isEmpty() || !queryMap.containsKey("s")) return null;
-				return queryMap.get("s");
-
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				return null;
-			}
-		}
 		
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
 
@@ -330,35 +149,35 @@ public class HelperService {
 				//State, LGA, Ward, FacilityUID, FacilityCode, CountryCode, PhoneNumber, FacilityName, FacilityLevel, Ownership
 				if (Validation.validateClinicAndStateCsvLine(csvData)) {
 					if(!states.contains(csvData[0])) {
-						Location state = FhirResourceTemplateHelper.state(csvData[0]);
-						stateId = createResource(state,Location.class,Location.NAME.matches().value(state.getName()));
+						Organization state = FhirResourceTemplateHelper.state(csvData[0]);
+						stateId = createResource(state,Organization.class,Organization.NAME.matches().value(state.getName()));
 						states.add(state.getName());
 						GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), stateId);
 						stateGroupId = createGroup(stateGroupRep);
-						updateResource(stateGroupId, stateId, Location.class);
+						updateResource(stateGroupId, stateId, Organization.class);
 					}
 
 					if(!lgas.contains(csvData[1])) {
-						Location lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0], stateId);
-						lgaId = createResource(lga, Location.class, Location.NAME.matches().value(lga.getName()));
+						Organization lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0], stateId);
+						lgaId = createResource(lga, Organization.class, Organization.NAME.matches().value(lga.getName()));
 						lgas.add(lga.getName());
 						GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lgaId);
 						lgaGroupId = createGroup(lgaGroupRep);
-						updateResource(lgaGroupId, lgaId, Location.class);
+						updateResource(lgaGroupId, lgaId, Organization.class);
 					}
 
 					if(!wards.contains(csvData[2])) {
-						Location ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2], lgaId);
-						wardId = createResource(ward, Location.class, Location.NAME.matches().value(ward.getName()));
+						Organization ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2], lgaId);
+						wardId = createResource(ward, Organization.class, Organization.NAME.matches().value(ward.getName()));
 						wards.add(ward.getName());
 						GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, wardId);
 						wardGroupId = createGroup(wardGroupRep);
-						updateResource(wardGroupId, wardId, Location.class);
+						updateResource(wardGroupId, wardId, Organization.class);
 					}
 
 					if(!clinics.contains(csvData[7])) {
-						Location clinicLocation = FhirResourceTemplateHelper.clinic(csvData[0], csvData[1], csvData[2], csvData[7], wardId);
-						Organization clinicOrganization = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2]);
+						Location clinicLocation = FhirResourceTemplateHelper.clinic(csvData[0], csvData[1], csvData[2], csvData[7]);
+						Organization clinicOrganization = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2], wardId);
 						facilityOrganizationId = createResource(clinicOrganization, Organization.class, Organization.NAME.matches().value(clinicOrganization.getName()));
 						facilityLocationId = createResource(clinicLocation, Location.class, Location.NAME.matches().value(clinicLocation.getName()));
 						clinics.add(clinicOrganization.getName());
@@ -429,7 +248,7 @@ public class HelperService {
 		}
 
 		public List<GroupRepresentation> getGroupsByUser(String userId) {
-			RealmResource realmResource = keycloak.realm("fhir-hapi");
+			RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 			List<GroupRepresentation> groups =  realmResource.users().get(userId).groups(0,appProperties.getKeycloak_max_group_count(),false);
 			return groups;
 		}
@@ -439,18 +258,18 @@ public class HelperService {
 			List<Map<String, String>> ancMetaData =  ReportGeneratorFactory.INSTANCE.reportGenerator().getAncMetaDataByOrganizationId(fhirClientProvider, new DateRange(startDate,endDate), organizationId);
 			return ResponseEntity.ok(ancMetaData);
 		}
-		
+
 		public ResponseEntity<DataResult> getAncDailySummaryData(String organizationId,String startDate, String endDate) {
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClient);
 			DataResult dataResult =  ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate,endDate), organizationId);
 			return ResponseEntity.ok(dataResult);
 		}
-		
+
 		public Bundle getEncountersBelowLocation(String locationId) {
 			List<String> locationIdsList = new ArrayList<>();
 			locationIdsList.add(locationId);
 			ListIterator<String> locationIdIterator = locationIdsList.listIterator();
-			
+
 			while(locationIdIterator.hasNext()) {
 				List<String> tempList = new ArrayList<>();
 				getLocationsPartOf(tempList, serverBase+"/Location?partof=Location/"+locationIdIterator.next()+"&_elements=id");
@@ -463,7 +282,7 @@ public class HelperService {
 			Bundle responseBundle = fhirClient.transaction().withBundle(batchBundle).prettyPrint().encodedJson().execute();
 			return responseBundle;
 		}
-		
+
 		public void getLocationsPartOf(List<String> idsList, String url) {
 			Bundle searchBundle = fhirClient.search()
 					   .byUrl(url)
@@ -474,24 +293,24 @@ public class HelperService {
 				getLocationsPartOf(idsList, getNextUrl(searchBundle.getLink()));
 			}
 		}
-		
+
 		public Bundle generateBatchBundle(String url) {
 			Bundle bundle = new Bundle();
 			bundle.setId("batch-bundle");
 			bundle.setType(BundleType.BATCH);
 			BundleEntryComponent bundleEntryComponent = new BundleEntryComponent();
-			
+
 			BundleEntryRequestComponent bundleEntryRequestComponent= new BundleEntryRequestComponent();
 			bundleEntryRequestComponent.setMethod(HTTPVerb.GET);
 			bundleEntryRequestComponent.setUrl(url);
-			
+
 			bundleEntryComponent.setRequest(bundleEntryRequestComponent);
 			bundle.addEntry(bundleEntryComponent);
 			return bundle;
 		}
-		
+
 		private String createGroup(GroupRepresentation groupRep) {
-			RealmResource realmResource = keycloak.realm("fhir-hapi");
+			RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm("fhir-hapi");
 			List<GroupRepresentation> groups = realmResource.groups().groups(groupRep.getName(), 0, Integer.MAX_VALUE);
 			if(!groups.isEmpty()) {
 				return groups.get(0).getId();
@@ -501,19 +320,19 @@ public class HelperService {
 		}
 
 		private String createResource(Resource resource, Class<? extends IBaseResource> theClass,ICriterion<?>...theCriterion ) {
-			IQuery<IBaseBundle> query = fhirClient.search().forResource(theClass).where(theCriterion[0]);
+			IQuery<IBaseBundle> query = FhirClientAuthenticatorService.getFhirClient().search().forResource(theClass).where(theCriterion[0]);
 			for(int i=1;i<theCriterion.length;i++)
 				query = query.and(theCriterion[i]);
 			Bundle bundle = query.returnBundle(Bundle.class).execute();
 			if(!bundle.hasEntry()) {
-				MethodOutcome outcome = fhirClient.update().resource(resource).execute();
+				MethodOutcome outcome = FhirClientAuthenticatorService.getFhirClient().update().resource(resource).execute();
 				 return outcome.getId().getIdPart();
 			}
 			return bundle.getEntry().get(0).getFullUrl().split("/")[5];
 		}
 
 		private <R extends IBaseResource> void updateResource(String keycloakId, String resourceId, Class<R> resourceClass) {
-			 R resource = fhirClient.read().resource(resourceClass).withId(resourceId).execute();
+			 R resource = FhirClientAuthenticatorService.getFhirClient().read().resource(resourceClass).withId(resourceId).execute();
 			 try {
 				 Method getIdentifier = resource.getClass().getMethod("getIdentifier");
 				 List<Identifier> identifierList = (List<Identifier>) getIdentifier.invoke(resource);
@@ -524,7 +343,7 @@ public class HelperService {
 				 Identifier obj = (Identifier) addIdentifier.invoke(resource);
 				 obj.setSystem(IDENTIFIER_SYSTEM+"/KeycloakId");
 				 obj.setValue(keycloakId);
-				 MethodOutcome outcome = fhirClient.update().resource(resource).execute();
+				 MethodOutcome outcome = FhirClientAuthenticatorService.getFhirClient().update().resource(resource).execute();
 			 }
 			 catch (SecurityException | NoSuchMethodException | InvocationTargetException e) {
 				 e.printStackTrace();
@@ -535,7 +354,7 @@ public class HelperService {
 		}
 
 		private String createUser(UserRepresentation userRep) {
-			RealmResource realmResource = keycloak.realm(appProperties.getKeycloak_Client_Realm());
+			RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 			List<UserRepresentation> users = realmResource.users().search(userRep.getUsername(), 0, Integer.MAX_VALUE);
 			//if not empty, return id
 			if(!users.isEmpty())
@@ -553,7 +372,7 @@ public class HelperService {
 		public void mapResourcesToPatient() {
 			//Searching for patient created with OCL-ID
 			Bundle tempPatientBundle = new Bundle();
-			getBundleBySearchUrl(tempPatientBundle, serverBase+"/Patient?identifier=patient_with_ocl");
+			getBundleBySearchUrl(tempPatientBundle, FhirClientAuthenticatorService.serverBase+"/Patient?identifier=patient_with_ocl");
 
 			for(BundleEntryComponent entry: tempPatientBundle.getEntry()) {
 				Patient tempPatient = (Patient)entry.getResource();
@@ -566,7 +385,7 @@ public class HelperService {
 					continue;
 				}
 				Bundle resourceBundle = new Bundle();
-				getBundleBySearchUrl(resourceBundle, serverBase+"/Patient/"+tempPatientId+"/$everything");
+				getBundleBySearchUrl(resourceBundle, FhirClientAuthenticatorService.serverBase+"/Patient/"+tempPatientId+"/$everything");
 
 				for(BundleEntryComponent resourceEntry: resourceBundle.getEntry()) {
 					Resource resource = resourceEntry.getResource();
@@ -576,7 +395,7 @@ public class HelperService {
 					else if(resource.fhirType().equals("Immunization")) {
 						Immunization immunization = (Immunization) resource;
 						immunization.getPatient().setReference("Patient/"+actualPatientId);
-						fhirClient.update()
+						FhirClientAuthenticatorService.getFhirClient().update()
 						   .resource(immunization)
 						   .execute();
 						continue;
@@ -584,7 +403,7 @@ public class HelperService {
 					else if(resource.fhirType().equals("Appointment")) {
 						Appointment appointment = (Appointment) resource;
 						appointment.getParticipant().get(0).getActor().setReference("Patient/"+actualPatientId);
-						fhirClient.update()
+						FhirClientAuthenticatorService.getFhirClient().update()
 						   .resource(appointment)
 						   .execute();
 						continue;
@@ -593,7 +412,7 @@ public class HelperService {
 						Method getSubject = resource.getClass().getMethod("getSubject");
 						Reference subject = (Reference)getSubject.invoke(resource);
 						subject.setReference("Patient/"+actualPatientId);
-						fhirClient.update()
+						FhirClientAuthenticatorService.getFhirClient().update()
 								   .resource(resource)
 								   .execute();
 					} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -608,7 +427,7 @@ public class HelperService {
 			String queryPath = "/Patient?";
 			queryPath += "identifierPartial:contains="+oclId+"&";
 			queryPath += "identifier:not=patient_with_ocl";
-			getBundleBySearchUrl(patientBundle, serverBase+queryPath);
+			getBundleBySearchUrl(patientBundle, FhirClientAuthenticatorService.serverBase+queryPath);
 			if(patientBundle.hasEntry() && patientBundle.getEntry().size() > 0) {
 				Patient patient = (Patient)patientBundle.getEntry().get(0).getResource();
 				return patient.getIdElement().getIdPart();
@@ -632,7 +451,7 @@ public class HelperService {
 		}
 
 		private void getBundleBySearchUrl(Bundle bundle, String url) {
-			Bundle searchBundle = fhirClient.search()
+			Bundle searchBundle = FhirClientAuthenticatorService.getFhirClient().search()
 					   .byUrl(url)
 					   .returnBundle(Bundle.class)
 					   .execute();

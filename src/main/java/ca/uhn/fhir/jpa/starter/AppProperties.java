@@ -89,6 +89,8 @@ public class AppProperties {
 	private Integer bundle_batch_pool_size = 20;
 	private Integer bundle_batch_pool_max_size = 100;
 	private List<String> local_base_urls = new ArrayList<>();
+	private String image_path = null;
+	private String notification_datasource_config_path = null;
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
@@ -264,6 +266,22 @@ public class AppProperties {
 
 	public String getHapi_Server_address() {
 		return hapi_server_address;
+	}
+	
+	public String getImage_path() {
+		return image_path;
+	}
+	
+	public void setImage_path(String image_path) {
+		this.image_path = image_path;
+	}
+	
+	public String getNotification_datasource_config_path() {
+		return notification_datasource_config_path;
+	}
+	
+	public void setNotification_datasource_config_path(String notification_datasource_config_path) {
+		this.notification_datasource_config_path = notification_datasource_config_path;
 	}
 
 	public void setHapi_Server_address(String hapi_server_address) {

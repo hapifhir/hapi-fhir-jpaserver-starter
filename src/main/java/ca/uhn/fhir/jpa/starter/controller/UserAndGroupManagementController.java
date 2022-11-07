@@ -22,6 +22,7 @@ import com.iprd.report.DataResult;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.service.HelperService;
+import ca.uhn.fhir.jpa.starter.service.NotificationService;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 
@@ -31,7 +32,9 @@ public class UserAndGroupManagementController {
 
 	@Autowired
 	HelperService helperService;
-	
+	@Autowired
+	NotificationService notificationService;
+
 	IParser iParser = FhirContext.forCached(FhirVersionEnum.R4).newJsonParser();
 
 	@RequestMapping(method = RequestMethod.POST, value = "/organizationBulkImport")
@@ -53,8 +56,8 @@ public class UserAndGroupManagementController {
 	@RequestMapping(method = RequestMethod.GET, value = "/getAncMetaDataByOrganizationId")
 	public ResponseEntity<List<Map<String, String>>> getAncMetaDataByOrganizationId(@RequestParam("organizationId") String organizationId,@RequestParam("startDate") String startDate,@RequestParam("endDate") String endDate) {
 		return helperService.getAncMetaDataByOrganizationId(organizationId, startDate, endDate);
-	} 
-	
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/getAncDailySummaryData")
 	public ResponseEntity<DataResult> getAncDailySummaryData(@RequestParam("organizationId") String organizationId,@RequestParam("startDate") String startDate,@RequestParam("endDate") String endDate) {
 		return helperService.getAncDailySummaryData(organizationId, startDate, endDate);
