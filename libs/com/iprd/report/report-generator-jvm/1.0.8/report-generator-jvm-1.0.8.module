@@ -49,11 +49,11 @@
         {
           "name": "report-generator-jvm-1.0.8.jar",
           "url": "report-generator-jvm-1.0.8.jar",
-          "size": 169329,
-          "sha512": "31c639fa6eaa9166f42486796b2aacd7290e418c6337f8f745298e239f04eba45f125335cbb2626f5aa122b50040c062dead8f8733ae84786e639ee967d6d840",
-          "sha256": "f9ab03807a5a12e1e931c28f138673ebaafea79386e540e9929ad81b730d339d",
-          "sha1": "0c96f2ff3547b3d48ae8715bb36a76f122164305",
-          "md5": "7b8252a66fbc2d4c0efa169c47142841"
+          "size": 169081,
+          "sha512": "178a02f0b9e6d29a8c6ae1924ecdb6339e1f93c5a74af365d9f453019121ab7dd7f050a8090f050a7e3191e37af0437172a55201d4a249f52f448318d8f451d1",
+          "sha256": "0f31946c6f863ede3efd8b9486335a98e0efb79a9f759039fad054c29d7018db",
+          "sha1": "96835e72592ec66ce37ed4203bfd0eb512679533",
+          "md5": "a7b13f86e60e10708ee94fad5b6cc95b"
         }
       ]
     },
@@ -134,31 +134,17 @@
           "version": {
             "requires": "20200518"
           }
-        },
-        {
-          "group": "com.aspose",
-          "module": "aspose-pdf",
-          "version": {
-            "requires": "21.7"
-          }
-        },
-        {
-          "group": "com.aspose",
-          "module": "aspose-cells",
-          "version": {
-            "requires": "22.10"
-          }
         }
       ],
       "files": [
         {
           "name": "report-generator-jvm-1.0.8.jar",
           "url": "report-generator-jvm-1.0.8.jar",
-          "size": 169329,
-          "sha512": "31c639fa6eaa9166f42486796b2aacd7290e418c6337f8f745298e239f04eba45f125335cbb2626f5aa122b50040c062dead8f8733ae84786e639ee967d6d840",
-          "sha256": "f9ab03807a5a12e1e931c28f138673ebaafea79386e540e9929ad81b730d339d",
-          "sha1": "0c96f2ff3547b3d48ae8715bb36a76f122164305",
-          "md5": "7b8252a66fbc2d4c0efa169c47142841"
+          "size": 169081,
+          "sha512": "178a02f0b9e6d29a8c6ae1924ecdb6339e1f93c5a74af365d9f453019121ab7dd7f050a8090f050a7e3191e37af0437172a55201d4a249f52f448318d8f451d1",
+          "sha256": "0f31946c6f863ede3efd8b9486335a98e0efb79a9f759039fad054c29d7018db",
+          "sha1": "96835e72592ec66ce37ed4203bfd0eb512679533",
+          "md5": "a7b13f86e60e10708ee94fad5b6cc95b"
         }
       ]
     }

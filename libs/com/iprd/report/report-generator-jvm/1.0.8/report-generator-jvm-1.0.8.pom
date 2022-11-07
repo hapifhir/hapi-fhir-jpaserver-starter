@@ -71,17 +71,5 @@
       <version>20200518</version>
       <scope>runtime</scope>
     </dependency>
-    <dependency>
-      <groupId>com.aspose</groupId>
-      <artifactId>aspose-pdf</artifactId>
-      <version>21.7</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.aspose</groupId>
-      <artifactId>aspose-cells</artifactId>
-      <version>22.10</version>
-      <scope>runtime</scope>
-    </dependency>
   </dependencies>
 </project>
