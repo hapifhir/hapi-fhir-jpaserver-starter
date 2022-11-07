@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
@@ -38,7 +39,7 @@ public class FhirClientAuthenticatorService {
 	private BearerTokenAuthInterceptor authInterceptor;
 
 	public void initializeKeycloak() {
-		  ctx = FhirContext.forR4();
+		  ctx = FhirContext.forCached(FhirVersionEnum.R4);
 		  serverBase = appProperties.getHapi_Server_address();
 		  fhirClient = ctx.newRestfulGenericClient(serverBase);     
 		  ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
