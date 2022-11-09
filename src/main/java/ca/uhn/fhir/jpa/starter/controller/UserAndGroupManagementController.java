@@ -11,6 +11,7 @@ import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ import ca.uhn.fhir.jpa.starter.service.NotificationService;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 
+@CrossOrigin(origins = {"http://localhost:3000","https://oclink.io","https://opencampaignlink.org"}, maxAge = 3600,  allowCredentials = "true")
 @RestController
 @RequestMapping("/iprd")
 public class UserAndGroupManagementController {
@@ -67,5 +69,11 @@ public class UserAndGroupManagementController {
 	public ResponseEntity<String> getEncountersBelowLocation(@RequestParam("locationId") String locationId) {
 		Bundle bundle = helperService.getEncountersBelowLocation(locationId);
 		return ResponseEntity.ok(iParser.encodeResourceToString(bundle));
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/getOrganizationHierarchy")
+	public ResponseEntity<?> getOrganizationHierarchy(@RequestParam("organizationId") String organizationId) {
+		helperService.getOrganizationHierarchy(organizationId);
+		return ResponseEntity.ok("");
 	}
 }

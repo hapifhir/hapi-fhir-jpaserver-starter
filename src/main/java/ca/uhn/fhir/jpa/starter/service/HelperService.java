@@ -84,6 +84,7 @@ import com.iprd.report.ReportGeneratorFactory;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.model.OrgModel;
 import ca.uhn.fhir.model.primitive.BooleanDt;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
 //import ca.uhn.fhir.model.dstu2.resource.Parameters;
@@ -308,6 +309,14 @@ public class HelperService {
 			bundle.addEntry(bundleEntryComponent);
 			return bundle;
 		}
+		
+		public void getOrganizationHierarchy(String organizationId) {
+			List<OrgModel> organizations = new ArrayList<OrgModel>();
+			OrgModel model = new OrgModel();
+			model.setId("");
+			organizations.add(model);
+		}
+		
 
 		private String createGroup(GroupRepresentation groupRep) {
 			RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm("fhir-hapi");

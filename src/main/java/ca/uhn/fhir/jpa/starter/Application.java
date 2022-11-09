@@ -21,6 +21,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @ServletComponentScan(basePackageClasses = {
   JpaRestfulServer.class})
@@ -58,5 +60,4 @@ public class Application extends SpringBootServletInitializer {
 
     return servletRegistrationBean;
   }
-
 }

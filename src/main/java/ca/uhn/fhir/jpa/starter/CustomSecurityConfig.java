@@ -37,9 +37,9 @@ import static org.springframework.http.HttpMethod.PUT;
 
 public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 	private static final String CORS_ALLOWED_HEADERS =
-            "origin,content-type,accept,x-requested-with,Authorization";
+            "origin,content-type,accept,x-requested-with,Authorization,Access-Control-Allow-Credentials";
 
-    private String opensrpAllowedSources = "*";
+    private String opensrpAllowedSources = "http://localhost:3000,https://oclink.io,https://opencampaignlink.org";
 
     private long corsMaxAge = 60;
 
@@ -138,6 +138,7 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 Arrays.asList(GET.name(), POST.name(), PUT.name(), DELETE.name()));
         configuration.setAllowedHeaders(Arrays.asList(CORS_ALLOWED_HEADERS.split(",")));
         configuration.setMaxAge(corsMaxAge);
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
