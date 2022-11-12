@@ -14,7 +14,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>6.2.0-PRE18-SNAPSHOT</version>
+        <version>6.2.0</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -316,11 +316,18 @@
             <version>${spring_boot_version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-core -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>1.8.5</version>
+            <version>1.9.4</version>
         </dependency>
 
         <dependency>

@@ -26,7 +26,6 @@ import ca.uhn.fhir.jpa.dao.IFulltextSearchSvc;
 import ca.uhn.fhir.jpa.dao.mdm.MdmLinkDaoJpaImpl;
 import ca.uhn.fhir.jpa.dao.search.HSearchSortHelperImpl;
 import ca.uhn.fhir.jpa.dao.search.IHSearchSortHelper;
-import ca.uhn.fhir.jpa.dao.tx.HapiTransactionService;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
 import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
@@ -423,7 +422,6 @@ public class StarterJpaConfig {
 	public static IServerConformanceProvider<?> calculateConformanceProvider(IFhirSystemDao fhirSystemDao, RestfulServer fhirServer, DaoConfig daoConfig, ISearchParamRegistry searchParamRegistry, IValidationSupport theValidationSupport) {
 		FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
 		if (fhirVersion == FhirVersionEnum.DSTU2) {
-
 			JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(fhirServer, fhirSystemDao, daoConfig);
 			confProvider.setImplementationDescription("HAPI FHIR DSTU2 Server");
 			return confProvider;
@@ -436,6 +434,11 @@ public class StarterJpaConfig {
 
 			JpaCapabilityStatementProvider confProvider = new JpaCapabilityStatementProvider(fhirServer, fhirSystemDao, daoConfig, searchParamRegistry, theValidationSupport);
 			confProvider.setImplementationDescription("HAPI FHIR R4 Server");
+			return confProvider;
+		} else if (fhirVersion == FhirVersionEnum.R4B) {
+
+			JpaCapabilityStatementProvider confProvider = new JpaCapabilityStatementProvider(fhirServer, fhirSystemDao, daoConfig, searchParamRegistry, theValidationSupport);
+			confProvider.setImplementationDescription("HAPI FHIR R4B Server");
 			return confProvider;
 		} else if (fhirVersion == FhirVersionEnum.R5) {
 
