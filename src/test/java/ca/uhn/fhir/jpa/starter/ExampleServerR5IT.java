@@ -34,7 +34,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
   {
-     "spring.batch.job.enabled=false",
      "spring.datasource.url=jdbc:h2:mem:dbr5",
      "hapi.fhir.fhir_version=r5",
      "hapi.fhir.subscription.websocket_enabled=true",
@@ -80,7 +79,7 @@ public class ExampleServerR5IT {
     subscription.getContained().add(topic);
     subscription.setTopic("#1");
     subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
-    subscription.setStatus(Enumerations.SubscriptionState.REQUESTED);
+    subscription.setStatus(Enumerations.SubscriptionStatusCodes.REQUESTED);
     subscription.getChannelType()
       .setSystem("http://terminology.hl7.org/CodeSystem/subscription-channel-type")
       .setCode("websocket");

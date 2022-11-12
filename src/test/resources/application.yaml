@@ -1,10 +1,3 @@
-#Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
-#see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "health,prometheus"
 spring:
   main:
     allow-circular-references: true
@@ -14,8 +7,7 @@ spring:
     check-location: false
     baselineOnMigrate: true
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
-    #url: jdbc:h2:mem:test_mem
+    url: jdbc:h2:mem:test_mem
     username: sa
     password: null
     driverClassName: org.h2.Driver
@@ -33,23 +25,24 @@ spring:
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
 
       hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
-  #      hibernate.hbm2ddl.auto: update
-  #      hibernate.jdbc.batch_size: 20
-  #      hibernate.cache.use_query_cache: false
-  #      hibernate.cache.use_second_level_cache: false
-  #      hibernate.cache.use_structured_entries: false
-  #      hibernate.cache.use_minimal_puts: false
-  ###    These settings will enable fulltext search with lucene or elastic
-      hibernate.search.enabled: true
+      #      hibernate.hbm2ddl.auto: update
+      #      hibernate.jdbc.batch_size: 20
+      #      hibernate.cache.use_query_cache: false
+      #      hibernate.cache.use_second_level_cache: false
+      #      hibernate.cache.use_structured_entries: false
+      #      hibernate.cache.use_minimal_puts: false
+      ###    These settings will enable fulltext search with lucene or elastic
+      hibernate.search.enabled: false
   ### lucene parameters
-#      hibernate.search.backend.type: lucene
-#      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
-#      hibernate.search.backend.directory.type: local-filesystem
-#      hibernate.search.backend.directory.root: target/lucenefiles
-#      hibernate.search.backend.lucene_version: lucene_current
+  #      hibernate.search.backend.type: lucene
+  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
+  #      hibernate.search.backend.directory.type: local-filesystem
+  #      hibernate.search.backend.directory.root: target/lucenefiles
+  #      hibernate.search.backend.lucene_version: lucene_current
   ### elastic parameters ===> see also elasticsearch section below <===
-      hibernate.search.backend.type: elasticsearch
-      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
+#      hibernate.search.backend.type: elasticsearch
+#      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
+
 hapi:
   fhir:
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
@@ -79,10 +72,6 @@ hapi:
     #    supported_resource_types:
     #      - Patient
     #      - Observation
-    ##################################################
-    # Allowed Bundle Types for persistence (defaults are: COLLECTION,DOCUMENT,MESSAGE)
-    ##################################################
-    #    allowed_bundle_types: COLLECTION,DOCUMENT,MESSAGE,TRANSACTION,TRANSACTIONRESPONSE,BATCH,BATCHRESPONSE,HISTORY,SEARCHSET
     #    allow_cascading_deletes: true
     #    allow_contains_searches: true
     #    allow_external_references: true
@@ -94,21 +83,20 @@ hapi:
     #    default_pretty_print: true
     #    default_page_size: 20
     #    delete_expunge_enabled: true
-    #    enable_repository_validating_interceptor: true
+    #    enable_repository_validating_interceptor: false
     #    enable_index_missing_fields: false
     #    enable_index_of_type: true
     #    enable_index_contained_resource: false
     ###  !!Extended Lucene/Elasticsearch Indexing is still a experimental feature, expect some features (e.g. _total=accurate) to not work as expected!!
     ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
     advanced_lucene_indexing: false
-    bulk_export_enabled: false
-    bulk_import_enabled: false
     #    enforce_referential_integrity_on_delete: false
     # This is an experimental feature, and does not fully support _total and other FHIR features.
     #    enforce_referential_integrity_on_delete: false
     #    enforce_referential_integrity_on_write: false
     #    etag_support_enabled: true
     #    expunge_enabled: true
+    #    daoconfig_client_id_strategy: null
     #    client_id_strategy: ALPHANUMERIC
     #    fhirpath_interceptor_enabled: false
     #    filter_search_enabled: true
@@ -121,11 +109,11 @@ hapi:
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
-    cors:
-      allow_Credentials: true
+    #cors:
+    #  allow_Credentials: true
       # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
-      allowed_origin:
-        - '*'
+    #  allowed_origin:
+    #    - '*'
 
     # Search coordinator thread pool sizes
     search-coord-core-pool-size: 20
@@ -160,11 +148,10 @@ hapi:
         server_address: "http://hapi.fhir.org/baseR4"
         refuse_to_fetch_third_party_urls: false
         fhir_version: R4
-    #    validation:
-    #      requests_enabled: true
-    #      responses_enabled: true
-    #    binary_storage_enabled: true
-    inline_resource_storage_below_size: 4000
+#    validation:
+#      requests_enabled: true
+#      responses_enabled: true
+#    binary_storage_enabled: true
 #    bulk_export_enabled: true
 #    subscription:
 #      resthook_enabled: true

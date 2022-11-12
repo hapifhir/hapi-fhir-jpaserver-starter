@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
   {
-     "spring.batch.job.enabled=false",
      "hapi.fhir.fhir_version=dstu2",
      "spring.datasource.url=jdbc:h2:mem:dbr2",
   })
