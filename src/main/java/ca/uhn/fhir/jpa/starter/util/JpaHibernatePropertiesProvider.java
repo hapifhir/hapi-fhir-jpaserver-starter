@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.starter;
+package ca.uhn.fhir.jpa.starter.util;
 
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
@@ -8,6 +8,8 @@ import org.hibernate.engine.jdbc.dialect.spi.DatabaseMetaDataDialectResolutionIn
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.sql.DataSource;
+
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public class JpaHibernatePropertiesProvider extends HibernatePropertiesProvider {
@@ -16,9 +18,9 @@ public class JpaHibernatePropertiesProvider extends HibernatePropertiesProvider 
 
   public JpaHibernatePropertiesProvider(LocalContainerEntityManagerFactoryBean myEntityManagerFactory) {
     DataSource connection = myEntityManagerFactory.getDataSource();
-    try {
+    try ( Connection dbConnection = connection.getConnection()){
       dialect = new StandardDialectResolver()
-        .resolveDialect(new DatabaseMetaDataDialectResolutionInfoAdapter(connection.getConnection().getMetaData()));
+        .resolveDialect(new DatabaseMetaDataDialectResolutionInfoAdapter(dbConnection.getMetaData()));
     } catch (SQLException sqlException) {
       throw new ConfigurationException(sqlException.getMessage(), sqlException);
     }

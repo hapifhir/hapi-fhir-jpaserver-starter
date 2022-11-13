@@ -218,6 +218,9 @@ spring:
     username: admin
     password: admin
     driverClassName: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
 ```
 
 Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
@@ -233,6 +236,12 @@ spring:
     username: admin
     password: admin
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+```
+
+Also, make sure you are not setting the Hibernate dialect explicitly, in other words remove any lines similar to:
+
+```
+hibernate.dialect: {some none Microsoft SQL dialect}
 ```
 
 

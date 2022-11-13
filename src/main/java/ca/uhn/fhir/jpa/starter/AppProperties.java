@@ -83,7 +83,7 @@ public class AppProperties {
 
   private Integer bundle_batch_pool_size = 20;
   private Integer bundle_batch_pool_max_size = 100;
-  private List<String> local_base_urls = new ArrayList<>();
+  private final List<String> local_base_urls = new ArrayList<>();
 
 
 	public String getStaticLocation() {
@@ -214,10 +214,6 @@ public class AppProperties {
   public void setSupported_resource_types(List<String> supported_resource_types) {
     this.supported_resource_types = supported_resource_types;
   }
-
-	public List<String> getSupported_resource_types(List<String> supported_resource_types) {
-		return this.supported_resource_types;
-	}
 
 	public Logger getLogger() {
     return logger;
