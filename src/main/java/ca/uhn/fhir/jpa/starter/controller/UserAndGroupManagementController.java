@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.iprd.report.DataResult;
+import com.iprd.report.OrgItem;
+
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.service.HelperService;
@@ -71,9 +73,9 @@ public class UserAndGroupManagementController {
 		return ResponseEntity.ok(iParser.encodeResourceToString(bundle));
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/getOrganizationHierarchy")
-	public ResponseEntity<?> getOrganizationHierarchy(@RequestParam("organizationId") String organizationId) {
-		helperService.getOrganizationHierarchy(organizationId);
-		return ResponseEntity.ok("");
+	@RequestMapping(method = RequestMethod.GET, value = "/organizations")
+	public ResponseEntity<List<OrgItem>> organizations(@RequestParam("organizationId") String organizationId) {
+		List<OrgItem> orgItemsList = helperService.getOrganizationHierarchy(organizationId);
+		return ResponseEntity.ok(orgItemsList);
 	}
 }

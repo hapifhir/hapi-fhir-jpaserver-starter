@@ -9,7 +9,7 @@ public class FhirResourceTemplateHelperTest {
 	public void testState() {
 		Organization state = FhirResourceTemplateHelper.state("oyo");
 		assertEquals(state.getName(), "oyo");
-		assertEquals(state.getType().get(0).getText(), "Jurisdiction");
+		assertEquals(state.getType().get(0).getText(), "Government");
 		assertEquals(state.getAddress().get(0).getState(), "oyo");
 	}
 	
@@ -19,7 +19,7 @@ public class FhirResourceTemplateHelperTest {
 		assertEquals(test.getName(), "Ibadan South West");
 		assertEquals(test.getAddress().get(0).getState(), "oyo");
 		assertEquals(test.getAddress().get(0).getDistrict(),"Ibadan South West");
-		assertEquals(test.getType().get(0).getText(), "Jurisdiction");
+		assertEquals(test.getType().get(0).getText(), "Government");
 		assertEquals(test.getPartOf().getReference(),"Organization/"+"12345");
 	}
 	
@@ -30,7 +30,7 @@ public class FhirResourceTemplateHelperTest {
 		assertEquals(test.getAddress().get(0).getState(), "oyo");
 		assertEquals(test.getAddress().get(0).getDistrict(),"Ibadan South West");
 		assertEquals(test.getAddress().get(0).getCity(),"Agbokojo");
-		assertEquals(test.getType().get(0).getText(), "Jurisdiction");
+		assertEquals(test.getType().get(0).getText(), "Government");
 		assertEquals(test.getPartOf().getReference(),"Organization/"+"12345");
 	}
 	

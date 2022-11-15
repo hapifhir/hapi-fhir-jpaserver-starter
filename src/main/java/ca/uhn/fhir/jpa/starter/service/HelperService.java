@@ -79,12 +79,12 @@ import com.iprd.fhir.utils.Validation;
 import com.iprd.report.DataResult;
 import com.iprd.report.DateRange;
 import com.iprd.report.FhirClientProvider;
+import com.iprd.report.OrgItem;
 import com.iprd.report.ReportGeneratorFactory;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.AppProperties;
-import ca.uhn.fhir.jpa.starter.model.OrgModel;
 import ca.uhn.fhir.model.primitive.BooleanDt;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
 //import ca.uhn.fhir.model.dstu2.resource.Parameters;
@@ -310,11 +310,9 @@ public class HelperService {
 			return bundle;
 		}
 		
-		public void getOrganizationHierarchy(String organizationId) {
-			List<OrgModel> organizations = new ArrayList<OrgModel>();
-			OrgModel model = new OrgModel();
-			model.setId("");
-			organizations.add(model);
+		public List<OrgItem> getOrganizationHierarchy(String organizationId) {
+			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+			return ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, organizationId);
 		}
 		
 

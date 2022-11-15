@@ -5,6 +5,9 @@ import java.lang.String;
 
 import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.r4.model.Reference;
+
+import com.iprd.report.OrgType;
+
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Location.LocationMode;
 import org.hl7.fhir.r4.model.Location.LocationStatus;
@@ -24,10 +27,14 @@ public class FhirResourceTemplateHelper {
 	private static String SYSTEM_ORGANIZATION_PHYSICAL_TYPE = "	http://hl7.org/fhir/ValueSet/organization-type";
 	private static String SYSTEM_HCW = "https://www.iprdgroup.com/nigeria/oyo/ValueSet/Roles";
 	private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
+	private static String SYSTEM_ORG_TYPE = "https://www.iprdgroup.com/ValueSet/OrganizationType/tags";
+	private static String CODE_GOVT = "govt";
+	private static String DISPLAY_GOVERNMENT = "Government";
 	
 	public static Organization state(String name)
 	{
 		Organization state = new Organization();
+		state.setMeta(getMetaByOrgType(OrgType.STATE));
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		List<Address> addresses = new ArrayList<>();
 		Address stateAddress = new Address();
@@ -37,11 +44,11 @@ public class FhirResourceTemplateHelper {
 		CodeableConcept statePhysicalType = new CodeableConcept();
 		Coding physicalTypeCoding = new Coding();
 		physicalTypeCoding
-		.setCode(CODE_JDN)
-		.setDisplay(DISPLAY_JURISDICTION)
+		.setCode(CODE_GOVT)
+		.setDisplay(DISPLAY_GOVERNMENT)
 		.setSystem(SYSTEM_ORGANIZATION_PHYSICAL_TYPE);
 		statePhysicalType.addCoding(physicalTypeCoding);
-		statePhysicalType.setText(DISPLAY_JURISDICTION);
+		statePhysicalType.setText(DISPLAY_GOVERNMENT);
 		codeableConcepts.add(statePhysicalType);
 		state.setType(codeableConcepts);
 		state.setName(name);
@@ -51,6 +58,7 @@ public class FhirResourceTemplateHelper {
 	
 	public static Organization lga(String nameOfLga, String state, String stateId) {
 		Organization lga = new Organization();
+		lga.setMeta(getMetaByOrgType(OrgType.LGA));
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		List<Address> addresses = new ArrayList<>();
 		Address lgaAddress = new Address();
@@ -61,11 +69,11 @@ public class FhirResourceTemplateHelper {
 		CodeableConcept lgaPhysicalType = new CodeableConcept();
 		Coding physicalTypeCoding = new Coding();
 		physicalTypeCoding
-		.setCode(CODE_JDN)
-		.setDisplay(DISPLAY_JURISDICTION)
+		.setCode(CODE_GOVT)
+		.setDisplay(DISPLAY_GOVERNMENT)
 		.setSystem(SYSTEM_ORGANIZATION_PHYSICAL_TYPE);
 		lgaPhysicalType.addCoding(physicalTypeCoding);
-		lgaPhysicalType.setText(DISPLAY_JURISDICTION);
+		lgaPhysicalType.setText(DISPLAY_GOVERNMENT);
 		codeableConcepts.add(lgaPhysicalType);
 		lga.setType(codeableConcepts);
 		lga.setName(nameOfLga);
@@ -76,6 +84,7 @@ public class FhirResourceTemplateHelper {
 	
 	public static Organization ward(String state, String district, String city, String lgaId) {
 		Organization ward = new Organization();
+		ward.setMeta(getMetaByOrgType(OrgType.WARD));
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		List<Address> addresses = new ArrayList<>();
 		Address wardAddress = new Address();
@@ -87,11 +96,11 @@ public class FhirResourceTemplateHelper {
 		CodeableConcept wardPhysicalType = new CodeableConcept();
 		Coding physicalTypeCoding = new Coding();
 		physicalTypeCoding
-			.setCode(CODE_JDN)
-			.setDisplay(DISPLAY_JURISDICTION)
+			.setCode(CODE_GOVT)
+			.setDisplay(DISPLAY_GOVERNMENT)
 			.setSystem(SYSTEM_ORGANIZATION_PHYSICAL_TYPE);
 		wardPhysicalType.addCoding(physicalTypeCoding);
-		wardPhysicalType.setText(DISPLAY_JURISDICTION);
+		wardPhysicalType.setText(DISPLAY_GOVERNMENT);
 		codeableConcepts.add(wardPhysicalType);
 		ward.setType(codeableConcepts);
 		ward.setName(city);
@@ -124,6 +133,7 @@ public class FhirResourceTemplateHelper {
 	
 	public static Organization clinic(String nameOfClinic,String facilityUID,String facilityCode ,String countryCode, String contact, String state, String district, String city, String wardId) {
 		Organization clinic = new Organization();
+		clinic.setMeta(getMetaByOrgType(OrgType.FACILITY));
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		List<Address> addresses = new ArrayList<>();
 		Address address = new Address();
@@ -230,5 +240,15 @@ public class FhirResourceTemplateHelper {
 	
 	private static String generateUUID() {
 		return UUID.randomUUID().toString();
+	}
+	
+	public static Meta getMetaByOrgType(OrgType orgType) {
+		Meta meta = new Meta();
+		Coding coding = new Coding();
+		coding.setSystem(SYSTEM_ORG_TYPE);
+		coding.setCode(orgType.getValue());
+		coding.setDisplay(orgType.name());
+		meta.addTag(coding);
+		return meta;
 	}
 }
