@@ -42,7 +42,7 @@ public class KeycloakTemplateHelper {
 		return wardGroupRep;
 	}
 
-	public static GroupRepresentation facilityGroup(String name , String parentId, String fhirOrganizationId, String fhirLocationId, String facilityLevel, String ownership, String facilityUID, String facilityCode) {
+	public static GroupRepresentation facilityGroup(String name , String parentId, String fhirOrganizationId, String fhirLocationId, String facilityLevel, String ownership, String facilityUID, String facilityCode,String argusoftId) {
 		GroupRepresentation facilityGroupRep = new GroupRepresentation();
 		facilityGroupRep.setName(facilityUID);
 		facilityGroupRep.singleAttribute("type", FACILITY);
@@ -52,12 +52,11 @@ public class KeycloakTemplateHelper {
 		facilityGroupRep.singleAttribute("organization_id",fhirOrganizationId);
 		facilityGroupRep.singleAttribute("location_id",fhirLocationId);
 		facilityGroupRep.singleAttribute("ownership",ownership);
-		facilityGroupRep.singleAttribute("facility_code",facilityCode);
-		facilityGroupRep.singleAttribute("facilityUID",facilityUID);
+		facilityGroupRep.singleAttribute("argusoft_identifier", argusoftId);
 		return facilityGroupRep;
 	}
 	
-	public static UserRepresentation user(String firstName,String lastName,String email,String userName,String password,String phoneNumber,String countryCode, String practitionerId, String practitionerRoleId,String role, String stateGroup, String lgaGroup, String wardGroup, String facilityGroup) {
+	public static UserRepresentation user(String firstName,String lastName,String email,String userName,String password,String phoneNumber,String countryCode, String practitionerId, String practitionerRoleId,String role, String stateGroup, String lgaGroup, String wardGroup, String facilityGroup, String argusoftId) {
 		UserRepresentation user = new UserRepresentation();
 		CredentialRepresentation credential = new CredentialRepresentation();
 		credential.setType(CredentialRepresentation.PASSWORD);
@@ -72,6 +71,7 @@ public class KeycloakTemplateHelper {
 		user.singleAttribute("type",role);
 		user.singleAttribute("practitioner_id", practitionerId);
 		user.singleAttribute("practitioner_role_id", practitionerRoleId);
+		user.singleAttribute("Argusoft Identifier", argusoftId);
 		user.setEnabled(true);
 		return user;
 	}

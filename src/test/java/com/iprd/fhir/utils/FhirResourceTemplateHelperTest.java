@@ -36,7 +36,7 @@ public class FhirResourceTemplateHelperTest {
 	
 	@Test
 	public void testClinic() {
-		Organization test = FhirResourceTemplateHelper.clinic("St Lucia Hospital", "19145158", "30/08/1/1/1/0019","+234","78945645796","oyo", "Ibadan South West", "Agbokojo","sds");
+		Organization test = FhirResourceTemplateHelper.clinic("St Lucia Hospital", "19145158", "30/08/1/1/1/0019","+234","78945645796","oyo", "Ibadan South West", "Agbokojo","sds","58562");
 		assertEquals(test.getName(),"St Lucia Hospital");
 		assertEquals(test.getAddress().get(0).getState(), "oyo");
 		assertEquals(test.getAddress().get(0).getDistrict(), "Ibadan South West");
@@ -50,7 +50,7 @@ public class FhirResourceTemplateHelperTest {
 	
 	@Test
 	public void testPractitioner() throws Exception {
-		Practitioner test = FhirResourceTemplateHelper.hcw("temp", "nurse", "+91", "8150038173", "female", "09/22/1995", "Oyo", "Ibadan-South-West", "Agbokojo", "19145158", "Nurse", "Bachelor-of-Nursing","N123");
+		Practitioner test = FhirResourceTemplateHelper.hcw("temp", "nurse", "+91", "8150038173", "female", "09/22/1995", "Oyo", "Ibadan-South-West", "Agbokojo", "19145158", "Nurse", "Bachelor-of-Nursing","N123","52620");
 		assertEquals(test.getName().get(0), "nurse");
 		assertEquals(test.getName().get(1), "temp");
 		assertEquals(test.getTelecom(), "+91"+"8150038173");

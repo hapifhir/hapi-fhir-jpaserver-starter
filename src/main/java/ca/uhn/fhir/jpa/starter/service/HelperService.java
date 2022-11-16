@@ -2,6 +2,8 @@ package ca.uhn.fhir.jpa.starter.service;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
@@ -81,6 +83,7 @@ import com.iprd.report.DateRange;
 import com.iprd.report.FhirClientProvider;
 import com.iprd.report.OrgItem;
 import com.iprd.report.ReportGeneratorFactory;
+import com.opencsv.CSVReader;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
@@ -126,6 +129,12 @@ public class HelperService {
 		private static final long AUTH_INITIAL_DELAY = 25 * 60000L;
 		private static final long AUTH_FIXED_DELAY = 50 * 60000L;
 		private static final long DELAY = 2 * 60000;
+		
+		public  static File multipartToFile(MultipartFile multipart, String fileName) throws IllegalStateException, IOException {
+		    File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+fileName);
+		    multipart.transferTo(convFile);
+		    return convFile;
+		}
 		
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
 
@@ -178,7 +187,7 @@ public class HelperService {
 
 					if(!clinics.contains(csvData[7])) {
 						Location clinicLocation = FhirResourceTemplateHelper.clinic(csvData[0], csvData[1], csvData[2], csvData[7]);
-						Organization clinicOrganization = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2], wardId);
+						Organization clinicOrganization = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2], wardId, csvData[10]);
 						facilityOrganizationId = createResource(clinicOrganization, Organization.class, Organization.NAME.matches().value(clinicOrganization.getName()));
 						facilityLocationId = createResource(clinicLocation, Location.class, Location.NAME.matches().value(clinicLocation.getName()));
 						clinics.add(clinicOrganization.getName());
@@ -191,7 +200,8 @@ public class HelperService {
 							csvData[8],
 							csvData[9],
 							csvData[3],
-							csvData[4]
+							csvData[4],
+							csvData[10]
 						);
 						facilityGroupId = createGroup(facilityGroupRep);
 						updateResource(facilityGroupId, facilityOrganizationId, Organization.class);
@@ -223,7 +233,7 @@ public class HelperService {
 				if(Validation.validationHcwCsvLine(hcwData))
 				{
 					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[4]+hcwData[3]))) {
-						Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[4],hcwData[3],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14],hcwData[15]);
+						Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[4],hcwData[3],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14],hcwData[15],hcwData[16]);
 						practitionerId = createResource(hcw,
 								Practitioner.class,
 								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
@@ -235,7 +245,7 @@ public class HelperService {
 						practitioners.add(hcw.getTelecom().get(0).getValue());
 						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId);
 						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
-						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[4],hcwData[3],practitionerId,practitionerRoleId,hcwData[13],hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
+						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[4],hcwData[3],practitionerId,practitionerRoleId,hcwData[13],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[16]);
 						String keycloakUserId = createUser(user);
 						if(keycloakUserId != null) {
 							updateResource(keycloakUserId, practitionerId, Practitioner.class);
