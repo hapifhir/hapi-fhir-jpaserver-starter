@@ -142,6 +142,7 @@ public class HelperService {
 			List<String> lgas = new ArrayList<>();
 			List<String> wards = new ArrayList<>();
 			List<String> clinics  = new ArrayList<>();
+			List<String> invalidClinics = new ArrayList<>();
 			
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
@@ -155,7 +156,7 @@ public class HelperService {
 					continue;
 				}
 				String[] csvData = singleLine.split(",");
-				//State, LGA, Ward, FacilityUID, FacilityCode, CountryCode, PhoneNumber, FacilityName, FacilityLevel, Ownership
+				//State, LGA, Ward, FacilityUID, FacilityCode, CountryCode, PhoneNumber, FacilityName, FacilityLevel, Ownership, Argusoft Identifier
 				if (Validation.validateClinicAndStateCsvLine(csvData)) {
 					if(!states.contains(csvData[0])) {
 						Organization state = FhirResourceTemplateHelper.state(csvData[0]);
@@ -205,9 +206,12 @@ public class HelperService {
 						facilityGroupId = createGroup(facilityGroupRep);
 						updateResource(facilityGroupId, facilityOrganizationId, Organization.class);
 						updateResource(facilityGroupId, facilityLocationId, Location.class);
+					}else {
+						invalidClinics.add(csvData[7]+","+csvData[0]+","+csvData[1]+","+csvData[2]);
 					}
 				}
 			}
+			map.put("Cannot create Clinics with state, lga, ward", invalidClinics);
 			map.put("uploadCSV", "Successful");
 			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
 		}
@@ -215,7 +219,7 @@ public class HelperService {
 		public ResponseEntity<LinkedHashMap<String, Object>> createUsers(@RequestParam("file") MultipartFile file) throws Exception{
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			List<String> practitioners = new ArrayList<>();
-
+			List<String> invalidUsers = new ArrayList<>();
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
@@ -228,7 +232,7 @@ public class HelperService {
 					continue;
 				}
 				String hcwData[] = singleLine.split(",");
-				//firstName,lastName,email,countryCode,phoneNumber,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier
+				//firstName,lastName,email,countryCode,phoneNumber,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier, Argusoft Identifier
 				if(Validation.validationHcwCsvLine(hcwData))
 				{
 					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[4]+hcwData[3]))) {
@@ -249,10 +253,13 @@ public class HelperService {
 						if(keycloakUserId != null) {
 							updateResource(keycloakUserId, practitionerId, Practitioner.class);
 							updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
+						}else {
+							invalidUsers.add(user.getUsername()+","+user.getGroups());
 						}
 					}
 				}
 			}
+			map.put("Cannot create users with groups", invalidUsers);
 			map.put("uploadCsv", "Successful");
 			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
 		}
