@@ -254,7 +254,7 @@ public class HelperService {
 							updateResource(keycloakUserId, practitionerId, Practitioner.class);
 							updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
 						}else {
-							invalidUsers.add(user.getUsername()+","+user.getGroups());
+							invalidUsers.add(user.getUsername()+","+user.getGroups().get(0)+","+user.getGroups().get(1)+","+user.getGroups().get(2)+","+user.getGroups().get(3));
 						}
 					}
 				}
