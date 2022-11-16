@@ -66,7 +66,11 @@ public class KeycloakTemplateHelper {
 		user.setUsername(userName);
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
-		user.setEmail(email);
+		if(email.equals("null")) {
+			user.setEmail(userName+"@test.org");
+		}else {
+			user.setEmail(email);	
+		}
 		user.singleAttribute("phoneNumber", countryCode+phoneNumber);
 		user.singleAttribute("type",role);
 		user.singleAttribute("practitioner_id", practitionerId);
