@@ -46,6 +46,11 @@ public class UserAndGroupManagementController {
 		return helperService.createUsers(file);
 	}
 
+	@RequestMapping(method = RequestMethod.POST, value = "/dashboardUserBulkImport")
+	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadDashboardUsers(@RequestParam("file") MultipartFile file) throws Exception{
+		return helperService.createDashboardUsers(file);
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/user/{userId}/groups")
 	public List<GroupRepresentation> getGroupsByUser(@PathVariable String userId) {
 		return helperService.getGroupsByUser(userId);

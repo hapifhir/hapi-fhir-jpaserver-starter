@@ -14,6 +14,35 @@ import com.iprd.fhir.utils.FhirResourceTemplateHelper;
 import com.iprd.fhir.utils.KeycloakTemplateHelper;
 import com.iprd.fhir.utils.Validation;
 import com.iprd.report.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Response;
+
+import org.apache.jena.ext.xerces.util.URI.MalformedURIException;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Appointment;
@@ -97,7 +126,8 @@ public class HelperService {
 			List<String> lgas = new ArrayList<>();
 			List<String> wards = new ArrayList<>();
 			List<String> clinics  = new ArrayList<>();
-			
+			List<String> invalidClinics = new ArrayList<>();
+
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
@@ -110,7 +140,7 @@ public class HelperService {
 					continue;
 				}
 				String[] csvData = singleLine.split(",");
-				//State, LGA, Ward, FacilityUID, FacilityCode, CountryCode, PhoneNumber, FacilityName, FacilityLevel, Ownership
+				//State, LGA, Ward, FacilityUID, FacilityCode, CountryCode, PhoneNumber, FacilityName, FacilityLevel, Ownership, Argusoft Identifier
 				if (Validation.validateClinicAndStateCsvLine(csvData)) {
 					if(!states.contains(csvData[0])) {
 						Organization state = FhirResourceTemplateHelper.state(csvData[0]);
@@ -141,7 +171,7 @@ public class HelperService {
 
 					if(!clinics.contains(csvData[7])) {
 						Location clinicLocation = FhirResourceTemplateHelper.clinic(csvData[0], csvData[1], csvData[2], csvData[7]);
-						Organization clinicOrganization = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2], wardId);
+						Organization clinicOrganization = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2], wardId, csvData[10]);
 						facilityOrganizationId = createResource(clinicOrganization, Organization.class, Organization.NAME.matches().value(clinicOrganization.getName()));
 						facilityLocationId = createResource(clinicLocation, Location.class, Location.NAME.matches().value(clinicLocation.getName()));
 						clinics.add(clinicOrganization.getName());
@@ -154,14 +184,18 @@ public class HelperService {
 							csvData[8],
 							csvData[9],
 							csvData[3],
-							csvData[4]
+							csvData[4],
+							csvData[10]
 						);
 						facilityGroupId = createGroup(facilityGroupRep);
 						updateResource(facilityGroupId, facilityOrganizationId, Organization.class);
 						updateResource(facilityGroupId, facilityLocationId, Location.class);
+					}else {
+						invalidClinics.add(csvData[7]+","+csvData[0]+","+csvData[1]+","+csvData[2]);
 					}
 				}
 			}
+			map.put("Cannot create Clinics with state, lga, ward", invalidClinics);
 			map.put("uploadCSV", "Successful");
 			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
 		}
@@ -169,7 +203,7 @@ public class HelperService {
 		public ResponseEntity<LinkedHashMap<String, Object>> createUsers(@RequestParam("file") MultipartFile file) throws Exception{
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			List<String> practitioners = new ArrayList<>();
-
+			List<String> invalidUsers = new ArrayList<>();
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
@@ -182,11 +216,11 @@ public class HelperService {
 					continue;
 				}
 				String hcwData[] = singleLine.split(",");
-				//firstName,lastName,email,countryCode,phoneNumber,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier
+				//firstName,lastName,email,countryCode,phoneNumber,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier, Argusoft Identifier
 				if(Validation.validationHcwCsvLine(hcwData))
 				{
 					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[4]+hcwData[3]))) {
-						Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[4],hcwData[3],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14],hcwData[15]);
+						Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[4],hcwData[3],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14],hcwData[15],hcwData[16]);
 						practitionerId = createResource(hcw,
 								Practitioner.class,
 								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
@@ -198,9 +232,56 @@ public class HelperService {
 						practitioners.add(hcw.getTelecom().get(0).getValue());
 						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId);
 						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
-						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[4],hcwData[3],practitionerId,practitionerRoleId,hcwData[13],hcwData[9],hcwData[10],hcwData[11],hcwData[12]);
+						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[4],hcwData[3],practitionerId,practitionerRoleId,hcwData[13],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[16]);
 						String keycloakUserId = createUser(user);
 						if(keycloakUserId != null) {
+							updateResource(keycloakUserId, practitionerId, Practitioner.class);
+							updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
+						}else {
+							invalidUsers.add(user.getUsername()+","+user.getGroups().get(0)+","+user.getGroups().get(1)+","+user.getGroups().get(2)+","+user.getGroups().get(3));
+						}
+					}
+				}
+			}
+			map.put("Cannot create users with groups", invalidUsers);
+			map.put("uploadCsv", "Successful");
+			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
+		}
+
+		public ResponseEntity<LinkedHashMap<String, Object>> createDashboardUsers(@RequestParam("file") MultipartFile file) throws Exception{
+			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			List<String> practitioners = new ArrayList<>();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
+			String singleLine;
+			int iteration = 0;
+			String practitionerRoleId = "";
+			String practitionerId = "";
+
+			while((singleLine = bufferedReader.readLine()) != null) {
+				if(iteration == 0) {
+					iteration++;
+					continue;
+				}
+				String hcwData[] = singleLine.split(",");
+				//firstName,lastName,email,phoneNumber,countryCode,gender,birthdate,keycloakUserName,initialPassword,facilityUID,role,organization,type
+				Organization state = FhirResourceTemplateHelper.state(hcwData[11]);
+				if(Validation.validationHcwCsvLine(hcwData)) {
+					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[3]+hcwData[4]))) {
+						Practitioner hcw = FhirResourceTemplateHelper.user(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[11],hcwData[6],state.getMeta().getTag().get(0).getCode());
+						practitionerId = createResource(hcw,
+								Practitioner.class,
+								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
+								Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
+								Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
+							);
+						practitioners.add(hcw.getName().get(0).getFamily());
+						practitioners.add(hcw.getName().get(0).getGivenAsSingleString());
+						practitioners.add(hcw.getTelecom().get(0).getValue());
+						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[10],"NA",practitionerId);
+						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
+						UserRepresentation user = KeycloakTemplateHelper.dashboardUser(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],hcwData[4],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],state.getMeta().getTag().get(0).getCode());
+						String keycloakUserId = createUser(user);
+						if(keycloakUserId!=null) {
 							updateResource(keycloakUserId, practitionerId, Practitioner.class);
 							updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
 						}
@@ -277,7 +358,7 @@ public class HelperService {
 			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
 			return new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
 		}
-		
+
 		public List<OrgItem> getOrganizationsByPractitionerRoleId(String practitionerRoleId) {
 			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 			return getOrganizationHierarchy(organizationId);
@@ -291,7 +372,7 @@ public class HelperService {
 			List<ScoreCardItem> data =  ReportGeneratorFactory.INSTANCE.reportGenerator().getData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), indicators);
 			return ResponseEntity.ok(data);
 		}
-		
+
 		public List<OrgItem> getOrganizationHierarchy(String organizationId) {
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
 			return ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, organizationId);
@@ -305,7 +386,7 @@ public class HelperService {
 			PractitionerRole practitionerRole = (PractitionerRole) bundle.getEntry().get(0).getResource();
 			return practitionerRole.getOrganization().getReferenceElement().getIdPart();
 		}
-		
+
 
 		private String createGroup(GroupRepresentation groupRep) {
 			RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm("fhir-hapi");

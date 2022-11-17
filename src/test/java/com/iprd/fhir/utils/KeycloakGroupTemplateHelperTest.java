@@ -44,7 +44,7 @@ public class KeycloakGroupTemplateHelperTest {
 	
 	@Test
 	public void facilityGroupTest() {
-		GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup("St Lucia Hospital" ,"parent125", "organization125", "Location125", "primary", "public", "19145158", "30/08/1/1/1/0019");
+		GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup("St Lucia Hospital" ,"parent125", "organization125", "Location125", "primary", "public", "19145158", "30/08/1/1/1/0019", "16212");
 		Map<String, List<String>> attributes = facilityGroupRep.getAttributes();
 		assertEquals(facilityGroupRep.getName(), "19145158");
 		assertEquals(attributes.get("type").get(0), "facility");
@@ -54,12 +54,12 @@ public class KeycloakGroupTemplateHelperTest {
 		assertEquals(attributes.get("ownership").get(0), "public");
 		assertEquals(attributes.get("facilityUID").get(0), "19145158");
 		assertEquals(attributes.get("facility_code").get(0), "30/08/1/1/1/0019");
-		assertEquals(attributes.get("location_id").get(0),"Location125");
+		assertEquals(attributes.get("argusoft_identifier").get(0),"16212");
 	}
 	
 	@Test
 	public void userTest() {
-		UserRepresentation userRep = KeycloakTemplateHelper.user("temp", "nurse", "temp@test.org", "temp", "1234", "+91", "8150038173","48482551-e023-4515-82e8-241fa1c91ffc","5f613809-01cb-41d6-a041-10efb88e9167", "hcw", "stateGroup", "lgaGroup", "wardGroup", "clinicGroup");
+		UserRepresentation userRep = KeycloakTemplateHelper.user("temp", "nurse", "temp@test.org", "temp", "1234", "+91", "8150038173","48482551-e023-4515-82e8-241fa1c91ffc","5f613809-01cb-41d6-a041-10efb88e9167", "hcw", "stateGroup", "lgaGroup", "wardGroup", "clinicGroup", "95007");
 		Map<String, List<String>> attributes = userRep.getAttributes();
 		List<String> groups = userRep.getGroups();
 		assertEquals(userRep.getFirstName(), "temp");

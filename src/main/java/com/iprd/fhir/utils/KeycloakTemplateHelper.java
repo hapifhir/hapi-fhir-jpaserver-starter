@@ -42,7 +42,7 @@ public class KeycloakTemplateHelper {
 		return wardGroupRep;
 	}
 
-	public static GroupRepresentation facilityGroup(String name , String parentId, String fhirOrganizationId, String fhirLocationId, String facilityLevel, String ownership, String facilityUID, String facilityCode) {
+	public static GroupRepresentation facilityGroup(String name , String parentId, String fhirOrganizationId, String fhirLocationId, String facilityLevel, String ownership, String facilityUID, String facilityCode,String argusoftId) {
 		GroupRepresentation facilityGroupRep = new GroupRepresentation();
 		facilityGroupRep.setName(facilityUID);
 		facilityGroupRep.singleAttribute("type", FACILITY);
@@ -54,10 +54,11 @@ public class KeycloakTemplateHelper {
 		facilityGroupRep.singleAttribute("ownership",ownership);
 		facilityGroupRep.singleAttribute("facility_code",facilityCode);
 		facilityGroupRep.singleAttribute("facilityUID",facilityUID);
+		facilityGroupRep.singleAttribute("argusoft_identifier", argusoftId);
 		return facilityGroupRep;
 	}
 	
-	public static UserRepresentation user(String firstName,String lastName,String email,String userName,String password,String phoneNumber,String countryCode, String practitionerId, String practitionerRoleId,String role, String stateGroup, String lgaGroup, String wardGroup, String facilityGroup) {
+	public static UserRepresentation user(String firstName,String lastName,String email,String userName,String password,String phoneNumber,String countryCode, String practitionerId, String practitionerRoleId,String role, String stateGroup, String lgaGroup, String wardGroup, String facilityGroup, String argusoftId) {
 		UserRepresentation user = new UserRepresentation();
 		CredentialRepresentation credential = new CredentialRepresentation();
 		credential.setType(CredentialRepresentation.PASSWORD);
@@ -67,11 +68,41 @@ public class KeycloakTemplateHelper {
 		user.setUsername(userName);
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
-		user.setEmail(email);
+		if(email.equals("null")) {
+			user.setEmail(userName+"@test.org");
+		}else {
+			user.setEmail(email);	
+		}
 		user.singleAttribute("phoneNumber", countryCode+phoneNumber);
 		user.singleAttribute("type",role);
 		user.singleAttribute("practitioner_id", practitionerId);
 		user.singleAttribute("practitioner_role_id", practitionerRoleId);
+		user.singleAttribute("Argusoft Identifier", argusoftId);
+		user.setEnabled(true);
+		return user;
+	}
+	
+	public static UserRepresentation dashboardUser(String firstName, String lastName, String email, String userName, String password, String phoneNumber, String countryCode, String practitionerId, String practitionerRoleId, String facilityUID,String role, String organization, String type) {
+		UserRepresentation user = new UserRepresentation();
+		CredentialRepresentation credential = new CredentialRepresentation();
+		credential.setType(CredentialRepresentation.PASSWORD);
+		credential.setValue(password);
+		user.setCredentials(Arrays.asList(credential));
+		user.setGroups(Arrays.asList(organization));
+		user.setUsername(userName);
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		if(email.equals(null)) {
+			user.setEmail(userName+"@test.org");
+		}else {
+			user.setEmail(email);
+		}
+		user.singleAttribute("phoneNumber", countryCode+phoneNumber);
+		user.singleAttribute("type", role);
+		user.singleAttribute("practitioner_id", practitionerId);
+		user.singleAttribute("practitioner_role_id", practitionerRoleId);
+		user.singleAttribute("group_type", type);
+		user.singleAttribute("facilityUID", facilityUID);
 		user.setEnabled(true);
 		return user;
 	}

@@ -131,7 +131,7 @@ public class FhirResourceTemplateHelper {
 		return facility;
 	}
 	
-	public static Organization clinic(String nameOfClinic,String facilityUID,String facilityCode ,String countryCode, String contact, String state, String district, String city, String wardId) {
+	public static Organization clinic(String nameOfClinic,String facilityUID,String facilityCode ,String countryCode, String contact, String state, String district, String city, String wardId, String argusoftId) {
 		Organization clinic = new Organization();
 		clinic.setMeta(getMetaByOrgType(OrgType.FACILITY));
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
@@ -149,6 +149,8 @@ public class FhirResourceTemplateHelper {
 		facilityUIDIdentifier.setId(facilityCode);
 		facilityCodeIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
 		facilityCodeIdentifier.setId(facilityUID);
+		facilityCodeIdentifier.setSystem(IDENTIFIER_SYSTEM+"/argusoft_identifier");
+		facilityCodeIdentifier.setId(argusoftId);
 		identifiers.add(facilityUIDIdentifier);
 		identifiers.add(facilityCodeIdentifier);
 		clinic.setIdentifier(identifiers);
@@ -172,7 +174,7 @@ public class FhirResourceTemplateHelper {
 		return clinic;
 	}
 	
-	public static Practitioner hcw(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification, String stateIdentifierString) throws Exception {
+	public static Practitioner hcw(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification, String stateIdentifierString, String argusoftId) throws Exception {
 		Practitioner practitioner = new Practitioner();
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier clinicIdentifier = new Identifier();
@@ -181,6 +183,8 @@ public class FhirResourceTemplateHelper {
 		Identifier stateIdentifier = new Identifier();
 		stateIdentifier.setSystem(IDENTIFIER_SYSTEM+"/stateIdentifier");
 		stateIdentifier.setId(stateIdentifierString);
+		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM+"/argusoft_identifier");
+		clinicIdentifier.setId(argusoftId);
 		identifiers.add(clinicIdentifier);
 		identifiers.add(stateIdentifier);
 		practitioner.setIdentifier(identifiers);
@@ -198,7 +202,14 @@ public class FhirResourceTemplateHelper {
 		contactPoint.setSystem(org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem.PHONE);
 		contactPoints.add(contactPoint);
 		practitioner.setTelecom(contactPoints);
-		practitioner.setGender(AdministrativeGender.fromCode(gender));
+		if(gender == "M") {
+			gender = "male";
+			practitioner.setGender(AdministrativeGender.fromCode(gender));
+		}
+		else if( gender == "F" || gender == "FM") {
+			gender = "female";
+			practitioner.setGender(AdministrativeGender.fromCode(gender));
+		}
 		CodeableConcept codeableConcept = new CodeableConcept();
 		Coding coding = new Coding();
 		coding.setCode(qualification);
@@ -210,6 +221,45 @@ public class FhirResourceTemplateHelper {
 		qualificationComponent.setCode(codeableConcept);
 		practitionerQualificationComponents.add(qualificationComponent);
 		practitioner.setQualification(practitionerQualificationComponents);
+		try {
+			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
+			practitioner.setBirthDate(dateOfBirth);
+		}catch(ParseException exception) {
+			exception.printStackTrace();
+		}
+		practitioner.setId(new IdType("Practitioner", generateUUID()));
+		return practitioner;
+	}
+	public static Practitioner user(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String facilityUID, String type){
+		Practitioner practitioner = new Practitioner();
+		List<Identifier> identifiers = new ArrayList<>();
+		Identifier clinicIdentifier = new Identifier();
+		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
+		clinicIdentifier.setSystem(facilityUID);
+		identifiers.add(clinicIdentifier);
+		practitioner.setIdentifier(identifiers);
+		List<HumanName> hcwName = new ArrayList<>();
+		HumanName humanName = new HumanName();
+		List<StringType> list = new ArrayList<>();
+		list.add(new StringType(firstName));
+		humanName.setGiven(list);
+		humanName.setFamily(lastName);
+		hcwName.add(humanName);
+		practitioner.setName(hcwName);
+		List<ContactPoint> contactPoints = new ArrayList<>();
+		ContactPoint contactPoint = new ContactPoint();
+		contactPoint.setValue(countryCode+telecom);
+		contactPoint.setSystem(org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem.PHONE);
+		contactPoints.add(contactPoint);
+		practitioner.setTelecom(contactPoints);
+		if(gender == "M") {
+			gender = "male";
+			practitioner.setGender(AdministrativeGender.fromCode(gender));
+		}
+		else if( gender == "F" || gender == "FM") {
+			gender = "female";
+			practitioner.setGender(AdministrativeGender.fromCode(gender));
+		}
 		try {
 			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
 			practitioner.setBirthDate(dateOfBirth);
