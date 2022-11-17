@@ -1,32 +1,19 @@
 package ca.uhn.fhir.jpa.starter.service;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Response;
-
-import org.apache.jena.ext.xerces.util.URI.MalformedURIException;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.client.impl.GenericClient;
+import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
+import ca.uhn.fhir.rest.gclient.ICriterion;
+import ca.uhn.fhir.rest.gclient.IQuery;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.iprd.fhir.utils.FhirResourceTemplateHelper;
+import com.iprd.fhir.utils.KeycloakTemplateHelper;
+import com.iprd.fhir.utils.Validation;
+import com.iprd.report.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Appointment;
@@ -53,7 +40,6 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.token.TokenManager;
 import org.keycloak.representations.idm.GroupRepresentation;
@@ -62,44 +48,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.gson.JsonObject;
-import com.iprd.fhir.utils.FhirResourceTemplateHelper;
-import com.iprd.fhir.utils.KeycloakTemplateHelper;
-import com.iprd.fhir.utils.Validation;
-import com.iprd.report.DataResult;
-import com.iprd.report.DateRange;
-import com.iprd.report.FhirClientProvider;
-import com.iprd.report.OrgItem;
-import com.iprd.report.ReportGeneratorFactory;
-
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
-import ca.uhn.fhir.jpa.starter.AppProperties;
-import ca.uhn.fhir.model.primitive.BooleanDt;
-import ca.uhn.fhir.model.primitive.DateTimeDt;
-//import ca.uhn.fhir.model.dstu2.resource.Parameters;
-import ca.uhn.fhir.rest.api.MethodOutcome;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.impl.GenericClient;
-import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
-import ca.uhn.fhir.rest.gclient.ICriterion;
-import ca.uhn.fhir.rest.gclient.IQuery;
-import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Request.Builder;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Import(AppProperties.class)
@@ -309,10 +272,38 @@ public class HelperService {
 			bundle.addEntry(bundleEntryComponent);
 			return bundle;
 		}
+
+		public List<IndicatorItem> getIndicators() throws FileNotFoundException {
+			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
+			return new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
+		}
+		
+		public List<OrgItem> getOrganizationsByPractitionerRoleId(String practitionerRoleId) {
+			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+			return getOrganizationHierarchy(organizationId);
+		}
+
+		public ResponseEntity<List<ScoreCardItem>> getDataByPractitionerRoleId(String practitionerRoleId,String startDate, String endDate) throws FileNotFoundException {
+			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
+			List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
+			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+			List<ScoreCardItem> data =  ReportGeneratorFactory.INSTANCE.reportGenerator().getData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), indicators);
+			return ResponseEntity.ok(data);
+		}
 		
 		public List<OrgItem> getOrganizationHierarchy(String organizationId) {
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
 			return ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, organizationId);
+		}
+		
+		public String getOrganizationIdByPractitionerRoleId(String practitionerRoleId) {
+			Bundle bundle = FhirClientAuthenticatorService.getFhirClient().search().forResource(PractitionerRole.class).where(PractitionerRole.RES_ID.exactly().identifier(practitionerRoleId)).returnBundle(Bundle.class).execute();
+			if(!bundle.hasEntry()) {
+				return null;
+			}
+			PractitionerRole practitionerRole = (PractitionerRole) bundle.getEntry().get(0).getResource();
+			return practitionerRole.getOrganization().getReferenceElement().getIdPart();
 		}
 		
 

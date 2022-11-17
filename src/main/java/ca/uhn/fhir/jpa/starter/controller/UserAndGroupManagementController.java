@@ -1,33 +1,27 @@
 package ca.uhn.fhir.jpa.starter.controller;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.OperationOutcome;
-import org.keycloak.representations.idm.GroupRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import com.iprd.report.DataResult;
-import com.iprd.report.OrgItem;
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.service.HelperService;
 import ca.uhn.fhir.jpa.starter.service.NotificationService;
 import ca.uhn.fhir.parser.IParser;
-import ca.uhn.fhir.rest.api.MethodOutcome;
+import com.iprd.fhir.utils.Validation;
+import com.iprd.report.DataResult;
+import com.iprd.report.IndicatorItem;
+import com.iprd.report.OrgItem;
+import com.iprd.report.ScoreCardItem;
+import org.hl7.fhir.r4.model.Bundle;
+import org.keycloak.representations.idm.GroupRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = {"http://localhost:3000","https://oclink.io","https://opencampaignlink.org"}, maxAge = 3600,  allowCredentials = "true")
 @RestController
@@ -73,9 +67,34 @@ public class UserAndGroupManagementController {
 		return ResponseEntity.ok(iParser.encodeResourceToString(bundle));
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/organizations")
-	public ResponseEntity<List<OrgItem>> organizations(@RequestParam("organizationId") String organizationId) {
+	@RequestMapping(method = RequestMethod.GET, value = "/getOrganizations")
+	public ResponseEntity<List<OrgItem>> getOrganizations(@RequestParam("organizationId") String organizationId) {
 		List<OrgItem> orgItemsList = helperService.getOrganizationHierarchy(organizationId);
 		return ResponseEntity.ok(orgItemsList);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/organizations")
+	public ResponseEntity<List<OrgItem>> organizations(@RequestHeader(name="Authorization") String token) {
+		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		if(practitionerRoleId == null) {
+			return ResponseEntity.badRequest().build();
+		}
+		List<OrgItem> orgItemsList = helperService.getOrganizationsByPractitionerRoleId(practitionerRoleId);
+		return ResponseEntity.ok(orgItemsList);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/indicator")
+	public ResponseEntity<List<IndicatorItem>> indicator() throws FileNotFoundException {
+		List<IndicatorItem> items = helperService.getIndicators();
+		return ResponseEntity.ok(items);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/data")
+	public ResponseEntity<List<ScoreCardItem>> data(@RequestHeader(name="Authorization") String token, @RequestParam("from") String startDate, @RequestParam("to") String endDate) throws FileNotFoundException {
+		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		if(practitionerRoleId == null) {
+			return ResponseEntity.badRequest().build();
+		}
+		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate);
 	}
 }
