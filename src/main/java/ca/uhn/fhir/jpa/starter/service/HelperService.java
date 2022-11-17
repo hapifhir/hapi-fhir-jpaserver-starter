@@ -354,9 +354,15 @@ public class HelperService {
 			return bundle;
 		}
 
-		public List<IndicatorItem> getIndicators() throws FileNotFoundException {
-			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
-			return new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
+		public ResponseEntity<?> getIndicators() {
+			try {
+				JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
+				List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
+				return ResponseEntity.ok(indicators);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return ResponseEntity.ok("Error : Config File Not Found");
+			}
 		}
 
 		public List<OrgItem> getOrganizationsByPractitionerRoleId(String practitionerRoleId) {
@@ -364,13 +370,18 @@ public class HelperService {
 			return getOrganizationHierarchy(organizationId);
 		}
 
-		public ResponseEntity<List<ScoreCardItem>> getDataByPractitionerRoleId(String practitionerRoleId,String startDate, String endDate) throws FileNotFoundException {
+		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId,String startDate, String endDate)  {
 			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
-			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
-			List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
-			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-			List<ScoreCardItem> data =  ReportGeneratorFactory.INSTANCE.reportGenerator().getData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), indicators);
-			return ResponseEntity.ok(data);
+			try {
+				JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
+				List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
+				FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+				List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), indicators);
+				return ResponseEntity.ok(data);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return ResponseEntity.ok("Error : Config File Not Found");
+			}
 		}
 
 		public List<OrgItem> getOrganizationHierarchy(String organizationId) {

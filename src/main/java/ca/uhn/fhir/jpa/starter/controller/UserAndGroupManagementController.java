@@ -77,28 +77,27 @@ public class UserAndGroupManagementController {
 		List<OrgItem> orgItemsList = helperService.getOrganizationHierarchy(organizationId);
 		return ResponseEntity.ok(orgItemsList);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/organizations")
-	public ResponseEntity<List<OrgItem>> organizations(@RequestHeader(name="Authorization") String token) {
+	public ResponseEntity<?> organizations(@RequestHeader(name = "Authorization") String token) {
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
-		if(practitionerRoleId == null) {
-			return ResponseEntity.badRequest().build();
+		if (practitionerRoleId == null) {
+			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
 		List<OrgItem> orgItemsList = helperService.getOrganizationsByPractitionerRoleId(practitionerRoleId);
 		return ResponseEntity.ok(orgItemsList);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/indicator")
-	public ResponseEntity<List<IndicatorItem>> indicator() throws FileNotFoundException {
-		List<IndicatorItem> items = helperService.getIndicators();
-		return ResponseEntity.ok(items);
+	public ResponseEntity<?> indicator() {
+		return helperService.getIndicators();
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/data")
-	public ResponseEntity<List<ScoreCardItem>> data(@RequestHeader(name="Authorization") String token, @RequestParam("from") String startDate, @RequestParam("to") String endDate) throws FileNotFoundException {
+	public ResponseEntity<?> data(@RequestHeader(name = "Authorization") String token, @RequestParam("from") String startDate, @RequestParam("to") String endDate) {
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
-		if(practitionerRoleId == null) {
-			return ResponseEntity.badRequest().build();
+		if (practitionerRoleId == null) {
+			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
 		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate);
 	}
