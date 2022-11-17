@@ -129,12 +129,6 @@ public class HelperService {
 		private static final long AUTH_FIXED_DELAY = 50 * 60000L;
 		private static final long DELAY = 2 * 60000;
 		
-		public  static File multipartToFile(MultipartFile multipart, String fileName) throws IllegalStateException, IOException {
-		    File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+fileName);
-		    multipart.transferTo(convFile);
-		    return convFile;
-		}
-		
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
 
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -260,6 +254,50 @@ public class HelperService {
 				}
 			}
 			map.put("Cannot create users with groups", invalidUsers);
+			map.put("uploadCsv", "Successful");
+			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
+		}
+		
+		public ResponseEntity<LinkedHashMap<String, Object>> createDashboardUsers(@RequestParam("file") MultipartFile file) throws Exception{
+			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			List<String> practitioners = new ArrayList<>();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
+			String singleLine;
+			int iteration = 0;
+			String practitionerRoleId = "";
+			String practitionerId = "";
+			
+			while((singleLine = bufferedReader.readLine()) != null) {
+				if(iteration == 0) {
+					iteration++;
+					continue;
+				}
+				String hcwData[] = singleLine.split(",");
+				//firstName,lastName,email,phoneNumber,countryCode,gender,birthdate,keycloakUserName,initialPassword,facilityUID,role,organization,type
+				Organization state = FhirResourceTemplateHelper.state(hcwData[11]);
+				if(Validation.validationHcwCsvLine(hcwData)) {
+					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[3]+hcwData[4]))) {
+						Practitioner hcw = FhirResourceTemplateHelper.user(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[11],hcwData[6],state.getMeta().getTag().get(0).getCode());
+						practitionerId = createResource(hcw,
+								Practitioner.class,
+								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
+								Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
+								Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
+							);
+						practitioners.add(hcw.getName().get(0).getFamily());
+						practitioners.add(hcw.getName().get(0).getGivenAsSingleString());
+						practitioners.add(hcw.getTelecom().get(0).getValue());
+						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[10],"NA",practitionerId);
+						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
+						UserRepresentation user = KeycloakTemplateHelper.dashboardUser(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],hcwData[4],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],state.getMeta().getTag().get(0).getCode());
+						String keycloakUserId = createUser(user);
+						if(keycloakUserId!=null) {
+							updateResource(keycloakUserId, practitionerId, Practitioner.class);
+							updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
+						}
+					}
+				}
+			}
 			map.put("uploadCsv", "Successful");
 			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
 		}

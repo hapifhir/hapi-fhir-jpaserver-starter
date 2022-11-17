@@ -230,6 +230,45 @@ public class FhirResourceTemplateHelper {
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;
 	}
+	public static Practitioner user(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String facilityUID, String type){
+		Practitioner practitioner = new Practitioner();
+		List<Identifier> identifiers = new ArrayList<>();
+		Identifier clinicIdentifier = new Identifier();
+		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
+		clinicIdentifier.setSystem(facilityUID);
+		identifiers.add(clinicIdentifier);
+		practitioner.setIdentifier(identifiers);
+		List<HumanName> hcwName = new ArrayList<>();
+		HumanName humanName = new HumanName();
+		List<StringType> list = new ArrayList<>();
+		list.add(new StringType(firstName));
+		humanName.setGiven(list);
+		humanName.setFamily(lastName);
+		hcwName.add(humanName);
+		practitioner.setName(hcwName);
+		List<ContactPoint> contactPoints = new ArrayList<>();
+		ContactPoint contactPoint = new ContactPoint();
+		contactPoint.setValue(countryCode+telecom);
+		contactPoint.setSystem(org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem.PHONE);
+		contactPoints.add(contactPoint);
+		practitioner.setTelecom(contactPoints);
+		if(gender == "M") {
+			gender = "male";
+			practitioner.setGender(AdministrativeGender.fromCode(gender));
+		}
+		else if( gender == "F" || gender == "FM") {
+			gender = "female";
+			practitioner.setGender(AdministrativeGender.fromCode(gender));
+		}
+		try {
+			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
+			practitioner.setBirthDate(dateOfBirth);
+		}catch(ParseException exception) {
+			exception.printStackTrace();
+		}
+		practitioner.setId(new IdType("Practitioner", generateUUID()));
+		return practitioner;
+	}
 	
 	public static PractitionerRole practitionerRole(String role, String qualification, String practitionerId)
 	{
