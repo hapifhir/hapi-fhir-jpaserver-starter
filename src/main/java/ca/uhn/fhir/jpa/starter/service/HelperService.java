@@ -1,5 +1,19 @@
 package ca.uhn.fhir.jpa.starter.service;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.client.impl.GenericClient;
+import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
+import ca.uhn.fhir.rest.gclient.ICriterion;
+import ca.uhn.fhir.rest.gclient.IQuery;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.iprd.fhir.utils.FhirResourceTemplateHelper;
+import com.iprd.fhir.utils.KeycloakTemplateHelper;
+import com.iprd.fhir.utils.Validation;
+import com.iprd.report.*;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -55,7 +69,6 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.token.TokenManager;
 import org.keycloak.representations.idm.GroupRepresentation;
@@ -64,44 +77,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.gson.JsonObject;
-import com.iprd.fhir.utils.FhirResourceTemplateHelper;
-import com.iprd.fhir.utils.KeycloakTemplateHelper;
-import com.iprd.fhir.utils.Validation;
-import com.iprd.report.DataResult;
-import com.iprd.report.DateRange;
-import com.iprd.report.FhirClientProvider;
-import com.iprd.report.OrgItem;
-import com.iprd.report.ReportGeneratorFactory;
-
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
-import ca.uhn.fhir.jpa.starter.AppProperties;
-import ca.uhn.fhir.model.primitive.BooleanDt;
-import ca.uhn.fhir.model.primitive.DateTimeDt;
-//import ca.uhn.fhir.model.dstu2.resource.Parameters;
-import ca.uhn.fhir.rest.api.MethodOutcome;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.impl.GenericClient;
-import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
-import ca.uhn.fhir.rest.gclient.ICriterion;
-import ca.uhn.fhir.rest.gclient.IQuery;
-import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Request.Builder;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Import(AppProperties.class)
@@ -129,12 +119,6 @@ public class HelperService {
 		private static final long AUTH_FIXED_DELAY = 50 * 60000L;
 		private static final long DELAY = 2 * 60000;
 		
-		public  static File multipartToFile(MultipartFile multipart, String fileName) throws IllegalStateException, IOException {
-		    File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+fileName);
-		    multipart.transferTo(convFile);
-		    return convFile;
-		}
-		
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
 
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -143,7 +127,7 @@ public class HelperService {
 			List<String> wards = new ArrayList<>();
 			List<String> clinics  = new ArrayList<>();
 			List<String> invalidClinics = new ArrayList<>();
-			
+
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
@@ -264,6 +248,50 @@ public class HelperService {
 			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
 		}
 
+		public ResponseEntity<LinkedHashMap<String, Object>> createDashboardUsers(@RequestParam("file") MultipartFile file) throws Exception{
+			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			List<String> practitioners = new ArrayList<>();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
+			String singleLine;
+			int iteration = 0;
+			String practitionerRoleId = "";
+			String practitionerId = "";
+
+			while((singleLine = bufferedReader.readLine()) != null) {
+				if(iteration == 0) {
+					iteration++;
+					continue;
+				}
+				String hcwData[] = singleLine.split(",");
+				//firstName,lastName,email,phoneNumber,countryCode,gender,birthdate,keycloakUserName,initialPassword,facilityUID,role,organization,type
+				Organization state = FhirResourceTemplateHelper.state(hcwData[11]);
+				if(Validation.validationHcwCsvLine(hcwData)) {
+					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[3]+hcwData[4]))) {
+						Practitioner hcw = FhirResourceTemplateHelper.user(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[11],hcwData[6],state.getMeta().getTag().get(0).getCode());
+						practitionerId = createResource(hcw,
+								Practitioner.class,
+								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
+								Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
+								Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
+							);
+						practitioners.add(hcw.getName().get(0).getFamily());
+						practitioners.add(hcw.getName().get(0).getGivenAsSingleString());
+						practitioners.add(hcw.getTelecom().get(0).getValue());
+						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[10],"NA",practitionerId);
+						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
+						UserRepresentation user = KeycloakTemplateHelper.dashboardUser(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],hcwData[4],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],state.getMeta().getTag().get(0).getCode());
+						String keycloakUserId = createUser(user);
+						if(keycloakUserId!=null) {
+							updateResource(keycloakUserId, practitionerId, Practitioner.class);
+							updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
+						}
+					}
+				}
+			}
+			map.put("uploadCsv", "Successful");
+			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
+		}
+
 		public List<GroupRepresentation> getGroupsByUser(String userId) {
 			RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 			List<GroupRepresentation> groups =  realmResource.users().get(userId).groups(0,appProperties.getKeycloak_max_group_count(),false);
@@ -325,12 +353,51 @@ public class HelperService {
 			bundle.addEntry(bundleEntryComponent);
 			return bundle;
 		}
-		
+
+		public ResponseEntity<?> getIndicators() {
+			try {
+				JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
+				List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
+				return ResponseEntity.ok(indicators);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return ResponseEntity.ok("Error : Config File Not Found");
+			}
+		}
+
+		public List<OrgItem> getOrganizationsByPractitionerRoleId(String practitionerRoleId) {
+			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+			return getOrganizationHierarchy(organizationId);
+		}
+
+		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId,String startDate, String endDate)  {
+			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+			try {
+				JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
+				List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
+				FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+				List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), indicators);
+				return ResponseEntity.ok(data);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return ResponseEntity.ok("Error : Config File Not Found");
+			}
+		}
+
 		public List<OrgItem> getOrganizationHierarchy(String organizationId) {
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
 			return ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, organizationId);
 		}
 		
+		public String getOrganizationIdByPractitionerRoleId(String practitionerRoleId) {
+			Bundle bundle = FhirClientAuthenticatorService.getFhirClient().search().forResource(PractitionerRole.class).where(PractitionerRole.RES_ID.exactly().identifier(practitionerRoleId)).returnBundle(Bundle.class).execute();
+			if(!bundle.hasEntry()) {
+				return null;
+			}
+			PractitionerRole practitionerRole = (PractitionerRole) bundle.getEntry().get(0).getResource();
+			return practitionerRole.getOrganization().getReferenceElement().getIdPart();
+		}
+
 
 		private String createGroup(GroupRepresentation groupRep) {
 			RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm("fhir-hapi");

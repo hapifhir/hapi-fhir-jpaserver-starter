@@ -1,5 +1,11 @@
 package com.iprd.fhir.utils;
 
+import android.util.Base64;
+import ca.uhn.fhir.jpa.starter.model.JWTPayload;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Validation {
 	
 	public static boolean validateClinicAndStateCsvLine(String[] csvLineContent) {
@@ -18,5 +24,19 @@ public class Validation {
 			System.out.println("HCW CSV Validate success");
 		}
 		return true;
+	}
+	
+	public static String getPractitionerRoleIdByToken(String token) {
+		try {
+			String[] chunks = token.split("\\.");
+			String payload = new String(Base64.decode(chunks[1], Base64.DEFAULT));
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES , false);
+			JWTPayload jwtPayload = mapper.readValue(payload, JWTPayload.class);
+			return jwtPayload.getPractitionerRoleId();
+		} catch (JsonProcessingException | IndexOutOfBoundsException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
