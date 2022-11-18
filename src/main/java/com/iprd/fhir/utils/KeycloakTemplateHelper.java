@@ -20,7 +20,7 @@ public class KeycloakTemplateHelper {
 		GroupRepresentation stateGroupRep = new GroupRepresentation();
 		stateGroupRep.setName(name);
 		stateGroupRep.singleAttribute("type", STATE);
-		stateGroupRep.singleAttribute("location_id", fhirResourceId);
+		stateGroupRep.singleAttribute("Organization_id", fhirResourceId);
 		return stateGroupRep;
 	}
 	
@@ -29,7 +29,7 @@ public class KeycloakTemplateHelper {
 		lgaGroupRep.setName(name);
 		lgaGroupRep.singleAttribute("type", LGA);
 		lgaGroupRep.singleAttribute("parent", parentId);
-		lgaGroupRep.singleAttribute("location_id",fhirResourceId);
+		lgaGroupRep.singleAttribute("Organization_id",fhirResourceId);
 		return lgaGroupRep;
 	}
 	
@@ -38,7 +38,7 @@ public class KeycloakTemplateHelper {
 		wardGroupRep.setName(name);
 		wardGroupRep.singleAttribute("type", WARD);
 		wardGroupRep.singleAttribute("parent", parentId);
-		wardGroupRep.singleAttribute("location_id",fhirResourceId);
+		wardGroupRep.singleAttribute("Organization_id",fhirResourceId);
 		return wardGroupRep;
 	}
 
