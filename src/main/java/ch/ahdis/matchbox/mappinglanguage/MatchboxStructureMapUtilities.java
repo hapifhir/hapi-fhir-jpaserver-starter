@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r5.conformance.ProfileUtilities.ProfileKnowledgeProvider;
+import org.hl7.fhir.r5.context.ContextUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.CodeType;
@@ -51,20 +52,22 @@ import org.jboss.logging.Logger;
  */
 public class MatchboxStructureMapUtilities extends StructureMapUtilities {
 
+	private IWorkerContext worker;
+	
 	public MatchboxStructureMapUtilities(IWorkerContext worker) {
 		super(worker);
-
+		this.worker = worker;
 	}
 
 	public MatchboxStructureMapUtilities(IWorkerContext worker, ITransformerServices services,
 			ProfileKnowledgeProvider pkp) {
 		super(worker, services, pkp);
-
+		this.worker = worker;
 	}
 
 	public MatchboxStructureMapUtilities(IWorkerContext worker, ITransformerServices services) {
 		super(worker, services);
-
+		this.worker = worker;
 	}
 
 	@Override
@@ -92,8 +95,7 @@ public class MatchboxStructureMapUtilities extends StructureMapUtilities {
 
 		String su = conceptMapUrl;
 		if (conceptMapUrl.equals("http://hl7.org/fhir/ConceptMap/special-oid2uri")) {
-// FIXME			String uri = getWorker().oid2Uri(src.getCode());
-			String uri = null;
+      String uri = new ContextUtilities(worker).oid2Uri(src.getCode()); // FIXME iterates overall CodeSytems ...
 			if (uri == null)
 				uri = "urn:oid:" + src.getCode();
 			if ("uri".equals(fieldToReturn))
@@ -104,7 +106,8 @@ public class MatchboxStructureMapUtilities extends StructureMapUtilities {
 			ConceptMap cmap = null;
 			if (conceptMapUrl.startsWith("#")) {
 				for (Resource r : map.getContained()) {
-					if (r instanceof ConceptMap && r.getId().equals(conceptMapUrl.substring(1))) {
+				if (r instanceof ConceptMap && r.getId().equals(conceptMapUrl)) {
+//					if (r instanceof ConceptMap && r.getId().equals(conceptMapUrl.substring(1))) {
 						cmap = (ConceptMap) r;
 						su = map.getUrl() + "#" + conceptMapUrl;
 					}

@@ -366,6 +366,8 @@ public class XmlParser extends ParserBase {
       	Property property = getAttrProp(properties, attr.getLocalName(), attr.getNamespaceURI());
       	if (property != null) {
 	    	  String av = attr.getNodeValue();
+	    	  if (ToolingExtensions.hasExtension(property.getDefinition(), "http://www.healthintersections.com.au/fhir/StructureDefinition/elementdefinition-dateformat"))
+	    	  	av = convertForDateFormatFromExternal(ToolingExtensions.readStringExtension(property.getDefinition(), "http://www.healthintersections.com.au/fhir/StructureDefinition/elementdefinition-dateformat"), av);
 	    	  if (ToolingExtensions.hasExtension(property.getDefinition(), ToolingExtensions.EXT_DATE_FORMAT))
 	    	  	av = convertForDateFormatFromExternal(ToolingExtensions.readStringExtension(property.getDefinition(), ToolingExtensions.EXT_DATE_FORMAT), av);
 	    		if (property.getName().equals("value") && element.isPrimitive())

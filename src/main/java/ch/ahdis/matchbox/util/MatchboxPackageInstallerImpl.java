@@ -196,7 +196,7 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 
 				retVal.getMessage().addAll(JpaPackageCache.getProcessingMessages(npmPackage));
 
-// FIXME no dependencies				if (theInstallationSpec.isFetchDependencies()) {
+// NOTE no dependencies				if (theInstallationSpec.isFetchDependencies()) {
 //					fetchAndInstallDependencies(npmPackage, theInstallationSpec, retVal);
 //				}
 
@@ -224,7 +224,7 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 	      extension.setValue(retval);
 	    }
 	  }
-	 // FIXME should maybe work independent of model
+	 // NOTE should maybe work independent of model
    // Resource Bundle/history-IHE-formatcode.valueset not found, specified in path: ImplementationGuide.definition.resource.reference
 	 private IBaseResource filterImplementationGuideResources(IBaseResource newResource, List<String> installTypes ) {
 	   ImplementationGuide ig = (ImplementationGuide) newResource;

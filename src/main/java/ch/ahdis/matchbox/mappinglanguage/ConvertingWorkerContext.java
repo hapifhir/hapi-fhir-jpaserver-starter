@@ -76,82 +76,82 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
 
   // see Issue https://github.com/ahdis/matchbox/issues/31  FIXME
   // this function gets now only the base StructureDefinition for R4 which the FHIRPathEngine is using to initialize itself
-//  @Override
-//  public List<org.hl7.fhir.r5.model.StructureDefinition> allStructures() {
-//
-//    List<org.hl7.fhir.r5.model.StructureDefinition> retVal = myAllStructures;
-//    if (retVal == null) {
-//      DefaultProfileValidationSupport defaultProfileValidationSupport = new DefaultProfileValidationSupport(FhirContext.forR4Cached());
-//      retVal = new ArrayList<>();
-//      for (IBaseResource next : defaultProfileValidationSupport.fetchAllStructureDefinitions()) {
-//        try {
-//          Resource converted = myModelConverter.toCanonical(next);
-//          retVal.add((org.hl7.fhir.r5.model.StructureDefinition) converted);
-//        } catch (FHIRException e) {
-//          throw new InternalErrorException(e);
-//        }
-//      }
-//      myAllStructures = retVal;
-//    }
-//
-//    return retVal;
-//  }
+  // @Override
+  public List<org.hl7.fhir.r5.model.StructureDefinition> allStructures() {
 
+    List<org.hl7.fhir.r5.model.StructureDefinition> retVal = myAllStructures;
+    if (retVal == null) {
+      DefaultProfileValidationSupport defaultProfileValidationSupport = new DefaultProfileValidationSupport(FhirContext.forR4Cached());
+      retVal = new ArrayList<>();
+      for (IBaseResource next : defaultProfileValidationSupport.fetchAllStructureDefinitions()) {
+        try {
+          Resource converted = myModelConverter.toCanonical(next);
+          retVal.add((org.hl7.fhir.r5.model.StructureDefinition) converted);
+        } catch (FHIRException e) {
+          throw new InternalErrorException(e);
+        }
+      }
+      myAllStructures = retVal;
+    }
 
+    return retVal;
+  }
+
+  
   // Logical Models can be defined by the type, FIXME
-//  @Override
-//  public org.hl7.fhir.r5.model.StructureDefinition fetchTypeDefinition(String typeName) {
-//    if (typeName == null) {
-//      return null;
-//    }
-//    String ns = null;
-//    String type = null;
-//    if (typeName.contains("|")) {
-//      ns = typeName.substring(0, typeName.indexOf("|"));
-//      type = typeName.substring(typeName.indexOf("|")+1);
-//    } else {
-//      type = typeName;
-//    }
-//    for (org.hl7.fhir.r5.model.StructureDefinition sd : this.allStructures()) {
-//      if (((sd.getDerivation() == null) || (sd.getDerivation() == org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule.SPECIALIZATION)) && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
-//        if(type.equals(sd.getType()) && (ns == null || ns.equals(FormatUtilities.FHIR_NS)) && !org.hl7.fhir.r5.utils.ToolingExtensions.hasExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"))
-//          return sd;
-//        String sns = org.hl7.fhir.r5.utils.ToolingExtensions.readStringExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace");
-//        if ((type.equals(sd.getType()) || type.equals(sd.getName())) && ns != null && ns.equals(sns))
-//          return sd;
-//      }
-//    } 
-//    if (myDaoRegistry != null) {
-//      IBundleProvider search = null;
-//      SearchParameterMap params = new SearchParameterMap();
-//      params.setLoadSynchronousUpTo(100);
-//      params.add(org.hl7.fhir.r4.model.StructureDefinition.SP_TYPE, new UriParam(type));
-//      search = myDaoRegistry.getResourceDao("StructureDefinition").search(params);
-//      Integer size = search.size();
-//      if (size == null || size == 0) {
-//        return null;
-//      }
-//      for (IBaseResource resource : search.getAllResources()) {
-//        org.hl7.fhir.r4.model.StructureDefinition sd = (org.hl7.fhir.r4.model.StructureDefinition) resource;
-//        if (sd.getDerivation() == TypeDerivationRule.SPECIALIZATION && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
-//          if(type.equals(sd.getType()) && (ns == null || ns.equals(FormatUtilities.FHIR_NS)) && !ToolingExtensions.hasExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"))
-//            return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
-//          String sns = ToolingExtensions.readStringExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace");
-//          if ((type.equals(sd.getType()) || type.equals(sd.getName())) && ns != null && ns.equals(sns))
-//            return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
-//        }
-//      } 
-//      // for json we don't have a namespace
-//      for (IBaseResource resource : search.getAllResources()) {
-//        org.hl7.fhir.r4.model.StructureDefinition sd = (org.hl7.fhir.r4.model.StructureDefinition) resource;
-//        if (sd.getDerivation() == TypeDerivationRule.SPECIALIZATION && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
-//          if(type.equals(sd.getType()) && (ns == null || ns.equals(FormatUtilities.FHIR_NS)))
-//            return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
-//        }
-//      } 
-//    }
-//    return null;
-//  }
+  @Override
+  public org.hl7.fhir.r5.model.StructureDefinition fetchTypeDefinition(String typeName) {
+    if (typeName == null) {
+      return null;
+    }
+    String ns = null;
+    String type = null;
+    if (typeName.contains("|")) {
+      ns = typeName.substring(0, typeName.indexOf("|"));
+      type = typeName.substring(typeName.indexOf("|")+1);
+    } else {
+      type = typeName;
+    }
+    for (org.hl7.fhir.r5.model.StructureDefinition sd : this.allStructures()) {
+      if (((sd.getDerivation() == null) || (sd.getDerivation() == org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule.SPECIALIZATION)) && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
+        if(type.equals(sd.getType()) && (ns == null || ns.equals(FormatUtilities.FHIR_NS)) && !org.hl7.fhir.r5.utils.ToolingExtensions.hasExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"))
+          return sd;
+        String sns = org.hl7.fhir.r5.utils.ToolingExtensions.readStringExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace");
+        if ((type.equals(sd.getType()) || type.equals(sd.getName())) && ns != null && ns.equals(sns))
+          return sd;
+      }
+    } 
+    if (myDaoRegistry != null) {
+      IBundleProvider search = null;
+      SearchParameterMap params = new SearchParameterMap();
+      params.setLoadSynchronousUpTo(100);
+      params.add(org.hl7.fhir.r4.model.StructureDefinition.SP_TYPE, new UriParam(type));
+      search = myDaoRegistry.getResourceDao("StructureDefinition").search(params);
+      Integer size = search.size();
+      if (size == null || size == 0) {
+        return null;
+      }
+      for (IBaseResource resource : search.getAllResources()) {
+        org.hl7.fhir.r4.model.StructureDefinition sd = (org.hl7.fhir.r4.model.StructureDefinition) resource;
+        if (sd.getDerivation() == TypeDerivationRule.SPECIALIZATION && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
+          if(type.equals(sd.getType()) && (ns == null || ns.equals(FormatUtilities.FHIR_NS)) && !ToolingExtensions.hasExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"))
+            return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
+          String sns = ToolingExtensions.readStringExtension(sd, "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace");
+          if ((type.equals(sd.getType()) || type.equals(sd.getName())) && ns != null && ns.equals(sns))
+            return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
+        }
+      } 
+      // for json we don't have a namespace
+      for (IBaseResource resource : search.getAllResources()) {
+        org.hl7.fhir.r4.model.StructureDefinition sd = (org.hl7.fhir.r4.model.StructureDefinition) resource;
+        if (sd.getDerivation() == TypeDerivationRule.SPECIALIZATION && !sd.getUrl().startsWith("http://hl7.org/fhir/StructureDefinition/de-")) {
+          if(type.equals(sd.getType()) && (ns == null || ns.equals(FormatUtilities.FHIR_NS)))
+            return (org.hl7.fhir.r5.model.StructureDefinition) myModelConverter.toCanonical(sd);
+        }
+      } 
+    }
+    return null;
+  }
 //  
 //  @Override
 //  public List<String> getTypeNames() {
@@ -211,7 +211,6 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
     return theResource;
   }
   
-//  @Override FIXME
   public org.hl7.fhir.r5.model.StructureMap getTransform(String url) {
     return fixMap((org.hl7.fhir.r5.model.StructureMap) myModelConverter
         .toCanonical(doFetchResource(org.hl7.fhir.r4.model.StructureMap.class, url)));

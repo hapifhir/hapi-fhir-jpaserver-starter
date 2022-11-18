@@ -793,7 +793,10 @@ public class VersionSpecificWorkerContextWrapper extends I18nBase implements IWo
 				converter = new VersionTypeConverterR4();
 				break;
 			}
-
+			case R4B: {
+				converter = new VersionTypeConverterR4B();
+				break;
+			}
 			case R5: {
 				converter = IDENTITY_VERSION_TYPE_CONVERTER;
 				break;
@@ -825,8 +828,7 @@ public class VersionSpecificWorkerContextWrapper extends I18nBase implements IWo
 			}
 			return (List<T>) retVal;
 		}
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<>();
 	}
 
 	// FIXME
