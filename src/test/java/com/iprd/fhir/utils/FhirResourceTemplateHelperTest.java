@@ -50,7 +50,7 @@ public class FhirResourceTemplateHelperTest {
 	
 	@Test
 	public void testPractitioner() throws Exception {
-		Practitioner test = FhirResourceTemplateHelper.hcw("temp", "nurse", "+91", "8150038173", "female", "09/22/1995", "Oyo", "Ibadan-South-West", "Agbokojo", "19145158", "Nurse", "Bachelor-of-Nursing","N123","52620");
+		Practitioner test = FhirResourceTemplateHelper.hcw("temp", "nurse", "+91", "8150038173", "female", "09/22/1995", "Oyo", "Ibadan-South-West", "Agbokojo", "19145158", "Nurse", "Bachelor-of-Nursing","N123","52620","12546555");
 		assertEquals(test.getName().get(0), "nurse");
 		assertEquals(test.getName().get(1), "temp");
 		assertEquals(test.getTelecom(), "+91"+"8150038173");

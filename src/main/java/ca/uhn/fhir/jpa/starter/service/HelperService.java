@@ -209,6 +209,7 @@ public class HelperService {
 			int iteration = 0;
 			String practitionerRoleId = "";
 			String practitionerId = "";
+			String organizationId = "";
 
 			while((singleLine = bufferedReader.readLine()) != null) {
 				if(iteration == 0) { //Skip header of CSV
@@ -216,11 +217,15 @@ public class HelperService {
 					continue;
 				}
 				String hcwData[] = singleLine.split(",");
+				Bundle organization = FhirClientAuthenticatorService.getFhirClient().search().forResource(Organization.class).where(Organization.RES_ID.exactly().identifier(hcwData[12])).returnBundle(Bundle.class).execute();
+				if(organization.hasEntry()) {
+					organizationId = organization.getEntryFirstRep().getIdElement().getId();	
+				}
 				//firstName,lastName,email,countryCode,phoneNumber,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier, Argusoft Identifier
 				if(Validation.validationHcwCsvLine(hcwData))
 				{
 					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[4]+hcwData[3]))) {
-						Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[4],hcwData[3],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14],hcwData[15],hcwData[16]);
+						Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[4],hcwData[3],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14],hcwData[15],hcwData[16],organizationId);
 						practitionerId = createResource(hcw,
 								Practitioner.class,
 								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
@@ -256,18 +261,23 @@ public class HelperService {
 			int iteration = 0;
 			String practitionerRoleId = "";
 			String practitionerId = "";
-
+			String organizationId = "";
+			
 			while((singleLine = bufferedReader.readLine()) != null) {
 				if(iteration == 0) {
 					iteration++;
 					continue;
 				}
 				String hcwData[] = singleLine.split(",");
+				Bundle organization = FhirClientAuthenticatorService.getFhirClient().search().forResource(Organization.class).where(Organization.NAME.matches().value(hcwData[11])).returnBundle(Bundle.class).execute();
+				if(organization.hasEntry()) {
+					organizationId = organization.getEntryFirstRep().getIdElement().getId();	
+				}
 				//firstName,lastName,email,phoneNumber,countryCode,gender,birthdate,keycloakUserName,initialPassword,facilityUID,role,organization,type
 				Organization state = FhirResourceTemplateHelper.state(hcwData[11]);
 				if(Validation.validationHcwCsvLine(hcwData)) {
 					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[3]+hcwData[4]))) {
-						Practitioner hcw = FhirResourceTemplateHelper.user(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[11],hcwData[6],state.getMeta().getTag().get(0).getCode());
+						Practitioner hcw = FhirResourceTemplateHelper.user(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[11],hcwData[6],state.getMeta().getTag().get(0).getCode(),organizationId);
 						practitionerId = createResource(hcw,
 								Practitioner.class,
 								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),

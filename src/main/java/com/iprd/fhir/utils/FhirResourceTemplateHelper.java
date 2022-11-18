@@ -3,8 +3,9 @@ package com.iprd.fhir.utils;
 import java.util.*;
 import java.lang.String;
 
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.*;
-import org.hl7.fhir.r4.model.Reference;
 
 import com.iprd.report.OrgType;
 
@@ -174,7 +175,7 @@ public class FhirResourceTemplateHelper {
 		return clinic;
 	}
 	
-	public static Practitioner hcw(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification, String stateIdentifierString, String argusoftId) throws Exception {
+	public static Practitioner hcw(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification, String stateIdentifierString, String argusoftId, String organizationId) throws Exception {
 		Practitioner practitioner = new Practitioner();
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier clinicIdentifier = new Identifier();
@@ -228,9 +229,10 @@ public class FhirResourceTemplateHelper {
 			exception.printStackTrace();
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
+		practitioner.setId(new IdType("Organization", organizationId));
 		return practitioner;
 	}
-	public static Practitioner user(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String facilityUID, String type){
+	public static Practitioner user(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String facilityUID, String type, String organizationId){
 		Practitioner practitioner = new Practitioner();
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier clinicIdentifier = new Identifier();
@@ -267,6 +269,7 @@ public class FhirResourceTemplateHelper {
 			exception.printStackTrace();
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
+		practitioner.setId(new IdType("Organization", organizationId));
 		return practitioner;
 	}
 	
