@@ -184,7 +184,7 @@ public class FhirResourceTemplateHelper {
 		stateIdentifier.setSystem(IDENTIFIER_SYSTEM+"/stateIdentifier");
 		stateIdentifier.setId(stateIdentifierString);
 		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM+"/argusoft_identifier");
-		clinicIdentifier.setId(argusoftId);
+		clinicIdentifier.setValue(argusoftId);
 		identifiers.add(clinicIdentifier);
 		identifiers.add(stateIdentifier);
 		practitioner.setIdentifier(identifiers);
