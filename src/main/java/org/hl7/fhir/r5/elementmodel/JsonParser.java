@@ -47,6 +47,7 @@ import java.util.Set;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.FHIRFormatError;
 import org.hl7.fhir.r5.conformance.ProfileUtilities;
+import org.hl7.fhir.r5.context.ContextUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element.SpecialElement;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
@@ -54,13 +55,18 @@ import org.hl7.fhir.r5.formats.JsonCreator;
 import org.hl7.fhir.r5.formats.JsonCreatorCanonical;
 import org.hl7.fhir.r5.formats.JsonCreatorGson;
 import org.hl7.fhir.r5.model.ElementDefinition.TypeRefComponent;
+import org.hl7.fhir.r5.model.Extension;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.utils.FHIRPathEngine;
+import org.hl7.fhir.r5.utils.ToolingExtensions;
+import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
+import org.hl7.fhir.utilities.StringPair;
 import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.i18n.I18nConstants;
 import org.hl7.fhir.utilities.json.JsonTrackingParser;
 import org.hl7.fhir.utilities.json.JsonTrackingParser.LocationData;
+import org.hl7.fhir.utilities.json.JsonUtilities;
 import org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity;
 import org.hl7.fhir.utilities.validation.ValidationMessage.IssueType;
 import org.hl7.fhir.utilities.xhtml.XhtmlParser;
@@ -78,6 +84,7 @@ public class JsonParser extends ParserBase {
   private boolean allowComments;
 
   private ProfileUtilities profileUtilities;
+  private Element baseElement;
 
   public JsonParser(IWorkerContext context, ProfileUtilities utilities) {
     super(context);
@@ -181,27 +188,33 @@ public class JsonParser extends ParserBase {
   }
 
   public Element parse(JsonObject object) throws FHIRException {
-    JsonElement rt = object.get("resourceType");
-    if (rt == null) {
-      logError(line(object), col(object), "$", IssueType.INVALID, context.formatMessage(I18nConstants.UNABLE_TO_FIND_RESOURCETYPE_PROPERTY), IssueSeverity.FATAL);
-      return null;
-    } else {
-      String name = rt.getAsString();
-      String path = name;
-
-      StructureDefinition sd = getDefinition(line(object), col(object), name);
-      if (sd == null)
+    StructureDefinition sd = getLogical();
+    String name;
+    if (sd == null) {
+      JsonElement rt = object.get("resourceType");
+      if (rt == null) {
+        logError(line(object), col(object), "$", IssueType.INVALID, context.formatMessage(I18nConstants.UNABLE_TO_FIND_RESOURCETYPE_PROPERTY), IssueSeverity.FATAL);
         return null;
+      } else {
+        name = rt.getAsString();
 
-      Element result = new Element(name, new Property(context, sd.getSnapshot().getElement().get(0), sd, this.profileUtilities));
-      checkObject(object, path);
-      result.markLocation(line(object), col(object));
-      result.setType(name);
-      result.setPath(result.fhirType());
-      parseChildren(path, object, result, true);
-      result.numberChildren();
-      return result;
+        sd = getDefinition(line(object), col(object), name);
+        if (sd == null) {
+         return null;
+        }
+      }
+    } else {
+      name = sd.getType();
     }
+    String path = name;      
+    baseElement = new Element(name, new Property(context, sd.getSnapshot().getElement().get(0), sd, this.profileUtilities));
+    checkObject(object, path);
+    baseElement.markLocation(line(object), col(object));
+    baseElement.setType(name);
+    baseElement.setPath(baseElement.fhirType());
+    parseChildren(path, object, baseElement, true);
+    baseElement.numberChildren();
+    return baseElement;
   }
 
   private void checkObject(JsonObject object, String path) throws FHIRFormatError {
@@ -235,7 +248,13 @@ public class JsonParser extends ParserBase {
     if (policy != ValidationPolicy.NONE) {
       for (Entry<String, JsonElement> e : object.entrySet()) {
         if (!processed.contains(e.getKey())) {
-          logError(line(e.getValue()), col(e.getValue()), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.UNRECOGNISED_PROPERTY_, e.getKey()), IssueSeverity.ERROR);
+          StructureDefinition sd = element.getProperty().isLogical() ? new ContextUtilities(context).fetchByJsonName(e.getKey()) : null;
+          if (sd != null) {
+            Property property = new Property(context, sd.getSnapshot().getElementFirstRep(), sd, element.getProperty().getUtils());
+            parseChildItem(path, object, element, null, property);
+          } else {
+            logError(line(e.getValue()), col(e.getValue()), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.UNRECOGNISED_PROPERTY_, e.getKey()), IssueSeverity.ERROR);
+          }
         }
       }
     }
@@ -243,84 +262,255 @@ public class JsonParser extends ParserBase {
 
   public void parseChildItem(String path, JsonObject object, Element context, Set<String> processed, Property property) {
     if (property.isChoice() || property.getDefinition().getPath().endsWith("data[x]")) {
-      for (TypeRefComponent type : property.getDefinition().getType()) {
-        String eName = property.getName().substring(0, property.getName().length()-3) + Utilities.capitalize(type.getWorkingCode());
-        if (!isPrimitive(type.getWorkingCode()) && object.has(eName)) {
-          parseChildComplex(path, object, context, processed, property, eName);
-          break;
-        } else if (isPrimitive(type.getWorkingCode()) && (object.has(eName) || object.has("_"+eName))) {
-          parseChildPrimitive(object, context, processed, property, path, eName);
-          break;
+      if (property.isJsonPrimitiveChoice()) {
+        if (object.has(property.getJsonName())) {
+          JsonElement je = object.get(property.getJsonName());
+          if (processed != null) processed.add(property.getJsonName());
+          String type = getTypeFromJsonType(je);
+          if (type == null) {
+            logError(line(je), col(je), path, IssueType.STRUCTURE, this.context.formatMessage(I18nConstants.UNRECOGNISED_PROPERTY_TYPE, describeType(je), property.getName(), property.typeSummary()), IssueSeverity.ERROR);
+          } else if (property.hasType(type)) {
+            Property np = new Property(property.getContext(), property.getDefinition(), property.getStructure(), property.getUtils(), type);
+            parseChildPrimitive(object, context, processed, np, path, property.getName());
+          } else {
+            logError(line(je), col(je), path, IssueType.STRUCTURE, this.context.formatMessage(I18nConstants.UNRECOGNISED_PROPERTY_TYPE_WRONG, describeType(je), property.getName(), type, property.typeSummary()), IssueSeverity.ERROR);
+          }
+        }
+      } else {
+        for (TypeRefComponent type : property.getDefinition().getType()) {
+          String eName = property.getJsonName().substring(0, property.getName().length()-3) + Utilities.capitalize(type.getWorkingCode());
+          if (!isPrimitive(type.getWorkingCode()) && object.has(eName)) {
+            parseChildComplex(path, object, context, processed, property, eName);
+            break;
+          } else if (isPrimitive(type.getWorkingCode()) && (object.has(eName) || object.has("_"+eName))) {
+            parseChildPrimitive(object, context, processed, property, path, eName);
+            break;
+          }
         }
       }
     } else if (property.isPrimitive(property.getType(null))) {
-      parseChildPrimitive(object, context, processed, property, path, property.getName());
-    } else if (object.has(property.getName())) {
-      parseChildComplex(path, object, context, processed, property, property.getName());
+      parseChildPrimitive(object, context, processed, property, path, property.getJsonName());
+    } else if (object.has(property.getJsonName())) {
+      parseChildComplex(path, object, context, processed, property, property.getJsonName());
+    }
+  }
+
+  private String getTypeFromJsonType(JsonElement je) {
+    if (je.isJsonPrimitive()) {
+      JsonPrimitive p = je.getAsJsonPrimitive();
+      if (p.isString()) {
+        return "string";
+      } else if (p.isBoolean()) {
+        return "boolean";
+      } else {
+        String s = p.getAsString();
+        if (Utilities.isInteger(s)) {
+          return "integer";
+        } else {
+          return "decimal";
+        }
+      }
+    } else {
+      return null;
     }
   }
 
   private void parseChildComplex(String path, JsonObject object, Element element, Set<String> processed, Property property, String name) throws FHIRException {
-    processed.add(name);
+    if (processed != null) {
+      processed.add(name);
+    }
     String npath = path+"."+property.getName();
     String fpath = element.getPath()+"."+property.getName();
     JsonElement e = object.get(name);
-    if (property.isList() && (e instanceof JsonArray)) {
+    if (property.isList() && !property.isJsonKeyArray() && (e instanceof JsonArray)) {
       JsonArray arr = (JsonArray) e;
       if (arr.size() == 0) {
-        logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.ARRAY_CANNOT_BE_EMPTY), IssueSeverity.ERROR);			  
+        if (property.canBeEmpty()) {
+          // nothing
+        } else {
+          logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.ARRAY_CANNOT_BE_EMPTY), IssueSeverity.ERROR);
+        }
       }
       int c = 0;
       for (JsonElement am : arr) {
-        parseChildComplexInstance(npath+"["+c+"]", fpath+"["+c+"]", object, element, property, name, am);
+        parseChildComplexInstance(npath+"["+c+"]", fpath+"["+c+"]", element, property, name, am);
         c++;
+      }
+    } else if (property.isJsonKeyArray()) {
+      String code = property.getJsonKeyProperty();
+      List<Property> properties = property.getChildProperties(element.getName(), null);
+      if (properties.size() != 2) {
+        logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.OBJECT_CANNOT_BE_KEYED_ARRAY_CHILD_COUNT, propNames(properties)), IssueSeverity.ERROR);               
+      } else {
+        Property propK = properties.get(0);
+        Property propV = properties.get(1);
+        if (!propK.getName().equals(code)) {
+          logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.OBJECT_CANNOT_BE_KEYED_ARRAY_PROP_NAME, propNames(properties)), IssueSeverity.ERROR);                       
+        } else if (!propK.isPrimitive())  {
+          logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.OBJECT_CANNOT_BE_KEYED_ARRAY_PROP_TYPE, propNames(properties), propK.typeSummary()), IssueSeverity.ERROR);                       
+        } else if (propV.isList())  {
+          logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.OBJECT_CANNOT_BE_KEYED_ARRAY_NO_LIST, propV.getName()), IssueSeverity.ERROR);                       
+        } else if (propV.isChoice() && propV.getName().endsWith("[x]"))  {
+          logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.OBJECT_CANNOT_BE_KEYED_ARRAY_NO_CHOICE, propV.getName()), IssueSeverity.ERROR);                       
+        } else if (!(e instanceof JsonObject)) {
+          logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.THIS_PROPERTY_MUST_BE_AN_OBJECT_NOT_, describe(e)), IssueSeverity.ERROR);                       
+        } else {
+          JsonObject o = (JsonObject) e;
+          int i = 0;
+          for (Entry<String, JsonElement> pv : o.entrySet()) {
+            // create an array entry
+            String npathArr = path+"."+property.getName()+"["+i+"]";
+            String fpathArr = element.getPath()+"."+property.getName()+"["+i+"]";
+            
+            Element n = new Element(name, property).markLocation(line(pv.getValue()), col(pv.getValue()));
+            n.setPath(fpath);
+            element.getChildren().add(n);
+            // handle the key
+            String fpathKey = fpathArr+"."+propK.getName();
+            Element nKey = new Element(code, propK).markLocation(line(pv.getValue()), col(pv.getValue()));
+            nKey.setPath(fpathKey);
+            n.getChildren().add(nKey);
+            nKey.setValue(pv.getKey());
+            
+
+            boolean ok = true;
+            Property pvl = propV;
+            if (propV.isJsonPrimitiveChoice()) {
+              ok = false;
+              String type = getTypeFromJsonType(pv.getValue());
+              if (type == null) {
+                logError(line(pv.getValue()), col(pv.getValue()), path, IssueType.STRUCTURE, this.context.formatMessage(I18nConstants.UNRECOGNISED_PROPERTY_TYPE, describeType(pv.getValue()), propV.getName(), propV.typeSummary()), IssueSeverity.ERROR);
+              } else if (propV.hasType(type)) {
+                pvl = new Property(propV.getContext(), propV.getDefinition(), propV.getStructure(), propV.getUtils(), type);
+                ok = true;
+              } else {
+                logError(line(pv.getValue()), col(pv.getValue()), path, IssueType.STRUCTURE, this.context.formatMessage(I18nConstants.UNRECOGNISED_PROPERTY_TYPE_WRONG, describeType(pv.getValue()), propV.getName(), type, propV.typeSummary()), IssueSeverity.ERROR);
+              }
+            }
+            if (ok) {
+              // handle the value
+              String npathV = npathArr+"."+pvl.getName();
+              String fpathV = fpathArr+"."+pvl.getName();
+              if (propV.isPrimitive(pvl.getType(null))) {
+                parseChildPrimitiveInstance(n, pvl, pvl.getName(), npathV, fpathV, pv.getValue(), null);
+              } else if (pv.getValue() instanceof JsonObject || pv.getValue() instanceof JsonNull) {
+                parseChildComplexInstance(npathV, fpathV, n, pvl, pvl.getName(), pv.getValue());
+              } else {
+                logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.THIS_PROPERTY_MUST_BE_AN_OBJECT_NOT_, describe(pv.getValue())), IssueSeverity.ERROR);                       
+              }
+            }
+            i++;
+          }
+        }
       }
     } else {
       if (property.isList()) {
-        logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.THIS_PROPERTY_MUST_BE_AN_ARRAY_NOT_, describeType(e), name, path), IssueSeverity.ERROR);
+        logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.THIS_PROPERTY_MUST_BE_AN_ARRAY_NOT_, describe(e), name, path), IssueSeverity.ERROR);
       }
-      parseChildComplexInstance(npath, fpath, object, element, property, name, e);
+      parseChildComplexInstance(npath, fpath, element, property, name, e);
     }
   }
 
-  private String describeType(JsonElement e) {
-    if (e.isJsonArray())
-      return "an Array";
-    if (e.isJsonObject())
-      return "an Object";
-    if (e.isJsonPrimitive())
-      return "a primitive property";
-    if (e.isJsonNull())
-      return "a Null";
-    return null;
+  private Object propNames(List<Property> properties) {
+    CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder();
+    for (Property p: properties) {
+      b.append(p.getName());
+    }
+    return b.toString();
   }
 
-  private void parseChildComplexInstance(String npath, String fpath, JsonObject object, Element element, Property property, String name, JsonElement e) throws FHIRException {
+  private void parseChildComplexInstance(String npath, String fpath, Element element, Property property, String name, JsonElement e) throws FHIRException {
+    if (property.hasTypeSpecifier()) {
+      FHIRPathEngine fpe = new FHIRPathEngine(context);
+      String type = null;
+      String cond = null;
+      for (StringPair sp : property.getTypeSpecifiers()) {
+        if (fpe.evaluateToBoolean(null, baseElement, baseElement, element, fpe.parse(sp.getName()))) {
+          type = sp.getValue();
+          cond = sp.getName();
+          break;
+        }
+      }
+      if (type != null) {
+        StructureDefinition sd = context.fetchResource(StructureDefinition.class, type);
+        if (sd == null) {
+          logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.TYPE_SPECIFIER_ILLEGAL_TYPE, type, cond), IssueSeverity.ERROR);
+        } else {
+          if (sd.getAbstract()) {
+            logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.TYPE_SPECIFIER_ABSTRACT_TYPE, type, cond), IssueSeverity.ERROR);
+          }
+          property = property.cloneToType(sd);
+        }
+      } else {
+        StructureDefinition sd = context.fetchTypeDefinition(property.getType());
+        if (sd == null) {
+          logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.TYPE_SPECIFIER_NM_ILLEGAL_TYPE, property.getType()), IssueSeverity.ERROR);
+        } else if (sd.getAbstract()) {
+          logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.TYPE_SPECIFIER_NM_ABSTRACT_TYPE, property.getType()), IssueSeverity.ERROR);
+        }        
+      }
+    }
     if (e instanceof JsonObject) {
       JsonObject child = (JsonObject) e;
       Element n = new Element(name, property).markLocation(line(child), col(child));
       n.setPath(fpath);
       checkObject(child, npath);
       element.getChildren().add(n);
-      if (property.isResource())
+      if (property.isResource()) {
         parseResource(npath, child, n, property);
-      else
+      } else {
         parseChildren(npath, child, n, false);
-    } else
+      }
+    } else if (property.isNullable() && e instanceof JsonNull) {
+      // we create an element marked as a null element so we know something was present
+      JsonNull child = (JsonNull) e;
+      Element n = new Element(name, property).markLocation(line(child), col(child));
+      n.setPath(fpath);
+      element.getChildren().add(n);
+      n.setNull(true);
+      // nothing to do, it's ok, but we treat it like it doesn't exist
+    } else {
       logError(line(e), col(e), npath, IssueType.INVALID, context.formatMessage(I18nConstants.THIS_PROPERTY_MUST_BE__NOT_, (property.isList() ? "an Array" : "an Object"), describe(e), name, npath), IssueSeverity.ERROR);
+    }
   }
 
   private String describe(JsonElement e) {
     if (e instanceof JsonArray) {
-      return "an array";
+      return "an Array";
     }
     if (e instanceof JsonObject) {
-      return "an object";
+      return "an Object";
+    }
+    if (e instanceof JsonNull) {
+      return "a Null";
+    }
+    if (e instanceof JsonPrimitive) {
+      return "a Primitive property";
+    }
+    return null;
+  }
+
+  private String describeType(JsonElement e) {
+    if (e instanceof JsonArray) {
+      return "array";
+    }
+    if (e instanceof JsonObject) {
+      return "object";
     }
     if (e instanceof JsonNull) {
       return "null";
     }
-    return "a primitive property";
+    if (e instanceof JsonPrimitive) {
+      JsonPrimitive p = (JsonPrimitive) e;
+      if (p.isString()) {
+        return "string";
+      } else if (p.isBoolean()) {
+        return "boolean";
+      } else if (p.isNumber()) {
+        return "number";
+      }
+    }
+    return "??";
   }
 
   private void parseChildPrimitive(JsonObject object, Element element, Set<String> processed, Property property, String path, String name) throws FHIRException {
@@ -378,9 +568,9 @@ public class JsonParser extends ParserBase {
         JsonPrimitive p = (JsonPrimitive) main;
         if (p.isNumber() && p.getAsNumber() instanceof JsonTrackingParser.PresentedBigDecimal) {
           String rawValue = ((JsonTrackingParser.PresentedBigDecimal) p.getAsNumber()).getPresentation();
-          n.setValue(rawValue);
+          n.setValue(property.hasImpliedPrefix() ? property.getImpliedPrefix()+rawValue : rawValue);
         } else {
-          n.setValue(p.getAsString());
+          n.setValue(property.hasImpliedPrefix() ? property.getImpliedPrefix()+p.getAsString() : p.getAsString());
         }
         if (!n.getProperty().isChoice() && n.getType().equals("xhtml")) {
           try {
@@ -416,7 +606,7 @@ public class JsonParser extends ParserBase {
       logError(line(res), col(res), npath, IssueType.INVALID, context.formatMessage(I18nConstants.UNABLE_TO_FIND_RESOURCETYPE_PROPERTY), IssueSeverity.FATAL);
     } else {
       String name = rt.getAsString();
-      StructureDefinition sd = context.fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(name, context.getOverrideVersionNs()));
+      StructureDefinition sd = context.fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(name, null));
       if (sd == null) {
         logError(line(res), col(res), npath, IssueType.INVALID, context.formatMessage(I18nConstants.CONTAINED_RESOURCE_DOES_NOT_APPEAR_TO_BE_A_FHIR_RESOURCE_UNKNOWN_NAME_, name), IssueSeverity.FATAL);			    
       } else {
@@ -483,6 +673,10 @@ public class JsonParser extends ParserBase {
 
   @Override
   public void compose(Element e, OutputStream stream, OutputStyle style, String identity) throws FHIRException, IOException {
+    if (e.getPath() == null) {
+      e.populatePaths(null);
+    }
+    
     OutputStreamWriter osw = new OutputStreamWriter(stream, "UTF-8");
     if (style == OutputStyle.CANONICAL)
       json = new JsonCreatorCanonical(osw);
@@ -501,6 +695,10 @@ public class JsonParser extends ParserBase {
   }
 
   public void compose(Element e, JsonCreator json) throws Exception {
+    if (e.getPath() == null) {
+      e.populatePaths(null);
+    }
+    
     this.json = json;
     json.beginObject();
 

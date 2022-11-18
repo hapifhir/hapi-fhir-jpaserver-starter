@@ -92,7 +92,8 @@ public class MatchboxStructureMapUtilities extends StructureMapUtilities {
 
 		String su = conceptMapUrl;
 		if (conceptMapUrl.equals("http://hl7.org/fhir/ConceptMap/special-oid2uri")) {
-			String uri = getWorker().oid2Uri(src.getCode());
+// FIXME			String uri = getWorker().oid2Uri(src.getCode());
+			String uri = null;
 			if (uri == null)
 				uri = "urn:oid:" + src.getCode();
 			if ("uri".equals(fieldToReturn))

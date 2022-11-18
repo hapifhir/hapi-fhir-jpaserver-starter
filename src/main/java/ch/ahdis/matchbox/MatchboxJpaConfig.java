@@ -6,7 +6,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Import;
 
 import ca.uhn.fhir.batch2.jobs.imprt.BulkDataImportProvider;
 import ca.uhn.fhir.batch2.jobs.reindex.ReindexProvider;
@@ -14,11 +14,13 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
+import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.bulk.export.provider.BulkDataExportProvider;
+import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
 import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.model.sched.ISchedulerService;
@@ -50,6 +52,7 @@ import ch.ahdis.matchbox.questionnaire.QuestionnairePopulateProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 
 @Configuration
+@Import(ThreadPoolFactoryConfig.class)
 public class MatchboxJpaConfig extends StarterJpaConfig {
 
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(MatchboxJpaConfig.class);
@@ -71,16 +74,14 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 
 	@Autowired
 	private ISchedulerService mySvc;
-	
+
 	@Autowired
 	private ImplementationGuideResourceProvider implementationGuideResourceProvider;
-	
+
 	@Autowired
 	private ValidationProvider validationProvider;
 
-
 	@Bean
-	@Primary
 	public RestfulServer restfulServer(IFhirSystemDao<?, ?> fhirSystemDao, AppProperties appProperties,
 			DaoRegistry daoRegistry, Optional<MdmProviderLoader> mdmProviderProvider, IJpaSystemProvider jpaSystemProvider,
 			ResourceProviderFactory resourceProviderFactory, DaoConfig daoConfig, ISearchParamRegistry searchParamRegistry,
@@ -94,18 +95,19 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 			ValueSetOperationProvider theValueSetOperationProvider, ReindexProvider reindexProvider,
 			PartitionManagementProvider partitionManagementProvider,
 			Optional<RepositoryValidatingInterceptor> repositoryValidatingInterceptor,
-			IPackageInstallerSvc packageInstallerSvc) {
+			IPackageInstallerSvc packageInstallerSvc, ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc) {
 
 		RestfulServer fhirServer = super.restfulServer(fhirSystemDao, appProperties, daoRegistry, mdmProviderProvider,
 				jpaSystemProvider, resourceProviderFactory, daoConfig, searchParamRegistry, theValidationSupport,
 				databaseBackedPagingProvider, loggingInterceptor, terminologyUploaderProvider, subscriptionTriggeringProvider,
 				corsInterceptor, interceptorBroadcaster, binaryAccessProvider, binaryStorageInterceptor, validatorModule,
 				graphQLProvider, bulkDataExportProvider, bulkDataImportProvider, theValueSetOperationProvider, reindexProvider,
-				partitionManagementProvider, repositoryValidatingInterceptor, packageInstallerSvc);
+				partitionManagementProvider, repositoryValidatingInterceptor, packageInstallerSvc, theThreadSafeResourceDeleterSvc);
 
 		fhirServer.registerInterceptor(new MappingLanguageInterceptor());
 		fhirServer.registerInterceptor(new ImplementationGuidePackageInterceptor(myPackageCacheManager, myFhirContext));
-		fhirServer.registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider, assembleProvider);
+		fhirServer.registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider,
+				assembleProvider);
 
 		if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages().booleanValue()
 				&& appProperties.getImplementationGuides() != null) {

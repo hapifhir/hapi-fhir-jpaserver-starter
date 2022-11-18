@@ -9,6 +9,9 @@ Content-Type: application/xml
 
 < ../ch-core/input/examples/patient/FranzMuster.xml
 
+
+POST  https://lforms-fhir.nlm.nih.gov/baseR4/Patient/$validate
+
 ### No issues detected during validation
 
 POST {{host}}/$validate HTTP/1.1

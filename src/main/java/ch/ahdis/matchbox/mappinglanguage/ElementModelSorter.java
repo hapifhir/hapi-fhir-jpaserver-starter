@@ -35,7 +35,8 @@ class ElementSortComparator implements Comparator<Element> {
 
 	public ElementSortComparator(Element e, org.hl7.fhir.r5.elementmodel.Property property) {
 		String tn = e.getType();
-		StructureDefinition sd = property.getContext().fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(tn, property.getContext().getOverrideVersionNs()));
+// FIXME		StructureDefinition sd = property.getContext().fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(tn, property.getContext().getOverrideVersionNs()));
+    StructureDefinition sd = null;
 		children = new ArrayList<String>();
 		if (sd != null && !sd.getAbstract())
 			for (ElementDefinition def : sd.getSnapshot().getElement()) {
