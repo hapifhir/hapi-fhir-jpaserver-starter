@@ -418,11 +418,14 @@ public class HelperService {
 			return null;
 		}
 
-		public String getOrganizationIdByOrganizationName(String name) throws EncoderException, UnsupportedEncodingException {
+		public String getOrganizationIdByOrganizationName(String name){
 			Bundle organizationBundle = new Bundle();
 			String queryPath = "/Organization?";
 			queryPath += "name="+name+"";
 			String searchUrl = getValidURL(FhirClientAuthenticatorService.serverBase+queryPath);
+			if(searchUrl == null) {
+				return null;
+			}
 			getBundleBySearchUrl(organizationBundle, searchUrl);
 			if(organizationBundle.hasEntry() && organizationBundle.getEntry().size() > 0) {
 				Organization organization = (Organization)organizationBundle.getEntry().get(0).getResource();
