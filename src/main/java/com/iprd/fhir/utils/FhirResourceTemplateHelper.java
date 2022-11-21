@@ -146,14 +146,16 @@ public class FhirResourceTemplateHelper {
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier facilityUIDIdentifier = new Identifier();
 		Identifier facilityCodeIdentifier = new Identifier();
+		Identifier argusoftIdentifier = new Identifier();
 		facilityUIDIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityCode");
-		facilityUIDIdentifier.setId(facilityCode);
+		facilityUIDIdentifier.setValue(facilityCode);
 		facilityCodeIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
-		facilityCodeIdentifier.setId(facilityUID);
-		facilityCodeIdentifier.setSystem(IDENTIFIER_SYSTEM+"/argusoft_identifier");
-		facilityCodeIdentifier.setId(argusoftId);
+		facilityCodeIdentifier.setValue(facilityUID);
+		argusoftIdentifier.setSystem(IDENTIFIER_SYSTEM+"/argusoft_identifier");
+		argusoftIdentifier.setValue(argusoftId);
 		identifiers.add(facilityUIDIdentifier);
 		identifiers.add(facilityCodeIdentifier);
+		identifiers.add(argusoftIdentifier);
 		clinic.setIdentifier(identifiers);
 		List<ContactPoint> contactPoints = new ArrayList<>();
 		ContactPoint contactPoint = new ContactPoint();
@@ -175,19 +177,21 @@ public class FhirResourceTemplateHelper {
 		return clinic;
 	}
 	
-	public static Practitioner hcw(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification, String stateIdentifierString, String argusoftId, String organizationId) throws Exception {
+	public static Practitioner hcw(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification, String stateIdentifierString, String argusoftId) throws Exception {
 		Practitioner practitioner = new Practitioner();
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier clinicIdentifier = new Identifier();
+		Identifier argusoftIdentifier = new Identifier();
 		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
-		clinicIdentifier.setId(facilityUID);
+		clinicIdentifier.setValue(facilityUID);
 		Identifier stateIdentifier = new Identifier();
 		stateIdentifier.setSystem(IDENTIFIER_SYSTEM+"/stateIdentifier");
-		stateIdentifier.setId(stateIdentifierString);
-		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM+"/argusoft_identifier");
-		clinicIdentifier.setValue(argusoftId);
+		stateIdentifier.setValue(stateIdentifierString);
+		argusoftIdentifier.setSystem(IDENTIFIER_SYSTEM+"/argusoft_identifier");
+		argusoftIdentifier.setValue(argusoftId);
 		identifiers.add(clinicIdentifier);
 		identifiers.add(stateIdentifier);
+		identifiers.add(argusoftIdentifier);
 		practitioner.setIdentifier(identifiers);
 		List<HumanName> hcwName = new ArrayList<>();
 		HumanName humanName = new HumanName();
@@ -229,10 +233,9 @@ public class FhirResourceTemplateHelper {
 			exception.printStackTrace();
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
-		practitioner.setId(new IdType("Organization", organizationId));
 		return practitioner;
 	}
-	public static Practitioner user(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String facilityUID, String type, String organizationId){
+	public static Practitioner user(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String facilityUID, String type){
 		Practitioner practitioner = new Practitioner();
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier clinicIdentifier = new Identifier();
@@ -269,14 +272,14 @@ public class FhirResourceTemplateHelper {
 			exception.printStackTrace();
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
-		practitioner.setId(new IdType("Organization", organizationId));
 		return practitioner;
 	}
 	
-	public static PractitionerRole practitionerRole(String role, String qualification, String practitionerId)
+	public static PractitionerRole practitionerRole(String role, String qualification, String practitionerId, String organizationId)
 	{
 		PractitionerRole practitionerRole = new PractitionerRole();
 		Reference PractitionerReference = new  Reference("Practitioner/"+practitionerId);
+		Reference organizatioReference = new Reference("Organization/"+organizationId);
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		CodeableConcept roleCoding = new CodeableConcept();
 		Coding coding2 = new Coding();
@@ -287,6 +290,7 @@ public class FhirResourceTemplateHelper {
 		codeableConcepts.add(roleCoding);
 		practitionerRole.setCode(codeableConcepts);
 		practitionerRole.setPractitioner(PractitionerReference);
+		practitionerRole.setOrganization(organizatioReference);
 		practitionerRole.setId(new IdType("PractitionerRole", generateUUID()));
 		return practitionerRole;
 	}

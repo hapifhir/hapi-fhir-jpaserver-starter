@@ -50,7 +50,7 @@ public class FhirResourceTemplateHelperTest {
 	
 	@Test
 	public void testPractitioner() throws Exception {
-		Practitioner test = FhirResourceTemplateHelper.hcw("temp", "nurse", "+91", "8150038173", "female", "09/22/1995", "Oyo", "Ibadan-South-West", "Agbokojo", "19145158", "Nurse", "Bachelor-of-Nursing","N123","52620","12546555");
+		Practitioner test = FhirResourceTemplateHelper.hcw("temp", "nurse", "+91", "8150038173", "female", "09/22/1995", "Oyo", "Ibadan-South-West", "Agbokojo", "19145158", "Nurse", "Bachelor-of-Nursing","N123","52620");
 		assertEquals(test.getName().get(0), "nurse");
 		assertEquals(test.getName().get(1), "temp");
 		assertEquals(test.getTelecom(), "+91"+"8150038173");
@@ -65,7 +65,7 @@ public class FhirResourceTemplateHelperTest {
 	
 	@Test
 	public void testPractitionerRole() {
-		PractitionerRole test = FhirResourceTemplateHelper.practitionerRole("Nurse", "Bachelor-of-Nursing", "32621379-fe59-49a0-93e9-203226d0cf52");
+		PractitionerRole test = FhirResourceTemplateHelper.practitionerRole("Nurse", "Bachelor-of-Nursing", "32621379-fe59-49a0-93e9-203226d0cf52", "32621379-fe59-49a0-93e9-203226d0cf52");
 		assertEquals(test.getCode().get(0), "Nurse");
 		assertEquals(test.getCode().get(1), "Bachelor-of-Nursing");
 		assertEquals(test.getId(),"32621379-fe59-49a0-93e9-203226d0cf52");

@@ -54,7 +54,7 @@ public class KeycloakTemplateHelper {
 		facilityGroupRep.singleAttribute("ownership",ownership);
 		facilityGroupRep.singleAttribute("facility_code",facilityCode);
 		facilityGroupRep.singleAttribute("facilityUID",facilityUID);
-		facilityGroupRep.singleAttribute("argusoft_identifier", argusoftId);
+		facilityGroupRep.singleAttribute("argusoft_identifier", argusoftId);	
 		return facilityGroupRep;
 	}
 	

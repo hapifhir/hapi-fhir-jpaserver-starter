@@ -141,58 +141,60 @@ public class HelperService {
 				}
 				String[] csvData = singleLine.split(",");
 				//State, LGA, Ward, FacilityUID, FacilityCode, CountryCode, PhoneNumber, FacilityName, FacilityLevel, Ownership, Argusoft Identifier
-				if (Validation.validateClinicAndStateCsvLine(csvData)) {
-					if(!states.contains(csvData[0])) {
-						Organization state = FhirResourceTemplateHelper.state(csvData[0]);
-						stateId = createResource(state,Organization.class,Organization.NAME.matches().value(state.getName()));
-						states.add(state.getName());
-						GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), stateId);
-						stateGroupId = createGroup(stateGroupRep);
-						updateResource(stateGroupId, stateId, Organization.class);
-					}
+				if(!csvData[3].isEmpty()) {
+					if (Validation.validateClinicAndStateCsvLine(csvData)) {
+						if(!states.contains(csvData[0])) {
+							Organization state = FhirResourceTemplateHelper.state(csvData[0]);
+							stateId = createResource(state,Organization.class,Organization.NAME.matches().value(state.getName()));
+							states.add(state.getName());
+							GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), stateId);
+							stateGroupId = createGroup(stateGroupRep);
+							updateResource(stateGroupId, stateId, Organization.class);
+						}
 
-					if(!lgas.contains(csvData[1])) {
-						Organization lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0], stateId);
-						lgaId = createResource(lga, Organization.class, Organization.NAME.matches().value(lga.getName()));
-						lgas.add(lga.getName());
-						GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lgaId);
-						lgaGroupId = createGroup(lgaGroupRep);
-						updateResource(lgaGroupId, lgaId, Organization.class);
-					}
+						if(!lgas.contains(csvData[1])) {
+							Organization lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0], stateId);
+							lgaId = createResource(lga, Organization.class, Organization.NAME.matches().value(lga.getName()));
+							lgas.add(lga.getName());
+							GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lgaId);
+							lgaGroupId = createGroup(lgaGroupRep);
+							updateResource(lgaGroupId, lgaId, Organization.class);
+						}
 
-					if(!wards.contains(csvData[2])) {
-						Organization ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2], lgaId);
-						wardId = createResource(ward, Organization.class, Organization.NAME.matches().value(ward.getName()));
-						wards.add(ward.getName());
-						GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, wardId);
-						wardGroupId = createGroup(wardGroupRep);
-						updateResource(wardGroupId, wardId, Organization.class);
-					}
+						if(!wards.contains(csvData[2])) {
+							Organization ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2], lgaId);
+							wardId = createResource(ward, Organization.class, Organization.NAME.matches().value(ward.getName()));
+							wards.add(ward.getName());
+							GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, wardId);
+							wardGroupId = createGroup(wardGroupRep);
+							updateResource(wardGroupId, wardId, Organization.class);
+						}
 
-					if(!clinics.contains(csvData[7])) {
-						Location clinicLocation = FhirResourceTemplateHelper.clinic(csvData[0], csvData[1], csvData[2], csvData[7]);
-						Organization clinicOrganization = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2], wardId, csvData[10]);
-						facilityOrganizationId = createResource(clinicOrganization, Organization.class, Organization.NAME.matches().value(clinicOrganization.getName()));
-						facilityLocationId = createResource(clinicLocation, Location.class, Location.NAME.matches().value(clinicLocation.getName()));
-						clinics.add(clinicOrganization.getName());
+						if(!clinics.contains(csvData[7])) {
+							Location clinicLocation = FhirResourceTemplateHelper.clinic(csvData[0], csvData[1], csvData[2], csvData[7]);
+							Organization clinicOrganization = FhirResourceTemplateHelper.clinic(csvData[7],  csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2], wardId, csvData[10]);
+							facilityOrganizationId = createResource(clinicOrganization, Organization.class, Organization.NAME.matches().value(clinicOrganization.getName()));
+							facilityLocationId = createResource(clinicLocation, Location.class, Location.NAME.matches().value(clinicLocation.getName()));
+							clinics.add(clinicOrganization.getName());
 
-						GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(
-							clinicOrganization.getName(),
-							wardGroupId,
-							facilityOrganizationId,
-							facilityLocationId,
-							csvData[8],
-							csvData[9],
-							csvData[3],
-							csvData[4],
-							csvData[10]
-						);
-						facilityGroupId = createGroup(facilityGroupRep);
-						updateResource(facilityGroupId, facilityOrganizationId, Organization.class);
-						updateResource(facilityGroupId, facilityLocationId, Location.class);
-					}else {
-						invalidClinics.add(csvData[7]+","+csvData[0]+","+csvData[1]+","+csvData[2]);
-					}
+							GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(
+								clinicOrganization.getName(),
+								wardGroupId,
+								facilityOrganizationId,
+								facilityLocationId,
+								csvData[8],
+								csvData[9],
+								csvData[3],
+								csvData[4],
+								csvData[10]
+							);
+							facilityGroupId = createGroup(facilityGroupRep);
+							updateResource(facilityGroupId, facilityOrganizationId, Organization.class);
+							updateResource(facilityGroupId, facilityLocationId, Location.class);
+						}else {
+							invalidClinics.add(csvData[7]+","+csvData[0]+","+csvData[1]+","+csvData[2]);
+						}	
+				}
 				}
 			}
 			map.put("Cannot create Clinics with state, lga, ward", invalidClinics);
@@ -217,35 +219,34 @@ public class HelperService {
 					continue;
 				}
 				String hcwData[] = singleLine.split(",");
-				Bundle organization = FhirClientAuthenticatorService.getFhirClient().search().forResource(Organization.class).where(Organization.RES_ID.exactly().identifier(hcwData[12])).returnBundle(Bundle.class).execute();
-				if(organization.hasEntry()) {
-					organizationId = organization.getEntryFirstRep().getIdElement().getId();	
-				}
+				organizationId = getOrganizationIdByFacilityUID(hcwData[12]);
 				//firstName,lastName,email,countryCode,phoneNumber,gender,birthDate,keycloakUserName,initialPassword,state,lga,ward,facilityUID,role,qualification,stateIdentifier, Argusoft Identifier
-				if(Validation.validationHcwCsvLine(hcwData))
-				{
-					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[4]+hcwData[3]))) {
-						Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[4],hcwData[3],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14],hcwData[15],hcwData[16],organizationId);
-						practitionerId = createResource(hcw,
-								Practitioner.class,
-								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
-								Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
-								Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
-							); // Catch index out of bound
-						practitioners.add(hcw.getName().get(0).getFamily());
-						practitioners.add(hcw.getName().get(0).getGivenAsSingleString());
-						practitioners.add(hcw.getTelecom().get(0).getValue());
-						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId);
-						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
-						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[4],hcwData[3],practitionerId,practitionerRoleId,hcwData[13],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[16]);
-						String keycloakUserId = createUser(user);
-						if(keycloakUserId != null) {
-							updateResource(keycloakUserId, practitionerId, Practitioner.class);
-							updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
-						}else {
-							invalidUsers.add(user.getUsername()+","+user.getGroups().get(0)+","+user.getGroups().get(1)+","+user.getGroups().get(2)+","+user.getGroups().get(3));
+				if(!hcwData[12].isEmpty()) {
+					if(Validation.validationHcwCsvLine(hcwData))
+					{
+						if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[4]+hcwData[3]))) {
+							Practitioner hcw = FhirResourceTemplateHelper.hcw(hcwData[0],hcwData[1],hcwData[4],hcwData[3],hcwData[5],hcwData[6],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[13],hcwData[14],hcwData[15],hcwData[16]);
+							practitionerId = createResource(hcw,
+									Practitioner.class,
+									Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
+									Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
+									Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
+								); // Catch index out of bound
+							practitioners.add(hcw.getName().get(0).getFamily());
+							practitioners.add(hcw.getName().get(0).getGivenAsSingleString());
+							practitioners.add(hcw.getTelecom().get(0).getValue());
+							PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[13],hcwData[14],practitionerId,organizationId);
+							practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
+							UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[4],hcwData[3],practitionerId,practitionerRoleId,hcwData[13],hcwData[9],hcwData[10],hcwData[11],hcwData[12],hcwData[16]);
+							String keycloakUserId = createUser(user);
+							if(keycloakUserId != null) {
+								updateResource(keycloakUserId, practitionerId, Practitioner.class);
+								updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
+							}else {
+								invalidUsers.add(user.getUsername()+","+user.getGroups().get(0)+","+user.getGroups().get(1)+","+user.getGroups().get(2)+","+user.getGroups().get(3));
+							}
 						}
-					}
+					}	
 				}
 			}
 			map.put("Cannot create users with groups", invalidUsers);
@@ -269,15 +270,11 @@ public class HelperService {
 					continue;
 				}
 				String hcwData[] = singleLine.split(",");
-				Bundle organization = FhirClientAuthenticatorService.getFhirClient().search().forResource(Organization.class).where(Organization.NAME.matches().value(hcwData[11])).returnBundle(Bundle.class).execute();
-				if(organization.hasEntry()) {
-					organizationId = organization.getEntryFirstRep().getIdElement().getId();	
-				}
-				//firstName,lastName,email,phoneNumber,countryCode,gender,birthdate,keycloakUserName,initialPassword,facilityUID,role,organization,type
+				organizationId = getOrganizationIdByOrganizationName(hcwData[11]);
 				Organization state = FhirResourceTemplateHelper.state(hcwData[11]);
 				if(Validation.validationHcwCsvLine(hcwData)) {
 					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[3]+hcwData[4]))) {
-						Practitioner hcw = FhirResourceTemplateHelper.user(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[11],hcwData[6],state.getMeta().getTag().get(0).getCode(),organizationId);
+						Practitioner hcw = FhirResourceTemplateHelper.user(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[11],hcwData[6],state.getMeta().getTag().get(0).getCode());
 						practitionerId = createResource(hcw,
 								Practitioner.class,
 								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
@@ -287,7 +284,7 @@ public class HelperService {
 						practitioners.add(hcw.getName().get(0).getFamily());
 						practitioners.add(hcw.getName().get(0).getGivenAsSingleString());
 						practitioners.add(hcw.getTelecom().get(0).getValue());
-						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[10],"NA",practitionerId);
+						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[10],"NA",practitionerId,organizationId);
 						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
 						UserRepresentation user = KeycloakTemplateHelper.dashboardUser(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],hcwData[4],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],state.getMeta().getTag().get(0).getCode());
 						String keycloakUserId = createUser(user);
@@ -407,7 +404,32 @@ public class HelperService {
 			PractitionerRole practitionerRole = (PractitionerRole) bundle.getEntry().get(0).getResource();
 			return practitionerRole.getOrganization().getReferenceElement().getIdPart();
 		}
+		
+		public String getOrganizationIdByFacilityUID(String facilityUID) {
+			Bundle organizationBundle = new Bundle();
+			String queryPath = "/Organization?";
+			queryPath += "identifier="+facilityUID+"";
+			getBundleBySearchUrl(organizationBundle, queryPath);
+			if(organizationBundle.hasEntry() && organizationBundle.getEntry().size() > 0) {
+				Organization organization = (Organization)organizationBundle.getEntry().get(0).getResource();
+				return organization.getIdElement().getIdPart();
+			}
+			return null;
+		}
 
+		public String getOrganizationIdByOrganizationName(String name) {
+			Bundle organizationBundle = new Bundle();
+			String queryPath = "/Organization?";
+			String orgName = name.replaceAll("\\s", "%20");
+			System.out.println(orgName);
+			queryPath += "name="+orgName+"";
+			getBundleBySearchUrl(organizationBundle, queryPath);
+			if(organizationBundle.hasEntry() && organizationBundle.getEntry().size() > 0) {
+				Organization organization = (Organization)organizationBundle.getEntry().get(0).getResource();
+				return organization.getIdElement().getIdPart();
+			}
+			return null;
+		}
 
 		private String createGroup(GroupRepresentation groupRep) {
 			RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm("fhir-hapi");
