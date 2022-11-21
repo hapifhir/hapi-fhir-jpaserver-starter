@@ -7,17 +7,21 @@ sources:
   - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
 dependencies:
   - name: postgresql
-    version: 11.8.1
+    version: 12.1.2
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
-appVersion: v6.x
-version: 0.10.1
+appVersion: 6.2.1
+version: 0.11.0
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
-      description: updated image version to v6.1.0
+      description: updated HAPI FHIR JPA Server app image version to v6.2.1
     - kind: changed
-      description: added section on configuring the chart for distributed tracing to the README.md
+      description: |
+        Reduced `startupProbe.initialDelaySeconds` to a more realistic `30` from `60`.
+        This should allow the server to become ready quicker and recover from failures faster.
+    - kind: changed
+      description: "⚠️ BREAKING CHANGE: updated included postgresql chart to v12, which is based on PostgreSQL 15.1"
