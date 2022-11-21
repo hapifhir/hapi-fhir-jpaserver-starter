@@ -14,16 +14,16 @@ import com.iprd.fhir.utils.FhirResourceTemplateHelper;
 import com.iprd.fhir.utils.KeycloakTemplateHelper;
 import com.iprd.fhir.utils.Validation;
 import com.iprd.report.*;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -42,6 +42,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.codec.EncoderException;
 import org.apache.jena.ext.xerces.util.URI.MalformedURIException;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -417,18 +418,32 @@ public class HelperService {
 			return null;
 		}
 
-		public String getOrganizationIdByOrganizationName(String name) {
+		public String getOrganizationIdByOrganizationName(String name) throws EncoderException, UnsupportedEncodingException {
 			Bundle organizationBundle = new Bundle();
 			String queryPath = "/Organization?";
-			String orgName = name.replaceAll("\\s", "%20");
-			System.out.println(orgName);
-			queryPath += "name="+orgName+"";
-			getBundleBySearchUrl(organizationBundle, queryPath);
+			queryPath += "name="+name+"";
+			String searchUrl = getValidURL(FhirClientAuthenticatorService.serverBase+queryPath);
+			getBundleBySearchUrl(organizationBundle, searchUrl);
 			if(organizationBundle.hasEntry() && organizationBundle.getEntry().size() > 0) {
 				Organization organization = (Organization)organizationBundle.getEntry().get(0).getResource();
 				return organization.getIdElement().getIdPart();
 			}
 			return null;
+		}
+		
+		static String getValidURL(String invalidURLString){
+		    try {
+		        // Convert the String and decode the URL into the URL class
+		        URL url = new URL(URLDecoder.decode(invalidURLString, StandardCharsets.UTF_8.toString()));
+
+		        // Use the methods of the URL class to achieve a generic solution
+		        URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+		        // return String or
+		        // uri.toURL() to return URL object
+		        return uri.toString();
+		    } catch (URISyntaxException | UnsupportedEncodingException | MalformedURLException ignored) {
+		        return null;
+		    }
 		}
 
 		private String createGroup(GroupRepresentation groupRep) {
