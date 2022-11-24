@@ -503,7 +503,8 @@ public class HelperService {
 				Response response = realmResource.users().create(userRep);
 				return CreatedResponseUtil.getCreatedId(response);
 			}catch(WebApplicationException e) {
-				logger.error("Cannot create user "+userRep.getUsername()+" with groups "+userRep.getGroups()+"\n"+e.getStackTrace().toString());
+				logger.error("Cannot create user "+userRep.getUsername()+" with groups "+userRep.getGroups()+"\n");
+				e.printStackTrace();
 				return null;
 			}
 		}
