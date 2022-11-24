@@ -192,10 +192,11 @@ public class HelperService {
 							facilityGroupId = createGroup(facilityGroupRep);
 							updateResource(facilityGroupId, facilityOrganizationId, Organization.class);
 							updateResource(facilityGroupId, facilityLocationId, Location.class);
-						}else {
-							invalidClinics.add(csvData[7]+","+csvData[0]+","+csvData[1]+","+csvData[2]);
 						}	
-				}
+					}
+					else {
+						invalidClinics.add(csvData[7]+","+csvData[0]+","+csvData[1]+","+csvData[2]);
+					}
 				}
 			}
 			map.put("Cannot create Clinics with state, lga, ward", invalidClinics);
@@ -243,11 +244,11 @@ public class HelperService {
 							if(keycloakUserId != null) {
 								updateResource(keycloakUserId, practitionerId, Practitioner.class);
 								updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
-							}else {
-								invalidUsers.add(user.getUsername()+","+user.getGroups().get(0)+","+user.getGroups().get(1)+","+user.getGroups().get(2)+","+user.getGroups().get(3));
 							}
 						}
-					}	
+					}
+				}else {
+					invalidUsers.add(hcwData[0]+" "+hcwData[1]+","+hcwData[9]+","+hcwData[10]+","+hcwData[11]+","+hcwData[12]);
 				}
 			}
 			map.put("Cannot create users with groups", invalidUsers);
@@ -258,6 +259,7 @@ public class HelperService {
 		public ResponseEntity<LinkedHashMap<String, Object>> createDashboardUsers(@RequestParam("file") MultipartFile file) throws Exception{
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			List<String> practitioners = new ArrayList<>();
+			List<String> invalidUsers = new ArrayList<>();
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			String singleLine;
 			int iteration = 0;
@@ -271,31 +273,37 @@ public class HelperService {
 					continue;
 				}
 				String hcwData[] = singleLine.split(",");
-				organizationId = getOrganizationIdByOrganizationName(hcwData[11]);
-				Organization state = FhirResourceTemplateHelper.state(hcwData[11]);
-				if(Validation.validationHcwCsvLine(hcwData)) {
-					if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[3]+hcwData[4]))) {
-						Practitioner hcw = FhirResourceTemplateHelper.user(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[11],hcwData[6],state.getMeta().getTag().get(0).getCode());
-						practitionerId = createResource(hcw,
-								Practitioner.class,
-								Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
-								Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
-								Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
-							);
-						practitioners.add(hcw.getName().get(0).getFamily());
-						practitioners.add(hcw.getName().get(0).getGivenAsSingleString());
-						practitioners.add(hcw.getTelecom().get(0).getValue());
-						PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[10],"NA",practitionerId,organizationId);
-						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
-						UserRepresentation user = KeycloakTemplateHelper.dashboardUser(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],hcwData[4],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],state.getMeta().getTag().get(0).getCode());
-						String keycloakUserId = createUser(user);
-						if(keycloakUserId!=null) {
-							updateResource(keycloakUserId, practitionerId, Practitioner.class);
-							updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
+				if(!hcwData[11].isEmpty()) {
+					organizationId = getOrganizationIdByOrganizationName(hcwData[11]);
+					//firstName,lastName,email,phoneNumber,countryCode,gender,birthDate,keycloakUserName,facilityUID,role,initialPassword,Organization,Type
+					Organization state = FhirResourceTemplateHelper.state(hcwData[11]);
+					if(Validation.validationHcwCsvLine(hcwData)) {
+						if(!(practitioners.contains(hcwData[0]) && practitioners.contains(hcwData[1]) && practitioners.contains(hcwData[3]+hcwData[4]))) {
+							Practitioner hcw = FhirResourceTemplateHelper.user(hcwData[0],hcwData[1],hcwData[3],hcwData[4],hcwData[5],hcwData[6],hcwData[11],hcwData[6],state.getMeta().getTag().get(0).getCode());
+							practitionerId = createResource(hcw,
+									Practitioner.class,
+									Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
+									Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
+									Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),Arrays.asList(hcwData[4]+hcwData[3]))
+								);
+							practitioners.add(hcw.getName().get(0).getFamily());
+							practitioners.add(hcw.getName().get(0).getGivenAsSingleString());
+							practitioners.add(hcw.getTelecom().get(0).getValue());
+							PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(hcwData[10],"NA",practitionerId,organizationId);
+							practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
+							UserRepresentation user = KeycloakTemplateHelper.dashboardUser(hcwData[0],hcwData[1],hcwData[2],hcwData[7],hcwData[8],hcwData[3],hcwData[4],practitionerId,practitionerRoleId,hcwData[9],hcwData[10],hcwData[11],state.getMeta().getTag().get(0).getCode());
+							String keycloakUserId = createUser(user);
+							if(keycloakUserId!=null) {
+								updateResource(keycloakUserId, practitionerId, Practitioner.class);
+								updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
+							}
 						}
-					}
+					}	
+				}else {
+					invalidUsers.add(hcwData[0]+" "+hcwData[1]+","+hcwData[11]);
 				}
 			}
+			map.put("Cannot create users with organization", invalidUsers);
 			map.put("uploadCsv", "Successful");
 			return new ResponseEntity<LinkedHashMap<String, Object>>(map,HttpStatus.OK);
 		}
