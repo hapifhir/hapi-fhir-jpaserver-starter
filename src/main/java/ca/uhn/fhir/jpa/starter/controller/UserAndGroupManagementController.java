@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter.controller;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.starter.model.Type;
 import ca.uhn.fhir.jpa.starter.service.HelperService;
 import ca.uhn.fhir.jpa.starter.service.NotificationService;
 import ca.uhn.fhir.parser.IParser;
@@ -94,11 +95,11 @@ public class UserAndGroupManagementController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/data")
-	public ResponseEntity<?> data(@RequestHeader(name = "Authorization") String token, @RequestParam("from") String startDate, @RequestParam("to") String endDate) {
+	public ResponseEntity<?> data(@RequestHeader(name = "Authorization") String token, @RequestParam("from") String startDate, @RequestParam("to") String endDate, @RequestParam("type") Type type) {
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
-		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate);
+		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type);
 	}
 }

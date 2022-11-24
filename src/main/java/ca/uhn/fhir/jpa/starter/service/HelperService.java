@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter.service;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.model.Type;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
@@ -10,9 +11,7 @@ import ca.uhn.fhir.rest.gclient.IQuery;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import com.iprd.fhir.utils.FhirResourceTemplateHelper;
-import com.iprd.fhir.utils.KeycloakTemplateHelper;
-import com.iprd.fhir.utils.Validation;
+import com.iprd.fhir.utils.*;
 import com.iprd.report.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,28 +21,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.sql.Date;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.codec.EncoderException;
-import org.apache.jena.ext.xerces.util.URI.MalformedURIException;
+import kotlin.Pair;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Appointment;
@@ -54,9 +41,6 @@ import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
 import org.hl7.fhir.r4.model.ContactPoint;
-import org.hl7.fhir.r4.model.DateTimeType;
-import org.hl7.fhir.r4.model.Encounter;
-import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Immunization;
 import org.hl7.fhir.r4.model.Location;
@@ -66,8 +50,6 @@ import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
-import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -85,14 +67,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Import(AppProperties.class)
@@ -119,7 +94,9 @@ public class HelperService {
 		private static final long AUTH_INITIAL_DELAY = 25 * 60000L;
 		private static final long AUTH_FIXED_DELAY = 50 * 60000L;
 		private static final long DELAY = 2 * 60000;
-		
+
+		NotificationDataSource notificationDataSource;
+
 		public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
 
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -333,7 +310,7 @@ public class HelperService {
 
 			while(locationIdIterator.hasNext()) {
 				List<String> tempList = new ArrayList<>();
-				getLocationsPartOf(tempList, FhirClientAuthenticatorService.serverBase+"/Location?partof=Location/"+locationIdIterator.next()+"&_elements=id");
+				getOrganizationsPartOf(tempList, FhirClientAuthenticatorService.serverBase+"/Location?partof=Location/"+locationIdIterator.next()+"&_elements=id");
 				tempList.forEach(item -> {
 					locationIdIterator.add(item);
 					locationIdIterator.previous();
@@ -344,14 +321,65 @@ public class HelperService {
 			return responseBundle;
 		}
 
-		public void getLocationsPartOf(List<String> idsList, String url) {
+		private List<String> getFacilityOrgIds(String orgId) {
+			List<String> facilityOrgIdList = new ArrayList<>();
+			List<String> orgIdList = new ArrayList<>();
+			orgIdList.add(orgId);
+			ListIterator<String> orgIdIterator = orgIdList.listIterator();
+
+			while(orgIdIterator.hasNext()) {
+				String tempOrgId = orgIdIterator.next();
+				List<String> childrenList = new ArrayList<>();
+				getOrganizationsPartOf(childrenList, FhirClientAuthenticatorService.serverBase+"/Organization?partof=Organization/"+tempOrgId+"&_elements=id");
+				childrenList.forEach(item -> {
+					orgIdIterator.add(item);
+					orgIdIterator.previous();
+				});
+				if(childrenList.isEmpty()) {
+					facilityOrgIdList.add(tempOrgId);
+				}
+			}
+			return facilityOrgIdList;
+		}
+
+	private LinkedHashMap<String, List<String>> getOrganizationIdToChildrenMap(String orgId) {
+		List<String> orgIdList = new ArrayList<>();
+		orgIdList.add(orgId);
+		ListIterator<String> orgIdIterator = orgIdList.listIterator();
+
+		LinkedHashMap<String, List<String>> mapOfIdToChildren = new LinkedHashMap<>();
+
+		while(orgIdIterator.hasNext()) {
+			String tempOrgId = orgIdIterator.next();
+			List<String> childrenList = new ArrayList<>();
+			getOrganizationsPartOf(childrenList, FhirClientAuthenticatorService.serverBase+"/Organization?partof=Organization/"+tempOrgId+"&_elements=id");
+			childrenList.forEach(item -> {
+				orgIdIterator.add(item);
+				orgIdIterator.previous();
+			});
+
+			mapOfIdToChildren.put(tempOrgId, childrenList);
+
+			mapOfIdToChildren.forEach((id, children) -> {
+				if(children.contains(tempOrgId)) {
+					List<String> prevChild = mapOfIdToChildren.get(id);
+					prevChild.addAll(childrenList);
+					mapOfIdToChildren.put(id, prevChild);
+				}
+			});
+
+		}
+		return mapOfIdToChildren;
+	}
+
+		public void getOrganizationsPartOf(List<String> idsList, String url) {
 			Bundle searchBundle = FhirClientAuthenticatorService.getFhirClient().search()
 					   .byUrl(url)
 					   .returnBundle(Bundle.class)
 					   .execute();
 			idsList.addAll(searchBundle.getEntry().stream().map(r -> r.getResource().getIdElement().getIdPart()).collect(Collectors.toList()));
 			if(searchBundle.hasLink() && bundleContainsNext(searchBundle)) {
-				getLocationsPartOf(idsList, getNextUrl(searchBundle.getLink()));
+				getOrganizationsPartOf(idsList, getNextUrl(searchBundle.getLink()));
 			}
 		}
 
@@ -386,18 +414,50 @@ public class HelperService {
 			return getOrganizationHierarchy(organizationId);
 		}
 
-		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId,String startDate, String endDate)  {
+		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, Type type)  {
+			notificationDataSource = NotificationDataSource.getInstance();
+			List<ScoreCardItem> scoreCardItems = new ArrayList<>();
 			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+
+			Date start = Date.valueOf(startDate);
+			Date end = Date.valueOf(endDate);
+
+			List<Date> dates = new ArrayList<>();
+			while (!start.toInstant().isAfter(end.toInstant())) {
+				dates.add(start);
+				start = Date.valueOf(start.toLocalDate().plusDays(1));
+			}
+
 			try {
 				JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
 				List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
-				FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-				List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), indicators);
-				return ResponseEntity.ok(data);
+				if(type == Type.summary) {
+					LinkedHashMap<String, List<String>> mapOfIdToChildren = getOrganizationIdToChildrenMap(organizationId);
+
+					mapOfIdToChildren.forEach((id, children) -> {
+						children.add(id);
+						for (IndicatorItem indicator: indicators) {
+							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(Date.valueOf(startDate), Date.valueOf(endDate), Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), children);
+							scoreCardItems.add(new ScoreCardItem(id ,indicator.getId(),cacheValueSum.toString(),Date.valueOf(startDate).toString(), Date.valueOf(endDate).toString()));
+						}
+					});
+
+				} else if (type == Type.quarterly) {
+					List<String> facilityIds = getFacilityOrgIds(organizationId);
+					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterDates();
+					for (Pair<Date,Date> pair: quarterDatePairList) {
+						for (IndicatorItem indicator: indicators) {
+							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.getFirst(), pair.getSecond(), Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
+							scoreCardItems.add(new ScoreCardItem(organizationId,indicator.getId(),cacheValueSum.toString(),pair.getFirst().toString(),pair.getSecond().toString()));
+						}
+					}
+				}
+
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				return ResponseEntity.ok("Error : Config File Not Found");
 			}
+			return ResponseEntity.ok(scoreCardItems);
 		}
 
 		public List<OrgItem> getOrganizationHierarchy(String organizationId) {
