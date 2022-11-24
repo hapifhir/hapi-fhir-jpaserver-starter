@@ -6,6 +6,37 @@ entries:
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
         - kind: changed
+          description: updated HAPI FHIR JPA Server app image version to v6.2.1
+        - kind: changed
+          description: |
+            Reduced `startupProbe.initialDelaySeconds` to a more realistic `30` from `60`.
+            This should allow the server to become ready quicker and recover from failures faster.
+        - kind: changed
+          description: "⚠️ BREAKING CHANGE: updated included postgresql chart to v12, which is based on PostgreSQL 15.1"
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 6.2.1
+    created: "2022-11-24T22:09:57.998707962Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.1.2
+    description: A Helm chart for deploying the HAPI FHIR JPA server starter on Kubernetes.
+    digest: e37a7e57e4abf0f66f82298d263f943e93ce136d56e7d03cc6dc1368a7d5777c
+    home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    name: hapi-fhir-jpaserver
+    sources:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    type: application
+    urls:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.11.0/hapi-fhir-jpaserver-0.11.0.tgz
+    version: 0.11.0
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
           description: updated image version to v6.1.0
         - kind: changed
           description: added section on configuring the chart for distributed tracing to the README.md
@@ -210,4 +241,4 @@ entries:
     urls:
     - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.6.0/hapi-fhir-jpaserver-0.6.0.tgz
     version: 0.6.0
-generated: "2022-08-28T18:11:32.465005729Z"
+generated: "2022-11-24T22:09:57.998746063Z"
