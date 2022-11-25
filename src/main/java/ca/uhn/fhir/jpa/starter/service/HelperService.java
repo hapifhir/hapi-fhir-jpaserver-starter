@@ -417,16 +417,25 @@ public class HelperService {
 		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, Type type)  {
 			notificationDataSource = NotificationDataSource.getInstance();
 			List<ScoreCardItem> scoreCardItems = new ArrayList<>();
+			CachingService cacheObject = new CachingService();
 			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
 			Date start = Date.valueOf(startDate);
 			Date end = Date.valueOf(endDate);
 
 			List<Date> dates = new ArrayList<>();
-			while (!start.toInstant().isAfter(end.toInstant())) {
-				dates.add(start);
+			List<Date> getPresentDates = notificationDataSource.getDatesNotPresent(start , end);
+			while (start.toInstant() != end.toInstant()) {
+				for (Date getPresentDate : getPresentDates) {
+               if(start != getPresentDate){
+						dates.add(start);
+					    }
+				   }
 				start = Date.valueOf(start.toLocalDate().plusDays(1));
 			}
+
+			dates.forEach(cacheObject::cacheData);
+
 
 			try {
 				JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
