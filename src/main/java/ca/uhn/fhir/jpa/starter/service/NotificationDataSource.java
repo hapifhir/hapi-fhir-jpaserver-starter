@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter.service;
 
 import java.io.File;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.uhn.fhir.jpa.starter.model.CacheEntity;
@@ -100,7 +101,7 @@ public class NotificationDataSource {
 	}
 
 	public List<Date> getDatesNotPresent(Date from, Date to) {
-
+		return new ArrayList<>();
 	}
 	
 	
