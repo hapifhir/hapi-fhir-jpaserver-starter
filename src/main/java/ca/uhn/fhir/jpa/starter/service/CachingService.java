@@ -17,8 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -32,12 +31,11 @@ public class CachingService {
 
 	private static final long DELAY = 10000;
 
-	@Scheduled(fixedDelay = 10 * DELAY, initialDelay = DELAY)
-	private void cacheDailyData() {
+	public void cacheData(Date date){
 		notificationDataSource = NotificationDataSource.getInstance();
 		try {
 			String orgId = "state-oyo";
-			Date currentDate = DateUtilityHelper.getCurrentSqlDate();
+
 			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
 			List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>() {
 			}.getType());
@@ -46,12 +44,12 @@ public class CachingService {
 				mapOfIdToMd5.put(item.getId(), Utils.md5Bytes(item.getFhirPath().getBytes(StandardCharsets.UTF_8)));
 			}
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-			List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, orgId, new DateRange(currentDate.toString(), currentDate.toString()), indicators);
+			List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators);
 
 			for (ScoreCardItem item : data) {
-				List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(currentDate, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
+				List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
 				if (cacheEntities.isEmpty()) {
-					CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), currentDate, Integer.valueOf(item.getValue()));
+					CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Integer.valueOf(item.getValue()));
 					notificationDataSource.insert(cacheEntity);
 				} else {
 					CacheEntity cacheEntity = cacheEntities.get(0);
@@ -62,5 +60,11 @@ public class CachingService {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	@Scheduled(fixedDelay = 10 * DELAY, initialDelay = DELAY)
+	private void cacheDailyData() {
+		 DateUtilityHelper.getCurrentSqlDate();
 	}
 }

@@ -125,7 +125,7 @@ public class AppProperties {
 	public void setDefer_indexing_for_codesystems_of_size(Integer defer_indexing_for_codesystems_of_size) {
 		this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
 	}
-	
+
 	public Integer getKeycloak_max_group_count() {
 		return keycloak_max_group_count;
 	}
@@ -269,19 +269,19 @@ public class AppProperties {
 	public String getHapi_Server_address() {
 		return hapi_server_address;
 	}
-	
+
 	public String getImage_path() {
 		return image_path;
 	}
-	
+
 	public void setImage_path(String image_path) {
 		this.image_path = image_path;
 	}
-	
+
 	public String getNotification_datasource_config_path() {
 		return notification_datasource_config_path;
 	}
-	
+
 	public void setNotification_datasource_config_path(String notification_datasource_config_path) {
 		this.notification_datasource_config_path = notification_datasource_config_path;
 	}
@@ -289,7 +289,7 @@ public class AppProperties {
 	public void setHapi_Server_address(String hapi_server_address) {
 		this.hapi_server_address = hapi_server_address;
 	}
-	
+
 	public String getAnc_config_file() {
 		return anc_config_file;
 	}
