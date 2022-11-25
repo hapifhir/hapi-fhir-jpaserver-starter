@@ -409,6 +409,19 @@ public class HelperService {
 			}
 		}
 
+
+		public ResponseEntity<?> getFilters() {
+			try {
+				JsonReader reader = new JsonReader(new FileReader(appProperties.getFilters_config_file()));
+				List<FilterItem> filters = new Gson().fromJson(reader,new TypeToken<List<FilterItem>>(){}.getType());
+				return ResponseEntity.ok(filters);
+			}
+			catch(FileNotFoundException e){
+				e.printStackTrace();
+				return ResponseEntity.ok("Error:Config File Not Found");
+			}
+		}
+
 		public List<OrgItem> getOrganizationsByPractitionerRoleId(String practitionerRoleId) {
 			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 			return getOrganizationHierarchy(organizationId);

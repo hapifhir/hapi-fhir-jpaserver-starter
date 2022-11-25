@@ -94,6 +94,11 @@ public class UserAndGroupManagementController {
 		return helperService.getIndicators();
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/filter")
+	public ResponseEntity<?> filter(){
+		return helperService.getFilters();
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/data")
 	public ResponseEntity<?> data(@RequestHeader(name = "Authorization") String token, @RequestParam("from") String startDate, @RequestParam("to") String endDate, @RequestParam("type") Type type) {
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
