@@ -414,23 +414,15 @@ public class HelperService {
 			return getOrganizationHierarchy(organizationId);
 		}
 
-		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, Type type)  {
+		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, Type type, LinkedHashMap<String, String> filters)  {
 			notificationDataSource = NotificationDataSource.getInstance();
 			List<ScoreCardItem> scoreCardItems = new ArrayList<>();
 			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
-			Date start = Date.valueOf(startDate);
-			Date end = Date.valueOf(endDate);
-
-			List<Date> dates = new ArrayList<>();
-			while (!start.toInstant().isAfter(end.toInstant())) {
-				dates.add(start);
-				start = Date.valueOf(start.toLocalDate().plusDays(1));
-			}
-
 			try {
 				JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
 				List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
+				List<String> fhirSearchList = getFhirSearchListByFilters(filters);
 				if(type == Type.summary) {
 					LinkedHashMap<String, List<String>> mapOfIdToChildren = getOrganizationIdToChildrenMap(organizationId);
 
@@ -441,7 +433,6 @@ public class HelperService {
 							scoreCardItems.add(new ScoreCardItem(id ,indicator.getId(),cacheValueSum.toString(),Date.valueOf(startDate).toString(), Date.valueOf(endDate).toString()));
 						}
 					});
-
 				} else if (type == Type.quarterly) {
 					List<String> facilityIds = getFacilityOrgIds(organizationId);
 					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterDates();
@@ -458,6 +449,26 @@ public class HelperService {
 				return ResponseEntity.ok("Error : Config File Not Found");
 			}
 			return ResponseEntity.ok(scoreCardItems);
+		}
+
+		List<String> getFhirSearchListByFilters(LinkedHashMap<String, String> filters) throws FileNotFoundException {
+			List<String> fhirSearchList = new ArrayList<>();
+			List<FilterItem> filterItemList = getFilterItemListFromFile();
+			filters.forEach((id, value)-> {
+				FilterItem filterItem = filterItemList.stream().filter(item -> item.getId().equals(id)).findFirst().orElse(null);
+				if(filterItem != null) {
+					FilterOptions filterOption = filterItem.getOptions().stream().filter(option -> option.getId().equals(value)).findFirst().orElse(null);
+					if(filterOption != null) {
+						fhirSearchList.add(filterOption.getFhirSearch());
+					}
+				}
+			});
+			return fhirSearchList;
+		}
+
+		List<FilterItem> getFilterItemListFromFile() throws FileNotFoundException {
+			JsonReader reader = new JsonReader(new FileReader(appProperties.getFilters_config_file()));
+			return new Gson().fromJson(reader, new TypeToken<List<FilterItem>>(){}.getType());
 		}
 
 		public List<OrgItem> getOrganizationHierarchy(String organizationId) {

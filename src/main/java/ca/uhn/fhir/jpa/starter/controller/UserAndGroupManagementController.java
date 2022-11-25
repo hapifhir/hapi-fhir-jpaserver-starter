@@ -95,11 +95,32 @@ public class UserAndGroupManagementController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/data")
-	public ResponseEntity<?> data(@RequestHeader(name = "Authorization") String token, @RequestParam("from") String startDate, @RequestParam("to") String endDate, @RequestParam("type") Type type) {
+	public ResponseEntity<?> data(
+		@RequestHeader(name = "Authorization") String token,
+		@RequestParam("from") String startDate,
+		@RequestParam("to") String endDate,
+		@RequestParam("type") Type type,
+		@RequestParam(value = "filter1Id", required = false) String filter1Id,
+		@RequestParam(value = "filter1Value", required = false) String filter1Value,
+		@RequestParam(value = "filter2Id", required = false) String filter2Id,
+		@RequestParam(value = "filter2Value", required = false) String filter2Value,
+		@RequestParam(value = "filter3Id", required = false) String filter3Id,
+		@RequestParam(value = "filter3Value", required = false) String filter3Value,
+		@RequestParam(value = "filter4Id", required = false) String filter4Id,
+		@RequestParam(value = "filter4Value", required = false) String filter4Value,
+		@RequestParam(value = "filter5Id", required = false) String filter5Id,
+		@RequestParam(value = "filter5Value", required = false) String filter5Value
+		) {
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
-		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type);
+		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
+		filters.put(filter1Id, filter1Value);
+		filters.put(filter2Id, filter2Value);
+		filters.put(filter3Id, filter3Value);
+		filters.put(filter4Id, filter4Value);
+		filters.put(filter5Id, filter5Value);
+		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type, filters);
 	}
 }

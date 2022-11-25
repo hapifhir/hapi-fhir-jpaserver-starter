@@ -62,6 +62,7 @@ hapi:
       fhir_user: kjois@iprdgroup.com
       fhir_password: 12345
       anc_config_file : C:\workspace\IPRD\ANC\anc-oyo\data\hapi\anc_config.json
+      filters_config_file : C:\workspace\IPRD\ANC\anc-oyo\data\hapi\filters_config.json
       hapi_server_address: http://localhost:8080/fhir
       advanced_lucene_indexing: true
       fhirpath_interceptor_enabled: true
