@@ -61,6 +61,7 @@ public class AppProperties {
 	private String fhir_hapi_client_secret = "xyz";
 	private String hapi_server_address = null;
 	private String anc_config_file = null;
+	private String filters_config_file = null;
 	private EncodingEnum default_encoding = EncodingEnum.JSON;
 	private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
 	private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
@@ -124,7 +125,7 @@ public class AppProperties {
 	public void setDefer_indexing_for_codesystems_of_size(Integer defer_indexing_for_codesystems_of_size) {
 		this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
 	}
-	
+
 	public Integer getKeycloak_max_group_count() {
 		return keycloak_max_group_count;
 	}
@@ -268,19 +269,19 @@ public class AppProperties {
 	public String getHapi_Server_address() {
 		return hapi_server_address;
 	}
-	
+
 	public String getImage_path() {
 		return image_path;
 	}
-	
+
 	public void setImage_path(String image_path) {
 		this.image_path = image_path;
 	}
-	
+
 	public String getNotification_datasource_config_path() {
 		return notification_datasource_config_path;
 	}
-	
+
 	public void setNotification_datasource_config_path(String notification_datasource_config_path) {
 		this.notification_datasource_config_path = notification_datasource_config_path;
 	}
@@ -288,13 +289,22 @@ public class AppProperties {
 	public void setHapi_Server_address(String hapi_server_address) {
 		this.hapi_server_address = hapi_server_address;
 	}
-	
+
 	public String getAnc_config_file() {
 		return anc_config_file;
 	}
 
 	public void setAnc_config_file(String anc_config_file) {
 		this.anc_config_file = anc_config_file;
+	}
+
+
+	public String getFilters_config_file() {
+		return filters_config_file;
+	}
+
+	public void setFilters_config_file(String filters_config_file) {
+		this.filters_config_file = filters_config_file;
 	}
 
 	public Subscription getSubscription() {
