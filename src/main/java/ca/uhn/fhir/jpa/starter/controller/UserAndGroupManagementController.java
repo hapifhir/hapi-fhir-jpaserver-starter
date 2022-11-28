@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = {"http://localhost:3000","https://oclink.io","https://opencampaignlink.org"}, maxAge = 3600,  allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000","http://testhost.dashboard:3000","https://oclink.io","https://opencampaignlink.org"}, maxAge = 3600,  allowCredentials = "true")
 @RestController
 @RequestMapping("/iprd")
 public class UserAndGroupManagementController {
@@ -64,6 +64,11 @@ public class UserAndGroupManagementController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getAncDailySummaryData")
 	public ResponseEntity<DataResult> getAncDailySummaryData(@RequestParam("organizationId") String organizationId,@RequestParam("startDate") String startDate,@RequestParam("endDate") String endDate) {
+		return helperService.getAncDailySummaryData(organizationId, startDate, endDate);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/details")
+	public ResponseEntity<DataResult> getDetails(@RequestParam("lga") String organizationId,@RequestParam("from") String startDate,@RequestParam("to") String endDate) {
 		return helperService.getAncDailySummaryData(organizationId, startDate, endDate);
 	}
 
