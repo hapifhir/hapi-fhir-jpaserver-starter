@@ -14,6 +14,8 @@ import com.google.gson.stream.JsonReader;
 import com.iprd.fhir.utils.*;
 import com.iprd.report.*;
 
+import android.util.Pair;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -30,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
-import kotlin.Pair;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Appointment;
@@ -443,14 +444,14 @@ public class HelperService {
 				} else if (type == Type.quarterly) {
 					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterDates();
 					for (Pair<Date, Date> pair : quarterDatePairList) {
-						List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.getFirst().toString(), pair.getSecond().toString()), indicators, fhirSearchList);
+						List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
 						for (IndicatorItem indicatorItem : indicators) {
 							List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
 							int sum = 0;
 							for (ScoreCardItem item : filteredList) {
 								sum += Integer.parseInt(item.getValue());
 							}
-							scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.getFirst().toString(), pair.getSecond().toString()));
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
 						}
 					}
 				}
@@ -500,8 +501,8 @@ public class HelperService {
 					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterDates();
 					for (Pair<Date,Date> pair: quarterDatePairList) {
 						for (IndicatorItem indicator: indicators) {
-							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.getFirst(), pair.getSecond(), Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
-							scoreCardItems.add(new ScoreCardItem(organizationId,indicator.getId(),cacheValueSum.toString(),pair.getFirst().toString(),pair.getSecond().toString()));
+							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second, Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
+							scoreCardItems.add(new ScoreCardItem(organizationId,indicator.getId(),cacheValueSum.toString(),pair.first.toString(),pair.second.toString()));
 						}
 					}
 				}
