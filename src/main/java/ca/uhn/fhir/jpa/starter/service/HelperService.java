@@ -437,13 +437,12 @@ public class HelperService {
 			Date end = Date.valueOf(endDate);
 
 			List<Date> dates = new ArrayList<>();
-			List<Date> getPresentDates = notificationDataSource.getDatesNotPresent(start , end);
-			while (start.toInstant() != end.toInstant()) {
-				for (Date getPresentDate : getPresentDates) {
-               if(start != getPresentDate){
+			List<Date> presentDates = notificationDataSource.getDatesPresent(start , end);
+
+			while (start != end) {
+				if(!presentDates.contains(start)){
 						dates.add(start);
-					    }
-				   }
+				}
 				start = Date.valueOf(start.toLocalDate().plusDays(1));
 			}
 

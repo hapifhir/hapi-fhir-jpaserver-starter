@@ -100,7 +100,7 @@ public class NotificationDataSource {
 		return (Long) resultList.get(0);
 	}
 
-	public List<Date> getDatesNotPresent(Date from, Date to) {
+	public List<Date> getDatesPresent(Date from, Date to) {
 		session = sf.openSession();
 		Query query = session.createQuery("SELECT DISTINCT(date) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2");
 		query.setParameter("param1",from);
