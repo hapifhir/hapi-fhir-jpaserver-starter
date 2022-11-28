@@ -61,6 +61,7 @@ public class AppProperties {
 	private String fhir_hapi_client_secret = "xyz";
 	private String hapi_server_address = null;
 	private String anc_config_file = null;
+	private String country_org_id = null;
 	private String filters_config_file = null;
 	private EncodingEnum default_encoding = EncodingEnum.JSON;
 	private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
@@ -305,6 +306,14 @@ public class AppProperties {
 
 	public void setFilters_config_file(String filters_config_file) {
 		this.filters_config_file = filters_config_file;
+	}
+
+	public String getCountry_org_id() {
+		return country_org_id;
+	}
+
+	public void setCountry_org_id(String country_org_id) {
+		this.country_org_id = country_org_id;
 	}
 
 	public Subscription getSubscription() {

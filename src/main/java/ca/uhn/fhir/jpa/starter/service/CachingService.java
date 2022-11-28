@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -29,12 +30,12 @@ public class CachingService {
 
 	NotificationDataSource notificationDataSource;
 
-	private static final long DELAY = 10000;
+	private static final long DELAY = 3600000;
 
 	public void cacheData(Date date){
 		notificationDataSource = NotificationDataSource.getInstance();
 		try {
-			String orgId = "state-oyo";
+			String countryOrgId = "state-oyo";
 
 			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
 			List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>() {
@@ -44,7 +45,7 @@ public class CachingService {
 				mapOfIdToMd5.put(item.getId(), Utils.md5Bytes(item.getFhirPath().getBytes(StandardCharsets.UTF_8)));
 			}
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-			List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators);
+			List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, appProperties.getCountry_org_id(), new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList());
 
 			for (ScoreCardItem item : data) {
 				List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
@@ -63,8 +64,8 @@ public class CachingService {
 	}
 
 
-	@Scheduled(fixedDelay = 10 * DELAY, initialDelay = DELAY)
+	@Scheduled(fixedDelay = 24 * DELAY, initialDelay = DELAY)
 	private void cacheDailyData() {
-		 DateUtilityHelper.getCurrentSqlDate();
+		cacheData(DateUtilityHelper.getCurrentSqlDate());
 	}
 }

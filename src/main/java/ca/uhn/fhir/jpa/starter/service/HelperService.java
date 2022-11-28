@@ -73,18 +73,20 @@ import java.io.*;
 @Import(AppProperties.class)
 @Service
 public class HelperService {
-	
+
 		@Autowired
 		AppProperties appProperties;
 		@Autowired
 		HttpServletRequest request;
+		@Autowired
+		CachingService cachingService;
 
 
 		FhirContext ctx;
 		Keycloak instance;
 		TokenManager tokenManager;
 		BearerTokenAuthInterceptor authInterceptor;
-		
+
 		private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
 		private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
 		private static String SMS_EXTENTION_URL = "http://iprdgroup.com/Extentions/sms-sent";
@@ -111,7 +113,7 @@ public class HelperService {
 			int iteration = 0;
 			String stateId="",lgaId="",wardId="",facilityOrganizationId="", facilityLocationId="";
 			String stateGroupId="", lgaGroupId="", wardGroupId="", facilityGroupId="";
-			
+
 			while((singleLine = bufferedReader.readLine())!=null){
 				if(iteration == 0) { //skip header of CSV file
 					iteration++;
@@ -169,7 +171,7 @@ public class HelperService {
 							facilityGroupId = createGroup(facilityGroupRep);
 							updateResource(facilityGroupId, facilityOrganizationId, Organization.class);
 							updateResource(facilityGroupId, facilityLocationId, Location.class);
-						}	
+						}
 					}
 					else {
 						invalidClinics.add(csvData[7]+","+csvData[0]+","+csvData[1]+","+csvData[2]);
@@ -243,7 +245,7 @@ public class HelperService {
 			String practitionerRoleId = "";
 			String practitionerId = "";
 			String organizationId = "";
-			
+
 			while((singleLine = bufferedReader.readLine()) != null) {
 				if(iteration == 0) {
 					iteration++;
@@ -275,7 +277,7 @@ public class HelperService {
 								updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
 							}
 						}
-					}	
+					}
 				}else {
 					invalidUsers.add(hcwData[0]+" "+hcwData[1]+","+hcwData[11]);
 				}
@@ -427,10 +429,42 @@ public class HelperService {
 			return getOrganizationHierarchy(organizationId);
 		}
 
-		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, Type type, LinkedHashMap<String, String> filters)  {
+		public ResponseEntity<?> getDataByPractitionerRoleIdWithFilters(String practitionerRoleId, String startDate, String endDate, Type type, LinkedHashMap<String, String> filters) {
 			notificationDataSource = NotificationDataSource.getInstance();
 			List<ScoreCardItem> scoreCardItems = new ArrayList<>();
-			CachingService cacheObject = new CachingService();
+			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+
+			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+			try {
+				List<IndicatorItem> indicators = getIndicatorItemListFromFile();
+				List<String> fhirSearchList = getFhirSearchListByFilters(filters);
+				if (type == Type.summary) {
+					scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), indicators, fhirSearchList);
+				} else if (type == Type.quarterly) {
+					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterDates();
+					for (Pair<Date, Date> pair : quarterDatePairList) {
+						List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.getFirst().toString(), pair.getSecond().toString()), indicators, fhirSearchList);
+						for (IndicatorItem indicatorItem : indicators) {
+							List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
+							int sum = 0;
+							for (ScoreCardItem item : filteredList) {
+								sum += Integer.parseInt(item.getValue());
+							}
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.getFirst().toString(), pair.getSecond().toString()));
+						}
+					}
+				}
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return ResponseEntity.ok("Error : Config File Not Found");
+			}
+			return ResponseEntity.ok(scoreCardItems);
+		}
+
+		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, Type type)  {
+			notificationDataSource = NotificationDataSource.getInstance();
+			List<ScoreCardItem> scoreCardItems = new ArrayList<>();
 			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
 			Date start = Date.valueOf(startDate);
@@ -439,20 +473,18 @@ public class HelperService {
 			List<Date> dates = new ArrayList<>();
 			List<Date> presentDates = notificationDataSource.getDatesPresent(start , end);
 
-			while (start != end) {
+			end = Date.valueOf(end.toLocalDate().plusDays(1));
+			while (!start.equals(end)) {
 				if(!presentDates.contains(start)){
 						dates.add(start);
 				}
 				start = Date.valueOf(start.toLocalDate().plusDays(1));
 			}
 
-			dates.forEach(cacheObject::cacheData);
-
+			dates.forEach(cachingService::cacheData);
 
 			try {
-				JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
-				List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
-				List<String> fhirSearchList = getFhirSearchListByFilters(filters);
+				List<IndicatorItem> indicators = getIndicatorItemListFromFile();
 				if(type == Type.summary) {
 					LinkedHashMap<String, List<String>> mapOfIdToChildren = getOrganizationIdToChildrenMap(organizationId);
 
@@ -501,11 +533,16 @@ public class HelperService {
 			return new Gson().fromJson(reader, new TypeToken<List<FilterItem>>(){}.getType());
 		}
 
+		List<IndicatorItem> getIndicatorItemListFromFile() throws FileNotFoundException {
+			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
+			return new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
+		}
+
 		public List<OrgItem> getOrganizationHierarchy(String organizationId) {
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
 			return ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, organizationId);
 		}
-		
+
 		public String getOrganizationIdByPractitionerRoleId(String practitionerRoleId) {
 			Bundle bundle = FhirClientAuthenticatorService.getFhirClient().search().forResource(PractitionerRole.class).where(PractitionerRole.RES_ID.exactly().identifier(practitionerRoleId)).returnBundle(Bundle.class).execute();
 			if(!bundle.hasEntry()) {
@@ -514,7 +551,7 @@ public class HelperService {
 			PractitionerRole practitionerRole = (PractitionerRole) bundle.getEntry().get(0).getResource();
 			return practitionerRole.getOrganization().getReferenceElement().getIdPart();
 		}
-		
+
 		public String getOrganizationIdByFacilityUID(String facilityUID) {
 			Bundle organizationBundle = new Bundle();
 			String queryPath = "/Organization?";
@@ -542,7 +579,7 @@ public class HelperService {
 			}
 			return null;
 		}
-		
+
 		static String getValidURL(String invalidURLString){
 		    try {
 		        // Convert the String and decode the URL into the URL class
@@ -681,7 +718,7 @@ public class HelperService {
 				Patient patient = (Patient)patientBundle.getEntry().get(0).getResource();
 				return patient.getIdElement().getIdPart();
 			}
-			
+
 			for(BundleEntryComponent entry: patientBundle.getEntry()) {
 				Patient patient = (Patient)entry.getResource();
 				if(isActualPatient(patient, oclId))

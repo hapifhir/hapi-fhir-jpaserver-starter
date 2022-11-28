@@ -108,7 +108,7 @@ public class NotificationDataSource {
 		List resultList = query.getResultList();
 		session.close();
 
-		return  resultList;
+		return resultList;
 	}
 	
 	

@@ -121,11 +121,19 @@ public class UserAndGroupManagementController {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
-		filters.put(filter1Id, filter1Value);
-		filters.put(filter2Id, filter2Value);
-		filters.put(filter3Id, filter3Value);
-		filters.put(filter4Id, filter4Value);
-		filters.put(filter5Id, filter5Value);
-		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type, filters);
+		if(filter1Id != null || filter1Value != null)
+			filters.put(filter1Id, filter1Value);
+		if(filter2Id != null || filter2Value != null)
+			filters.put(filter2Id, filter2Value);
+		if(filter3Id != null || filter3Value != null)
+			filters.put(filter3Id, filter3Value);
+		if(filter4Id != null || filter4Value != null)
+			filters.put(filter4Id, filter4Value);
+		if(filter5Id != null || filter5Value != null)
+			filters.put(filter5Id, filter5Value);
+		if (!filters.isEmpty()) {
+			return helperService.getDataByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, type, filters);
+		}
+		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type);
 	}
 }
