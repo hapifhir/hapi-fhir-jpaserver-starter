@@ -2,7 +2,7 @@ package ca.uhn.fhir.jpa.starter.service;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
-import ca.uhn.fhir.jpa.starter.model.Type;
+import ca.uhn.fhir.jpa.starter.model.ReportType;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
@@ -430,7 +430,7 @@ public class HelperService {
 			return getOrganizationHierarchy(organizationId);
 		}
 
-		public ResponseEntity<?> getDataByPractitionerRoleIdWithFilters(String practitionerRoleId, String startDate, String endDate, Type type, LinkedHashMap<String, String> filters) {
+		public ResponseEntity<?> getDataByPractitionerRoleIdWithFilters(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters) {
 			notificationDataSource = NotificationDataSource.getInstance();
 			List<ScoreCardItem> scoreCardItems = new ArrayList<>();
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
@@ -439,9 +439,9 @@ public class HelperService {
 			try {
 				List<IndicatorItem> indicators = getIndicatorItemListFromFile();
 				List<String> fhirSearchList = getFhirSearchListByFilters(filters);
-				if (type == Type.summary) {
+				if (type == ReportType.summary) {
 					scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), indicators, fhirSearchList);
-				} else if (type == Type.quarterly) {
+				} else if (type == ReportType.quarterly) {
 					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterDates();
 					for (Pair<Date, Date> pair : quarterDatePairList) {
 						List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
@@ -463,7 +463,7 @@ public class HelperService {
 			return ResponseEntity.ok(scoreCardItems);
 		}
 
-		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, Type type)  {
+		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type)  {
 			notificationDataSource = NotificationDataSource.getInstance();
 			List<ScoreCardItem> scoreCardItems = new ArrayList<>();
 			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
@@ -486,7 +486,7 @@ public class HelperService {
 
 			try {
 				List<IndicatorItem> indicators = getIndicatorItemListFromFile();
-				if(type == Type.summary) {
+				if(type == ReportType.summary) {
 					LinkedHashMap<String, List<String>> mapOfIdToChildren = getOrganizationIdToChildrenMap(organizationId);
 
 					mapOfIdToChildren.forEach((id, children) -> {
@@ -496,7 +496,7 @@ public class HelperService {
 							scoreCardItems.add(new ScoreCardItem(id ,indicator.getId(),cacheValueSum.toString(),Date.valueOf(startDate).toString(), Date.valueOf(endDate).toString()));
 						}
 					});
-				} else if (type == Type.quarterly) {
+				} else if (type == ReportType.quarterly) {
 					List<String> facilityIds = getFacilityOrgIds(organizationId);
 					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterDates();
 					for (Pair<Date,Date> pair: quarterDatePairList) {
