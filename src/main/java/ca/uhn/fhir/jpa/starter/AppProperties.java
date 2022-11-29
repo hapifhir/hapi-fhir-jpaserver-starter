@@ -63,6 +63,7 @@ public class AppProperties {
 	private String anc_config_file = null;
 	private String country_org_id = null;
 	private String filters_config_file = null;
+	private String daily_and_summary_config_file = null;
 	private EncodingEnum default_encoding = EncodingEnum.JSON;
 	private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
 	private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
@@ -306,6 +307,14 @@ public class AppProperties {
 
 	public void setFilters_config_file(String filters_config_file) {
 		this.filters_config_file = filters_config_file;
+	}
+
+	public String getDaily_and_summary_config_file() {
+		return daily_and_summary_config_file;
+	}
+
+	public void setDaily_and_summary_config_file(String daily_and_summary_config_file) {
+		this.daily_and_summary_config_file = daily_and_summary_config_file;
 	}
 
 	public String getCountry_org_id() {

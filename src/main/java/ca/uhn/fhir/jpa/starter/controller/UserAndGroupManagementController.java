@@ -63,13 +63,38 @@ public class UserAndGroupManagementController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getAncDailySummaryData")
-	public ResponseEntity<DataResult> getAncDailySummaryData(@RequestParam("organizationId") String organizationId,@RequestParam("startDate") String startDate,@RequestParam("endDate") String endDate) {
-		return helperService.getAncDailySummaryData(organizationId, startDate, endDate);
+	public ResponseEntity<?> getAncDailySummaryData(@RequestParam("organizationId") String organizationId,@RequestParam("startDate") String startDate,@RequestParam("endDate") String endDate) {
+		return helperService.getAncDailySummaryData(organizationId, startDate, endDate, new LinkedHashMap<>());
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/details")
-	public ResponseEntity<DataResult> getDetails(@RequestParam("lga") String organizationId,@RequestParam("from") String startDate,@RequestParam("to") String endDate) {
-		return helperService.getAncDailySummaryData(organizationId, startDate, endDate);
+	public ResponseEntity<?> getDetails(
+		@RequestParam("lga") String organizationId,
+		@RequestParam("from") String startDate,
+		@RequestParam("to") String endDate,
+		@RequestParam(value = "filter1Id", required = false) String filter1Id,
+		@RequestParam(value = "filter1Value", required = false) String filter1Value,
+		@RequestParam(value = "filter2Id", required = false) String filter2Id,
+		@RequestParam(value = "filter2Value", required = false) String filter2Value,
+		@RequestParam(value = "filter3Id", required = false) String filter3Id,
+		@RequestParam(value = "filter3Value", required = false) String filter3Value,
+		@RequestParam(value = "filter4Id", required = false) String filter4Id,
+		@RequestParam(value = "filter4Value", required = false) String filter4Value,
+		@RequestParam(value = "filter5Id", required = false) String filter5Id,
+		@RequestParam(value = "filter5Value", required = false) String filter5Value
+	) {
+		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
+		if(filter1Id != null || filter1Value != null)
+			filters.put(filter1Id, filter1Value);
+		if(filter2Id != null || filter2Value != null)
+			filters.put(filter2Id, filter2Value);
+		if(filter3Id != null || filter3Value != null)
+			filters.put(filter3Id, filter3Value);
+		if(filter4Id != null || filter4Value != null)
+			filters.put(filter4Id, filter4Value);
+		if(filter5Id != null || filter5Value != null)
+			filters.put(filter5Id, filter5Value);
+		return helperService.getAncDailySummaryData(organizationId, startDate, endDate, filters);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getEncountersBelowLocation")

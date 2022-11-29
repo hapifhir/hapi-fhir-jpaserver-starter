@@ -299,10 +299,17 @@ public class HelperService {
 			return ResponseEntity.ok(ancMetaData);
 		}
 
-		public ResponseEntity<DataResult> getAncDailySummaryData(String organizationId,String startDate, String endDate) {
-			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-			DataResult dataResult =  ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate,endDate), organizationId);
-			return ResponseEntity.ok(dataResult);
+		public ResponseEntity<?> getAncDailySummaryData(String organizationId,String startDate, String endDate,LinkedHashMap<String, String> filters) {
+			try {
+				FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+				List<String> fhirSearchList = getFhirSearchListByFilters(filters);
+				ANCDailySummaryConfig ancDailySummaryConfig = getANCDailySummaryConfigFromFile();
+				DataResult dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
+				return ResponseEntity.ok(dataResult);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return ResponseEntity.ok("Error : Config File Not Found");
+			}
 		}
 
 		public Bundle getEncountersBelowLocation(String locationId) {
@@ -536,6 +543,11 @@ public class HelperService {
 		List<IndicatorItem> getIndicatorItemListFromFile() throws FileNotFoundException {
 			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
 			return new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
+		}
+
+		ANCDailySummaryConfig getANCDailySummaryConfigFromFile() throws FileNotFoundException {
+			JsonReader reader = new JsonReader(new FileReader(appProperties.getDaily_and_summary_config_file()));
+			return new Gson().fromJson(reader, ANCDailySummaryConfig.class);
 		}
 
 		public List<OrgItem> getOrganizationHierarchy(String organizationId) {
