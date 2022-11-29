@@ -1,6 +1,6 @@
 package ca.uhn.fhir.jpa.starter.model;
 
-public enum Type {
+public enum ReportType {
 	summary,
 	quarterly
 }

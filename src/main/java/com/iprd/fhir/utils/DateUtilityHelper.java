@@ -1,6 +1,5 @@
 package com.iprd.fhir.utils;
 
-import kotlin.Pair;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -8,6 +7,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import android.util.Pair;
 
 public class DateUtilityHelper {
 	

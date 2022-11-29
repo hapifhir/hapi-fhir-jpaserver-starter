@@ -39,7 +39,7 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 	private static final String CORS_ALLOWED_HEADERS =
             "origin,content-type,accept,x-requested-with,Authorization,Access-Control-Allow-Credentials";
 
-    private String opensrpAllowedSources = "http://localhost:3000,https://oclink.io,https://opencampaignlink.org";
+    private String opensrpAllowedSources = "http://testhost.dashboard:3000/,http://localhost:3000/,https://oclink.io/,https://opencampaignlink.org/";
 
     private long corsMaxAge = 60;
 
