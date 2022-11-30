@@ -449,7 +449,7 @@ public class HelperService {
 				if (type == ReportType.summary) {
 					scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), indicators, fhirSearchList);
 				} else if (type == ReportType.quarterly) {
-					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterDates();
+					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates();
 					for (Pair<Date, Date> pair : quarterDatePairList) {
 						List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
 						for (IndicatorItem indicatorItem : indicators) {
@@ -473,43 +473,32 @@ public class HelperService {
 		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type)  {
 			notificationDataSource = NotificationDataSource.getInstance();
 			List<ScoreCardItem> scoreCardItems = new ArrayList<>();
-			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
-
-			Date start = Date.valueOf(startDate);
-			Date end = Date.valueOf(endDate);
-
-			List<Date> dates = new ArrayList<>();
-			List<Date> presentDates = notificationDataSource.getDatesPresent(start , end);
-
-			end = Date.valueOf(end.toLocalDate().plusDays(1));
-			while (!start.equals(end)) {
-				if(!presentDates.contains(start)){
-						dates.add(start);
-				}
-				start = Date.valueOf(start.toLocalDate().plusDays(1));
-			}
-
-			dates.forEach(cachingService::cacheData);
-
 			try {
 				List<IndicatorItem> indicators = getIndicatorItemListFromFile();
-				if(type == ReportType.summary) {
+				String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+
+				Date start = Date.valueOf(startDate);
+				Date end = Date.valueOf(endDate);
+
+				performCachingIfNotPresent(indicators, start, end);
+
+				if (type == ReportType.summary) {
 					LinkedHashMap<String, List<String>> mapOfIdToChildren = getOrganizationIdToChildrenMap(organizationId);
 
 					mapOfIdToChildren.forEach((id, children) -> {
 						children.add(id);
-						for (IndicatorItem indicator: indicators) {
-							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(Date.valueOf(startDate), Date.valueOf(endDate), Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), children);
-							scoreCardItems.add(new ScoreCardItem(id ,indicator.getId(),cacheValueSum.toString(),Date.valueOf(startDate).toString(), Date.valueOf(endDate).toString()));
+						for (IndicatorItem indicator : indicators) {
+							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end, Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), children);
+							scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(), startDate, endDate));
 						}
 					});
 				} else if (type == ReportType.quarterly) {
 					List<String> facilityIds = getFacilityOrgIds(organizationId);
-					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterDates();
-					for (Pair<Date,Date> pair: quarterDatePairList) {
-						for (IndicatorItem indicator: indicators) {
+					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates();
+					for (Pair<Date, Date> pair : quarterDatePairList) {
+						for (IndicatorItem indicator : indicators) {
 							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second, Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
-							scoreCardItems.add(new ScoreCardItem(organizationId,indicator.getId(),cacheValueSum.toString(),pair.first.toString(),pair.second.toString()));
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(), cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 						}
 					}
 				}
@@ -520,6 +509,36 @@ public class HelperService {
 			}
 			return ResponseEntity.ok(scoreCardItems);
 		}
+
+		private void performCachingIfNotPresent(List<IndicatorItem> indicators, Date start, Date end) {
+			List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.md5Bytes(indicatorItem.getFhirPath().getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
+
+			List<Date> dates = new ArrayList<>();
+			List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(start, end);
+
+			List<String> existingIndicators = new ArrayList<>();
+			List<String> nonExistingIndicators = new ArrayList<>();
+
+			for (String indicator : currentIndicatorMD5List) {
+				if (presentIndicators.contains(indicator)) {
+					existingIndicators.add(indicator);
+				} else {
+					nonExistingIndicators.add(indicator);
+				}
+			}
+			List<Date> presentDates = notificationDataSource.getDatesPresent(start, end, nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators);
+
+			end = Date.valueOf(end.toLocalDate().plusDays(1));
+			while (!start.equals(end)) {
+				if (!presentDates.contains(start)) {
+					dates.add(start);
+				}
+				start = Date.valueOf(start.toLocalDate().plusDays(1));
+			}
+
+			dates.forEach( date -> cachingService.cacheData(date, indicators));
+		}
+
 
 		List<String> getFhirSearchListByFilters(LinkedHashMap<String, String> filters) throws FileNotFoundException {
 			List<String> fhirSearchList = new ArrayList<>();

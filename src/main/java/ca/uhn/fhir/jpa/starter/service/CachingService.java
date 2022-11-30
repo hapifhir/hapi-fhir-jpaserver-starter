@@ -32,40 +32,39 @@ public class CachingService {
 
 	private static final long DELAY = 3600000;
 
-	public void cacheData(Date date){
+	public void cacheData(Date date, List<IndicatorItem> indicators){
 		notificationDataSource = NotificationDataSource.getInstance();
-		try {
-			String countryOrgId = "state-oyo";
+		LinkedHashMap<Integer, String> mapOfIdToMd5 = new LinkedHashMap<>();
+		for (IndicatorItem item : indicators) {
+			mapOfIdToMd5.put(item.getId(), Utils.md5Bytes(item.getFhirPath().getBytes(StandardCharsets.UTF_8)));
+		}
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, appProperties.getCountry_org_id(), new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList());
 
-			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
-			List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>() {
-			}.getType());
-			LinkedHashMap<Integer, String> mapOfIdToMd5 = new LinkedHashMap<>();
-			for (IndicatorItem item : indicators) {
-				mapOfIdToMd5.put(item.getId(), Utils.md5Bytes(item.getFhirPath().getBytes(StandardCharsets.UTF_8)));
+		for (ScoreCardItem item : data) {
+			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
+			if (cacheEntities.isEmpty()) {
+				CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Integer.valueOf(item.getValue()));
+				notificationDataSource.insert(cacheEntity);
+			} else {
+				CacheEntity cacheEntity = cacheEntities.get(0);
+				cacheEntity.setValue(Integer.valueOf(item.getValue()));
+				notificationDataSource.update(cacheEntity);
 			}
-			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-			List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, appProperties.getCountry_org_id(), new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList());
-
-			for (ScoreCardItem item : data) {
-				List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
-				if (cacheEntities.isEmpty()) {
-					CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Integer.valueOf(item.getValue()));
-					notificationDataSource.insert(cacheEntity);
-				} else {
-					CacheEntity cacheEntity = cacheEntities.get(0);
-					cacheEntity.setValue(Integer.valueOf(item.getValue()));
-					notificationDataSource.update(cacheEntity);
-				}
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		}
 	}
 
 
 	@Scheduled(fixedDelay = 24 * DELAY, initialDelay = DELAY)
 	private void cacheDailyData() {
-		cacheData(DateUtilityHelper.getCurrentSqlDate());
+		try {
+			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
+			List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>() {
+			}.getType());
+			cacheData(DateUtilityHelper.getCurrentSqlDate(), indicators);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

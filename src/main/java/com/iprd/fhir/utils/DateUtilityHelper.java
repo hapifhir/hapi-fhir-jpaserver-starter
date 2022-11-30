@@ -46,7 +46,7 @@ public class DateUtilityHelper {
 		return DateTimeFormatter.ISO_INSTANT.format(timestamp.toInstant()).split("T")[0];
 	}
 
-	public static List<Pair<Date, Date>> getQuarterDates() {
+	public static List<Pair<Date, Date>> getQuarterlyDates() {
 		LocalDate localDate = LocalDate.now();
 		Date firstQuarterStart = Date.valueOf(localDate.getYear()+"-01-01");
 		Date firstQuarterEnd = Date.valueOf(localDate.getYear()+"-03-31");
