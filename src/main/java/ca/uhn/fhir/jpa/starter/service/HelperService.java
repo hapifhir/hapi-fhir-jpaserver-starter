@@ -331,6 +331,41 @@ public class HelperService {
 			return responseBundle;
 		}
 
+	private Pair<List<String>, LinkedHashMap<String, List<String>>> getFacilityIdsAndOrgIdToChildrenMapPair(String orgId) {
+		List<String> facilityOrgIdList = new ArrayList<>();
+		List<String> orgIdList = new ArrayList<>();
+		orgIdList.add(orgId);
+		ListIterator<String> orgIdIterator = orgIdList.listIterator();
+
+		LinkedHashMap<String, List<String>> mapOfIdToChildren = new LinkedHashMap<>();
+
+		while(orgIdIterator.hasNext()) {
+			String tempOrgId = orgIdIterator.next();
+			List<String> childrenList = new ArrayList<>();
+			getOrganizationsPartOf(childrenList, FhirClientAuthenticatorService.serverBase+"/Organization?partof=Organization/"+tempOrgId+"&_elements=id");
+			childrenList.forEach(item -> {
+				orgIdIterator.add(item);
+				orgIdIterator.previous();
+			});
+
+			if(childrenList.isEmpty()) {
+				facilityOrgIdList.add(tempOrgId);
+			}
+
+			mapOfIdToChildren.put(tempOrgId, childrenList);
+
+			mapOfIdToChildren.forEach((id, children) -> {
+				if(children.contains(tempOrgId)) {
+					List<String> prevChild = mapOfIdToChildren.get(id);
+					prevChild.addAll(childrenList);
+					mapOfIdToChildren.put(id, prevChild);
+				}
+			});
+		}
+
+		return new Pair<>(facilityOrgIdList, mapOfIdToChildren);
+	}
+
 		private List<String> getFacilityOrgIds(String orgId) {
 			List<String> facilityOrgIdList = new ArrayList<>();
 			List<String> orgIdList = new ArrayList<>();
@@ -477,13 +512,15 @@ public class HelperService {
 				List<IndicatorItem> indicators = getIndicatorItemListFromFile();
 				String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
+				Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
+
 				Date start = Date.valueOf(startDate);
 				Date end = Date.valueOf(endDate);
 
-				performCachingIfNotPresent(indicators, start, end);
+				performCachingIfNotPresent(indicators, idsAndOrgIdToChildrenMapPair.first, start, end);
 
 				if (type == ReportType.summary) {
-					LinkedHashMap<String, List<String>> mapOfIdToChildren = getOrganizationIdToChildrenMap(organizationId);
+					LinkedHashMap<String, List<String>> mapOfIdToChildren = idsAndOrgIdToChildrenMapPair.second;
 
 					mapOfIdToChildren.forEach((id, children) -> {
 						children.add(id);
@@ -493,7 +530,7 @@ public class HelperService {
 						}
 					});
 				} else if (type == ReportType.quarterly) {
-					List<String> facilityIds = getFacilityOrgIds(organizationId);
+					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
 					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates();
 					for (Pair<Date, Date> pair : quarterDatePairList) {
 						for (IndicatorItem indicator : indicators) {
@@ -510,7 +547,7 @@ public class HelperService {
 			return ResponseEntity.ok(scoreCardItems);
 		}
 
-		private void performCachingIfNotPresent(List<IndicatorItem> indicators, Date start, Date end) {
+		private void performCachingIfNotPresent(List<IndicatorItem> indicators, List<String> facilityIds, Date start, Date end) {
 			List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.md5Bytes(indicatorItem.getFhirPath().getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
 
 			List<Date> dates = new ArrayList<>();
@@ -526,7 +563,7 @@ public class HelperService {
 					nonExistingIndicators.add(indicator);
 				}
 			}
-			List<Date> presentDates = notificationDataSource.getDatesPresent(start, end, nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators);
+			List<Date> presentDates = notificationDataSource.getDatesPresent(start, end, nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
 
 			end = Date.valueOf(end.toLocalDate().plusDays(1));
 			while (!start.equals(end)) {
@@ -536,7 +573,11 @@ public class HelperService {
 				start = Date.valueOf(start.toLocalDate().plusDays(1));
 			}
 
-			dates.forEach( date -> cachingService.cacheData(date, indicators));
+			facilityIds.forEach(facilityId -> {
+				dates.forEach(date -> {
+					cachingService.cacheData(facilityId, date, indicators);
+				});
+			});
 		}
 
 

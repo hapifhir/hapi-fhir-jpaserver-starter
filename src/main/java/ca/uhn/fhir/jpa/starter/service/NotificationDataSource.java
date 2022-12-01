@@ -100,12 +100,13 @@ public class NotificationDataSource {
 		return (Long) resultList.get(0);
 	}
 
-	public List<Date> getDatesPresent(Date from, Date to, List<String> indicatorMD5List) {
+	public List<Date> getDatesPresent(Date from, Date to, List<String> indicatorMD5List, List<String> facilityIds) {
 		session = sf.openSession();
-		Query query = session.createQuery("SELECT DISTINCT(date) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2 AND indicator IN (:param3)");
+		Query query = session.createQuery("SELECT DISTINCT(date) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2 AND indicator IN (:param3) AND org_id IN (:param4)");
 		query.setParameter("param1",from);
 		query.setParameter("param2",to);
 		query.setParameterList("param3", indicatorMD5List);
+		query.setParameterList("param4", facilityIds);
 		List resultList = query.getResultList();
 		session.close();
 
