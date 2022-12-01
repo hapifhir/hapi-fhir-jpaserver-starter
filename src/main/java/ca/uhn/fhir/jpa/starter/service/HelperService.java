@@ -584,7 +584,10 @@ public class HelperService {
 		List<String> getFhirSearchListByFilters(LinkedHashMap<String, String> filters) throws FileNotFoundException {
 			List<String> fhirSearchList = new ArrayList<>();
 			List<FilterItem> filterItemList = getFilterItemListFromFile();
-			filters.forEach((id, value)-> {
+			for(int i = 0; i < filters.size() - 2; i += 2) {
+				int keyIndex = i/2;
+			    String id = filters.get("filter"+String.valueOf(keyIndex+1)+"Id");
+			    String value = filters.get("filter"+String.valueOf(keyIndex+1)+"Value");
 				FilterItem filterItem = filterItemList.stream().filter(item -> item.getId().equals(id)).findFirst().orElse(null);
 				if(filterItem != null) {
 					FilterOptions filterOption = filterItem.getOptions().stream().filter(option -> option.getId().equals(value)).findFirst().orElse(null);
@@ -592,7 +595,7 @@ public class HelperService {
 						fhirSearchList.add(filterOption.getFhirSearch());
 					}
 				}
-			});
+			}
 			return fhirSearchList;
 		}
 
