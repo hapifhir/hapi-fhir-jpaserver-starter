@@ -123,6 +123,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("from");
 		allFilters.remove("to");
 		allFilters.remove("type");
+		allFilters.remove("lga");
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
