@@ -525,7 +525,7 @@ public class HelperService {
 					mapOfIdToChildren.forEach((id, children) -> {
 						children.add(id);
 						for (IndicatorItem indicator : indicators) {
-							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end, Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), children);
+							Double cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end, Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), children);
 							scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(), startDate, endDate));
 						}
 					});
@@ -534,7 +534,7 @@ public class HelperService {
 					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates();
 					for (Pair<Date, Date> pair : quarterDatePairList) {
 						for (IndicatorItem indicator : indicators) {
-							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second, Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+							Double cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second, Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
 							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(), cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 						}
 					}

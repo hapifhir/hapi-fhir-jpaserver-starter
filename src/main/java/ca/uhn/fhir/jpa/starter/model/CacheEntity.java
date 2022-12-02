@@ -25,12 +25,12 @@ public class CacheEntity {
 	private Date date;
 
 	@Column(name = "value", nullable = false)
-	private Integer value;
+	private Double value;
 	
 	// Default constructor required for entity.
 	public CacheEntity() {	}
 
-	public CacheEntity(String orgId, String indicator, Date date, Integer value) {
+	public CacheEntity(String orgId, String indicator, Date date, Double value) {
 		this.orgId = orgId;
 		this.indicator = indicator;
 		this.date = date;
@@ -69,11 +69,11 @@ public class CacheEntity {
 		this.date = date;
 	}
 
-	public Integer getValue() {
+	public Double getValue() {
 		return value;
 	}
 
-	public void setValue(Integer value) {
+	public void setValue(Double value) {
 		this.value = value;
 	}
 }

@@ -44,11 +44,11 @@ public class CachingService {
 		for (ScoreCardItem item : data) {
 			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
 			if (cacheEntities.isEmpty()) {
-				CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Integer.valueOf(item.getValue()));
+				CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()));
 				notificationDataSource.insert(cacheEntity);
 			} else {
 				CacheEntity cacheEntity = cacheEntities.get(0);
-				cacheEntity.setValue(Integer.valueOf(item.getValue()));
+				cacheEntity.setValue(Double.valueOf(item.getValue()));
 				notificationDataSource.update(cacheEntity);
 			}
 		}
