@@ -291,7 +291,7 @@ You can use a custom property file that utilizes environment variables for many 
 -e OAUTH_ENABLED=<true/false> \
 -e OAUTH_URL=<oauth_server_url> \
 -e reuse_cached_search_results_millis=<milliseconds_value_to_reuse_cached_search_results> \
--e spring.config.location='</usr/local/tomcat/webapps/ROOT/WEB-INF/classes/application-custom.yaml>' \
+-e spring.config.location='<classpath:/application-custom.yaml>' \
 -e subscription.resthook.enabled=<true/false> \
 -e subscription.websocket.enabled=<true/false> \
 -e url_pattern=</fhir/*> \
@@ -316,6 +316,13 @@ spring:
     password: admin
     driverClassName: com.mysql.jdbc.Driver
 ```
+
+Also, make sure you are not setting the Hibernate dialect explicitly, in other words remove any lines similar to:
+
+```
+hibernate.dialect: {some none MySQL dialect}
+```
+
 On some systems, it might be necessary to override hibernate's default naming strategy. The naming strategy must be set using spring.jpa.hibernate.physical_naming_strategy. 
 
 ```yaml
@@ -341,6 +348,26 @@ spring:
 ```
 
 Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
+
+### Microsoft SQL Server configuration
+
+To configure the starter app to use MS SQL Server, instead of the default H2, update the application.yaml file to have the following:
+
+```yaml
+spring:
+  datasource:
+    url: 'jdbc:sqlserver://<server>:<port>;databaseName=<databasename>'
+    username: admin
+    password: admin
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+```
+
+
+Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
+
+
+NOTE: MS SQL Server by default uses a case-insensitive codepage. This will cause errors with some operations - such as when expanding case-sensitive valuesets (UCUM) as there are unique indexes defined on the terminology tables for codes. 
+It is recommended to deploy a case-sensitive database prior to running HAPI FHIR when using MS SQL Server to avoid these and potentially other issues. 
 
 ## Customizing The Web Testpage UI
 
@@ -406,6 +433,8 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
 ```
 
+Also, make sure you are not setting the Hibernate Dialect explicitly, see more details in the section about MySQL.
+
 ## Running hapi-fhir-jpaserver directly from IntelliJ as Spring Boot
 Make sure you run with the maven profile called ```boot``` and NOT also ```jetty```. Then you are ready to press debug the project directly without any extra Application Servers.
 
@@ -465,6 +494,7 @@ Set `hapi.fhir.mdm_enabled=true` in the [application.yaml](https://github.com/ha
 
 Set `empi.enabled=true` in the [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties) file to enable EMPI on this server.  The EMPI matching rules are configured in [empi-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/empi-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that EMPI relies on subscriptions, so for EMPI to work, subscriptions must be enabled. 
 
+
 ## Enabling EMPI
 
 Set `empi.enabled=true` in the [hapi.properties](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/hapi.properties) file to enable EMPI on this server.  The EMPI matching rules are configured in [empi-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/empi-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that EMPI relies on subscriptions, so for EMPI to work, subscriptions must be enabled. 
@@ -489,10 +519,14 @@ elasticsearch.schema_management_strategy=CREATE
 
 Set `hapi.fhir.lastn_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable the $lastn operation on this server.  Note that the $lastn operation relies on Elasticsearch, so for $lastn to work, indexing must be enabled using Elasticsearch.
 
+## Enabling Resource to be stored in Lucene Index
+
+Set `hapi.fhir.store_resource_in_lucene_index_enabled` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable storing of resource json along with Lucene/Elasticsearch index mappings.
+
 ## Changing cached search results time
 
-It is possible to change the cached search results time. The option `reuse_cached_search_results_millis` in the [application.yaml] is 6000 miliseconds by default.
-Set `reuse_cached_search_results_millis: -1` in the [application.yaml] file to ignore the cache time every search. 
+It is possible to change the cached search results time. The option `reuse_cached_search_results_millis` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) is 6000 miliseconds by default.
+Set `reuse_cached_search_results_millis: -1` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to ignore the cache time every search. 
 
 ## Build the distroless variant of the image (for lower footprint and improved security)
 
@@ -503,7 +537,7 @@ using the `gcr.io/distroless/java-debian10:11` base image:
 docker build --target=release-distroless -t hapi-fhir:distroless .
 ```
 
-Note that distroless images are also automatically build and pushed to the container registry,
+Note that distroless images are also automatically built and pushed to the container registry,
 see the `-distroless` suffix in the image tags.
 
 ## Adding custom operations

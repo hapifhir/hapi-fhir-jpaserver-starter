@@ -39,7 +39,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
      "hapi.fhir.fhir_version=r5",
      "hapi.fhir.subscription.websocket_enabled=true",
 	  "hapi.fhir.subscription.websocket_enabled=true",
-	  "spring.main.allow-bean-definition-overriding=true"
   })
 public class ExampleServerR5IT {
 

@@ -1,7 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.config.HapiFhirLocalContainerEntityManagerFactoryBean;
-import ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer;
+import ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers;
 import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
 import org.apache.lucene.util.Version;
 import org.hibernate.cfg.AvailableSettings;
@@ -14,6 +14,7 @@ import org.hibernate.search.engine.cfg.BackendSettings;
 import org.hibernate.search.mapper.orm.automaticindexing.session.AutomaticIndexingSynchronizationStrategyNames;
 import org.hibernate.search.mapper.orm.cfg.HibernateOrmMapperSettings;
 import org.hibernate.search.mapper.orm.schema.management.SchemaManagementStrategyName;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy;
 import org.springframework.core.env.CompositePropertySource;
@@ -21,11 +22,15 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.PropertySource;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class EnvironmentHelper {
 
-	public static Properties getHibernateProperties(ConfigurableEnvironment environment) {
+	public static Properties getHibernateProperties(ConfigurableEnvironment environment,
+		ConfigurableListableBeanFactory myConfigurableListableBeanFactory) {
 		Properties properties = new Properties();
 		Map<String, Object> jpaProps = getPropertiesStartingWith(environment, "spring.jpa.properties");
 		for (Map.Entry<String, Object> entry : jpaProps.entrySet()) {
@@ -41,7 +46,7 @@ public class EnvironmentHelper {
 		//properties.putIfAbsent(AvailableSettings.BEAN_CONTAINER, new SpringBeanContainer(beanFactory));
 
 		//hapi-fhir-jpaserver-base "sensible defaults"
-		Map<String, Object> hapiJpaPropertyMap = new HapiFhirLocalContainerEntityManagerFactoryBean().getJpaPropertyMap();
+		Map<String, Object> hapiJpaPropertyMap = new HapiFhirLocalContainerEntityManagerFactoryBean(myConfigurableListableBeanFactory).getJpaPropertyMap();
 		hapiJpaPropertyMap.forEach(properties::putIfAbsent);
 
 		//hapi-fhir-jpaserver-starter defaults
@@ -66,14 +71,15 @@ public class EnvironmentHelper {
 			if (properties.get(BackendSettings.backendKey(BackendSettings.TYPE)).equals(LuceneBackendSettings.TYPE_NAME)) {
 				properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_TYPE), LocalFileSystemDirectoryProvider.NAME);
 				properties.putIfAbsent(BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_ROOT), "target/lucenefiles");
-				properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.ANALYSIS_CONFIGURER), HapiLuceneAnalysisConfigurer.class.getName());
+				properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.ANALYSIS_CONFIGURER),
+					HapiHSearchAnalysisConfigurers.HapiLuceneAnalysisConfigurer.class.getName());
 				properties.putIfAbsent(BackendSettings.backendKey(LuceneBackendSettings.LUCENE_VERSION), Version.LATEST);
 
 			} else if (properties.get(BackendSettings.backendKey(BackendSettings.TYPE)).equals(ElasticsearchBackendSettings.TYPE_NAME)) {
 				ElasticsearchHibernatePropertiesBuilder builder = new ElasticsearchHibernatePropertiesBuilder();
 				IndexStatus requiredIndexStatus = environment.getProperty("elasticsearch.required_index_status", IndexStatus.class);
 				builder.setRequiredIndexStatus(requireNonNullElse(requiredIndexStatus, IndexStatus.YELLOW));
-				builder.setRestUrl(getElasticsearchServerUrl(environment));
+				builder.setHosts(getElasticsearchServerUrl(environment));
 				builder.setUsername(getElasticsearchServerUsername(environment));
 				builder.setPassword(getElasticsearchServerPassword(environment));
 				builder.setProtocol(getElasticsearchServerProtocol(environment));
