@@ -525,7 +525,7 @@ public class HelperService {
 					mapOfIdToChildren.forEach((id, children) -> {
 						children.add(id);
 						for (IndicatorItem indicator : indicators) {
-							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end, Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), children);
+							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end, Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), children);
 							scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(), startDate, endDate));
 						}
 					});
@@ -534,7 +534,7 @@ public class HelperService {
 					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates();
 					for (Pair<Date, Date> pair : quarterDatePairList) {
 						for (IndicatorItem indicator : indicators) {
-							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second, Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
+							Long cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second, Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
 							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(), cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 						}
 					}
@@ -548,7 +548,7 @@ public class HelperService {
 		}
 
 		private void performCachingIfNotPresent(List<IndicatorItem> indicators, List<String> facilityIds, Date start, Date end) {
-			List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.md5Bytes(indicatorItem.getFhirPath().getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
+			List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.getMd5StringFromFhirPath(indicatorItem.getFhirPath())).collect(Collectors.toList());
 
 			List<Date> dates = new ArrayList<>();
 			List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(start, end);
