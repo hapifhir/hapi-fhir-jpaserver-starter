@@ -481,10 +481,12 @@ public class HelperService {
 			try {
 				List<IndicatorItem> indicators = getIndicatorItemListFromFile();
 				List<String> fhirSearchList = getFhirSearchListByFilters(filters);
-				if (type == ReportType.summary) {
+				switch(type) {
+				case summary: {
 					scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), indicators, fhirSearchList);
-				} else if (type == ReportType.quarterly) {
-					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates();
+				}
+				case quarterly:{
+					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates(Date.valueOf(startDate), Date.valueOf(endDate));
 					for (Pair<Date, Date> pair : quarterDatePairList) {
 						List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
 						for (IndicatorItem indicatorItem : indicators) {
@@ -497,7 +499,35 @@ public class HelperService {
 						}
 					}
 				}
-
+				case monthly:{
+					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getMonthlyDates(Date.valueOf(startDate), Date.valueOf(endDate));
+					for (Pair<Date, Date> pair : quarterDatePairList) {
+						List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
+						for (IndicatorItem indicatorItem : indicators) {
+							List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
+							int sum = 0;
+							for (ScoreCardItem item : filteredList) {
+								sum += Integer.parseInt(item.getValue());
+							}
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
+						}
+					}
+				}
+				case daily:{
+					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getDailyDates(Date.valueOf(startDate), Date.valueOf(endDate));
+					for (Pair<Date, Date> pair : quarterDatePairList) {
+						List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
+						for (IndicatorItem indicatorItem : indicators) {
+							List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
+							int sum = 0;
+							for (ScoreCardItem item : filteredList) {
+								sum += Integer.parseInt(item.getValue());
+							}
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
+						}
+					}
+				}
+				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				return ResponseEntity.ok("Error : Config File Not Found");
@@ -518,28 +548,60 @@ public class HelperService {
 				Date end = Date.valueOf(endDate);
 
 				performCachingIfNotPresent(indicators, idsAndOrgIdToChildrenMapPair.first, start, end);
-
-				if (type == ReportType.summary) {
-					LinkedHashMap<String, List<String>> mapOfIdToChildren = idsAndOrgIdToChildrenMapPair.second;
-
-					mapOfIdToChildren.forEach((id, children) -> {
-						children.add(id);
-						for (IndicatorItem indicator : indicators) {
-							Double cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end, Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), children);
-							scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(), startDate, endDate));
+				switch (type) {
+					case summary: {
+						LinkedHashMap<String, List<String>> mapOfIdToChildren = idsAndOrgIdToChildrenMapPair.second;
+						mapOfIdToChildren.forEach((id, children) -> {
+							children.add(id);
+							for (IndicatorItem indicator : indicators) {
+								Double cacheValueSum = notificationDataSource
+										.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
+												Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), children);
+								scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(),
+										startDate, endDate));
+							}
+						});
+					}
+					case quarterly: {
+						List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+						List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates(start, end);
+						for (Pair<Date, Date> pair : quarterDatePairList) {
+							for (IndicatorItem indicator : indicators) {
+								Double cacheValueSum = notificationDataSource
+										.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+												Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+								scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+										cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+							}
 						}
-					});
-				} else if (type == ReportType.quarterly) {
-					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates();
-					for (Pair<Date, Date> pair : quarterDatePairList) {
-						for (IndicatorItem indicator : indicators) {
-							Double cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second, Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
-							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(), cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+					}
+					case monthly: {
+						List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+						List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getMonthlyDates(start, end);
+						for (Pair<Date, Date> pair : quarterDatePairList) {
+							for (IndicatorItem indicator : indicators) {
+								Double cacheValueSum = notificationDataSource
+										.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+												Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+								scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+										cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+							}
+						}
+					}
+					case daily: {
+						List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+						List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getDailyDates(start, end);
+						for (Pair<Date, Date> pair : quarterDatePairList) {
+							for (IndicatorItem indicator : indicators) {
+								Double cacheValueSum = notificationDataSource
+										.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+												Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+								scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+										cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+							}
 						}
 					}
 				}
-
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				return ResponseEntity.ok("Error : Config File Not Found");

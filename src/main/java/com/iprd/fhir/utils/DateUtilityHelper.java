@@ -1,10 +1,11 @@
 package com.iprd.fhir.utils;
-
+import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +47,8 @@ public class DateUtilityHelper {
 		return DateTimeFormatter.ISO_INSTANT.format(timestamp.toInstant()).split("T")[0];
 	}
 
-	public static List<Pair<Date, Date>> getQuarterlyDates() {
-		LocalDate localDate = LocalDate.now();
+	public static List<Pair<Date, Date>> getQuarterlyDates(Date start,Date end) {
+		LocalDate localDate = start.toLocalDate();
 		Date firstQuarterStart = Date.valueOf(localDate.getYear()+"-01-01");
 		Date firstQuarterEnd = Date.valueOf(localDate.getYear()+"-03-31");
 		Date secondQuarterStart = Date.valueOf(localDate.getYear()+"-04-01");
@@ -63,4 +64,55 @@ public class DateUtilityHelper {
 		quarterDatePairs.add( new Pair<>(fourthQuarterStart, fourthQuarterEnd));
 		return quarterDatePairs;
 	}
+	
+	public static List<Pair<Date, Date>> getMonthlyDates(Date start, Date end) {
+		LocalDate startDate = start.toLocalDate();
+		LocalDate endDate = end.toLocalDate();
+		List<Pair<Date, Date>> monthDatePairs = new ArrayList<>();
+		  
+		if (startDate.getDayOfMonth() == 1) {
+			startDate = startDate.minusDays(1);
+		}
+		
+		while (startDate.isBefore(endDate)) {
+		  if (startDate.plusMonths(1).with(lastDayOfMonth()).isAfter(endDate)) {
+		      break;
+		   }
+		
+		  monthDatePairs.add(new Pair<Date,Date>(Date.valueOf(startDate),Date.valueOf(startDate.plusMonths(1).withDayOfMonth(1))));
+		}
+		return monthDatePairs;	
+	}
+	
+	public static List<Pair<Date, Date>> getWeeklyDates(Date start, Date end) {
+		  LocalDate startDate = start.toLocalDate();
+		  LocalDate endDate = end.toLocalDate();
+
+		  Long weekNumber = ChronoUnit.WEEKS.between(startDate, endDate);
+
+		  List<Pair<Date, Date>> weekDatePairs = new ArrayList<>();
+
+		  for (int i = 0; i < weekNumber; i++) {
+		    LocalDate endOfWeek = startDate.plusDays(6);
+		    weekDatePairs.add(new Pair<Date,Date>(Date.valueOf(startDate),Date.valueOf(endOfWeek)));
+		    startDate = endOfWeek.plusDays(1);
+		  }
+		  return weekDatePairs;
+		}
+	
+	public static List<Pair<Date, Date>> getDailyDates(Date start, Date end) {
+		  LocalDate startDate = start.toLocalDate();
+		  LocalDate endDate = end.toLocalDate();
+
+		  Long dayNumber = ChronoUnit.DAYS.between(startDate, endDate);
+
+		  List<Pair<Date, Date>> dailyDatePairs = new ArrayList<>();
+
+		  for (int i = 0; i < dayNumber; i++) {
+		    LocalDate endOfDay = startDate.plusDays(1);
+		    dailyDatePairs.add(new Pair<Date,Date>(Date.valueOf(startDate),Date.valueOf(endOfDay)));
+		    startDate = startDate.plusDays(1);
+		  }
+		  return dailyDatePairs;
+		}
 }
