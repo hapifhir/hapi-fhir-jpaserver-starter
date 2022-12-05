@@ -492,9 +492,9 @@ public class HelperService {
 							List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
 							for (IndicatorItem indicatorItem : indicators) {
 								List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
-								int sum = 0;
+								double sum = 0;
 								for (ScoreCardItem item : filteredList) {
-									sum += Integer.parseInt(item.getValue());
+									sum += Double.parseDouble(item.getValue());
 								}
 								scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
 							}
@@ -507,9 +507,9 @@ public class HelperService {
 							List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
 							for (IndicatorItem indicatorItem : indicators) {
 								List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
-								int sum = 0;
+								double sum = 0;
 								for (ScoreCardItem item : filteredList) {
-									sum += Integer.parseInt(item.getValue());
+									sum += Double.parseDouble(item.getValue());
 								}
 								scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
 							}
@@ -522,9 +522,9 @@ public class HelperService {
 							List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
 							for (IndicatorItem indicatorItem : indicators) {
 								List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
-								int sum = 0;
+								double sum = 0;
 								for (ScoreCardItem item : filteredList) {
-									sum += Integer.parseInt(item.getValue());
+									sum += Double.parseDouble(item.getValue());
 								}
 								scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
 							}
@@ -537,9 +537,9 @@ public class HelperService {
 							List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
 							for (IndicatorItem indicatorItem : indicators) {
 								List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
-								int sum = 0;
+								double sum = 0;
 								for (ScoreCardItem item : filteredList) {
-									sum += Integer.parseInt(item.getValue());
+									sum += Double.parseDouble(item.getValue());
 								}
 								scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
 							}
