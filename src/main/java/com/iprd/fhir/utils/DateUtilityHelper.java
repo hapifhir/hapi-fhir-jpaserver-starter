@@ -64,24 +64,20 @@ public class DateUtilityHelper {
 		quarterDatePairs.add( new Pair<>(fourthQuarterStart, fourthQuarterEnd));
 		return quarterDatePairs;
 	}
-	
+
 	public static List<Pair<Date, Date>> getMonthlyDates(Date start, Date end) {
+		List<Pair<Date, Date>> monthDatePairs = new ArrayList<>();
+
 		LocalDate startDate = start.toLocalDate();
 		LocalDate endDate = end.toLocalDate();
-		List<Pair<Date, Date>> monthDatePairs = new ArrayList<>();
-		  
-		if (startDate.getDayOfMonth() == 1) {
-			startDate = startDate.minusDays(1);
+
+		while (!startDate.isAfter(endDate)) {
+			LocalDate startMonthDate = startDate.withDayOfMonth(1);
+			LocalDate endDMonthDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+			monthDatePairs.add(new Pair<Date, Date>(Date.valueOf(startMonthDate), Date.valueOf(endDMonthDate)));
+			startDate = endDMonthDate.plusDays(1);
 		}
-		
-		while (startDate.isBefore(endDate)) {
-		  if (startDate.plusMonths(1).with(lastDayOfMonth()).isAfter(endDate)) {
-		      break;
-		   }
-		
-		  monthDatePairs.add(new Pair<Date,Date>(Date.valueOf(startDate),Date.valueOf(startDate.plusMonths(1).withDayOfMonth(1))));
-		}
-		return monthDatePairs;	
+		return monthDatePairs;
 	}
 	
 	public static List<Pair<Date, Date>> getWeeklyDates(Date start, Date end) {

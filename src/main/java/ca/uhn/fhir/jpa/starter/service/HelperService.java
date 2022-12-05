@@ -481,52 +481,71 @@ public class HelperService {
 			try {
 				List<IndicatorItem> indicators = getIndicatorItemListFromFile();
 				List<String> fhirSearchList = getFhirSearchListByFilters(filters);
-				switch(type) {
-				case summary: {
-					scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), indicators, fhirSearchList);
-				}
-				case quarterly:{
-					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates(Date.valueOf(startDate), Date.valueOf(endDate));
-					for (Pair<Date, Date> pair : quarterDatePairList) {
-						List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
-						for (IndicatorItem indicatorItem : indicators) {
-							List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
-							int sum = 0;
-							for (ScoreCardItem item : filteredList) {
-								sum += Integer.parseInt(item.getValue());
-							}
-							scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
-						}
+				switch (type) {
+					case summary: {
+						scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), indicators, fhirSearchList);
+						break;
 					}
-				}
-				case monthly:{
-					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getMonthlyDates(Date.valueOf(startDate), Date.valueOf(endDate));
-					for (Pair<Date, Date> pair : quarterDatePairList) {
-						List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
-						for (IndicatorItem indicatorItem : indicators) {
-							List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
-							int sum = 0;
-							for (ScoreCardItem item : filteredList) {
-								sum += Integer.parseInt(item.getValue());
+					case quarterly: {
+						List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates(Date.valueOf(startDate), Date.valueOf(endDate));
+						for (Pair<Date, Date> pair : quarterDatePairList) {
+							List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
+							for (IndicatorItem indicatorItem : indicators) {
+								List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
+								int sum = 0;
+								for (ScoreCardItem item : filteredList) {
+									sum += Integer.parseInt(item.getValue());
+								}
+								scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
 							}
-							scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
 						}
+						break;
 					}
-				}
-				case daily:{
-					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getDailyDates(Date.valueOf(startDate), Date.valueOf(endDate));
-					for (Pair<Date, Date> pair : quarterDatePairList) {
-						List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
-						for (IndicatorItem indicatorItem : indicators) {
-							List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
-							int sum = 0;
-							for (ScoreCardItem item : filteredList) {
-								sum += Integer.parseInt(item.getValue());
+					case weekly: {
+						List<Pair<Date, Date>> weeklyDatePairList = DateUtilityHelper.getWeeklyDates(Date.valueOf(startDate), Date.valueOf(endDate));
+						for (Pair<Date, Date> pair : weeklyDatePairList) {
+							List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
+							for (IndicatorItem indicatorItem : indicators) {
+								List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
+								int sum = 0;
+								for (ScoreCardItem item : filteredList) {
+									sum += Integer.parseInt(item.getValue());
+								}
+								scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
 							}
-							scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
 						}
+						break;
 					}
-				}
+					case monthly: {
+						List<Pair<Date, Date>> monthlyDatePairList = DateUtilityHelper.getMonthlyDates(Date.valueOf(startDate), Date.valueOf(endDate));
+						for (Pair<Date, Date> pair : monthlyDatePairList) {
+							List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
+							for (IndicatorItem indicatorItem : indicators) {
+								List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
+								int sum = 0;
+								for (ScoreCardItem item : filteredList) {
+									sum += Integer.parseInt(item.getValue());
+								}
+								scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
+							}
+						}
+						break;
+					}
+					case daily: {
+						List<Pair<Date, Date>> dailyDatePairList = DateUtilityHelper.getDailyDates(Date.valueOf(startDate), Date.valueOf(endDate));
+						for (Pair<Date, Date> pair : dailyDatePairList) {
+							List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), indicators, fhirSearchList);
+							for (IndicatorItem indicatorItem : indicators) {
+								List<ScoreCardItem> filteredList = data.stream().filter(scoreCardItem -> indicatorItem.getId() == scoreCardItem.getIndicatorId()).collect(Collectors.toList());
+								int sum = 0;
+								for (ScoreCardItem item : filteredList) {
+									sum += Integer.parseInt(item.getValue());
+								}
+								scoreCardItems.add(new ScoreCardItem(organizationId, indicatorItem.getId(), String.valueOf(sum), pair.first.toString(), pair.second.toString()));
+							}
+						}
+						break;
+					}
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -561,6 +580,7 @@ public class HelperService {
 										startDate, endDate));
 							}
 						});
+						break;
 					}
 					case quarterly: {
 						List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
@@ -574,11 +594,26 @@ public class HelperService {
 										cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 							}
 						}
+						break;
+					}
+					case weekly: {
+						List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+						List<Pair<Date, Date>> weeklyDatePairList = DateUtilityHelper.getWeeklyDates(start, end);
+						for (Pair<Date, Date> pair : weeklyDatePairList) {
+							for (IndicatorItem indicator : indicators) {
+								Double cacheValueSum = notificationDataSource
+									.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+										Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+								scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+									cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+							}
+						}
+						break;
 					}
 					case monthly: {
 						List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-						List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getMonthlyDates(start, end);
-						for (Pair<Date, Date> pair : quarterDatePairList) {
+						List<Pair<Date, Date>> monthlyDatePairList = DateUtilityHelper.getMonthlyDates(start, end);
+						for (Pair<Date, Date> pair : monthlyDatePairList) {
 							for (IndicatorItem indicator : indicators) {
 								Double cacheValueSum = notificationDataSource
 										.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
@@ -587,11 +622,12 @@ public class HelperService {
 										cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 							}
 						}
+						break;
 					}
 					case daily: {
 						List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-						List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getDailyDates(start, end);
-						for (Pair<Date, Date> pair : quarterDatePairList) {
+						List<Pair<Date, Date>> dailyDatePairList = DateUtilityHelper.getDailyDates(start, end);
+						for (Pair<Date, Date> pair : dailyDatePairList) {
 							for (IndicatorItem indicator : indicators) {
 								Double cacheValueSum = notificationDataSource
 										.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
@@ -600,6 +636,7 @@ public class HelperService {
 										cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 							}
 						}
+						break;
 					}
 				}
 			} catch (FileNotFoundException e) {
