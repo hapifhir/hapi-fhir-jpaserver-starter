@@ -95,6 +95,7 @@ public class AppProperties {
 	private List<String> local_base_urls = new ArrayList<>();
 	private String image_path = null;
 	private String notification_datasource_config_path = null;
+	private String gcp_credential_file_path = null;
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
@@ -287,6 +288,15 @@ public class AppProperties {
 	public void setNotification_datasource_config_path(String notification_datasource_config_path) {
 		this.notification_datasource_config_path = notification_datasource_config_path;
 	}
+	
+	public String getGcpCredentialFilePath() {
+		return gcp_credential_file_path;
+	}
+	
+	public void setGcpCredentialFilePath(String gcp_credential_file_path) {
+		this.gcp_credential_file_path = gcp_credential_file_path; 
+	}
+	
 
 	public void setHapi_Server_address(String hapi_server_address) {
 		this.hapi_server_address = hapi_server_address;
