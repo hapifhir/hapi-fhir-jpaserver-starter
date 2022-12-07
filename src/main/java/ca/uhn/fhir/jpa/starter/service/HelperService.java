@@ -683,7 +683,7 @@ public class HelperService {
 		List<String> getFhirSearchListByFilters(LinkedHashMap<String, String> filters) throws FileNotFoundException {
 			List<String> fhirSearchList = new ArrayList<>();
 			List<FilterItem> filterItemList = getFilterItemListFromFile();
-			for(int i = 0; i < filters.size() - 2; i += 2) {
+			for(int i = 0; i <= filters.size() - 2; i += 2) {
 				int keyIndex = i/2;
 			    String id = filters.get("filter"+String.valueOf(keyIndex+1)+"Id");
 			    String value = filters.get("filter"+String.valueOf(keyIndex+1)+"Value");

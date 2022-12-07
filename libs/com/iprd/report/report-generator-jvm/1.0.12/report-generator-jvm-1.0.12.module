@@ -49,11 +49,11 @@
         {
           "name": "report-generator-jvm-1.0.12.jar",
           "url": "report-generator-jvm-1.0.12.jar",
-          "size": 211447,
-          "sha512": "c68185b2233cb18859d59b7aa45c22120d41075b3e07351b3eaa86ab1bed0c64bcb208ea77b1484a7523eb150437d8ff1553fbdd9744cf73ad5660ba1aa05549",
-          "sha256": "84dd6cfe6b1f478870cf2edcce45105b23108b5213cb5bf053557ad5d9555207",
-          "sha1": "61a6edb1837dc77f463cad876f5b51a18979ef98",
-          "md5": "cebfb7933e5b99f25c6defaa07a02898"
+          "size": 212143,
+          "sha512": "3876c2a926fc0dafaae4d311b68f7b07f639f61193bbc66e7978156a6650e61a1805602e2c3b37efa6fcfcbfec40cf5b87663a7ab6e7938d0c9610594e12a288",
+          "sha256": "89d3f18a03e706adbac2ee66788a5935cbb3f68ee81703784298ad89f137259d",
+          "sha1": "bce0f9e86e37e5d0d16b44e9ab09dfed2aba0980",
+          "md5": "35ec0419be4d5b977b38312ae794c45e"
         }
       ]
     },
@@ -140,11 +140,11 @@
         {
           "name": "report-generator-jvm-1.0.12.jar",
           "url": "report-generator-jvm-1.0.12.jar",
-          "size": 211447,
-          "sha512": "c68185b2233cb18859d59b7aa45c22120d41075b3e07351b3eaa86ab1bed0c64bcb208ea77b1484a7523eb150437d8ff1553fbdd9744cf73ad5660ba1aa05549",
-          "sha256": "84dd6cfe6b1f478870cf2edcce45105b23108b5213cb5bf053557ad5d9555207",
-          "sha1": "61a6edb1837dc77f463cad876f5b51a18979ef98",
-          "md5": "cebfb7933e5b99f25c6defaa07a02898"
+          "size": 212143,
+          "sha512": "3876c2a926fc0dafaae4d311b68f7b07f639f61193bbc66e7978156a6650e61a1805602e2c3b37efa6fcfcbfec40cf5b87663a7ab6e7938d0c9610594e12a288",
+          "sha256": "89d3f18a03e706adbac2ee66788a5935cbb3f68ee81703784298ad89f137259d",
+          "sha1": "bce0f9e86e37e5d0d16b44e9ab09dfed2aba0980",
+          "md5": "35ec0419be4d5b977b38312ae794c45e"
         }
       ]
     }

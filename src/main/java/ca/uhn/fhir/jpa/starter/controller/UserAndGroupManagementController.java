@@ -75,6 +75,7 @@ public class UserAndGroupManagementController {
 		String endDate = allFilters.get("to");
 		allFilters.remove("from");
 		allFilters.remove("to");
+		allFilters.remove("lga");
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
 		return helperService.getAncDailySummaryData(organizationId, startDate, endDate, filters);
 	}
