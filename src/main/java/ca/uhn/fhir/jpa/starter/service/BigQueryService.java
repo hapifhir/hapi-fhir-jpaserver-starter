@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,26 +25,14 @@ public class BigQueryService {
 	@Autowired
 	  AppProperties appProperties;
 
-	public ResponseEntity<?> timeSpentOnScreen() throws IOException {
-
-		GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(appProperties.getGcp_credential_file_path()));
-		BigQuery bigQuery = BigQueryOptions.newBuilder().setCredentials(credentials).build().getService();
-		final String GET_SCREEN_VIEW_INFO =
-			"WITH screenView AS" +
-				"  (" +
-				"    SELECT event_timestamp AS event_timestamp," +
-				"    (SELECT value.string_value FROM UNNEST(event_params) WHERE key=\"firebase_screen\") AS screen," +
-				"    (SELECT value.int_value FROM UNNEST(event_params) WHERE key=\"engagement_time_msec\") AS time_spent\n" +
-				"    FROM `" + appProperties.getGcp_event_table_name() + "` WHERE event_name=\"screen_view\" AND app_info.id=\"com.iprd.anc.nigeriaoyo\"" +
-				"  )" +
-				"  SELECT screen,MIN(time_spent) AS min_time_spent,MAX(time_spent)AS max_time_spent,ROUND(AVG(time_spent),2) AS avg_time_spent " +
-				"  FROM screenView " +
-				"  WHERE time_spent IS NOT NULL AND screen IS NOT NULL" +
-				"  GROUP BY screen;";
-		QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(GET_SCREEN_VIEW_INFO).build();
-		Job queryJob = bigQuery.create(JobInfo.newBuilder(queryConfig).build());
-		List<LinkedHashMap<String, Object>> response = new ArrayList<>();
+	public ResponseEntity<?> timeSpentOnScreen() {
 		try {
+			GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(appProperties.getGcp_credential_file_path()));
+			BigQuery bigQuery = BigQueryOptions.newBuilder().setCredentials(credentials).build().getService();
+			String getScreenViewQuery = getSQLQueryStringFromFile(appProperties.getSql_screen_time_file_path());
+			QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(getScreenViewQuery).build();
+			Job queryJob = bigQuery.create(JobInfo.newBuilder(queryConfig).build());
+			List<LinkedHashMap<String, Object>> response = new ArrayList<>();
 			queryJob = queryJob.waitFor();
 			if (queryJob == null) {
 				return ResponseEntity.ok("Error: Job no longer exists");
@@ -58,12 +48,27 @@ public class BigQueryService {
 				map.put("min_time_spent", row.get("min_time_spent").getLongValue());
 				map.put("max_time_spent", row.get("max_time_spent").getLongValue());
 				map.put("avg_time_spent", row.get("avg_time_spent").getDoubleValue());
+				map.put("avg_time_comparison", row.get("avg_time_comparison").getDoubleValue());
 				response.add(map);
 			}
 			return ResponseEntity.ok(response);
 		} catch (InterruptedException ex) {
 			ex.printStackTrace();
 			return ResponseEntity.ok("Error: Unable to fetch screen view information");
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			return ResponseEntity.ok("Error: Unable to find file");
 		}
+	}
+
+	private String getSQLQueryStringFromFile(String filePath) throws IOException {
+		StringBuilder stringBuilder = new StringBuilder();
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
+		String line;
+		while ((line = bufferedReader.readLine()) != null)
+		{
+			stringBuilder.append(line);
+		}
+		return stringBuilder.toString();
 	}
 }

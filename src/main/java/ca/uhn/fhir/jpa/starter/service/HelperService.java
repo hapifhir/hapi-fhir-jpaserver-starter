@@ -445,8 +445,7 @@ public class HelperService {
 
 		public ResponseEntity<?> getIndicators() {
 			try {
-				JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
-				List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
+				List<IndicatorItem> indicators = getIndicatorItemListFromFile();
 				return ResponseEntity.ok(indicators);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -457,8 +456,7 @@ public class HelperService {
 
 		public ResponseEntity<?> getFilters() {
 			try {
-				JsonReader reader = new JsonReader(new FileReader(appProperties.getFilters_config_file()));
-				List<FilterItem> filters = new Gson().fromJson(reader,new TypeToken<List<FilterItem>>(){}.getType());
+				List<FilterItem> filters = getFilterItemListFromFile();
 				return ResponseEntity.ok(filters);
 			}
 			catch(FileNotFoundException e){

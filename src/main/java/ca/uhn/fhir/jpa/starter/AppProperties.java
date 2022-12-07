@@ -96,7 +96,7 @@ public class AppProperties {
 	private String image_path = null;
 	private String notification_datasource_config_path = null;
 	private String gcp_credential_file_path = null;
-	private String gcp_event_table_name = null;
+	private String sql_screen_time_file_path = null;
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
@@ -298,12 +298,12 @@ public class AppProperties {
 		this.gcp_credential_file_path = gcp_credential_file_path; 
 	}
 
-	public String getGcp_event_table_name() {
-		return this.gcp_event_table_name;
+	public String getSql_screen_time_file_path() {
+		return sql_screen_time_file_path;
 	}
 
-	public void setGcp_event_table_name(String gcp_event_table_name) {
-		this.gcp_event_table_name = gcp_event_table_name;
+	public void setSql_screen_time_file_path(String sql_screen_time_file_path) {
+		this.sql_screen_time_file_path = sql_screen_time_file_path;
 	}
 
 	public void setHapi_Server_address(String hapi_server_address) {
