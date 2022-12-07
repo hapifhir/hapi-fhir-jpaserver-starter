@@ -137,7 +137,7 @@ public class UserAndGroupManagementController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/analytics/timeSpent")
-	public ResponseEntity<List<LinkedHashMap<String, Object>>> bigQueryController() throws Exception {
+	public ResponseEntity<?> bigQueryController() throws Exception {
 		return bigQueryService.timeSpentOnScreen();
 	}
 }

@@ -1,6 +1,6 @@
-# server:
-#    port: 8085
-#    address: testhost.dashboard
+ server:
+    port: 8085
+    address: testhost.dashboard
 spring:
    main:
       allow-circular-references: true
@@ -9,7 +9,7 @@ spring:
       check-location: false
       baselineOnMigrate: true
    datasource:
-      url: 'jdbc:mysql://localhost:3306/hapi'
+      url: 'jdbc:mysql://testhost.dashboard:3306/hapi'
 #url: jdbc:h2:mem:test_mem
       username: admin
       password: admin
@@ -141,7 +141,7 @@ hapi:
          home:
             name: Local Tester
 
-            server_address: http://localhost:8080/fhir
+            server_address: http://testhost.dashboard:8080/fhir
 # Threadpool size for BATCH'ed GETs in a bundle.
 #    bundle_batch_pool_size: 10
 #    bundle_batch_pool_max_size: 50
