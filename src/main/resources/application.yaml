@@ -1,6 +1,6 @@
-server:
-   port: 8085
-   address: testhost.dashboard
+# server:
+#    port: 8085
+#    address: testhost.dashboard
 spring:
    main:
       allow-circular-references: true
@@ -9,7 +9,7 @@ spring:
       check-location: false
       baselineOnMigrate: true
    datasource:
-      url: 'jdbc:mysql://testhost.dashboard:3306/hapi'
+      url: 'jdbc:mysql://localhost:3306/hapi'
 #url: jdbc:h2:mem:test_mem
       username: admin
       password: admin
@@ -51,10 +51,12 @@ hapi:
       openapi_enabled: true
       fhir_version: R4
       image_path: Images
-      notification_datasource_config_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\notificationDataSourceConfig.xml
       country_org_id: nigeria
-      anc_config_file : C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\anc_config.json
-      filters_config_file : C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\filters_config.json
+      notification_datasource_config_path: C:\iprd\anc-oyo\data\hapi\notificationDataSourceConfig.xml
+      gcp_credential_file_path: C:\IPRD\anc-oyo\data\hapi\gcpCredential.json
+      gcp_event_table_name: analytics_243381278.events_*
+      anc_config_file : C:\iprd\anc-oyo\data\hapi\anc_config.json
+      filters_config_file : C:\iprd\anc-oyo\data\hapi\filters_config.json
 ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
       keycloak_server_address: http://localhost:8081/auth
 ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
@@ -139,7 +141,7 @@ hapi:
          home:
             name: Local Tester
 
-            server_address: http://testhost.dashboard:8085/fhir
+            server_address: http://localhost:8080/fhir
 # Threadpool size for BATCH'ed GETs in a bundle.
 #    bundle_batch_pool_size: 10
 #    bundle_batch_pool_max_size: 50

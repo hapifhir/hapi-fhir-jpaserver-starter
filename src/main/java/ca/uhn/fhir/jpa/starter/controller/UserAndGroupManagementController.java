@@ -3,14 +3,12 @@ package ca.uhn.fhir.jpa.starter.controller;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
+import ca.uhn.fhir.jpa.starter.service.BigQueryService;
 import ca.uhn.fhir.jpa.starter.service.HelperService;
 import ca.uhn.fhir.jpa.starter.service.NotificationService;
 import ca.uhn.fhir.parser.IParser;
 import com.iprd.fhir.utils.Validation;
-import com.iprd.report.DataResult;
-import com.iprd.report.IndicatorItem;
 import com.iprd.report.OrgItem;
-import com.iprd.report.ScoreCardItem;
 import org.hl7.fhir.r4.model.Bundle;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,6 +30,8 @@ public class UserAndGroupManagementController {
 	HelperService helperService;
 	@Autowired
 	NotificationService notificationService;
+	@Autowired
+	BigQueryService bigQueryService;
 
 	IParser iParser = FhirContext.forCached(FhirVersionEnum.R4).newJsonParser();
 
@@ -134,5 +133,10 @@ public class UserAndGroupManagementController {
 			return helperService.getDataByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, type, filters);
 		}
 		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/analytics/timeSpent")
+	public ResponseEntity<List<LinkedHashMap<String, Object>>> bigQueryController() throws Exception {
+		return bigQueryService.timeSpentOnScreen();
 	}
 }

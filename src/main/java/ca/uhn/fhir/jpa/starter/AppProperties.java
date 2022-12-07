@@ -96,6 +96,7 @@ public class AppProperties {
 	private String image_path = null;
 	private String notification_datasource_config_path = null;
 	private String gcp_credential_file_path = null;
+	private String gcp_event_table_name = null;
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
@@ -289,14 +290,21 @@ public class AppProperties {
 		this.notification_datasource_config_path = notification_datasource_config_path;
 	}
 	
-	public String getGcpCredentialFilePath() {
-		return gcp_credential_file_path;
+	public String getGcp_credential_file_path() {
+		return this.gcp_credential_file_path;
 	}
 	
-	public void setGcpCredentialFilePath(String gcp_credential_file_path) {
+	public void setGcp_credential_file_path(String gcp_credential_file_path) {
 		this.gcp_credential_file_path = gcp_credential_file_path; 
 	}
-	
+
+	public String getGcp_event_table_name() {
+		return this.gcp_event_table_name;
+	}
+
+	public void setGcp_event_table_name(String gcp_event_table_name) {
+		this.gcp_event_table_name = gcp_event_table_name;
+	}
 
 	public void setHapi_Server_address(String hapi_server_address) {
 		this.hapi_server_address = hapi_server_address;

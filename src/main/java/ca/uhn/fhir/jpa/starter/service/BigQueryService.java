@@ -24,7 +24,7 @@ public class BigQueryService {
 
 	public ResponseEntity<List<LinkedHashMap<String, Object>>> timeSpentOnScreen() throws Exception {
 
-		GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(appProperties.getGcpCredentialFilePath()));
+		GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(appProperties.getGcp_credential_file_path()));
 		BigQuery bigQuery = BigQueryOptions.newBuilder().setCredentials(credentials).build().getService();
 		final String GET_SCREEN_VIEW_INFO =
 			"WITH screenView AS" +
@@ -32,7 +32,7 @@ public class BigQueryService {
 				"    SELECT event_timestamp AS event_timestamp," +
 				"    (SELECT value.string_value FROM UNNEST(event_params) WHERE key=\"firebase_screen\") AS screen," +
 				"    (SELECT value.int_value FROM UNNEST(event_params) WHERE key=\"engagement_time_msec\") AS time_spent\n" +
-				"    FROM `analytics_243381278.events_*` WHERE event_name=\"screen_view\" AND app_info.id=\"com.iprd.anc.nigeriaoyo\"" +
+				"    FROM `"+appProperties.getGcp_event_table_name()+"` WHERE event_name=\"screen_view\" AND app_info.id=\"com.iprd.anc.nigeriaoyo\"" +
 				"  )" +
 				"  SELECT screen,MIN(time_spent) AS min_time_spent,MAX(time_spent)AS max_time_spent,ROUND(AVG(time_spent),2) AS avg_time_spent " +
 				"  FROM screenView " +
