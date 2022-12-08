@@ -1,6 +1,6 @@
- server:
-    port: 8085
-    address: testhost.dashboard
+server:
+   port: 8085
+   address: testhost.dashboard
 spring:
    main:
       allow-circular-references: true

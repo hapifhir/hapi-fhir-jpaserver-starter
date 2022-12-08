@@ -48,7 +48,7 @@ public class BigQueryService {
 				map.put("min_time_spent", row.get("min_time_spent").getLongValue());
 				map.put("max_time_spent", row.get("max_time_spent").getLongValue());
 				map.put("avg_time_spent", row.get("avg_time_spent").getDoubleValue());
-				map.put("avg_time_comparison", row.get("avg_time_comparison").getDoubleValue());
+				map.put("avg_time_comparison", row.get("avg_time_comparison").getBooleanValue());
 				response.add(map);
 			}
 			return ResponseEntity.ok(response);
