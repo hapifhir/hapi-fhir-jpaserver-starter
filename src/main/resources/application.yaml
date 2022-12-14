@@ -52,11 +52,13 @@ hapi:
       fhir_version: R4
       image_path: Images
       country_org_id: nigeria
-      notification_datasource_config_path: C:\iprd\anc-oyo\data\hapi\notificationDataSourceConfig.xml
-      gcp_credential_file_path: C:\IPRD\anc-oyo\data\hapi\gcpCredential.json
-      sql_screen_time_file_path: C:\IPRD\anc-oyo\data\hapi\sql_screen_time.txt
-      anc_config_file : C:\iprd\anc-oyo\data\hapi\anc_config.json
-      filters_config_file : C:\iprd\anc-oyo\data\hapi\filters_config.json
+      notification_datasource_config_path: C:\workspace\IPRD\ANC\anc-oyo\data\hapi\notificationDataSourceConfig.xml
+      gcp_credential_file_path: C:\workspace\IPRD\ANC\anc-oyo\data\hapi\gcpCredential.json
+      sql_screen_time_file_path: C:\workspace\IPRD\ANC\anc-oyo\data\hapi\sql_screen_time.txt
+      anc_config_file : C:\workspace\IPRD\ANC\anc-oyo\data\hapi\anc_config.json
+      filters_config_file : C:\workspace\IPRD\ANC\anc-oyo\data\hapi\filters_config.json
+      daily_and_summary_config_file :  C:\workspace\IPRD\ANC\anc-oyo\data\hapi\daily_and_summary_config.json
+      analytics_config_file : C:\workspace\IPRD\ANC\anc-oyo\data\hapi\analytics_config.json
 ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
       keycloak_server_address: http://testhost.dashboard:8081/auth
 ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
