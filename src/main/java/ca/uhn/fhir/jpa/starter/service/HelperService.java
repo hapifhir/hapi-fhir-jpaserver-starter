@@ -2,6 +2,8 @@ package ca.uhn.fhir.jpa.starter.service;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.model.AnalyticComparison;
+import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
@@ -552,6 +554,39 @@ public class HelperService {
 			return ResponseEntity.ok(scoreCardItems);
 		}
 
+		public List<AnalyticItem> getMaternalAnalytics(String practitionerRoleId) {
+			notificationDataSource = NotificationDataSource.getInstance();
+			List<AnalyticItem> analyticItems = new ArrayList<>();
+			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+			try {
+				List<IndicatorItem> analyticsItemListFromFile = getAnalyticsItemListFromFile();
+				Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
+
+				Pair<Date, Date> currentWeek = DateUtilityHelper.getCurrentWeekDates();
+				Pair<Date, Date> prevWeek = DateUtilityHelper.getPrevWeekDates();
+
+				performCachingIfNotPresent(analyticsItemListFromFile, idsAndOrgIdToChildrenMapPair.first, prevWeek.first, currentWeek.second);
+				for (IndicatorItem indicator : analyticsItemListFromFile) {
+					Double currentWeekCacheValueSum = notificationDataSource
+						.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(currentWeek.first, currentWeek.second,
+							Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), idsAndOrgIdToChildrenMapPair.first);
+
+					Double prevWeekCacheValueSum = notificationDataSource
+						.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(prevWeek.first, prevWeek.second,
+							Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), idsAndOrgIdToChildrenMapPair.first);
+
+					AnalyticComparison comparisonValue = (currentWeekCacheValueSum > prevWeekCacheValueSum) ? AnalyticComparison.POSITIVE_UP : AnalyticComparison.NEGATIVE_DOWN;
+
+					analyticItems.add(new AnalyticItem(indicator.getDescription(), String.valueOf(currentWeekCacheValueSum.intValue()), comparisonValue));
+				}
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return null;
+			}
+			return analyticItems;
+		}
+
 		public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type)  {
 			notificationDataSource = NotificationDataSource.getInstance();
 			List<ScoreCardItem> scoreCardItems = new ArrayList<>();
@@ -703,6 +738,11 @@ public class HelperService {
 
 		List<IndicatorItem> getIndicatorItemListFromFile() throws FileNotFoundException {
 			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
+			return new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
+		}
+
+		List<IndicatorItem> getAnalyticsItemListFromFile() throws FileNotFoundException {
+			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnalytics_config_file()));
 			return new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>(){}.getType());
 		}
 

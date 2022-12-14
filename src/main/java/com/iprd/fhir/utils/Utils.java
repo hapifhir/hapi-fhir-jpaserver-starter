@@ -5,8 +5,26 @@ import com.iprd.report.FhirPath;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class Utils {
+
+	public static String convertToTitleCaseSplitting(String text) {
+		if (text == null || text.isEmpty()) {
+			return text;
+		}
+
+		return Arrays
+			.stream(text.split("_"))
+			.map(word -> word.isEmpty()
+				? word
+				: Character.toTitleCase(word.charAt(0)) + word
+				.substring(1)
+				.toLowerCase())
+			.collect(Collectors.joining(" "));
+	}
+
 	public static String md5Bytes(byte[] bytes){
 		String digest = null;
 		try {

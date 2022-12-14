@@ -111,4 +111,16 @@ public class DateUtilityHelper {
 		  }
 		  return dailyDatePairs;
 		}
+
+	public static Pair<Date, Date> getCurrentWeekDates() {
+		LocalDate current = getCurrentSqlDate().toLocalDate();
+		LocalDate prev = current.minusDays(6);
+		return new Pair<>(Date.valueOf(prev),Date.valueOf(current));
+	}
+
+	public static Pair<Date, Date> getPrevWeekDates() {
+		LocalDate current = getCurrentSqlDate().toLocalDate().minusDays(7);
+		LocalDate prev = current.minusDays(6);
+		return new Pair<>(Date.valueOf(prev),Date.valueOf(current));
+	}
 }

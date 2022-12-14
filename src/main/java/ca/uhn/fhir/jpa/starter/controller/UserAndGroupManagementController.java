@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter.controller;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
 import ca.uhn.fhir.jpa.starter.service.BigQueryService;
 import ca.uhn.fhir.jpa.starter.service.HelperService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,8 +138,23 @@ public class UserAndGroupManagementController {
 		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/analytics/timeSpent")
-	public ResponseEntity<?> bigQueryController() throws Exception {
-		return bigQueryService.timeSpentOnScreen();
+	@RequestMapping(method = RequestMethod.GET, value = "/analytics")
+	public ResponseEntity<?> analytics(@RequestHeader(name = "Authorization") String token) {
+		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		if (practitionerRoleId == null) {
+			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
+		}
+		List<AnalyticItem> analyticItems = new ArrayList<>();
+		List<AnalyticItem> timeSpentAnalyticsItems = bigQueryService.timeSpentOnScreenAnalyticItems();
+		if(timeSpentAnalyticsItems == null) {
+			return ResponseEntity.ok("Error: Unable to find file or fetch screen view information");
+		}
+		analyticItems.addAll(timeSpentAnalyticsItems);
+		List<AnalyticItem> maternalAnalyticsItems = helperService.getMaternalAnalytics(practitionerRoleId);
+		if (maternalAnalyticsItems == null) {
+			return ResponseEntity.ok("Error: Unable to find analytics file");
+		}
+		analyticItems.addAll(maternalAnalyticsItems);
+		return ResponseEntity.ok(analyticItems);
 	}
 }
