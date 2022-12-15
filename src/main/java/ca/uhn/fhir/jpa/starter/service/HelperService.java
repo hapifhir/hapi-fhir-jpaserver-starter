@@ -679,11 +679,11 @@ public class HelperService {
 			return ResponseEntity.ok(scoreCardItems);
 		}
 
-		private void performCachingIfNotPresent(List<IndicatorItem> indicators, List<String> facilityIds, Date start, Date end) {
+		private void performCachingIfNotPresent(List<IndicatorItem> indicators, List<String> facilityIds, Date startDate, Date endDate) {
 			List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.getMd5StringFromFhirPath(indicatorItem.getFhirPath())).collect(Collectors.toList());
 
 			List<Date> dates = new ArrayList<>();
-			List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(start, end);
+			List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
 
 			List<String> existingIndicators = new ArrayList<>();
 			List<String> nonExistingIndicators = new ArrayList<>();
@@ -695,9 +695,10 @@ public class HelperService {
 					nonExistingIndicators.add(indicator);
 				}
 			}
-			List<Date> presentDates = notificationDataSource.getDatesPresent(start, end, nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
+			List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate, nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
 
-			end = Date.valueOf(end.toLocalDate().plusDays(1));
+			Date start = startDate;
+			Date end = Date.valueOf(endDate.toLocalDate().plusDays(1));
 			while (!start.equals(end)) {
 				if (!presentDates.contains(start)) {
 					dates.add(start);
@@ -710,6 +711,15 @@ public class HelperService {
 					cachingService.cacheData(facilityId, date, indicators);
 				});
 			});
+
+			Date currentDate = DateUtilityHelper.getCurrentSqlDate();
+			//Always cache current date data if it lies between start and end date.
+			if(currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+				facilityIds.forEach(facilityId -> {
+					cachingService.cacheData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators);
+				});
+			}
+
 		}
 
 
