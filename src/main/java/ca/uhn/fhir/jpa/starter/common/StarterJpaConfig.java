@@ -162,7 +162,8 @@ public class StarterJpaConfig {
 	@Bean
 	@ConditionalOnProperty(prefix = "hapi.fhir", name = ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR, havingValue = "true")
 	public RepositoryValidatingInterceptor repositoryValidatingInterceptor(IRepositoryValidationInterceptorFactory factory) {
-		return factory.buildUsingStoredStructureDefinitions();
+		return factory.build();
+//		return factory.buildUsingStoredStructureDefinitions();
 	}
 
 	@Bean

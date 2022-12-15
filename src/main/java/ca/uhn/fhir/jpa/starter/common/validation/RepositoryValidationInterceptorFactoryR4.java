@@ -67,7 +67,8 @@ public class RepositoryValidationInterceptorFactoryR4 implements IRepositoryVali
 
 		// Customize the ruleBuilder here to have the rules you want! We will give a simple example
 		// of enabling validation for all Patient resources
-		repositoryValidatingRuleBuilder.forResourcesOfType("Patient").requireAtLeastProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient").and().requireValidationToDeclaredProfiles();
+		repositoryValidatingRuleBuilder.forResourcesOfType("Patient").requireAtLeastProfile("http://hl7.org/fhir/StructureDefinition/Patient").and().requireValidationToDeclaredProfiles();
+//		repositoryValidatingRuleBuilder.forResourcesOfType("Patient").requireAtLeastProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient").and().requireValidationToDeclaredProfiles();
 
 		// Do not customize below this line
 		List<IRepositoryValidatingRule> rules = repositoryValidatingRuleBuilder.build();
