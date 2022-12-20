@@ -554,10 +554,9 @@ public class HelperService {
 			return ResponseEntity.ok(scoreCardItems);
 		}
 
-		public List<AnalyticItem> getMaternalAnalytics(String practitionerRoleId) {
+		public List<AnalyticItem> getMaternalAnalytics(String organizationId) {
 			notificationDataSource = NotificationDataSource.getInstance();
 			List<AnalyticItem> analyticItems = new ArrayList<>();
-			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 			try {
 				List<IndicatorItem> analyticsItemListFromFile = getAnalyticsItemListFromFile();
 				Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
@@ -775,6 +774,16 @@ public class HelperService {
 			return practitionerRole.getOrganization().getReferenceElement().getIdPart();
 		}
 
+		public Organization getOrganizationResourceByPractitionerRoleId(String practitionerRoleId) {
+			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+			if(organizationId  == null) return null;
+			Bundle bundle = FhirClientAuthenticatorService.getFhirClient().search().forResource(Organization.class).where(Organization.RES_ID.exactly().identifier(organizationId)).returnBundle(Bundle.class).execute();
+			if(!bundle.hasEntry()) {
+				return null;
+			}
+			return (Organization) bundle.getEntry().get(0).getResource();
+		}
+
 		public String getOrganizationIdByFacilityUID(String facilityUID) {
 			Bundle organizationBundle = new Bundle();
 			String queryPath = "/Organization?";
@@ -819,7 +828,7 @@ public class HelperService {
 		}
 
 		private String createGroup(GroupRepresentation groupRep) {
-			RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm("fhir-hapi");
+			RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 			List<GroupRepresentation> groups = realmResource.groups().groups(groupRep.getName(), 0, Integer.MAX_VALUE);
 			if(!groups.isEmpty()) {
 				return groups.get(0).getId();

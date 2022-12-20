@@ -11,6 +11,7 @@ import ca.uhn.fhir.parser.IParser;
 import com.iprd.fhir.utils.Validation;
 import com.iprd.report.OrgItem;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Organization;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -144,13 +145,17 @@ public class UserAndGroupManagementController {
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
+		Organization organization = helperService.getOrganizationResourceByPractitionerRoleId(practitionerRoleId);
+		if (organization == null) {
+			return ResponseEntity.ok("Error : This user is not mapped to any organization");
+		}
 		List<AnalyticItem> analyticItems = new ArrayList<>();
-		List<AnalyticItem> timeSpentAnalyticsItems = bigQueryService.timeSpentOnScreenAnalyticItems();
+		List<AnalyticItem> timeSpentAnalyticsItems = bigQueryService.timeSpentOnScreenAnalyticItems(organization);
 		if(timeSpentAnalyticsItems == null) {
 			return ResponseEntity.ok("Error: Unable to find file or fetch screen view information");
 		}
 		analyticItems.addAll(timeSpentAnalyticsItems);
-		List<AnalyticItem> maternalAnalyticsItems = helperService.getMaternalAnalytics(practitionerRoleId);
+		List<AnalyticItem> maternalAnalyticsItems = helperService.getMaternalAnalytics(organization.getId());
 		if (maternalAnalyticsItems == null) {
 			return ResponseEntity.ok("Error: Unable to find analytics file");
 		}
