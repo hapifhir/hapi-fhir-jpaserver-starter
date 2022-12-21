@@ -11,10 +11,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
-import org.springframework.context.annotation.Import;
 
-import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.model.ComGenerator;
+import ca.uhn.fhir.jpa.starter.model.Scheduler;
+
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 
 public class NotificationDataSource {
@@ -35,7 +35,7 @@ public class NotificationDataSource {
 	}
 	
 	public void configure(String filePath) {
-		conf = new Configuration().configure(new File(filePath)).addAnnotatedClass(ComGenerator.class).addAnnotatedClass(CacheEntity.class);
+		conf = new Configuration().configure(new File(filePath)).addAnnotatedClass(ComGenerator.class).addAnnotatedClass(CacheEntity.class).addAnnotatedClass(Scheduler.class);
 		sf = conf.buildSessionFactory();
 	}
 
@@ -70,6 +70,15 @@ public class NotificationDataSource {
 		query.setParameter("param1", status.name());
 		query.setParameter("param2", date);
 		List<ComGenerator> resultList = query.getResultList();
+		session.close();
+		return resultList;
+	}
+
+	public ArrayList fetchStatus(String uuid) {
+		session = sf.openSession();
+		Query query = session.createQuery("FROM Scheduler WHERE uuid=:param1");
+		query.setParameter("param1", uuid);
+		ArrayList resultList = (ArrayList) query.getResultList();
 		session.close();
 		return resultList;
 	}

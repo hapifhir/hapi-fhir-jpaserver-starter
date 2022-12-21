@@ -10,6 +10,9 @@ import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
+import ca.uhn.fhir.jpa.starter.model.Scheduler;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -26,7 +29,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Clob;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,6 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
+import org.hibernate.engine.jdbc.ClobProxy;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Appointment;
@@ -53,6 +59,8 @@ import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -65,6 +73,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -72,11 +81,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 
+import static org.keycloak.util.JsonSerialization.mapper;
+
 
 @Import(AppProperties.class)
 @Service
 public class HelperService {
 
+	NotificationDataSource datasource = NotificationDataSource.getInstance();
 		@Autowired
 		AppProperties appProperties;
 		@Autowired
@@ -302,18 +314,150 @@ public class HelperService {
 			return ResponseEntity.ok(ancMetaData);
 		}
 
-		public ResponseEntity<?> getAncDailySummaryData(String organizationId,String startDate, String endDate,LinkedHashMap<String, String> filters) {
-			try {
-				FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-				List<String> fhirSearchList = getFhirSearchListByFilters(filters);
-				ANCDailySummaryConfig ancDailySummaryConfig = getANCDailySummaryConfigFromFile();
-				DataResult dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
-				return ResponseEntity.ok(dataResult);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return ResponseEntity.ok("Error : Config File Not Found");
-			}
+	public ResponseEntity<?> getAncDailySummaryData(String organizationId,String startDate, String endDate,LinkedHashMap<String, String> filters) {
+		try {
+			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+			List<String> fhirSearchList = getFhirSearchListByFilters(filters);
+			ANCDailySummaryConfig ancDailySummaryConfig = getANCDailySummaryConfigFromFile();
+			DataResult dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
+			return ResponseEntity.ok(dataResult);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok("Error : Config File Not Found");
 		}
+	}
+
+	public void postId(DataResult dataResult,String id) {
+
+
+		String outcome = new Gson().toJson(dataResult);
+
+		try {
+			ArrayList output = datasource.fetchStatus(id);
+			Scheduler getOne = (Scheduler) output.get(0);
+			getOne.setStatus("completed");
+			getOne.setData(ClobProxy.generateProxy(outcome));
+			datasource.update(getOne);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		}
+
+	public ResponseEntity<?> getId(String id)  {
+
+		ArrayList output = datasource.fetchStatus(id);
+			 Object getOne = output.get(0);
+
+			if(((Scheduler) getOne).getData() == null)return null;
+
+			 Clob input = ((Scheduler) getOne).getData();
+
+			 final StringBuilder sb = new StringBuilder();
+
+			    try
+			    {
+			        final Reader reader = input.getCharacterStream();
+			        final BufferedReader br = new BufferedReader(reader);
+
+			        int b;
+			        while(-1 != (b = br.read()))
+			        {
+			            sb.append((char)b);
+			        }
+
+			        br.close();
+			    }
+			    catch (SQLException e)
+			    {
+			       System.out.println("SQL. Could not convert CLOB to string"+e);
+			        return ResponseEntity.ok(e.toString());
+			    }
+			    catch (IOException e)
+			    {
+			    	System.out.println("IO. Could not convert CLOB to string"+e);
+					 return ResponseEntity.ok(e.toString());
+			    }
+
+			String letSee = sb.toString();
+
+		JSONObject jsnobject = new JSONObject(letSee);
+		JSONArray explrObject = jsnobject.getJSONArray("summaryResult");
+
+
+			String[] list = letSee.split("dailyResult");
+			String outputList = list[1].substring(2);
+
+		
+
+		List<Map<String, String>> participantJsonList;
+		try {
+			participantJsonList = mapper.readValue(outputList, new TypeReference<List<Map<String, String>>>(){});
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+
+
+
+		byte[] bytes = new byte[explrObject.length()];
+		for (int i = 0; i < explrObject.length(); i++) {
+
+			int cal = (int) explrObject.get(i);
+			byte bal = (byte) cal;
+			bytes[i] = bal;
+		}
+
+		String s = Base64.getEncoder().encodeToString(bytes);
+		
+		DataResult dataResult = new DataResult(bytes, participantJsonList);
+
+	  return ResponseEntity.ok (dataResult);
+
+		}
+
+
+
+
+	public ResponseEntity<?> getIdRoute(String organizationId,String startDate, String endDate,LinkedHashMap<String, String> filters) {
+		String id = UUID.randomUUID().toString();
+		try {
+			Scheduler scheduler = new Scheduler(id,"processing",null);
+			datasource.insert(scheduler);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		saveQueryResult(organizationId, startDate, endDate, filters,id);
+
+
+		return ResponseEntity.ok(id);
+
+	}
+
+	public ResponseEntity<?> checkIfDataExists (String randomId){
+		if(getId(randomId)==null){
+			return ResponseEntity.ok("Searching in Progress");
+		}
+		else return ResponseEntity.ok(getId(randomId));
+	}
+
+
+	@Async
+	public void saveQueryResult  (String organizationId,String startDate, String endDate,LinkedHashMap<String, String> filters, String id) {
+
+		try {
+			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+			List<String> fhirSearchList = getFhirSearchListByFilters(filters);
+			ANCDailySummaryConfig ancDailySummaryConfig = getANCDailySummaryConfigFromFile();
+			DataResult dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
+			postId(dataResult,id);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+
+		}
+	}
+
+
 
 		public Bundle getEncountersBelowLocation(String locationId) {
 			List<String> locationIdsList = new ArrayList<>();

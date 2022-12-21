@@ -4,8 +4,10 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
+import ca.uhn.fhir.jpa.starter.model.Scheduler;
 import ca.uhn.fhir.jpa.starter.service.BigQueryService;
 import ca.uhn.fhir.jpa.starter.service.HelperService;
+import ca.uhn.fhir.jpa.starter.service.NotificationDataSource;
 import ca.uhn.fhir.jpa.starter.service.NotificationService;
 import ca.uhn.fhir.parser.IParser;
 import com.iprd.fhir.utils.Validation;
@@ -15,6 +17,7 @@ import org.hl7.fhir.r4.model.Organization;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,12 +26,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @CrossOrigin(origins = {"http://localhost:3000/","http://testhost.dashboard:3000/","https://oclink.io/","https://opencampaignlink.org/"}, maxAge = 3600,  allowCredentials = "true")
 @RestController
 @RequestMapping("/iprd")
-public class UserAndGroupManagementController {
 
+public class UserAndGroupManagementController {
+	NotificationDataSource datasource = NotificationDataSource.getInstance();
 	@Autowired
 	HelperService helperService;
 	@Autowired
@@ -69,8 +74,23 @@ public class UserAndGroupManagementController {
 		return helperService.getAncDailySummaryData(organizationId, startDate, endDate, new LinkedHashMap<>());
 	}
 	
+//	@RequestMapping(method = RequestMethod.GET, value = "/details")
+//	public ResponseEntity<?> getDetails(
+//		@RequestParam Map<String, String> allFilters
+//	) {
+//		String organizationId = allFilters.get("lga");
+//		String startDate = allFilters.get("from");
+//		String endDate = allFilters.get("to");
+//		allFilters.remove("from");
+//		allFilters.remove("to");
+//		allFilters.remove("lga");
+//		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
+//		return helperService.getIdRoute(organizationId, startDate, endDate, filters);
+//	}
+
+
 	@RequestMapping(method = RequestMethod.GET, value = "/details")
-	public ResponseEntity<?> getDetails(
+	public String getDetails(
 		@RequestParam Map<String, String> allFilters
 	) {
 		String organizationId = allFilters.get("lga");
@@ -80,8 +100,25 @@ public class UserAndGroupManagementController {
 		allFilters.remove("to");
 		allFilters.remove("lga");
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
-		return helperService.getAncDailySummaryData(organizationId, startDate, endDate, filters);
+
+		String id = UUID.randomUUID().toString();
+		try {
+			Scheduler scheduler = new Scheduler(id,"processing",null);
+			datasource.insert(scheduler);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		helperService.saveQueryResult(organizationId, startDate, endDate, filters,id);
+		return id;
 	}
+
+
+	@RequestMapping(method = RequestMethod.GET, value = "/details/{randomId}")
+	public  ResponseEntity<?> getDataResult(@PathVariable String randomId) {
+		return helperService.checkIfDataExists(randomId);
+	}
+
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getEncountersBelowLocation")
 	public ResponseEntity<String> getEncountersBelowLocation(@RequestParam("locationId") String locationId) {
@@ -94,6 +131,7 @@ public class UserAndGroupManagementController {
 		List<OrgItem> orgItemsList = helperService.getOrganizationHierarchy(organizationId);
 		return ResponseEntity.ok(orgItemsList);
 	}
+
 
 	@RequestMapping(method = RequestMethod.GET, value = "/organizations")
 	public ResponseEntity<?> organizations(@RequestHeader(name = "Authorization") String token) {
