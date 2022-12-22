@@ -202,16 +202,6 @@ public class StarterJpaConfig {
 	}
 
 	@Bean
-	@Primary
-	/*
-		This bean is currently necessary to override from MDM settings
-	 */
-	IMdmLinkDao mdmLinkDao() {
-		return new MdmLinkDaoJpaImpl();
-	}
-
-
-	@Bean
 	@Conditional(OnCorsPresent.class)
 	public CorsInterceptor corsInterceptor(AppProperties appProperties) {
 		// Define your CORS configuration. This is an example
