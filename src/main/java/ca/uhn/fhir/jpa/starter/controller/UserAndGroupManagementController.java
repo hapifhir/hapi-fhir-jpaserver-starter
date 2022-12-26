@@ -3,12 +3,9 @@ package ca.uhn.fhir.jpa.starter.controller;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
+import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
-import ca.uhn.fhir.jpa.starter.model.Scheduler;
-import ca.uhn.fhir.jpa.starter.service.BigQueryService;
-import ca.uhn.fhir.jpa.starter.service.HelperService;
-import ca.uhn.fhir.jpa.starter.service.NotificationDataSource;
-import ca.uhn.fhir.jpa.starter.service.NotificationService;
+import ca.uhn.fhir.jpa.starter.service.*;
 import ca.uhn.fhir.parser.IParser;
 import com.iprd.fhir.utils.Validation;
 import com.iprd.report.OrgItem;
@@ -17,18 +14,15 @@ import org.hl7.fhir.r4.model.Organization;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.sql.SQLException;
+import java.util.*;
+import java.time.LocalDateTime;
 
-@CrossOrigin(origins = {"http://localhost:3000/","http://testhost.dashboard:3000/","https://oclink.io/","https://opencampaignlink.org/"}, maxAge = 3600,  allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000/", "http://testhost.dashboard:3000/", "https://oclink.io/", "https://opencampaignlink.org/"}, maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/iprd")
 
@@ -50,49 +44,34 @@ public class UserAndGroupManagementController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/hcwBulkImport")
 	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadHcw(@RequestParam("file") MultipartFile file)
-			throws Exception {
+		throws Exception {
 		return helperService.createUsers(file);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/dashboardUserBulkImport")
-	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadDashboardUsers(@RequestParam("file") MultipartFile file) throws Exception{
+	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadDashboardUsers(@RequestParam("file") MultipartFile file) throws Exception {
 		return helperService.createDashboardUsers(file);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/user/{userId}/groups")
 	public List<GroupRepresentation> getGroupsByUser(@PathVariable String userId) {
 		return helperService.getGroupsByUser(userId);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getAncMetaDataByOrganizationId")
-	public ResponseEntity<List<Map<String, String>>> getAncMetaDataByOrganizationId(@RequestParam("organizationId") String organizationId,@RequestParam("startDate") String startDate,@RequestParam("endDate") String endDate) {
+	public ResponseEntity<List<Map<String, String>>> getAncMetaDataByOrganizationId(@RequestParam("organizationId") String organizationId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
 		return helperService.getAncMetaDataByOrganizationId(organizationId, startDate, endDate);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getAncDailySummaryData")
-	public ResponseEntity<?> getAncDailySummaryData(@RequestParam("organizationId") String organizationId,@RequestParam("startDate") String startDate,@RequestParam("endDate") String endDate) {
+	public ResponseEntity<?> getAncDailySummaryData(@RequestParam("organizationId") String organizationId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
 		return helperService.getAncDailySummaryData(organizationId, startDate, endDate, new LinkedHashMap<>());
 	}
-	
-//	@RequestMapping(method = RequestMethod.GET, value = "/details")
-//	public ResponseEntity<?> getDetails(
-//		@RequestParam Map<String, String> allFilters
-//	) {
-//		String organizationId = allFilters.get("lga");
-//		String startDate = allFilters.get("from");
-//		String endDate = allFilters.get("to");
-//		allFilters.remove("from");
-//		allFilters.remove("to");
-//		allFilters.remove("lga");
-//		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
-//		return helperService.getIdRoute(organizationId, startDate, endDate, filters);
-//	}
-
 
 	@RequestMapping(method = RequestMethod.GET, value = "/details")
-	public String getDetails(
+	public ResponseEntity<?> getDetails(
 		@RequestParam Map<String, String> allFilters
-	) {
+	) throws SQLException, IOException {
 		String organizationId = allFilters.get("lga");
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
@@ -101,22 +80,32 @@ public class UserAndGroupManagementController {
 		allFilters.remove("lga");
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
 
-		String id = UUID.randomUUID().toString();
-		try {
-			Scheduler scheduler = new Scheduler(id,"processing",null);
-			datasource.insert(scheduler);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		LocalDateTime dateTimeNow = LocalDateTime.now();
+		String[] extractedFromDateTimeNow = dateTimeNow.toString().split(":");
+		String FormattedId = organizationId + startDate + endDate + extractedFromDateTimeNow[0];
+		String hashOfFormattedId = String.valueOf(FormattedId.hashCode());
 
-		helperService.saveQueryResult(organizationId, startDate, endDate, filters,id);
-		return id;
+		ArrayList<ApiAsyncTaskEntity> fetchAsyncData = datasource.fetchStatus(hashOfFormattedId);
+
+		if (fetchAsyncData == null || fetchAsyncData.isEmpty()) {
+			try {
+				ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(hashOfFormattedId, ApiAsyncTaskEntity.Status.PROCESSING.name(), null, null);
+				datasource.insert(apiAsyncTaskEntity);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			helperService.saveQueryResult(organizationId, startDate, endDate, filters, hashOfFormattedId);
+			return ResponseEntity.ok(hashOfFormattedId);
+		}
+		return ResponseEntity.ok(helperService.checkIfDataExistsInAsyncTable(hashOfFormattedId));
+
 	}
 
 
-	@RequestMapping(method = RequestMethod.GET, value = "/details/{randomId}")
-	public  ResponseEntity<?> getDataResult(@PathVariable String randomId) {
-		return helperService.checkIfDataExists(randomId);
+	@RequestMapping(method = RequestMethod.GET, value = "/details/{uuid}")
+	public ResponseEntity<?> getDataResult(@PathVariable String uuid) throws SQLException, IOException {
+		return ResponseEntity.ok(helperService.checkIfDataExistsInAsyncTable(uuid));
 	}
 
 
@@ -125,7 +114,7 @@ public class UserAndGroupManagementController {
 		Bundle bundle = helperService.getEncountersBelowLocation(locationId);
 		return ResponseEntity.ok(iParser.encodeResourceToString(bundle));
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/getOrganizations")
 	public ResponseEntity<List<OrgItem>> getOrganizations(@RequestParam("organizationId") String organizationId) {
 		List<OrgItem> orgItemsList = helperService.getOrganizationHierarchy(organizationId);
@@ -149,7 +138,7 @@ public class UserAndGroupManagementController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/filters")
-	public ResponseEntity<?> filter(){
+	public ResponseEntity<?> filter() {
 		return helperService.getFilters();
 	}
 
@@ -189,7 +178,7 @@ public class UserAndGroupManagementController {
 		}
 		List<AnalyticItem> analyticItems = new ArrayList<>();
 		List<AnalyticItem> timeSpentAnalyticsItems = bigQueryService.timeSpentOnScreenAnalyticItems(organization);
-		if(timeSpentAnalyticsItems == null) {
+		if (timeSpentAnalyticsItems == null) {
 			return ResponseEntity.ok("Error: Unable to find file or fetch screen view information");
 		}
 		analyticItems.addAll(timeSpentAnalyticsItems);

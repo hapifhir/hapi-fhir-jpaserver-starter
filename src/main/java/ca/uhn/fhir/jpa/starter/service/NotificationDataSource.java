@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
 import ca.uhn.fhir.jpa.starter.model.CacheEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,7 +14,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import ca.uhn.fhir.jpa.starter.model.ComGenerator;
-import ca.uhn.fhir.jpa.starter.model.Scheduler;
 
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 
@@ -35,7 +35,7 @@ public class NotificationDataSource {
 	}
 	
 	public void configure(String filePath) {
-		conf = new Configuration().configure(new File(filePath)).addAnnotatedClass(ComGenerator.class).addAnnotatedClass(CacheEntity.class).addAnnotatedClass(Scheduler.class);
+		conf = new Configuration().configure(new File(filePath)).addAnnotatedClass(ComGenerator.class).addAnnotatedClass(CacheEntity.class).addAnnotatedClass(ApiAsyncTaskEntity.class);
 		sf = conf.buildSessionFactory();
 	}
 
@@ -74,11 +74,11 @@ public class NotificationDataSource {
 		return resultList;
 	}
 
-	public ArrayList fetchStatus(String uuid) {
+	public ArrayList<ApiAsyncTaskEntity> fetchStatus(String uuid) {
 		session = sf.openSession();
-		Query query = session.createQuery("FROM Scheduler WHERE uuid=:param1");
+		Query query = session.createQuery("FROM ApiAsyncTaskEntity WHERE uuid=:param1");
 		query.setParameter("param1", uuid);
-		ArrayList resultList = (ArrayList) query.getResultList();
+		ArrayList<ApiAsyncTaskEntity> resultList = (ArrayList<ApiAsyncTaskEntity>) query.getResultList();
 		session.close();
 		return resultList;
 	}
@@ -139,6 +139,15 @@ public class NotificationDataSource {
 		Query query = session.createQuery("DELETE ComGenerator WHERE scheduledDate < :param1 AND communicationStatus=:param2");
 		query.setParameter("param1", date);
 		query.setParameter("param2", MessageStatus.SENT.name());
+		query.executeUpdate();
+		tx.commit();
+		session.close();
+	}
+
+	public void clearAsyncTable(){
+		session = sf.openSession();
+		tx = session.beginTransaction();
+		Query query = session.createQuery("DELETE ApiAsyncTaskEntity");
 		query.executeUpdate();
 		tx.commit();
 		session.close();
