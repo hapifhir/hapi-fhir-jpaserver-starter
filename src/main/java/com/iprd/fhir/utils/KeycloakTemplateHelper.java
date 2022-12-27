@@ -7,6 +7,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.GroupRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
 public class KeycloakTemplateHelper {
@@ -105,5 +106,13 @@ public class KeycloakTemplateHelper {
 		user.singleAttribute("facilityUID", facilityUID);
 		user.setEnabled(true);
 		return user;
+	}
+
+	public static RoleRepresentation role(String name) {
+		RoleRepresentation role = new RoleRepresentation();
+		role.setName(name);
+		role.setDescription("${role_" + name + "}");
+		role.singleAttribute("role_name", name);
+		return role;
 	}
 }

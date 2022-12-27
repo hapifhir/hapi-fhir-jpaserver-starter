@@ -69,6 +69,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.token.TokenManager;
 import org.keycloak.representations.idm.GroupRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,6 +85,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 
+import static org.hibernate.search.util.common.impl.CollectionHelper.asList;
 import static org.keycloak.util.JsonSerialization.mapper;
 
 
@@ -236,7 +238,10 @@ public class HelperService {
 						practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
 						UserRepresentation user = KeycloakTemplateHelper.user(hcwData[0], hcwData[1], hcwData[2], hcwData[7], hcwData[8], hcwData[4], hcwData[3], practitionerId, practitionerRoleId, hcwData[13], hcwData[9], hcwData[10], hcwData[11], hcwData[12], hcwData[16]);
 						String keycloakUserId = createUser(user);
+						RoleRepresentation role = KeycloakTemplateHelper.role(hcwData[13]);
+						createRoleIfNotExists(role);
 						if (keycloakUserId != null) {
+							assignRole(keycloakUserId,role.getName());
 							updateResource(keycloakUserId, practitionerId, Practitioner.class);
 							updateResource(keycloakUserId, practitionerRoleId, PractitionerRole.class);
 						}
@@ -397,7 +402,7 @@ public class HelperService {
 
 
 	//@Scheduled(fixedDelay = 300000)
-	@Scheduled(cron = 0 0 23 * * *)
+//	@Scheduled(cron = 0 0 23 * * *)
 	public void removeAsyncTableCache() {
 		datasource.clearAsyncTable();
 	}
@@ -974,6 +979,41 @@ public class HelperService {
 			logger.error("Cannot create user " + userRep.getUsername() + " with groups " + userRep.getGroups() + "\n");
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+	private void createRoleIfNotExists(RoleRepresentation roleRepresentation) {
+		RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		String clientId = realmResource.clients().findByClientId(appProperties.getFhir_hapi_client_id()).get(0).getId();
+		if (roleWithNameExists(clientId, roleRepresentation.getName())) {
+			return;
+		}
+		try {
+			realmResource.clients().get(clientId).roles().create(roleRepresentation);
+		} catch (WebApplicationException ex) {
+			logger.error("cannot create role" + roleRepresentation.getName() + "\n" + ex.getStackTrace().toString());
+		}
+	}
+
+	public Boolean roleWithNameExists(String clientId, String roleName) {
+		RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		for (RoleRepresentation roleRepresentation : realmResource.clients().get(clientId).roles().list()) {
+			if (roleRepresentation.getName().equals(roleName)) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+
+	private void assignRole(String userId, String roleName) {
+		try {
+			RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+			String clientId = realmResource.clients().findByClientId(appProperties.getFhir_hapi_client_id()).get(0).getId();
+			RoleRepresentation saveRoleRepresentation = realmResource.clients().get(clientId).roles().get(roleName).toRepresentation();
+			realmResource.users().get(userId).roles().clientLevel(clientId).add(asList(saveRoleRepresentation));
+		} catch (WebApplicationException e) {
+			logger.error("Cannot assign role " + roleName + " to user " + userId);
 		}
 	}
 
