@@ -401,8 +401,7 @@ public class HelperService {
 	}
 
 
-	//@Scheduled(fixedDelay = 300000)
-//	@Scheduled(cron = 0 0 23 * * *)
+	@Scheduled(cron = "0 0 23 * * *")
 	public void removeAsyncTableCache() {
 		datasource.clearAsyncTable();
 	}
