@@ -1,5 +1,7 @@
-data
 database
+**/with-postgres/data
+**/with-preload/data
+
 fhir.logdir
 fhir.logdir_IS_UNDEFINED
 mydump
