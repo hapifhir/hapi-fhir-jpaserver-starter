@@ -23,7 +23,7 @@ jobs:
           distribution: 'adopt'
           cache: 'maven'
       - run: mvn --batch-mode --update-snapshots verify
-      - run: mkdir staging && cp matchbox-engine/target/*.jar staging && cp matchbox-server/target/*.jar staging
+      - run: mkdir staging && cp matchbox-engine/target/*.jar staging
       - uses: actions/upload-artifact@v3
         with:
           name: Package
