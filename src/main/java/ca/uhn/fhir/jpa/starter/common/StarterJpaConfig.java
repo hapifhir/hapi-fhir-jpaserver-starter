@@ -66,9 +66,11 @@ import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.http.HttpHeaders;
@@ -78,11 +80,14 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+
 import java.util.*;
 
 import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory.ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR;
 
 @Configuration
+//allow users to configure custom packages to scan for additional beans
+@ComponentScan(basePackages = { "${hapi.fhir.custom-bean-packages:}" })
 @Import(
 	ThreadPoolFactoryConfig.class
 )
@@ -246,10 +251,8 @@ public class StarterJpaConfig {
 	}
 
 	@Bean
-	public RestfulServer restfulServer(IFhirSystemDao<?, ?> fhirSystemDao, AppProperties appProperties, DaoRegistry daoRegistry, Optional<MdmProviderLoader> mdmProviderProvider, IJpaSystemProvider jpaSystemProvider, ResourceProviderFactory resourceProviderFactory, DaoConfig daoConfig, ISearchParamRegistry searchParamRegistry, IValidationSupport theValidationSupport, DatabaseBackedPagingProvider databaseBackedPagingProvider, LoggingInterceptor loggingInterceptor, Optional<TerminologyUploaderProvider> terminologyUploaderProvider, Optional<SubscriptionTriggeringProvider> subscriptionTriggeringProvider, Optional<CorsInterceptor> corsInterceptor, IInterceptorBroadcaster interceptorBroadcaster, Optional<BinaryAccessProvider> binaryAccessProvider, BinaryStorageInterceptor binaryStorageInterceptor, IValidatorModule validatorModule, Optional<GraphQLProvider> graphQLProvider, BulkDataExportProvider bulkDataExportProvider, BulkDataImportProvider bulkDataImportProvider, ValueSetOperationProvider theValueSetOperationProvider, ReindexProvider reindexProvider, PartitionManagementProvider partitionManagementProvider, Optional<RepositoryValidatingInterceptor> repositoryValidatingInterceptor, IPackageInstallerSvc packageInstallerSvc, ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc, IRequestPartitionHelperSvc theRequestPartitionHelperSvc, ISearchCoordinatorSvc mySearchCoordinatorSvc) {
+	public RestfulServer restfulServer(IFhirSystemDao<?, ?> fhirSystemDao, AppProperties appProperties, DaoRegistry daoRegistry, Optional<MdmProviderLoader> mdmProviderProvider, IJpaSystemProvider jpaSystemProvider, ResourceProviderFactory resourceProviderFactory, DaoConfig daoConfig, ISearchParamRegistry searchParamRegistry, IValidationSupport theValidationSupport, DatabaseBackedPagingProvider databaseBackedPagingProvider, LoggingInterceptor loggingInterceptor, Optional<TerminologyUploaderProvider> terminologyUploaderProvider, Optional<SubscriptionTriggeringProvider> subscriptionTriggeringProvider, Optional<CorsInterceptor> corsInterceptor, IInterceptorBroadcaster interceptorBroadcaster, Optional<BinaryAccessProvider> binaryAccessProvider, BinaryStorageInterceptor binaryStorageInterceptor, IValidatorModule validatorModule, Optional<GraphQLProvider> graphQLProvider, BulkDataExportProvider bulkDataExportProvider, BulkDataImportProvider bulkDataImportProvider, ValueSetOperationProvider theValueSetOperationProvider, ReindexProvider reindexProvider, PartitionManagementProvider partitionManagementProvider, Optional<RepositoryValidatingInterceptor> repositoryValidatingInterceptor, IPackageInstallerSvc packageInstallerSvc, ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc, ApplicationContext appContext, IRequestPartitionHelperSvc theRequestPartitionHelperSvc, ISearchCoordinatorSvc mySearchCoordinatorSvc) {
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
-
-
 
 		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
 
@@ -413,14 +416,51 @@ public class StarterJpaConfig {
 			fhirServer.setTenantIdentificationStrategy(new UrlBaseTenantIdentificationStrategy());
 			fhirServer.registerProviders(partitionManagementProvider);
 		}
-
-
 		repositoryValidatingInterceptor.ifPresent(fhirServer::registerInterceptor);
 
-
-		fhirServer.registerProvider(new Ips(daoRegistry,theRequestPartitionHelperSvc, mySearchCoordinatorSvc));
+		// register custom interceptors
+		registerCustomInterceptors(fhirServer, appContext, appProperties.getCustomInterceptorClasses());
 
 		return fhirServer;
+	}
+
+	/**
+	 * check the properties for custom interceptor classes and registers them.
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void registerCustomInterceptors(RestfulServer fhirServer, ApplicationContext theAppContext, List<String> customInterceptorClasses) {
+
+		if (customInterceptorClasses == null) {
+			return;
+		}
+		fhirServer.registerProvider(new Ips(daoRegistry,theRequestPartitionHelperSvc, mySearchCoordinatorSvc));
+
+		for (String className : customInterceptorClasses) {
+			Class clazz;
+			try {
+				clazz = Class.forName(className);
+			} catch (ClassNotFoundException e) {
+				throw new ConfigurationException("Interceptor class was not found on classpath: " + className, e);
+	}
+
+			// first check if the class a Bean in the app context
+			Object interceptor = null;
+			try {
+				interceptor = theAppContext.getBean(clazz);
+			} catch (NoSuchBeanDefinitionException ex) {
+				// no op - if it's not a bean we'll try to create it
+			}
+
+			// if not a bean, instantiate the interceptor via reflection
+			if (interceptor == null) {
+				try {
+					interceptor = clazz.getConstructor().newInstance();
+				} catch (Exception e) {
+					throw new ConfigurationException("Unable to instantiate interceptor class : " + className, e);
+				}
+			}
+			fhirServer.registerInterceptor(interceptor);
+		}
 	}
 
 	public static IServerConformanceProvider<?> calculateConformanceProvider(IFhirSystemDao fhirSystemDao, RestfulServer fhirServer, DaoConfig daoConfig, ISearchParamRegistry searchParamRegistry, IValidationSupport theValidationSupport) {
