@@ -421,6 +421,8 @@ public class StarterJpaConfig {
 		// register custom interceptors
 		registerCustomInterceptors(fhirServer, appContext, appProperties.getCustomInterceptorClasses());
 
+		fhirServer.registerProvider(new Ips(daoRegistry,theRequestPartitionHelperSvc, mySearchCoordinatorSvc));
+
 		return fhirServer;
 	}
 
@@ -433,7 +435,6 @@ public class StarterJpaConfig {
 		if (customInterceptorClasses == null) {
 			return;
 		}
-		fhirServer.registerProvider(new Ips(daoRegistry,theRequestPartitionHelperSvc, mySearchCoordinatorSvc));
 
 		for (String className : customInterceptorClasses) {
 			Class clazz;
