@@ -62,7 +62,6 @@ import org.springframework.context.annotation.Configuration;
  * #L%
  */
 
-@Configuration
 public class Ips {
 	private final FhirContext fhirContext;
 	private final IFhirResourceDao<Bundle> bundleResourceProvider;
