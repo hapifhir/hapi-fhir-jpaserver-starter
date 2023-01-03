@@ -1,0 +1,9 @@
+server:
+  servlet:
+    context-path: /matchbox
+hapi:
+  fhir:
+    implementationguides:
+      core:
+        name: ch.fhir.ig.ch-core
+        version: 2.0.0

@@ -1,0 +1,16 @@
+map "http://ahdis.ch/matchbox/fml/qty" = "qty"
+uses "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse" alias QuestionnaireResponse as source
+uses "http://hl7.org/fhir/StructureDefinition/Observation" alias Observation as target
+
+group stringtocoding(source src : QuestionnaireResponse, target tgt : Observation) {
+    src.item as item -> tgt as obs then ExtractBloodPressure(item, obs);
+}
+
+group ExtractBloodPressure(source src, target tgt : Observation){
+    src.item as systolic_bp where (linkId = 'systolic-bp_1.2') then {
+        systolic_bp.answer as ans then {
+//            ans.value as value -> tgt.value = create('Quantity') as qty,  qty.value = value "qty";
+            ans.value as value -> tgt.value = qty(value,'kg','http://unit.org') "qty";
+        } "qty";
+    };
+}

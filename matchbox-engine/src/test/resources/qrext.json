@@ -1,0 +1,22 @@
+{
+    "resourceType": "QuestionnaireResponse",
+    "extension": [
+      {
+        "url": "urn:implicitstring",
+        "valueString": "implicit"
+      },
+      {
+        "url": "urn:explicitstring",
+        "valueString": "explicit"
+      },
+      {
+        "url": "urn:positiveIntString",
+        "valueString": "2147483647"
+      },
+      {
+        "url": "urn:positiveInt",
+        "valuePositiveInt": "2147483647"
+      }
+    ],
+    "id": "qrpatientsexeresponse"
+  }

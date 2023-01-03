@@ -1,0 +1,16 @@
+server:
+  servlet:
+    context-path: /matchboxv3
+spring:
+  datasource:
+    url: 'jdbc:postgresql://matchbox-db:5432/matchbox'
+    username: matchbox
+    password: matchbox
+    driverClassName: org.postgresql.Driver
+
+    # database connection pool size
+    hikari:
+      maximum-pool-size: 10
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect

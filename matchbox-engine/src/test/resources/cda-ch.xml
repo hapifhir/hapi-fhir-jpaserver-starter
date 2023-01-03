@@ -1,0 +1,304 @@
+<ClinicalDocument xmlns='urn:hl7-org:v3' xmlns:voc='urn:hl7-org:v3/voc' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='urn:hl7-org:v3 CDA.xsd' xmlns:sdtc='urn:hl7-org:sdtc'>
+
+	<!-- CDA-CH V2 (2017) realm. -->
+	<realmCode code="CHE"/>
+
+	<!-- CDA R2 (2005) type code. -->
+	<typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3"/>
+
+	<!-- CDA-CH V2 specification (optional, but informative template id). -->
+	<templateId root="2.16.756.5.30.1.1.1.1.4"/>
+	<!-- CDA-CH V2 ART-DECOR model - structuredBody. -->
+	<templateId root="2.16.756.5.30.1.1.10.1.9"/>
+	<!-- HL7 CDA R2 (2005) having a structuredBody. -->
+	<templateId root="2.16.840.1.113883.10.12.2"/>
+	<!-- HL7 CDA R2 (2005). -->
+	<templateId root="2.16.840.1.113883.10.12.1"/>
+
+	<!-- Document id according to CDA-CH v2.1 and case study "hip joint replacement". -->
+	<id root="31397B31-BE60-47E1-BEC6-F37816D42B0C"/>
+
+	<!-- Document code according to CDA-CH v2.1 and case study "hip joint replacement". -->
+	<code code="28616-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Physician Transfer note">
+		<!-- Document code mapping to the Swiss EPR XDS.b metadata (DocumentEntry.typeCode	, 2.16.756.5.30.1.127.3.10.1.27). -->
+		<translation code="371535009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Transfer summary report"/>
+	</code>
+
+	<!-- Document title according to CDA-CH v2.1 and case study "hip joint replacement". -->
+	<title>Zuweisung zur Radiologischen Diagnostik</title>
+
+	<!-- Document creation timestamp according to CDA-CH v2.1 and case study "hip joint replacement". -->
+	<effectiveTime value="201710031733+0100"/>
+
+	<!-- Confidentiality code according to the Swiss EPR XDS.b metadata. -->
+	<confidentialityCode code="17621005" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Normally accessible"/>
+
+	<!-- Document code according to CDA-CH v2.1. -->
+	<languageCode code="de-CH"/>
+
+	<!--
+	Document setId and versionNumber according to CDA-CH v2.1 and case study "hip joint replacement".
+	This document is a new version of the one created in 2009 for CDA-CH v1.2
+	-->
+	<setId root="807563C2-5146-11D5-A672-00B0D022E945"/>
+	<versionNumber value="2"/>
+
+	<!-- Human patient according to CDA-CH v2.1 and case study "hip joint replacement". -->
+	<recordTarget>
+		<templateId root="2.16.756.5.30.1.1.10.2.1"/>
+		<patientRole>
+			<!-- The patient's id. -->
+			<id extension="8733" root="2.16.756.888888.3.1"/>
+			<!-- The patient's address - also according to eCH-0010. -->
+			<addr use="HP">
+				<streetName>Leidensweg</streetName>
+				<houseNumber>10</houseNumber>
+				<postalCode>9999</postalCode>
+				<city>Specimendorf</city>
+				<country>CH</country>
+			</addr>
+			<!-- The patient's means of communication: phone home private.-->
+			<telecom use="HP" value="tel:+41.32.685.12.34"/>
+			<!-- The patient's means of communication: phone work place.-->
+			<telecom use="WP" value="tel:+41.32.123.77.88"/>
+			<!-- The patient's means of communication: public eMail address.-->
+			<telecom use="PUB" value="mailto:max.muster@sampledomain.ch"/>
+			<patient>
+				<!-- The patient's name - also according to eCH-0011. -->
+				<name use="L">
+					<given>Max</given>
+					<family>MUSTER</family>
+				</name>
+				<!-- The patient's gender.  -->
+				<administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1" codeSystemName="HL7 AdministrativeGender" displayName="Male" />
+				<!-- The patient's birthdate. -->
+				<birthTime value="19381212"/>
+			</patient>
+
+			<!-- The organization who took care of the patient in the same context with the current CDA document. -->
+			<providerOrganization>
+				<!-- The organization's id (GLN). -->
+				<id extension="7601000201041" root="2.51.1.3"/>
+				<!-- The organization's name - also according to eCH-0011. -->
+				<name use="L">Gruppenpraxis CH, Dr. med. Allzeit Bereit</name>
+			</providerOrganization>
+		</patientRole>
+	</recordTarget>
+
+	<!-- Information about the author of a CDA document according to CDA-CH v2.1 and case study "hip joint replacement". -->
+	<author>
+		<templateId root="2.16.756.5.30.1.1.10.9.23"/>
+		<!-- Timestamp of the authorship. -->
+		<time value="201710031609+0100"/>
+		<assignedAuthor>
+			<!-- The author's id (GLN). -->
+			<id extension="7601000201041" root="2.51.1.3"/>
+			<!-- The author is a person. -->
+			<assignedPerson>
+				<!-- The author's name - also according to eCH-0011. -->
+				<name use="L">
+					<prefix qualifier="AC">Dr. med.</prefix>
+					<given>Allzeit</given>
+					<family>Bereit</family>
+					<suffix>Facharzt für Allgemeine Medizin</suffix>
+				</name>
+			</assignedPerson>
+			<!-- The author's organization. -->
+			<representedOrganization>
+				<!-- The organization's id (GLN). -->
+				<id extension="7601000201041" root="2.51.1.3"/>
+				<!-- The organization's name - also according to eCH-0011. -->
+				<name use="L">Gruppenpraxis CH</name>
+				<!-- The author's means of communication: phone work place.-->
+				<telecom value="tel:+41.32.234.55.66" use="WP"/>
+				<!-- The author's means of communication: fax work place.-->
+				<telecom value="fax:+41.32.234.66.77" use="WP"/>
+				<!-- The author's means of communication: eMail work place.-->
+				<telecom value="mailto:bereit@gruppenpraxis.ch" use="WP"/>
+				<!-- The author's means of communication: website work place.-->
+				<!-- The author's address - also according to eCH-0010. -->
+				<addr use="WP">
+					<streetName>Doktorgasse</streetName>
+					<houseNumber>2</houseNumber>
+					<postalCode>8888</postalCode>
+					<city>Musterhausen</city>
+					<country>CH</country>
+				</addr>
+			</representedOrganization>
+		</assignedAuthor>
+	</author>
+
+	<!-- Information about the person that entered information in this CDA document according to CDA-CH v2.1 and case study "hip joint replacement". -->
+	<dataEnterer>
+<!-- Template id according to CDA-CH v2.1 -->
+		<templateId root="2.16.756.5.30.1.1.10.2.7"/>
+		<!-- Timestamp of the data input. -->
+		<time value="201710031315+0100"/>
+		<assignedEntity>
+			<!-- The data enterer's id. -->
+			<id root="2.999" extension="0812763"/>
+			<assignedPerson>
+				<!-- The data enterer's name. -->
+				<name use="L">
+					<given>Schreib</given>
+					<family>Kraft</family>
+				</name>
+			</assignedPerson>
+		</assignedEntity>
+	</dataEnterer>
+
+	<!-- The organization in whose name this CDA document has been created (corresponds to the sender of a letter) according to CDA-CH v2.1 and case study "hip joint replacement". -->
+	<custodian>
+		<templateId root="2.16.756.5.30.1.1.10.2.3"/>
+		<assignedCustodian>
+			<representedCustodianOrganization>
+				<!-- The custodian's id (GLN).  -->
+				<id extension="7601000201041" root="2.51.1.3"/>
+				<!-- The custodian's name. -->
+				<name use="L">Gruppenpraxis CH, Dr. med. Allzeit Bereit, Facharzt für Allgemeine Medizin</name>
+				<!-- The custodian's address - also according to eCH-0010. -->
+				<addr use="WP">
+					<streetName>Doktorgasse</streetName>
+					<houseNumber>2</houseNumber>
+					<postalCode>8888</postalCode>
+					<city>Musterhausen</city>
+					<country>CH</country>
+				</addr>
+			</representedCustodianOrganization>
+		</assignedCustodian>
+	</custodian>
+
+	<!-- The main recipient of the document according to CDA-CH v2.1 and case study "hip joint replacement". -->
+	<informationRecipient typeCode="PRCP">
+		<templateId root="2.16.756.5.30.1.1.10.2.4"/>
+		<intendedRecipient>
+			<receivedOrganization>
+				<!-- The addressee's name. -->
+				<name use="L">RoDiag Radiologieinstitut</name>
+				<!-- The addressee's address - also according to eCH-0010. -->
+				<addr use="WP">
+					<streetName>Röntgenstr.</streetName>
+					<houseNumber>1</houseNumber>
+					<postalCode>8888</postalCode>
+					<city>Musterhausen</city>
+					<country>CH</country>
+				</addr>
+			</receivedOrganization>
+		</intendedRecipient>
+	</informationRecipient>
+
+	<!-- The legal authenticator of the document according to CDA-CH v2.1 and case study "hip joint replacement". -->
+	<legalAuthenticator>
+		<templateId root="2.16.756.5.30.1.1.10.2.5"/>
+		<!-- Timestamp of the signature. -->
+		<time value="20171003"/>
+		<signatureCode code="S"/>
+		<assignedEntity>
+			<!-- The assigned entity's id (including the assigned person's id). -->
+			<id extension="7601000201041" root="2.51.1.3"/>
+			<assignedPerson>
+				<!-- The person's legal name (with required family and given name). -->
+				<name use="L">
+					<prefix qualifier="AC">Dr. med.</prefix>
+					<given>Allzeit</given>
+					<family>Bereit</family>
+					<suffix>Facharzt für Allgemeine Medizin</suffix>
+				</name>
+			</assignedPerson>
+		</assignedEntity>
+	</legalAuthenticator>
+
+
+	<!--
+	********************************************************
+	CDA Body
+	********************************************************
+	-->
+	<component>
+		<structuredBody>
+			<!--
+			********************************************************
+			Gewünschte Untersuchung
+			********************************************************
+			-->
+			<component>
+				<section>
+					<title>Gewünschte Untersuchung</title>
+					<text>
+						<content>
+							Der Patient erwartet Ihr Aufgebot zur Untersuchung.<br/>
+						</content>
+						<content styleCode="Italics">
+							Spezifizierung der gewünschten Untersuchung<br/>
+						</content>
+					</text>
+				</section>
+			</component>
+			<!--
+			********************************************************
+			Dringlichkeit / Wunschtermin
+			********************************************************
+			-->
+			<component>
+				<section>
+					<title>Dringlichkeit / Wunschtermin</title>
+					<text>
+						<content styleCode="Italics">
+							Angaben zum gewünschten Termin
+						</content>
+					</text>
+				</section>
+			</component>
+			<!--
+			********************************************************
+			Fragestellung
+			********************************************************
+			-->
+			<component>
+				<section>
+					<title>Fragestellung</title>
+					<text>
+						<content styleCode="Italics">
+							Grund für die Durchführung der Untersuchung und Angaben zum aktuellen Leiden resp. zum Grund der Untersuchung
+						</content>
+					</text>
+				</section>
+			</component>
+			<!--
+			********************************************************
+			Angaben zum Patienten
+			********************************************************
+			-->
+			<component>
+				<section>
+					<title>Angaben zum Patienten</title>
+					<text>
+						<content styleCode="Italics">
+							Erfolgte Voruntersuchungen<br/>
+							Befundkopie – Empfänger<br/>
+						</content>
+					</text>
+				</section>
+			</component>
+			<!--
+			********************************************************
+			Klinische Angaben
+			********************************************************
+			-->
+			<component>
+				<section>
+					<title>Klinische Angaben</title>
+					<text>
+						<content styleCode="Italics">
+							Beschreibung des aktuellen Leidens<br/>
+							Schwangerschaft ja / nein<br/>
+							Laborwerte (Quick / Tc, Kreatinin)<br/>
+							Bekannte Allergien<br/>
+						</content>
+					</text>
+				</section>
+			</component>
+		</structuredBody>
+	</component>
+
+</ClinicalDocument>

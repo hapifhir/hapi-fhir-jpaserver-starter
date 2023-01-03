@@ -1,4 +1,7 @@
-data
+database
+**/with-postgres/data
+**/with-preload/data
+
 fhir.logdir
 fhir.logdir_IS_UNDEFINED
 mydump
@@ -182,3 +185,5 @@ database/h2.trace.db
 
 # Helm Chart dependencies
 **/charts/*.tgz
+
+.apt_generated_tests
