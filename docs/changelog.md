@@ -1,3 +1,9 @@
+2023/01/xxx Release 3.0.0
+- Extracting matchbox-engine out of matchbox for validation and transformation with validation engine
+- CDA transformation: Updating to latest [CDA Core 2.0 logical model](https://github.com/ahdis/cda-core-2.0/releases/download/v0.0.4-dev/cda-core-2.0.2.1.0-cibuild.tgz) with lab/pharm additions, [package https://github.com/ahdis/cda-core-2.0/releases/download/v0.0.4-dev/cda-core-2.0.2.1.0-cibuild.tgz]
+- matchbox-server for validation and transformation but not storage of FHIR resources
+- removing questionnaire viewer and mobile access gateway gui
+
 2022/09/11 Release 2.4.0
 - hapi-fhir 6.2.0 and org.hl7.fhir.core 5.6.43
 - update mobile access

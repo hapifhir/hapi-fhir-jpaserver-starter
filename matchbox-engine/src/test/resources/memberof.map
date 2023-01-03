@@ -1,0 +1,8 @@
+map "http://ahdis.ch/matchbox/fml/memberof" = "memberof"
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as source
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as target
+
+group MemberOf(source src : Patient, target tgt : Patient) {
+//  src where gender.memberOf("http://hl7.org/fhir/ValueSet/administrative-gender") -> tgt.gender = 'male' "memberof";
+    src where maritalStatus.memberOf("http://hl7.org/fhir/ValueSet/marital-status") -> tgt.gender = 'male' "memberof";
+}

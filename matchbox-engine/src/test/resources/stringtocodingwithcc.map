@@ -1,0 +1,13 @@
+map "http://ahdis.ch/matchbox/fml/stringtocodingwithcc" = "stringtocodingwithcc"
+
+uses "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse" alias QuestionnaireResponse as source
+uses "http://hl7.org/fhir/StructureDefinition/ExplanationOfBenefit" alias ExplanationOfBenefit as target
+
+group stringtocoding(source src : QuestionnaireResponse, target tgt : ExplanationOfBenefit) {
+    src.item as item -> tgt as eob then item(item, eob);
+}
+  
+group item(source src, target tgt: ExplanationOfBenefit) {
+   src.item as item where linkId in ('patient.claim-type') -> 
+   tgt.type = cc('http://terminology.hl7.org/CodeSystem/communication-category', 'notification') "code2coding";
+}

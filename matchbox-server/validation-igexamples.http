@@ -1,0 +1,158 @@
+### @host = http://test.ahdis.ch/matchbox/fhir
+@host = http://localhost:8080/matchbox/fhir
+
+### @host = http://hapi.fhir.org/baseR4
+
+## No issues detected during validation
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/xml
+
+< ../ch-core/input/examples/patient/FranzMuster.xml
+
+###
+POST  https://lforms-fhir.nlm.nih.gov/baseR4/Patient/$validate
+
+### No issues detected during validation
+
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/xml
+
+< ../ch-emed/input/examples/medicationstatement/2-3-MedStatBeloczok.xml
+
+### No issues detected during validation
+###   for ../ch-emed/input/examples/medication/2-3-Beloczok.xml we have a 
+###   <system value="http://unitsofmeasure.org"/> <code value="mg"/> and the codesystem is not provided here: heWantSystemUrlAndVersion=null 
+###   adapted hapi-fhir-validation/src/main/java/org/hl7/fhir/common/hapi/validation/support/InMemoryTerminologyServerValidationSupport.java
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/xml
+
+< ../ch-emed/input/examples/medication/2-3-Beloczok.xml
+
+
+### No issues detected during validatio
+### Maybe problem with message: [BaseTermReadSvcImpl.java:1468] ValueSet.url[http://fhir.ch/ig/ch-epr-term/ValueSet/DocumentEntry.healthcareFacilityTypeCode] is present in terminology tables but not ready for persistence-backed invocation of operation $validation-code. Will perform in-memory code validation. Current status: NOT_EXPANDED | The ValueSet is waiting to be picked up and pre-expanded by a scheduled task.
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/xml
+
+< ../ch-core/input/examples/organization/Radiologieinstitut.xml
+
+
+### ValueSet DocumentEntry.healthcareFacilityTypeCode
+
+GET {{host}}/ValueSet/DocumentEntry.healthcareFacilityTypeCode HTTP/1.1
+Accept: application/xml
+Content-Type: application/xml
+
+
+### "None of the codings provided are in the value set http://fhir.ch/ig/ch-rad-order/ValueSet/ch-rad-order-caveat-condition (http://fhir.ch/ig/ch-rad-order/ValueSet/ch-rad-order-caveat-condition), and a coding from this value set is required) (codes = http://snomed.info/sct#879862001)"
+### https://fhir.ch/ig/ch-rad-order/ValueSet-ch-rad-order-caveat-condition.html
+### ValueSet include
+### needs a fresh database -> do not an InMemory Expand and exclude defer
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+json
+
+< ../ch-rad-order/fsh-generated/resources/Condition-CaveatBodyPiercing.json
+
+
+
+### [12: file ch.fhir.ig.ch-core#2.0.0-Bundle-CdaContainingOriginalRepresentationAsPdfA]
+### error wend sending in Parameters (catched from validator Unable to find a match for profile PractitionerRole/cac33923-b081-4060-bd57-46ee35dd5a33 among choices: http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-practitionerrole")
+### switched to direct POST for test with specifying profile
+
+### removed vocabulary
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/CdaContainingOriginalRepresentationAsPdfA.xml
+
+### [22: file ch.fhir.ig.ch-core#2.0.0-Consent-EncounterExcludedForEpr]
+POST {{host}}/$validate HTTP/1.1
+Content-Type: application/fhir+json
+
+< ../ch-core/input/examples/consent/EncounterExcludedForEpr.json
+
+### [142: file ch.fhir.ig.ch-orf#0.10.0-Composition-comp-order-referral-form]
+### [162: file ch.fhir.ig.ch-rad-order#0.1.0-Composition-CompositionRadiologyOrder]
+
+### [163: file ch.fhir.ig.ch-rad-order#0.1.0-Condition-CaveatDrugPrescriptionMetformin]
+###<OperationOutcome xmlns="http://hl7.org/fhir"><id value="84bd5811eda42dfae1d428b7e5d4d04b568861668c15b6a1ae7ac3b14db36a6a"/><text><status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"> <h1>Operation Outcome</h1> <table border="0"> <tr> <td style="font-weight: bold;">ERROR</td> <td>[Condition.code, Line 1, Col 1332]</td> <td> <pre>None of the codings provided are in the value set http://fhir.ch/ig/ch-rad-order/ValueSet/ch-rad-order-caveat-condition (http://fhir.ch/ig/ch-rad-order/ValueSet/ch-rad-order-caveat-condition), and a coding from this value set is required) (codes = http://snomed.info/sct#372567009)</pre> </td> </tr> </table> </div></text><issue><extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line"><valueInteger value="1"/></extension><severity value="error"/><code value="processing"/><diagnostics value="None of the codings provided are in the value set http://fhir.ch/ig/ch-rad-order/ValueSet/ch-rad-order-caveat-condition (http://fhir.ch/ig/ch-rad-order/ValueSet/ch-rad-order-caveat-condition), and a coding from this value set is required) (codes = http://snomed.info/sct#372567009)"/><location value="Condition.code"/><location value="Line 1, Col 1332"/></issue></OperationOutcome>
+### 372567009 is in the expanded Valueset, but we cannot yet expand the valueset https://fhir.ch/ig/ch-rad-order/ValueSet-ch-rad-order-caveat-condition.html with the compose includes to other Valuests -> ignore it
+
+### [165: file ch.fhir.ig.ch-rad-order#0.1.0-Condition-CaveatDeviceCardiacPacemaker]
+### [195: file ch.fhir.ig.ch-etoc#0.1.0-Composition-CompositionEtoc]
+## Composition problems are probably that the references are not existing
+
+
+
+## StructureDefintion
+GET {{host}}/StructureDefinition?base-path=Patient&_summary=true HTTP/1.1
+Accept: application/xml
+Content-Type: application/xml
+
+
+
+### StructureDefintion
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard HTTP/1.1
+Content-Type: application/fhir+json
+
+< ./poc/medicationCardTest.json
+
+
+### Implementation Guide
+GET http://localhost:8080/matchbox/fhir/ImplementationGuide/ch.fhir.ig.ch-core
+Accept: application/gzip
+
+
+
+### StructureDefintion
+POST {{host}} HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/BundleInTransaction.xml
+
+### StructureDefintion
+POST {{host}} HTTP/1.1
+Content-Type: application/fhir+json
+
+< ./examples/BundleInTransaction.json
+
+
+### StructureDefintion
+POST {{host}}/Bundle HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/BundleInPost.xml
+
+
+### GET
+GET {{host}}/Bundle/405 HTTP/1.1
+Content-Type: application/fhir+xml
+
+
+### GET
+GET {{host}}/Bundle/166 HTTP/1.1
+Content-Type: application/fhir+xml
+
+### StructureDefintion
+POST {{host}} HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/BundleInTransaction.xml
+
+### StructureDefintion
+POST {{host}}/Bundle HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/BundleInCollection.xml
+
+### StructureDefintion
+POST {{host}}/Bundle HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/BundleInBundleWithContained.xml
+
+### StructureDefintion
+POST {{host}} HTTP/1.1
+Content-Type: application/fhir+xml
+
+< ./examples/BundleInTransactionId.xmlc

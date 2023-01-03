@@ -1,0 +1,20 @@
+map "http://ahdis.ch/matchbox/fml/cast" = "cast"
+
+uses "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse" alias QuestionnaireResponse as source
+uses "http://hl7.org/fhir/StructureDefinition/Observation" alias Observation as target
+
+group qrtocobs(source src : QuestionnaireResponse, target tgt : Observation) {
+    src.extension as ext where (url = 'urn:implicitstring') then {
+        ext.value as value -> tgt.extension as ext, ext.url="urn:implicitstring", ext.value = value "item";
+    } "implictstring";
+    src.extension as ext where (url = 'urn:explicitstring') then {
+        ext.value as value -> tgt.extension as ext, ext.url="urn:explicitstring", ext.value = cast(value,'string') "item";
+    } "implictstring";
+    src.extension as ext where (url = 'urn:positiveInt') then {
+        ext.value as value -> tgt.extension as ext, ext.url="urn:positiveInt", ext.value = value "item";
+    } "positiveInt";
+    src.extension as ext where (url = 'urn:positiveIntString') then {
+        ext.value as value -> tgt.extension as ext, ext.url="urn:positiveIntString", ext.value = cast(value,'positiveInt') "item";
+    } "positiveInt";
+}
+
