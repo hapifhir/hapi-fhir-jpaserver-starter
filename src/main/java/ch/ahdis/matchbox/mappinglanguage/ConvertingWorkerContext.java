@@ -74,9 +74,9 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
   }
   
 
-  // see Issue https://github.com/ahdis/matchbox/issues/31  
+  // see Issue https://github.com/ahdis/matchbox/issues/31  FIXME
   // this function gets now only the base StructureDefinition for R4 which the FHIRPathEngine is using to initialize itself
-  @Override
+  // @Override
   public List<org.hl7.fhir.r5.model.StructureDefinition> allStructures() {
 
     List<org.hl7.fhir.r5.model.StructureDefinition> retVal = myAllStructures;
@@ -97,8 +97,8 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
     return retVal;
   }
 
-
-  // Logical Models can be defined by the type, we ch
+  
+  // Logical Models can be defined by the type, FIXME
   @Override
   public org.hl7.fhir.r5.model.StructureDefinition fetchTypeDefinition(String typeName) {
     if (typeName == null) {
@@ -152,17 +152,17 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
     }
     return null;
   }
-  
-  @Override
-  public List<String> getTypeNames() {
-    List<String> result = new ArrayList<String>();
-    for (org.hl7.fhir.r5.model.StructureDefinition sd : getStructures()) {
-      if (sd.getKind() != StructureDefinitionKind.LOGICAL && sd.getDerivation() == org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule.SPECIALIZATION)
-        result.add(sd.getName());
-    }
-    Collections.sort(result);
-    return result;
-  }
+//  
+//  @Override
+//  public List<String> getTypeNames() {
+//    List<String> result = new ArrayList<String>();
+//    for (org.hl7.fhir.r5.model.StructureDefinition sd : getStructures()) {
+//      if (sd.getKind() != StructureDefinitionKind.LOGICAL && sd.getDerivation() == org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule.SPECIALIZATION)
+//        result.add(sd.getName());
+//    }
+//    Collections.sort(result);
+//    return result;
+//  }
 
 
   private static final Logger ourLog = LoggerFactory.getLogger(ConvertingWorkerContext.class);
@@ -211,7 +211,6 @@ public class ConvertingWorkerContext extends VersionSpecificWorkerContextWrapper
     return theResource;
   }
   
-  @Override
   public org.hl7.fhir.r5.model.StructureMap getTransform(String url) {
     return fixMap((org.hl7.fhir.r5.model.StructureMap) myModelConverter
         .toCanonical(doFetchResource(org.hl7.fhir.r4.model.StructureMap.class, url)));

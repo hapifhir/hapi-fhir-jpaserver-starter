@@ -22,6 +22,7 @@ import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.TerminologyServiceException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.context.IWorkerContext;
+import org.hl7.fhir.r5.context.IWorkerContextManager.IPackageLoadingTracker;
 import org.hl7.fhir.r5.formats.IParser;
 import org.hl7.fhir.r5.formats.ParserType;
 import org.hl7.fhir.r5.model.CanonicalResource;
@@ -116,15 +117,15 @@ public class VersionSpecificWorkerContextWrapper extends I18nBase implements IWo
 		setValidationMessageLanguage(getLocale());
 	}
 
-	@Override
-	public List<CanonicalResource> allConformanceResources() {
-		throw new UnsupportedOperationException(Msg.code(650));
-	}
+//	@Override
+//	public List<CanonicalResource> allConformanceResources() {
+//		throw new UnsupportedOperationException(Msg.code(650));
+//	}
 
-	@Override
-	public String getLinkForUrl(String corePath, String url) {
-		throw new UnsupportedOperationException(Msg.code(651));
-	}
+// 	@Override
+// 	public String getLinkForUrl(String corePath, String url) {
+//		throw new UnsupportedOperationException(Msg.code(651));
+//	}
 
 	@Override
 	public Set<String> getBinaryKeysAsSet() {
@@ -202,26 +203,26 @@ public class VersionSpecificWorkerContextWrapper extends I18nBase implements IWo
 		throw new UnsupportedOperationException(Msg.code(2109));
 	}
 
-	@Override
-	public void generateSnapshot(StructureDefinition input) throws FHIRException {
-		if (input.hasSnapshot()) {
-			return;
-		}
+//	@Override
+//	public void generateSnapshot(StructureDefinition input) throws FHIRException {
+//		if (input.hasSnapshot()) {
+//			return;
+//		}
+//
+//		org.hl7.fhir.r5.conformance.ProfileUtilities.ProfileKnowledgeProvider profileKnowledgeProvider = new ProfileKnowledgeWorkerR5(ourR5Context);
+//		ArrayList<ValidationMessage> messages = new ArrayList<>();
+//		org.hl7.fhir.r5.model.StructureDefinition base = fetchResource(StructureDefinition.class, input.getBaseDefinition());
+//		if (base == null) {
+//			throw new PreconditionFailedException(Msg.code(658) + "Unknown base definition: " + input.getBaseDefinition());
+//		}
+//		new org.hl7.fhir.r5.conformance.ProfileUtilities(this, messages, profileKnowledgeProvider).generateSnapshot(base, input, "", null, "");
+//
+//	}
 
-		org.hl7.fhir.r5.conformance.ProfileUtilities.ProfileKnowledgeProvider profileKnowledgeProvider = new ProfileKnowledgeWorkerR5(ourR5Context);
-		ArrayList<ValidationMessage> messages = new ArrayList<>();
-		org.hl7.fhir.r5.model.StructureDefinition base = fetchResource(StructureDefinition.class, input.getBaseDefinition());
-		if (base == null) {
-			throw new PreconditionFailedException(Msg.code(658) + "Unknown base definition: " + input.getBaseDefinition());
-		}
-		new org.hl7.fhir.r5.conformance.ProfileUtilities(this, messages, profileKnowledgeProvider).generateSnapshot(base, input, "", null, "");
-
-	}
-
-	@Override
-	public void generateSnapshot(StructureDefinition theStructureDefinition, boolean theB) {
-		// nothing yet
-	}
+//	@Override
+//	public void generateSnapshot(StructureDefinition theStructureDefinition, boolean theB) {
+//		// nothing yet
+//	}
 
 	@Override
 	public org.hl7.fhir.r5.model.Parameters getExpansionParameters() {
@@ -233,31 +234,31 @@ public class VersionSpecificWorkerContextWrapper extends I18nBase implements IWo
 		myExpansionProfile = expParameters;
 	}
 
-	@Override
-	public List<StructureDefinition> allStructures() {
+//	@Override
+//	public List<StructureDefinition> allStructures() {
+//
+//		List<StructureDefinition> retVal = myAllStructures;
+//		if (retVal == null) {
+//			retVal = new ArrayList<>();
+//			for (IBaseResource next : myValidationSupportContext.getRootValidationSupport().fetchAllStructureDefinitions()) {
+//				try {
+//					Resource converted = myModelConverter.toCanonical(next);
+//					retVal.add((StructureDefinition) converted);
+//				} catch (FHIRException e) {
+//					throw new InternalErrorException(Msg.code(659) + e);
+//				}
+//			}
+//			myAllStructures = retVal;
+//		}
+//
+//		return retVal;
+//	}
 
-		List<StructureDefinition> retVal = myAllStructures;
-		if (retVal == null) {
-			retVal = new ArrayList<>();
-			for (IBaseResource next : myValidationSupportContext.getRootValidationSupport().fetchAllStructureDefinitions()) {
-				try {
-					Resource converted = myModelConverter.toCanonical(next);
-					retVal.add((StructureDefinition) converted);
-				} catch (FHIRException e) {
-					throw new InternalErrorException(Msg.code(659) + e);
-				}
-			}
-			myAllStructures = retVal;
-		}
-
-		return retVal;
-	}
-
-	@Override
-	public List<StructureDefinition> getStructures() {
-		return allStructures();
-	}
-
+//	@Override
+//	public List<StructureDefinition> getStructures() {
+//		return allStructures();
+//	}
+//
 	@Override
 	public void cacheResource(Resource res) {
 
@@ -407,25 +408,25 @@ public class VersionSpecificWorkerContextWrapper extends I18nBase implements IWo
 		throw new UnsupportedOperationException(Msg.code(668));
 	}
 
-	@Override
-	public List<org.hl7.fhir.r5.model.ConceptMap> findMapsForSource(String url) {
-		throw new UnsupportedOperationException(Msg.code(669));
-	}
-
-	@Override
-	public String getAbbreviation(String name) {
-		throw new UnsupportedOperationException(Msg.code(670));
-	}
-
-	@Override
-	public IParser getParser(ParserType type) {
-		throw new UnsupportedOperationException(Msg.code(671));
-	}
-
-	@Override
-	public IParser getParser(String type) {
-		throw new UnsupportedOperationException(Msg.code(672));
-	}
+//	@Override
+//	public List<org.hl7.fhir.r5.model.ConceptMap> findMapsForSource(String url) {
+//		throw new UnsupportedOperationException(Msg.code(669));
+//	}
+//
+//	@Override
+//	public String getAbbreviation(String name) {
+//		throw new UnsupportedOperationException(Msg.code(670));
+//	}
+//
+//	@Override
+//	public IParser getParser(ParserType type) {
+//		throw new UnsupportedOperationException(Msg.code(671));
+//	}
+//
+//	@Override
+//	public IParser getParser(String type) {
+//		throw new UnsupportedOperationException(Msg.code(672));
+//	}
 
 	@Override
 	public List<String> getResourceNames() {
@@ -437,46 +438,46 @@ public class VersionSpecificWorkerContextWrapper extends I18nBase implements IWo
 		return myValidationSupportContext.getRootValidationSupport().getFhirContext().getResourceTypes();
 	}
 
-	@Override
-	public List<String> getCanonicalResourceNames() {
-		throw new UnsupportedOperationException(Msg.code(2110));
-	}
-
-	@Override
-	public org.hl7.fhir.r5.model.StructureMap getTransform(String url) {
-		throw new UnsupportedOperationException(Msg.code(673));
-	}
-
-	@Override
-	public String getOverrideVersionNs() {
-		return null;
-	}
-
-	@Override
-	public void setOverrideVersionNs(String value) {
-		throw new UnsupportedOperationException(Msg.code(674));
-	}
+//	@Override
+//	public List<String> getCanonicalResourceNames() {
+//		throw new UnsupportedOperationException(Msg.code(2110));
+//	}
+//
+//	@Override
+//	public org.hl7.fhir.r5.model.StructureMap getTransform(String url) {
+//		throw new UnsupportedOperationException(Msg.code(673));
+//	}
+//
+//	@Override
+//	public String getOverrideVersionNs() {
+//		return null;
+//	}
+//
+//	@Override
+//	public void setOverrideVersionNs(String value) {
+//		throw new UnsupportedOperationException(Msg.code(674));
+//	}
 
 	@Override
 	public StructureDefinition fetchTypeDefinition(String typeName) {
 		return fetchResource(StructureDefinition.class, "http://hl7.org/fhir/StructureDefinition/" + typeName);
 	}
 
-	@Override
-	public StructureDefinition fetchRawProfile(String url) {
-		StructureDefinition retVal = fetchResource(StructureDefinition.class, url);
+//	@Override FIXME
+//	public StructureDefinition fetchRawProfile(String url) {
+//		StructureDefinition retVal = fetchResource(StructureDefinition.class, url);
+//
+//		if (retVal != null && retVal.getSnapshot().isEmpty()) {
+//			generateSnapshot(retVal);
+//		}
+//
+//		return retVal;
+//	}
 
-		if (retVal != null && retVal.getSnapshot().isEmpty()) {
-			generateSnapshot(retVal);
-		}
-
-		return retVal;
-	}
-
-	@Override
-	public List<String> getTypeNames() {
-		throw new UnsupportedOperationException(Msg.code(675));
-	}
+//	@Override
+//	public List<String> getTypeNames() {
+//		throw new UnsupportedOperationException(Msg.code(675));
+//	}
 
 	@Override
 	public UcumService getUcumService() {
@@ -493,15 +494,15 @@ public class VersionSpecificWorkerContextWrapper extends I18nBase implements IWo
 		return myValidationSupportContext.getRootValidationSupport().getFhirContext().getVersion().getVersion().getFhirVersionString();
 	}
 
-	@Override
-	public String getSpecUrl() {
-		throw new UnsupportedOperationException(Msg.code(678));
-	}
-
-	@Override
-	public boolean hasCache() {
-		throw new UnsupportedOperationException(Msg.code(679));
-	}
+//	@Override
+//	public String getSpecUrl() {
+//		throw new UnsupportedOperationException(Msg.code(678));
+//	}
+//
+//	@Override
+//	public boolean hasCache() {
+//		throw new UnsupportedOperationException(Msg.code(679));
+//	}
 
 	@Override
 	public <T extends Resource> boolean hasResource(Class<T> class_, String uri) {
@@ -518,27 +519,28 @@ public class VersionSpecificWorkerContextWrapper extends I18nBase implements IWo
 		throw new UnsupportedOperationException(Msg.code(681));
 	}
 
-	@Override
-	public List<org.hl7.fhir.r5.model.StructureMap> listTransforms() {
-		throw new UnsupportedOperationException(Msg.code(682));
-	}
-
-	@Override
-	public IParser newJsonParser() {
-		throw new UnsupportedOperationException(Msg.code(683));
-	}
-
-	@Override
-	public IResourceValidator newValidator() {
-		throw new UnsupportedOperationException(Msg.code(684));
-	}
-
-	@Override
-	public IParser newXmlParser() {
-		throw new UnsupportedOperationException(Msg.code(685));
-	}
-
-	@Override
+	// FXIME
+//	@Override
+//	public List<org.hl7.fhir.r5.model.StructureMap> listTransforms() {
+//		throw new UnsupportedOperationException(Msg.code(682));
+//	}
+//
+//	@Override
+//	public IParser newJsonParser() {
+//		throw new UnsupportedOperationException(Msg.code(683));
+//	}
+//
+//	@Override
+//	public IResourceValidator newValidator() {
+//		throw new UnsupportedOperationException(Msg.code(684));
+//	}
+//
+//	@Override
+//	public IParser newXmlParser() {
+//		throw new UnsupportedOperationException(Msg.code(685));
+//	}
+//
+//	@Override FIXME
 	public String oid2Uri(String code) {
 		throw new UnsupportedOperationException(Msg.code(686));
 	}
@@ -791,7 +793,10 @@ public class VersionSpecificWorkerContextWrapper extends I18nBase implements IWo
 				converter = new VersionTypeConverterR4();
 				break;
 			}
-
+			case R4B: {
+				converter = new VersionTypeConverterR4B();
+				break;
+			}
 			case R5: {
 				converter = IDENTITY_VERSION_TYPE_CONVERTER;
 				break;
@@ -803,6 +808,36 @@ public class VersionSpecificWorkerContextWrapper extends I18nBase implements IWo
 
 		return new VersionSpecificWorkerContextWrapper(new ValidationSupportContext(theValidationSupport), converter);
 	}
+
+	// FIXME
+	@Override
+	public <T extends Resource> List<T> fetchResourcesByType(Class<T> arg0) {
+		if (StructureDefinition.class.equals(arg0)) {
+			List<StructureDefinition> retVal = myAllStructures;
+			if (retVal == null) {
+				retVal = new ArrayList<>();
+				for (IBaseResource next : myValidationSupportContext.getRootValidationSupport().fetchAllStructureDefinitions()) {
+					try {
+						Resource converted = myModelConverter.toCanonical(next);
+						retVal.add((StructureDefinition) converted);
+					} catch (FHIRException e) {
+						throw new InternalErrorException(Msg.code(659) + e);
+					}
+				}
+				myAllStructures = retVal;
+			}
+			return (List<T>) retVal;
+		}
+		return new ArrayList<>();
+	}
+
+	// FIXME
+	@Override
+	public IResourceValidator newValidator() throws FHIRException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
 
 

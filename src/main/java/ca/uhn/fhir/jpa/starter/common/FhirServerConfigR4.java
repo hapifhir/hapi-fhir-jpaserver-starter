@@ -2,8 +2,6 @@ package ca.uhn.fhir.jpa.starter.common;
 
 import java.io.IOException;
 
-import javax.annotation.PostConstruct;
-
 import org.hl7.fhir.common.hapi.validation.support.UnknownCodeSystemWarningValidationSupport;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.hl7.fhir.r5.utils.validation.constants.BestPracticeWarningLevel;
@@ -14,7 +12,6 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.env.ConfigurableEnvironment;
 
 import ca.uhn.fhir.batch2.jobs.reindex.ReindexAppCtx;
 import ca.uhn.fhir.context.FhirContext;
@@ -27,7 +24,7 @@ import ca.uhn.fhir.jpa.config.r4.JpaR4Config;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ca.uhn.fhir.jpa.starter.cql.StarterCqlR4Config;
-import ca.uhn.fhir.jpa.term.api.ITermReadSvcR4;
+import ca.uhn.fhir.jpa.term.TermReadSvcImpl;
 import ca.uhn.fhir.jpa.validation.ValidatorPolicyAdvisor;
 import ca.uhn.fhir.jpa.validation.ValidatorResourceFetcher;
 import ca.uhn.fhir.validation.IInstanceValidatorModule;
@@ -63,7 +60,7 @@ public class FhirServerConfigR4 {
 
 
   @Bean(autowire = Autowire.BY_TYPE)
-  public ITermReadSvcR4 terminologyService() {
+  public TermReadSvcImpl terminologyService() {
     return new ExtTermReadSvcR4();
   }
   
