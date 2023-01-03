@@ -15,9 +15,9 @@ spring:
     check-location: false
     baselineOnMigrate: true
   datasource:
-    url: ${datasource.url}
-    username: ${datasource.username}
-    password: ${datasource.password}
+    url: ${DB_PROTOCOL:jdbc:mysql}://${DB_HOST}:${DB_PORT}/${DB_NAME}?${DB_PARAMS}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driverClassName: ${datasource.driver}
     max-active: 15
 
