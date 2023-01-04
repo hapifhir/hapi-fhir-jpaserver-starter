@@ -41,6 +41,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
+import ca.uhn.fhir.jpa.starter.interceptor.DC4HAuthorizationInterceptor;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
@@ -360,6 +361,17 @@ public class StarterJpaConfig {
 		if (appProperties.getBinary_storage_enabled() && binaryAccessProvider.isPresent()) {
 			fhirServer.registerProvider(binaryAccessProvider.get());
 			fhirServer.registerInterceptor(binaryStorageInterceptor);
+		}
+
+		// DC4H Authorization
+		if (appProperties.getAuthorization_enabled()) {
+			ourLog.info("DC4HAuthorizationInterceptor is enabled on this server");
+			ourLog.info("DC4HAuthorizationInterceptor is looking for the following claim name: " + appProperties.getAuthorization_token_claim_name());
+			ourLog.info("DC4HAuthorizationInterceptor is looking for the read permission of: " + appProperties.getAuthorization_token_read_perm());
+			ourLog.info("DC4HAuthorizationInterceptor is looking for the write permission of: " + appProperties.getAuthorization_token_write_perm());
+			fhirServer.registerInterceptor(new DC4HAuthorizationInterceptor(appProperties));
+		} else {
+			ourLog.info("DC4HAuthorizationInterceptor is not enabled on this server");
 		}
 
 		// Validation

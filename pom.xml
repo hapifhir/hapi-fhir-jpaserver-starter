@@ -17,7 +17,7 @@
         <version>6.1.0</version>
     </parent>
 
-    <artifactId>hapi-fhir-jpaserver-starter</artifactId>
+    <artifactId>hapi-fhir-jpaserver-ods</artifactId>
     <packaging>war</packaging>
 
     <properties>
@@ -28,7 +28,7 @@
         <maven>3.8.3</maven>
     </prerequisites>
 
-    <name>HAPI FHIR JPA Server - Starter Project</name>
+    <name>HAPI FHIR JPA Server - ODS Project</name>
 
     <repositories>
         <repository>
@@ -348,6 +348,32 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring_boot_version}</version>
             <scope>test</scope>
+        </dependency>
+
+
+        <!-- DC4H - Needed for JWT Validation 
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>compile</scope> 
+        </dependency>-->
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

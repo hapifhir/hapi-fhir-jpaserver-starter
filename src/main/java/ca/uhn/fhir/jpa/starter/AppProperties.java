@@ -63,6 +63,12 @@ public class AppProperties {
   private List<Bundle.BundleType> allowed_bundle_types = null;
   private Boolean narrative_enabled = true;
 
+  //DC4H stuff
+  private Boolean authorization_enabled = false;
+  private String authorization_token_claim_name = "authorities";
+  private String authorization_token_write_perm= "";
+  private String authorization_token_read_perm= "";
+
   private Validation validation = new Validation();
   private Map<String, Tester> tester = null;
   private Logger logger = new Logger();
@@ -537,6 +543,40 @@ public class AppProperties {
 	public List<String> getLocal_base_urls() {
 		return local_base_urls;
 	}
+
+  // DC4H Settings
+  public boolean getAuthorization_enabled() {
+		return this.authorization_enabled;
+	}
+
+	public void setAuthorization_enabled(boolean authorization_enabled) {
+		this.authorization_enabled = authorization_enabled;
+	}
+
+  public String getAuthorization_token_claim_name() {
+		return this.authorization_token_claim_name;
+	}
+
+	public void setAuthorization_token_claim_name(String authorization_token_claim_name) {
+		this.authorization_token_claim_name = authorization_token_claim_name;
+	}
+
+  public String getAuthorization_token_write_perm() {
+		return this.authorization_token_write_perm;
+	}
+
+	public void setAuthorization_token_write_perm(String authorization_token_write_perm) {
+		this.authorization_token_write_perm = authorization_token_write_perm;
+	}
+
+  public String getAuthorization_token_read_perm() {
+		return this.authorization_token_read_perm;
+	}
+
+	public void setAuthorization_token_read_perm(String authorization_token_read_perm) {
+		this.authorization_token_read_perm = authorization_token_read_perm;
+	}
+
 
 	public static class Cors {
     private Boolean allow_Credentials = true;
