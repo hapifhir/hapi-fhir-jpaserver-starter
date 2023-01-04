@@ -39,9 +39,6 @@ import org.springframework.web.servlet.DispatcherServlet;
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
-    // This is needed due to the hapi-fhir upgrade, which updates logback from 1.2.10 to 1.4.4
-    System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
-
     SpringApplication.run(Application.class, args);
 
     //Server is now accessible at eg. http://localhost:8080/fhir/metadata
