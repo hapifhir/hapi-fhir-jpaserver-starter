@@ -8,7 +8,7 @@ management:
 spring:
   main:
     allow-circular-references: true
-#    allow-bean-definition-overriding: true
+    #allow-bean-definition-overriding: true
   flyway:
     enabled: false
     check-location: false
