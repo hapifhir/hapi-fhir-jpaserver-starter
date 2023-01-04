@@ -88,6 +88,12 @@ public class AppProperties {
   private Integer bundle_batch_pool_size = 20;
   private Integer bundle_batch_pool_max_size = 100;
   private final List<String> local_base_urls = new ArrayList<>();
+  
+  private final List<String> custom_interceptor_classes = new ArrayList<>();
+
+  public List<String> getCustomInterceptorClasses() {
+    return custom_interceptor_classes;
+  }
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;

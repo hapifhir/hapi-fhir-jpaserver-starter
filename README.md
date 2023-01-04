@@ -218,6 +218,9 @@ spring:
     username: admin
     password: admin
     driverClassName: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
 ```
 
 Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
@@ -235,12 +238,28 @@ spring:
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
 ```
 
+Also, make sure you are not setting the Hibernate dialect explicitly, in other words remove any lines similar to:
+
+```
+hibernate.dialect: {some none Microsoft SQL dialect}
+```
+
 
 Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
 
 
 NOTE: MS SQL Server by default uses a case-insensitive codepage. This will cause errors with some operations - such as when expanding case-sensitive valuesets (UCUM) as there are unique indexes defined on the terminology tables for codes.
 It is recommended to deploy a case-sensitive database prior to running HAPI FHIR when using MS SQL Server to avoid these and potentially other issues.
+
+## Adding custom interceptors
+Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server. 
+Interceptors will be discovered in one of two ways: 
+
+1) discovered from the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
+
+or 
+
+2) classes will be instantiated via reflection if no matching Bean is found
 
 ## Customizing The Web Testpage UI
 

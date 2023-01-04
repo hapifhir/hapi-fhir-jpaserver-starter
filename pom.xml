@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
-    <!-- 'mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 -e spring.batch.job.enabled=false distroless-hapi' -->
+    <!-- 'mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 distroless-hapi' -->
     <!--
     Note: HAPI projects use the "hapi-fhir" POM as their base to provide easy management.
     You do not need to use this in your own projects, so the "parent" tag and it's
@@ -14,7 +14,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>6.1.0</version>
+        <version>6.2.2</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-ods</artifactId>
@@ -316,11 +316,18 @@
             <version>${spring_boot_version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-core -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>1.8.5</version>
+            <version>1.9.4</version>
         </dependency>
 
         <dependency>
@@ -408,20 +415,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- The following is not required for the application to build, but allows you to test it by issuing "mvn package jetty:run -Dspring.batch.job.enabled=false" from the command line. -->
-            <!--
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty_version}</version>
-                <configuration>
-                    <webApp>
-                        <contextPath>/hapi-fhir-jpaserver</contextPath>
-                        <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
-                    </webApp>
-                </configuration>
-            </plugin>
-            -->
 
             <!-- Tell Maven which Java source version you want to use -->
             <plugin>
@@ -592,8 +585,8 @@
             </dependencies>
         </profile>
         <!-- examples of how to start the server using the default profile-->
-        <!-- mvn clean package jetty:run -Dspring.batch.job.enabled=false -->
-        <!-- java -jar -Dspring.batch.job.enabled=false jetty-runner.jar target/hapi-fhir-jpaserver.war -->
+        <!-- mvn clean package jetty:run -->
+        <!-- java -jar jetty-runner.jar target/hapi-fhir-jpaserver.war -->
         <profile>
             <id>jetty</id>
             <dependencies>

@@ -14,7 +14,10 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Conditional(OnDSTU2Condition.class)
-@Import({StarterJpaConfig.class, JpaDstu2Config.class})
+@Import({
+	JpaDstu2Config.class,
+	StarterJpaConfig.class
+})
 public class FhirServerConfigDstu2 {
 	@Bean
 	public ITermLoaderSvc termLoaderService(ITermDeferredStorageSvc theDeferredStorageSvc, ITermCodeSystemStorageSvc theCodeSystemStorageSvc) {
