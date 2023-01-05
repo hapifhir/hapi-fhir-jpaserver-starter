@@ -1,7 +1,12 @@
 package ca.uhn.fhir.jpa.ig.ips;
 
+import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
+import ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition;
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.RuntimeChildChoiceDefinition;
+import ca.uhn.fhir.context.RuntimeChildNarrativeDefinition;
 import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.narrative.CustomThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
@@ -29,6 +34,7 @@ import org.hl7.fhir.r4.model.Immunization;
 import org.hl7.fhir.r4.model.Procedure;        
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Observation.ObservationStatus;
+
 import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Address;
@@ -38,7 +44,10 @@ import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.UriType;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.hibernate.type.CustomType;
+import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.instance.model.api.INarrative;
 
 import java.util.UUID;
 import java.util.List;
@@ -47,6 +56,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Date;
 import java.time.format.DateTimeFormatter;
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 
 /*
@@ -149,8 +159,9 @@ public class PatientSummary {
                 // See hapi-fhir-jpaserver-base/src/main/java/ca/uhn/fhir/jpa/dao/index/IdHelperService.java 
 		if (searchResources.isEmpty()) {
                         throw new ResourceNotFoundException(Msg.code(2001) + "Resource is not known"); 
-                }
-        Patient patient = (Patient) searchResources.get(0);
+      }
+      
+		Patient patient = (Patient) searchResources.get(0);
 		Organization author = createAuthor();
 		Composition composition = createIPSComposition(patient, author);
 
@@ -370,7 +381,13 @@ public class PatientSummary {
 
 	private static String createSectionNarrative(IPSSection iPSSection, List<Resource> resources, FhirContext ctx) {
 		// Use the narrative generator
-		ctx.setNarrativeGenerator(new DefaultThymeleafNarrativeGenerator());
+		String NARRATIVES_PROPERTIES = "classpath:ca/uhn/fhir/narrative/narratives.properties";
+		String HAPISERVER_NARRATIVES_PROPERTIES = "classpath:ca/uhn/fhir/narrative/narratives-hapiserver.properties";
+		CustomThymeleafNarrativeGenerator generator = new CustomThymeleafNarrativeGenerator("classpath:narrative/ips_narratives.properties",NARRATIVES_PROPERTIES,HAPISERVER_NARRATIVES_PROPERTIES);
+
+		// ctx.setNarrativeGenerator(new CustomThymeleafNarrativeGenerator("classpath:narrative/ips_narratives.properties"));
+		//ctx.setNarrativeGenerator(new DefaultThymeleafNarrativeGenerator());
+		ctx.setNarrativeGenerator(generator);
 		// Create a bundle to hold the resources
 		Bundle bundle = new Bundle();
 		Composition composition = new Composition();
@@ -382,9 +399,11 @@ public class PatientSummary {
 
 		String profile = SectionProfiles.get(iPSSection);
 		bundle.setMeta(new Meta().addProfile(profile));
+		
 
 		// Generate the narrative
-		DefaultThymeleafNarrativeGenerator generator = new DefaultThymeleafNarrativeGenerator();
+		//CustomThymeleafNarrativeGenerator generator = new CustomThymeleafNarrativeGenerator("classpath:narrative/ips_narratives.properties");
+		//DefaultThymeleafNarrativeGenerator generator = new DefaultThymeleafNarrativeGenerator();
 		generator.populateResourceNarrative(ctx, bundle);
 		
 		// Get the narrative
