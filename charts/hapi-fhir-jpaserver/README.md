@@ -1,6 +1,6 @@
 # HAPI FHIR JPA Server Starter Helm Chart
 
-![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.2.1](https://img.shields.io/badge/AppVersion-6.2.1-informational?style=flat-square)
+![Version: 0.11.1](https://img.shields.io/badge/Version-0.11.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.2.2](https://img.shields.io/badge/AppVersion-6.2.2-informational?style=flat-square)
 
 This helm chart will help you install the HAPI FHIR JPA Server in a Kubernetes environment.
 
@@ -32,7 +32,7 @@ helm install --render-subchart-notes hapi-fhir-jpaserver hapifhir/hapi-fhir-jpas
 | image.pullPolicy | string | `"IfNotPresent"` | image pullPolicy to use |
 | image.registry | string | `"docker.io"` | registry where the HAPI FHIR server image is hosted |
 | image.repository | string | `"hapiproject/hapi"` | the path inside the repository |
-| image.tag | string | `"v6.2.1@sha256:8d1b4c1c8abd613f685267a3dda494d87aba4cff449eed39902a6ece2c086f3c"` | the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image. |
+| image.tag | string | `"v6.2.2@sha256:9c4e8af94d81ac0049dbb589e4cd855bf78c9c13be6f6844e814c63d63545b44"` | the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image. |
 | imagePullSecrets | list | `[]` | image pull secrets to use when pulling the image |
 | ingress.annotations | object | `{}` | provide any additional annotations which may be required. Evaluated as a template. |
 | ingress.enabled | bool | `false` | whether to create an Ingress to expose the FHIR server HTTP endpoint |
