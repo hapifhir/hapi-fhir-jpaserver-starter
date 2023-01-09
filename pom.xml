@@ -147,21 +147,21 @@
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
             is used here, but log4j would also be fine. -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+<!--        <dependency>-->
+<!--            <groupId>ch.qos.logback</groupId>-->
+<!--            <artifactId>logback-classic</artifactId>-->
             <!-- Please note that in the process of upgrading from hapi-fhir 6.22 to 6.3.4-SNAPSHOT logback was upgraded from 1.2.10. to 1.4.4.  This included the removal of the StaticLoggerBinder class. -->
             <!-- In order to resolve this error, the only solution we found was to explicitly use version 1.2.10.  However, this exposes a Spring dependency issue with the hapi-fhir-jpaserver-base module and JpaConfig method memberMatcherR4Helper(). -->
-            <version>1.2.10</version>
-        </dependency>
+<!--            <version>1.2.10</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
+<!--        <dependency>-->
+<!--            <groupId>ch.qos.logback</groupId>-->
+<!--            <artifactId>logback-core</artifactId>-->
             <!-- Please note that in the process of upgrading from hapi-fhir 6.22 to 6.3.4-SNAPSHOT logback was upgraded from 1.2.10. to 1.4.4.  This included the removal of the StaticLoggerBinder class. -->
             <!-- In order to resolve this error, the only solution we found was to explicitly use version 1.2.10.  However, this exposes a Spring dependency issue with the hapi-fhir-jpaserver-base module and JpaConfig method memberMatcherR4Helper(). -->
-            <version>1.2.10</version>
-        </dependency>
+<!--            <version>1.2.10</version>-->
+<!--        </dependency>-->
 
 
         <!-- Needed for JEE/Servlet support -->
@@ -319,13 +319,15 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${spring_boot_version}</version>
+<!--            <version>${spring_boot_version}</version>-->
+            <version>3.0.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-            <version>${spring_boot_version}</version>
+<!--            <version>${spring_boot_version}</version>-->
+            <version>3.0.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-core -->
@@ -365,7 +367,8 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring_boot_version}</version>
+<!--            <version>${spring_boot_version}</version>-->
+            <version>3.0.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -566,7 +569,8 @@
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-web</artifactId>
-                    <version>${spring_boot_version}</version>
+<!--                    <version>${spring_boot_version}</version>-->
+                    <version>3.0.1</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -579,7 +583,8 @@
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-web</artifactId>
-                    <version>${spring_boot_version}</version>
+<!--                    <version>${spring_boot_version}</version>-->
+                    <version>3.0.1</version>
                     <exclusions>
                         <exclusion>
                             <groupId>org.springframework.boot</groupId>
