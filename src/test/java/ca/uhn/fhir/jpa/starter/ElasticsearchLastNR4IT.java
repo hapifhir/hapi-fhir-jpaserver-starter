@@ -57,8 +57,12 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
   })
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
 public class ElasticsearchLastNR4IT {
+	static {
+		System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
+	}
 
-  private IGenericClient ourClient;
+
+	private IGenericClient ourClient;
   private FhirContext ourCtx;
 
   private static final String ELASTIC_VERSION = "7.16.3";

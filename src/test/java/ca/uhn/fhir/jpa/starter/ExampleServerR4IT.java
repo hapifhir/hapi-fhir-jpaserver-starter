@@ -43,6 +43,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 		// when running in a spring boot environment
 		"spring.main.allow-bean-definition-overriding=true" })
 class ExampleServerR4IT {
+
+	static {
+		System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
+	}
+
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
 	private IGenericClient ourClient;
 	private FhirContext ourCtx;

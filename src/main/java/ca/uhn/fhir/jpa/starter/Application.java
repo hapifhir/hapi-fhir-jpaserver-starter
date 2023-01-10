@@ -38,6 +38,10 @@ import org.springframework.web.servlet.DispatcherServlet;
 })
 public class Application extends SpringBootServletInitializer {
 
+	static {
+		System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
+	}
+
   public static void main(String[] args) {
 
     SpringApplication.run(Application.class, args);

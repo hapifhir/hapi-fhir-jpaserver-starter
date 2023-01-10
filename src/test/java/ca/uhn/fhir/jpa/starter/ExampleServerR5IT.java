@@ -41,7 +41,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
   })
 public class ExampleServerR5IT {
 
-  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
+	static {
+		System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
+	}
+
+	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
   private IGenericClient ourClient;
   private FhirContext ourCtx;
 
