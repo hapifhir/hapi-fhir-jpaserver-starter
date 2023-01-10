@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
 
+
         {
             "type": "java",
             "name": "Launch Current File",
@@ -20,7 +21,7 @@
         },
         {
             "type": "java",
-            "name": "Launch Matchbox-Server",
+            "name": "Launch Matchbox-Server (postres)",
             "request": "launch",
             "mainClass": "ca.uhn.fhir.jpa.starter.Application",
             "projectName": "matchbox-server",

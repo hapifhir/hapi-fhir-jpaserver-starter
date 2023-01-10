@@ -100,9 +100,9 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
     outcome.setOperationOutcome(oo);
     
     // initialize matchbox engine
-    log.info("Initializing matcbox engine(s): " +VersionUtil.getMemory());
-    matchboxEngineSupport.getMatchboxEngine("default", true);
-    log.info("Initializing matcbox engine finished: "+VersionUtil.getMemory());
+    log.info("Initializing matchbox engine(s): " +VersionUtil.getMemory());
+    matchboxEngineSupport.getMatchboxEngine("default", null, true);
+    log.info("Initializing matchbox engine finished: "+VersionUtil.getMemory());
     
     return outcome;
   }
@@ -210,9 +210,9 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
       }
     }
 	    // initialize matchbox engine
-    log.info("Initializing matcbox engine(s): " +VersionUtil.getMemory());
-    matchboxEngineSupport.getMatchboxEngine("default", true);
-    log.info("Initializing matcbox engine finsihed: "+VersionUtil.getMemory());
+    log.info("Initializing matchbox engine(s): " +VersionUtil.getMemory());
+    matchboxEngineSupport.getMatchboxEngine("default", null, true);
+    log.info("Initializing matchbox engine finished: "+VersionUtil.getMemory());
 
     return installOutcome;
 	}
@@ -412,12 +412,12 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
   			ig.setId(npmPackage.getPackageId()+"-"+npmPackage.getVersionId());
   			ig.setTitle(npmPackage.getDescription());
   			ig.setDate(npmPackage.getUpdatedTime());
-        ig.setPackageId(npmPackage.getPackageId());
-        if (npmPackage.isCurrentVersion()) {
-        	ig.setVersion(npmPackage.getVersionId()+" (current)");
-        } else {
-        	ig.setVersion(npmPackage.getVersionId());
-        }
+	        ig.setPackageId(npmPackage.getPackageId());
+			if (npmPackage.isCurrentVersion()) {
+				ig.setVersion(npmPackage.getVersionId()+" (current)");
+			} else {
+				ig.setVersion(npmPackage.getVersionId());
+			}
   			list.add(ig);
   		}
   		
@@ -428,4 +428,32 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
 			endRequest(theServletRequest);
 		}
 	}
+
+
+	@Override
+	public ImplementationGuide read(HttpServletRequest theServletRequest, IIdType theId, RequestDetails theRequestDetails) {
+
+		startRequest(theServletRequest);
+		try {
+			return new TransactionTemplate(myTxManager).execute(tx -> {
+				String id = theId.getIdPart().substring(0, theId.getIdPart().lastIndexOf("-"));
+				String version = theId.getIdPart().substring(theId.getIdPart().lastIndexOf("-")+1);
+				Optional<NpmPackageVersionEntity> packages = myPackageVersionDao.findByPackageIdAndVersion(id, version);
+				if (packages.isPresent()) {
+					NpmPackageVersionEntity npmPackage = packages.get();
+					ImplementationGuide ig = new ImplementationGuide();
+					ig.setId(npmPackage.getPackageId()+"-"+npmPackage.getVersionId());
+					ig.setTitle(npmPackage.getDescription());
+					ig.setDate(npmPackage.getUpdatedTime());
+					ig.setPackageId(npmPackage.getPackageId());
+					ig.setVersion(npmPackage.getVersionId());
+					return ig;
+				}
+				return null;
+			});
+		} finally {
+			endRequest(theServletRequest);
+		}
+	}
+
 }

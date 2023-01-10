@@ -4,35 +4,39 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
 import org.hl7.fhir.utilities.FhirPublication;
+import org.hl7.fhir.utilities.TimeTracker;
 import org.hl7.fhir.validation.IgLoader;
+import org.hl7.fhir.validation.cli.services.SessionCache;
+import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
-import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionEntity;
 import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.MatchboxEngine.MatchboxEngineBuilder;
+
 
 public class MatchboxEngineSupport {
 	
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxEngineSupport.class);
 
 	private static MatchboxEngine engine = null;
+	private SessionCache sessionCache;
 	
 	private boolean initialized = false;
 
-  @Autowired
-  private DaoRegistry myDaoRegistry;
+	@Autowired
+	private DaoRegistry myDaoRegistry;
   
 	
 	@Autowired
@@ -45,24 +49,16 @@ public class MatchboxEngineSupport {
 	private IHapiPackageCacheManager myPackageCacheManager;
 
 	@Autowired
-  private INpmPackageVersionDao myNpmPackageVersionDao;
+	private INpmPackageVersionDao myNpmPackageVersionDao;
 	
 	@Autowired(required = false)
-  private IBinaryStorageSvc myBinaryStorageSvc;
+	private IBinaryStorageSvc myBinaryStorageSvc;
 
-//  public ImplementationGuide getImplementationGuide(String canonical) {
-//    SearchParameterMap params = new SearchParameterMap();
-//    params.setLoadSynchronousUpTo(1);
-//    params.add(ImplementationGuide.SP_RESOURCE, new ReferenceParam(canonical));
-//    IBundleProvider search = myDaoRegistry.getResourceDao("ImplementationGuide").search(params);
-//    Integer size = search.size();
-//    if (size!=null && size.intValue()==1) {
-//      return (ImplementationGuide) search.getResources(0, 1).get(0);
-//    }
-//    return null;
-//  }
+	public MatchboxEngineSupport() {
+		this.sessionCache = new SessionCache();
+	}
 
-	// FIXME this assumes that the cannoncial and ig version are the same
+	// Note this assumes that the canonical and ig version are the same if the version is specified 
 	public NpmPackageVersionResourceEntity loadPackageAssetByUrl(String theCanonicalUrl) {
 		NpmPackageVersionResourceEntity resourceEntity  = new TransactionTemplate(myTxManager).execute(tx -> {
 			String canonicalUrl = theCanonicalUrl;
@@ -73,13 +69,13 @@ public class MatchboxEngineSupport {
 				canonicalUrl = canonicalUrl.substring(0, versionSeparator);
 				slice = myPackageVersionResourceDao.findByCanonicalUrlByCanonicalVersion(PageRequest.of(0, 2), canonicalUrl, canonicalVersion);
 			} else {
-				slice = myPackageVersionResourceDao.findByCanonicalUrl(PageRequest.of(0, 2), canonicalUrl);
+				slice = myPackageVersionResourceDao.findCurrentByCanonicalUrl(PageRequest.of(0, 2), canonicalUrl);
 			}
 			if (slice.isEmpty()) {
 				return null;
 			} 
 			if (slice.getContent().size()>1) {
-				log.error("multiple entries with same canoncial (version) for "+theCanonicalUrl);
+				log.error("multiple entries with same canonical (version) for "+theCanonicalUrl);
 			}
 			return slice.getContent().get(0);
 		});
@@ -88,25 +84,35 @@ public class MatchboxEngineSupport {
 		
 			
 	/**
-	 * returns a matchbox-engine for the specified canoncial
-	 * @param canonical
-	 * @return
+	 * returns a matchbox-engine for the specified canonical with cliClontext parameters
+	 * @param canonical URL to validate
+	 * @param cliContext cliContext parameters
+	 * @param reload if true, reload the engine
+	 * @return matchbox-engine
 	 * @throws IOException 
 	 */
-	public synchronized MatchboxEngine getMatchboxEngine(String canonical, boolean reload) {
+	public synchronized MatchboxEngine getMatchboxEngine(String canonical, CliContext cliContext, boolean reload) {
+		TimeTracker tt = new TimeTracker();
+		
 		if (reload) {
 			engine = null;
+			if ("default".endsWith(canonical)){
+				this.sessionCache = new SessionCache();
+			}
 			this.setInitialized(false);
+		}
+		if (cliContext == null) {
+			cliContext = new CliContext();
 		}
 		if (engine == null) {
 				try {
 					engine = new MatchboxEngineBuilder().getEngine();
 				} catch (FHIRException e) {
-					log.error("error generating machbox engine", e);
+					log.error("error generating matchbox engine", e);
 				} catch (IOException e) {
-					log.error("error generating machbox engine", e);
+					log.error("error generating matchbox engine", e);
 				} catch (URISyntaxException e) {
-					log.error("error generating machbox engine", e);
+					log.error("error generating matchbox engine", e);
 				}
 				
 					IgLoader igLoader = null;
@@ -118,18 +124,12 @@ public class MatchboxEngineSupport {
 						log.error("error generating matchbox engine", e);
 					}
 					engine.setIgLoader(igLoader);
-					// FIXME we should do this configurable
-					String tx = "https://tx.fhir.org/r4";
 					try {
-						engine.getContext().setNoTerminologyServer(false);
-						engine.getContext().setCanRunWithoutTerminology(false);
-						String txLog = engine.setTerminologyServer(tx, null, FhirPublication.R4);
-						log.info(txLog);
 						engine.loadPackage("hl7.terminology",  "5.0.0");
 						engine.loadPackage("hl7.fhir.r4.core",  "4.0.1");
 						this.initialized = true;
-					} catch (FHIRException | URISyntaxException | IOException e) {
-						log.error("error connecting to terminology server "+tx);
+					} catch (FHIRException | IOException e) {
+						log.error("error connecting to terminology server ");
 						return null;
 					}
 		}
@@ -138,51 +138,113 @@ public class MatchboxEngineSupport {
 			log.error("ValidationEngine is not yet initialized");
 		}
 
-		// Current we just have one matchbox engine, we would like to create one per package and validation parameters
-		// This will allow to have multiple valdiation engines defined per package and parameters
-		// e.g. we can use validation with one version of a package and another version
-		
-		// FIXME: get the package from the canonical
-		// FIXME: extend to additional validation parameters
-		// FIXME: create a MatchboxEngine with the combination of ht package and validation parameters which can be used in subsequent requests
-		
-		if (canonical == null || "default".equals(canonical)) {
-			return engine;
-		}
-		
-		if (engine.getStructureDefinition(canonical)!=null) {
-			// Core StructureDefininitions etc.
-			return engine;
-		}
-		
-		NpmPackageVersionResourceEntity  npm = loadPackageAssetByUrl(canonical);
-		if (npm!=null) {
-			NpmPackageVersionEntity npmPackageVersion = npm.getPackageVersion();
-			String packageId = npmPackageVersion.getPackageId();
-			String packageVersionId = npmPackageVersion.getVersionId();
-			for(org.hl7.fhir.r5.model.ImplementationGuide igEngine: engine.getIgs()) {
-				// we check that the package is load
-				if (packageId.equals(igEngine.getPackageId()) && packageVersionId.equals(igEngine.getVersion())) {
-					return engine;
+		String ig = cliContext.getIgs().size()>0 ? cliContext.getIgs().get(0):null;		
+		if (ig == null) {
+			if ("default".equals(canonical) || canonical == null || engine.getStructureDefinition(canonical)!=null) {
+				ig = "hl7.fhir.r4.core#4.0.1";
+			} else {
+				NpmPackageVersionResourceEntity  npm = loadPackageAssetByUrl(canonical);
+				if (npm==null) {
+					log.error("package not found for canonical url "+canonical);
+					return null;
 				}
-			}
-			// loaddd missing package
-			try {
-				
-				log.info("loading package into engine "+packageId+"#"+packageVersionId);
-				engine.loadPackage(packageId,  packageVersionId);
-				log.info("done loading package into engine "+packageId+"#"+packageVersionId);
-			} catch (FHIRException e) {
-				log.error("error loading pacakge "+packageId+"#"+packageVersionId, e);
-				return null;
-			} catch (IOException e) {
-				log.error("error loading pacakge "+packageId+"#"+packageVersionId, e);
-				return null;
+				ig = npm.getPackageVersion().getPackageId()+"#"+npm.getPackageVersion().getVersionId();
+				log.info("using ig "+ig+" for canonical url "+canonical);
 			}
 		}
-		return engine;
-	}
+		cliContext.getIgs().clear();
+		cliContext.getIgs().add(ig);
 
+		// check if we have already a validator in cache for that
+		MatchboxEngine matchboxEngine = (MatchboxEngine) this.sessionCache.fetchSessionValidatorEngine(""+cliContext.hashCode());
+		if (matchboxEngine!=null && reload == false) {
+			log.info("using cached validate engine for "+ig+" with parameters "+cliContext.hashCode());
+			return matchboxEngine;
+		}
+		
+		// create a new validator
+		log.info("creating new validate engine for "+ig+" with parameters "+cliContext.hashCode());
+		try {
+			matchboxEngine = new MatchboxEngine(engine);
+			MatchboxEngine validator = matchboxEngine;
+
+// FIXME should we load this			if (!VersionUtilities.isR5Ver(validator.getContext().getVersion())) {
+//				log.info("  Load R5 Extensions");
+//				R5ExtensionsLoader r5e = new R5ExtensionsLoader(validator.getPcm(), validator.getContext());
+//				r5e.load();
+//				r5e.loadR5Extensions();
+//				log.info(" - " + r5e.getCount() + " resources (" + tt.milestone() + ")");
+//			}
+			log.info("  Terminology server " + cliContext.getTxServer());
+			String txServer = cliContext.getTxServer();
+			if ("n/a".equals(cliContext.getTxServer())) {
+				txServer = null;
+				validator.getContext().setCanRunWithoutTerminology(true);
+				validator.getContext().setNoTerminologyServer(true);
+			} else {
+				// we need really to do it explicitly
+				validator.getContext().setCanRunWithoutTerminology(false);
+				validator.getContext().setNoTerminologyServer(false);
+			}
+			String txver = validator.setTerminologyServer(txServer, null, FhirPublication.R4);
+			log.info(" - Version " + txver + " (" + tt.milestone() + ")");
+
+			validator.setDebug(cliContext.isDoDebug());
+			validator.getContext().setLogger(new EngineLoggingService(cliContext.isDoDebug()));
+
+			IgLoaderFromJpaPackageCache igLoader = new IgLoaderFromJpaPackageCache(validator.getPcm(), validator.getContext(), validator.getVersion(),
+			   validator.isDebug(), myPackageCacheManager, myNpmPackageVersionDao, myDaoRegistry, myBinaryStorageSvc, myTxManager);
+			validator.setIgLoader(igLoader);
+			validator.getIgLoader().loadIg(validator.getIgs(), validator.getBinaries(), ig, true);
+
+			log.info("  Package Summary: "+validator.getContext().loadedPackageSummary());
+
+			log.info("  Get set... ");
+			validator.setQuestionnaireMode(cliContext.getQuestionnaireMode());
+			validator.setLevel(cliContext.getLevel());
+			validator.setDoNative(cliContext.isDoNative());
+			validator.setHintAboutNonMustSupport(cliContext.isHintAboutNonMustSupport());
+//			for (String s : cliContext.getExtensions()) {
+//			if ("any".equals(s)) {
+				validator.setAnyExtensionsAllowed(true);
+//			} else {          
+//				validator.getExtensionDomains().add(s);
+//			}
+//			}
+			validator.setLanguage(cliContext.getLang());
+			validator.setLocale(cliContext.getLocale());
+			validator.setSnomedExtension(cliContext.getSnomedCTCode());
+			validator.setAssumeValidRestReferences(cliContext.isAssumeValidRestReferences());
+			validator.setShowMessagesFromReferences(cliContext.isShowMessagesFromReferences());
+			validator.setDoImplicitFHIRPathStringConversion(cliContext.isDoImplicitFHIRPathStringConversion());
+			validator.setHtmlInMarkdownCheck(cliContext.getHtmlInMarkdownCheck());
+			validator.setNoExtensibleBindingMessages(cliContext.isNoExtensibleBindingMessages());
+			validator.setNoUnicodeBiDiControlChars(cliContext.isNoUnicodeBiDiControlChars());
+			validator.setNoInvariantChecks(cliContext.isNoInvariants());
+			validator.setWantInvariantInMessage(cliContext.isWantInvariantsInMessages());
+			validator.setSecurityChecks(cliContext.isSecurityChecks());
+			validator.setCrumbTrails(cliContext.isCrumbTrails());
+			validator.setForPublication(cliContext.isForPublication());
+			validator.setShowTimes(true);
+			validator.setAllowExampleUrls(cliContext.isAllowExampleUrls());
+			StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(validator.getPcm(), validator.getContext(), validator);    
+			validator.setFetcher(fetcher);
+			validator.getContext().setLocator(fetcher);
+//			validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());
+			validator.setJurisdiction(CodeSystemUtilities.readCoding(cliContext.getJurisdiction()));
+//			TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());
+			sessionCache.cacheSession(""+cliContext.hashCode(), validator);
+
+			return validator;
+		} catch (FHIRException e) {
+			log.error("Error loading validator: "+e.getMessage(), e);
+		} catch (IOException e) {
+			log.error("Error loading validator: "+e.getMessage(), e);
+		} catch (URISyntaxException e) {
+			log.error("Error loading validator: "+e.getMessage(), e);
+		}
+		return null;
+	}
 
 	public boolean isInitialized() {
 		return initialized;

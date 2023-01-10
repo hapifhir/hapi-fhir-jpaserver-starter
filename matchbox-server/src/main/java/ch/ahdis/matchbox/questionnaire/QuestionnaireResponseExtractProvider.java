@@ -46,7 +46,7 @@ public class QuestionnaireResponseExtractProvider  {
   @Operation(name = "$extract", type = QuestionnaireResponse.class, manualResponse = true, manualRequest = true)
   public void extract(HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
     String contentType = theServletRequest.getContentType();   
-    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", false);
+    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", null, false);
     org.hl7.fhir.r5.elementmodel.Element src = Manager.parseSingle(matchboxEngine.getContext(), theServletRequest.getInputStream(),
         contentType.contains("xml") ? FhirFormat.XML : FhirFormat.JSON);
      extract(src, theServletRequest, theServletResponse); 
@@ -71,7 +71,7 @@ public class QuestionnaireResponseExtractProvider  {
       throw new UnprocessableEntityException("No questionnaire canonical URL given.");
 
 
-    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(questionnaireUri, false);
+    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(questionnaireUri, null, false);
     if (matchboxEngine == null)
       throw new UnprocessableEntityException(
           "Could not get matcbox-enginge with questionnaire with canonical URL '" + questionnaireUri + "'");

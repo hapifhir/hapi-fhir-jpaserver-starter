@@ -164,8 +164,15 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			return;
 		}
 		if (src.equals("hl7.fhir.cda#dev")) {
-			log.info("Replacing hl7.fhir.cda#dev with " + src);
-			loadIg(igs, binaries, "hl7.fhir.cda#2.1.0-cibuild", recursive);
+			String replace = "hl7.fhir.cda#2.1.0-cibuild";
+			log.info("Replacing hl7.fhir.cda#dev with " + replace);
+			loadIg(igs, binaries, replace, recursive);
+			return;
+		}
+		if (src.equals("ch.fhir.ig.ch-epr-term#current")) {
+			String replace  = "ch.fhir.ig.ch-epr-term#2.0.x";
+			log.info("ch.fhir.ig.ch-epr-term#current with " + replace);
+			loadIg(igs, binaries, replace, recursive);
 			return;
 		}
 		if (getContext().getLoadedPackages().contains(src)) {
