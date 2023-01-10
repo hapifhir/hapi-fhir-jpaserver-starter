@@ -57,10 +57,6 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
   })
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
 public class ElasticsearchLastNR4IT {
-	static {
-		System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
-	}
-
 
 	private IGenericClient ourClient;
   private FhirContext ourCtx;

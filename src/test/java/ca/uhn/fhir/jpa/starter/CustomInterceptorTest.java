@@ -23,10 +23,6 @@ import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 
 public class CustomInterceptorTest {
 
-	static {
-		System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
-	}
-
 	@LocalServerPort
 	private int port;
 

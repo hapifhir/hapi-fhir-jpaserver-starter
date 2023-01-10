@@ -13,10 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 })
 public class CustomBeanTest {
 
-	static {
-		System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
-	}
-
 	@Autowired
 	some.custom.pkg1.CustomBean customBean1;
 

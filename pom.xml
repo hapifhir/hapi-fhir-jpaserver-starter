@@ -22,6 +22,8 @@
 
     <properties>
         <java.version>11</java.version>
+        <logback-classic.version>1.2.11</logback-classic.version>
+        <slf4j-api.version>1.7.25</slf4j-api.version>
     </properties>
 
     <prerequisites>
@@ -355,6 +357,23 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring_boot_version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-classic.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback-classic.version}</version>
         </dependency>
 
     </dependencies>

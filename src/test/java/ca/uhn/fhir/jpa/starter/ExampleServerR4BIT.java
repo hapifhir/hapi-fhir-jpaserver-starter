@@ -25,10 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 	// when running in a spring boot environment
 	"spring.main.allow-bean-definition-overriding=true"})
 class ExampleServerR4BIT {
-
-	static {
-		System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
-	}
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4BIT.class);
 	private IGenericClient ourClient;
 	private FhirContext ourCtx;
