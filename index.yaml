@@ -6,6 +6,33 @@ entries:
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
         - kind: changed
+          description: updated HAPI FHIR JPA Server app image version to v6.2.2
+        - kind: changed
+          description: updated curl used by helm tests to version to v7.87.0
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 6.2.2
+    created: "2023-01-10T19:52:40.475125881Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.1.2
+    description: A Helm chart for deploying the HAPI FHIR JPA server starter on Kubernetes.
+    digest: 8857b1c057c736ccb326ad80d7c2d84d24a3bf2992050f5d45bc090105ac7644
+    home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    name: hapi-fhir-jpaserver
+    sources:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    type: application
+    urls:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.11.1/hapi-fhir-jpaserver-0.11.1.tgz
+    version: 0.11.1
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
           description: updated HAPI FHIR JPA Server app image version to v6.2.1
         - kind: changed
           description: |
@@ -241,4 +268,4 @@ entries:
     urls:
     - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.6.0/hapi-fhir-jpaserver-0.6.0.tgz
     version: 0.6.0
-generated: "2022-11-24T22:09:57.998746063Z"
+generated: "2023-01-10T19:52:40.475319182Z"
