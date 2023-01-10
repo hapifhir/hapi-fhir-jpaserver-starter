@@ -10,18 +10,14 @@ dependencies:
     version: 12.1.2
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
-appVersion: 6.2.1
-version: 0.11.0
+appVersion: 6.2.2
+version: 0.11.1
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
-      description: updated HAPI FHIR JPA Server app image version to v6.2.1
+      description: updated HAPI FHIR JPA Server app image version to v6.2.2
     - kind: changed
-      description: |
-        Reduced `startupProbe.initialDelaySeconds` to a more realistic `30` from `60`.
-        This should allow the server to become ready quicker and recover from failures faster.
-    - kind: changed
-      description: "⚠️ BREAKING CHANGE: updated included postgresql chart to v12, which is based on PostgreSQL 15.1"
+      description: updated curl used by helm tests to version to v7.87.0
