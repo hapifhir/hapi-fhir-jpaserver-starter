@@ -64,7 +64,8 @@ hapi:
     ### alternatively, it may be set using the X-Forwarded-Proto header.
     #   use_apache_address_strategy_https: false
     ### enables the server to host content like HTML, css, etc. under the url pattern of /static/**
-    # staticLocation: file:/usr/somewhere/
+    ### the deepest folder level will be used. E.g. - if you put file:/foo/bar/bazz as value then the files are resolved under /static/bazz/**
+    #staticLocation: file:/foo/bar/bazz
     ### enable to set the Server URL
     #    server_address: http://hapi.fhir.org/baseR4
     #    defer_indexing_for_codesystems_of_size: 101
