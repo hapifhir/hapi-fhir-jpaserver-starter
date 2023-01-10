@@ -14,7 +14,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>6.3.6-SNAPSHOT</version>
+        <version>6.2.2</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -44,12 +44,12 @@
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-jetty-api</artifactId>
+            <artifactId>websocket-api</artifactId>
             <version>${jetty_version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-jetty-client</artifactId>
+            <artifactId>websocket-client</artifactId>
             <version>${jetty_version}</version>
         </dependency>
         <dependency>
@@ -150,19 +150,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <!-- Please note that in the process of upgrading from hapi-fhir 6.22 to 6.3.4-SNAPSHOT logback was upgraded from 1.2.10. to 1.4.4.  This included the removal of the StaticLoggerBinder class. -->
-            <!-- In order to resolve this error, the only solution we found was to explicitly use version 1.2.10.  However, this exposes a Spring dependency issue with the hapi-fhir-jpaserver-base module and JpaConfig method memberMatcherR4Helper(). -->
-            <version>1.2.10</version>
         </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <!-- Please note that in the process of upgrading from hapi-fhir 6.22 to 6.3.4-SNAPSHOT logback was upgraded from 1.2.10. to 1.4.4.  This included the removal of the StaticLoggerBinder class. -->
-            <!-- In order to resolve this error, the only solution we found was to explicitly use version 1.2.10.  However, this exposes a Spring dependency issue with the hapi-fhir-jpaserver-base module and JpaConfig method memberMatcherR4Helper(). -->
-            <version>1.2.10</version>
-        </dependency>
-
 
         <!-- Needed for JEE/Servlet support -->
         <dependency>
@@ -258,7 +246,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-jetty-server</artifactId>
+            <artifactId>websocket-server</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
