@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ca.uhn.fhir.jpa.starter.service.FhirClientAuthenticatorService;
+import org.hl7.fhir.r4.model.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +61,7 @@ public class FhirUtils {
 			return null;
 		}
 	}
-	
+
 	public static Map<String, String> getQueryMap(String query) {
 		String[] params = query.split("&");
 		Map<String, String> map = new HashMap<String, String>();
@@ -71,4 +73,34 @@ public class FhirUtils {
 		}
 		return map;
 	}
+
+	public static void getBundleBySearchUrl(Bundle bundle, String url) {
+		Bundle searchBundle = FhirClientAuthenticatorService.getFhirClient().search()
+			.byUrl(url)
+			.returnBundle(Bundle.class)
+			.execute();
+		bundle.getEntry().addAll(searchBundle.getEntry());
+		// Recursively adding all the resources to the bundle if it contains next URL.
+		if (searchBundle.hasLink() && bundleContainsNext(searchBundle)) {
+			getBundleBySearchUrl(bundle, getNextUrl(searchBundle.getLink()));
+		}
+	}
+
+	public static boolean bundleContainsNext(Bundle bundle) {
+		for (Bundle.BundleLinkComponent link : bundle.getLink()) {
+			if (link.getRelation().equals("next"))
+				return true;
+		}
+		return false;
+	}
+
+	public static String getNextUrl(List<Bundle.BundleLinkComponent> bundleLinks) {
+		for (Bundle.BundleLinkComponent link : bundleLinks) {
+			if (link.getRelation().equals("next")) {
+				return link.getUrl();
+			}
+		}
+		return null;
+	}
+
 }

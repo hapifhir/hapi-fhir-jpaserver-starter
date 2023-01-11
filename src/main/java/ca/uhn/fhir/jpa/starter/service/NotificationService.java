@@ -15,9 +15,6 @@ import ca.uhn.fhir.jpa.starter.model.ComGenerator;
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Request.Builder;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 
 @Service
 public class NotificationService {

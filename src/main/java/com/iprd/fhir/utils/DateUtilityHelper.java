@@ -3,6 +3,7 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -45,6 +46,11 @@ public class DateUtilityHelper {
 	
 	public static String sqlTimestampToFormattedDateString(Timestamp timestamp) {
 		return DateTimeFormatter.ISO_INSTANT.format(timestamp.toInstant()).split("T")[0];
+	}
+
+	public static String toDateString(java.util.Date date, String format) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+		return simpleDateFormat.format(date);
 	}
 
 	public static List<Pair<Date, Date>> getQuarterlyDates(Date start,Date end) {

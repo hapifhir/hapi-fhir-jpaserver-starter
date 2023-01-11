@@ -11,9 +11,7 @@ import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -41,29 +39,15 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.tomcat.util.json.JSONParser;
 import org.hibernate.engine.jdbc.ClobProxy;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.Appointment;
-import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
-import org.hl7.fhir.r4.model.ContactPoint;
-import org.hl7.fhir.r4.model.Identifier;
-import org.hl7.fhir.r4.model.Immunization;
-import org.hl7.fhir.r4.model.Location;
-import org.hl7.fhir.r4.model.Organization;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Practitioner;
-import org.hl7.fhir.r4.model.PractitionerRole;
-import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.Resource;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -881,7 +865,7 @@ public class HelperService {
 		Bundle organizationBundle = new Bundle();
 		String queryPath = "/Organization?";
 		queryPath += "identifier=" + facilityUID + "";
-		getBundleBySearchUrl(organizationBundle, queryPath);
+		FhirUtils.getBundleBySearchUrl(organizationBundle, queryPath);
 		if (organizationBundle.hasEntry() && organizationBundle.getEntry().size() > 0) {
 			Organization organization = (Organization) organizationBundle.getEntry().get(0).getResource();
 			return organization.getIdElement().getIdPart();
@@ -897,7 +881,7 @@ public class HelperService {
 		if (searchUrl == null) {
 			return null;
 		}
-		getBundleBySearchUrl(organizationBundle, searchUrl);
+		FhirUtils.getBundleBySearchUrl(organizationBundle, searchUrl);
 		if (organizationBundle.hasEntry() && organizationBundle.getEntry().size() > 0) {
 			Organization organization = (Organization) organizationBundle.getEntry().get(0).getResource();
 			return organization.getIdElement().getIdPart();
@@ -1013,98 +997,6 @@ public class HelperService {
 			realmResource.users().get(userId).roles().clientLevel(clientId).add(asList(saveRoleRepresentation));
 		} catch (WebApplicationException e) {
 			logger.error("Cannot assign role " + roleName + " to user " + userId);
-		}
-	}
-
-	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
-	public void mapResourcesToPatient() {
-		//Searching for patient created with OCL-ID
-		Bundle tempPatientBundle = new Bundle();
-		getBundleBySearchUrl(tempPatientBundle, FhirClientAuthenticatorService.serverBase + "/Patient?identifier=patient_with_ocl");
-
-		for (BundleEntryComponent entry : tempPatientBundle.getEntry()) {
-			Patient tempPatient = (Patient) entry.getResource();
-			String tempPatientId = tempPatient.getIdElement().getIdPart();
-			String oclId = tempPatient.getIdentifier().get(0).getValue();
-
-			//Searching for actual patient with OCL-ID
-			String actualPatientId = getActualPatientId(oclId);
-			if (actualPatientId == null) {
-				continue;
-			}
-			Bundle resourceBundle = new Bundle();
-			getBundleBySearchUrl(resourceBundle, FhirClientAuthenticatorService.serverBase + "/Patient/" + tempPatientId + "/$everything");
-
-			for (BundleEntryComponent resourceEntry : resourceBundle.getEntry()) {
-				Resource resource = resourceEntry.getResource();
-				if (resource.fhirType().equals("Patient")) {
-					continue;
-				} else if (resource.fhirType().equals("Immunization")) {
-					Immunization immunization = (Immunization) resource;
-					immunization.getPatient().setReference("Patient/" + actualPatientId);
-					FhirClientAuthenticatorService.getFhirClient().update()
-						.resource(immunization)
-						.execute();
-					continue;
-				} else if (resource.fhirType().equals("Appointment")) {
-					Appointment appointment = (Appointment) resource;
-					appointment.getParticipant().get(0).getActor().setReference("Patient/" + actualPatientId);
-					FhirClientAuthenticatorService.getFhirClient().update()
-						.resource(appointment)
-						.execute();
-					continue;
-				}
-				try {
-					Method getSubject = resource.getClass().getMethod("getSubject");
-					Reference subject = (Reference) getSubject.invoke(resource);
-					subject.setReference("Patient/" + actualPatientId);
-					FhirClientAuthenticatorService.getFhirClient().update()
-						.resource(resource)
-						.execute();
-				} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException |
-							InvocationTargetException e) {
-					logger.error(e.getMessage());
-				}
-			}
-		}
-	}
-
-	private String getActualPatientId(String oclId) {
-		Bundle patientBundle = new Bundle();
-		String queryPath = "/Patient?";
-		queryPath += "identifierPartial:contains=" + oclId + "&";
-		queryPath += "identifier:not=patient_with_ocl";
-		getBundleBySearchUrl(patientBundle, FhirClientAuthenticatorService.serverBase + queryPath);
-		if (patientBundle.hasEntry() && patientBundle.getEntry().size() > 0) {
-			Patient patient = (Patient) patientBundle.getEntry().get(0).getResource();
-			return patient.getIdElement().getIdPart();
-		}
-
-		for (BundleEntryComponent entry : patientBundle.getEntry()) {
-			Patient patient = (Patient) entry.getResource();
-			if (isActualPatient(patient, oclId))
-				return patient.getIdElement().getIdPart();
-		}
-		return null;
-	}
-
-	private boolean isActualPatient(Patient patient, String oclId) {
-		for (Identifier identifier : patient.getIdentifier()) {
-			if (identifier.getValue().equals("patient_with_ocl")) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private void getBundleBySearchUrl(Bundle bundle, String url) {
-		Bundle searchBundle = FhirClientAuthenticatorService.getFhirClient().search()
-			.byUrl(url)
-			.returnBundle(Bundle.class)
-			.execute();
-		bundle.getEntry().addAll(searchBundle.getEntry());
-		if (searchBundle.hasLink() && bundleContainsNext(searchBundle)) {
-			getBundleBySearchUrl(bundle, getNextUrl(searchBundle.getLink()));
 		}
 	}
 

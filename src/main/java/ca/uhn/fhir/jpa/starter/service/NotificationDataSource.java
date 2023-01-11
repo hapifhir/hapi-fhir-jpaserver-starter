@@ -5,15 +5,12 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
-import ca.uhn.fhir.jpa.starter.model.CacheEntity;
+import ca.uhn.fhir.jpa.starter.model.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
-
-import ca.uhn.fhir.jpa.starter.model.ComGenerator;
 
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 
@@ -24,7 +21,8 @@ public class NotificationDataSource {
 	Session session;
 	Transaction tx;
 	private static NotificationDataSource notificationDataSource;
-	 
+	private Class<?> aClass;
+
 	private NotificationDataSource() {}
 	
 	public static NotificationDataSource getInstance() {
@@ -35,7 +33,11 @@ public class NotificationDataSource {
 	}
 	
 	public void configure(String filePath) {
-		conf = new Configuration().configure(new File(filePath)).addAnnotatedClass(ComGenerator.class).addAnnotatedClass(CacheEntity.class).addAnnotatedClass(ApiAsyncTaskEntity.class);
+		conf = new Configuration().configure(new File(filePath))
+			.addAnnotatedClass(ComGenerator.class)
+			.addAnnotatedClass(CacheEntity.class)
+			.addAnnotatedClass(ApiAsyncTaskEntity.class)
+			.addAnnotatedClass(ParentEncounterMapHelper.class);
 		sf = conf.buildSessionFactory();
 	}
 
@@ -45,9 +47,8 @@ public class NotificationDataSource {
 		session.save(object);
 		tx.commit();
 		session.close();
-
 	}
-	
+
 	public void update(Object object) {
 		session = sf.openSession();
 		tx = session.beginTransaction();
@@ -55,11 +56,11 @@ public class NotificationDataSource {
 		tx.commit();
 		session.close();
 	}
-	
-	public void delete(ComGenerator comGenerator) {
+
+	public void delete(Object object) {
 		session = sf.openSession();
 		tx = session.beginTransaction();
-		session.delete(comGenerator);
+		session.delete(object);
 		tx.commit();
 		session.close();
 	}
@@ -72,6 +73,14 @@ public class NotificationDataSource {
 		List<ComGenerator> resultList = query.getResultList();
 		session.close();
 		return resultList;
+	}
+
+	public List<ParentEncounterMapHelper> fetchAllFromPatientEncounterMapper() {
+		session = sf.openSession();
+		Query query = session.createQuery("From ParentEncounterMapHelper");
+		List<ParentEncounterMapHelper> encounterIds = query.getResultList();
+		session.close();
+		return encounterIds;
 	}
 
 	public ArrayList<ApiAsyncTaskEntity> fetchStatus(String uuid) {
@@ -151,6 +160,14 @@ public class NotificationDataSource {
 		query.executeUpdate();
 		tx.commit();
 		session.close();
+	}
+
+	public void deleteFromParentEncounterMapHelperByEncounterId(String encounterId) {
+		session = sf.openSession();
+		tx = session.beginTransaction();
+		Query query = session.createQuery("DELETE ParentEncounterMapHelper WHERE encounterId = :param1");
+		query.setParameter("param1", encounterId);
+		query.executeUpdate();
 	}
 	
 }
