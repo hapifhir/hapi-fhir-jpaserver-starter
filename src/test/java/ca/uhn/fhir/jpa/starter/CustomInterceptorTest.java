@@ -13,7 +13,7 @@ import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties = {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties = {
 		"hapi.fhir.custom-bean-packages=some.custom.pkg1",
 		"hapi.fhir.custom-interceptor-classes=some.custom.pkg1.CustomInterceptorBean,some.custom.pkg1.CustomInterceptorPojo",
 		"spring.datasource.url=jdbc:h2:mem:dbr4",
