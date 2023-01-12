@@ -183,7 +183,7 @@ public class ResourceMapperService {
 	/**
 	 *  Updates partOf reference in the encounter if multiple encounters created for a patient on same day.
 	*/
-//	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
+	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
 	public void mapEncounters() {
 		NotificationDataSource notificationDataSource = NotificationDataSource.getInstance();
 		List<ParentEncounterMapHelper> parentEncounterMapHelperList = notificationDataSource.fetchAllFromPatientEncounterMapper();
