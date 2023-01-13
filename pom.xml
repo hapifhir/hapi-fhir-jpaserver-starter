@@ -17,7 +17,7 @@
         <version>6.2.2</version>
     </parent>
 
-    <artifactId>hapi-fhir-jpaserver-ods</artifactId>
+    <artifactId>hapi-fhir-jpaserver-dc4h</artifactId>
     <packaging>war</packaging>
 
     <properties>
