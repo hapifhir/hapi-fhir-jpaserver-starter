@@ -32,7 +32,7 @@ import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
 @Configuration
 @Conditional(OnR4Condition.class)
-@Import({ MatchboxJpaConfig.class, JpaR4Config.class, StarterCqlR4Config.class, ElasticsearchConfig.class, ReindexAppCtx.class, JpaBatch2Config.class })
+@Import({ MatchboxJpaConfig.class, JpaR4Config.class})
 public class FhirServerConfigR4 {
 
   /**
@@ -90,7 +90,7 @@ public class FhirServerConfigR4 {
     ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider retVal;
     retVal = new ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProvider();
     retVal.setContext(fhirContext);
-    retVal.setDao(daoImplementationGuideR4());
+//    retVal.setDao(daoImplementationGuideR4());
     return retVal;
   }
   

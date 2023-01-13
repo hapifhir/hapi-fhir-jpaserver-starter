@@ -42,6 +42,9 @@ public interface INpmPackageVersionResourceDao extends JpaRepository<NpmPackageV
 	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myCanonicalUrl = :url AND e.myCanonicalVersion = :version AND e.myFhirVersion = :fhirVersion AND e.myPackageVersion.myCurrentVersion = true")
 	Slice<NpmPackageVersionResourceEntity> findCurrentVersionByCanonicalUrlAndVersion(Pageable theOf, @Param("fhirVersion") FhirVersionEnum theFhirVersion, @Param("url") String theCanonicalUrl, @Param("version") String theCanonicalVersion);
 
+	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myResourceType = :resourceType AND e.myPackageVersion.myCurrentVersion = true")
+	Slice<NpmPackageVersionResourceEntity> findCurrentByResourceType(Pageable thePage, @Param("resourceType") String theResourceType);
+
 	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myResourceType = :resourceType")
 	Slice<NpmPackageVersionResourceEntity> findByResourceType(Pageable thePage, @Param("resourceType") String theResourceType);
 

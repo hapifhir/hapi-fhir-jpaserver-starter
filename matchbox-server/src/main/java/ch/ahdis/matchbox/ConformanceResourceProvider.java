@@ -155,7 +155,10 @@ public class ConformanceResourceProvider<T extends IBaseResource> extends BaseJp
 	public List<CanonicalType> getCanonicals() {
 		return new TransactionTemplate(myTxManager).execute(tx -> {
 			Slice<NpmPackageVersionResourceEntity> outcome = myPackageVersionResourceDao.findByResourceType(PageRequest.of(0, 2147483646), resourceType);
-			return outcome.stream().map(t -> (t.getCanonicalUrl()+"|"+t.getCanonicalVersion())).sorted().map(t->new CanonicalType(t)).collect(Collectors.toList());
+			List<String> versioned = outcome.stream().filter(t -> !t.getPackageVersion().isCurrentVersion()).map(t -> (t.getCanonicalUrl()+"|"+t.getCanonicalVersion())).collect(Collectors.toList());
+			Slice<NpmPackageVersionResourceEntity> current = myPackageVersionResourceDao.findCurrentByResourceType(PageRequest.of(0, 2147483646), resourceType);
+			versioned.addAll(current.stream().map(t -> (t.getCanonicalUrl())).collect(Collectors.toList()));
+			return versioned.stream().sorted().map(t->new CanonicalType(t)).collect(Collectors.toList());
 		});
 	}
 

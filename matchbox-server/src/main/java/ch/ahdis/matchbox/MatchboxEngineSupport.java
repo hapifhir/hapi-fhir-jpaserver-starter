@@ -125,6 +125,7 @@ public class MatchboxEngineSupport {
 					}
 					engine.setIgLoader(igLoader);
 					try {
+						// FIXME if we want to validate against different version we would probably no need to load theses packages
 						engine.loadPackage("hl7.terminology",  "5.0.0");
 						engine.loadPackage("hl7.fhir.r4.core",  "4.0.1");
 						this.initialized = true;
@@ -138,7 +139,7 @@ public class MatchboxEngineSupport {
 			log.error("ValidationEngine is not yet initialized");
 		}
 
-		String ig = cliContext.getIgs().size()>0 ? cliContext.getIgs().get(0):null;		
+		String ig = cliContext.getIg();
 		if (ig == null) {
 			if ("default".equals(canonical) || canonical == null || engine.getStructureDefinition(canonical)!=null) {
 				ig = "hl7.fhir.r4.core#4.0.1";
@@ -150,10 +151,9 @@ public class MatchboxEngineSupport {
 				}
 				ig = npm.getPackageVersion().getPackageId()+"#"+npm.getPackageVersion().getVersionId();
 				log.info("using ig "+ig+" for canonical url "+canonical);
+				cliContext.setIg(ig); // set the ig in the cliContext that hashCode will be set
 			}
 		}
-		cliContext.getIgs().clear();
-		cliContext.getIgs().add(ig);
 
 		// check if we have already a validator in cache for that
 		MatchboxEngine matchboxEngine = (MatchboxEngine) this.sessionCache.fetchSessionValidatorEngine(""+cliContext.hashCode());

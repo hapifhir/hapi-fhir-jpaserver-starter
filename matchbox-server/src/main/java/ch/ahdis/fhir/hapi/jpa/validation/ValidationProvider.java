@@ -103,7 +103,7 @@ public class ValidationProvider {
 		List<Field> cliContextProperties = Arrays.asList(cliContext.getClass().getDeclaredFields()).stream()
 				.filter(f -> f.isAnnotationPresent(JsonProperty.class))
 				.filter(f -> f.getName() != "profile")
-				.filter(f -> f.getType() == String.class || f.getType() == Boolean.class)
+				.filter(f -> f.getType() == String.class || f.getType() == boolean.class)
 				.collect(Collectors.toList());
 		return cliContextProperties;
 	}	
@@ -112,6 +112,11 @@ public class ValidationProvider {
 			@OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
 	public IBaseResource validate(HttpServletRequest theRequest) {
 
+		// FIXME, we need to do this version independent
+		// we should be able to extract the version from the 
+		// a) the request int version is set int the request
+		// b) ig parameter is specified whichis fixed to a FHIR Version
+		// c) profile parameter is specified and we can resolve it to a FHIR version
 		FhirContext myFhirCtx = FhirContext.forR4Cached();
 
 		log.info("$validate");
@@ -136,7 +141,7 @@ public class ValidationProvider {
 				try {
 					String value = theRequest.getParameter(cliContextProperty);
 					// currently only handles boolean or String
-					if (field.getType() == Boolean.class) {
+					if (field.getType() == boolean.class) {
 						BeanUtils.setProperty(cliContext, cliContextProperty, Boolean.parseBoolean(value));
 					} else {
 						BeanUtils.setProperty(cliContext, cliContextProperty, value);

@@ -38,8 +38,8 @@ public class CliContext {
   private boolean assumeValidRestReferences = false;
   @JsonProperty("canDoNative")
   private boolean canDoNative = false;
-  @JsonProperty("noInternalCaching")
-  private boolean noInternalCaching = false; // internal, for when debugging terminology validation
+//  @JsonProperty("noInternalCaching")
+//  private boolean noInternalCaching = false; // internal, for when debugging terminology validation
   @JsonProperty("noExtensibleBindingMessages")
   private boolean noExtensibleBindingMessages = false;
   @JsonProperty("noUnicodeBiDiControlChars")
@@ -82,8 +82,11 @@ public class CliContext {
 
   // @JsonProperty("extensions")
   // private List<String> extensions = new ArrayList<String>();
-  @JsonProperty("igs")
-  private List<String> igs = new ArrayList<String>();
+  // @JsonProperty("igs")
+  // private List<String> igs = new ArrayList<String>();
+  @JsonProperty("ig")
+  private String ig = null;
+  
   @JsonProperty("questionnaire")
   private QuestionnaireMode questionnaireMode = QuestionnaireMode.CHECK;
   @JsonProperty("level")
@@ -127,26 +130,38 @@ public class CliContext {
   @JsonProperty("jurisdiction")
   private String jurisdiction = JurisdictionUtilities.getJurisdictionFromLocale(Locale.getDefault().getCountry());
 
-
-
-  @JsonProperty("igs")
-  public List<String> getIgs() {
-    return igs;
+  @JsonProperty("ig")
+  public String getIg() {
+     return ig;
   }
 
   @JsonProperty("igs")
-  public void setIgs(List<String> igs) {
-    this.igs = igs;
+  public void setIg(String ig) {
+     this.ig = ig;
   }
 
+  // @JsonProperty("igs")
+  // public void setIgs(List<String> igs) {
+  //   this.igs = igs;
+  // }
 
-  public CliContext addIg(String ig) {
-    if (this.igs == null) {
-      this.igs = new ArrayList<>();
-    }
-    this.igs.add(ig);
-    return this;
-  }
+  // @JsonProperty("igs")
+  // public List<String> getIgs() {
+  //   return igs;
+  // }
+
+  // @JsonProperty("igs")
+  // public void setIgs(List<String> igs) {
+  //   this.igs = igs;
+  // }
+
+  // public CliContext addIg(String ig) {
+  //   if (this.igs == null) {
+  //     this.igs = new ArrayList<>();
+  //   }
+  //   this.igs.add(ig);
+  //   return this;
+  // }
 
   @JsonProperty("questionnaire")
   public QuestionnaireMode getQuestionnaireMode() {
@@ -352,15 +367,15 @@ public class CliContext {
     this.assumeValidRestReferences = assumeValidRestReferences;
   }
 
-  @JsonProperty("noInternalCaching")
-  public boolean isNoInternalCaching() {
-    return noInternalCaching;
-  }
+  // @JsonProperty("noInternalCaching")
+  // public boolean isNoInternalCaching() {
+  //   return noInternalCaching;
+  // }
 
-  @JsonProperty("noInternalCaching")
-  public void setNoInternalCaching(boolean noInternalCaching) {
-    this.noInternalCaching = noInternalCaching;
-  }
+  // @JsonProperty("noInternalCaching")
+  // public void setNoInternalCaching(boolean noInternalCaching) {
+  //   this.noInternalCaching = noInternalCaching;
+  // }
 
   @JsonProperty("noExtensibleBindingMessages")
   public boolean isNoExtensibleBindingMessages() {
@@ -458,7 +473,7 @@ public class CliContext {
       doDebug == that.doDebug &&
       assumeValidRestReferences == that.assumeValidRestReferences &&
       canDoNative == that.canDoNative &&
-      noInternalCaching == that.noInternalCaching &&
+//      noInternalCaching == that.noInternalCaching &&
       noExtensibleBindingMessages == that.noExtensibleBindingMessages &&
       noUnicodeBiDiControlChars == that.noUnicodeBiDiControlChars &&
       noInvariants == that.noInvariants &&
@@ -467,7 +482,7 @@ public class CliContext {
       Objects.equals(lang, that.lang) &&
       Objects.equals(snomedCT, that.snomedCT) &&
       Objects.equals(targetVer, that.targetVer) &&
-      Objects.equals(igs, that.igs) &&
+      Objects.equals(ig, that.ig) &&
       Objects.equals(questionnaireMode, that.questionnaireMode) &&
       Objects.equals(level, that.level) &&
       Objects.equals(crumbTrails, that.crumbTrails) &&
@@ -481,9 +496,9 @@ public class CliContext {
 
   @Override
   public int hashCode() {
-    return Objects.hash(doNative,  hintAboutNonMustSupport, recursive, doDebug, assumeValidRestReferences, canDoNative, noInternalCaching, 
+    return Objects.hash(doNative,  hintAboutNonMustSupport, recursive, doDebug, assumeValidRestReferences, canDoNative, 
             noExtensibleBindingMessages, noInvariants, wantInvariantsInMessages, txServer, lang, snomedCT,
-            targetVer, igs, questionnaireMode, level, mode, locale, locations, crumbTrails, forPublication, allowExampleUrls, jurisdiction, noUnicodeBiDiControlChars);
+            targetVer, ig, questionnaireMode, level, mode, locale, locations, crumbTrails, forPublication, allowExampleUrls, jurisdiction, noUnicodeBiDiControlChars);
   }
 
   @Override
@@ -495,7 +510,6 @@ public class CliContext {
       ", doDebug=" + doDebug +
       ", assumeValidRestReferences=" + assumeValidRestReferences +
       ", canDoNative=" + canDoNative +
-      ", noInternalCaching=" + noInternalCaching +
       ", noExtensibleBindingMessages=" + noExtensibleBindingMessages +
       ", noUnicodeBiDiControlChars=" + noUnicodeBiDiControlChars +
       ", noInvariants=" + noInvariants +
@@ -504,7 +518,7 @@ public class CliContext {
       ", lang='" + lang + '\'' +
       ", snomedCT='" + snomedCT + '\'' +
       ", targetVer='" + targetVer + '\'' +
-      ", igs=" + igs +
+      ", ig=" + ig +
       ", questionnaireMode=" + questionnaireMode +
       ", level=" + level +
       ", mode=" + mode +
