@@ -7,19 +7,19 @@ import javax.persistence.Table;
 import javax.persistence.Column;
 
 @Entity
-@Table(name = "parent_encounter_map_helper")
-public class ParentEncounterMapHelper {
+@Table(name = "encounter_id_entity")
+public class EncounterIdEntity {
 	@Id
 	@GeneratedValue
 	private long id;
 
-	@Column(name = "encounter_id", nullable = false)
+	@Column(name = "encounter_id", nullable = false, unique = true)
 	private String encounterId;
 
 	// Default constructor
-	public ParentEncounterMapHelper() {}
+	public EncounterIdEntity() {}
 
-	public ParentEncounterMapHelper(String encounterId) {
+	public EncounterIdEntity(String encounterId) {
 		this.encounterId = encounterId;
 	}
 
@@ -36,6 +36,6 @@ public class ParentEncounterMapHelper {
 	}
 
 	public String toString() {
-		return "PatientEncounterMapper[encounterId="+encounterId+"]";
+		return "EncounterIdEntity[encounterId="+encounterId+"]";
 	}
 }

@@ -1,6 +1,6 @@
 package ca.uhn.fhir.jpa.starter.service;
 
-import ca.uhn.fhir.jpa.starter.model.ParentEncounterMapHelper;
+import ca.uhn.fhir.jpa.starter.model.EncounterIdEntity;
 import ca.uhn.fhir.rest.client.exceptions.FhirClientConnectionException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 
@@ -186,16 +186,16 @@ public class ResourceMapperService {
 	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
 	public void mapEncounters() {
 		NotificationDataSource notificationDataSource = NotificationDataSource.getInstance();
-		List<ParentEncounterMapHelper> parentEncounterMapHelperList = notificationDataSource.fetchAllFromPatientEncounterMapper();
-		if (parentEncounterMapHelperList.isEmpty()) {
+		List<EncounterIdEntity> encounterIdEntityList = notificationDataSource.fetchAllFromEncounterIdEntity();
+		if (encounterIdEntityList.isEmpty()) {
 			return;
 		}
-		for (ParentEncounterMapHelper mapper: parentEncounterMapHelperList) {
+		for (EncounterIdEntity encounterIdEntity : encounterIdEntityList) {
 			try {
 				Encounter encounterCreated = FhirClientAuthenticatorService.getFhirClient()
 					.read()
 					.resource(Encounter.class)
-					.withId(mapper.getEncounterId())
+					.withId(encounterIdEntity.getEncounterId())
 					.execute();
 				Bundle encounterBundle = FhirClientAuthenticatorService.getFhirClient()
 					.search()
@@ -206,8 +206,9 @@ public class ResourceMapperService {
 					).and(Encounter.PATIENT.hasId(encounterCreated.getSubject().getReferenceElement().getIdPart()))
 					.returnBundle(Bundle.class)
 					.execute();
-				if (!encounterBundle.hasEntry() || encounterBundle.getEntry().size() <= 0) {
-					return;
+				if (!encounterBundle.hasEntry() || encounterBundle.getEntry().size() <= 1) {
+					notificationDataSource.delete(encounterIdEntity);
+					continue;
 				}
 				List<Encounter> encountersOfPatient =
 					encounterBundle.getEntry().stream()
@@ -217,24 +218,29 @@ public class ResourceMapperService {
 						.collect(Collectors.toList());
 
 				Encounter parentEncounter = encountersOfPatient.get(0);
-				Reference parentEncounterReference = new Reference("Encounter/"+parentEncounter.getIdElement().getIdPart());
+				String parentEncounterId = parentEncounter.getIdElement().getIdPart();
+				Reference parentEncounterReference = new Reference("Encounter/" + parentEncounterId);
 				if (parentEncounter.getPartOf().getReference() != null) {
 					parentEncounter.setPartOf(null);
 					FhirClientAuthenticatorService.getFhirClient().update().resource(parentEncounter).execute();
 				}
-				for (int i = 1; i < encountersOfPatient.size(); i ++) {
+				for (int i = 1; i < encountersOfPatient.size(); i++) {
 					Encounter encounter = encountersOfPatient.get(i);
-					encounter.setPartOf(parentEncounterReference);
-					FhirClientAuthenticatorService.getFhirClient().update().resource(encounter).execute();
-					notificationDataSource.deleteFromParentEncounterMapHelperByEncounterId(encounter.getIdElement().getIdPart());
+					if (
+						!parentEncounterId
+							.equals(encounter.getPartOf().getReferenceElement().getIdPart())
+					) {
+						encounter.setPartOf(parentEncounterReference);
+						FhirClientAuthenticatorService.getFhirClient().update().resource(encounter).execute();
+					}
 				}
 
-				notificationDataSource.delete(mapper);
+				notificationDataSource.delete(encounterIdEntity);
 
 			} catch (ResourceNotFoundException ex) {
 				ex.printStackTrace();
 			} catch (FhirClientConnectionException ex) {
-				// This exception internally throws SocketTimeoutException: Read timeout
+				// FhirClientConnectionException internally throws SocketTimeoutException: Read timeout
 				ex.printStackTrace();
 			}
 		}

@@ -13,13 +13,19 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.persistence.PersistenceException;
 
 public class NotificationDataSource {
+
+	private static final Logger logger = LoggerFactory.getLogger(ResourceMapperService.class);
 		
 	Configuration conf;
 	SessionFactory sf;
 	Session session;
-	Transaction tx;
+	Transaction transaction;
 	private static NotificationDataSource notificationDataSource;
 	private Class<?> aClass;
 
@@ -37,31 +43,45 @@ public class NotificationDataSource {
 			.addAnnotatedClass(ComGenerator.class)
 			.addAnnotatedClass(CacheEntity.class)
 			.addAnnotatedClass(ApiAsyncTaskEntity.class)
-			.addAnnotatedClass(ParentEncounterMapHelper.class);
+			.addAnnotatedClass(EncounterIdEntity.class);
 		sf = conf.buildSessionFactory();
 	}
 
 	public void insert(Object object) {
 		session = sf.openSession();
-		tx = session.beginTransaction();
+		transaction = session.beginTransaction();
 		session.save(object);
-		tx.commit();
+		transaction.commit();
 		session.close();
+	}
+
+	public void persist(Object object) {
+		session = sf.openSession();
+		transaction = session.beginTransaction();
+		try {
+			session.persist(object);
+			transaction.commit();
+		} catch (PersistenceException ex) {
+			// PersistenceException internally throws UniqueConstraintViolationError
+			logger.info("Duplicate entry. Entity " + object.toString() + "Already exists");
+		} finally {
+			session.close();
+		}
 	}
 
 	public void update(Object object) {
 		session = sf.openSession();
-		tx = session.beginTransaction();
+		transaction = session.beginTransaction();
 		session.update(object);
-		tx.commit();
+		transaction.commit();
 		session.close();
 	}
 
 	public void delete(Object object) {
 		session = sf.openSession();
-		tx = session.beginTransaction();
+		transaction = session.beginTransaction();
 		session.delete(object);
-		tx.commit();
+		transaction.commit();
 		session.close();
 	}
 	
@@ -75,10 +95,10 @@ public class NotificationDataSource {
 		return resultList;
 	}
 
-	public List<ParentEncounterMapHelper> fetchAllFromPatientEncounterMapper() {
+	public List<EncounterIdEntity> fetchAllFromEncounterIdEntity() {
 		session = sf.openSession();
-		Query query = session.createQuery("From ParentEncounterMapHelper");
-		List<ParentEncounterMapHelper> encounterIds = query.getResultList();
+		Query query = session.createQuery("From EncounterIdEntity");
+		List<EncounterIdEntity> encounterIds = query.getResultList();
 		session.close();
 		return encounterIds;
 	}
@@ -144,28 +164,28 @@ public class NotificationDataSource {
 	
 	public void deleteRecordsByTimePeriod(Date date) {
 		session = sf.openSession();
-		tx = session.beginTransaction();
+		transaction = session.beginTransaction();
 		Query query = session.createQuery("DELETE ComGenerator WHERE scheduledDate < :param1 AND communicationStatus=:param2");
 		query.setParameter("param1", date);
 		query.setParameter("param2", MessageStatus.SENT.name());
 		query.executeUpdate();
-		tx.commit();
+		transaction.commit();
 		session.close();
 	}
 
 	public void clearAsyncTable(){
 		session = sf.openSession();
-		tx = session.beginTransaction();
+		transaction = session.beginTransaction();
 		Query query = session.createQuery("DELETE ApiAsyncTaskEntity");
 		query.executeUpdate();
-		tx.commit();
+		transaction.commit();
 		session.close();
 	}
 
-	public void deleteFromParentEncounterMapHelperByEncounterId(String encounterId) {
+	public void deleteFromEncounterIdEntityByEncounterId(String encounterId) {
 		session = sf.openSession();
-		tx = session.beginTransaction();
-		Query query = session.createQuery("DELETE ParentEncounterMapHelper WHERE encounterId = :param1");
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("DELETE EncounterIdEntity WHERE encounterId = :param1");
 		query.setParameter("param1", encounterId);
 		query.executeUpdate();
 	}

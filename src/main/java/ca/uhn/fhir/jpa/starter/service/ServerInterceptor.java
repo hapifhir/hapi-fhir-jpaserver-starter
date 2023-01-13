@@ -68,8 +68,8 @@ public class ServerInterceptor {
 			Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 			String messageStatus = ComGenerator.MessageStatus.PENDING.name();
 
-			ParentEncounterMapHelper parentEncounterMapHelper = new ParentEncounterMapHelper(encounterId);
-			notificationDataSource.insert(parentEncounterMapHelper);
+			EncounterIdEntity encounterIdEntity = new EncounterIdEntity(encounterId);
+			notificationDataSource.insert(encounterIdEntity);
 
 			ComGenerator comGen = new ComGenerator(
 				"Encounter",
@@ -149,8 +149,9 @@ public class ServerInterceptor {
 			Encounter encounter = (Encounter) theResource;
 			String encounterId = encounter.getIdElement().getIdPart();
 
-			ParentEncounterMapHelper parentEncounterMapHelper = new ParentEncounterMapHelper(encounterId);
-			notificationDataSource.insert(parentEncounterMapHelper);
+			EncounterIdEntity encounterIdEntity = new EncounterIdEntity(encounterId);
+			// Using persist to add entry only if it is not exists
+			notificationDataSource.persist(encounterIdEntity);
 		}
 	}
 
@@ -160,7 +161,7 @@ public class ServerInterceptor {
 		if (theResource.fhirType().equals("Encounter")) {
 			Encounter encounter = (Encounter) theResource;
 			String encounterId = encounter.getIdElement().getIdPart();
-			notificationDataSource.deleteFromParentEncounterMapHelperByEncounterId(encounterId);
+			notificationDataSource.deleteFromEncounterIdEntityByEncounterId(encounterId);
 		}
 	}
 }
