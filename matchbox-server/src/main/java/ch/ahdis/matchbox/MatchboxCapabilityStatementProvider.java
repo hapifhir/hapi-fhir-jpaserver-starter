@@ -1,5 +1,8 @@
 package ch.ahdis.matchbox;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.OperationDefinition.OperationDefinitionParameterComponent;
@@ -10,6 +13,7 @@ import ca.uhn.fhir.rest.annotation.Read;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.provider.ServerCapabilityStatementProvider;
+import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 
 public class MatchboxCapabilityStatementProvider extends ServerCapabilityStatementProvider {
 
@@ -45,6 +49,16 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			parameter = operationDefintion.addParameter();
 			parameter.setName("profile").setUse(OperationParameterUse.IN).setMin(0).setMax("1").setType("canonical");
 			parameter.setTargetProfile(structureDefinitionProvider.getCanonicals());
+			parameter = operationDefintion.addParameter();
+			parameter.setName("reload").setUse(OperationParameterUse.IN).setMin(0).setMax("1").setType("boolean");
+
+			ch.ahdis.matchbox.CliContext cliContext = new ch.ahdis.matchbox.CliContext();
+			
+			List<Field> cliContextProperties = ValidationProvider.getValidateEngineParameters(cliContext);
+			for (Field field : cliContextProperties) {
+				parameter = operationDefintion.addParameter();
+				parameter.setName(field.getName()).setUse(OperationParameterUse.IN).setMin(0).setMax("1").setType(field.getType().equals(boolean.class) ? "boolean" : "string");
+			}
 		}
 		return operationDefintion;
 	}

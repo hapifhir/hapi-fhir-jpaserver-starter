@@ -79,7 +79,8 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
       RequestDetails theRequestDetails) {
     createNarrative(theResource);
     // FIXME: is default correct: we would need to derive the package for new url
-    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", false);
+
+    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", null, false);
     Resource existing = matchboxEngine.getCanonicalResource(theResource.getUrl());
     if (existing !=null) {
     	matchboxEngine.dropResource("StructureMap", existing.getId());
@@ -95,7 +96,7 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
   public MethodOutcome update(HttpServletRequest theRequest, StructureMap theResource, IIdType theId,
       String theConditional, RequestDetails theRequestDetails) {
     createNarrative(theResource);
-    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(theResource.getUrl(), false);
+    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(theResource.getUrl(), null, false);
     Resource existing = matchboxEngine.getCanonicalResource(theResource.getUrl());
     if (existing !=null) {
     	matchboxEngine.dropResource("StructureMap", existing.getId());
@@ -159,9 +160,9 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
     Map<String, String[]> requestParams = theServletRequest.getParameterMap();
     String[] source = requestParams.get("source");
     if (source != null && source.length > 0) {
-      MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(source[0], false);
+      MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(source[0], null, false);
       if (matchboxEngine == null) {
-        throw new UnprocessableEntityException("matchbox engine cound not be initialized with canonical url "+source[0]);
+        throw new UnprocessableEntityException("matchbox engine cound not be initialized swith canonical url "+source[0]);
       }
       org.hl7.fhir.r5.model.StructureMap map  = matchboxEngine.getContext().fetchResource(org.hl7.fhir.r5.model.StructureMap.class, source[0]);
       if (map == null) {

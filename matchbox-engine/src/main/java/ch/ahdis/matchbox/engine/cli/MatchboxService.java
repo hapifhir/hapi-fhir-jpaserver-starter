@@ -416,7 +416,7 @@ public class MatchboxService {
       validator.getContext().setLocator(fetcher);
       validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());
       validator.setJurisdiction(CodeSystemUtilities.readCoding(cliContext.getJurisdiction()));
-      TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());
+//      TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());
       validator.prepare(); // generate any missing snapshots
       System.out.println(" go (" + tt.milestone() + ")");
     } else {

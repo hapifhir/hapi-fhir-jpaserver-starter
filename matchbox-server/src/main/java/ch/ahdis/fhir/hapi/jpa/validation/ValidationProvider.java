@@ -3,8 +3,12 @@ package ch.ahdis.fhir.hapi.jpa.validation;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
  * #%L
@@ -27,35 +31,31 @@ import java.util.List;
  */
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.instance.model.api.IBaseParameters;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome.IssueSeverity;
 import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
-import org.hl7.fhir.r4.model.Parameters;
-import org.hl7.fhir.r4.model.Parameters.ParametersParameterComponent;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
+import ch.ahdis.matchbox.CliContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
-import ca.uhn.fhir.util.ParametersUtil;
 import ca.uhn.fhir.util.StopWatch;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
-import ca.uhn.fhir.validation.ValidationOptions;
 import ca.uhn.fhir.validation.ValidationResult;
 import ch.ahdis.matchbox.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
@@ -99,10 +99,24 @@ public class ValidationProvider {
 //		return null;
 //	}
 
+	static public List<Field> getValidateEngineParameters(CliContext cliContext) {
+		List<Field> cliContextProperties = Arrays.asList(cliContext.getClass().getDeclaredFields()).stream()
+				.filter(f -> f.isAnnotationPresent(JsonProperty.class))
+				.filter(f -> f.getName() != "profile")
+				.filter(f -> f.getType() == String.class || f.getType() == boolean.class)
+				.collect(Collectors.toList());
+		return cliContextProperties;
+	}	
+
 	@Operation(name = "$validate", manualRequest = true, idempotent = true, returnParameters = {
 			@OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
 	public IBaseResource validate(HttpServletRequest theRequest) {
 
+		// FIXME, we need to do this version independent
+		// we should be able to extract the version from the 
+		// a) the request int version is set int the request
+		// b) ig parameter is specified whichis fixed to a FHIR Version
+		// c) profile parameter is specified and we can resolve it to a FHIR version
 		FhirContext myFhirCtx = FhirContext.forR4Cached();
 
 		log.info("$validate");
@@ -114,36 +128,59 @@ public class ValidationProvider {
 		String profile = null;
 		boolean reload = false;
 
-		ValidationOptions validationOptions = new ValidationOptions();
+		// we extract here all config
+		CliContext cliContext = new CliContext();
+
+		// get al list of all JsonProperty of cliContext with return values property name and property type
+		List<Field> cliContextProperties = getValidateEngineParameters(cliContext);
+
+		// check for each cliContextProperties if it is in the request parameter
+		for (Field field : cliContextProperties) {
+			String cliContextProperty = field.getName();
+			if (theRequest.getParameter(cliContextProperty) != null) {
+				try {
+					String value = theRequest.getParameter(cliContextProperty);
+					// currently only handles boolean or String
+					if (field.getType() == boolean.class) {
+						BeanUtils.setProperty(cliContext, cliContextProperty, Boolean.parseBoolean(value));
+					} else {
+						BeanUtils.setProperty(cliContext, cliContextProperty, value);
+					}
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					log.error("error setting property " + cliContextProperty + " to " + theRequest.getParameter(cliContextProperty));
+				}
+			}
+		}
+
 		if (theRequest.getParameter("profile") != null) {
 			profile = theRequest.getParameter("profile");
 		}
 
 		if (theRequest.getParameter("reload") != null) {
-			reload = true;
+			reload = theRequest.getParameter("reload").equals("true");
 		}
 
-		MatchboxEngine engine = matchboxEngineSupport.getMatchboxEngine(profile, reload);
+		MatchboxEngine engine = matchboxEngineSupport.getMatchboxEngine(profile, cliContext, reload);
 		if (engine == null) {
 			return getValidationMessageProfileNotSupported(profile);
 		}
+		
 		if (engine.getStructureDefinition(profile) == null) {
 			return getValidationMessageProfileNotSupported(profile);
 		}
 		
 		if (!matchboxEngineSupport.isInitialized()) {
-			OperationOutcomeIssueComponent a = new OperationOutcomeIssueComponent().setDiagnostics("validaiton engine not initialized, please try again").setSeverity(IssueSeverity.ERROR);
+			OperationOutcomeIssueComponent a = new OperationOutcomeIssueComponent().setDiagnostics("validation engine not initialized, please try again").setSeverity(IssueSeverity.ERROR);
 			return new OperationOutcome().addIssue(a);
 		}
 
-		validationOptions.addProfileIfNotBlank(profile);
 		StructureDefinition structDef = engine.getStructureDefinition(profile);
 		String contentString = getContentString(theRequest, addedValidationMessages);
 
 		if (contentString.length() == 0) {
 			SingleValidationMessage m = new SingleValidationMessage();
 			m.setSeverity(ResultSeverityEnum.ERROR);
-			m.setMessage("No resource provided in http body");
+			m.setMessage("No content provided in http body");
 			m.setLocationCol(0);
 			m.setLocationLine(0);
 			addedValidationMessages.add(m);
@@ -159,75 +196,12 @@ public class ValidationProvider {
 			encoding = EncodingEnum.detectEncoding(contentString);
 		}
 
-		// the $validate operation can be called in different ways, see
-		// https://www.hl7.org/fhir/resource-operation-validate.html
-		// HTTP Body ---- HTTP Header Parameter
-		// Resource profile = specified --> return OperationOutcome
-		// Parameters profile = specified --> return OperationOutcome
-		// Resource profile not specified --> return OperationOutcome
-		// Parameters profile not specified --> return Parameters/OperationOutcome
 		ValidationResult result = null;
-		IBaseResource resource = null;
-		try {
-			// we still parse to catch wrongli formatted (doest not work for CDA) thats why we don't throw an exception now
- 			resource = encoding.newParser(myFhirCtx).parseResource(contentString);
-		} catch (DataFormatException e) {
-//			return getValidationMessageDataFormatException(e);
-		}
-
-		if (resource != null && "Parameters".equals(resource.fhirType()) && profile == null) {
-//      IBaseParameters parameters = (IBaseParameters) resource;
-// https://github.com/ahdis/matchbox/issues/11
-			Parameters parameters = (Parameters) resource;
-			IBaseResource resourceInParam = null;
-			for (ParametersParameterComponent compoment : parameters.getParameter()) {
-				if ("resource".equals(compoment.getName())) {
-					resourceInParam = compoment.getResource();
-					break;
-				}
-			}
-			if (resourceInParam != null && resourceInParam.fhirType().contentEquals("Bundle")) {
-				Bundle bundle = (Bundle) resourceInParam;
-				for (BundleEntryComponent entry : bundle.getEntry()) {
-					if (entry.getResource() != null && entry.getResource().getId() == null) {
-						if (entry.getFullUrl() != null && entry.getFullUrl().startsWith("urn:uuid:")) {
-							entry.setId(entry.getFullUrl().substring(9));
-						}
-					}
-
-				}
-			}
-			List<String> profiles = ParametersUtil.getNamedParameterValuesAsString(myFhirCtx, parameters, "profile");
-			if (profiles != null && profiles.size() == 1) {
-				profile = profiles.get(0);
-			}
-			if (resourceInParam != null) {
-				validationOptions = new ValidationOptions();
-				if (profile != null) {
-					structDef = (StructureDefinition) engine.getStructureDefinition(profile);
-					if (structDef == null) {
-						return getValidationMessageProfileNotSupported(profile);
-					}
-					validationOptions.addProfileIfNotBlank(profile);
-				}
-				result = validateWithResult(engine, encoding.newParser(myFhirCtx).encodeResourceToString(resourceInParam), validationOptions, encoding, profile);
-				IBaseResource operationOutcome = getOperationOutcome(sha3Hex, addedValidationMessages, sw, structDef, result, engine);
-				IBaseParameters returnParameters = ParametersUtil.newInstance(myFhirCtx);
-				ParametersUtil.addParameterToParameters(myFhirCtx, returnParameters, "return", operationOutcome);
-				return returnParameters;
-			} else {
-				// we have a validation for a Parameter but not a resource inside, fall back to
-				// validate only Parameter
-				result = validateWithResult(engine, contentString, validationOptions, encoding, profile);
-			}
-		} else {
-			result = validateWithResult(engine, contentString, validationOptions, encoding, profile);
-		}
-		return getOperationOutcome(sha3Hex, addedValidationMessages, sw, structDef, result, engine);
+		result = validateWithResult(engine, contentString, encoding, profile);
+		return getOperationOutcome(sha3Hex, addedValidationMessages, sw, structDef, result, engine, cliContext);
 	}
 
-	private ValidationResult validateWithResult(MatchboxEngine engine, String contentString,
-			ValidationOptions validationOptions, EncodingEnum encoding, String profile) {
+	private ValidationResult validateWithResult(MatchboxEngine engine, String contentString, EncodingEnum encoding, String profile) {
 		try {
 			ArrayList<SingleValidationMessage> hapiMessages = new ArrayList<SingleValidationMessage>();
 			List<ValidationMessage> messages = engine.validate(
@@ -304,7 +278,7 @@ public class ValidationProvider {
 	}
 
 	private IBaseResource getOperationOutcome(String id, ArrayList<SingleValidationMessage> addedValidationMessages,
-			StopWatch sw, StructureDefinition profile, ValidationResult result, MatchboxEngine engine) {
+			StopWatch sw, StructureDefinition profile, ValidationResult result, MatchboxEngine engine, CliContext cli) {
 		sw.endCurrentTask();
 
 		FhirContext myFhirCtx = FhirContext.forR4Cached();
@@ -328,7 +302,8 @@ public class ValidationProvider {
 								+ (profile.getDateElement() != null ? "(" + profile.getDateElement().asStringValue() + ") " : " ")
 						: "") +packages + " " 
 				+ (result.getMessages().size() == 0 ? "No Issues detected. " : "") + sw.formatTaskDurations() + " "
-				+ VersionUtil.getPoweredBy());
+				+ VersionUtil.getPoweredBy()
+				+ " validation parameters "+cli.toString());
 	 	
 		m.setLocationCol(0);
 		m.setLocationLine(0);
@@ -350,17 +325,6 @@ public class ValidationProvider {
 		m.setSeverity(ResultSeverityEnum.ERROR);
 		m.setMessage("Validation for profile " + profile
 				+ " not supported by this server, but additional ig's could be configured.");
-		m.setLocationCol(0);
-		m.setLocationLine(0);
-		ArrayList<SingleValidationMessage> newValidationMessages = new ArrayList<>();
-		newValidationMessages.add(m);
-		return (new ValidationResult(FhirContext.forR4Cached(), newValidationMessages)).toOperationOutcome();
-	}
-
-	private IBaseResource getValidationMessageDataFormatException(DataFormatException e) {
-		SingleValidationMessage m = new SingleValidationMessage();
-		m.setSeverity(ResultSeverityEnum.FATAL);
-		m.setMessage(e.getMessage());
 		m.setLocationCol(0);
 		m.setLocationLine(0);
 		ArrayList<SingleValidationMessage> newValidationMessages = new ArrayList<>();

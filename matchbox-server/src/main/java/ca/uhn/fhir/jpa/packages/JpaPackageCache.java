@@ -48,6 +48,8 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r5.model.CanonicalResource;
 import org.hl7.fhir.r5.model.Resource;
+import org.hl7.fhir.r5.model.StructureDefinition;
+import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
 import org.hl7.fhir.utilities.npm.BasePackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.validation.IgLoader;
@@ -311,6 +313,24 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 								getProcessingMessages(npmPackage).add("Not indexing file: " + nextFile);
 								continue;
 							}
+
+							// don't store StructureDefinitions that define Extensions
+							if (resource instanceof StructureDefinition) {
+								StructureDefinition sd = (StructureDefinition) resource;
+								if ("http://hl7.org/fhir/StructureDefinition/Extension".equals(sd.getBaseDefinition())) {
+									getProcessingMessages(npmPackage).add("Not indexing file: " + nextFile);
+									continue;
+								}
+								if (StructureDefinitionKind.PRIMITIVETYPE.equals(sd.getKind())) {
+									getProcessingMessages(npmPackage).add("Not indexing file: " + nextFile);
+									continue;
+								}
+								if (StructureDefinitionKind.COMPLEXTYPE.equals(sd.getKind())) {
+									getProcessingMessages(npmPackage).add("Not indexing file: " + nextFile);
+									continue;
+								}
+							}
+							
 							/*
 							 * Re-encode the resource as JSON with the narrative removed in order to reduce the footprint.
 							 * This is useful since we'll be loading these resources back and hopefully keeping lots of

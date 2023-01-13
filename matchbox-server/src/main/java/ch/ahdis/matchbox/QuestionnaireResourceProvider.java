@@ -26,7 +26,7 @@ public class QuestionnaireResourceProvider extends ConformanceResourceProvider<Q
 	public MethodOutcome create(HttpServletRequest theRequest, Questionnaire theResource, String theConditional,
 		RequestDetails theRequestDetails) {
 	  // FIXME: is default correct: we would need to derive the package for new url
-	  MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", false);
+	  MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", null, false);
 	  Resource existing = matchboxEngine.getCanonicalResource(theResource.getUrl());
 	  if (existing !=null) {
 		  matchboxEngine.dropResource("Questionnaire", existing.getId());
@@ -41,7 +41,7 @@ public class QuestionnaireResourceProvider extends ConformanceResourceProvider<Q
 	@Override
 	public MethodOutcome update(HttpServletRequest theRequest, Questionnaire theResource, IIdType theId,
 		String theConditional, RequestDetails theRequestDetails) {
-	  MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(theResource.getUrl(), false);
+	  MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(theResource.getUrl(), null, false);
 	  Resource existing = matchboxEngine.getCanonicalResource(theResource.getUrl());
 	  if (existing !=null) {
 		  matchboxEngine.dropResource("Questionnaire", existing.getId());

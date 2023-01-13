@@ -28,13 +28,7 @@ import ch.ahdis.matchbox.MatchboxJpaConfig;
 @ServletComponentScan(basePackageClasses = {RestfulServer.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
 @Import({
-	SubscriptionSubmitterConfig.class,
-	SubscriptionProcessorConfig.class,
-	SubscriptionChannelConfig.class,
-	WebsocketDispatcherConfig.class,
 	MdmConfig.class,
-	JpaBatch2Config.class,
-	Batch2JobsConfig.class,
 	MatchboxJpaConfig.class,
 	FhirServerConfigR4.class})
 public class Application extends SpringBootServletInitializer {

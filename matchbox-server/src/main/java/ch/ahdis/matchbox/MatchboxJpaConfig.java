@@ -1,24 +1,41 @@
 package ch.ahdis.matchbox;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 
+import ca.uhn.fhir.batch2.model.StatusEnum;
+import ca.uhn.fhir.batch2.api.IJobCoordinator;
+import ca.uhn.fhir.batch2.api.JobOperationResultJson;
+import ca.uhn.fhir.batch2.coordinator.JobCoordinatorImpl;
 import ca.uhn.fhir.batch2.jobs.imprt.BulkDataImportProvider;
+import ca.uhn.fhir.batch2.jobs.parameters.UrlPartitioner;
 import ca.uhn.fhir.batch2.jobs.reindex.ReindexProvider;
+import ca.uhn.fhir.batch2.model.JobInstance;
+import ca.uhn.fhir.batch2.model.JobInstanceStartRequest;
+import ca.uhn.fhir.batch2.models.JobInstanceFetchRequest;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
+import ca.uhn.fhir.jpa.batch.models.Batch2JobStartResponse;
 import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
+import ca.uhn.fhir.jpa.bulk.export.api.IBulkExportProcessor;
 import ca.uhn.fhir.jpa.bulk.export.provider.BulkDataExportProvider;
+import ca.uhn.fhir.jpa.dao.mdm.MdmExpansionCacheSvc;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
 import ca.uhn.fhir.jpa.model.sched.ISchedulerService;
 import ca.uhn.fhir.jpa.model.sched.ScheduledJobDefinition;
@@ -34,6 +51,8 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.common.StarterJpaConfig;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
 import ca.uhn.fhir.rest.server.RestfulServer;
+import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
@@ -45,6 +64,12 @@ import ch.ahdis.matchbox.interceptor.MappingLanguageInterceptor;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
+import org.springframework.data.domain.Page;
+
+import com.github.jsonldjava.shaded.com.google.common.annotations.VisibleForTesting;
+import ca.uhn.fhir.jpa.bulk.export.model.ExportPIDIteratorParameters;
+import ca.uhn.fhir.rest.api.server.storage.ResourcePersistentId;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 
 @Configuration
 @Import(ThreadPoolFactoryConfig.class)
@@ -102,20 +127,17 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 			DaoRegistry daoRegistry, Optional<MdmProviderLoader> mdmProviderProvider, IJpaSystemProvider jpaSystemProvider,
 			ResourceProviderFactory resourceProviderFactory, DaoConfig daoConfig, ISearchParamRegistry searchParamRegistry,
 			DatabaseBackedPagingProvider databaseBackedPagingProvider,
-			LoggingInterceptor loggingInterceptor, Optional<TerminologyUploaderProvider> terminologyUploaderProvider,
-			Optional<SubscriptionTriggeringProvider> subscriptionTriggeringProvider,
+			LoggingInterceptor loggingInterceptor, 
 			Optional<CorsInterceptor> corsInterceptor, IInterceptorBroadcaster interceptorBroadcaster,
 			Optional<BinaryAccessProvider> binaryAccessProvider, BinaryStorageInterceptor binaryStorageInterceptor,
-			BulkDataExportProvider bulkDataExportProvider, BulkDataImportProvider bulkDataImportProvider,
-			ReindexProvider reindexProvider,
 			PartitionManagementProvider partitionManagementProvider,
 			IPackageInstallerSvc packageInstallerSvc, ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc) {
 
 		RestfulServer fhirServer = super.restfulServer(fhirSystemDao, appProperties, daoRegistry, mdmProviderProvider,
 				jpaSystemProvider, resourceProviderFactory, daoConfig, searchParamRegistry,
-				databaseBackedPagingProvider, loggingInterceptor, terminologyUploaderProvider, subscriptionTriggeringProvider,
+				databaseBackedPagingProvider, loggingInterceptor, null, null,
 				corsInterceptor, interceptorBroadcaster, binaryAccessProvider, binaryStorageInterceptor, null,
-				null, bulkDataExportProvider, bulkDataImportProvider, null, reindexProvider,
+				null, null, null, null, null,
 				partitionManagementProvider,  null, packageInstallerSvc, theThreadSafeResourceDeleterSvc);
 
 		fhirServer.registerInterceptor(new MappingLanguageInterceptor(matchboxEngineSupport));
@@ -146,6 +168,111 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Bean
 	public MatchboxEngineSupport getMachboxEngineSupport() {
 		return new MatchboxEngineSupport();
+	}
+
+	@Bean
+	public IJobCoordinator batch2JobCoordinator() {
+
+		// return an implementation of the interface IJobCoordinator
+
+		return new IJobCoordinator() {
+
+			public Batch2JobStartResponse startInstance(JobInstanceStartRequest theStartRequest) throws InvalidRequestException {
+				// start a job instance
+				return null;
+			}
+
+			/**s
+			 * Fetch details about a job instance
+			 *
+			 * @param theInstanceId The instance ID
+			 * @return Returns the current instance details
+			 * @throws ResourceNotFoundException If the instance ID can not be found
+			 */
+			public JobInstance getInstance(String theInstanceId) throws ResourceNotFoundException {
+				// fetch details about a job instance
+				return null;
+			}
+		
+			/**
+			 * Fetch all job instances
+			 */
+			public List<JobInstance> getInstances(int thePageSize, int thePageIndex) {
+				// fetch all job instances
+				return null;
+			}
+		
+			/**
+			 * Fetch recent job instances
+			 */
+			public List<JobInstance> getRecentInstances(int theCount, int theStart) {
+				// fetch recent job instances
+				return null;
+			}
+		
+			public JobOperationResultJson cancelInstance(String theInstanceId) throws ResourceNotFoundException {
+				// cancel a job instance
+				return null;
+			}
+		
+			public List<JobInstance> getInstancesbyJobDefinitionIdAndEndedStatus(String theJobDefinitionId, @Nullable Boolean theEnded, int theCount, int theStart) {
+				// fetch job instances by job definition id and ended status
+				return null;
+			}
+		
+			/**
+			 * Fetches all job instances tht meet the FetchRequest criteria
+			 * @param theFetchRequest - fetch request
+			 * @return - page of job instances
+			 */
+			public Page<JobInstance> fetchAllJobInstances(JobInstanceFetchRequest theFetchRequest) {
+				// fetch all job instances
+				return null;
+			}
+		
+			/**
+			 * Fetches all job instances by job definition id and statuses
+			 */
+			public List<JobInstance> getJobInstancesByJobDefinitionIdAndStatuses(String theJobDefinitionId, Set<StatusEnum> theStatuses, int theCount, int theStart) {
+				// fetch job instances by job definition id and statuses
+				return null;
+			}
+		
+			/**
+			 * Fetches all jobs by job definition id
+			 */
+			public List<JobInstance> getJobInstancesByJobDefinitionId(String theJobDefinitionId, int theCount, int theStart) {
+				// fetch job instances by job definition id
+				return null;
+			}
+			
+		};
+	}
+
+	@Bean
+	UrlPartitioner urlPartitioner() {
+		return new UrlPartitioner(null, null);
+	}
+
+	// @Bean
+	// public IBatch2JobRunner batch2JobRunner() {
+	// 	return new Batch2JobRunnerImpl();
+	// }
+
+	@Bean
+	@Primary
+	public IBulkExportProcessor jpaBulkExportProcessor() {
+		return new IBulkExportProcessor() {
+			public Iterator<ResourcePersistentId> getResourcePidIterator(ExportPIDIteratorParameters theParams) {
+				return null;
+			}
+			 public void expandMdmResources(List<IBaseResource> theResources) {}
+		};
+	}
+
+	@Bean
+	public MdmExpansionCacheSvc mdmExpansionCacheSvc() {
+		return new MdmExpansionCacheSvc();
 	}
 
 
