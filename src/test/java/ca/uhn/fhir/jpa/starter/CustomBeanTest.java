@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties = {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties = {
 		"hapi.fhir.custom-bean-packages=some.custom.pkg1,some.custom.pkg2",
 		"spring.datasource.url=jdbc:h2:mem:dbr4",
 		// "hapi.fhir.enable_repository_validating_interceptor=true",
