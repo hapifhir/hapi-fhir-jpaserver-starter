@@ -11,7 +11,7 @@ spec:
   restartPolicy: Never
   containers:
     - name: test-metadata-endpoint
-      image: docker.io/curlimages/curl:7.86.0@sha256:cfdeba7f88bb85f6c87f2ec9135115b523a1c24943976a61fbf59c4f2eafd78e
+      image: docker.io/curlimages/curl:7.87.0@sha256:f7f265d5c64eb4463a43a99b6bf773f9e61a50aaa7cefaf564f43e42549a01dd
       command: ["curl", "--fail-with-body"]
       args: ["http://{{ include "hapi-fhir-jpaserver.fullname" . }}:{{ .Values.service.port }}/fhir/metadata?_summary=true"]
       {{- with .Values.restrictedContainerSecurityContext }}
@@ -32,7 +32,7 @@ spec:
         exec:
           command: ["true"]
     - name: test-patient-endpoint
-      image: docker.io/curlimages/curl:7.86.0@sha256:cfdeba7f88bb85f6c87f2ec9135115b523a1c24943976a61fbf59c4f2eafd78e
+      image: docker.io/curlimages/curl:7.87.0@sha256:f7f265d5c64eb4463a43a99b6bf773f9e61a50aaa7cefaf564f43e42549a01dd
       command: ["curl", "--fail-with-body"]
       args: ["http://{{ include "hapi-fhir-jpaserver.fullname" . }}:{{ .Values.service.port }}/fhir/Patient?_count=1&_summary=true"]
       {{- with .Values.restrictedContainerSecurityContext }}
@@ -53,7 +53,7 @@ spec:
         exec:
           command: ["true"]
     - name: test-metrics-endpoint
-      image: docker.io/curlimages/curl:7.86.0@sha256:cfdeba7f88bb85f6c87f2ec9135115b523a1c24943976a61fbf59c4f2eafd78e
+      image: docker.io/curlimages/curl:7.87.0@sha256:f7f265d5c64eb4463a43a99b6bf773f9e61a50aaa7cefaf564f43e42549a01dd
       command: ["curl", "--fail-with-body"]
       args: ["http://{{ include "hapi-fhir-jpaserver.fullname" . }}:{{ .Values.metrics.service.port }}/actuator/prometheus"]
       {{- with .Values.restrictedContainerSecurityContext }}
