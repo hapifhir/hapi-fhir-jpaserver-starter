@@ -21,7 +21,8 @@ import java.util.Objects;
 @EnableConfigurationProperties
 public class AppProperties {
 
-  private Boolean cql_enabled = false;
+  private Boolean cr_enabled = false;
+  private Boolean ips_enabled = false;
   private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
   private boolean advanced_lucene_indexing = false;
@@ -149,13 +150,22 @@ public class AppProperties {
     this.partitioning = partitioning;
   }
 
-  public Boolean getCql_enabled() {
-    return cql_enabled;
+  public Boolean getCr_enabled() {
+    return cr_enabled;
   }
 
-  public void setCql_enabled(Boolean cql_enabled) {
-    this.cql_enabled = cql_enabled;
+  public void setCr_enabled(Boolean cr_enabled) {
+    this.cr_enabled = cr_enabled;
   }
+
+  public Boolean getIps_enabled() {
+	return ips_enabled;
+ }
+
+ public void setIps_enabled(Boolean ips_enabled) {
+	this.ips_enabled = ips_enabled;
+ }
+
 
   public Boolean getMdm_enabled() {
     return mdm_enabled;
