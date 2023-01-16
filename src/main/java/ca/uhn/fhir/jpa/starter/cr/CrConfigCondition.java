@@ -8,7 +8,7 @@ public class CrConfigCondition implements Condition {
 
   @Override
   public boolean matches(ConditionContext theConditionContext, AnnotatedTypeMetadata theAnnotatedTypeMetadata) {
-    String property = theConditionContext.getEnvironment().getProperty("hapi.fhir.cql_enabled");
+    String property = theConditionContext.getEnvironment().getProperty("hapi.fhir.cr_enabled");
 	  return Boolean.parseBoolean(property);
   }
 }
