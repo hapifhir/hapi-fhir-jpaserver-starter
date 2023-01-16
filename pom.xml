@@ -14,7 +14,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>6.3.6-SNAPSHOT</version>
+        <version>6.3.7-SNAPSHOT</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -117,7 +117,7 @@
         <!-- This dependency includes the JPA CQL Server -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-jpaserver-cql</artifactId>
+            <artifactId>hapi-fhir-storage-cr</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- This dependency includes the JPA MDM Server -->
@@ -145,6 +145,12 @@
             <artifactId>hapi-fhir-testpage-overlay</artifactId>
             <version>${project.version}</version>
             <classifier>classes</classifier>
+        </dependency>
+        <!-- This dependency is used to include the IPS Base Implementation -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-jpaserver-ips</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback

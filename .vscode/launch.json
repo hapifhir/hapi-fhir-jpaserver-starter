@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<hapi-fhir-jpaserver-starter>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+            "projectName": "hapi-fhir-jpaserver-starter",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
