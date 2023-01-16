@@ -1,0 +1,162 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "InfrastructureRoot",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>An abstract super-type for all RIM classes, either directly or through inheritance.</p>\n      <p>In general, constraint declarations, such as those communicated in this class's attributes, may occur wherever a RIM class or one of its derived clones is instantiated in an HL7 communication. Thus, the attributes MUST be available in all RIM classes and clones.</p>\n      <p>Infrastructure Root provides a set of communication infrastructure attributes that may be used in instances of HL7-specified, RIM-based communications. When valued in a communication instance, these attributes indicate whether the information structure is being constrained by specifically defined templates, realms or common communication element types.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/InfrastructureRoot",
+  "version" : "2.1.0-draft1",
+  "name" : "Base Type for all classes in the CDA structure",
+  "title" : "InfrastructureRoot",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "Defines the base elements and attributes on all CDA elements (other than data types)",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : true,
+  "type" : "InfrastructureRoot",
+  "baseDefinition" : "http://hl7.org/fhir/cda/StructureDefinition/ANY",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "InfrastructureRoot",
+      "path" : "InfrastructureRoot",
+      "short" : "Base for all types and resources",
+      "definition" : "Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "InfrastructureRoot.nullFlavor",
+      "path" : "InfrastructureRoot.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
+    },
+    {
+      "id" : "InfrastructureRoot.realmCode",
+      "path" : "InfrastructureRoot.realmCode",
+      "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InfrastructureRoot.realmCode",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "InfrastructureRoot.typeId",
+      "path" : "InfrastructureRoot.typeId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "InfrastructureRoot.typeId",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "InfrastructureRoot.templateId",
+      "path" : "InfrastructureRoot.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InfrastructureRoot.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "InfrastructureRoot",
+      "path" : "InfrastructureRoot",
+      "min" : 1,
+      "max" : "*"
+    },
+    {
+      "id" : "InfrastructureRoot.realmCode",
+      "path" : "InfrastructureRoot.realmCode",
+      "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "InfrastructureRoot.typeId",
+      "path" : "InfrastructureRoot.typeId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "InfrastructureRoot.templateId",
+      "path" : "InfrastructureRoot.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    }]
+  }
+}

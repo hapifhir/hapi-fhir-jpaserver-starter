@@ -1,0 +1,18 @@
+"Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
+"ExternalDocument","ExternalDocument","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"ExternalDocument.classCode","ExternalDocument.classCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DOC""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassDocument","",,,,"ExternalDocument.classCode",1,1,"",""
+"ExternalDocument.moodCode","ExternalDocument.moodCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"ExternalDocument.moodCode",1,1,"",""
+"ExternalDocument.templateId","ExternalDocument.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"ExternalDocument.templateId",0,*,"",""
+"ExternalDocument.id","ExternalDocument.id","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"ExternalDocument.id",0,*,"",""
+"ExternalDocument.code","ExternalDocument.code","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CD {[]} {[]}
+","","","","","","","","","","","",,"extensible","","http://hl7.org/fhir/ValueSet/doc-typecodes","",,,,"ExternalDocument.code",0,1,"",""
+"ExternalDocument.text","ExternalDocument.text","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ED {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"ExternalDocument.text",0,1,"",""
+"ExternalDocument.setId","ExternalDocument.setId","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"ExternalDocument.setId",0,1,"",""
+"ExternalDocument.versionNumber","ExternalDocument.versionNumber","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/INT {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"ExternalDocument.versionNumber",0,1,"",""

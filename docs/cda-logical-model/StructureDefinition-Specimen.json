@@ -1,0 +1,192 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "Specimen",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A specimen is a part of some entity, typically the subject, that is the target of focused laboratory, radiology or other observations. In many clinical observations, such as physical examination of a patient, the patient is the subject of the observation, and there is no specimen. The specimen participant is only used when observations are made against some substance or object that is taken or derived from the subject.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/Specimen",
+  "version" : "2.1.0-draft1",
+  "name" : "CDAR2.Specimen",
+  "title" : "Specimen (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "A specimen is a part of some entity, typically the subject, that is the target of focused laboratory, radiology or other observations. In many clinical observations, such as physical examination of a patient, the patient is the subject of the observation, and there is no specimen. The specimen participant is only used when observations are made against some substance or object that is taken or derived from the subject.",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "Specimen",
+  "baseDefinition" : "http://hl7.org/fhir/cda/StructureDefinition/InfrastructureRoot",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "Specimen",
+      "path" : "Specimen",
+      "short" : "Base for all types and resources",
+      "definition" : "Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Specimen.nullFlavor",
+      "path" : "Specimen.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
+    },
+    {
+      "id" : "Specimen.realmCode",
+      "path" : "Specimen.realmCode",
+      "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InfrastructureRoot.realmCode",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "Specimen.typeId",
+      "path" : "Specimen.typeId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "InfrastructureRoot.typeId",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "Specimen.templateId",
+      "path" : "Specimen.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InfrastructureRoot.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "Specimen.typeCode",
+      "path" : "Specimen.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Specimen.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "SPC",
+      "fixedCode" : "SPC",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetDirect"
+      }
+    },
+    {
+      "id" : "Specimen.specimenRole",
+      "path" : "Specimen.specimenRole",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Specimen.specimenRole",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SpecimenRole"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "Specimen",
+      "path" : "Specimen",
+      "min" : 1,
+      "max" : "1"
+    },
+    {
+      "id" : "Specimen.typeCode",
+      "path" : "Specimen.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "SPC",
+      "fixedCode" : "SPC",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetDirect"
+      }
+    },
+    {
+      "id" : "Specimen.specimenRole",
+      "path" : "Specimen.specimenRole",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SpecimenRole"
+      }]
+    }]
+  }
+}

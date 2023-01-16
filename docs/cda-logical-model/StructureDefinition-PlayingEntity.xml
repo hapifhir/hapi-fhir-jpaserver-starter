@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="PlayingEntity"/>
+  <text>
+    <status value="extensions"/><div xmlns="http://www.w3.org/1999/xhtml"><table border="0" cellpadding="0" cellspacing="0" style="border: 0px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;"><tr style="border: 1px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top"><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="The logical name of the element">Name</a></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Information about the use of the element">Flags</a></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Minimum and Maximum # of times the the element can appear in the instance">Card.</a></th><th style="width: 100px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Reference to the type of the element">Type</a></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Additional information about the element">Description &amp; Constraints</a><span style="float: right"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Legend for this format"><img src="http://build.fhir.org/help16.png" alt="doco" style="background-color: inherit"/></a></span></th></tr><tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white"><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck1.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_element.gif" alt="." style="background-color: white; background-color: inherit" title="Element" class="hierarchy"/> <a href="StructureDefinition-PlayingEntity-definitions.html#PlayingEntity">PlayingEntity</a><a name="PlayingEntity"> </a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">1..1</td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="http://build.fhir.org/types.html#Base">Base</a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="font-weight:bold">XML Namespace: </span>urn:hl7-org:v3<br/><span style="opacity: 0.5">Base for all types and resources</span></td></tr>
+<tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7"><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_primitive.png" alt="." style="background-color: #F7F7F7; background-color: inherit" title="Primitive Data Type" class="hierarchy"/> <a href="StructureDefinition-PlayingEntity-definitions.html#PlayingEntity.classCode">@classCode</a><a name="PlayingEntity.classCode"> </a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">1..1</td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="http://build.fhir.org/datatypes.html#code">code</a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="font-weight:bold">Binding: </span><a href="http://terminology.hl7.org/5.0.0/ValueSet-v3-EntityClassRoot.html">EntityClassRoot</a> (<a href="http://build.fhir.org/terminologies.html#required" title="To be conformant, the concept in this element SHALL be from the specified value set.">required</a>)</td></tr>
+<tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white"><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_primitive.png" alt="." style="background-color: white; background-color: inherit" title="Primitive Data Type" class="hierarchy"/> <a href="StructureDefinition-PlayingEntity-definitions.html#PlayingEntity.determinerCode">@determinerCode</a><a name="PlayingEntity.determinerCode"> </a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">1..1</td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="http://build.fhir.org/datatypes.html#code">code</a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="font-weight:bold">Binding: </span><a href="http://terminology.hl7.org/5.0.0/ValueSet-v3-EntityDeterminer.html">EntityDeterminer</a> (<a href="http://build.fhir.org/terminologies.html#required" title="To be conformant, the concept in this element SHALL be from the specified value set.">required</a>)<br/><span style="font-weight:bold">Fixed Value: </span><span style="color: darkgreen">INSTANCE</span></td></tr>
+<tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7"><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_resource.png" alt="." style="background-color: #F7F7F7; background-color: inherit" title="Resource" class="hierarchy"/> <a href="StructureDefinition-PlayingEntity-definitions.html#PlayingEntity.templateId" title="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question">templateId</a><a name="PlayingEntity.templateId"> </a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">0..*</td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="StructureDefinition-II.html">II</a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/></tr>
+<tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white"><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_resource.png" alt="." style="background-color: white; background-color: inherit" title="Resource" class="hierarchy"/> <a href="StructureDefinition-PlayingEntity-definitions.html#PlayingEntity.code">code</a><a name="PlayingEntity.code"> </a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">0..1</td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="StructureDefinition-CE.html">CE</a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="font-weight:bold">Binding: </span><a href="http://terminology.hl7.org/5.0.0/ValueSet-v3-EntityCode.html">EntityCode</a> (<a href="http://build.fhir.org/terminologies.html#extensible" title="To be conformant, the concept in this element SHALL be from the specified value set if any of the codes within the value set can apply to the concept being communicated.  If the value set does not cover the concept (based on human review), alternate codings (or, data type allowing, text) may be included instead.">extensible</a>)</td></tr>
+<tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7"><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_resource.png" alt="." style="background-color: #F7F7F7; background-color: inherit" title="Resource" class="hierarchy"/> <a href="StructureDefinition-PlayingEntity-definitions.html#PlayingEntity.quantity">quantity</a><a name="PlayingEntity.quantity"> </a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">0..*</td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="StructureDefinition-PQ.html">PQ</a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/></tr>
+<tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white"><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_resource.png" alt="." style="background-color: white; background-color: inherit" title="Resource" class="hierarchy"/> <a href="StructureDefinition-PlayingEntity-definitions.html#PlayingEntity.name">name</a><a name="PlayingEntity.name"> </a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">0..*</td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="StructureDefinition-EN.html">EN</a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/></tr>
+<tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7"><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck00.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin_end.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_resource.png" alt="." style="background-color: #F7F7F7; background-color: inherit" title="Resource" class="hierarchy"/> <a href="StructureDefinition-PlayingEntity-definitions.html#PlayingEntity.desc">desc</a><a name="PlayingEntity.desc"> </a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">0..1</td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="StructureDefinition-ED.html">ED</a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/></tr>
+<tr><td colspan="5" class="hierarchy"><br/><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Legend for this format"><img src="http://build.fhir.org/help16.png" alt="doco" style="background-color: inherit"/> Documentation for this format</a></td></tr></table></div>
+  </text>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <url value="http://hl7.org/fhir/cda/StructureDefinition/PlayingEntity"/>
+  <version value="2.1.0-draft1"/>
+  <name value="CDAR2.PlayingEntity"/>
+  <title value="PlayingEntity (CDA Class)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2023-01-16T15:52:41+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+  </contact>
+  <description value="PlayingEntity (CDA Class)"/>
+  <fhirVersion value="5.0.0-ballot"/>
+  <mapping>
+    <identity value="rim"/>
+    <uri value="http://hl7.org/v3"/>
+    <name value="RIM Mapping"/>
+  </mapping>
+  <kind value="logical"/>
+  <abstract value="false"/>
+  <type value="PlayingEntity"/>
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
+  <derivation value="specialization"/>
+  <snapshot>
+    <element id="PlayingEntity">
+      <path value="PlayingEntity"/>
+      <short value="Base for all types and resources"/>
+      <definition value="Base definition for all types defined in FHIR type system."/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Base"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <isModifier value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="PlayingEntity.classCode">
+      <path value="PlayingEntity.classCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="PlayingEntity.classCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="ENT"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityClassRoot"/>
+      </binding>
+    </element>
+    <element id="PlayingEntity.determinerCode">
+      <path value="PlayingEntity.determinerCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="PlayingEntity.determinerCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="INSTANCE"/>
+      <fixedCode value="INSTANCE"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityDeterminer"/>
+      </binding>
+    </element>
+    <element id="PlayingEntity.templateId">
+      <path value="PlayingEntity.templateId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="PlayingEntity.templateId"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="PlayingEntity.code">
+      <path value="PlayingEntity.code"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="PlayingEntity.code"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityCode"/>
+      </binding>
+    </element>
+    <element id="PlayingEntity.quantity">
+      <path value="PlayingEntity.quantity"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="PlayingEntity.quantity"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/PQ"/>
+      </type>
+    </element>
+    <element id="PlayingEntity.name">
+      <path value="PlayingEntity.name"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="PlayingEntity.name"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/EN"/>
+      </type>
+    </element>
+    <element id="PlayingEntity.desc">
+      <path value="PlayingEntity.desc"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="PlayingEntity.desc"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+      </type>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="PlayingEntity">
+      <path value="PlayingEntity"/>
+      <min value="1"/>
+      <max value="1"/>
+    </element>
+    <element id="PlayingEntity.classCode">
+      <path value="PlayingEntity.classCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="ENT"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityClassRoot"/>
+      </binding>
+    </element>
+    <element id="PlayingEntity.determinerCode">
+      <path value="PlayingEntity.determinerCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="INSTANCE"/>
+      <fixedCode value="INSTANCE"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityDeterminer"/>
+      </binding>
+    </element>
+    <element id="PlayingEntity.templateId">
+      <path value="PlayingEntity.templateId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="PlayingEntity.code">
+      <path value="PlayingEntity.code"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityCode"/>
+      </binding>
+    </element>
+    <element id="PlayingEntity.quantity">
+      <path value="PlayingEntity.quantity"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/PQ"/>
+      </type>
+    </element>
+    <element id="PlayingEntity.name">
+      <path value="PlayingEntity.name"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/EN"/>
+      </type>
+    </element>
+    <element id="PlayingEntity.desc">
+      <path value="PlayingEntity.desc"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

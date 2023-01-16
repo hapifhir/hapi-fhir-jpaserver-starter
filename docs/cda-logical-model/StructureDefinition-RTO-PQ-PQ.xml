@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="RTO-PQ-PQ"/>
+  <text>
+    <status value="extensions"/><div xmlns="http://www.w3.org/1999/xhtml"><table border="0" cellpadding="0" cellspacing="0" style="border: 0px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;"><tr style="border: 1px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top"><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="The logical name of the element">Name</a></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Information about the use of the element">Flags</a></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Minimum and Maximum # of times the the element can appear in the instance">Card.</a></th><th style="width: 100px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Reference to the type of the element">Type</a></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Additional information about the element">Description &amp; Constraints</a><span style="float: right"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Legend for this format"><img src="http://build.fhir.org/help16.png" alt="doco" style="background-color: inherit"/></a></span></th></tr><tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white"><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck1.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_element.gif" alt="." style="background-color: white; background-color: inherit" title="Element" class="hierarchy"/> <a href="StructureDefinition-RTO-PQ-PQ-definitions.html#RTO_PQ_PQ">RTO_PQ_PQ</a><a name="RTO_PQ_PQ"> </a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">1..*</td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="StructureDefinition-QTY.html">QTY</a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="font-weight:bold">XML Namespace: </span>urn:hl7-org:v3<br/><span style="opacity: 0.5">Base for all types and resources</span><br/></td></tr>
+<tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7"><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_resource.png" alt="." style="background-color: #F7F7F7; background-color: inherit" title="Resource" class="hierarchy"/> <a href="StructureDefinition-RTO-PQ-PQ-definitions.html#RTO_PQ_PQ.numerator" title="The quantity that is being divided in the ratio. The default is the integer number 1 (one.)">numerator</a><a name="RTO_PQ_PQ.numerator"> </a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">0..1</td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="StructureDefinition-PQ.html">PQ</a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/></tr>
+<tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white"><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck00.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin_end.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_resource.png" alt="." style="background-color: white; background-color: inherit" title="Resource" class="hierarchy"/> <a href="StructureDefinition-RTO-PQ-PQ-definitions.html#RTO_PQ_PQ.denominator" title="The quantity that devides the numerator in the ratio. The default is the integer number 1 (one.) The denominator must not be zero.">denominator</a><a name="RTO_PQ_PQ.denominator"> </a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">0..1</td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="StructureDefinition-PQ.html">PQ</a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/></tr>
+<tr><td colspan="5" class="hierarchy"><br/><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Legend for this format"><img src="http://build.fhir.org/help16.png" alt="doco" style="background-color: inherit"/> Documentation for this format</a></td></tr></table></div>
+  </text>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <url value="http://hl7.org/fhir/cda/StructureDefinition/RTO-PQ-PQ"/>
+  <version value="2.1.0-draft1"/>
+  <name value="RTO-PQ-PQ"/>
+  <title value="RTO-PQ-PQ: Ratio (V3 Data Type)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2023-01-16T15:52:41+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+  </contact>
+  <description value="A quantity constructed as the quotient of a numerator quantity divided by a denominator quantity. Common factors in the numerator and denominator are not automatically cancelled out. The data type supports titers (e.g., &quot;1:128&quot;) and other quantities produced by laboratories that truly represent ratios. Ratios are not simply &quot;structured numerics&quot;, particularly blood pressure measurements (e.g. &quot;120/60&quot;) are not ratios. In many cases the should be used instead of the ."/>
+  <fhirVersion value="5.0.0-ballot"/>
+  <mapping>
+    <identity value="rim"/>
+    <uri value="http://hl7.org/v3"/>
+    <name value="RIM Mapping"/>
+  </mapping>
+  <kind value="logical"/>
+  <abstract value="false"/>
+  <type value="RTO_PQ_PQ"/>
+  <baseDefinition value="http://hl7.org/fhir/cda/StructureDefinition/QTY"/>
+  <derivation value="specialization"/>
+  <snapshot>
+    <element id="RTO_PQ_PQ">
+      <path value="RTO_PQ_PQ"/>
+      <short value="Base for all types and resources"/>
+      <definition value="is an abstract generalization for all data types (1) whose value set has an order relation (less-or-equal) and (2) where difference is defined in all of the data type's totally ordered value subsets. The quantity type abstraction is needed in defining certain other types, such as the interval and the probability distribution."/>
+      <min value="1"/>
+      <max value="*"/>
+      <base>
+        <path value="Base"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <isModifier value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="RTO_PQ_PQ.nullFlavor">
+      <path value="RTO_PQ_PQ.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+      </binding>
+    </element>
+    <element id="RTO_PQ_PQ.numerator">
+      <path value="RTO_PQ_PQ.numerator"/>
+      <representation value="typeAttr"/>
+      <label value="Numerator"/>
+      <definition value="The quantity that is being divided in the ratio. The default is the integer number 1 (one.)"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RTO_PQ_PQ.numerator"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/PQ"/>
+      </type>
+    </element>
+    <element id="RTO_PQ_PQ.denominator">
+      <path value="RTO_PQ_PQ.denominator"/>
+      <representation value="typeAttr"/>
+      <label value="Denominator"/>
+      <definition value="The quantity that devides the numerator in the ratio. The default is the integer number 1 (one.) The denominator must not be zero."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RTO_PQ_PQ.denominator"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/PQ"/>
+      </type>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="RTO_PQ_PQ">
+      <path value="RTO_PQ_PQ"/>
+      <min value="1"/>
+      <max value="*"/>
+    </element>
+    <element id="RTO_PQ_PQ.numerator">
+      <path value="RTO_PQ_PQ.numerator"/>
+      <representation value="typeAttr"/>
+      <label value="Numerator"/>
+      <definition value="The quantity that is being divided in the ratio. The default is the integer number 1 (one.)"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/PQ"/>
+      </type>
+    </element>
+    <element id="RTO_PQ_PQ.denominator">
+      <path value="RTO_PQ_PQ.denominator"/>
+      <representation value="typeAttr"/>
+      <label value="Denominator"/>
+      <definition value="The quantity that devides the numerator in the ratio. The default is the integer number 1 (one.) The denominator must not be zero."/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/PQ"/>
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

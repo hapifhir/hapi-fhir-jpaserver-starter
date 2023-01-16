@@ -1,0 +1,218 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "RelatedSubject",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A subject is a person playing one of several possible roles (RelatedSubject class). The entity playing the role is a person (SubjectPerson class).</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject",
+  "version" : "2.1.0-draft1",
+  "name" : "CDAR2.RelatedSubject",
+  "title" : "RelatedSubject (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "A subject is a person playing one of several possible roles (RelatedSubject class). The entity playing the role is a person (SubjectPerson class).",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "RelatedSubject",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "RelatedSubject",
+      "path" : "RelatedSubject",
+      "short" : "Base for all types and resources",
+      "definition" : "Base definition for all types defined in FHIR type system.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "RelatedSubject.classCode",
+      "path" : "RelatedSubject.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "RelatedSubject.classCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "PRS"
+    },
+    {
+      "id" : "RelatedSubject.templateId",
+      "path" : "RelatedSubject.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "RelatedSubject.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "RelatedSubject.code",
+      "path" : "RelatedSubject.code",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "RelatedSubject.code",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-PersonalRelationshipRoleType"
+      }
+    },
+    {
+      "id" : "RelatedSubject.addr",
+      "path" : "RelatedSubject.addr",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "RelatedSubject.addr",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AD"
+      }]
+    },
+    {
+      "id" : "RelatedSubject.telecom",
+      "path" : "RelatedSubject.telecom",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "RelatedSubject.telecom",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TEL"
+      }]
+    },
+    {
+      "id" : "RelatedSubject.subject",
+      "path" : "RelatedSubject.subject",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "RelatedSubject.subject",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SubjectPerson"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "RelatedSubject",
+      "path" : "RelatedSubject",
+      "min" : 1,
+      "max" : "1"
+    },
+    {
+      "id" : "RelatedSubject.classCode",
+      "path" : "RelatedSubject.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "PRS"
+    },
+    {
+      "id" : "RelatedSubject.templateId",
+      "path" : "RelatedSubject.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "RelatedSubject.code",
+      "path" : "RelatedSubject.code",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-PersonalRelationshipRoleType"
+      }
+    },
+    {
+      "id" : "RelatedSubject.addr",
+      "path" : "RelatedSubject.addr",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AD"
+      }]
+    },
+    {
+      "id" : "RelatedSubject.telecom",
+      "path" : "RelatedSubject.telecom",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TEL"
+      }]
+    },
+    {
+      "id" : "RelatedSubject.subject",
+      "path" : "RelatedSubject.subject",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SubjectPerson"
+      }]
+    }]
+  }
+}

@@ -1,0 +1,668 @@
+<!-- get modelType -->
+
+
+
+
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <title>HL7.FHIR.CDA\Participant2 (CDA Class) - XML Representation - FHIR v5.0.0-ballot</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="http://hl7.org/fhir"/>
+
+    <link href="fhir.css" rel="stylesheet"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap-fhir.css" rel="stylesheet"/>
+
+    <!-- Project extras -->
+    <link href="assets/css/project.css" rel="stylesheet"/>
+    <link href="assets/css/pygments-manni.css" rel="stylesheet"/>
+    <link href="assets/css/jquery-ui.css" rel="stylesheet"/>
+  	<link href="assets/css/prism.css" rel="stylesheet" />
+    <!-- Placeholder for child template CSS declarations -->
+    <link href="assets/css/hl7.css" rel="stylesheet"/>
+    <link href="assets/css/cda.css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="fhir-table-scripts.js"> </script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png"/>
+    <link rel="shortcut icon" href="assets/ico/favicon.png"/>
+  </head>
+  <body onload="document.body.style.opacity='1'">
+
+	  <script src="assets/js/prism.js"></script>
+
+    <style type="text/css">h2{--heading-prefix:"3.80"}
+    h3,h4,h5,h6{--heading-prefix:"3.80"}</style>
+    <div id="segment-header" class="segment">  <!-- segment-header -->
+      <div class="container">  <!-- container -->
+        <!-- Placeholder for child template header declarations -->
+
+        <div id="hl7-nav">
+          <a id="hl7-logo" no-external="true" href="http://hl7.org">
+            <img height="50" alt="Visit the HL7 website" src="assets/images/hl7-logo-header.png"/>
+          </a>
+        </div>
+        <div id="family-nav">
+          <a id="family-logo" no-external="true" href="http://hl7.org/cda"><img height="50" alt="Visit the CDA website" src="assets/images/cda_both_trans.jpg"/> </a>
+        </div>
+        <div id="hl7-search">
+          <a id="hl7-search-lnk" no-external="true" href="http://hl7.org/fhir/search.cfm"><img alt="Search FHIR" src="assets/images/search.png"/></a>
+        </div>
+
+
+        <div id="ig-status">
+          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture V2.0.1</span>
+            <br/>
+            <span style="display:inline-block;">2.1.0-draft1 - 1st Draft
+
+
+            </span>
+          </p>
+        </div>
+      </div> <!-- /container -->
+    </div>  <!-- /segment-header -->
+
+    <div id="segment-navbar" class="segment">  <!-- segment-navbar -->
+      <div id="stripe"> </div>
+      <div class="container">  <!-- container -->
+        <!-- HEADER CONTENT -->
+
+        <nav class="navbar navbar-inverse">
+          <!--status-bar-->
+          <div class="container">
+            <button data-target=".navbar-inverse-collapse" class="navbar-toggle" data-toggle="collapse" type="button">
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+            </button>
+            <a class="navbar-brand hidden" href="http://build.fhir.org/index.html">FHIR</a>
+            <div class="nav-collapse collapse navbar-inverse-collapse">
+              <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
+  <li><a href="index.html">IG Home</a></li>
+  <li><a href="toc.html">Table of Contents</a></li>
+  <li><a href="artifacts.html">Artifact Index</a></li>
+  <li><a href="downloads.html">Downloads</a></li>
+</ul>      
+            </div>  <!-- /.nav-collapse -->
+          </div>  <!-- /.container -->
+        </nav>  <!-- /.navbar -->
+      <!-- /HEADER CONTENT -->
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-navbar -->
+    <!--status-bar-->
+
+    <div id="segment-breadcrumb" class="segment">  <!-- segment-breadcrumb -->
+      <div class="container">  <!-- container -->
+        <ul class="breadcrumb">
+          <li><a href='toc.html'><b>Table of Contents</b></a></li><li><a href='artifacts.html'><b>Artifacts Summary</b></a></li><li><b>Participant2 (CDA Class)</b></li>
+
+        </ul>
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-breadcrumb -->
+
+    <a name="top"> </a>
+    <div id="segment-content" class="segment">  <!-- segment-content -->
+      <div class="container">  <!-- container -->
+        <div class="row">
+          <div class="inner-wrapper">
+
+<div style="counter-reset: section 7" class="col-12">
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture V2.0.1 - Local Development build (v2.1.0-draft1). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  
+
+
+
+
+
+
+
+
+
+
+
+<ul class="nav nav-tabs">
+
+  <li>
+    <a href="StructureDefinition-Participant2.html">Content</a>
+  </li>
+
+
+
+  <li>
+    <a href="StructureDefinition-Participant2-definitions.html">Detailed Descriptions</a>
+  </li>
+
+
+
+  
+    <li>
+      <a href="StructureDefinition-Participant2-mappings.html">Mappings</a>
+    </li>
+  
+
+
+
+
+
+
+
+  
+    <li class="active">
+      <a href="#">XML</a>
+    </li>
+  
+
+
+  
+    <li>
+      <a href="StructureDefinition-Participant2.profile.json.html">JSON</a>
+    </li>
+  
+
+
+  
+    <li>
+      <a href="StructureDefinition-Participant2.profile.ttl.html">TTL</a>
+    </li>
+  
+
+
+</ul>
+
+
+<a name="root"> </a>
+<h2 id="root">Logical Model: CDAR2.Participant2 - XML Profile</h2>
+  <table class="colsi">
+    <tr>
+
+      <td colspan="2">
+        
+          Active
+          
+            as of 2023-01-16
+          
+        
+      </td>
+
+    </tr>
+  </table>
+
+
+<p>XML representation of the Participant2 logical model.</p>
+
+<p><a href="StructureDefinition-Participant2.xml" no-download="true">Raw xml</a> | <a href="StructureDefinition-Participant2.xml" download>Download</a></p>
+
+  <!-- insert intro if present -->
+  
+
+
+
+  <pre class="xml" style="white-space: pre; overflow: hidden"><code class="language-xml">
+
+&lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition">StructureDefinition</a> xmlns=&quot;http://hl7.org/fhir&quot;&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.id">id</a> <a href="http://build.fhir.org/datatypes.html#id">value</a>=&quot;Participant2&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.text">text</a>&gt;
+    &lt;<a href="http://build.fhir.org/narrative.html#Narrative#Narrative.status">status</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;generated&quot;/&gt;
+    &lt;div xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+      &lt;p&gt;Can be used to represent any other participant that cannot be represented with one of the more specific participants. The participant can be ascribed to a CDA entry, and propagates to nested CDA entries, unless overridden.&lt;/p&gt;
+    &lt;/div&gt;<a name="end-xhtml"></a>
+  &lt;/text&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.extension">extension</a>
+             <a href="http://build.fhir.org/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
+    &lt;<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;urn:hl7-org:v3&quot;/&gt;
+  &lt;/extension&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.url">url</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/Participant2&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.version">version</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;2.1.0-draft1&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.name">name</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;CDAR2.Participant2&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.title">title</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2 (CDA Class)&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.status">status</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;active&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.experimental">experimental</a> <a href="http://build.fhir.org/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.date">date</a> <a href="http://build.fhir.org/datatypes.html#dateTime">value</a>=&quot;2023-01-16T15:52:41+01:00&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.publisher">publisher</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Health Level 7&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.contact">contact</a>&gt;
+    &lt;<a href="http://build.fhir.org/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
+      &lt;<a href="http://build.fhir.org/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;url&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;http://www.hl7.org/Special/committees/structure&quot;/&gt;
+    &lt;/telecom&gt;
+  &lt;/contact&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.description">description</a>
+               <a href="http://build.fhir.org/datatypes.html#markdown">value</a>=&quot;Can be used to represent any other participant that cannot be represented with one of the more specific participants. The participant can be ascribed to a CDA entry, and propagates to nested CDA entries, unless overridden.&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;5.0.0-ballot&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping">mapping</a>&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.identity">identity</a> <a href="http://build.fhir.org/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.uri">uri</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/v3&quot;/&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.name">name</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;RIM Mapping&quot;/&gt;
+  &lt;/mapping&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.kind">kind</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;logical&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.abstract">abstract</a> <a href="http://build.fhir.org/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.type">type</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;Participant2&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a> <a href="http://build.fhir.org/datatypes.html#canonical">value</a>=&quot;http://hl7.org/fhir/StructureDefinition/Base&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.derivation">derivation</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;specialization&quot;/&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Base for all types and resources&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://build.fhir.org/datatypes.html#markdown">value</a>=&quot;Base definition for all types defined in FHIR type system.&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Base&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a> <a href="http://build.fhir.org/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a> <a href="http://build.fhir.org/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;n/a&quot;/&gt;
+      &lt;/mapping&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.nullFlavor&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.nullFlavor&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Exceptional Value Detail&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://build.fhir.org/datatypes.html#markdown">value</a>=&quot;If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.nullFlavor&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;/type&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a> <a href="http://build.fhir.org/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-NullFlavor&quot;/&gt;
+      &lt;/binding&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.typeCode&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.typeCode&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.typeCode&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;/type&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
+                  <a href="http://build.fhir.org/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-ParticipationType&quot;/&gt;
+      &lt;/binding&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.contextControlCode&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.contextControlCode&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.contextControlCode&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;/type&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;OP&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
+                  <a href="http://build.fhir.org/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-ContextControl&quot;/&gt;
+      &lt;/binding&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.realmCode&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.realmCode&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://build.fhir.org/datatypes.html#markdown">value</a>=&quot;When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.realmCode&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/CS&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.typeId&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.typeId&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://build.fhir.org/datatypes.html#markdown">value</a>=&quot;When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.typeId&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/II&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.templateId&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.templateId&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://build.fhir.org/datatypes.html#markdown">value</a>=&quot;When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.templateId&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/II&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.sdtcFunctionCode&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
+                 <a href="http://build.fhir.org/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
+        &lt;<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;urn:hl7-org:sdtc&quot;/&gt;
+      &lt;/extension&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
+                 <a href="http://build.fhir.org/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name&quot;&gt;
+        &lt;<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueString</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;functionCode&quot;/&gt;
+      &lt;/extension&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.sdtcFunctionCode&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.sdtcFunctionCode&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/CE&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.time&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.time&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.time&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/IVL-TS&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.awarenessCode&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.awarenessCode&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.awarenessCode&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/CE&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.participantRole&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.participantRole&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.participantRole&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>
+              <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/ParticipantRole&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+  &lt;/snapshot&gt;
+  &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential">differential</a>&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.nullFlavor&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.nullFlavor&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Exceptional Value Detail&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://build.fhir.org/datatypes.html#markdown">value</a>=&quot;If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;/type&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a> <a href="http://build.fhir.org/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-NullFlavor&quot;/&gt;
+      &lt;/binding&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.typeCode&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.typeCode&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;/type&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
+                  <a href="http://build.fhir.org/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-ParticipationType&quot;/&gt;
+      &lt;/binding&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.contextControlCode&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.contextControlCode&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;/type&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;OP&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://build.fhir.org/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
+                  <a href="http://build.fhir.org/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-ContextControl&quot;/&gt;
+      &lt;/binding&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.realmCode&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.realmCode&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://build.fhir.org/datatypes.html#markdown">value</a>=&quot;When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/CS&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.typeId&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.typeId&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://build.fhir.org/datatypes.html#markdown">value</a>=&quot;When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/II&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.templateId&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.templateId&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://build.fhir.org/datatypes.html#markdown">value</a>=&quot;When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/II&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.sdtcFunctionCode&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
+                 <a href="http://build.fhir.org/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
+        &lt;<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;urn:hl7-org:sdtc&quot;/&gt;
+      &lt;/extension&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
+                 <a href="http://build.fhir.org/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name&quot;&gt;
+        &lt;<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueString</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;functionCode&quot;/&gt;
+      &lt;/extension&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.sdtcFunctionCode&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/CE&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.time&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.time&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/IVL-TS&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.awarenessCode&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.awarenessCode&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/CE&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://build.fhir.org/datatypes.html#id">id</a>=&quot;Participant2.participantRole&quot;&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;Participant2.participantRole&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://build.fhir.org/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://build.fhir.org/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>
+              <a href="http://build.fhir.org/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/ParticipantRole&quot;/&gt;
+      &lt;/type&gt;
+    &lt;/element&gt;
+  &lt;/differential&gt;
+&lt;/StructureDefinition&gt;</code></pre>
+
+
+  <!-- insert notes if present -->
+  
+
+
+
+</div>
+
+        </div>  <!-- /inner-wrapper -->
+      </div>  <!-- /row -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-content -->
+
+  <script type="text/javascript" src="assets/js/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
+  <script type="text/javascript" src="assets/js/jquery-ui.min.js"> </script>
+
+  <script type="text/javascript">
+    try {
+      var currentTabIndex = sessionStorage.getItem('fhir-resource-tab-index');
+    } catch(exception) {
+    }
+
+    if (!currentTabIndex)
+      currentTabIndex = '0';
+
+    $( '#tabs' ).tabs({
+      active: currentTabIndex,
+      activate: function( event, ui ) {
+        var active = $('.selector').tabs('option', 'active');
+        currentTabIndex = ui.newTab.index();
+        document.activeElement.blur();
+        try {
+          sessionStorage.setItem('fhir-resource-tab-index', currentTabIndex);
+        } catch(exception) {
+        }
+      }
+    });
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      if(window.location.hash != "") {
+          $('a[href="' + window.location.hash + '"]').click()
+      }
+    });
+  </script>
+  <a name="bottom"> </a>
+  <div id="segment-footer" igtool="footer" class="segment">  <!-- segment-footer -->
+    <div class="container">  <!-- container -->
+
+      <div class="inner-wrapper">
+        <p>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.fhir.cda#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-ballot</a>. Generated <span title="Mon, Jan 16, 2023 15:52+0100">2023-01-16</span>
+          <br/>
+          <span style="color: var(--footer-highlight-text-color)">
+                      Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
+                 <a style="color: var(--footer-hyperlink-text-color)" href="qa.html">QA Report</a>
+                 
+                
+                 | <a style="color: #81BEF7" target="_blank" href="http://hl7.org/cda/stds/core/history.html">Version History <img alt="external" style="vertical-align: baseline" src="external.png"/></a></a> |
+                 <a style="color: #81BEF7" rel="license" href="http://build.fhir.org/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
+                 <!--<a style="color: #81BEF7" href="todo.html">Search</a> | --> 
+                 <a style="color: #81BEF7" target="_blank" href="https://jira.hl7.org/projects/CDA/issues">Propose a change <img alt="external" style="vertical-align: baseline" src="external.png"/></a>
+
+          </span>
+        </p>
+      </div>  <!-- /inner-wrapper -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-footer -->
+  
+  <div id="segment-post-footer" class="segment hidden">  <!-- segment-post-footer -->
+    <div class="container">  <!-- container -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-post-footer -->
+  
+  <!-- JS and analytics only. -->
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="assets/js/bootstrap.min.js"> </script>
+  <script type="text/javascript" src="assets/js/respond.min.js"> </script>
+  <script type="text/javascript" src="assets/js/anchor.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard-btn.js"> </script>
+  <script>anchors.options.visible = 'hover'
+anchors.add()</script>
+  
+<!-- feedback form - Google forms -->
+<!-- v0.1, 2021-01-09 -->
+
+
+
+<!-- / feedback form  -->
+
+  <!-- Analytics Below
+  ================================================== -->
+  </body>
+</html>
+

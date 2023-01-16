@@ -1,0 +1,222 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "PN",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A name for a person. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for person name values are &quot;Jim Bob Walton, Jr.&quot;, &quot;Adam Everyman&quot;, etc. A person name may be as simple as a character string or may consist of several person name parts, such as, &quot;Jim&quot;, &quot;Bob&quot;, &quot;Walton&quot;, and &quot;Jr.&quot;. PN differs from EN because the qualifier type cannot include LS (Legal Status).</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-xml-no-order",
+    "valueBoolean" : true
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/PN",
+  "version" : "2.1.0-draft1",
+  "name" : "PN",
+  "title" : "PN: PersonName (V3 Data Type)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "A name for a person. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for person name values are \"Jim Bob Walton, Jr.\", \"Adam Everyman\", etc. A person name may be as simple as a character string or may consist of several person name parts, such as, \"Jim\", \"Bob\", \"Walton\", and \"Jr.\". PN differs from EN because the qualifier type cannot include LS (Legal Status).",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "PN",
+  "baseDefinition" : "http://hl7.org/fhir/cda/StructureDefinition/EN",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "PN",
+      "path" : "PN",
+      "short" : "Base for all types and resources",
+      "definition" : "A name for a person. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for person name values are \"Jim Bob Walton, Jr.\", \"Adam Everyman\", etc. A person name may be as simple as a character string or may consist of several person name parts, such as, \"Jim\", \"Bob\", \"Walton\", and \"Jr.\". PN differs from EN because the qualifier type cannot include LS (Legal Status).",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "PN.nullFlavor",
+      "path" : "PN.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
+    },
+    {
+      "id" : "PN.use",
+      "path" : "PN.use",
+      "representation" : ["xmlAttr"],
+      "label" : "Use Code",
+      "definition" : "A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EN.use",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-PersonNameUse"
+      }
+    },
+    {
+      "id" : "PN.delimiter",
+      "path" : "PN.delimiter",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.delimiter",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "PN.family",
+      "path" : "PN.family",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.family",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "PN.given",
+      "path" : "PN.given",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.given",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "PN.prefix",
+      "path" : "PN.prefix",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.prefix",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "PN.suffix",
+      "path" : "PN.suffix",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.suffix",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "PN.other",
+      "path" : "PN.other",
+      "representation" : ["xmlText"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EN.other",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string"
+      }]
+    },
+    {
+      "id" : "PN.validTime",
+      "path" : "PN.validTime",
+      "label" : "Valid Time",
+      "definition" : "An interval of time specifying the time during which the name is or was used for the entity. This accomodates the fact that people change names for people, places and things.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EN.validTime",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "PN",
+      "path" : "PN",
+      "definition" : "A name for a person. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for person name values are \"Jim Bob Walton, Jr.\", \"Adam Everyman\", etc. A person name may be as simple as a character string or may consist of several person name parts, such as, \"Jim\", \"Bob\", \"Walton\", and \"Jr.\". PN differs from EN because the qualifier type cannot include LS (Legal Status).",
+      "min" : 1,
+      "max" : "*"
+    },
+    {
+      "id" : "PN.use",
+      "path" : "PN.use",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-PersonNameUse"
+      }
+    }]
+  }
+}

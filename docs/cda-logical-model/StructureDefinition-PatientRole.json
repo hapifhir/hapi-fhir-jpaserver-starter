@@ -1,0 +1,282 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "PatientRole",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A recordTarget is represented as a relationship between a person and an organization, where the person is in a patient role (PatientRole class). The entity playing the role is a patient (Patient class). The entity scoping the role is an organization (Organization class). A patient is uniquely identified via the PatientRole.id attribute.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/PatientRole",
+  "version" : "2.1.0-draft1",
+  "name" : "CDAR2.PatientRole",
+  "title" : "PatientRole (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "A recordTarget is represented as a relationship between a person and an organization, where the person is in a patient role (PatientRole class). The entity playing the role is a patient (Patient class). The entity scoping the role is an organization (Organization class). A patient is uniquely identified via the PatientRole.id attribute.",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "PatientRole",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "PatientRole",
+      "path" : "PatientRole",
+      "short" : "Base for all types and resources",
+      "definition" : "Base definition for all types defined in FHIR type system.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "PatientRole.classCode",
+      "path" : "PatientRole.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "PatientRole.classCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "PAT",
+      "fixedCode" : "PAT",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-RoleClassRelationshipFormal"
+      }
+    },
+    {
+      "id" : "PatientRole.templateId",
+      "path" : "PatientRole.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "PatientRole.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "PatientRole.id",
+      "path" : "PatientRole.id",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "PatientRole.id",
+        "min" : 1,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "PatientRole.sdtcIdentifiedBy",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      },
+      {
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+        "valueString" : "identifiedBy"
+      }],
+      "path" : "PatientRole.sdtcIdentifiedBy",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "PatientRole.sdtcIdentifiedBy",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IdentifiedBy"
+      }]
+    },
+    {
+      "id" : "PatientRole.addr",
+      "path" : "PatientRole.addr",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "PatientRole.addr",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AD"
+      }]
+    },
+    {
+      "id" : "PatientRole.telecom",
+      "path" : "PatientRole.telecom",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "PatientRole.telecom",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TEL"
+      }]
+    },
+    {
+      "id" : "PatientRole.patient",
+      "path" : "PatientRole.patient",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "PatientRole.patient",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Patient"
+      }]
+    },
+    {
+      "id" : "PatientRole.providerOrganization",
+      "path" : "PatientRole.providerOrganization",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "PatientRole.providerOrganization",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Organization"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "PatientRole",
+      "path" : "PatientRole",
+      "min" : 1,
+      "max" : "1"
+    },
+    {
+      "id" : "PatientRole.classCode",
+      "path" : "PatientRole.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "PAT",
+      "fixedCode" : "PAT",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-RoleClassRelationshipFormal"
+      }
+    },
+    {
+      "id" : "PatientRole.templateId",
+      "path" : "PatientRole.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "PatientRole.id",
+      "path" : "PatientRole.id",
+      "min" : 1,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "PatientRole.sdtcIdentifiedBy",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      },
+      {
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+        "valueString" : "identifiedBy"
+      }],
+      "path" : "PatientRole.sdtcIdentifiedBy",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IdentifiedBy"
+      }]
+    },
+    {
+      "id" : "PatientRole.addr",
+      "path" : "PatientRole.addr",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AD"
+      }]
+    },
+    {
+      "id" : "PatientRole.telecom",
+      "path" : "PatientRole.telecom",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TEL"
+      }]
+    },
+    {
+      "id" : "PatientRole.patient",
+      "path" : "PatientRole.patient",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Patient"
+      }]
+    },
+    {
+      "id" : "PatientRole.providerOrganization",
+      "path" : "PatientRole.providerOrganization",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Organization"
+      }]
+    }]
+  }
+}

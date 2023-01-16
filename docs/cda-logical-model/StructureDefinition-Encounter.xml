@@ -1,0 +1,1564 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="Encounter"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
+      <p>A derivative of the RIM PatientEncounter class, used to represent related encounters, such as follow-up visits or referenced past encounters.</p>
+      <p>NOTE: The EncompassingEncounter class in the CDA Header (see Header Relationships (§ 4.2.3 )) represents the setting of the clinical encounter during which the documented act occurred. The Encounter class in the CDA Body is used to represent other related encounters.</p>
+    </div>
+  </text>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <url value="http://hl7.org/fhir/cda/StructureDefinition/Encounter"/>
+  <version value="2.1.0-draft1"/>
+  <name value="CDAR2.Encounter"/>
+  <title value="Encounter (CDA Class)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2023-01-16T15:52:41+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+  </contact>
+  <description value="A derivative of the RIM PatientEncounter class, used to represent related encounters, such as follow-up visits or referenced past encounters.&#xA;NOTE: The EncompassingEncounter class in the CDA Header (see Header Relationships (§ 4.2.3 )) represents the setting of the clinical encounter during which the documented act occurred. The Encounter class in the CDA Body is used to represent other related encounters."/>
+  <fhirVersion value="5.0.0-ballot"/>
+  <mapping>
+    <identity value="rim"/>
+    <uri value="http://hl7.org/v3"/>
+    <name value="RIM Mapping"/>
+  </mapping>
+  <kind value="logical"/>
+  <abstract value="false"/>
+  <type value="Encounter"/>
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
+  <derivation value="specialization"/>
+  <snapshot>
+    <element id="Encounter">
+      <path value="Encounter"/>
+      <short value="Base for all types and resources"/>
+      <definition value="Base definition for all types defined in FHIR type system."/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Base"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <isModifier value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="Encounter.classCode">
+      <path value="Encounter.classCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.classCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <fixedCode value="ENC"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClass"/>
+      </binding>
+    </element>
+    <element id="Encounter.moodCode">
+      <path value="Encounter.moodCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.moodCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+    </element>
+    <element id="Encounter.realmCode">
+      <path value="Encounter.realmCode"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Encounter.realmCode"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+      </type>
+    </element>
+    <element id="Encounter.typeId">
+      <path value="Encounter.typeId"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.typeId"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Encounter.templateId">
+      <path value="Encounter.templateId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Encounter.templateId"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Encounter.id">
+      <path value="Encounter.id"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Encounter.id"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Encounter.code">
+      <path value="Encounter.code"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.code"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CD"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActEncounterCode"/>
+      </binding>
+    </element>
+    <element id="Encounter.text">
+      <path value="Encounter.text"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.text"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+      </type>
+    </element>
+    <element id="Encounter.statusCode">
+      <path value="Encounter.statusCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.statusCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActStatus"/>
+      </binding>
+    </element>
+    <element id="Encounter.effectiveTime">
+      <path value="Encounter.effectiveTime"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.effectiveTime"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"/>
+      </type>
+    </element>
+    <element id="Encounter.dischargeDispositionCode">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Encounter.dischargeDispositionCode"/>
+      <short value="sdtc:dischargeDispositionCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.dischargeDispositionCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+    </element>
+    <element id="Encounter.priorityCode">
+      <path value="Encounter.priorityCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.priorityCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActPriority"/>
+      </binding>
+    </element>
+    <element id="Encounter.subject">
+      <path value="Encounter.subject"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.subject"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="Element"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+    </element>
+    <element id="Encounter.subject.id">
+      <path value="Encounter.subject.id"/>
+      <representation value="xmlAttr"/>
+      <short value="Unique id for inter-element referencing"/>
+      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Element.id"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="id"/>
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String"/>
+      </type>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="Encounter.subject.extension">
+      <path value="Encounter.subject.extension"/>
+      <slicing>
+        <discriminator>
+          <type value="value"/>
+          <path value="url"/>
+        </discriminator>
+        <description value="Extensions are always sliced by (at least) url"/>
+        <rules value="open"/>
+      </slicing>
+      <short value="Additional content defined by implementations"/>
+      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
+      <alias value="extensions"/>
+      <alias value="user content"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Element.extension"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Extension"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+      <constraint>
+        <key value="ext-1"/>
+        <severity value="error"/>
+        <human value="Must have either extensions or value[x], not both"/>
+        <expression value="extension.exists() != value.exists()"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
+      </constraint>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="Encounter.subject.typeCode">
+      <path value="Encounter.subject.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.subject.typeCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="SBJ"/>
+      <fixedCode value="SBJ"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"/>
+      </binding>
+    </element>
+    <element id="Encounter.subject.contextControlCode">
+      <path value="Encounter.subject.contextControlCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.subject.contextControlCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="OP"/>
+      <fixedCode value="OP"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
+      </binding>
+    </element>
+    <element id="Encounter.subject.awarenessCode">
+      <path value="Encounter.subject.awarenessCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.subject.awarenessCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-TargetAwareness"/>
+      </binding>
+    </element>
+    <element id="Encounter.subject.relatedSubject">
+      <path value="Encounter.subject.relatedSubject"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.subject.relatedSubject"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject"/>
+      </type>
+    </element>
+    <element id="Encounter.specimen">
+      <path value="Encounter.specimen"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Encounter.specimen"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Specimen"/>
+      </type>
+    </element>
+    <element id="Encounter.performer">
+      <path value="Encounter.performer"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Encounter.performer"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Performer2"/>
+      </type>
+    </element>
+    <element id="Encounter.author">
+      <path value="Encounter.author"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Encounter.author"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Author"/>
+      </type>
+    </element>
+    <element id="Encounter.informant">
+      <path value="Encounter.informant"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Encounter.informant"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Element"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+    </element>
+    <element id="Encounter.informant.id">
+      <path value="Encounter.informant.id"/>
+      <representation value="xmlAttr"/>
+      <short value="Unique id for inter-element referencing"/>
+      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Element.id"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="id"/>
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String"/>
+      </type>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="Encounter.informant.extension">
+      <path value="Encounter.informant.extension"/>
+      <slicing>
+        <discriminator>
+          <type value="value"/>
+          <path value="url"/>
+        </discriminator>
+        <description value="Extensions are always sliced by (at least) url"/>
+        <rules value="open"/>
+      </slicing>
+      <short value="Additional content defined by implementations"/>
+      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
+      <alias value="extensions"/>
+      <alias value="user content"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Element.extension"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Extension"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+      <constraint>
+        <key value="ext-1"/>
+        <severity value="error"/>
+        <human value="Must have either extensions or value[x], not both"/>
+        <expression value="extension.exists() != value.exists()"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
+      </constraint>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="Encounter.informant.typeCode">
+      <path value="Encounter.informant.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.informant.typeCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="INF"/>
+      <fixedCode value="INF"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator"/>
+      </binding>
+    </element>
+    <element id="Encounter.informant.contextControlCode">
+      <path value="Encounter.informant.contextControlCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.informant.contextControlCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="OP"/>
+      <fixedCode value="OP"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
+      </binding>
+    </element>
+    <element id="Encounter.informant.assignedEntity">
+      <path value="Encounter.informant.assignedEntity"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.informant.assignedEntity"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"/>
+      </type>
+    </element>
+    <element id="Encounter.informant.relatedEntity">
+      <path value="Encounter.informant.relatedEntity"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.informant.relatedEntity"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity"/>
+      </type>
+    </element>
+    <element id="Encounter.participant">
+      <path value="Encounter.participant"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Encounter.participant"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Participant2"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship">
+      <path value="Encounter.entryRelationship"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Encounter.entryRelationship"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Element"/>
+      </type>
+      <constraint>
+        <key value="enc-er-1"/>
+        <severity value="error"/>
+        <human value="Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act"/>
+        <expression value="(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1"/>
+      </constraint>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+    </element>
+    <element id="Encounter.entryRelationship.id">
+      <path value="Encounter.entryRelationship.id"/>
+      <representation value="xmlAttr"/>
+      <short value="Unique id for inter-element referencing"/>
+      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Element.id"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="id"/>
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String"/>
+      </type>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="Encounter.entryRelationship.extension">
+      <path value="Encounter.entryRelationship.extension"/>
+      <slicing>
+        <discriminator>
+          <type value="value"/>
+          <path value="url"/>
+        </discriminator>
+        <description value="Extensions are always sliced by (at least) url"/>
+        <rules value="open"/>
+      </slicing>
+      <short value="Additional content defined by implementations"/>
+      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
+      <alias value="extensions"/>
+      <alias value="user content"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Element.extension"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Extension"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+      <constraint>
+        <key value="ext-1"/>
+        <severity value="error"/>
+        <human value="Must have either extensions or value[x], not both"/>
+        <expression value="extension.exists() != value.exists()"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
+      </constraint>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="Encounter.entryRelationship.typeCode">
+      <path value="Encounter.entryRelationship.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.typeCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.inversionInd">
+      <path value="Encounter.entryRelationship.inversionInd"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.inversionInd"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.contextConductionInd">
+      <path value="Encounter.entryRelationship.contextConductionInd"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.contextConductionInd"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+      </type>
+      <defaultValueBoolean value="true"/>
+    </element>
+    <element id="Encounter.entryRelationship.sequenceNumber">
+      <path value="Encounter.entryRelationship.sequenceNumber"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.sequenceNumber"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/INT"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.negationInd">
+      <path value="Encounter.entryRelationship.negationInd"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.negationInd"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.seperatableInd">
+      <path value="Encounter.entryRelationship.seperatableInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.seperatableInd"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.observation">
+      <path value="Encounter.entryRelationship.observation"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.observation"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Observation"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.regionOfInterest">
+      <path value="Encounter.entryRelationship.regionOfInterest"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.regionOfInterest"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.observationMedia">
+      <path value="Encounter.entryRelationship.observationMedia"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.observationMedia"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.substanceAdministration">
+      <path value="Encounter.entryRelationship.substanceAdministration"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.substanceAdministration"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.supply">
+      <path value="Encounter.entryRelationship.supply"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.supply"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Supply"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.procedure">
+      <path value="Encounter.entryRelationship.procedure"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.procedure"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Procedure"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.encounter">
+      <path value="Encounter.entryRelationship.encounter"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.encounter"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Encounter"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.organizer">
+      <path value="Encounter.entryRelationship.organizer"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.organizer"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Organizer"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.act">
+      <path value="Encounter.entryRelationship.act"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.entryRelationship.act"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Act"/>
+      </type>
+    </element>
+    <element id="Encounter.reference">
+      <path value="Encounter.reference"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Encounter.reference"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Element"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+    </element>
+    <element id="Encounter.reference.id">
+      <path value="Encounter.reference.id"/>
+      <representation value="xmlAttr"/>
+      <short value="Unique id for inter-element referencing"/>
+      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Element.id"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="id"/>
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String"/>
+      </type>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="Encounter.reference.extension">
+      <path value="Encounter.reference.extension"/>
+      <slicing>
+        <discriminator>
+          <type value="value"/>
+          <path value="url"/>
+        </discriminator>
+        <description value="Extensions are always sliced by (at least) url"/>
+        <rules value="open"/>
+      </slicing>
+      <short value="Additional content defined by implementations"/>
+      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
+      <alias value="extensions"/>
+      <alias value="user content"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Element.extension"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Extension"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+      <constraint>
+        <key value="ext-1"/>
+        <severity value="error"/>
+        <human value="Must have either extensions or value[x], not both"/>
+        <expression value="extension.exists() != value.exists()"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
+      </constraint>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="Encounter.reference.typeCode">
+      <path value="Encounter.reference.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.reference.typeCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+    </element>
+    <element id="Encounter.reference.seperatableInd">
+      <path value="Encounter.reference.seperatableInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.reference.seperatableInd"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="Encounter.reference.externalAct">
+      <path value="Encounter.reference.externalAct"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.reference.externalAct"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalAct"/>
+      </type>
+    </element>
+    <element id="Encounter.reference.externalObservation">
+      <path value="Encounter.reference.externalObservation"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.reference.externalObservation"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation"/>
+      </type>
+    </element>
+    <element id="Encounter.reference.externalProcedure">
+      <path value="Encounter.reference.externalProcedure"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.reference.externalProcedure"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure"/>
+      </type>
+    </element>
+    <element id="Encounter.reference.externalDocument">
+      <path value="Encounter.reference.externalDocument"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Encounter.reference.externalDocument"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument"/>
+      </type>
+    </element>
+    <element id="Encounter.precondition">
+      <path value="Encounter.precondition"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Encounter.precondition"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Precondition"/>
+      </type>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="Encounter">
+      <path value="Encounter"/>
+      <min value="1"/>
+      <max value="1"/>
+    </element>
+    <element id="Encounter.classCode">
+      <path value="Encounter.classCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <fixedCode value="ENC"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClass"/>
+      </binding>
+    </element>
+    <element id="Encounter.moodCode">
+      <path value="Encounter.moodCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+    </element>
+    <element id="Encounter.realmCode">
+      <path value="Encounter.realmCode"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+      </type>
+    </element>
+    <element id="Encounter.typeId">
+      <path value="Encounter.typeId"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Encounter.templateId">
+      <path value="Encounter.templateId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Encounter.id">
+      <path value="Encounter.id"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Encounter.code">
+      <path value="Encounter.code"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CD"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActEncounterCode"/>
+      </binding>
+    </element>
+    <element id="Encounter.text">
+      <path value="Encounter.text"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+      </type>
+    </element>
+    <element id="Encounter.statusCode">
+      <path value="Encounter.statusCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActStatus"/>
+      </binding>
+    </element>
+    <element id="Encounter.effectiveTime">
+      <path value="Encounter.effectiveTime"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"/>
+      </type>
+    </element>
+    <element id="Encounter.dischargeDispositionCode">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Encounter.dischargeDispositionCode"/>
+      <short value="sdtc:dischargeDispositionCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+    </element>
+    <element id="Encounter.priorityCode">
+      <path value="Encounter.priorityCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActPriority"/>
+      </binding>
+    </element>
+    <element id="Encounter.subject">
+      <path value="Encounter.subject"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="Element"/>
+      </type>
+    </element>
+    <element id="Encounter.subject.typeCode">
+      <path value="Encounter.subject.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="SBJ"/>
+      <fixedCode value="SBJ"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"/>
+      </binding>
+    </element>
+    <element id="Encounter.subject.contextControlCode">
+      <path value="Encounter.subject.contextControlCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="OP"/>
+      <fixedCode value="OP"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
+      </binding>
+    </element>
+    <element id="Encounter.subject.awarenessCode">
+      <path value="Encounter.subject.awarenessCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-TargetAwareness"/>
+      </binding>
+    </element>
+    <element id="Encounter.subject.relatedSubject">
+      <path value="Encounter.subject.relatedSubject"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject"/>
+      </type>
+    </element>
+    <element id="Encounter.specimen">
+      <path value="Encounter.specimen"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Specimen"/>
+      </type>
+    </element>
+    <element id="Encounter.performer">
+      <path value="Encounter.performer"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Performer2"/>
+      </type>
+    </element>
+    <element id="Encounter.author">
+      <path value="Encounter.author"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Author"/>
+      </type>
+    </element>
+    <element id="Encounter.informant">
+      <path value="Encounter.informant"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="Element"/>
+      </type>
+    </element>
+    <element id="Encounter.informant.typeCode">
+      <path value="Encounter.informant.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="INF"/>
+      <fixedCode value="INF"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator"/>
+      </binding>
+    </element>
+    <element id="Encounter.informant.contextControlCode">
+      <path value="Encounter.informant.contextControlCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="OP"/>
+      <fixedCode value="OP"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
+      </binding>
+    </element>
+    <element id="Encounter.informant.assignedEntity">
+      <path value="Encounter.informant.assignedEntity"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"/>
+      </type>
+    </element>
+    <element id="Encounter.informant.relatedEntity">
+      <path value="Encounter.informant.relatedEntity"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity"/>
+      </type>
+    </element>
+    <element id="Encounter.participant">
+      <path value="Encounter.participant"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Participant2"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship">
+      <path value="Encounter.entryRelationship"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="Element"/>
+      </type>
+      <constraint>
+        <key value="enc-er-1"/>
+        <severity value="error"/>
+        <human value="Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act"/>
+        <expression value="(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1"/>
+      </constraint>
+    </element>
+    <element id="Encounter.entryRelationship.typeCode">
+      <path value="Encounter.entryRelationship.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.inversionInd">
+      <path value="Encounter.entryRelationship.inversionInd"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="boolean"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.contextConductionInd">
+      <path value="Encounter.entryRelationship.contextConductionInd"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="boolean"/>
+      </type>
+      <defaultValueBoolean value="true"/>
+    </element>
+    <element id="Encounter.entryRelationship.sequenceNumber">
+      <path value="Encounter.entryRelationship.sequenceNumber"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/INT"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.negationInd">
+      <path value="Encounter.entryRelationship.negationInd"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="boolean"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.seperatableInd">
+      <path value="Encounter.entryRelationship.seperatableInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.observation">
+      <path value="Encounter.entryRelationship.observation"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Observation"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.regionOfInterest">
+      <path value="Encounter.entryRelationship.regionOfInterest"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.observationMedia">
+      <path value="Encounter.entryRelationship.observationMedia"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.substanceAdministration">
+      <path value="Encounter.entryRelationship.substanceAdministration"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.supply">
+      <path value="Encounter.entryRelationship.supply"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Supply"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.procedure">
+      <path value="Encounter.entryRelationship.procedure"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Procedure"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.encounter">
+      <path value="Encounter.entryRelationship.encounter"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Encounter"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.organizer">
+      <path value="Encounter.entryRelationship.organizer"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Organizer"/>
+      </type>
+    </element>
+    <element id="Encounter.entryRelationship.act">
+      <path value="Encounter.entryRelationship.act"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Act"/>
+      </type>
+    </element>
+    <element id="Encounter.reference">
+      <path value="Encounter.reference"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="Element"/>
+      </type>
+    </element>
+    <element id="Encounter.reference.typeCode">
+      <path value="Encounter.reference.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+    </element>
+    <element id="Encounter.reference.seperatableInd">
+      <path value="Encounter.reference.seperatableInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="Encounter.reference.externalAct">
+      <path value="Encounter.reference.externalAct"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalAct"/>
+      </type>
+    </element>
+    <element id="Encounter.reference.externalObservation">
+      <path value="Encounter.reference.externalObservation"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation"/>
+      </type>
+    </element>
+    <element id="Encounter.reference.externalProcedure">
+      <path value="Encounter.reference.externalProcedure"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure"/>
+      </type>
+    </element>
+    <element id="Encounter.reference.externalDocument">
+      <path value="Encounter.reference.externalDocument"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument"/>
+      </type>
+    </element>
+    <element id="Encounter.precondition">
+      <path value="Encounter.precondition"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Precondition"/>
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

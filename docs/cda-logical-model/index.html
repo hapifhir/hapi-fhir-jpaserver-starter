@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <title>HL7.FHIR.CDA\IG Home Page - FHIR v5.0.0-ballot</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="http://hl7.org/fhir"/>
+
+    <link href="fhir.css" rel="stylesheet"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap-fhir.css" rel="stylesheet"/>
+
+    <!-- Project extras -->
+    <link href="assets/css/project.css" rel="stylesheet"/>
+    <link href="assets/css/pygments-manni.css" rel="stylesheet"/>
+    <link href="assets/css/jquery-ui.css" rel="stylesheet"/>
+  	<link href="assets/css/prism.css" rel="stylesheet" />
+    <!-- Placeholder for child template CSS declarations -->
+    <link href="assets/css/hl7.css" rel="stylesheet"/>
+    <link href="assets/css/cda.css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="fhir-table-scripts.js"> </script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png"/>
+    <link rel="shortcut icon" href="assets/ico/favicon.png"/>
+  </head>
+  <body onload="document.body.style.opacity='1'">
+
+	  <script src="assets/js/prism.js"></script>
+
+    <style type="text/css">h2{--heading-prefix:"1"}
+    h3,h4,h5,h6{--heading-prefix:"1"}</style>
+    <div id="segment-header" class="segment">  <!-- segment-header -->
+      <div class="container">  <!-- container -->
+        <!-- Placeholder for child template header declarations -->
+
+        <div id="hl7-nav">
+          <a id="hl7-logo" no-external="true" href="http://hl7.org">
+            <img height="50" alt="Visit the HL7 website" src="assets/images/hl7-logo-header.png"/>
+          </a>
+        </div>
+        <div id="family-nav">
+          <a id="family-logo" no-external="true" href="http://hl7.org/cda"><img height="50" alt="Visit the CDA website" src="assets/images/cda_both_trans.jpg"/> </a>
+        </div>
+        <div id="hl7-search">
+          <a id="hl7-search-lnk" no-external="true" href="http://hl7.org/fhir/search.cfm"><img alt="Search FHIR" src="assets/images/search.png"/></a>
+        </div>
+
+
+        <div id="ig-status">
+          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture V2.0.1</span>
+            <br/>
+            <span style="display:inline-block;">2.1.0-draft1 - 1st Draft
+
+
+            </span>
+          </p>
+        </div>
+      </div> <!-- /container -->
+    </div>  <!-- /segment-header -->
+
+    <div id="segment-navbar" class="segment">  <!-- segment-navbar -->
+      <div id="stripe"> </div>
+      <div class="container">  <!-- container -->
+        <!-- HEADER CONTENT -->
+
+        <nav class="navbar navbar-inverse">
+          <!--status-bar-->
+          <div class="container">
+            <button data-target=".navbar-inverse-collapse" class="navbar-toggle" data-toggle="collapse" type="button">
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+            </button>
+            <a class="navbar-brand hidden" href="http://build.fhir.org/index.html">FHIR</a>
+            <div class="nav-collapse collapse navbar-inverse-collapse">
+              <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
+  <li><a href="index.html">IG Home</a></li>
+  <li><a href="toc.html">Table of Contents</a></li>
+  <li><a href="artifacts.html">Artifact Index</a></li>
+  <li><a href="downloads.html">Downloads</a></li>
+</ul>      
+            </div>  <!-- /.nav-collapse -->
+          </div>  <!-- /.container -->
+        </nav>  <!-- /.navbar -->
+      <!-- /HEADER CONTENT -->
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-navbar -->
+    <!--status-bar-->
+
+    <div id="segment-breadcrumb" class="segment">  <!-- segment-breadcrumb -->
+      <div class="container">  <!-- container -->
+        <ul class="breadcrumb">
+          <li><a href='toc.html'><b>Table of Contents</b></a></li><li><b>IG Home Page</b></li>
+
+        </ul>
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-breadcrumb -->
+
+    <a name="top"> </a>
+    <div id="segment-content" class="segment">  <!-- segment-content -->
+      <div class="container">  <!-- container -->
+        <div class="row">
+          <div class="inner-wrapper">
+
+<style type="text/css">
+h2:before{color:silver;counter-increment:section;content:var(--heading-prefix) " ";}
+h3:before{color:silver;counter-increment:sub-section;content:var(--heading-prefix) "." counter(sub-section) " ";}
+h4:before{color:silver;counter-increment:composite;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) " ";}
+h5:before{color:silver;counter-increment:detail;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) "." counter(detail) " ";}
+h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) "." counter(detail) "." counter(more-detail)" ";}
+</style>
+<div class="col-12">
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture V2.0.1 - Local Development build (v2.1.0-draft1). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  <h2>IG Home Page</h2>
+  
+
+
+
+
+
+
+  <table class="colsi">
+
+    <tr>
+      <td colspan="4"><i>Official URL</i>: <span class="copy-text">http://hl7.org/cda/stds/core/ImplementationGuide/hl7.fhir.cda<button title="Click to copy URL" class="btn-copy" data-clipboard-text="http://hl7.org/cda/stds/core/ImplementationGuide/hl7.fhir.cda"/></span>
+      </td>
+      <td><i>Version</i>:
+      <span class="copy-text">2.1.0-draft1<button title="Click to copy versioned URL" class="btn-copy" data-clipboard-text="http://hl7.org/cda/stds/core/ImplementationGuide/hl7.fhir.cda|2.1.0-draft1"/></span>
+      </td>
+    </tr>
+
+    <tr>
+
+
+
+
+
+
+
+      <td colspan="4">
+        
+          Active
+          
+            as of 2023-01-16
+          
+        
+      </td>
+
+
+
+      <td><i>Computable Name</i>: <span style="font-family: monospace;">ClinicalDocumentArchitectureV201</span></td>
+    </tr>
+
+
+
+
+  </table>
+
+
+
+
+
+
+
+
+
+    <p><!-- white space is critical inside of capture --></p>
+<div class="markdown-toc">
+<ul id="markdown-toc">
+  <li><a href="#cda-fhir-definition" id="markdown-toc-cda-fhir-definition">CDA FHIR Definition</a></li>
+  <li><a href="#other-information" id="markdown-toc-other-information">Other Information</a></li>
+</ul>
+
+</div>
+<h2 id="cda-fhir-definition">CDA FHIR Definition</h2>
+
+<p>This FHIR Implementation Guide represents CDA using the FHIR Type Definition Framework</p>
+
+<table class="cda-table">
+	<tbody>
+	<tr>
+		<td>
+			<h3>CDA Classes</h3>
+			<ul>
+				<li><a href="StructureDefinition-ClinicalDocument.html"><strong>ClinicalDocument</strong></a></li>
+				<li><a href="StructureDefinition-Act.html">Act</a></li>
+				<li><a href="StructureDefinition-AssignedAuthor.html">AssignedAuthor</a></li>
+				<li><a href="StructureDefinition-AssignedCustodian.html">AssignedCustodian</a></li>
+				<li><a href="StructureDefinition-AssignedEntity.html">AssignedEntity</a></li>
+				<li><a href="StructureDefinition-AssociatedEntity.html">AssociatedEntity</a></li>
+				<li><a href="StructureDefinition-Authenticator.html">Authenticator</a></li>
+				<li><a href="StructureDefinition-Author.html">Author</a></li>
+				<li><a href="StructureDefinition-AuthoringDevice.html">AuthoringDevice</a></li>
+				<li><a href="StructureDefinition-Authorization.html">Authorization</a></li>
+				<li><a href="StructureDefinition-Birthplace.html">Birthplace</a></li>
+				<li><a href="StructureDefinition-Component2.html">Component2</a></li>
+				<li><a href="StructureDefinition-ComponentOf.html">ComponentOf</a></li>
+				<li><a href="StructureDefinition-Consent.html">Consent</a></li>
+				<li><a href="StructureDefinition-Criterion.html">Criterion</a></li>
+				<li><a href="StructureDefinition-Custodian.html">Custodian</a></li>
+				<li><a href="StructureDefinition-CustodianOrganization.html">CustodianOrganization</a></li>
+				<li><a href="StructureDefinition-DataEnterer.html">DataEnterer</a></li>
+				<li><a href="StructureDefinition-Device.html">Device</a></li>
+				<li><a href="StructureDefinition-DocumentationOf.html">DocumentationOf</a></li>
+				<li><a href="StructureDefinition-EncompassingEncounter.html">EncompassingEncounter</a></li>
+				<li><a href="StructureDefinition-Encounter.html">Encounter</a></li>
+				<li><a href="StructureDefinition-EncounterParticipant.html">EncounterParticipant</a></li>
+				<li><a href="StructureDefinition-Entity.html">Entity</a></li>
+				<li><a href="StructureDefinition-ExternalAct.html">ExternalAct</a></li>
+				<li><a href="StructureDefinition-ExternalDocument.html">ExternalDocument</a></li>
+				<li><a href="StructureDefinition-ExternalObservation.html">ExternalObservation</a></li>
+				<li><a href="StructureDefinition-ExternalProcedure.html">ExternalProcedure</a></li>
+				<li><a href="StructureDefinition-Guardian.html">Guardian</a></li>
+				<li><a href="StructureDefinition-HealthCareFacility.html">HealthCareFacility</a></li>
+				<li><a href="StructureDefinition-Informant.html">Informant</a></li>
+				<li><a href="StructureDefinition-InformationRecipient.html">InformationRecipient</a></li>
+				<li><a href="StructureDefinition-InfrastructureRoot.html">InfrastructureRoot</a></li>
+				<li><a href="StructureDefinition-InFulfillmentOf.html">InFulfillmentOf</a></li>
+				<li><a href="StructureDefinition-IntendedRecipient.html">IntendedRecipient</a></li>
+				<li><a href="StructureDefinition-LabeledDrug.html">LabeledDrug</a></li>
+				<li><a href="StructureDefinition-LanguageCommunication.html">LanguageCommunication</a></li>
+				<li><a href="StructureDefinition-LegalAuthenticator.html">LegalAuthenticator</a></li>
+				<li><a href="StructureDefinition-MaintainedEntity.html">MaintainedEntity</a></li>
+				<li><a href="StructureDefinition-ManufacturedProduct.html">ManufacturedProduct</a></li>
+				<li><a href="StructureDefinition-Material.html">Material</a></li>
+				<li><a href="StructureDefinition-NonXMLBody.html">NonXMLBody</a></li>
+				<li><a href="StructureDefinition-Observation.html">Observation</a></li>
+				<li><a href="StructureDefinition-ObservationMedia.html">ObservationMedia</a></li>
+				<li><a href="StructureDefinition-ObservationRange.html">ObservationRange</a></li>
+				<li><a href="StructureDefinition-Order.html">Order</a></li>
+				<li><a href="StructureDefinition-Organization.html">Organization</a></li>
+				<li><a href="StructureDefinition-OrganizationPartOf.html">OrganizationPartOf</a></li>
+				<li><a href="StructureDefinition-Organizer.html">Organizer</a></li>
+				<li><a href="StructureDefinition-ParentDocument.html">ParentDocument</a></li>
+				<li><a href="StructureDefinition-Participant1.html">Participant1</a></li>
+				<li><a href="StructureDefinition-Participant2.html">Participant2</a></li>
+				<li><a href="StructureDefinition-ParticipantRole.html">ParticipantRole</a></li>
+				<li><a href="StructureDefinition-Patient.html">Patient</a></li>
+				<li><a href="StructureDefinition-PatientRole.html">PatientRole</a></li>
+				<li><a href="StructureDefinition-Performer1.html">Performer1</a></li>
+				<li><a href="StructureDefinition-Performer2.html">Performer2</a></li>
+				<li><a href="StructureDefinition-Person.html">Person</a></li>
+				<li><a href="StructureDefinition-Place.html">Place</a></li>
+				<li><a href="StructureDefinition-PlayingEntity.html">PlayingEntity</a></li>
+				<li><a href="StructureDefinition-Precondition.html">Precondition</a></li>
+				<li><a href="StructureDefinition-Procedure.html">Procedure</a></li>
+				<li><a href="StructureDefinition-RecordTarget.html">RecordTarget</a></li>
+				<li><a href="StructureDefinition-RegionOfInterest.html">RegionOfInterest</a></li>
+				<li><a href="StructureDefinition-RelatedDocument.html">RelatedDocument</a></li>
+				<li><a href="StructureDefinition-RelatedEntity.html">RelatedEntity</a></li>
+				<li><a href="StructureDefinition-RelatedSubject.html">RelatedSubject</a></li>
+				<li><a href="StructureDefinition-Section.html">Section</a></li>
+				<li><a href="StructureDefinition-ServiceEvent.html">ServiceEvent</a></li>
+				<li><a href="StructureDefinition-Specimen.html">Specimen</a></li>
+				<li><a href="StructureDefinition-SpecimenRole.html">SpecimenRole</a></li>
+				<li><a href="StructureDefinition-StructuredBody.html">StructuredBody</a></li>
+				<li><a href="StructureDefinition-SubjectPerson.html">SubjectPerson</a></li>
+				<li><a href="StructureDefinition-SubstanceAdministration.html">SubstanceAdministration</a></li>
+				<li><a href="StructureDefinition-Supply.html">Supply</a></li>
+			</ul>
+		</td>
+		<td>
+			<h3>V3 Data Types</h3>
+			<ul>
+				<li><a href="StructureDefinition-AD.html">AD: PostalAddress</a></li>
+				<li><a href="StructureDefinition-ADXP.html">ADXP: CharacterString</a></li>
+				<li><a href="StructureDefinition-ANY.html">ANY: DataValue</a></li>
+				<li><a href="StructureDefinition-BL.html">BL: Boolean</a></li>
+				<li><a href="StructureDefinition-CD.html">CD: ConceptDescriptor</a></li>
+				<li><a href="StructureDefinition-CE.html">CE: CodedWithEquivalents</a></li>
+				<li><a href="StructureDefinition-CO.html">CO: CodedOrdinal</a></li>
+				<li><a href="StructureDefinition-CR.html">CR: ConceptRole</a></li>
+				<li><a href="StructureDefinition-CS.html">CS: CodedSimpleValue</a></li>
+				<li><a href="StructureDefinition-CV.html">CV: CodedValue</a></li>
+				<li><a href="StructureDefinition-ED.html">ED: EncapsulatedData</a></li>
+				<li><a href="StructureDefinition-EIVL-TS.html">EIVL_TS: EventRelatedPeriodicInterval</a></li>
+				<li><a href="StructureDefinition-EN.html">EN: EntityName</a></li>
+				<li><a href="StructureDefinition-ENXP.html">ENXP: EntityNamePart</a></li>
+				<li><a href="StructureDefinition-II.html">II: InstanceIdentifier</a></li>
+				<li><a href="StructureDefinition-INT.html">INT: IntegerNumber</a></li>
+				<li><a href="StructureDefinition-INT-POS.html">INT-POS: PositiveIntegerNumber</a></li>
+				<li><a href="StructureDefinition-IVL-INT.html">IVL_INT: Interval</a></li>
+				<li><a href="StructureDefinition-IVL-PQ.html">IVL_PQ: Interval</a></li>
+				<li><a href="StructureDefinition-IVL-TS.html">IVL_TS: Interval</a></li>
+				<li><a href="StructureDefinition-MO.html">MO: MonetaryAmount</a></li>
+				<li><a href="StructureDefinition-PIVL-TS.html">PIVL_TS: PeriodicIntervalOfTime</a></li>
+				<li><a href="StructureDefinition-PN.html">PN: PersonName</a></li>
+				<li><a href="StructureDefinition-PQ.html">PQ: PhysicalQuantity</a></li>
+				<li><a href="StructureDefinition-PQR.html">PQR: PhysicalQuantityRepresentation</a></li>
+				<li><a href="StructureDefinition-QTY.html">QTY: Quantity</a></li>
+				<li><a href="StructureDefinition-REAL.html">REAL: RealNumber</a></li>
+				<li><a href="StructureDefinition-RTO-PQ-PQ.html">RTO_PQ_PQ: Ratio</a></li>
+				<li><a href="StructureDefinition-SC.html">SC: CharacterStringWithCode</a></li>
+				<li><a href="StructureDefinition-ST.html">ST: CharacterString</a></li>
+				<li><a href="StructureDefinition-SXCM-TS.html">SXCM_TS: GeneralTimingSpecification</a></li>
+				<li><a href="StructureDefinition-SXPR-TS.html">SXPR_TS: Component part of GTS</a></li>
+				<li><a href="StructureDefinition-TEL.html">TEL: TelecommunicationAddress</a></li>
+				<li><a href="StructureDefinition-TS.html">TS: PointInTime</a></li>
+				<li><a href="StructureDefinition-TN.html">TN: TrivialName</a></li>
+			</ul>
+		</td>
+	</tr>
+	</tbody>
+</table>
+
+<h2 id="other-information">Other Information</h2>
+
+<p>This publication includes IP covered under the following statements.</p>
+<ul>
+<li>This material contains content from <a href="http://loinc.org">LOINC</a>. LOINC is copyright © 1995-2020, Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee and is available at no cost under the <a href="http://loinc.org/license">license</a>. LOINC® is a registered United States trademark of Regenstrief Institute, Inc.<div id="ipp_1" onclick="if (document.getElementById('ipp2_1').innerHTML != '') {document.getElementById('ipp_1').innerHTML = document.getElementById('ipp2_1').innerHTML; document.getElementById('ipp2_1').innerHTML = ''}"> <span style="cursor: pointer; border: 1px grey solid; background-color: #fcdcb3; padding-left: 3px; padding-right: 3px; color: black">Show Usage</span></div><div id="ipp2_1" style="display: none">
+<ul>
+<li><a href="http://terminology.hl7.org/5.0.0/CodeSystem-v3-loinc.html">LOINC</a>: <a href="StructureDefinition-ClinicalDocument.html">CDAR2.ClinicalDocument</a>, <a href="StructureDefinition-ExternalDocument.html">CDAR2.ExternalDocument</a>, <a href="StructureDefinition-ParentDocument.html">CDAR2.ParentDocument</a> and <a href="StructureDefinition-Section.html">CDAR2.Section</a></li>
+</ul>
+</div></li>
+</ul>
+<!--$$1$$-->
+
+<hr />
+
+<div><table border="0" cellpadding="0" cellspacing="0" style="border: 0px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;"><tr style="border: 1px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top"><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span title="Implementation Guide Reference">IG</span></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span title="The NPM Package Id">Package</span></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span title="The version of FHIR that the package is based on">FHIR</span></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span title="Explains why this dependency exists">Comment</span></th></tr><tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white"><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(/Users/oliveregger/Documents/github/cda-core-2.0/temp/pagesdata:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAACCAYAAACg/LjIAAAALUlEQVR4Xu3IoREAIAwEwfT6/ddA0GBAxO3NrLlKUj9263wAAAAvrgEAADClAVWFQIBRHMicAAAAAElFTkSuQmCC)" class="hierarchy"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAWCAYAAAABxvaqAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wYeFzIs1vtcMQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAE0lEQVQI12P4//8/AxMDAwNdCABMPwMo2ctnoQAAAABJRU5ErkJggg==" alt="." style="background-color: inherit" class="hierarchy" /><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QYZCik0qECmbAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAABtUlEQVQoz2P8//8/Ayb4///v8xfM4iIMzKxoMkwMOMC3DVv/vXmEKY5Dw///Pw8c+Xn2CLEa/r55+/P07t/nrxKl4f/PX6+8g1mlP/44c4eAhn8fP33bsOV1dBoT51V2+z/MohIfeyYy/P2LXcPfFy8/NLb9efTs//utgjUfft35xRUY8Hnm/N/Xb2LT8P//h5ZOnvjoj+11giXcTH//MTLp/v/x9c/z279uXsOi4e/LRwzsbz6vmMyTLM6m9fnXE3Y2l+yv+yez2nL9eX0Wi4afF5eyW4r/+3qYP1Xjz/N3P17ZsRsKMrJd4rL9wcTxDIsGZqEvLEKv2VT/Mgl+/XGbXSB72s/zxXyBYmwqLCxSLFg0sKkHsAg+YJX7xfBTmt204s/NXE4dQTZtT2beH6yqFv9ebkDXwMhnxixrySb68f9fcWYRTSbGA6ya2QwMsixCvxk/djByiWIJVkbBBGaNOoafO5nYWVlkPRjYtP5/388s+JdJkI+R1xquDMl9zOqMQioM7BIMjJ8Z2IUYWOQZeT0Y/u5mEF+G7AdGLMn7712GnycY/v1g+HOZga+WgUkYWRIAe6ip9OnE1GoAAAAASUVORK5CYII=" alt="." style="background-color: white; background-color: inherit" title="NPM Package" class="hierarchy" /> <span title="Canonical: http://hl7.org/cda/stds/core">Clinical Document Architecture V2.0.1</span></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://simplifier.net/packages/hl7.fhir.cda/2.1.0-draft1">hl7.fhir.cda#2.1.0-draft1</a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="http://hl7.org/fhir/5.0.0-ballot">R5</a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy" /></tr>
+<tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7"><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(/Users/oliveregger/Documents/github/cda-core-2.0/temp/pagesdata:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAACCAYAAACg/LjIAAAAJUlEQVR4Xu3IIQEAAAgDsHd9/w4EQIOamFnaBgAA4MMKAACAKwNp30CqZFfFmwAAAABJRU5ErkJggg==)" class="hierarchy"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAWCAYAAAABxvaqAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wYeFzIs1vtcMQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAE0lEQVQI12P4//8/AxMDAwNdCABMPwMo2ctnoQAAAABJRU5ErkJggg==" alt="." style="background-color: inherit" class="hierarchy" /><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAWCAYAAADJqhx8AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wYeFzME+lXFigAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAANklEQVQ4y+3OsRUAIAjEUOL+O8cJABttJM11/x1qZAGqRBEVcNIqdWj1efDqQbb3HwwwwEfABmQUHSPM9dtDAAAAAElFTkSuQmCC" alt="." style="background-color: inherit" class="hierarchy" /><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QYZCik0qECmbAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAABtUlEQVQoz2P8//8/Ayb4///v8xfM4iIMzKxoMkwMOMC3DVv/vXmEKY5Dw///Pw8c+Xn2CLEa/r55+/P07t/nrxKl4f/PX6+8g1mlP/44c4eAhn8fP33bsOV1dBoT51V2+z/MohIfeyYy/P2LXcPfFy8/NLb9efTs//utgjUfft35xRUY8Hnm/N/Xb2LT8P//h5ZOnvjoj+11giXcTH//MTLp/v/x9c/z279uXsOi4e/LRwzsbz6vmMyTLM6m9fnXE3Y2l+yv+yez2nL9eX0Wi4afF5eyW4r/+3qYP1Xjz/N3P17ZsRsKMrJd4rL9wcTxDIsGZqEvLEKv2VT/Mgl+/XGbXSB72s/zxXyBYmwqLCxSLFg0sKkHsAg+YJX7xfBTmt204s/NXE4dQTZtT2beH6yqFv9ebkDXwMhnxixrySb68f9fcWYRTSbGA6ya2QwMsixCvxk/djByiWIJVkbBBGaNOoafO5nYWVlkPRjYtP5/388s+JdJkI+R1xquDMl9zOqMQioM7BIMjJ8Z2IUYWOQZeT0Y/u5mEF+G7AdGLMn7712GnycY/v1g+HOZga+WgUkYWRIAe6ip9OnE1GoAAAAASUVORK5CYII=" alt="." style="background-color: #F7F7F7; background-color: inherit" title="NPM Package" class="hierarchy" /> <a href="http://terminology.hl7.org/5.0.0" title="Canonical: http://terminology.hl7.org">HL7 Terminology (THO)</a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://simplifier.net/packages/hl7.terminology.r5/5.0.0">hl7.terminology.r5#5.0.0</a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="http://hl7.org/fhir/5.0.0-snapshot3">R5</a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">Automatically added as a dependency - all IGs depend on HL7 Terminology</td></tr>
+</table></div>
+<!--$$3$$-->
+
+<hr />
+
+<p><i>There are no Global profiles defined</i></p>
+<!--$$4$$-->
+
+
+
+
+</div>
+        </div>  <!-- /inner-wrapper -->
+      </div>  <!-- /row -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-content -->
+
+  <script type="text/javascript" src="assets/js/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
+  <script type="text/javascript" src="assets/js/jquery-ui.min.js"> </script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      if(window.location.hash != "") {
+          $('a[href="' + window.location.hash + '"]').click()
+      }
+    });
+  </script>
+  <a name="bottom"> </a>
+  <div id="segment-footer" igtool="footer" class="segment">  <!-- segment-footer -->
+    <div class="container">  <!-- container -->
+
+      <div class="inner-wrapper">
+        <p>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.fhir.cda#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-ballot</a>. Generated <span title="Mon, Jan 16, 2023 15:52+0100">2023-01-16</span>
+          <br/>
+          <span style="color: var(--footer-highlight-text-color)">
+                      Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
+                 <a style="color: var(--footer-hyperlink-text-color)" href="qa.html">QA Report</a>
+                 
+                
+                 | <a style="color: #81BEF7" target="_blank" href="http://hl7.org/cda/stds/core/history.html">Version History <img alt="external" style="vertical-align: baseline" src="external.png"/></a></a> |
+                 <a style="color: #81BEF7" rel="license" href="http://build.fhir.org/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
+                 <!--<a style="color: #81BEF7" href="todo.html">Search</a> | --> 
+                 <a style="color: #81BEF7" target="_blank" href="https://jira.hl7.org/projects/CDA/issues">Propose a change <img alt="external" style="vertical-align: baseline" src="external.png"/></a>
+
+          </span>
+        </p>
+      </div>  <!-- /inner-wrapper -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-footer -->
+  
+  <div id="segment-post-footer" class="segment hidden">  <!-- segment-post-footer -->
+    <div class="container">  <!-- container -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-post-footer -->
+  
+  <!-- JS and analytics only. -->
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="assets/js/bootstrap.min.js"> </script>
+  <script type="text/javascript" src="assets/js/respond.min.js"> </script>
+  <script type="text/javascript" src="assets/js/anchor.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard-btn.js"> </script>
+  <script>anchors.options.visible = 'hover'
+anchors.add()</script>
+  
+<!-- feedback form - Google forms -->
+<!-- v0.1, 2021-01-09 -->
+
+
+
+<!-- / feedback form  -->
+
+  <!-- Analytics Below
+  ================================================== -->
+  </body>
+</html>
+

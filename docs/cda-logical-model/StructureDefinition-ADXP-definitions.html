@@ -1,0 +1,478 @@
+<!-- get modelType -->
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <title>HL7.FHIR.CDA\ADXP: CharacterString (V3 Data Type) - Definitions - FHIR v5.0.0-ballot</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="http://hl7.org/fhir"/>
+
+    <link href="fhir.css" rel="stylesheet"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap-fhir.css" rel="stylesheet"/>
+
+    <!-- Project extras -->
+    <link href="assets/css/project.css" rel="stylesheet"/>
+    <link href="assets/css/pygments-manni.css" rel="stylesheet"/>
+    <link href="assets/css/jquery-ui.css" rel="stylesheet"/>
+  	<link href="assets/css/prism.css" rel="stylesheet" />
+    <!-- Placeholder for child template CSS declarations -->
+    <link href="assets/css/hl7.css" rel="stylesheet"/>
+    <link href="assets/css/cda.css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="fhir-table-scripts.js"> </script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png"/>
+    <link rel="shortcut icon" href="assets/ico/favicon.png"/>
+  </head>
+  <body onload="document.body.style.opacity='1'">
+
+	  <script src="assets/js/prism.js"></script>
+
+    <style type="text/css">h2{--heading-prefix:"3.3"}
+    h3,h4,h5,h6{--heading-prefix:"3.3"}</style>
+    <div id="segment-header" class="segment">  <!-- segment-header -->
+      <div class="container">  <!-- container -->
+        <!-- Placeholder for child template header declarations -->
+
+        <div id="hl7-nav">
+          <a id="hl7-logo" no-external="true" href="http://hl7.org">
+            <img height="50" alt="Visit the HL7 website" src="assets/images/hl7-logo-header.png"/>
+          </a>
+        </div>
+        <div id="family-nav">
+          <a id="family-logo" no-external="true" href="http://hl7.org/cda"><img height="50" alt="Visit the CDA website" src="assets/images/cda_both_trans.jpg"/> </a>
+        </div>
+        <div id="hl7-search">
+          <a id="hl7-search-lnk" no-external="true" href="http://hl7.org/fhir/search.cfm"><img alt="Search FHIR" src="assets/images/search.png"/></a>
+        </div>
+
+
+        <div id="ig-status">
+          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture V2.0.1</span>
+            <br/>
+            <span style="display:inline-block;">2.1.0-draft1 - 1st Draft
+
+
+            </span>
+          </p>
+        </div>
+      </div> <!-- /container -->
+    </div>  <!-- /segment-header -->
+
+    <div id="segment-navbar" class="segment">  <!-- segment-navbar -->
+      <div id="stripe"> </div>
+      <div class="container">  <!-- container -->
+        <!-- HEADER CONTENT -->
+
+        <nav class="navbar navbar-inverse">
+          <!--status-bar-->
+          <div class="container">
+            <button data-target=".navbar-inverse-collapse" class="navbar-toggle" data-toggle="collapse" type="button">
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+            </button>
+            <a class="navbar-brand hidden" href="http://build.fhir.org/index.html">FHIR</a>
+            <div class="nav-collapse collapse navbar-inverse-collapse">
+              <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
+  <li><a href="index.html">IG Home</a></li>
+  <li><a href="toc.html">Table of Contents</a></li>
+  <li><a href="artifacts.html">Artifact Index</a></li>
+  <li><a href="downloads.html">Downloads</a></li>
+</ul>      
+            </div>  <!-- /.nav-collapse -->
+          </div>  <!-- /.container -->
+        </nav>  <!-- /.navbar -->
+      <!-- /HEADER CONTENT -->
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-navbar -->
+    <!--status-bar-->
+
+    <div id="segment-breadcrumb" class="segment">  <!-- segment-breadcrumb -->
+      <div class="container">  <!-- container -->
+        <ul class="breadcrumb">
+          <li><a href='toc.html'><b>Table of Contents</b></a></li><li><a href='artifacts.html'><b>Artifacts Summary</b></a></li><li><b>ADXP: CharacterString (V3 Data Type)</b></li>
+
+        </ul>
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-breadcrumb -->
+
+    <a name="top"> </a>
+    <div id="segment-content" class="segment">  <!-- segment-content -->
+      <div class="container">  <!-- container -->
+        <div class="row">
+          <div class="inner-wrapper">
+
+<div style="counter-reset: section 4" class="col-12">
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture V2.0.1 - Local Development build (v2.1.0-draft1). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  
+
+
+
+
+
+
+
+
+
+
+
+<ul class="nav nav-tabs">
+
+  <li>
+    <a href="StructureDefinition-ADXP.html">Content</a>
+  </li>
+
+
+
+  <li class="active">
+    <a href="#">Detailed Descriptions</a>
+  </li>
+
+
+
+  
+    <li>
+      <a href="StructureDefinition-ADXP-mappings.html">Mappings</a>
+    </li>
+  
+
+
+
+
+
+
+
+  
+    <li>
+      <a href="StructureDefinition-ADXP.profile.xml.html">XML</a>
+    </li>
+  
+
+
+  
+    <li>
+      <a href="StructureDefinition-ADXP.profile.json.html">JSON</a>
+    </li>
+  
+
+
+  
+    <li>
+      <a href="StructureDefinition-ADXP.profile.ttl.html">TTL</a>
+    </li>
+  
+
+
+</ul>
+
+
+<a name="root"> </a>
+<h2 id="root">Logical Model: ADXP - Detailed Descriptions</h2>
+  <table class="colsi">
+    <tr>
+
+      <td colspan="2">
+        
+          Active
+          
+            as of 2023-01-16
+          
+        
+      </td>
+
+    </tr>
+  </table>
+
+
+<p>Definitions for the ADXP logical model.</p>
+
+  <!-- insert intro if present -->
+  
+
+
+
+  <div id="tabs">
+    <ul>
+      <li>
+        <a href="#tabs-diff">Differential Elements Table</a>
+      </li>
+      <li>
+        <a href="#tabs-key">Key Elements Table</a>
+      </li>
+      <li>
+        <a href="#tabs-snap">Snapshot Elements Table</a>
+      </li>
+    </ul>
+    <a name="tabs-diff"> </a>
+    <div id="tabs-diff">
+      <p>Guidance on how to interpret the contents of this table can be found <a href="https://build.fhir.org/ig/FHIR/ig-guidance//readingIgs.html#data-dictionaries">here</a>.</p>
+<table class="dict">
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="diff_ADXP"> </a><span style="color: grey">1.</span> <b>ADXP</b><a href="#diff_ADXP" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>A character string that may have a type-tag signifying its role in the address. Typical parts that exist in about every address are street, house number, or post box, postal code, city, country but other roles may be defined regionally, nationally, or on an enterprise level (e.g. in military addresses). Addresses are usually broken up into lines, which are indicated by special line-breaking delimiter elements (e.g., DEL).</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>1..*</td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property has the namespace <code>urn:hl7-org:v3</code>.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="diff_ADXP.partType"> </a><span style="color: grey">2.</span> <b>ADXP.partType</b><a href="#diff_ADXP.partType" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>Specifies the type of the address part</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..1</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#code">code</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+</table>
+
+    </div>
+    <a name="tabs-key"> </a>
+    <div id="tabs-key">
+      <p>Guidance on how to interpret the contents of this table can be found <a href="https://build.fhir.org/ig/FHIR/ig-guidance//readingIgs.html#data-dictionaries">here</a>.</p>
+<table class="dict">
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="key_ADXP"> </a><span style="color: grey">1.</span> <b>ADXP</b><a href="#key_ADXP" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>A character string that may have a type-tag signifying its role in the address. Typical parts that exist in about every address are street, house number, or post box, postal code, city, country but other roles may be defined regionally, nationally, or on an enterprise level (e.g. in military addresses). Addresses are usually broken up into lines, which are indicated by special line-breaking delimiter elements (e.g., DEL).</p>
+<span style='color:DarkGray;text-decoration:line-through'><p>Base definition for all types defined in FHIR type system.</p>
+</span></td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>1<span style='color:DarkGray;text-decoration:line-through'>0</span>..<span style='color:DarkGray'>*</span></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property has the namespace <code>urn:hl7-org:v3</code>.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="key_ADXP.compression"> </a><span style="color: grey">2.</span> <b>ADXP.compression</b><a href="#key_ADXP.compression" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>Indicates whether the raw byte data is compressed, and what compression algorithm was used.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..0</td></tr>
+  <tr><td><a href="http://build.fhir.org/terminologies.html">Binding</a></td><td>The codes SHALL be taken from <a href="http://terminology.hl7.org/5.0.0/ValueSet-v3-CompressionAlgorithm.html">CompressionAlgorithm</a></td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#code">code</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="key_ADXP.integrityCheck"> </a><span style="color: grey">3.</span> <b>ADXP.integrityCheck</b><a href="#key_ADXP.integrityCheck" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>The integrity check is a short binary value representing a cryptographically strong checksum that is calculated over the binary data. The purpose of this property, when communicated with a reference is for anyone to validate later whether the reference still resolved to the same data that the reference resolved to when the encapsulated data value with reference was created.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..0</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#base64Binary">base64Binary</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="key_ADXP.integrityCheckAlgorithm"> </a><span style="color: grey">4.</span> <b>ADXP.integrityCheckAlgorithm</b><a href="#key_ADXP.integrityCheckAlgorithm" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>Specifies the algorithm used to compute the integrityCheck value. The cryptographically strong checksum algorithm Secure Hash Algorithm-1 (SHA-1) is currently the industry standard. It has superseded the MD5 algorithm only a couple of years ago, when certain flaws in the security of MD5 were discovered. Currently the SHA-1 hash algorithm is the default choice for the integrity check algorithm. Note that SHA-256 is also entering widespread usage.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..0</td></tr>
+  <tr><td><a href="http://build.fhir.org/terminologies.html">Binding</a></td><td>The codes SHALL be taken from <a href="http://terminology.hl7.org/5.0.0/ValueSet-v3-IntegrityCheckAlgorithm.html">IntegrityCheckAlgorithm</a></td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#code">code</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="key_ADXP.reference"> </a><span style="color: grey">5.</span> <b>ADXP.reference</b><a href="#key_ADXP.reference" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>A telecommunication address (TEL), such as a URL for HTTP or FTP, which will resolve to precisely the same binary data that could as well have been provided as inline data.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..0</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="StructureDefinition-TEL.html">http://hl7.org/fhir/cda/StructureDefinition/TEL</a></td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="key_ADXP.thumbnail"> </a><span style="color: grey">6.</span> <b>ADXP.thumbnail</b><a href="#key_ADXP.thumbnail" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>An abbreviated rendition of the full data. A thumbnail requires significantly fewer resources than the full data, while still maintaining some distinctive similarity with the full data. A thumbnail is typically used with by-reference encapsulated data. It allows a user to select data more efficiently before actually downloading through the reference.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..0</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="StructureDefinition-ED.html">http://hl7.org/fhir/cda/StructureDefinition/ED</a></td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="key_ADXP.partType"> </a><span style="color: grey">7.</span> <b>ADXP.partType</b><a href="#key_ADXP.partType" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>Specifies the type of the address part</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..1</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#code">code</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+</table>
+
+    </div>
+    <a name="tabs-snap"> </a>
+    <div id="tabs-snap">
+      <p>Guidance on how to interpret the contents of this table can be found <a href="https://build.fhir.org/ig/FHIR/ig-guidance//readingIgs.html#data-dictionaries">here</a>.</p>
+<table class="dict">
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP"> </a><span style="color: grey">1.</span> <b>ADXP</b><a href="#ADXP" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>A character string that may have a type-tag signifying its role in the address. Typical parts that exist in about every address are street, house number, or post box, postal code, city, country but other roles may be defined regionally, nationally, or on an enterprise level (e.g. in military addresses). Addresses are usually broken up into lines, which are indicated by special line-breaking delimiter elements (e.g., DEL).</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>1..*</td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property has the namespace <code>urn:hl7-org:v3</code>.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP.nullFlavor"> </a><span style="color: grey">2.</span> <b>ADXP.nullFlavor</b><a href="#ADXP.nullFlavor" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..1</td></tr>
+  <tr><td><a href="http://build.fhir.org/terminologies.html">Binding</a></td><td>The codes SHALL be taken from <a href="http://terminology.hl7.org/5.0.0/ValueSet-v3-NullFlavor.html">NullFlavor</a></td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#code">code</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP.charset"> </a><span style="color: grey">3.</span> <b>ADXP.charset</b><a href="#ADXP.charset" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>For character-based encoding types, this property specifies the character set and character encoding used. The charset shall be identified by an Internet Assigned Numbers Authority (IANA) Charset Registration [] in accordance with RFC 2978 [].</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..1</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#code">code</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP.compression"> </a><span style="color: grey">4.</span> <b>ADXP.compression</b><a href="#ADXP.compression" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>Indicates whether the raw byte data is compressed, and what compression algorithm was used.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..0</td></tr>
+  <tr><td><a href="http://build.fhir.org/terminologies.html">Binding</a></td><td>The codes SHALL be taken from <a href="http://terminology.hl7.org/5.0.0/ValueSet-v3-CompressionAlgorithm.html">CompressionAlgorithm</a></td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#code">code</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP.integrityCheck"> </a><span style="color: grey">5.</span> <b>ADXP.integrityCheck</b><a href="#ADXP.integrityCheck" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>The integrity check is a short binary value representing a cryptographically strong checksum that is calculated over the binary data. The purpose of this property, when communicated with a reference is for anyone to validate later whether the reference still resolved to the same data that the reference resolved to when the encapsulated data value with reference was created.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..0</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#base64Binary">base64Binary</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP.integrityCheckAlgorithm"> </a><span style="color: grey">6.</span> <b>ADXP.integrityCheckAlgorithm</b><a href="#ADXP.integrityCheckAlgorithm" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>Specifies the algorithm used to compute the integrityCheck value. The cryptographically strong checksum algorithm Secure Hash Algorithm-1 (SHA-1) is currently the industry standard. It has superseded the MD5 algorithm only a couple of years ago, when certain flaws in the security of MD5 were discovered. Currently the SHA-1 hash algorithm is the default choice for the integrity check algorithm. Note that SHA-256 is also entering widespread usage.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..0</td></tr>
+  <tr><td><a href="http://build.fhir.org/terminologies.html">Binding</a></td><td>The codes SHALL be taken from <a href="http://terminology.hl7.org/5.0.0/ValueSet-v3-IntegrityCheckAlgorithm.html">IntegrityCheckAlgorithm</a></td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#code">code</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP.language"> </a><span style="color: grey">7.</span> <b>ADXP.language</b><a href="#ADXP.language" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>For character based information the language property specifies the human language of the text.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..1</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#code">code</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP.mediaType"> </a><span style="color: grey">8.</span> <b>ADXP.mediaType</b><a href="#ADXP.mediaType" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>Identifies the type of the encapsulated data and identifies a method to interpret or render the data.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..1</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#code">code</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+  <tr><td>Fixed Value</td><td>text/plain</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP.representation"> </a><span style="color: grey">9.</span> <b>ADXP.representation</b><a href="#ADXP.representation" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>Specifies the representation of the binary data that is the content of the binary data value</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..1</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#code">code</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+  <tr><td>Fixed Value</td><td>TXT</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP.data[x]"> </a><a name="ADXP.dataString"> </a><a name="ADXP.data[x]:dataString"> </a><span style="color: grey">10.</span> <b>ADXP.data[x]</b><a href="#ADXP.data[x]" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>The string value</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..1</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#string">string</a></td></tr>
+  <tr><td>[x] Note</td><td>See <a href="http://build.fhir.org/formats.html#choice">Choice of Data Types</a> for further information about how to use [x]</td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as unadorned text.</td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP.reference"> </a><span style="color: grey">11.</span> <b>ADXP.reference</b><a href="#ADXP.reference" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>A telecommunication address (TEL), such as a URL for HTTP or FTP, which will resolve to precisely the same binary data that could as well have been provided as inline data.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..0</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="StructureDefinition-TEL.html">http://hl7.org/fhir/cda/StructureDefinition/TEL</a></td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP.thumbnail"> </a><span style="color: grey">12.</span> <b>ADXP.thumbnail</b><a href="#ADXP.thumbnail" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>An abbreviated rendition of the full data. A thumbnail requires significantly fewer resources than the full data, while still maintaining some distinctive similarity with the full data. A thumbnail is typically used with by-reference encapsulated data. It allows a user to select data more efficiently before actually downloading through the reference.</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..0</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="StructureDefinition-ED.html">http://hl7.org/fhir/cda/StructureDefinition/ED</a></td></tr>
+  <tr><td colspan="2" class="structure"><span class="self-link-parent"><a name="ADXP.partType"> </a><span style="color: grey">13.</span> <b>ADXP.partType</b><a href="#ADXP.partType" title="link to here" class="self-link"><svg viewBox="0 0 1792 1792" width="16" class="self-link" height="16"><path d="M1520 1216q0-40-28-68l-208-208q-28-28-68-28-42 0-72 32 3 3 19 18.5t21.5 21.5 15 19 13 25.5 3.5 27.5q0 40-28 68t-68 28q-15 0-27.5-3.5t-25.5-13-19-15-21.5-21.5-18.5-19q-33 31-33 73 0 40 28 68l206 207q27 27 68 27 40 0 68-26l147-146q28-28 28-67zm-703-705q0-40-28-68l-206-207q-28-28-68-28-39 0-68 27l-147 146q-28 28-28 67 0 40 28 68l208 208q27 27 68 27 42 0 72-31-3-3-19-18.5t-21.5-21.5-15-19-13-25.5-3.5-27.5q0-40 28-68t68-28q15 0 27.5 3.5t25.5 13 19 15 21.5 21.5 18.5 19q33-31 33-73zm895 705q0 120-85 203l-147 146q-83 83-203 83-121 0-204-85l-206-207q-83-83-83-203 0-123 88-209l-88-88q-86 88-208 88-120 0-204-84l-208-208q-84-84-84-204t85-203l147-146q83-83 203-83 121 0 204 85l206 207q83 83 83 203 0 123-88 209l88 88q86-88 208-88 120 0 204 84l208 208q84 84 84 204z" fill="navy"></path></svg></a></span></td></tr>
+  <tr><td>Definition</td><td><p>Specifies the type of the address part</p>
+</td></tr>
+  <tr><td><a href="http://build.fhir.org/conformance-rules.html#conformance">Control</a></td><td>0..1</td></tr>
+  <tr><td><a href="http://build.fhir.org/datatypes.html">Type</a></td><td><a href="http://build.fhir.org/datatypes.html#code">code</a></td></tr>
+  <tr><td>XML Representation</td><td>In the XML format, this property is represented as an attribute.</td></tr>
+</table>
+
+    </div>
+  </div>
+
+  <!-- insert notes if present -->
+  
+
+
+
+</div>
+
+        </div>  <!-- /inner-wrapper -->
+      </div>  <!-- /row -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-content -->
+
+  <script type="text/javascript" src="assets/js/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
+  <script type="text/javascript" src="assets/js/jquery-ui.min.js"> </script>
+
+  <script type="text/javascript">
+    try {
+      var currentTabIndex = sessionStorage.getItem('fhir-resource-tab-index');
+    } catch(exception) {
+    }
+
+    if (!currentTabIndex)
+      currentTabIndex = '0';
+
+    $( '#tabs' ).tabs({
+      active: currentTabIndex,
+      activate: function( event, ui ) {
+        var active = $('.selector').tabs('option', 'active');
+        currentTabIndex = ui.newTab.index();
+        document.activeElement.blur();
+        try {
+          sessionStorage.setItem('fhir-resource-tab-index', currentTabIndex);
+        } catch(exception) {
+        }
+      }
+    });
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      if(window.location.hash != "") {
+          $('a[href="' + window.location.hash + '"]').click()
+      }
+    });
+  </script>
+  <a name="bottom"> </a>
+  <div id="segment-footer" igtool="footer" class="segment">  <!-- segment-footer -->
+    <div class="container">  <!-- container -->
+
+      <div class="inner-wrapper">
+        <p>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.fhir.cda#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-ballot</a>. Generated <span title="Mon, Jan 16, 2023 15:52+0100">2023-01-16</span>
+          <br/>
+          <span style="color: var(--footer-highlight-text-color)">
+                      Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
+                 <a style="color: var(--footer-hyperlink-text-color)" href="qa.html">QA Report</a>
+                 
+                
+                 | <a style="color: #81BEF7" target="_blank" href="http://hl7.org/cda/stds/core/history.html">Version History <img alt="external" style="vertical-align: baseline" src="external.png"/></a></a> |
+                 <a style="color: #81BEF7" rel="license" href="http://build.fhir.org/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
+                 <!--<a style="color: #81BEF7" href="todo.html">Search</a> | --> 
+                 <a style="color: #81BEF7" target="_blank" href="https://jira.hl7.org/projects/CDA/issues">Propose a change <img alt="external" style="vertical-align: baseline" src="external.png"/></a>
+
+          </span>
+        </p>
+      </div>  <!-- /inner-wrapper -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-footer -->
+  
+  <div id="segment-post-footer" class="segment hidden">  <!-- segment-post-footer -->
+    <div class="container">  <!-- container -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-post-footer -->
+  
+  <!-- JS and analytics only. -->
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="assets/js/bootstrap.min.js"> </script>
+  <script type="text/javascript" src="assets/js/respond.min.js"> </script>
+  <script type="text/javascript" src="assets/js/anchor.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard-btn.js"> </script>
+  <script>anchors.options.visible = 'hover'
+anchors.add()</script>
+  
+<!-- feedback form - Google forms -->
+<!-- v0.1, 2021-01-09 -->
+
+
+
+<!-- / feedback form  -->
+
+  <!-- Analytics Below
+  ================================================== -->
+  </body>
+</html>
+

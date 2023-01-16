@@ -1,0 +1,743 @@
+/*
+
+    Specific layout and styling, project based
+
+
+*/
+/*
+Flexslider vs LayerSlider vs SliderRevolution
+Font-scaling
+Transition
+Isotope Masonry less
+popover alties => wireframe analyse hiervoor
+breadcrumb vs history what is a breadcrumb hiearchy or history?
+gray-color thingy
+
+widget-row vs thumbs vs joyo-thumbs
+shortcode for
+- Fontawesome
+- Accordion
+- Notifications
+- span-fluid in content bv span3
+font-awesome OWN export
+joyo-widget and all other style
+widget in sidebar vs in column = uiterlijk op basis van locale class via functions of template
+  een sidebar uiterlijk moet ook midden in de pagina kunnen.
+*/
+/*
+
+- SCAFFOLDING							Groundwork for the site. Background colors are set in less or overruled here
+- SCAFFOLDING OBJECTS					Objects reoccurring on every page
+- COMPONENTS							Everything what can be moved around
+- BACK TO TOP							Anchor animating to top of the page
+- EXCEPTIONS FOR SPECIFIC SITUATIONS	Some pages are not like the others
+- D-I-D AREA							Do-It-Dirty
+
+*/
+/* SCAFFOLDING STYLING
+----------------------------------------------------------------------------------------*/
+
+
+/* Colors
+
+Usage:
+var(--publish-box-border); */
+
+:root {
+
+  --ig-status-text-color: maroon; /* 1. IG Title and status text color */
+  --navbar-bg-color: #7b1fad; /* 2. Header container color */
+  --footer-bg-color: #707070; /* 3. Footer background color*/
+  --footer-container-bg-color: #7b1fad; /* 4. Footer container color */
+  --stripe-bg-color: #999999; /* 5. Header strip color */
+
+  --btn-hover-color: #9b2fdd;  /* 6. Menu button hover color */
+  --btn-active-color: #da0c23; /* 7. Menu button active color */
+  --btn-text-color: #e6e6e6; /* 8. Menu button text color */
+  --btn-gradient-start-color: #428bca; /* 9. Menu item gradient start color */
+  --btn-gradient-end-color: #357ebd; /* 10. Menu item gradient end  color */
+  --btn-gradient-start-color-alpha: #ff428bca; /* 11. Menu item gradient start color (with alpha) */
+  --btn-gradient-end-color-alpha: #ff357ebd; /* 12. Menu item gradient end color (with alpha) */
+  --link-color: #428bca; /* 13. Hyperlink text color */
+  --link-hover-color: #2a6496; /* 14. Hyperlink text hover color */
+
+  --publish-box-bg-color: yellow; /* 15. Publish box background color */
+  --publish-box-border: 1px solid #0A0008; /* 16.  Publish box border definition */
+
+  --toc-box-bg-color: #ffeb7e; /* 17.  TOC box background color */
+  --toc-box-border: 1px solid navy; /* 18. TOC box border definition */
+
+  --stu-note-background-color: #fff2ff; /* 19. (STU) Note box background color */
+  --stu-note-border-left-color: #ffa0ff; /* 20. (STU) Note box border color */
+
+  --ig-header-color: #f5f5f5; /* 21. Header color (sides) */
+  --ig-header-container-color: #ffffff; /* 22. Header container color (center) */
+  --footer-nav-bg-color: #f5f5f5; /* 23. Footer navigation background color*/
+
+  --footer-text-color: #ffffff; /* 24. Footer highlight font color */
+  --footer-hyperlink-text-color: #81BEF7; /* 25. Footer hyperlinks font color */
+  --footer-highlight-text-color: #ffff77; /* 26. Footer highlight font color */
+
+  --breadcrumb-bg-color: #f5f5f5; /* 27. Breadcrumb font color */
+  --breadcrumb-text-color: ##555555; /* 28. Breadcrumb font color */
+
+  --dragon-background-color: #fffbf7; /* 29. Dragon background color */
+  --dragon-text-color: #101020; /* 30. Dragon font color */
+
+}
+
+
+
+html {
+  background-color: #ffffff;
+}
+body {
+  background-color: #ffffff;
+  position: relative;
+  padding-top: 0;
+}
+.segment {
+  position: relative;
+}
+.segment > .container {
+  background-color: #ffffff;
+  position: relative;
+}
+#segment-header {
+  background-color: var(--ig-header-color);
+}
+#segment-header > .container {
+  background-color: var(--ig-header-container-color);
+}
+#segment-footer {
+  background-color: var(--footer-bg-color);
+}
+
+#segment-footer > .container {
+  background-color: var(--footer-container-bg-color);
+  color: var(--footer-text-color);
+}
+.navbar-inverse {
+  background-color: var(--navbar-bg-color);
+}
+.navbar-inverse .navbar-nav > li > a:hover {
+  background-color: var(--btn-hover-color);
+}
+#segment-footer > .container .inner-wrapper {
+  padding: 4px 20px;
+}
+#segment-footer > .container .inner-wrapper > p {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  color:var(--footer-text-color);
+}
+#segment-post-footer {
+  background-color: #f5f5f5;
+}
+#segment-post-footer > .container {
+  background-color: #e6e6e6;
+  min-height: 90px;
+}
+/*
+@media (max-width: 767px) {
+	body {
+		//padding-left: 0;
+		//padding-right: 0;
+		.segment > .container {
+			//padding-left: 10px;
+			//padding-right: 10px;
+		}
+	}
+	.segment {
+		margin-left: -20px;
+		margin-right: -20px;
+		&#segment-content {
+			margin-left: 0;
+			margin-right: 0;
+		}
+	}
+}
+*/
+#sidebar > .inner-wrapper {
+  margin-top: 14px;
+  margin-bottom: 20px;
+}
+#content > .inner-wrapper,
+.container > .row > .inner-wrapper {
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+/* SCAFFOlDING OBJECTS
+----------------------------------------------------------------------------------------*/
+#logo {
+  float: left;
+  margin-top: 6px;
+  margin-left: 20px;
+  margin-bottom: 4px;
+  display: block;
+}
+#logo img {
+  max-width: 100%;
+}
+
+#project-nav {
+  line-height: 50px;
+  float: left;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  color: #808080;
+}
+#project-logo {
+  float: left;
+  margin-left: 3px;
+}
+
+#family-nav {
+    line-height: 50px;
+    float: right;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    color: #808080;
+}
+
+#family-logo {
+  float: right;
+  margin-left: 6px;
+}
+
+#ig-status {
+  line-height: 20px;
+  margin-top: 17px;
+  color: var(--ig-status-text-color);
+  text-align: center;
+  height: 50px;
+}
+
+#stripe {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 8px;
+  background: var(--stripe-bg-color);
+}
+#notes a {
+  color: #555555;
+}
+#publish-box {
+  background-color: var(--publish-box-bg-color);
+  border: var(--publish-box-border);
+  padding: 5px;
+}
+
+.dragon {
+  border: 1px solid maroon;
+  padding: 10px;
+  background-color: var(--dragon-background-color);
+  min-height: 160px;
+  color: var(--dragon-text-color);
+}
+
+.dragon::before {
+  content: "";
+  background-image: url('../images/dragon.png');
+  background-size: 150px 150px;
+  display: inline-block;
+  float:left;
+  margin-right: 10px;
+  width: 150px;
+  height: 150px;
+}
+
+.note-to-balloters, .stu-note {
+    margin: 5px;
+    padding: 10px;
+    border-left-style: solid;
+    background-color: var(--stu-note-background-color);
+    border-left-color: var(--stu-note-border-left-color);
+}
+
+.stu-note::before {
+  white-space: pre;
+  content: "Note\A ";
+  background-color: yellow;
+  color: red;
+  font-weight: bold;
+}
+
+.note-to-balloters::before {
+  white-space: pre;
+  content: "Note to Balloters\A ";
+  background-color: yellow;
+  color: red;
+  font-weight: bold;
+}
+
+blockquote.stu-note {
+	margin: 5px;
+	padding:10px;
+    background-color: var(--stu-note-background-color);
+    border-left-color: var(--stu-note-border-left-color);
+}
+
+
+/* GENERIC OBJECTS
+----------------------------------------------------------------------------------------*/
+.navbar {
+  clear: both;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  border-color: #ffffff;
+  border-width: 0px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-bottom: 0;
+/*  background-color: var(--navbar-bg-color); */
+
+}
+.navbar > div > div > ul > li {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.navbar .nav > li > a {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.navbar .nav > li > a {
+  padding: 10px 12px;
+  text-shadow: none;
+}
+.navbar .nav > li > a,
+.navbar .nav > .active > a,
+.navbar .nav > .active > a:hover,
+.navbar .nav > .active > a:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.dropdown-menu {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+.dropdown-menu li > a {
+  padding: 6px 20px;
+}
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus,
+.dropdown-submenu:hover > a,
+.dropdown-submenu:focus > a {
+  text-decoration: none;
+  color: #ffffff;
+  background-color: var(--btn-hover-color);
+  background-image: -webkit-gradient(linear, left 0%, left 100%, from(var(--btn-gradient-start-color)), to(var(--btn-gradient-end-color)));
+  background-image: -webkit-linear-gradient(top, var(--btn-gradient-start-color), 0%, var(--btn-gradient-end-color), 100%);
+  background-image: -moz-linear-gradient(top, var(--btn-gradient-start-color) 0%, var(--btn-gradient-end-color) 100%);
+  background-image: linear-gradient(to bottom, var(--btn-gradient-start-color) 0%, var(--btn-gradient-end-color) 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=var(--btn-gradient-start-color-alpha), endColorstr=var(--btn-gradient-end-color-alpha), GradientType=0);
+}
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  outline: 0;
+  background-color: var(--btn-active-color);
+  background-image: -webkit-gradient(linear, left 0%, left 100%, from(var(--btn-gradient-start-color)), to(var(--btn-gradient-end-color)));
+  background-image: -webkit-linear-gradient(top, var(--btn-gradient-start-color), 0%, var(--btn-gradient-end-color), 100%);
+  background-image: -moz-linear-gradient(top, var(--btn-gradient-start-color) 0%, var(--btn-gradient-end-color) 100%);
+  background-image: linear-gradient(to bottom, var(--btn-gradient-start-color) 0%, var(--btn-gradient-end-color) 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=var(--btn-gradient-start-color-alpha), endColorstr=var(--btn-gradient-end-color-alpha), GradientType=0);
+}
+.nav-tabs {
+  margin-bottom: 20px;
+}
+.nav-tabs a {
+  color: #555555;
+}
+
+.nav-tabs li a:hover,
+.nav-tabs li a:focus {
+  border-bottom-color: #955159;
+}
+.nav-tabs {
+  border-bottom-color: #955159;
+}
+
+.nav-tabs > .active > a,
+.nav-tabs > .active > a:hover,
+.nav-tabs > .active > a:focus {
+  color: var(--btn-active-color);
+  border-color: #955159 #955159 transparent;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  color: var(--btn-active-color);
+  background-color: #ffffff;
+  border: 1px solid #955159;
+  border-bottom-color: transparent;
+  cursor: default;
+}
+
+.navbar-inverse .navbar-nav > .open > a,
+.navbar-inverse .navbar-nav > .open > a:hover,
+.navbar-inverse .navbar-nav > .open > a:focus {
+  background-color: var(--btn-active-color);
+  color: #ffffff;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+  color:  var(--btn-text-color);
+}
+
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+  color: #ffffff;
+  background-color: var(--btn-hover-color);
+}
+
+/*
+@media (max-width: 979px) {
+    // make tabs act like nav-stacked
+    // (mostly) copied from bootstrap/navs.less
+    .nav-tabs > li {
+        float: none;
+    }
+    .nav-tabs > li > a {
+        margin-right: 0; // no need for the gap between nav items
+    }
+    .nav-tabs {
+        border-bottom: 0;
+    }
+    .nav-tabs > li > a {
+        border: 1px solid #ddd;
+        .border-top-radius(0);
+        .border-right-radius(0);
+        .border-bottom-radius(0);
+        .border-left-radius(0);
+    }
+    .nav-tabs > .active > a,
+    .nav-tabs > .active > a:hover {
+        border: 1px solid #ddd;
+    }
+    .nav-tabs > li:first-child > a {
+        .border-top-radius(4px);
+    }
+    .nav-tabs > li:last-child > a {
+        .border-bottom-radius(4px);
+    }
+    .nav-tabs > li > a:hover,
+    .nav-tabs > li > a:focus {
+        border-color: #ddd;
+        z-index: 2;
+    }
+}
+*/
+
+
+a {
+  color:  var(--link-color);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+.btn-link:hover,
+.btn-link:focus {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+  background-color: transparent;
+}
+
+
+.nav-list > li > a {
+  padding: 3px 15px;
+}
+.breadcrumb {
+  margin-bottom: 0;
+  background-color: var(--breadcrumb-bg-color);;
+}
+.breadcrumb a {
+  color: var(--breadcrumb-text-color);
+}
+.nav-listing {
+  overflow: hidden;
+}
+.nav-listing > li {
+  float: left;
+  width: 25%;
+}
+.nav-listing > li > a {
+  padding: 2px 6px;
+}
+.sectioncount {
+  x-float: right;
+  x-color: #555555;
+  x-font-size: 12px;
+}
+.sectioncount a {
+  color: inherit;
+}
+h1.underlined,
+h2.underlined,
+h3.underlined,
+h4.underlined,
+h5.underlined,
+h6.underlined {
+  border-bottom: 1px solid #dddddd;
+  padding-bottom: 0.2em;
+}
+p > img {
+  float: left;
+  margin-top: 0;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  margin-left: 0;
+}
+.table td {
+  padding: 6px;
+  line-height: 18px;
+}
+.table th h1,
+.table th h2,
+.table th h3,
+.table th h4,
+.table th h5,
+.table th h6 {
+  margin-bottom: 0;
+}
+.table th.inverted {
+  background-color: #555555;
+  color: #ffffff;
+  border: none!important;
+}
+.table th.inverted h1,
+.table th.inverted h2,
+.table th.inverted h3,
+.table th.inverted h4,
+.table th.inverted h5,
+.table th.inverted h6 {
+  color: inherit;
+}
+pre {
+  font-size: 12px;
+}
+.icon-warning-sign {
+  font-size: 30px;
+  margin-right: 10px;
+  display: block;
+  float: left;
+}
+/* BACK TO TOP
+----------------------------------------------------------------------------------------*/
+a.to-top {
+  background: url('../images/theme/up.png') no-repeat;
+  display: block;
+  float: right;
+  width: 25px;
+  height: 25px;
+  text-indent: -9999px;
+  margin-top: -28px;
+}
+/* EXCEPTIONS FOR SPECIFIC SITUATIONS
+----------------------------------------------------------------------------------------*/
+/* D-I-D AREA
+----------------------------------------------------------------------------------------*/
+
+ul.markdown-toc
+{
+  margin: 4px;
+  padding: 4px;
+  float: right;
+  z-index: 10;
+  width: 30%;
+  background-color:  var(--toc-box-bg-color);
+  border: var(--toc-box-border);
+}
+
+ul.markdown-toc p
+{
+  font-size: 10px;
+  font-weight: bold;
+  margin: 5px;
+  padding: 0px;
+}
+
+ul.markdown-toc p.link
+{
+  font-size: 10px;
+  padding-left: 8px;
+  margin: 0px;
+}
+
+div.markdown-toc
+{
+  margin: 4px;
+  padding: 4px;
+  float: right;
+  z-index: 10;
+  width: 30%;
+  background-color:  var(--toc-box-bg-color);
+  border: var(--toc-box-border);
+}
+
+div.markdown-toc p
+{
+  font-size: 10px;
+  font-weight: bold;
+  margin: 5px;
+  padding: 0px;
+}
+
+div.markdown-toc p.link
+{
+  font-size: 10px;
+  padding-left: 8px;
+  margin: 0px;
+}
+
+/* Fix to avoid truncating letter descenders in headings */
+h1, h2, h3, h4, h5, h6, .title {
+overflow: visible;
+}
+
+/* Common content for section numbering */
+body{counter-reset:section}
+h2{counter-reset:sub-section}
+h3{counter-reset:composite}
+h4{counter-reset:detail}
+h5{counter-reset:more-detail}
+h2:before{color:silver;counter-increment:section;content:var(--heading-prefix) "." counter(section) " ";}
+h3:before{color:silver;counter-increment:sub-section;content:var(--heading-prefix) "." counter(section) "." counter(sub-section) " ";}
+h4:before{color:silver;counter-increment:composite;content:var(--heading-prefix) "." counter(section) "." counter(sub-section) "." counter(composite) " ";}
+h5:before{color:silver;counter-increment:detail;content:var(--heading-prefix) "." counter(section) "." counter(sub-section) "." counter(composite) "." counter(detail) " ";}
+h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefix) "." counter(section) "." counter(sub-section) "." counter(composite) "." counter(detail) "." counter(more-detail)" ";}
+
+/* ============ downloads css ============= */
+
+a[href$=".sch"]:after, a[href$=".xlsx"]:after, a[href$=".zip"]:after, a[href$=".tgz"]:after, a[href$=".xml"]:not([no-download^="true"]):after, a[href$=".json"]:not([no-download^="true"]):after, a[href$=".csv"]:after, a[href$=".ttl"]:not([no-download^="true"]):after {
+  content: url(../images/download.png);
+  display: inline-block;
+  text-decoration: none;
+  padding-left: 3px;
+}
+
+/* =========== external links ============= */
+p a[href^="http://"]:not([no-external^="true"]):after,p a[href^="https://"]:not([no-external^="true"]):after {
+    content: url(../images/external.png);
+    display: inline-block;
+    text-decoration: none;
+    padding-left: 3px;
+}
+
+li a[href^="http://"]:not([no-external^="true"]):after,li a[href^="https://"]:not([no-external^="true"]):after {
+    content: url(../images/external.png);
+    display: inline-block;
+    text-decoration: none;
+    padding-left: 3px;
+}
+
+/* ----------New content for ballot styling------*/
+
+.new-content::before {
+  white-space: pre;
+  content: "New Content\A ";
+  color: red;
+  font-weight: bold;}
+.new-content{
+    margin: 5px;
+    padding: 10px;
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.bg-success{
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #bce8f1;
+}
+
+.bg-info{
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #d6e9c6;
+}
+
+.bg-warning{
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+
+.bg-danger{
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+
+.feedback {
+  color: #e0e0e0;
+  padding:1px ;
+  font-size: 80%;
+  background-size: 17px 17px;
+  background-position: left center;
+  background-repeat: no-repeat;
+  margin-left: 7px;
+  padding-left: 7px;
+  padding-right: 7px;
+  float: right ; /* none or right */
+  border-radius: 6px;
+  border: 0.5px solid #ffffff;
+}
+
+.feedback:hover  {
+  color: #101010;
+  border: 0.5px solid #777;
+  background-color: #f7f7f7;
+}
+
+.feedback:after {  /* 'feedback:before' or after for icon before or after text  */
+  content: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDY0IDY0IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxNiAxNiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyB0cmFuc2Zvcm09Im1hdHJpeCguMzE4NzIgMCAwIC4zMTg3MiAtMi4xNDYxIC0yLjE3NTcpIiBmaWxsPSIjODgyMjIyIj48cGF0aCBkPSJtNTUuNzM2IDEzLjYzNi00LjM2OC00LjM2MmMtMC40NTEtMC40NTEtMS4wNDQtMC42NzctMS42MzYtMC42NzdzLTEuMTg0IDAuMjI1LTEuNjM1IDAuNjc2bC0zLjQ5NCAzLjQ4NCA3LjYzOSA3LjYyNiAzLjQ5NC0zLjQ4M2MwLjkwMy0wLjkwMiAwLjkwMy0yLjM2NSAwLTMuMjY0eiIvPjxwb2x5Z29uIHBvaW50cz0iMjEuOTIyIDM1LjM5NiAyOS41NjIgNDMuMDIzIDUwLjYwNyAyMi4wMTcgNDIuOTY3IDE0LjM5Ii8+PHBvbHlnb24gcG9pbnRzPSIyNy45MTMgNDQuNjU0IDIwLjI3MyAzNy4wMjggMTguNjQyIDQ2LjI4Ii8+PHBhdGggZD0ibTQxLjM5MyA1MC40MDNoLTI4LjgwNnYtMjguODA2aDIwLjMyOWw1LjAxLTVoLTI3LjEwNmMtMS43NzkgMC0zLjIzNCAxLjQ1NS0zLjIzNCAzLjIzNHYzMi4zMzljMCAxLjc3OSAxLjQ1NSAzLjIzNCAzLjIzNCAzLjIzNGgzMi4zMzljMS43NzkgMCAzLjIzNC0xLjQ1NSAzLjIzNC0zLjIzNHYtMjMuMTIxbC01IDQuOTkxeiIvPjwvZz48L3N2Zz4K')!important;
+}
+
+.feedback:before {  /* 'feedback:before' or after for icon before or after text  */
+  content: none !important;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+.copy-text {
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.copy-text .btn-copy{
+  visibility: hidden;
+}
+
+.copy-text:hover .btn-copy {
+  visibility: visible;
+}
+
+.btn-copy {
+  height: 14px;
+  width: 17px;
+  background-image: url('../ico/noun_copy to clipboard_1669410.png');
+  background-size: 22px;
+  padding: 0px 0px; 
+  border-width: 0px;
+  background-color: transparent;
+}

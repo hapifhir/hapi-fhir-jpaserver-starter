@@ -1,0 +1,14 @@
+"Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
+"Precondition","Precondition","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"Precondition.nullFlavor","Precondition.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"Precondition.nullFlavor",0,1,"",""
+"Precondition.typeCode","Precondition.typeCode","","","",0,1,"","","","code {[]} {[]}
+","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActRelationshipType","",,,,"Precondition.typeCode",0,1,"",""
+"Precondition.realmCode","Precondition.realmCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/CS {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question","","","","","","","","","",,,,,"",,,,"Precondition.realmCode",0,*,"",""
+"Precondition.typeId","Precondition.typeId","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.","","","","","","","","","",,,,,"",,,,"Precondition.typeId",0,1,"",""
+"Precondition.templateId","Precondition.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"Precondition.templateId",0,*,"",""
+"Precondition.criterion","Precondition.criterion","","","",1,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Criterion {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Precondition.criterion",1,1,"",""

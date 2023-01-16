@@ -1,0 +1,236 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "InformationRecipient",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Represents a recipient who should receive a copy of the document.</p>\n      <p>NOTE: The information recipient is an entity to whom a copy of a document is directed, at the time of document authorship. It is not the same as the cumulative set of persons to whom the document has subsequently been disclosed, over the life-time of the patient. Such a disclosure list would not be contained within the document, and it outside the scope of CDA.</p>\n      <p>Where a person is the intended recipient (IntendedRecipient class), the playing entity is a person (Person class), optionally scoped by an organization (Organization class). Where the intended recipient is an organization, the IntendedRecipient.classCode is valued with &quot;ASSIGNED&quot;, and the recipient is reflected by the presence of a scoping Organization, without a playing entity. Where a health chart is the intended recipient, the IntendedRecipient.classCode is valued with &quot;HLTHCHRT&quot; (health chart). In this case there is no playing entity, and an optional scoping organization (Organization class).</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/InformationRecipient",
+  "version" : "2.1.0-draft1",
+  "name" : "CDAR2.InformationRecipient",
+  "title" : "InformationRecipient (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "Represents the participant who has transformed a dictated note into text.",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "InformationRecipient",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "InformationRecipient",
+      "path" : "InformationRecipient",
+      "short" : "Base for all types and resources",
+      "definition" : "Base definition for all types defined in FHIR type system.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "InformationRecipient.nullFlavor",
+      "path" : "InformationRecipient.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "InformationRecipient.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
+    },
+    {
+      "id" : "InformationRecipient.typeCode",
+      "path" : "InformationRecipient.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "InformationRecipient.typeCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "PRCP",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType"
+      }
+    },
+    {
+      "id" : "InformationRecipient.realmCode",
+      "path" : "InformationRecipient.realmCode",
+      "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InformationRecipient.realmCode",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "InformationRecipient.typeId",
+      "path" : "InformationRecipient.typeId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "InformationRecipient.typeId",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "InformationRecipient.templateId",
+      "path" : "InformationRecipient.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InformationRecipient.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "InformationRecipient.intendedRecipient",
+      "path" : "InformationRecipient.intendedRecipient",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "InformationRecipient.intendedRecipient",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IntendedRecipient"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "InformationRecipient",
+      "path" : "InformationRecipient",
+      "min" : 1,
+      "max" : "1"
+    },
+    {
+      "id" : "InformationRecipient.nullFlavor",
+      "path" : "InformationRecipient.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
+    },
+    {
+      "id" : "InformationRecipient.typeCode",
+      "path" : "InformationRecipient.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "PRCP",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType"
+      }
+    },
+    {
+      "id" : "InformationRecipient.realmCode",
+      "path" : "InformationRecipient.realmCode",
+      "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "InformationRecipient.typeId",
+      "path" : "InformationRecipient.typeId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "InformationRecipient.templateId",
+      "path" : "InformationRecipient.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "InformationRecipient.intendedRecipient",
+      "path" : "InformationRecipient.intendedRecipient",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IntendedRecipient"
+      }]
+    }]
+  }
+}

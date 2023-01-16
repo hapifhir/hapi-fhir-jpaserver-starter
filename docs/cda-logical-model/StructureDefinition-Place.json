@@ -1,0 +1,211 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "Place",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A bounded physical place or site, including any contained structures.</p>\n      <p>Place may be natural or man-made. The geographic position of a place may or may not be constant. Places may be work facilities (where relevant acts occur), homes (where people live) or offices (where people work). Places may contain sub-places (floor, room, booth, bed). Places may also be sites that are investigated in the context of health care, social work, public health administration (e.g., buildings, picnic grounds, day care centers, prisons, counties, states, and other focuses of epidemiological events).</p>\n      <p>Examples: A field, lake, city, county, state, country, lot (land), building, pipeline, power line, playground, ship, truck</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/Place",
+  "version" : "2.1.0-draft1",
+  "name" : "CDAR2.Place",
+  "title" : "Place (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "A bounded physical place or site, including any contained structures.\nPlace may be natural or man-made. The geographic position of a place may or may not be constant. Places may be work facilities (where relevant acts occur), homes (where people live) or offices (where people work). Places may contain sub-places (floor, room, booth, bed). Places may also be sites that are investigated in the context of health care, social work, public health administration (e.g., buildings, picnic grounds, day care centers, prisons, counties, states, and other focuses of epidemiological events).\nExamples: A field, lake, city, county, state, country, lot (land), building, pipeline, power line, playground, ship, truck",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "Place",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "Place",
+      "path" : "Place",
+      "short" : "Base for all types and resources",
+      "definition" : "Base definition for all types defined in FHIR type system.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Place.classCode",
+      "path" : "Place.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Place.classCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "PLC",
+      "fixedCode" : "PLC",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityClassPlace"
+      }
+    },
+    {
+      "id" : "Place.determinerCode",
+      "path" : "Place.determinerCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Place.determinerCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "INSTANCE",
+      "fixedCode" : "INSTANCE",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityDeterminer"
+      }
+    },
+    {
+      "id" : "Place.templateId",
+      "path" : "Place.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Place.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "Place.name",
+      "path" : "Place.name",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Place.name",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EN"
+      }]
+    },
+    {
+      "id" : "Place.addr",
+      "path" : "Place.addr",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Place.addr",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AD"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "Place",
+      "path" : "Place",
+      "min" : 1,
+      "max" : "1"
+    },
+    {
+      "id" : "Place.classCode",
+      "path" : "Place.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "PLC",
+      "fixedCode" : "PLC",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityClassPlace"
+      }
+    },
+    {
+      "id" : "Place.determinerCode",
+      "path" : "Place.determinerCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "INSTANCE",
+      "fixedCode" : "INSTANCE",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityDeterminer"
+      }
+    },
+    {
+      "id" : "Place.templateId",
+      "path" : "Place.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "Place.name",
+      "path" : "Place.name",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EN"
+      }]
+    },
+    {
+      "id" : "Place.addr",
+      "path" : "Place.addr",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AD"
+      }]
+    }]
+  }
+}

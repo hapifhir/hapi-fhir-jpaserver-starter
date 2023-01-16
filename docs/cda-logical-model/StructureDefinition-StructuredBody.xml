@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="StructuredBody"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
+      <p>The StructuredBody class represents a CDA document body that is comprised of one or more document sections.</p>
+      <p>The StructuredBody class is associated with one or more Section classes through a component relationship.</p>
+    </div>
+  </text>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <url value="http://hl7.org/fhir/cda/StructureDefinition/StructuredBody"/>
+  <version value="2.1.0-draft1"/>
+  <name value="CDAR2.StructuredBody"/>
+  <title value="StructuredBody (CDA Class)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2023-01-16T15:52:41+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+  </contact>
+  <description value="The StructuredBody class represents a CDA document body that is comprised of one or more document sections.&#xA;The StructuredBody class is associated with one or more Section classes through a component relationship."/>
+  <fhirVersion value="5.0.0-ballot"/>
+  <mapping>
+    <identity value="rim"/>
+    <uri value="http://hl7.org/v3"/>
+    <name value="RIM Mapping"/>
+  </mapping>
+  <kind value="logical"/>
+  <abstract value="false"/>
+  <type value="StructuredBody"/>
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
+  <derivation value="specialization"/>
+  <snapshot>
+    <element id="StructuredBody">
+      <path value="StructuredBody"/>
+      <short value="Base for all types and resources"/>
+      <definition value="Base definition for all types defined in FHIR type system."/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Base"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <isModifier value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="StructuredBody.classCode">
+      <path value="StructuredBody.classCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="StructuredBody.classCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="DOCBODY"/>
+      <fixedCode value="DOCBODY"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer"/>
+      </binding>
+    </element>
+    <element id="StructuredBody.moodCode">
+      <path value="StructuredBody.moodCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="StructuredBody.moodCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="EVN"/>
+      <fixedCode value="EVN"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActMood"/>
+      </binding>
+    </element>
+    <element id="StructuredBody.confidentialityCode">
+      <path value="StructuredBody.confidentialityCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="StructuredBody.confidentialityCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+    </element>
+    <element id="StructuredBody.languageCode">
+      <path value="StructuredBody.languageCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="StructuredBody.languageCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-HumanLanguage"/>
+      </binding>
+    </element>
+    <element id="StructuredBody.component">
+      <path value="StructuredBody.component"/>
+      <min value="1"/>
+      <max value="*"/>
+      <base>
+        <path value="StructuredBody.component"/>
+        <min value="1"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Element"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+    </element>
+    <element id="StructuredBody.component.id">
+      <path value="StructuredBody.component.id"/>
+      <representation value="xmlAttr"/>
+      <short value="Unique id for inter-element referencing"/>
+      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Element.id"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="id"/>
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String"/>
+      </type>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="StructuredBody.component.extension">
+      <path value="StructuredBody.component.extension"/>
+      <slicing>
+        <discriminator>
+          <type value="value"/>
+          <path value="url"/>
+        </discriminator>
+        <description value="Extensions are always sliced by (at least) url"/>
+        <rules value="open"/>
+      </slicing>
+      <short value="Additional content defined by implementations"/>
+      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
+      <alias value="extensions"/>
+      <alias value="user content"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Element.extension"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Extension"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+      <constraint>
+        <key value="ext-1"/>
+        <severity value="error"/>
+        <human value="Must have either extensions or value[x], not both"/>
+        <expression value="extension.exists() != value.exists()"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
+      </constraint>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="StructuredBody.component.typeCode">
+      <path value="StructuredBody.component.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="StructuredBody.component.typeCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="COMP"/>
+      <fixedCode value="COMP"/>
+    </element>
+    <element id="StructuredBody.component.contextConductionInd">
+      <path value="StructuredBody.component.contextConductionInd"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="StructuredBody.component.contextConductionInd"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+      </type>
+      <defaultValueBoolean value="true"/>
+    </element>
+    <element id="StructuredBody.component.section">
+      <path value="StructuredBody.component.section"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="StructuredBody.component.section"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Section"/>
+      </type>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="StructuredBody">
+      <path value="StructuredBody"/>
+      <min value="1"/>
+      <max value="1"/>
+    </element>
+    <element id="StructuredBody.classCode">
+      <path value="StructuredBody.classCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="DOCBODY"/>
+      <fixedCode value="DOCBODY"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer"/>
+      </binding>
+    </element>
+    <element id="StructuredBody.moodCode">
+      <path value="StructuredBody.moodCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="EVN"/>
+      <fixedCode value="EVN"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActMood"/>
+      </binding>
+    </element>
+    <element id="StructuredBody.confidentialityCode">
+      <path value="StructuredBody.confidentialityCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+    </element>
+    <element id="StructuredBody.languageCode">
+      <path value="StructuredBody.languageCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-HumanLanguage"/>
+      </binding>
+    </element>
+    <element id="StructuredBody.component">
+      <path value="StructuredBody.component"/>
+      <min value="1"/>
+      <max value="*"/>
+      <type>
+        <code value="Element"/>
+      </type>
+    </element>
+    <element id="StructuredBody.component.typeCode">
+      <path value="StructuredBody.component.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="COMP"/>
+      <fixedCode value="COMP"/>
+    </element>
+    <element id="StructuredBody.component.contextConductionInd">
+      <path value="StructuredBody.component.contextConductionInd"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="boolean"/>
+      </type>
+      <defaultValueBoolean value="true"/>
+    </element>
+    <element id="StructuredBody.component.section">
+      <path value="StructuredBody.component.section"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Section"/>
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

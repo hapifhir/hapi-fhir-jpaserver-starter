@@ -1,0 +1,14 @@
+"Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
+"RelatedSubject","RelatedSubject","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"RelatedSubject.classCode","RelatedSubject.classCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PRS""/>","","","","","","",,,,,"",,,,"RelatedSubject.classCode",1,1,"",""
+"RelatedSubject.templateId","RelatedSubject.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"RelatedSubject.templateId",0,*,"",""
+"RelatedSubject.code","RelatedSubject.code","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-PersonalRelationshipRoleType","",,,,"RelatedSubject.code",0,1,"",""
+"RelatedSubject.addr","RelatedSubject.addr","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/AD {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"RelatedSubject.addr",0,*,"",""
+"RelatedSubject.telecom","RelatedSubject.telecom","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/TEL {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"RelatedSubject.telecom",0,*,"",""
+"RelatedSubject.subject","RelatedSubject.subject","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/SubjectPerson {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"RelatedSubject.subject",0,1,"",""

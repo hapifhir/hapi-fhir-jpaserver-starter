@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="PQR"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
+      <p>A representation of a physical quantity in a unit from any code system. Used to show alternative representation for a physical quantity.</p>
+    </div>
+  </text>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-binding-style">
+    <valueCode value="CDA"/>
+  </extension>
+  <url value="http://hl7.org/fhir/cda/StructureDefinition/PQR"/>
+  <version value="2.1.0-draft1"/>
+  <name value="PQR"/>
+  <title value="PQR: PhysicalQuantityRepresentation (V3 Data Type)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2023-01-16T15:52:41+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+  </contact>
+  <description value="An extension of the coded value data type representating a physical quantity using a unit from any code system. Used to show alternative representation for a physical quantity."/>
+  <fhirVersion value="5.0.0-ballot"/>
+  <mapping>
+    <identity value="rim"/>
+    <uri value="http://hl7.org/v3"/>
+    <name value="RIM Mapping"/>
+  </mapping>
+  <kind value="logical"/>
+  <abstract value="false"/>
+  <type value="PQR"/>
+  <baseDefinition value="http://hl7.org/fhir/cda/StructureDefinition/CV"/>
+  <derivation value="specialization"/>
+  <snapshot>
+    <element id="PQR">
+      <path value="PQR"/>
+      <short value="Base for all types and resources"/>
+      <definition value="A representation of a physical quantity in a unit from any code system. Used to show alternative representation for a physical quantity."/>
+      <min value="1"/>
+      <max value="*"/>
+      <base>
+        <path value="Base"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <isModifier value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="PQR.nullFlavor">
+      <path value="PQR.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+      </binding>
+    </element>
+    <element id="PQR.code">
+      <path value="PQR.code"/>
+      <representation value="xmlAttr"/>
+      <label value="Code"/>
+      <definition value="The plain code symbol defined by the code system. For example, &quot;784.0&quot; is the code symbol of the ICD-9 code &quot;784.0&quot; for headache."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="CD.code"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="PQR.codeSystem">
+      <path value="PQR.codeSystem"/>
+      <representation value="xmlAttr"/>
+      <label value="Code System"/>
+      <definition value="Specifies the code system that defines the code."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="CD.codeSystem"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="PQR.codeSystemName">
+      <path value="PQR.codeSystemName"/>
+      <representation value="xmlAttr"/>
+      <label value="Code System Name"/>
+      <definition value="The common name of the coding system."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="CD.codeSystemName"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="PQR.codeSystemVersion">
+      <path value="PQR.codeSystemVersion"/>
+      <representation value="xmlAttr"/>
+      <label value="Code System Version"/>
+      <definition value="If applicable, a version descriptor defined specifically for the given code system."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="CD.codeSystemVersion"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="PQR.displayName">
+      <path value="PQR.displayName"/>
+      <representation value="xmlAttr"/>
+      <label value="Display Name"/>
+      <definition value="A name or title for the code, under which the sending system shows the code value to its users."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="CD.displayName"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="PQR.sdtcValueSet">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="valueSet"/>
+      </extension>
+      <path value="PQR.sdtcValueSet"/>
+      <representation value="xmlAttr"/>
+      <definition value="The valueSet extension adds an attribute for elements with a CD dataType which indicates the particular value set constraining the coded concept."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="CD.valueSet"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="PQR.sdtcValueSetVersion">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="valueSetVersion"/>
+      </extension>
+      <path value="PQR.sdtcValueSetVersion"/>
+      <representation value="xmlAttr"/>
+      <definition value="The valueSetVersion extension adds an attribute for elements with a CD dataType which indicates the version of the particular value set constraining the coded concept."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="CD.sdtcValueSetVersion"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="PQR.originalText">
+      <path value="PQR.originalText"/>
+      <label value="Original Text"/>
+      <definition value="The text or phrase used as the basis for the coding."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="CD.originalText"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+      </type>
+    </element>
+    <element id="PQR.qualifier">
+      <path value="PQR.qualifier"/>
+      <label value="Qualifier"/>
+      <definition value="Specifies additional codes that increase the specificity of the the primary code."/>
+      <min value="0"/>
+      <max value="0"/>
+      <base>
+        <path value="CD.qualifier"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CR"/>
+      </type>
+    </element>
+    <element id="PQR.translation">
+      <path value="PQR.translation"/>
+      <representation value="typeAttr"/>
+      <label value="Translation"/>
+      <definition value="A set of other concept descriptors that translate this concept descriptor into other code systems."/>
+      <min value="0"/>
+      <max value="0"/>
+      <base>
+        <path value="CD.translation"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CD"/>
+      </type>
+    </element>
+    <element id="PQR.value">
+      <path value="PQR.value"/>
+      <representation value="xmlAttr"/>
+      <label value="Value"/>
+      <definition value="The magnitude of the measurement value in terms of the unit specified by this code."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="PQR.value"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="decimal"/>
+      </type>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="PQR">
+      <path value="PQR"/>
+      <definition value="A representation of a physical quantity in a unit from any code system. Used to show alternative representation for a physical quantity."/>
+      <min value="1"/>
+      <max value="*"/>
+    </element>
+    <element id="PQR.value">
+      <path value="PQR.value"/>
+      <representation value="xmlAttr"/>
+      <label value="Value"/>
+      <definition value="The magnitude of the measurement value in terms of the unit specified by this code."/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="decimal"/>
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

@@ -1,0 +1,345 @@
+@prefix fhir: <http://hl7.org/fhir/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# - resource -------------------------------------------------------------------
+
+<http://hl7.org/cda/stds/core/StructureDefinition/RecordTarget> a fhir:StructureDefinition;
+  fhir:nodeRole fhir:treeRoot;
+  fhir:Resource.id [ fhir:value "RecordTarget"]; # 
+  fhir:DomainResource.text [
+     fhir:Narrative.status [ fhir:value "generated" ];
+     fhir:Narrative.div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The recordTarget represents the medical record that this document belongs to.</p>\n      <p>A clinical document typically has exactly one recordTarget participant. In the uncommon case where a clinical document (such as a group encounter note) is placed into more than one patient chart, more than one recordTarget participants can be stated.</p>\n      <p>The recordTarget(s) of a document are stated in the header and propagate to nested content, where they cannot be overridden (see See CDA Context (§ 4.4 )).</p>\n      <p>A recordTarget is represented as a relationship between a person and an organization, where the person is in a patient role (PatientRole class). The entity playing the role is a patient (Patient class). The entity scoping the role is an organization (Organization class). A patient is uniquely identified via the PatientRole.id attribute.</p>\n      <p>CDA Release One allowed for additional person identifiers, corresponding to the Patient.id attribute in CDA Release Two. This attribute is included for backwards compatibility and has been deprecated because having two different ways to identify a patient can result in inconsistent usage. Further use of Patient.id is discouraged.</p>\n    </div>"
+  ]; # 
+  fhir:DomainResource.extension [
+     fhir:index 0;
+     fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
+     fhir:Extension.valueUri [ fhir:value "urn:hl7-org:v3" ]
+  ]; # 
+  fhir:StructureDefinition.url [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget"]; # 
+  fhir:StructureDefinition.version [ fhir:value "2.1.0-draft1"]; # 
+  fhir:StructureDefinition.name [ fhir:value "CDAR2.RecordTarget"]; # 
+  fhir:StructureDefinition.title [ fhir:value "RecordTarget (CDA Class)"]; # 
+  fhir:StructureDefinition.status [ fhir:value "active"]; # 
+  fhir:StructureDefinition.experimental [ fhir:value "false"^^xsd:boolean]; # 
+  fhir:StructureDefinition.date [ fhir:value "2023-01-16T15:52:41+01:00"^^xsd:dateTime]; # 
+  fhir:StructureDefinition.publisher [ fhir:value "Health Level 7"]; # 
+  fhir:StructureDefinition.contact [
+     fhir:index 0;
+     fhir:ContactDetail.telecom [
+       fhir:index 0;
+       fhir:ContactPoint.system [ fhir:value "url" ];
+       fhir:ContactPoint.value [ fhir:value "http://www.hl7.org/Special/committees/structure" ]
+     ]
+  ]; # 
+  fhir:StructureDefinition.description [ fhir:value "The recordTarget represents the medical record that this document belongs to. A clinical document typically has exactly one recordTarget participant. In the uncommon case where a clinical document (such as a group encounter note) is placed into more than one patient chart, more than one recordTarget participants can be stated. The recordTarget(s) of a document are stated in the header and propagate to nested content, where they cannot be overridden (see See CDA Context (§ 4.4 ))."]; # 
+  fhir:StructureDefinition.fhirVersion [ fhir:value "5.0.0-ballot"]; # 
+  fhir:StructureDefinition.mapping [
+     fhir:index 0;
+     fhir:StructureDefinition.mapping.identity [ fhir:value "rim" ];
+     fhir:StructureDefinition.mapping.uri [ fhir:value "http://hl7.org/v3" ];
+     fhir:StructureDefinition.mapping.name [ fhir:value "RIM Mapping" ]
+  ]; # 
+  fhir:StructureDefinition.kind [ fhir:value "logical"]; # 
+  fhir:StructureDefinition.abstract [ fhir:value "false"^^xsd:boolean]; # 
+  fhir:StructureDefinition.type [ fhir:value "RecordTarget"]; # 
+  fhir:StructureDefinition.baseDefinition [
+     fhir:value "http://hl7.org/fhir/StructureDefinition/Base";
+     fhir:link <http://hl7.org/fhir/StructureDefinition/Base>
+  ]; # 
+  fhir:StructureDefinition.derivation [ fhir:value "specialization"]; # 
+  fhir:StructureDefinition.snapshot [
+     fhir:StructureDefinition.snapshot.element [
+       fhir:index 0;
+       fhir:Element.id [ fhir:value "RecordTarget" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget" ];
+       fhir:ElementDefinition.short [ fhir:value "Base for all types and resources" ];
+       fhir:ElementDefinition.definition [ fhir:value "Base definition for all types defined in FHIR type system." ];
+       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.base [
+         fhir:ElementDefinition.base.path [ fhir:value "Base" ];
+         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+         fhir:ElementDefinition.base.max [ fhir:value "*" ]
+       ];
+       fhir:ElementDefinition.isModifier [ fhir:value "false"^^xsd:boolean ];
+       fhir:ElementDefinition.mapping [
+         fhir:index 0;
+         fhir:ElementDefinition.mapping.identity [ fhir:value "rim" ];
+         fhir:ElementDefinition.mapping.map [ fhir:value "n/a" ]
+       ]
+     ], [
+       fhir:index 1;
+       fhir:Element.id [ fhir:value "RecordTarget.nullFlavor" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.nullFlavor" ];
+       fhir:ElementDefinition.representation [
+         fhir:value "xmlAttr";
+         fhir:index 0
+       ];
+       fhir:ElementDefinition.label [ fhir:value "Exceptional Value Detail" ];
+       fhir:ElementDefinition.definition [ fhir:value "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.base [
+         fhir:ElementDefinition.base.path [ fhir:value "RecordTarget.nullFlavor" ];
+         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+         fhir:ElementDefinition.base.max [ fhir:value "1" ]
+       ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "code" ]
+       ];
+       fhir:ElementDefinition.binding [
+         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
+         fhir:ElementDefinition.binding.valueSet [
+           fhir:value "http://terminology.hl7.org/ValueSet/v3-NullFlavor";
+           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+         ]
+       ]
+     ], [
+       fhir:index 2;
+       fhir:Element.id [ fhir:value "RecordTarget.typeCode" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.typeCode" ];
+       fhir:ElementDefinition.representation [
+         fhir:value "xmlAttr";
+         fhir:index 0
+       ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.base [
+         fhir:ElementDefinition.base.path [ fhir:value "RecordTarget.typeCode" ];
+         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+         fhir:ElementDefinition.base.max [ fhir:value "1" ]
+       ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "code" ]
+       ];
+       fhir:ElementDefinition.fixedCode [ fhir:value "RCT" ];
+       fhir:ElementDefinition.binding [
+         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
+         fhir:ElementDefinition.binding.valueSet [
+           fhir:value "http://terminology.hl7.org/ValueSet/v3-ParticipationType";
+           fhir:link <http://terminology.hl7.org/ValueSet/v3-ParticipationType>
+         ]
+       ]
+     ], [
+       fhir:index 3;
+       fhir:Element.id [ fhir:value "RecordTarget.contextControlCode" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.contextControlCode" ];
+       fhir:ElementDefinition.representation [
+         fhir:value "xmlAttr";
+         fhir:index 0
+       ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.base [
+         fhir:ElementDefinition.base.path [ fhir:value "RecordTarget.contextControlCode" ];
+         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+         fhir:ElementDefinition.base.max [ fhir:value "1" ]
+       ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "code" ]
+       ];
+       fhir:ElementDefinition.fixedCode [ fhir:value "OP" ];
+       fhir:ElementDefinition.binding [
+         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
+         fhir:ElementDefinition.binding.valueSet [
+           fhir:value "http://terminology.hl7.org/ValueSet/v3-ContextControl";
+           fhir:link <http://terminology.hl7.org/ValueSet/v3-ContextControl>
+         ]
+       ]
+     ], [
+       fhir:index 4;
+       fhir:Element.id [ fhir:value "RecordTarget.realmCode" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.realmCode" ];
+       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question" ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "*" ];
+       fhir:ElementDefinition.base [
+         fhir:ElementDefinition.base.path [ fhir:value "RecordTarget.realmCode" ];
+         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+         fhir:ElementDefinition.base.max [ fhir:value "*" ]
+       ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CS" ]
+       ]
+     ], [
+       fhir:index 5;
+       fhir:Element.id [ fhir:value "RecordTarget.typeId" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.typeId" ];
+       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question." ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.base [
+         fhir:ElementDefinition.base.path [ fhir:value "RecordTarget.typeId" ];
+         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+         fhir:ElementDefinition.base.max [ fhir:value "1" ]
+       ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/II" ]
+       ]
+     ], [
+       fhir:index 6;
+       fhir:Element.id [ fhir:value "RecordTarget.templateId" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.templateId" ];
+       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "*" ];
+       fhir:ElementDefinition.base [
+         fhir:ElementDefinition.base.path [ fhir:value "RecordTarget.templateId" ];
+         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+         fhir:ElementDefinition.base.max [ fhir:value "*" ]
+       ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/II" ]
+       ]
+     ], [
+       fhir:index 7;
+       fhir:Element.id [ fhir:value "RecordTarget.patientRole" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.patientRole" ];
+       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.base [
+         fhir:ElementDefinition.base.path [ fhir:value "RecordTarget.patientRole" ];
+         fhir:ElementDefinition.base.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
+         fhir:ElementDefinition.base.max [ fhir:value "1" ]
+       ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" ]
+       ]
+     ]
+  ]; # 
+  fhir:StructureDefinition.differential [
+     fhir:StructureDefinition.differential.element [
+       fhir:index 0;
+       fhir:Element.id [ fhir:value "RecordTarget" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget" ];
+       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ]
+     ], [
+       fhir:index 1;
+       fhir:Element.id [ fhir:value "RecordTarget.nullFlavor" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.nullFlavor" ];
+       fhir:ElementDefinition.representation [
+         fhir:value "xmlAttr";
+         fhir:index 0
+       ];
+       fhir:ElementDefinition.label [ fhir:value "Exceptional Value Detail" ];
+       fhir:ElementDefinition.definition [ fhir:value "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "code" ]
+       ];
+       fhir:ElementDefinition.binding [
+         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
+         fhir:ElementDefinition.binding.valueSet [
+           fhir:value "http://terminology.hl7.org/ValueSet/v3-NullFlavor";
+           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+         ]
+       ]
+     ], [
+       fhir:index 2;
+       fhir:Element.id [ fhir:value "RecordTarget.typeCode" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.typeCode" ];
+       fhir:ElementDefinition.representation [
+         fhir:value "xmlAttr";
+         fhir:index 0
+       ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "code" ]
+       ];
+       fhir:ElementDefinition.fixedCode [ fhir:value "RCT" ];
+       fhir:ElementDefinition.binding [
+         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
+         fhir:ElementDefinition.binding.valueSet [
+           fhir:value "http://terminology.hl7.org/ValueSet/v3-ParticipationType";
+           fhir:link <http://terminology.hl7.org/ValueSet/v3-ParticipationType>
+         ]
+       ]
+     ], [
+       fhir:index 3;
+       fhir:Element.id [ fhir:value "RecordTarget.contextControlCode" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.contextControlCode" ];
+       fhir:ElementDefinition.representation [
+         fhir:value "xmlAttr";
+         fhir:index 0
+       ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "code" ]
+       ];
+       fhir:ElementDefinition.fixedCode [ fhir:value "OP" ];
+       fhir:ElementDefinition.binding [
+         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
+         fhir:ElementDefinition.binding.valueSet [
+           fhir:value "http://terminology.hl7.org/ValueSet/v3-ContextControl";
+           fhir:link <http://terminology.hl7.org/ValueSet/v3-ContextControl>
+         ]
+       ]
+     ], [
+       fhir:index 4;
+       fhir:Element.id [ fhir:value "RecordTarget.realmCode" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.realmCode" ];
+       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question" ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "*" ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CS" ]
+       ]
+     ], [
+       fhir:index 5;
+       fhir:Element.id [ fhir:value "RecordTarget.typeId" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.typeId" ];
+       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question." ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/II" ]
+       ]
+     ], [
+       fhir:index 6;
+       fhir:Element.id [ fhir:value "RecordTarget.templateId" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.templateId" ];
+       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "*" ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/II" ]
+       ]
+     ], [
+       fhir:index 7;
+       fhir:Element.id [ fhir:value "RecordTarget.patientRole" ];
+       fhir:ElementDefinition.path [ fhir:value "RecordTarget.patientRole" ];
+       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" ]
+       ]
+     ]
+  ] . # 
+
+# - ontology header ------------------------------------------------------------
+
+<http://hl7.org/cda/stds/core/StructureDefinition/RecordTarget.ttl> a owl:Ontology;
+  owl:imports fhir:fhir.ttl .
+
+# -------------------------------------------------------------------------------------
+

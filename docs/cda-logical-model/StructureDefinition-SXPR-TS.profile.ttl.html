@@ -1,0 +1,515 @@
+<!-- get modelType -->
+
+
+
+
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <title>HL7.FHIR.CDA\SXPR-TS: Component part of GTS (V3 Data Type) - TTL Representation - FHIR v5.0.0-ballot</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="http://hl7.org/fhir"/>
+
+    <link href="fhir.css" rel="stylesheet"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap-fhir.css" rel="stylesheet"/>
+
+    <!-- Project extras -->
+    <link href="assets/css/project.css" rel="stylesheet"/>
+    <link href="assets/css/pygments-manni.css" rel="stylesheet"/>
+    <link href="assets/css/jquery-ui.css" rel="stylesheet"/>
+  	<link href="assets/css/prism.css" rel="stylesheet" />
+    <!-- Placeholder for child template CSS declarations -->
+    <link href="assets/css/hl7.css" rel="stylesheet"/>
+    <link href="assets/css/cda.css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="fhir-table-scripts.js"> </script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png"/>
+    <link rel="shortcut icon" href="assets/ico/favicon.png"/>
+  </head>
+  <body onload="document.body.style.opacity='1'">
+
+	  <script src="assets/js/prism.js"></script>
+
+    <style type="text/css">h2{--heading-prefix:"3.119"}
+    h3,h4,h5,h6{--heading-prefix:"3.119"}</style>
+    <div id="segment-header" class="segment">  <!-- segment-header -->
+      <div class="container">  <!-- container -->
+        <!-- Placeholder for child template header declarations -->
+
+        <div id="hl7-nav">
+          <a id="hl7-logo" no-external="true" href="http://hl7.org">
+            <img height="50" alt="Visit the HL7 website" src="assets/images/hl7-logo-header.png"/>
+          </a>
+        </div>
+        <div id="family-nav">
+          <a id="family-logo" no-external="true" href="http://hl7.org/cda"><img height="50" alt="Visit the CDA website" src="assets/images/cda_both_trans.jpg"/> </a>
+        </div>
+        <div id="hl7-search">
+          <a id="hl7-search-lnk" no-external="true" href="http://hl7.org/fhir/search.cfm"><img alt="Search FHIR" src="assets/images/search.png"/></a>
+        </div>
+
+
+        <div id="ig-status">
+          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture V2.0.1</span>
+            <br/>
+            <span style="display:inline-block;">2.1.0-draft1 - 1st Draft
+
+
+            </span>
+          </p>
+        </div>
+      </div> <!-- /container -->
+    </div>  <!-- /segment-header -->
+
+    <div id="segment-navbar" class="segment">  <!-- segment-navbar -->
+      <div id="stripe"> </div>
+      <div class="container">  <!-- container -->
+        <!-- HEADER CONTENT -->
+
+        <nav class="navbar navbar-inverse">
+          <!--status-bar-->
+          <div class="container">
+            <button data-target=".navbar-inverse-collapse" class="navbar-toggle" data-toggle="collapse" type="button">
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+            </button>
+            <a class="navbar-brand hidden" href="http://build.fhir.org/index.html">FHIR</a>
+            <div class="nav-collapse collapse navbar-inverse-collapse">
+              <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
+  <li><a href="index.html">IG Home</a></li>
+  <li><a href="toc.html">Table of Contents</a></li>
+  <li><a href="artifacts.html">Artifact Index</a></li>
+  <li><a href="downloads.html">Downloads</a></li>
+</ul>      
+            </div>  <!-- /.nav-collapse -->
+          </div>  <!-- /.container -->
+        </nav>  <!-- /.navbar -->
+      <!-- /HEADER CONTENT -->
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-navbar -->
+    <!--status-bar-->
+
+    <div id="segment-breadcrumb" class="segment">  <!-- segment-breadcrumb -->
+      <div class="container">  <!-- container -->
+        <ul class="breadcrumb">
+          <li><a href='toc.html'><b>Table of Contents</b></a></li><li><a href='artifacts.html'><b>Artifacts Summary</b></a></li><li><b>SXPR-TS: Component part of GTS (V3 Data Type)</b></li>
+
+        </ul>
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-breadcrumb -->
+
+    <a name="top"> </a>
+    <div id="segment-content" class="segment">  <!-- segment-content -->
+      <div class="container">  <!-- container -->
+        <div class="row">
+          <div class="inner-wrapper">
+
+<div style="counter-reset: section 9" class="col-12">
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture V2.0.1 - Local Development build (v2.1.0-draft1). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  
+
+
+
+
+
+
+
+
+
+
+
+<ul class="nav nav-tabs">
+
+  <li>
+    <a href="StructureDefinition-SXPR-TS.html">Content</a>
+  </li>
+
+
+
+  <li>
+    <a href="StructureDefinition-SXPR-TS-definitions.html">Detailed Descriptions</a>
+  </li>
+
+
+
+  
+    <li>
+      <a href="StructureDefinition-SXPR-TS-mappings.html">Mappings</a>
+    </li>
+  
+
+
+
+
+
+
+
+  
+    <li>
+      <a href="StructureDefinition-SXPR-TS.profile.xml.html">XML</a>
+    </li>
+  
+
+
+  
+    <li>
+      <a href="StructureDefinition-SXPR-TS.profile.json.html">JSON</a>
+    </li>
+  
+
+
+  
+    <li class="active">
+      <a href="#">TTL</a>
+    </li>
+  
+
+
+</ul>
+
+
+<a name="root"> </a>
+<h2 id="root">Logical Model: SXPR-TS - TTL Profile</h2>
+  <table class="colsi">
+    <tr>
+
+      <td colspan="2">
+        
+          Active
+          
+            as of 2023-01-16
+          
+        
+      </td>
+
+    </tr>
+  </table>
+
+
+<p>TTL representation of the SXPR-TS logical model.</p>
+
+<p><a href="StructureDefinition-SXPR-TS.ttl" no-download="true">Raw ttl</a> | <a href="StructureDefinition-SXPR-TS.ttl" download>Download</a></p>
+
+  <!-- insert intro if present -->
+  
+
+
+
+  <pre class="rdf" style="white-space: pre; overflow: hidden"><code class="language-turtle">
+@prefix fhir: &lt;http://hl7.org/fhir/&gt; .
+@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .
+@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+
+# - resource -------------------------------------------------------------------
+
+ a fhir:StructureDefinition;
+  <a href="http://build.fhir.org/rdf.html#tree-root">fhir:nodeRole</a> fhir:treeRoot;
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.id">fhir:Resource.id</a> [ <a href="http://build.fhir.org/datatypes.html#id">fhir:value</a> &quot;SXPR-TS&quot;]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.text">fhir:DomainResource.text</a> [
+     <a href="http://build.fhir.org/narrative.html#Narrative#Narrative.status">fhir:Narrative.status</a> [ <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;extensions&quot; ];
+     fhir:Narrative.div &quot;&lt;div xmlns=\&quot;http://www.w3.org/1999/xhtml\&quot;&gt;&lt;table border=\&quot;0\&quot; cellpadding=\&quot;0\&quot; cellspacing=\&quot;0\&quot; style=\&quot;border: 0px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;\&quot;&gt;&lt;tr style=\&quot;border: 1px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top\&quot;&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;The logical name of the element\&quot;&gt;Name&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Information about the use of the element\&quot;&gt;Flags&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Minimum and Maximum # of times the the element can appear in the instance\&quot;&gt;Card.&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;width: 100px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Reference to the type of the element\&quot;&gt;Type&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Additional information about the element\&quot;&gt;Description &amp;amp; Constraints&lt;/a&gt;&lt;span style=\&quot;float: right\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Legend for this format\&quot;&gt;&lt;img src=\&quot;http://build.fhir.org/help16.png\&quot; alt=\&quot;doco\&quot; style=\&quot;background-color: inherit\&quot;/&gt;&lt;/a&gt;&lt;/span&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck1.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_element.gif\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Element\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-SXPR-TS-definitions.html#SXPR_TS\&quot;&gt;SXPR_TS&lt;/a&gt;&lt;a name=\&quot;SXPR_TS\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;1..*&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-SXCM-TS.html\&quot;&gt;SXCM-TS&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;span style=\&quot;font-weight:bold\&quot;&gt;XML Namespace: &lt;/span&gt;urn:hl7-org:v3&lt;br/&gt;&lt;span style=\&quot;opacity: 0.5\&quot;&gt;Base for all types and resources&lt;/span&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck01.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin_end.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_choice.gif\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: #F7F7F7; background-color: inherit\&quot; title=\&quot;Choice of Types\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-SXPR-TS-definitions.html#SXPR_TS.comp\&quot;&gt;comp&lt;/a&gt;&lt;a name=\&quot;SXPR_TS.comp\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;1..*&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck010.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_blank.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_datatype.gif\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Data Type\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;span title=\&quot;A set of consecutive values of an ordered base data type.\&quot;&gt;comp&lt;/span&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-IVL-TS.html\&quot;&gt;IVL_TS&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck010.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_blank.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_datatype.gif\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: #F7F7F7; background-color: inherit\&quot; title=\&quot;Data Type\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;span title=\&quot;Specifies a periodic interval of time where the recurrence is based on activities of daily living or other important events that are time-related but not fully determined by time.\&quot;&gt;comp&lt;/span&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-EIVL-TS.html\&quot;&gt;EIVL_TS&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck010.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_blank.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_datatype.gif\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Data Type\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;span title=\&quot;An interval of time that recurs periodically. Periodic intervals have two properties, phase and period. The phase specifies the &amp;quot;interval prototype&amp;quot; that is repeated every period.\&quot;&gt;comp&lt;/span&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-PIVL-TS.html\&quot;&gt;PIVL_TS&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck000.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_blank.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin_end.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_datatype.gif\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: #F7F7F7; background-color: inherit\&quot; title=\&quot;Data Type\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;span title=\&quot;A set-component that is itself made up of set-components that are evaluated as one value\&quot;&gt;comp&lt;/span&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-SXPR-TS.html\&quot;&gt;SXPR_TS&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr&gt;&lt;td colspan=\&quot;5\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;br/&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Legend for this format\&quot;&gt;&lt;img src=\&quot;http://build.fhir.org/help16.png\&quot; alt=\&quot;doco\&quot; style=\&quot;background-color: inherit\&quot;/&gt; Documentation for this format&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&quot;
+  ]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.extension">fhir:DomainResource.extension</a> [
+     <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+     <a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">fhir:Extension.url</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot; ];
+     <a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">fhir:Extension.valueUri</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;urn:hl7-org:v3&quot; ]
+  ]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.url">fhir:StructureDefinition.url</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS&quot;]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.version">fhir:StructureDefinition.version</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;2.1.0-draft1&quot;]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.name">fhir:StructureDefinition.name</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;SXPR-TS&quot;]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.title">fhir:StructureDefinition.title</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;SXPR-TS: Component part of GTS (V3 Data Type)&quot;]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.status">fhir:StructureDefinition.status</a> [ <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;active&quot;]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.experimental">fhir:StructureDefinition.experimental</a> [ <a href="http://build.fhir.org/datatypes.html#boolean">fhir:value</a> &quot;false&quot;^^xsd:boolean]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.date">fhir:StructureDefinition.date</a> [ <a href="http://build.fhir.org/datatypes.html#dateTime">fhir:value</a> &quot;2023-01-16T15:52:41+01:00&quot;^^xsd:dateTime]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.publisher">fhir:StructureDefinition.publisher</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;Health Level 7&quot;]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.contact">fhir:StructureDefinition.contact</a> [
+     <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+     <a href="http://build.fhir.org/metadatatypes.html#ContactDetail#ContactDetail.telecom">fhir:ContactDetail.telecom</a> [
+       <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+       <a href="http://build.fhir.org/datatypes.html#ContactPoint#ContactPoint.system">fhir:ContactPoint.system</a> [ <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;url&quot; ];
+       <a href="http://build.fhir.org/datatypes.html#ContactPoint#ContactPoint.value">fhir:ContactPoint.value</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;http://www.hl7.org/Special/committees/structure&quot; ]     ]
+  ]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.description">fhir:StructureDefinition.description</a> [ <a href="http://build.fhir.org/datatypes.html#markdown">fhir:value</a> &quot;A set-component that is itself made up of set-components that are evaluated as one value&quot;]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.fhirVersion">fhir:StructureDefinition.fhirVersion</a> [ <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;5.0.0-ballot&quot;]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping">fhir:StructureDefinition.mapping</a> [
+     <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+     <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.identity">fhir:StructureDefinition.mapping.identity</a> [ <a href="http://build.fhir.org/datatypes.html#id">fhir:value</a> &quot;rim&quot; ];
+     <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.uri">fhir:StructureDefinition.mapping.uri</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;http://hl7.org/v3&quot; ];
+     <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.name">fhir:StructureDefinition.mapping.name</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;RIM Mapping&quot; ]
+  ]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.kind">fhir:StructureDefinition.kind</a> [ <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;logical&quot;]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.abstract">fhir:StructureDefinition.abstract</a> [ <a href="http://build.fhir.org/datatypes.html#boolean">fhir:value</a> &quot;false&quot;^^xsd:boolean]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.type">fhir:StructureDefinition.type</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;SXPR_TS&quot;]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.baseDefinition">fhir:StructureDefinition.baseDefinition</a> [
+     <a href="http://build.fhir.org/datatypes.html#canonical">fhir:value</a> &quot;http://hl7.org/fhir/cda/StructureDefinition/SXCM-TS&quot;;
+     <a href="http://build.fhir.org/rdf.html#reference">fhir:link</a> &lt;http://hl7.org/fhir/cda/StructureDefinition/SXCM-TS&gt;
+  ]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.derivation">fhir:StructureDefinition.derivation</a> [ <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;specialization&quot;]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot">fhir:StructureDefinition.snapshot</a> [
+     <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">fhir:StructureDefinition.snapshot.element</a> [
+       <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">fhir:Element.id</a> [ <a href="http://build.fhir.org/datatypes.html#id">fhir:value</a> &quot;SXPR_TS&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">fhir:ElementDefinition.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;SXPR_TS&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.short">fhir:ElementDefinition.short</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;Base for all types and resources&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">fhir:ElementDefinition.definition</a> [ <a href="http://build.fhir.org/datatypes.html#markdown">fhir:value</a> &quot;A quantity specifying a point on the axis of natural time. A point in time is most often represented as a calendar expression.&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">fhir:ElementDefinition.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;1&quot;^^xsd:nonNegativeInteger ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">fhir:ElementDefinition.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;*&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">fhir:ElementDefinition.base</a> [
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">fhir:ElementDefinition.base.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;Base&quot; ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">fhir:ElementDefinition.base.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;0&quot;^^xsd:nonNegativeInteger ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">fhir:ElementDefinition.base.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;*&quot; ]       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">fhir:ElementDefinition.isModifier</a> [ <a href="http://build.fhir.org/datatypes.html#boolean">fhir:value</a> &quot;false&quot;^^xsd:boolean ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">fhir:ElementDefinition.mapping</a> [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">fhir:ElementDefinition.mapping.identity</a> [ <a href="http://build.fhir.org/datatypes.html#id">fhir:value</a> &quot;rim&quot; ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">fhir:ElementDefinition.mapping.map</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;n/a&quot; ]       ]     ], [
+       <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 1;
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">fhir:Element.id</a> [ <a href="http://build.fhir.org/datatypes.html#id">fhir:value</a> &quot;SXPR_TS.nullFlavor&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">fhir:ElementDefinition.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;SXPR_TS.nullFlavor&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">fhir:ElementDefinition.representation</a> [
+         <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;xmlAttr&quot;;
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">fhir:ElementDefinition.label</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;Exceptional Value Detail&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">fhir:ElementDefinition.definition</a> [ <a href="http://build.fhir.org/datatypes.html#markdown">fhir:value</a> &quot;If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">fhir:ElementDefinition.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;0&quot;^^xsd:nonNegativeInteger ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">fhir:ElementDefinition.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;1&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">fhir:ElementDefinition.base</a> [
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">fhir:ElementDefinition.base.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;ANY.nullFlavor&quot; ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">fhir:ElementDefinition.base.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;0&quot;^^xsd:nonNegativeInteger ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">fhir:ElementDefinition.base.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;1&quot; ]       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">fhir:ElementDefinition.type</a> [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">fhir:ElementDefinition.type.code</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;code&quot; ]       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">fhir:ElementDefinition.binding</a> [
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">fhir:ElementDefinition.binding.strength</a> [ <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;required&quot; ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">fhir:ElementDefinition.binding.valueSet</a> [
+           <a href="http://build.fhir.org/datatypes.html#canonical">fhir:value</a> &quot;http://terminology.hl7.org/ValueSet/v3-NullFlavor&quot;;
+           <a href="http://build.fhir.org/rdf.html#reference">fhir:link</a> &lt;http://terminology.hl7.org/ValueSet/v3-NullFlavor&gt;         ]       ]     ], [
+       <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 2;
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">fhir:Element.id</a> [ <a href="http://build.fhir.org/datatypes.html#id">fhir:value</a> &quot;SXPR_TS.value&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.extension">fhir:Element.extension</a> [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+         <a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">fhir:Extension.url</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-date-format&quot; ];
+         <a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">fhir:Extension.valueCode</a> [ <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;YYYYMMDDHHMMSS.UUUU[+|-ZZzz]&quot; ]       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">fhir:ElementDefinition.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;SXPR_TS.value&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">fhir:ElementDefinition.representation</a> [
+         <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;xmlAttr&quot;;
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">fhir:ElementDefinition.definition</a> [ <a href="http://build.fhir.org/datatypes.html#markdown">fhir:value</a> &quot;A quantity specifying a point on the axis of natural time. A point in time is most often represented as a calendar expression.&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">fhir:ElementDefinition.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;0&quot;^^xsd:nonNegativeInteger ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">fhir:ElementDefinition.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;1&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">fhir:ElementDefinition.base</a> [
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">fhir:ElementDefinition.base.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;TS.value&quot; ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">fhir:ElementDefinition.base.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;0&quot;^^xsd:nonNegativeInteger ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">fhir:ElementDefinition.base.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;1&quot; ]       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">fhir:ElementDefinition.type</a> [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">fhir:ElementDefinition.type.code</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;dateTime&quot; ]       ]     ], [
+       <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 3;
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">fhir:Element.id</a> [ <a href="http://build.fhir.org/datatypes.html#id">fhir:value</a> &quot;SXPR_TS.inclusive&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">fhir:ElementDefinition.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;SXPR_TS.inclusive&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">fhir:ElementDefinition.representation</a> [
+         <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;xmlAttr&quot;;
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">fhir:ElementDefinition.definition</a> [ <a href="http://build.fhir.org/datatypes.html#markdown">fhir:value</a> &quot;Specifies whether the limit is included in the interval (interval is closed) or excluded from the interval (interval is open).&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">fhir:ElementDefinition.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;0&quot;^^xsd:nonNegativeInteger ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">fhir:ElementDefinition.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;1&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">fhir:ElementDefinition.base</a> [
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">fhir:ElementDefinition.base.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;TS.inclusive&quot; ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">fhir:ElementDefinition.base.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;0&quot;^^xsd:nonNegativeInteger ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">fhir:ElementDefinition.base.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;1&quot; ]       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">fhir:ElementDefinition.type</a> [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">fhir:ElementDefinition.type.code</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;boolean&quot; ]       ]     ], [
+       <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 4;
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">fhir:Element.id</a> [ <a href="http://build.fhir.org/datatypes.html#id">fhir:value</a> &quot;SXPR_TS.operator&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">fhir:ElementDefinition.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;SXPR_TS.operator&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">fhir:ElementDefinition.representation</a> [
+         <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;xmlAttr&quot;;
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">fhir:ElementDefinition.definition</a> [ <a href="http://build.fhir.org/datatypes.html#markdown">fhir:value</a> &quot;A code specifying whether the set component is included (union) or excluded (set-difference) from the set, or other set operations with the current set component and the set as constructed from the representation stream up to the current point.&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">fhir:ElementDefinition.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;0&quot;^^xsd:nonNegativeInteger ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">fhir:ElementDefinition.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;1&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">fhir:ElementDefinition.base</a> [
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">fhir:ElementDefinition.base.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;SXCM_TS.operator&quot; ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">fhir:ElementDefinition.base.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;0&quot;^^xsd:nonNegativeInteger ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">fhir:ElementDefinition.base.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;1&quot; ]       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">fhir:ElementDefinition.type</a> [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">fhir:ElementDefinition.type.code</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;code&quot; ]       ]     ], [
+       <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 5;
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">fhir:Element.id</a> [ <a href="http://build.fhir.org/datatypes.html#id">fhir:value</a> &quot;SXPR_TS.comp&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">fhir:ElementDefinition.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;SXPR_TS.comp&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">fhir:ElementDefinition.representation</a> [
+         <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;typeAttr&quot;;
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">fhir:ElementDefinition.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;1&quot;^^xsd:nonNegativeInteger ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">fhir:ElementDefinition.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;*&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">fhir:ElementDefinition.base</a> [
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">fhir:ElementDefinition.base.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;SXPR_TS.comp&quot; ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">fhir:ElementDefinition.base.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;1&quot;^^xsd:nonNegativeInteger ];
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">fhir:ElementDefinition.base.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;*&quot; ]       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">fhir:ElementDefinition.type</a> [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">fhir:ElementDefinition.type.code</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;http://hl7.org/fhir/cda/StructureDefinition/IVL-TS&quot; ]       ], [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 1;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">fhir:ElementDefinition.type.code</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS&quot; ]       ], [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 2;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">fhir:ElementDefinition.type.code</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;http://hl7.org/fhir/cda/StructureDefinition/PIVL-TS&quot; ]       ], [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 3;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">fhir:ElementDefinition.type.code</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS&quot; ]       ]     ]
+  ]; # 
+  <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential">fhir:StructureDefinition.differential</a> [
+     <a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">fhir:StructureDefinition.differential.element</a> [
+       <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">fhir:Element.id</a> [ <a href="http://build.fhir.org/datatypes.html#id">fhir:value</a> &quot;SXPR_TS&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">fhir:ElementDefinition.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;SXPR_TS&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">fhir:ElementDefinition.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;1&quot;^^xsd:nonNegativeInteger ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">fhir:ElementDefinition.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;*&quot; ]     ], [
+       <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 1;
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">fhir:Element.id</a> [ <a href="http://build.fhir.org/datatypes.html#id">fhir:value</a> &quot;SXPR_TS.comp&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">fhir:ElementDefinition.path</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;SXPR_TS.comp&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">fhir:ElementDefinition.representation</a> [
+         <a href="http://build.fhir.org/datatypes.html#code">fhir:value</a> &quot;typeAttr&quot;;
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0       ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">fhir:ElementDefinition.min</a> [ <a href="http://build.fhir.org/datatypes.html#unsignedInt">fhir:value</a> &quot;1&quot;^^xsd:nonNegativeInteger ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">fhir:ElementDefinition.max</a> [ <a href="http://build.fhir.org/datatypes.html#string">fhir:value</a> &quot;*&quot; ];
+       <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">fhir:ElementDefinition.type</a> [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 0;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">fhir:ElementDefinition.type.code</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;http://hl7.org/fhir/cda/StructureDefinition/IVL-TS&quot; ]       ], [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 1;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">fhir:ElementDefinition.type.code</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS&quot; ]       ], [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 2;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">fhir:ElementDefinition.type.code</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;http://hl7.org/fhir/cda/StructureDefinition/PIVL-TS&quot; ]       ], [
+         <a href="http://build.fhir.org/rdf.html#index">fhir:index</a> 3;
+         <a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">fhir:ElementDefinition.type.code</a> [ <a href="http://build.fhir.org/datatypes.html#uri">fhir:value</a> &quot;http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS&quot; ]       ]     ]
+  ]. # 
+
+# - ontology header ------------------------------------------------------------
+
+ a owl:Ontology;
+  owl:imports fhir:fhir.ttl.
+
+</code></pre>
+
+
+
+  <!-- insert notes if present -->
+  
+
+
+
+</div>
+
+        </div>  <!-- /inner-wrapper -->
+      </div>  <!-- /row -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-content -->
+
+  <script type="text/javascript" src="assets/js/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
+  <script type="text/javascript" src="assets/js/jquery-ui.min.js"> </script>
+
+  <script type="text/javascript">
+    try {
+      var currentTabIndex = sessionStorage.getItem('fhir-resource-tab-index');
+    } catch(exception) {
+    }
+
+    if (!currentTabIndex)
+      currentTabIndex = '0';
+
+    $( '#tabs' ).tabs({
+      active: currentTabIndex,
+      activate: function( event, ui ) {
+        var active = $('.selector').tabs('option', 'active');
+        currentTabIndex = ui.newTab.index();
+        document.activeElement.blur();
+        try {
+          sessionStorage.setItem('fhir-resource-tab-index', currentTabIndex);
+        } catch(exception) {
+        }
+      }
+    });
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      if(window.location.hash != "") {
+          $('a[href="' + window.location.hash + '"]').click()
+      }
+    });
+  </script>
+  <a name="bottom"> </a>
+  <div id="segment-footer" igtool="footer" class="segment">  <!-- segment-footer -->
+    <div class="container">  <!-- container -->
+
+      <div class="inner-wrapper">
+        <p>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.fhir.cda#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-ballot</a>. Generated <span title="Mon, Jan 16, 2023 15:52+0100">2023-01-16</span>
+          <br/>
+          <span style="color: var(--footer-highlight-text-color)">
+                      Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
+                 <a style="color: var(--footer-hyperlink-text-color)" href="qa.html">QA Report</a>
+                 
+                
+                 | <a style="color: #81BEF7" target="_blank" href="http://hl7.org/cda/stds/core/history.html">Version History <img alt="external" style="vertical-align: baseline" src="external.png"/></a></a> |
+                 <a style="color: #81BEF7" rel="license" href="http://build.fhir.org/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
+                 <!--<a style="color: #81BEF7" href="todo.html">Search</a> | --> 
+                 <a style="color: #81BEF7" target="_blank" href="https://jira.hl7.org/projects/CDA/issues">Propose a change <img alt="external" style="vertical-align: baseline" src="external.png"/></a>
+
+          </span>
+        </p>
+      </div>  <!-- /inner-wrapper -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-footer -->
+  
+  <div id="segment-post-footer" class="segment hidden">  <!-- segment-post-footer -->
+    <div class="container">  <!-- container -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-post-footer -->
+  
+  <!-- JS and analytics only. -->
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="assets/js/bootstrap.min.js"> </script>
+  <script type="text/javascript" src="assets/js/respond.min.js"> </script>
+  <script type="text/javascript" src="assets/js/anchor.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard-btn.js"> </script>
+  <script>anchors.options.visible = 'hover'
+anchors.add()</script>
+  
+<!-- feedback form - Google forms -->
+<!-- v0.1, 2021-01-09 -->
+
+
+
+<!-- / feedback form  -->
+
+  <!-- Analytics Below
+  ================================================== -->
+  </body>
+</html>
+

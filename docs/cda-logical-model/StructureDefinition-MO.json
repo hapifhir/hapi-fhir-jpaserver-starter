@@ -1,0 +1,142 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "MO",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A monetary amount is a quantity expressing the amount of money in some currency. Currencies are the units in which monetary amounts are denominated in different economic regions. While the monetary amount is a single kind of quantity (money) the exchange rates between the different units are variable. This is the principle difference between physical quantity and monetary amounts, and the reason why currency units are not physical units.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/MO",
+  "version" : "2.1.0-draft1",
+  "name" : "MO",
+  "title" : "MO: MonetaryAmount (V3 Data Type)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "A monetary amount is a quantity expressing the amount of money in some currency. Currencies are the units in which monetary amounts are denominated in different economic regions. While the monetary amount is a single kind of quantity (money) the exchange rates between the different units are variable. This is the principle difference between physical quantity and monetary amounts, and the reason why currency units are not physical units.",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "MO",
+  "baseDefinition" : "http://hl7.org/fhir/cda/StructureDefinition/QTY",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "MO",
+      "path" : "MO",
+      "short" : "Base for all types and resources",
+      "definition" : "A monetary amount is a quantity expressing the amount of money in some currency. Currencies are the units in which monetary amounts are denominated in different economic regions. While the monetary amount is a single kind of quantity (money) the exchange rates between the different units are variable. This is the principle difference between physical quantity and monetary amounts, and the reason why currency units are not physical units.",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "MO.nullFlavor",
+      "path" : "MO.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
+    },
+    {
+      "id" : "MO.currency",
+      "path" : "MO.currency",
+      "label" : "Currency",
+      "definition" : "The currency unit as defined in ISO 4217.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "MO.currency",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "MO.value",
+      "path" : "MO.value",
+      "label" : "Value",
+      "definition" : "The magnitude of the monetary amount in terms of the currency unit.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "MO.value",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/REAL"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "MO",
+      "path" : "MO",
+      "definition" : "A monetary amount is a quantity expressing the amount of money in some currency. Currencies are the units in which monetary amounts are denominated in different economic regions. While the monetary amount is a single kind of quantity (money) the exchange rates between the different units are variable. This is the principle difference between physical quantity and monetary amounts, and the reason why currency units are not physical units.",
+      "min" : 1,
+      "max" : "*"
+    },
+    {
+      "id" : "MO.currency",
+      "path" : "MO.currency",
+      "label" : "Currency",
+      "definition" : "The currency unit as defined in ISO 4217.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "MO.value",
+      "path" : "MO.value",
+      "label" : "Value",
+      "definition" : "The magnitude of the monetary amount in terms of the currency unit.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/REAL"
+      }]
+    }]
+  }
+}

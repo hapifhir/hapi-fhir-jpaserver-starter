@@ -1,0 +1,24 @@
+"Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
+"CO","CO","","","",1,*,"","","","","Base for all types and resources","Coded data, where the domain from which the codeset comes is ordered. The Coded Ordinal data type adds semantics related to ordering so that models that make use of such domains may introduce model elements that involve statements about the order of the terms in a domain.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"CO.nullFlavor","CO.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"CO.code","CO.code","","","Code",0,1,"","","","string {[]} {[]}
+","","The plain code symbol defined by the code system. For example, ""784.0"" is the code symbol of the ICD-9 code ""784.0"" for headache.","","","","","","","","","",,,,,"",,,,"CD.code",0,1,"",""
+"CO.codeSystem","CO.codeSystem","","","Code System",0,1,"","","","string {[]} {[]}
+","","Specifies the code system that defines the code.","","","","","","","","","",,,,,"",,,,"CD.codeSystem",0,1,"",""
+"CO.codeSystemName","CO.codeSystemName","","","Code System Name",0,1,"","","","string {[]} {[]}
+","","The common name of the coding system.","","","","","","","","","",,,,,"",,,,"CD.codeSystemName",0,1,"",""
+"CO.codeSystemVersion","CO.codeSystemVersion","","","Code System Version",0,1,"","","","string {[]} {[]}
+","","If applicable, a version descriptor defined specifically for the given code system.","","","","","","","","","",,,,,"",,,,"CD.codeSystemVersion",0,1,"",""
+"CO.displayName","CO.displayName","","","Display Name",0,1,"","","","string {[]} {[]}
+","","A name or title for the code, under which the sending system shows the code value to its users.","","","","","","","","","",,,,,"",,,,"CD.displayName",0,1,"",""
+"CO.sdtcValueSet","CO.sdtcValueSet","","","",0,1,"","","","string {[]} {[]}
+","","The valueSet extension adds an attribute for elements with a CD dataType which indicates the particular value set constraining the coded concept.","","","","","","","","","",,,,,"",,,,"CD.valueSet",0,1,"",""
+"CO.sdtcValueSetVersion","CO.sdtcValueSetVersion","","","",0,1,"","","","string {[]} {[]}
+","","The valueSetVersion extension adds an attribute for elements with a CD dataType which indicates the version of the particular value set constraining the coded concept.","","","","","","","","","",,,,,"",,,,"CD.sdtcValueSetVersion",0,1,"",""
+"CO.originalText","CO.originalText","","","Original Text",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ED {[]} {[]}
+","","The text or phrase used as the basis for the coding.","","","","","","","","","",,,,,"",,,,"CD.originalText",0,1,"",""
+"CO.qualifier","CO.qualifier","","","Qualifier",0,0,"","","","http://hl7.org/fhir/cda/StructureDefinition/CR {[]} {[]}
+","","Specifies additional codes that increase the specificity of the the primary code.","","","","","","","","","",,,,,"",,,,"CD.qualifier",0,*,"",""
+"CO.translation","CO.translation","","","Translation",0,0,"","","","http://hl7.org/fhir/cda/StructureDefinition/CD {[]} {[]}
+","","A set of other concept descriptors that translate this concept descriptor into other code systems.","","","","","","","","","",,,,,"",,,,"CD.translation",0,*,"",""

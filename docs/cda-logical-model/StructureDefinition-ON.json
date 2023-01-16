@@ -1,0 +1,224 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "ON",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A name for an organization. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for organization name values are &quot;Health Level Seven, Inc.&quot;, &quot;Hospital&quot;, etc. An organization name may be as simple as a character string or may consist of several person name parts, such as, &quot;Health Level 7&quot;, &quot;Inc.&quot;. ON differs from EN because certain person related name parts are not possible.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-xml-no-order",
+    "valueBoolean" : true
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/ON",
+  "version" : "2.1.0-draft1",
+  "name" : "ON",
+  "title" : "ON: OrganizationName (V3 Data Type)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "A name for an organization. A sequence of name parts. Examples for organization name values are \"Health Level Seven, Inc.\", \"Hospital\", etc. An organization name may be as simple as a character string or may consist of several person name parts, such as, \"Health Level 7\", \"Inc.\". ON differs from EN because certain person related name parts are not possible.",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "ON",
+  "baseDefinition" : "http://hl7.org/fhir/cda/StructureDefinition/EN",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "ON",
+      "path" : "ON",
+      "short" : "Base for all types and resources",
+      "definition" : "A name for an organization. A sequence of name parts. Examples for organization name values are \"Health Level Seven, Inc.\", \"Hospital\", etc. An organization name may be as simple as a character string or may consist of several person name parts, such as, \"Health Level 7\", \"Inc.\". ON differs from EN because certain person related name parts are not possible.",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "ON.nullFlavor",
+      "path" : "ON.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
+    },
+    {
+      "id" : "ON.use",
+      "path" : "ON.use",
+      "representation" : ["xmlAttr"],
+      "label" : "Use Code",
+      "definition" : "A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EN.use",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityNameUse"
+      }
+    },
+    {
+      "id" : "ON.delimiter",
+      "path" : "ON.delimiter",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.delimiter",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "ON.family",
+      "path" : "ON.family",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "EN.family",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "ON.given",
+      "path" : "ON.given",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "EN.given",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "ON.prefix",
+      "path" : "ON.prefix",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.prefix",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "ON.suffix",
+      "path" : "ON.suffix",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.suffix",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "ON.other",
+      "path" : "ON.other",
+      "representation" : ["xmlText"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EN.other",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string"
+      }]
+    },
+    {
+      "id" : "ON.validTime",
+      "path" : "ON.validTime",
+      "label" : "Valid Time",
+      "definition" : "An interval of time specifying the time during which the name is or was used for the entity. This accomodates the fact that people change names for people, places and things.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EN.validTime",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "ON",
+      "path" : "ON",
+      "definition" : "A name for an organization. A sequence of name parts. Examples for organization name values are \"Health Level Seven, Inc.\", \"Hospital\", etc. An organization name may be as simple as a character string or may consist of several person name parts, such as, \"Health Level 7\", \"Inc.\". ON differs from EN because certain person related name parts are not possible.",
+      "min" : 1,
+      "max" : "*"
+    },
+    {
+      "id" : "ON.family",
+      "path" : "ON.family",
+      "max" : "0"
+    },
+    {
+      "id" : "ON.given",
+      "path" : "ON.given",
+      "max" : "0"
+    }]
+  }
+}
