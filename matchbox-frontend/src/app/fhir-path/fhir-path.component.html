@@ -1,0 +1,18 @@
+<mat-card class="display">
+  <mat-card-content>
+    <mat-form-field>
+      <mat-label>FHIRPath Expression</mat-label>
+      <input matInput [formControl]="fhirPathExpression" />
+    </mat-form-field>
+    <div>Result</div>
+    <pre><code [highlight]="getFhirPathResult()" [lineNumbers]="true"></code></pre>
+    <div>Resource</div>
+    <input
+      type="file"
+      (change)="fileChange($event)"
+      placeholder="Upload resource"
+      accept=".json"
+    />
+    <pre><code [highlight]="getJson()" [lineNumbers]="true"></code></pre>
+  </mat-card-content>
+</mat-card>

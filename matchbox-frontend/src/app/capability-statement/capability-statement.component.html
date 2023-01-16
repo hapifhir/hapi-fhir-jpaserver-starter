@@ -1,0 +1,16 @@
+<mat-card class="display">
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>{{ client.baseUrl }}</mat-card-title>
+    </mat-card-header>
+    <pre><code [highlight]="getJson()" [lineNumbers]="true"></code></pre>
+
+    <mat-error *ngIf="operationOutcome">
+      <ul>
+        <li *ngFor="let issue of operationOutcome.issue">
+          {{ issue.diagnostics }}
+        </li>
+      </ul>
+    </mat-error>
+  </mat-card-content>
+</mat-card>

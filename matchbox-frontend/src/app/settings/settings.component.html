@@ -1,0 +1,19 @@
+<mat-card>
+  <mat-card-content>
+    <form>
+      <mat-form-field>
+        <mat-select
+          placeholder="FHIR Server"
+          name="selectserver"
+          [ngModel]="getFhirSelectedValue()"
+          (ngModelChange)="setFhirSelectedValue($event)"
+        >
+          <mat-option *ngFor="let fhir of fhirServers" [value]="fhir">
+            {{ fhir }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br />
+    </form>
+  </mat-card-content>
+</mat-card>

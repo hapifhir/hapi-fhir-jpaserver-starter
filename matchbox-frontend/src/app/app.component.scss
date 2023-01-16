@@ -1,0 +1,39 @@
+.example-fill-remaining-space {
+  /* This fills the remaining space, by using flexbox.
+       Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  padding-left: 0;
+
+  .home-link {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .logo-container {
+    display: flex;
+    height: 100%;
+    width: 160px;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      height: calc(100% - 1.2em);
+    }
+  }
+}
+
+main {
+  width: 100%;
+  margin: 0 auto;
+
+  @media screen and (min-width: 1020px) {
+    padding: 3rem 0;
+    width: 1000px;
+  }
+}

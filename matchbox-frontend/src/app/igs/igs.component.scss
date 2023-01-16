@@ -1,0 +1,41 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-form-field {
+  &.url {
+    width: 200px;
+  }
+}
+
+.mat-table {
+  margin: 1rem;
+
+  .mat-row {
+    cursor: pointer;
+  }
+
+  .mat-cell,
+  .mat-header-cell {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+
+    &.title {
+      flex: 2;
+      justify-content: flex-end;
+    }
+
+    &:first-child {
+      padding-left: 1rem;
+    }
+
+    &:last-child {
+      padding-right: 1rem;
+    }
+  }
+}
+
+.card-igs {
+  margin-bottom: 10px;
+}

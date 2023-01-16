@@ -1,0 +1,29 @@
+@import '../../variables';
+
+$primary: map-get($theme, primary);
+
+.mat-card.primary {
+  mat-card-header {
+    display: flex;
+    flex-direction: column;
+
+    .mat-subheading-2 {
+      margin: 1rem 0 0 0;
+    }
+  }
+
+  mat-card-content {
+    ::ng-deep mat-tab-body > div {
+      box-shadow: 0 0 5px -3px black inset;
+    }
+  }
+
+  mat-card-footer {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+
+    p {
+      padding-top: 1rem;
+      margin: 0;
+    }
+  }
+}

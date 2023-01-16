@@ -1,0 +1,60 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.attachment-field {
+  $radius: 5px;
+  border-radius: $radius;
+  background: #f0f3f6;
+
+  .attachment-entry {
+    border-bottom: 1px solid #dedede;
+    display: flex;
+    align-items: center;
+    height: 40px;
+
+    .attachment-name {
+      flex: 1;
+      padding: 0 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .attachment-size:last-child {
+      margin-right: 1rem;
+    }
+
+    .mat-icon-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: inherit;
+    }
+  }
+
+  .drop-zone {
+    text-align: center;
+    padding: 2rem;
+    border-bottom-left-radius: $radius;
+    border-bottom-right-radius: $radius;
+
+    &:first-child {
+      border-top-left-radius: $radius;
+      border-top-right-radius: $radius;
+    }
+
+    &.file-over {
+      background: darken(#f0f3f6, 5%);
+    }
+
+    .spacer {
+      line-height: 3rem;
+    }
+
+    .bold-text {
+      font-weight: bold;
+    }
+  }
+}

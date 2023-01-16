@@ -1,0 +1,65 @@
+<mat-card class="card-maps">
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>Source</mat-card-title>
+    </mat-card-header>
+    <mat-form-field class="fixtextarea">
+      <mat-card-actions>
+        <input
+          type="file"
+          (change)="fileSource($event)"
+          placeholder="Upload source"
+          accept=".json"
+        />
+      </mat-card-actions>
+      <textarea matNativeControl [formControl]="source" rows="15" cols="400">
+      </textarea>
+    </mat-form-field>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="card-maps">
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>FHIR Mapping Language map</mat-card-title>
+    </mat-card-header>
+    <mat-form-field class="fixtextarea">
+      <mat-card-actions>
+        <input
+          type="file"
+          (change)="fileChange($event)"
+          placeholder="Upload map"
+          accept=".map"
+        />
+      </mat-card-actions>
+      <textarea matNativeControl [formControl]="map" rows="20" cols="400">
+      </textarea>
+    </mat-form-field>
+    <mat-error *ngIf="operationOutcome">
+      <ul>
+        <li *ngFor="let issue of operationOutcome.issue">
+          {{ issue.diagnostics }}
+        </li>
+      </ul>
+    </mat-error>
+    <mat-hint *ngIf="structureMap"
+      >Successfully created on server: {{ structureMap.url }}</mat-hint
+    >
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="card-maps">
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>Transformed</mat-card-title>
+    </mat-card-header>
+    <mat-error *ngIf="operationOutcomeTransformed">
+      <ul>
+        <li *ngFor="let issue of operationOutcomeTransformed.issue">
+          {{ issue.diagnostics }}
+        </li>
+      </ul>
+    </mat-error>
+    <pre>{{ transformed | json }}</pre>
+  </mat-card-content>
+</mat-card>

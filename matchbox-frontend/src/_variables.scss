@@ -1,0 +1,61 @@
+@use '@angular/material' as mat;
+$md-mcgpalette0: (
+  50: #e8ebee,
+  100: #c5ced5,
+  200: #9eaeb9,
+  300: #778d9d,
+  400: #5a7488,
+  500: #97d6ba,
+  600: #37546b,
+  700: #2f4a60,
+  800: #274156,
+  900: #1a3043,
+  A100: #84c3ff,
+  A200: #51aaff,
+  A400: #1e91ff,
+  A700: #0485ff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+$my-primary: mat.define-palette($md-mcgpalette0, 500, 50, 300);
+$my-accent: mat.define-palette($md-mcgpalette0, A400);
+
+@function my-mat-light-theme-foreground($color) {
+  @return (
+    base: $color,
+    divider: rgba(black, 0.12),
+    dividers: rgba(black, 0.12),
+    disabled: rgba($color, 0.38),
+    disabled-button: rgba($color, 0.38),
+    disabled-text: rgba($color, 0.38),
+    hint-text: rgba($color, 0.38),
+    secondary-text: rgba($color, 0.54),
+    icon: rgba($color, 0.54),
+    icons: rgba($color, 0.54),
+    text: rgba($color, 0.87),
+    slider-off: rgba($color, 0.26),
+    slider-off-active: rgba($color, 0.38)
+  );
+}
+
+$theme: map-merge(
+  mat.define-light-theme($my-primary, $my-accent),
+  (
+    foreground: my-mat-light-theme-foreground(darken(#113549, 5%)),
+  )
+);

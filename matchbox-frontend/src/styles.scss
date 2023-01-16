@@ -1,0 +1,52 @@
+@use '@angular/material' as mat;
+@import 'variables';
+@import '~highlight.js/styles/github.css';
+
+@include mat.core();
+@include mat.all-component-themes($theme);
+
+body {
+  background: #e2e7ea;
+
+  &,
+  html {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Roboto, Arial, sans-serif;
+  }
+}
+
+$primary: map-get($theme, primary);
+$outer-space: 1.5rem;
+
+.mat-card.primary {
+  padding: $outer-space;
+
+  .primary-card-header {
+    margin: -$outer-space;
+    margin-bottom: 0;
+    padding-top: $outer-space;
+    padding-left: $outer-space;
+    padding-right: $outer-space;
+
+    h1 {
+      margin-bottom: 0;
+    }
+
+    .mat-card-header-text {
+      display: none;
+    }
+
+    @media screen and (min-width: 1020px) {
+      background-color: mat.get-color-from-palette($primary);
+      color: white;
+      border-radius: 4px 4px 0 0;
+      padding-bottom: $outer-space;
+    }
+  }
+
+  .mat-card-content {
+    padding-top: $outer-space;
+  }
+}

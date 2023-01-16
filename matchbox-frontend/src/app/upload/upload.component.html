@@ -1,0 +1,34 @@
+<div class="attachment-field">
+  <div
+    class="drop-zone"
+    (dragover)="onDragOver($event)"
+    [class.file-over]="dragCounter > 0"
+    (drop)="onDrop($event)"
+    (dragenter)="onDragEnter()"
+    (dragleave)="onDragLeave()"
+  >
+    <mat-icon
+      (dragover)="onDragOver($event)"
+      (dragenter)="onDragEnter()"
+      (dragleave)="onDragLeave()"
+      >cloud_upload</mat-icon
+    >
+    <div
+      class="bold-text"
+      (dragenter)="onDragEnter()"
+      (dragleave)="onDragLeave()"
+    >
+      Drop file here
+    </div>
+    <div class="spacer">or</div>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="fileInput.click()"
+      type="button"
+    >
+      Add file
+    </button>
+  </div>
+</div>
+<input hidden type="file" #fileInput (change)="onDrop($event)" />
