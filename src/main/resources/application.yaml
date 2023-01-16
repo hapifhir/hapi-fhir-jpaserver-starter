@@ -93,7 +93,7 @@ hapi:
     #    allow_multiple_delete: true
     #    allow_override_default_search_params: true
     #    auto_create_placeholder_reference_targets: false
-    #    cql_enabled: true
+    #    cr_enabled: true
     #    default_encoding: JSON
     #    default_pretty_print: true
     #    default_page_size: 20
@@ -117,7 +117,7 @@ hapi:
     #    fhirpath_interceptor_enabled: false
     #    filter_search_enabled: true
     #    graphql_enabled: true
-    #    narrative_enabled: true
+    narrative_enabled: false
     #    mdm_enabled: true
     #    local_base_urls:
     #      - https://hapi.fhir.org/baseR4
