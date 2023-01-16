@@ -78,7 +78,7 @@ hapi:
     #    allow_multiple_delete: true
     #    allow_override_default_search_params: true
     #    auto_create_placeholder_reference_targets: false
-    #    cql_enabled: true
+    #    cr_enabled: true
     #    default_encoding: JSON
     #    default_pretty_print: true
     #    default_page_size: 20
