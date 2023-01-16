@@ -1,0 +1,288 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "ParentDocument",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The ParentDocument represents the source of a document revision, addenda, or transformation. ParentDocument.text is modeled as an ED data type - allowing for the expression of the MIME type of the parent document. It is not to be used to embed the related document, and thus ParentDocument.text.BIN is precluded from use.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/ParentDocument",
+  "version" : "2.1.0-draft1",
+  "name" : "CDAR2.ParentDocument",
+  "title" : "ParentDocument (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "The ParentDocument represents the source of a document revision, addenda, or transformation. ParentDocument.text is modeled as an ED data type - allowing for the expression of the MIME type of the parent document. It is not to be used to embed the related document, and thus ParentDocument.text.BIN is precluded from use.",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "ParentDocument",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "ParentDocument",
+      "path" : "ParentDocument",
+      "short" : "Base for all types and resources",
+      "definition" : "Base definition for all types defined in FHIR type system.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "ParentDocument.classCode",
+      "path" : "ParentDocument.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "ParentDocument.classCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "DOCCLIN",
+      "fixedCode" : "DOCCLIN",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClassClinicalDocument"
+      }
+    },
+    {
+      "id" : "ParentDocument.moodCode",
+      "path" : "ParentDocument.moodCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "ParentDocument.moodCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "EVN",
+      "fixedCode" : "EVN",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActMood"
+      }
+    },
+    {
+      "id" : "ParentDocument.templateId",
+      "path" : "ParentDocument.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ParentDocument.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ParentDocument.id",
+      "path" : "ParentDocument.id",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "ParentDocument.id",
+        "min" : 1,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ParentDocument.code",
+      "path" : "ParentDocument.code",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ParentDocument.code",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CD"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://hl7.org/fhir/ValueSet/doc-typecodes"
+      }
+    },
+    {
+      "id" : "ParentDocument.text",
+      "path" : "ParentDocument.text",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ParentDocument.text",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+      }]
+    },
+    {
+      "id" : "ParentDocument.setId",
+      "path" : "ParentDocument.setId",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ParentDocument.setId",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ParentDocument.versionNumber",
+      "path" : "ParentDocument.versionNumber",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ParentDocument.versionNumber",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/INT"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "ParentDocument",
+      "path" : "ParentDocument",
+      "min" : 1,
+      "max" : "1"
+    },
+    {
+      "id" : "ParentDocument.classCode",
+      "path" : "ParentDocument.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "DOCCLIN",
+      "fixedCode" : "DOCCLIN",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClassClinicalDocument"
+      }
+    },
+    {
+      "id" : "ParentDocument.moodCode",
+      "path" : "ParentDocument.moodCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "EVN",
+      "fixedCode" : "EVN",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActMood"
+      }
+    },
+    {
+      "id" : "ParentDocument.templateId",
+      "path" : "ParentDocument.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ParentDocument.id",
+      "path" : "ParentDocument.id",
+      "min" : 1,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ParentDocument.code",
+      "path" : "ParentDocument.code",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CD"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://hl7.org/fhir/ValueSet/doc-typecodes"
+      }
+    },
+    {
+      "id" : "ParentDocument.text",
+      "path" : "ParentDocument.text",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+      }]
+    },
+    {
+      "id" : "ParentDocument.setId",
+      "path" : "ParentDocument.setId",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ParentDocument.versionNumber",
+      "path" : "ParentDocument.versionNumber",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/INT"
+      }]
+    }]
+  }
+}

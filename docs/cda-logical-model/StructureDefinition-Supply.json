@@ -1,0 +1,1937 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "Supply",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A derivative of the RIM Supply class, used for representing the provision of a material by one entity to another.</p>\n      <p>The dispensed product is associated with the Supply act via a product participant, which connects to the same ManufacturedProduct role used for SubstanceAdministration.</p>\n      <p>The Supply class represents dispensing, whereas the SubstanceAdministration class represents administration. Prescriptions are complex activities that involve both an administration request to the patient (e.g. take digoxin 0.125mg by mouth once per day) and a supply request to the pharmacy (e.g. dispense 30 tablets, with 5 refills). This should be represented in CDA by a SubstanceAdministration entry that has a component Supply entry. The nested Supply entry can have Supply.independentInd set to &quot;false&quot; to signal that the Supply cannot stand alone, without it's containing SubstanceAdministration. The following example illustrates a prescription representation in CDA.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/Supply",
+  "version" : "2.1.0-draft1",
+  "name" : "CDAR2Supply",
+  "title" : "Supply (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "A derivative of the RIM Supply class, used for representing the provision of a material by one entity to another.\nThe dispensed product is associated with the Supply act via a product participant, which connects to the same ManufacturedProduct role used for SubstanceAdministration.\nThe Supply class represents dispensing, whereas the SubstanceAdministration class represents administration. Prescriptions are complex activities that involve both an administration request to the patient (e.g. take digoxin 0.125mg by mouth once per day) and a supply request to the pharmacy (e.g. dispense 30 tablets, with 5 refills). This should be represented in CDA by a SubstanceAdministration entry that has a component Supply entry. The nested Supply entry can have Supply.independentInd set to \"false\" to signal that the Supply cannot stand alone, without it's containing SubstanceAdministration. The following example illustrates a prescription representation in CDA.",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "Supply",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "Supply",
+      "path" : "Supply",
+      "short" : "Base for all types and resources",
+      "definition" : "Base definition for all types defined in FHIR type system.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Supply.classCode",
+      "path" : "Supply.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.classCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "SPLY",
+      "fixedCode" : "SPLY",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClassSupply"
+      }
+    },
+    {
+      "id" : "Supply.moodCode",
+      "path" : "Supply.moodCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.moodCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "Supply.realmCode",
+      "path" : "Supply.realmCode",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.realmCode",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "Supply.typeId",
+      "path" : "Supply.typeId",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.typeId",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "Supply.templateId",
+      "path" : "Supply.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "Supply.id",
+      "path" : "Supply.id",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.id",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "Supply.code",
+      "path" : "Supply.code",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.code",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CD"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActCode"
+      }
+    },
+    {
+      "id" : "Supply.text",
+      "path" : "Supply.text",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.text",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+      }]
+    },
+    {
+      "id" : "Supply.statusCode",
+      "path" : "Supply.statusCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.statusCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActStatus"
+      }
+    },
+    {
+      "id" : "Supply.effectiveTime",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype",
+        "valueCanonical" : "http://hl7.org/fhir/cda/StructureDefinition/SXCM-TS"
+      }],
+      "path" : "Supply.effectiveTime",
+      "representation" : ["typeAttr"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.effectiveTime",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SXCM-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/PIVL-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"
+      }]
+    },
+    {
+      "id" : "Supply.priorityCode",
+      "path" : "Supply.priorityCode",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.priorityCode",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActPriority"
+      }
+    },
+    {
+      "id" : "Supply.repeatNumber",
+      "path" : "Supply.repeatNumber",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.repeatNumber",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-INT"
+      }]
+    },
+    {
+      "id" : "Supply.independentInd",
+      "path" : "Supply.independentInd",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.independentInd",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+      }]
+    },
+    {
+      "id" : "Supply.quantity",
+      "path" : "Supply.quantity",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.quantity",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
+      }]
+    },
+    {
+      "id" : "Supply.expectedUseTime",
+      "path" : "Supply.expectedUseTime",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.expectedUseTime",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+      }]
+    },
+    {
+      "id" : "Supply.product",
+      "path" : "Supply.product",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.product",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }]
+    },
+    {
+      "id" : "Supply.product.id",
+      "path" : "Supply.product.id",
+      "representation" : ["xmlAttr"],
+      "short" : "Unique id for inter-element referencing",
+      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Supply.product.extension",
+      "path" : "Supply.product.extension",
+      "slicing" : {
+        "discriminator" : [{
+          "type" : "value",
+          "path" : "url"
+        }],
+        "description" : "Extensions are always sliced by (at least) url",
+        "rules" : "open"
+      },
+      "short" : "Additional content defined by implementations",
+      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
+      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
+      "alias" : ["extensions",
+      "user content"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Supply.product.typeCode",
+      "path" : "Supply.product.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.product.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "PRD",
+      "fixedCode" : "PRD",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetDirect"
+      }
+    },
+    {
+      "id" : "Supply.product.manufacturedProduct",
+      "path" : "Supply.product.manufacturedProduct",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.product.manufacturedProduct",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ManufacturedProduct"
+      }]
+    },
+    {
+      "id" : "Supply.subject",
+      "path" : "Supply.subject",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.subject",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }]
+    },
+    {
+      "id" : "Supply.subject.id",
+      "path" : "Supply.subject.id",
+      "representation" : ["xmlAttr"],
+      "short" : "Unique id for inter-element referencing",
+      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Supply.subject.extension",
+      "path" : "Supply.subject.extension",
+      "slicing" : {
+        "discriminator" : [{
+          "type" : "value",
+          "path" : "url"
+        }],
+        "description" : "Extensions are always sliced by (at least) url",
+        "rules" : "open"
+      },
+      "short" : "Additional content defined by implementations",
+      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
+      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
+      "alias" : ["extensions",
+      "user content"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Supply.subject.typeCode",
+      "path" : "Supply.subject.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.subject.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "SBJ",
+      "fixedCode" : "SBJ",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"
+      }
+    },
+    {
+      "id" : "Supply.subject.contextControlCode",
+      "path" : "Supply.subject.contextControlCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.subject.contextControlCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "OP",
+      "fixedCode" : "OP",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
+      }
+    },
+    {
+      "id" : "Supply.subject.awarenessCode",
+      "path" : "Supply.subject.awarenessCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.subject.awarenessCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-TargetAwareness"
+      }
+    },
+    {
+      "id" : "Supply.subject.relatedSubject",
+      "path" : "Supply.subject.relatedSubject",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.subject.relatedSubject",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject"
+      }]
+    },
+    {
+      "id" : "Supply.specimen",
+      "path" : "Supply.specimen",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.specimen",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Specimen"
+      }]
+    },
+    {
+      "id" : "Supply.performer",
+      "path" : "Supply.performer",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.performer",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Performer2"
+      }]
+    },
+    {
+      "id" : "Supply.author",
+      "path" : "Supply.author",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.author",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Author"
+      }]
+    },
+    {
+      "id" : "Supply.informant",
+      "path" : "Supply.informant",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.informant",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }]
+    },
+    {
+      "id" : "Supply.informant.id",
+      "path" : "Supply.informant.id",
+      "representation" : ["xmlAttr"],
+      "short" : "Unique id for inter-element referencing",
+      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Supply.informant.extension",
+      "path" : "Supply.informant.extension",
+      "slicing" : {
+        "discriminator" : [{
+          "type" : "value",
+          "path" : "url"
+        }],
+        "description" : "Extensions are always sliced by (at least) url",
+        "rules" : "open"
+      },
+      "short" : "Additional content defined by implementations",
+      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
+      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
+      "alias" : ["extensions",
+      "user content"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Supply.informant.typeCode",
+      "path" : "Supply.informant.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.informant.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "INF",
+      "fixedCode" : "INF",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator"
+      }
+    },
+    {
+      "id" : "Supply.informant.contextControlCode",
+      "path" : "Supply.informant.contextControlCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.informant.contextControlCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "OP",
+      "fixedCode" : "OP",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
+      }
+    },
+    {
+      "id" : "Supply.informant.assignedEntity",
+      "path" : "Supply.informant.assignedEntity",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.informant.assignedEntity",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+      }]
+    },
+    {
+      "id" : "Supply.informant.relatedEntity",
+      "path" : "Supply.informant.relatedEntity",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.informant.relatedEntity",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity"
+      }]
+    },
+    {
+      "id" : "Supply.participant",
+      "path" : "Supply.participant",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.participant",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Participant2"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship",
+      "path" : "Supply.entryRelationship",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.entryRelationship",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "sup-er-1",
+        "severity" : "error",
+        "human" : "Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act",
+        "expression" : "(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1"
+      },
+      {
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.id",
+      "path" : "Supply.entryRelationship.id",
+      "representation" : ["xmlAttr"],
+      "short" : "Unique id for inter-element referencing",
+      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.extension",
+      "path" : "Supply.entryRelationship.extension",
+      "slicing" : {
+        "discriminator" : [{
+          "type" : "value",
+          "path" : "url"
+        }],
+        "description" : "Extensions are always sliced by (at least) url",
+        "rules" : "open"
+      },
+      "short" : "Additional content defined by implementations",
+      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
+      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
+      "alias" : ["extensions",
+      "user content"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.typeCode",
+      "path" : "Supply.entryRelationship.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.inversionInd",
+      "path" : "Supply.entryRelationship.inversionInd",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.inversionInd",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.contextConductionInd",
+      "path" : "Supply.entryRelationship.contextConductionInd",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.contextConductionInd",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean"
+      }],
+      "defaultValueBoolean" : true
+    },
+    {
+      "id" : "Supply.entryRelationship.sequenceNumber",
+      "path" : "Supply.entryRelationship.sequenceNumber",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.sequenceNumber",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/INT"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.negationInd",
+      "path" : "Supply.entryRelationship.negationInd",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.negationInd",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.seperatableInd",
+      "path" : "Supply.entryRelationship.seperatableInd",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.seperatableInd",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.observation",
+      "path" : "Supply.entryRelationship.observation",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.observation",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Observation"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.regionOfInterest",
+      "path" : "Supply.entryRelationship.regionOfInterest",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.regionOfInterest",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.observationMedia",
+      "path" : "Supply.entryRelationship.observationMedia",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.observationMedia",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.substanceAdministration",
+      "path" : "Supply.entryRelationship.substanceAdministration",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.substanceAdministration",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.supply",
+      "path" : "Supply.entryRelationship.supply",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.supply",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Supply"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.procedure",
+      "path" : "Supply.entryRelationship.procedure",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.procedure",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Procedure"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.encounter",
+      "path" : "Supply.entryRelationship.encounter",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.encounter",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Encounter"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.organizer",
+      "path" : "Supply.entryRelationship.organizer",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.organizer",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Organizer"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.act",
+      "path" : "Supply.entryRelationship.act",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.entryRelationship.act",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Act"
+      }]
+    },
+    {
+      "id" : "Supply.reference",
+      "path" : "Supply.reference",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.reference",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }]
+    },
+    {
+      "id" : "Supply.reference.id",
+      "path" : "Supply.reference.id",
+      "representation" : ["xmlAttr"],
+      "short" : "Unique id for inter-element referencing",
+      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Supply.reference.extension",
+      "path" : "Supply.reference.extension",
+      "slicing" : {
+        "discriminator" : [{
+          "type" : "value",
+          "path" : "url"
+        }],
+        "description" : "Extensions are always sliced by (at least) url",
+        "rules" : "open"
+      },
+      "short" : "Additional content defined by implementations",
+      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
+      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
+      "alias" : ["extensions",
+      "user content"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Supply.reference.typeCode",
+      "path" : "Supply.reference.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.reference.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "Supply.reference.seperatableInd",
+      "path" : "Supply.reference.seperatableInd",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.reference.seperatableInd",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+      }]
+    },
+    {
+      "id" : "Supply.reference.externalAct",
+      "path" : "Supply.reference.externalAct",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.reference.externalAct",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalAct"
+      }]
+    },
+    {
+      "id" : "Supply.reference.externalObservation",
+      "path" : "Supply.reference.externalObservation",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.reference.externalObservation",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation"
+      }]
+    },
+    {
+      "id" : "Supply.reference.externalProcedure",
+      "path" : "Supply.reference.externalProcedure",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.reference.externalProcedure",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure"
+      }]
+    },
+    {
+      "id" : "Supply.reference.externalDocument",
+      "path" : "Supply.reference.externalDocument",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Supply.reference.externalDocument",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument"
+      }]
+    },
+    {
+      "id" : "Supply.precondition",
+      "path" : "Supply.precondition",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Supply.precondition",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Precondition"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "Supply",
+      "path" : "Supply",
+      "min" : 1,
+      "max" : "1"
+    },
+    {
+      "id" : "Supply.classCode",
+      "path" : "Supply.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "SPLY",
+      "fixedCode" : "SPLY",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClassSupply"
+      }
+    },
+    {
+      "id" : "Supply.moodCode",
+      "path" : "Supply.moodCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "Supply.realmCode",
+      "path" : "Supply.realmCode",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "Supply.typeId",
+      "path" : "Supply.typeId",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "Supply.templateId",
+      "path" : "Supply.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "Supply.id",
+      "path" : "Supply.id",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "Supply.code",
+      "path" : "Supply.code",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CD"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActCode"
+      }
+    },
+    {
+      "id" : "Supply.text",
+      "path" : "Supply.text",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+      }]
+    },
+    {
+      "id" : "Supply.statusCode",
+      "path" : "Supply.statusCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActStatus"
+      }
+    },
+    {
+      "id" : "Supply.effectiveTime",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype",
+        "valueCanonical" : "http://hl7.org/fhir/cda/StructureDefinition/SXCM-TS"
+      }],
+      "path" : "Supply.effectiveTime",
+      "representation" : ["typeAttr"],
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SXCM-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/PIVL-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"
+      }]
+    },
+    {
+      "id" : "Supply.priorityCode",
+      "path" : "Supply.priorityCode",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActPriority"
+      }
+    },
+    {
+      "id" : "Supply.repeatNumber",
+      "path" : "Supply.repeatNumber",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-INT"
+      }]
+    },
+    {
+      "id" : "Supply.independentInd",
+      "path" : "Supply.independentInd",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+      }]
+    },
+    {
+      "id" : "Supply.quantity",
+      "path" : "Supply.quantity",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
+      }]
+    },
+    {
+      "id" : "Supply.expectedUseTime",
+      "path" : "Supply.expectedUseTime",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+      }]
+    },
+    {
+      "id" : "Supply.product",
+      "path" : "Supply.product",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "Element"
+      }]
+    },
+    {
+      "id" : "Supply.product.typeCode",
+      "path" : "Supply.product.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "PRD",
+      "fixedCode" : "PRD",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetDirect"
+      }
+    },
+    {
+      "id" : "Supply.product.manufacturedProduct",
+      "path" : "Supply.product.manufacturedProduct",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ManufacturedProduct"
+      }]
+    },
+    {
+      "id" : "Supply.subject",
+      "path" : "Supply.subject",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "Element"
+      }]
+    },
+    {
+      "id" : "Supply.subject.typeCode",
+      "path" : "Supply.subject.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "SBJ",
+      "fixedCode" : "SBJ",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"
+      }
+    },
+    {
+      "id" : "Supply.subject.contextControlCode",
+      "path" : "Supply.subject.contextControlCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "OP",
+      "fixedCode" : "OP",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
+      }
+    },
+    {
+      "id" : "Supply.subject.awarenessCode",
+      "path" : "Supply.subject.awarenessCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-TargetAwareness"
+      }
+    },
+    {
+      "id" : "Supply.subject.relatedSubject",
+      "path" : "Supply.subject.relatedSubject",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject"
+      }]
+    },
+    {
+      "id" : "Supply.specimen",
+      "path" : "Supply.specimen",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Specimen"
+      }]
+    },
+    {
+      "id" : "Supply.performer",
+      "path" : "Supply.performer",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Performer2"
+      }]
+    },
+    {
+      "id" : "Supply.author",
+      "path" : "Supply.author",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Author"
+      }]
+    },
+    {
+      "id" : "Supply.informant",
+      "path" : "Supply.informant",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "Element"
+      }]
+    },
+    {
+      "id" : "Supply.informant.typeCode",
+      "path" : "Supply.informant.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "INF",
+      "fixedCode" : "INF",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator"
+      }
+    },
+    {
+      "id" : "Supply.informant.contextControlCode",
+      "path" : "Supply.informant.contextControlCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "OP",
+      "fixedCode" : "OP",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
+      }
+    },
+    {
+      "id" : "Supply.informant.assignedEntity",
+      "path" : "Supply.informant.assignedEntity",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+      }]
+    },
+    {
+      "id" : "Supply.informant.relatedEntity",
+      "path" : "Supply.informant.relatedEntity",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity"
+      }]
+    },
+    {
+      "id" : "Supply.participant",
+      "path" : "Supply.participant",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Participant2"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship",
+      "path" : "Supply.entryRelationship",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "sup-er-1",
+        "severity" : "error",
+        "human" : "Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act",
+        "expression" : "(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.typeCode",
+      "path" : "Supply.entryRelationship.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.inversionInd",
+      "path" : "Supply.entryRelationship.inversionInd",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "boolean"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.contextConductionInd",
+      "path" : "Supply.entryRelationship.contextConductionInd",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "boolean"
+      }],
+      "defaultValueBoolean" : true
+    },
+    {
+      "id" : "Supply.entryRelationship.sequenceNumber",
+      "path" : "Supply.entryRelationship.sequenceNumber",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/INT"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.negationInd",
+      "path" : "Supply.entryRelationship.negationInd",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "boolean"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.seperatableInd",
+      "path" : "Supply.entryRelationship.seperatableInd",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.observation",
+      "path" : "Supply.entryRelationship.observation",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Observation"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.regionOfInterest",
+      "path" : "Supply.entryRelationship.regionOfInterest",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.observationMedia",
+      "path" : "Supply.entryRelationship.observationMedia",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.substanceAdministration",
+      "path" : "Supply.entryRelationship.substanceAdministration",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.supply",
+      "path" : "Supply.entryRelationship.supply",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Supply"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.procedure",
+      "path" : "Supply.entryRelationship.procedure",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Procedure"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.encounter",
+      "path" : "Supply.entryRelationship.encounter",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Encounter"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.organizer",
+      "path" : "Supply.entryRelationship.organizer",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Organizer"
+      }]
+    },
+    {
+      "id" : "Supply.entryRelationship.act",
+      "path" : "Supply.entryRelationship.act",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Act"
+      }]
+    },
+    {
+      "id" : "Supply.reference",
+      "path" : "Supply.reference",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "Element"
+      }]
+    },
+    {
+      "id" : "Supply.reference.typeCode",
+      "path" : "Supply.reference.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "Supply.reference.seperatableInd",
+      "path" : "Supply.reference.seperatableInd",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+      }]
+    },
+    {
+      "id" : "Supply.reference.externalAct",
+      "path" : "Supply.reference.externalAct",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalAct"
+      }]
+    },
+    {
+      "id" : "Supply.reference.externalObservation",
+      "path" : "Supply.reference.externalObservation",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation"
+      }]
+    },
+    {
+      "id" : "Supply.reference.externalProcedure",
+      "path" : "Supply.reference.externalProcedure",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure"
+      }]
+    },
+    {
+      "id" : "Supply.reference.externalDocument",
+      "path" : "Supply.reference.externalDocument",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument"
+      }]
+    },
+    {
+      "id" : "Supply.precondition",
+      "path" : "Supply.precondition",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Precondition"
+      }]
+    }]
+  }
+}

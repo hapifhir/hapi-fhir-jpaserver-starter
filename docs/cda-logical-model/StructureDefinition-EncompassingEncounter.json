@@ -1,0 +1,663 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "EncompassingEncounter",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>This optional class represents the setting of the clinical encounter during which the documented act(s) or ServiceEvent occurred. Documents are not necessarily generated during an encounter, such as when a clinician, in response to an abnormal lab result, attempts to contact the patient but can't, and writes a Progress Note.</p>\n      <p>In some cases, the setting of the encounter is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is &quot;Diabetes Clinic Progress Note&quot;. The setting of an encounter can also be transmitted in the HealthCareFacility.code attribute. If HealthCareFacility.code is sent, it should be equivalent to or further specialize the value inherent in the ClinicalDocument.code (such as where the ClinicalDocument.code is simply &quot;Clinic Progress Note&quot; and the value of HealthCareFacility.code is &quot;cardiology clinic&quot;), and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.</p>\n      <p>EncompassingEncounter.dischargeDispositionCode can be used to depict the disposition of the patient at the time of hospital discharge (e.g., discharged to home, expired, against medical advice, etc.).</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/EncompassingEncounter",
+  "version" : "2.1.0-draft1",
+  "name" : "CDAR2.EncompassingEncounter",
+  "title" : "EncompassingEncounter (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "This optional class represents the setting of the clinical encounter during which the documented act(s) or ServiceEvent occurred. Documents are not necessarily generated during an encounter, such as when a clinician, in response to an abnormal lab result, attempts to contact the patient but can't, and writes a Progress Note.\nIn some cases, the setting of the encounter is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is \"Diabetes Clinic Progress Note\". The setting of an encounter can also be transmitted in the HealthCareFacility.code attribute. If HealthCareFacility.code is sent, it should be equivalent to or further specialize the value inherent in the ClinicalDocument.code (such as where the ClinicalDocument.code is simply \"Clinic Progress Note\" and the value of HealthCareFacility.code is \"cardiology clinic\"), and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.\nEncompassingEncounter.dischargeDispositionCode can be used to depict the disposition of the patient at the time of hospital discharge (e.g., discharged to home, expired, against medical advice, etc.).",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "EncompassingEncounter",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "EncompassingEncounter",
+      "path" : "EncompassingEncounter",
+      "short" : "Base for all types and resources",
+      "definition" : "Base definition for all types defined in FHIR type system.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.classCode",
+      "path" : "EncompassingEncounter.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "EncompassingEncounter.classCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "ENC",
+      "fixedCode" : "ENC",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClass"
+      }
+    },
+    {
+      "id" : "EncompassingEncounter.moodCode",
+      "path" : "EncompassingEncounter.moodCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "EncompassingEncounter.moodCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "EVN",
+      "fixedCode" : "EVN",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActMood"
+      }
+    },
+    {
+      "id" : "EncompassingEncounter.templateId",
+      "path" : "EncompassingEncounter.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EncompassingEncounter.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.id",
+      "path" : "EncompassingEncounter.id",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EncompassingEncounter.id",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.code",
+      "path" : "EncompassingEncounter.code",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EncompassingEncounter.code",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActEncounterCode"
+      }
+    },
+    {
+      "id" : "EncompassingEncounter.effectiveTime",
+      "path" : "EncompassingEncounter.effectiveTime",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "EncompassingEncounter.effectiveTime",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.sdtcAdmissionReferralSourceCode",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      },
+      {
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+        "valueString" : "admissionReferralSourceCode"
+      }],
+      "path" : "EncompassingEncounter.sdtcAdmissionReferralSourceCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EncompassingEncounter.sdtcAdmissionReferralSourceCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.dischargeDispositionCode",
+      "path" : "EncompassingEncounter.dischargeDispositionCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EncompassingEncounter.dischargeDispositionCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-USEncounterDischargeDisposition"
+      }
+    },
+    {
+      "id" : "EncompassingEncounter.responsibleParty",
+      "path" : "EncompassingEncounter.responsibleParty",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EncompassingEncounter.responsibleParty",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.responsibleParty.id",
+      "path" : "EncompassingEncounter.responsibleParty.id",
+      "representation" : ["xmlAttr"],
+      "short" : "Unique id for inter-element referencing",
+      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.responsibleParty.extension",
+      "path" : "EncompassingEncounter.responsibleParty.extension",
+      "slicing" : {
+        "discriminator" : [{
+          "type" : "value",
+          "path" : "url"
+        }],
+        "description" : "Extensions are always sliced by (at least) url",
+        "rules" : "open"
+      },
+      "short" : "Additional content defined by implementations",
+      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
+      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
+      "alias" : ["extensions",
+      "user content"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.responsibleParty.typeCode",
+      "path" : "EncompassingEncounter.responsibleParty.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "EncompassingEncounter.responsibleParty.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "RESP",
+      "fixedCode" : "RESP",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType"
+      }
+    },
+    {
+      "id" : "EncompassingEncounter.responsibleParty.assignedEntity",
+      "path" : "EncompassingEncounter.responsibleParty.assignedEntity",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "EncompassingEncounter.responsibleParty.assignedEntity",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.encounterParticipant",
+      "path" : "EncompassingEncounter.encounterParticipant",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EncompassingEncounter.encounterParticipant",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EncounterParticipant"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.location",
+      "path" : "EncompassingEncounter.location",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EncompassingEncounter.location",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.location.id",
+      "path" : "EncompassingEncounter.location.id",
+      "representation" : ["xmlAttr"],
+      "short" : "Unique id for inter-element referencing",
+      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.location.extension",
+      "path" : "EncompassingEncounter.location.extension",
+      "slicing" : {
+        "discriminator" : [{
+          "type" : "value",
+          "path" : "url"
+        }],
+        "description" : "Extensions are always sliced by (at least) url",
+        "rules" : "open"
+      },
+      "short" : "Additional content defined by implementations",
+      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
+      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
+      "alias" : ["extensions",
+      "user content"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.location.typeCode",
+      "path" : "EncompassingEncounter.location.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "EncompassingEncounter.location.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "LOC",
+      "fixedCode" : "LOC",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetLocation"
+      }
+    },
+    {
+      "id" : "EncompassingEncounter.location.healthCareFacility",
+      "path" : "EncompassingEncounter.location.healthCareFacility",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "EncompassingEncounter.location.healthCareFacility",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/HealthCareFacility"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "EncompassingEncounter",
+      "path" : "EncompassingEncounter",
+      "min" : 1,
+      "max" : "1"
+    },
+    {
+      "id" : "EncompassingEncounter.classCode",
+      "path" : "EncompassingEncounter.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "ENC",
+      "fixedCode" : "ENC",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClass"
+      }
+    },
+    {
+      "id" : "EncompassingEncounter.moodCode",
+      "path" : "EncompassingEncounter.moodCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "EVN",
+      "fixedCode" : "EVN",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActMood"
+      }
+    },
+    {
+      "id" : "EncompassingEncounter.templateId",
+      "path" : "EncompassingEncounter.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.id",
+      "path" : "EncompassingEncounter.id",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.code",
+      "path" : "EncompassingEncounter.code",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActEncounterCode"
+      }
+    },
+    {
+      "id" : "EncompassingEncounter.effectiveTime",
+      "path" : "EncompassingEncounter.effectiveTime",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.sdtcAdmissionReferralSourceCode",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      },
+      {
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+        "valueString" : "admissionReferralSourceCode"
+      }],
+      "path" : "EncompassingEncounter.sdtcAdmissionReferralSourceCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.dischargeDispositionCode",
+      "path" : "EncompassingEncounter.dischargeDispositionCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-USEncounterDischargeDisposition"
+      }
+    },
+    {
+      "id" : "EncompassingEncounter.responsibleParty",
+      "path" : "EncompassingEncounter.responsibleParty",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "Element"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.responsibleParty.typeCode",
+      "path" : "EncompassingEncounter.responsibleParty.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "RESP",
+      "fixedCode" : "RESP",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType"
+      }
+    },
+    {
+      "id" : "EncompassingEncounter.responsibleParty.assignedEntity",
+      "path" : "EncompassingEncounter.responsibleParty.assignedEntity",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.encounterParticipant",
+      "path" : "EncompassingEncounter.encounterParticipant",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EncounterParticipant"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.location",
+      "path" : "EncompassingEncounter.location",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "Element"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.location.typeCode",
+      "path" : "EncompassingEncounter.location.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "LOC",
+      "fixedCode" : "LOC",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetLocation"
+      }
+    },
+    {
+      "id" : "EncompassingEncounter.location.healthCareFacility",
+      "path" : "EncompassingEncounter.location.healthCareFacility",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/HealthCareFacility"
+      }]
+    }]
+  }
+}

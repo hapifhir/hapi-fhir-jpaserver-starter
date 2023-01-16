@@ -1,0 +1,1485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="RegionOfInterest"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
+      <p>A derivative of the RIM Observation class that represents a region of interest on an image, using an overlay shape. RegionOfInterest is used to make reference to specific regions in images, e.g., to specify the site of a physical finding by &quot;circling&quot; a region in a schematic picture of a human body. The units of the coordinate values in RegionOfInterest.value are in pixels, expressed as a list of integers. The origin is in the upper left hand corner, with positive X values going to the right and positive Y values going down. The relationship between a RegionOfInterest and its referenced ObservationMedia or ExternalObservation is specified by traversing the entryRelationship or reference class, respectively, where typeCode equals &quot;SUBJ&quot;. A RegionOfInterest must reference exactly one ObservationMedia or one ExternalObservation. If the RegionOfInterest is the target of a &lt;renderMultimedia&gt; reference, then it shall only reference an ObservationMedia and not an ExternalObservation.</p>
+      <p>An XML attribute &quot;ID&quot; of type XML ID, is added to RegionOfInterest within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).</p>
+    </div>
+  </text>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <url value="http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"/>
+  <version value="2.1.0-draft1"/>
+  <name value="CDAR2.RegionOfInterest"/>
+  <title value="RegionOfInterest (CDA Class)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2023-01-16T15:52:41+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+  </contact>
+  <description value="A derivative of the RIM Observation class that represents a region of interest on an image, using an overlay shape. RegionOfInterest is used to make reference to specific regions in images, e.g., to specify the site of a physical finding by &quot;circling&quot; a region in a schematic picture of a human body. The units of the coordinate values in RegionOfInterest.value are in pixels, expressed as a list of integers. The origin is in the upper left hand corner, with positive X values going to the right and positive Y values going down. The relationship between a RegionOfInterest and its referenced ObservationMedia or ExternalObservation is specified by traversing the entryRelationship or reference class, respectively, where typeCode equals &quot;SUBJ&quot;. A RegionOfInterest must reference exactly one ObservationMedia or one ExternalObservation. If the RegionOfInterest is the target of a &lt;renderMultimedia&gt; reference, then it shall only reference an ObservationMedia and not an ExternalObservation.&#xA;An XML attribute &quot;ID&quot; of type XML ID, is added to RegionOfInterest within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification)."/>
+  <fhirVersion value="5.0.0-ballot"/>
+  <mapping>
+    <identity value="rim"/>
+    <uri value="http://hl7.org/v3"/>
+    <name value="RIM Mapping"/>
+  </mapping>
+  <kind value="logical"/>
+  <abstract value="false"/>
+  <type value="RegionOfInterest"/>
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
+  <derivation value="specialization"/>
+  <snapshot>
+    <element id="RegionOfInterest">
+      <path value="RegionOfInterest"/>
+      <short value="Base for all types and resources"/>
+      <definition value="Base definition for all types defined in FHIR type system."/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Base"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <isModifier value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="RegionOfInterest.ID">
+      <path value="RegionOfInterest.ID"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.ID"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.classCode">
+      <path value="RegionOfInterest.classCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.classCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="ROIOVL"/>
+      <fixedCode value="ROIOVL"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClassROI"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.moodCode">
+      <path value="RegionOfInterest.moodCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.moodCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="EVN"/>
+      <fixedCode value="EVN"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActMood"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.realmCode">
+      <path value="RegionOfInterest.realmCode"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="RegionOfInterest.realmCode"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.typeId">
+      <path value="RegionOfInterest.typeId"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.typeId"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.templateId">
+      <path value="RegionOfInterest.templateId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="RegionOfInterest.templateId"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.id">
+      <path value="RegionOfInterest.id"/>
+      <min value="1"/>
+      <max value="*"/>
+      <base>
+        <path value="RegionOfInterest.id"/>
+        <min value="1"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.code">
+      <path value="RegionOfInterest.code"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.code"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.value">
+      <path value="RegionOfInterest.value"/>
+      <min value="1"/>
+      <max value="*"/>
+      <base>
+        <path value="RegionOfInterest.value"/>
+        <min value="1"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/INT"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.subject">
+      <path value="RegionOfInterest.subject"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.subject"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="Element"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+    </element>
+    <element id="RegionOfInterest.subject.id">
+      <path value="RegionOfInterest.subject.id"/>
+      <representation value="xmlAttr"/>
+      <short value="Unique id for inter-element referencing"/>
+      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Element.id"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="id"/>
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String"/>
+      </type>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="RegionOfInterest.subject.extension">
+      <path value="RegionOfInterest.subject.extension"/>
+      <slicing>
+        <discriminator>
+          <type value="value"/>
+          <path value="url"/>
+        </discriminator>
+        <description value="Extensions are always sliced by (at least) url"/>
+        <rules value="open"/>
+      </slicing>
+      <short value="Additional content defined by implementations"/>
+      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
+      <alias value="extensions"/>
+      <alias value="user content"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Element.extension"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Extension"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+      <constraint>
+        <key value="ext-1"/>
+        <severity value="error"/>
+        <human value="Must have either extensions or value[x], not both"/>
+        <expression value="extension.exists() != value.exists()"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
+      </constraint>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="RegionOfInterest.subject.typeCode">
+      <path value="RegionOfInterest.subject.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.subject.typeCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="SBJ"/>
+      <fixedCode value="SBJ"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.subject.contextControlCode">
+      <path value="RegionOfInterest.subject.contextControlCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.subject.contextControlCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="OP"/>
+      <fixedCode value="OP"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.subject.awarenessCode">
+      <path value="RegionOfInterest.subject.awarenessCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.subject.awarenessCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-TargetAwareness"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.subject.relatedSubject">
+      <path value="RegionOfInterest.subject.relatedSubject"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.subject.relatedSubject"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.specimen">
+      <path value="RegionOfInterest.specimen"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="RegionOfInterest.specimen"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Specimen"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.performer">
+      <path value="RegionOfInterest.performer"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="RegionOfInterest.performer"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Performer2"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.author">
+      <path value="RegionOfInterest.author"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="RegionOfInterest.author"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Author"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.informant">
+      <path value="RegionOfInterest.informant"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="RegionOfInterest.informant"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Element"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+    </element>
+    <element id="RegionOfInterest.informant.id">
+      <path value="RegionOfInterest.informant.id"/>
+      <representation value="xmlAttr"/>
+      <short value="Unique id for inter-element referencing"/>
+      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Element.id"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="id"/>
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String"/>
+      </type>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="RegionOfInterest.informant.extension">
+      <path value="RegionOfInterest.informant.extension"/>
+      <slicing>
+        <discriminator>
+          <type value="value"/>
+          <path value="url"/>
+        </discriminator>
+        <description value="Extensions are always sliced by (at least) url"/>
+        <rules value="open"/>
+      </slicing>
+      <short value="Additional content defined by implementations"/>
+      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
+      <alias value="extensions"/>
+      <alias value="user content"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Element.extension"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Extension"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+      <constraint>
+        <key value="ext-1"/>
+        <severity value="error"/>
+        <human value="Must have either extensions or value[x], not both"/>
+        <expression value="extension.exists() != value.exists()"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
+      </constraint>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="RegionOfInterest.informant.typeCode">
+      <path value="RegionOfInterest.informant.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.informant.typeCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="INF"/>
+      <fixedCode value="INF"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.informant.contextControlCode">
+      <path value="RegionOfInterest.informant.contextControlCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.informant.contextControlCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="OP"/>
+      <fixedCode value="OP"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.informant.assignedEntity">
+      <path value="RegionOfInterest.informant.assignedEntity"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.informant.assignedEntity"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.informant.relatedEntity">
+      <path value="RegionOfInterest.informant.relatedEntity"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.informant.relatedEntity"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.participant">
+      <path value="RegionOfInterest.participant"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="RegionOfInterest.participant"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Participant2"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship">
+      <path value="RegionOfInterest.entryRelationship"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Element"/>
+      </type>
+      <constraint>
+        <key value="roi-er-1"/>
+        <severity value="error"/>
+        <human value="Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act"/>
+        <expression value="(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1"/>
+      </constraint>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.id">
+      <path value="RegionOfInterest.entryRelationship.id"/>
+      <representation value="xmlAttr"/>
+      <short value="Unique id for inter-element referencing"/>
+      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Element.id"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="id"/>
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String"/>
+      </type>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.extension">
+      <path value="RegionOfInterest.entryRelationship.extension"/>
+      <slicing>
+        <discriminator>
+          <type value="value"/>
+          <path value="url"/>
+        </discriminator>
+        <description value="Extensions are always sliced by (at least) url"/>
+        <rules value="open"/>
+      </slicing>
+      <short value="Additional content defined by implementations"/>
+      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
+      <alias value="extensions"/>
+      <alias value="user content"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Element.extension"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Extension"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+      <constraint>
+        <key value="ext-1"/>
+        <severity value="error"/>
+        <human value="Must have either extensions or value[x], not both"/>
+        <expression value="extension.exists() != value.exists()"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
+      </constraint>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.typeCode">
+      <path value="RegionOfInterest.entryRelationship.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.typeCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.inversionInd">
+      <path value="RegionOfInterest.entryRelationship.inversionInd"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.inversionInd"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.contextConductionInd">
+      <path value="RegionOfInterest.entryRelationship.contextConductionInd"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.contextConductionInd"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+      </type>
+      <defaultValueBoolean value="true"/>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.sequenceNumber">
+      <path value="RegionOfInterest.entryRelationship.sequenceNumber"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.sequenceNumber"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/INT"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.negationInd">
+      <path value="RegionOfInterest.entryRelationship.negationInd"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.negationInd"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.seperatableInd">
+      <path value="RegionOfInterest.entryRelationship.seperatableInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.seperatableInd"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.observation">
+      <path value="RegionOfInterest.entryRelationship.observation"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.observation"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Observation"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.regionOfInterest">
+      <path value="RegionOfInterest.entryRelationship.regionOfInterest"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.regionOfInterest"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.observationMedia">
+      <path value="RegionOfInterest.entryRelationship.observationMedia"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.observationMedia"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.substanceAdministration">
+      <path value="RegionOfInterest.entryRelationship.substanceAdministration"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.substanceAdministration"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.supply">
+      <path value="RegionOfInterest.entryRelationship.supply"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.supply"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Supply"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.procedure">
+      <path value="RegionOfInterest.entryRelationship.procedure"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.procedure"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Procedure"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.encounter">
+      <path value="RegionOfInterest.entryRelationship.encounter"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.encounter"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Encounter"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.organizer">
+      <path value="RegionOfInterest.entryRelationship.organizer"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.organizer"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Organizer"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.act">
+      <path value="RegionOfInterest.entryRelationship.act"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.entryRelationship.act"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Act"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference">
+      <path value="RegionOfInterest.reference"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="RegionOfInterest.reference"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Element"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+    </element>
+    <element id="RegionOfInterest.reference.id">
+      <path value="RegionOfInterest.reference.id"/>
+      <representation value="xmlAttr"/>
+      <short value="Unique id for inter-element referencing"/>
+      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Element.id"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="id"/>
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String"/>
+      </type>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="RegionOfInterest.reference.extension">
+      <path value="RegionOfInterest.reference.extension"/>
+      <slicing>
+        <discriminator>
+          <type value="value"/>
+          <path value="url"/>
+        </discriminator>
+        <description value="Extensions are always sliced by (at least) url"/>
+        <rules value="open"/>
+      </slicing>
+      <short value="Additional content defined by implementations"/>
+      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
+      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
+      <alias value="extensions"/>
+      <alias value="user content"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Element.extension"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Extension"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+      <constraint>
+        <key value="ext-1"/>
+        <severity value="error"/>
+        <human value="Must have either extensions or value[x], not both"/>
+        <expression value="extension.exists() != value.exists()"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
+      </constraint>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="RegionOfInterest.reference.typeCode">
+      <path value="RegionOfInterest.reference.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.reference.typeCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference.seperatableInd">
+      <path value="RegionOfInterest.reference.seperatableInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.reference.seperatableInd"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference.externalAct">
+      <path value="RegionOfInterest.reference.externalAct"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.reference.externalAct"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalAct"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference.externalObservation">
+      <path value="RegionOfInterest.reference.externalObservation"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.reference.externalObservation"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference.externalProcedure">
+      <path value="RegionOfInterest.reference.externalProcedure"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.reference.externalProcedure"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference.externalDocument">
+      <path value="RegionOfInterest.reference.externalDocument"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="RegionOfInterest.reference.externalDocument"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.precondition">
+      <path value="RegionOfInterest.precondition"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="RegionOfInterest.precondition"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Precondition"/>
+      </type>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="RegionOfInterest">
+      <path value="RegionOfInterest"/>
+      <min value="1"/>
+      <max value="1"/>
+    </element>
+    <element id="RegionOfInterest.ID">
+      <path value="RegionOfInterest.ID"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.classCode">
+      <path value="RegionOfInterest.classCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="ROIOVL"/>
+      <fixedCode value="ROIOVL"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClassROI"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.moodCode">
+      <path value="RegionOfInterest.moodCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="EVN"/>
+      <fixedCode value="EVN"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActMood"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.realmCode">
+      <path value="RegionOfInterest.realmCode"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.typeId">
+      <path value="RegionOfInterest.typeId"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.templateId">
+      <path value="RegionOfInterest.templateId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.id">
+      <path value="RegionOfInterest.id"/>
+      <min value="1"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.code">
+      <path value="RegionOfInterest.code"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.value">
+      <path value="RegionOfInterest.value"/>
+      <min value="1"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/INT"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.subject">
+      <path value="RegionOfInterest.subject"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="Element"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.subject.typeCode">
+      <path value="RegionOfInterest.subject.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="SBJ"/>
+      <fixedCode value="SBJ"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.subject.contextControlCode">
+      <path value="RegionOfInterest.subject.contextControlCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="OP"/>
+      <fixedCode value="OP"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.subject.awarenessCode">
+      <path value="RegionOfInterest.subject.awarenessCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-TargetAwareness"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.subject.relatedSubject">
+      <path value="RegionOfInterest.subject.relatedSubject"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.specimen">
+      <path value="RegionOfInterest.specimen"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Specimen"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.performer">
+      <path value="RegionOfInterest.performer"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Performer2"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.author">
+      <path value="RegionOfInterest.author"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Author"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.informant">
+      <path value="RegionOfInterest.informant"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="Element"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.informant.typeCode">
+      <path value="RegionOfInterest.informant.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="INF"/>
+      <fixedCode value="INF"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.informant.contextControlCode">
+      <path value="RegionOfInterest.informant.contextControlCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="OP"/>
+      <fixedCode value="OP"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
+      </binding>
+    </element>
+    <element id="RegionOfInterest.informant.assignedEntity">
+      <path value="RegionOfInterest.informant.assignedEntity"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.informant.relatedEntity">
+      <path value="RegionOfInterest.informant.relatedEntity"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.participant">
+      <path value="RegionOfInterest.participant"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Participant2"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship">
+      <path value="RegionOfInterest.entryRelationship"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="Element"/>
+      </type>
+      <constraint>
+        <key value="roi-er-1"/>
+        <severity value="error"/>
+        <human value="Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act"/>
+        <expression value="(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1"/>
+      </constraint>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.typeCode">
+      <path value="RegionOfInterest.entryRelationship.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.inversionInd">
+      <path value="RegionOfInterest.entryRelationship.inversionInd"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="boolean"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.contextConductionInd">
+      <path value="RegionOfInterest.entryRelationship.contextConductionInd"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="boolean"/>
+      </type>
+      <defaultValueBoolean value="true"/>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.sequenceNumber">
+      <path value="RegionOfInterest.entryRelationship.sequenceNumber"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/INT"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.negationInd">
+      <path value="RegionOfInterest.entryRelationship.negationInd"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="boolean"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.seperatableInd">
+      <path value="RegionOfInterest.entryRelationship.seperatableInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.observation">
+      <path value="RegionOfInterest.entryRelationship.observation"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Observation"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.regionOfInterest">
+      <path value="RegionOfInterest.entryRelationship.regionOfInterest"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.observationMedia">
+      <path value="RegionOfInterest.entryRelationship.observationMedia"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.substanceAdministration">
+      <path value="RegionOfInterest.entryRelationship.substanceAdministration"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.supply">
+      <path value="RegionOfInterest.entryRelationship.supply"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Supply"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.procedure">
+      <path value="RegionOfInterest.entryRelationship.procedure"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Procedure"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.encounter">
+      <path value="RegionOfInterest.entryRelationship.encounter"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Encounter"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.organizer">
+      <path value="RegionOfInterest.entryRelationship.organizer"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Organizer"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.entryRelationship.act">
+      <path value="RegionOfInterest.entryRelationship.act"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Act"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference">
+      <path value="RegionOfInterest.reference"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="Element"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference.typeCode">
+      <path value="RegionOfInterest.reference.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference.seperatableInd">
+      <path value="RegionOfInterest.reference.seperatableInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference.externalAct">
+      <path value="RegionOfInterest.reference.externalAct"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalAct"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference.externalObservation">
+      <path value="RegionOfInterest.reference.externalObservation"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference.externalProcedure">
+      <path value="RegionOfInterest.reference.externalProcedure"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.reference.externalDocument">
+      <path value="RegionOfInterest.reference.externalDocument"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument"/>
+      </type>
+    </element>
+    <element id="RegionOfInterest.precondition">
+      <path value="RegionOfInterest.precondition"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Precondition"/>
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

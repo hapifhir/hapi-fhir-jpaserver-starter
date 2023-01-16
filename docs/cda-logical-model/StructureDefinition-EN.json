@@ -1,0 +1,296 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "EN",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A name for a person, organization, place or thing. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for entity name values are &quot;Jim Bob Walton, Jr.&quot;, &quot;Health Level Seven, Inc.&quot;, &quot;Lake Tahoe&quot;, etc. An entity name may be as simple as a character string or may consist of several entity name parts, such as, &quot;Jim&quot;, &quot;Bob&quot;, &quot;Walton&quot;, and &quot;Jr.&quot;, &quot;Health Level Seven&quot; and &quot;Inc.&quot;, &quot;Lake&quot; and &quot;Tahoe&quot;.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-xml-no-order",
+    "valueBoolean" : true
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/EN",
+  "version" : "2.1.0-draft1",
+  "name" : "EN",
+  "title" : "EN: EntityName (V3 Data Type)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "A name for a person, organization, place or thing. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for entity name values are \"Jim Bob Walton, Jr.\", \"Health Level Seven, Inc.\", \"Lake Tahoe\", etc. An entity name may be as simple as a character string or may consist of several entity name parts, such as, \"Jim\", \"Bob\", \"Walton\", and \"Jr.\", \"Health Level Seven\" and \"Inc.\", \"Lake\" and \"Tahoe\".",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "EN",
+  "baseDefinition" : "http://hl7.org/fhir/cda/StructureDefinition/ANY",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "EN",
+      "path" : "EN",
+      "short" : "Base for all types and resources",
+      "definition" : "A name for a person, organization, place or thing. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for entity name values are \"Jim Bob Walton, Jr.\", \"Health Level Seven, Inc.\", \"Lake Tahoe\", etc. An entity name may be as simple as a character string or may consist of several entity name parts, such as, \"Jim\", \"Bob\", \"Walton\", and \"Jr.\", \"Health Level Seven\" and \"Inc.\", \"Lake\" and \"Tahoe\".",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "EN.nullFlavor",
+      "path" : "EN.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
+    },
+    {
+      "id" : "EN.use",
+      "path" : "EN.use",
+      "representation" : ["xmlAttr"],
+      "label" : "Use Code",
+      "definition" : "A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EN.use",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityNameUse"
+      }
+    },
+    {
+      "id" : "EN.delimiter",
+      "path" : "EN.delimiter",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.delimiter",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "EN.family",
+      "path" : "EN.family",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.family",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "EN.given",
+      "path" : "EN.given",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.given",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "EN.prefix",
+      "path" : "EN.prefix",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.prefix",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "EN.suffix",
+      "path" : "EN.suffix",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "EN.suffix",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "EN.other",
+      "path" : "EN.other",
+      "representation" : ["xmlText"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EN.other",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string"
+      }]
+    },
+    {
+      "id" : "EN.validTime",
+      "path" : "EN.validTime",
+      "label" : "Valid Time",
+      "definition" : "An interval of time specifying the time during which the name is or was used for the entity. This accomodates the fact that people change names for people, places and things.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "EN.validTime",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "EN",
+      "path" : "EN",
+      "definition" : "A name for a person, organization, place or thing. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for entity name values are \"Jim Bob Walton, Jr.\", \"Health Level Seven, Inc.\", \"Lake Tahoe\", etc. An entity name may be as simple as a character string or may consist of several entity name parts, such as, \"Jim\", \"Bob\", \"Walton\", and \"Jr.\", \"Health Level Seven\" and \"Inc.\", \"Lake\" and \"Tahoe\".",
+      "min" : 1,
+      "max" : "*"
+    },
+    {
+      "id" : "EN.use",
+      "path" : "EN.use",
+      "representation" : ["xmlAttr"],
+      "label" : "Use Code",
+      "definition" : "A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityNameUse"
+      }
+    },
+    {
+      "id" : "EN.delimiter",
+      "path" : "EN.delimiter",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "EN.family",
+      "path" : "EN.family",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "EN.given",
+      "path" : "EN.given",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "EN.prefix",
+      "path" : "EN.prefix",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "EN.suffix",
+      "path" : "EN.suffix",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP"
+      }]
+    },
+    {
+      "id" : "EN.other",
+      "path" : "EN.other",
+      "representation" : ["xmlText"],
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "string"
+      }]
+    },
+    {
+      "id" : "EN.validTime",
+      "path" : "EN.validTime",
+      "label" : "Valid Time",
+      "definition" : "An interval of time specifying the time during which the name is or was used for the entity. This accomodates the fact that people change names for people, places and things.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+      }]
+    }]
+  }
+}

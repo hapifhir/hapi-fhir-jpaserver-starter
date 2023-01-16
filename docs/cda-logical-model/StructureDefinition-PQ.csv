@@ -1,0 +1,12 @@
+"Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
+"PQ","PQ","","","",1,*,"","","","","Base for all types and resources","A dimensioned quantity expressing the result of a measurement act.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"PQ.nullFlavor","PQ.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"PQ.inclusive","PQ.inclusive","","","",0,1,"","","","boolean {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"PQ.inclusive",0,1,"",""
+"PQ.unit","PQ.unit","","","Unit of Measure",0,1,"","","","code {[]} {[]}
+","","The unit of measure specified in the Unified Code for Units of Measure (UCUM) [].","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""1""/>","","","","","","",,,,,"",,,,"PQ.unit",0,1,"",""
+"PQ.value","PQ.value","","","Maginitude Value",0,1,"","","","decimal {[]} {[]}
+","","The magnitude of the quantity measured in terms of the unit.","","","","","","","","","",,,,,"",,,,"PQ.value",0,1,"",""
+"PQ.translation","PQ.translation","","","Translation",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/PQR {[]} {[]}
+","","An alternative representation of the same physical quantity expressed in a different unit, of a different unit code system and possibly with a different value.","","","","","","","","","",,,,,"",,,,"PQ.translation",0,*,"",""

@@ -1,0 +1,16 @@
+"Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
+"HealthCareFacility","HealthCareFacility","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"HealthCareFacility.classCode","HealthCareFacility.classCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SDLOC""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-RoleClassServiceDeliveryLocation","",,,,"HealthCareFacility.classCode",1,1,"",""
+"HealthCareFacility.templateId","HealthCareFacility.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"HealthCareFacility.templateId",0,*,"",""
+"HealthCareFacility.id","HealthCareFacility.id","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"HealthCareFacility.id",0,*,"",""
+"HealthCareFacility.sdtcIdentifiedBy","HealthCareFacility.sdtcIdentifiedBy","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/IdentifiedBy {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"HealthCareFacility.sdtcIdentifiedBy",0,*,"",""
+"HealthCareFacility.code","HealthCareFacility.code","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ServiceDeliveryLocationRoleType","",,,,"HealthCareFacility.code",0,1,"",""
+"HealthCareFacility.location","HealthCareFacility.location","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Place {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"HealthCareFacility.location",0,1,"",""
+"HealthCareFacility.serviceProviderOrganization","HealthCareFacility.serviceProviderOrganization","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Organization {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"HealthCareFacility.serviceProviderOrganization",0,1,"",""

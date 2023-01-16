@@ -1,0 +1,337 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "ENXP",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A character string token representing a part of a name. May have a type code signifying the role of the part in the whole entity name, and a qualifier code for more detail about the name part type. Typical name parts for person names are given names, and family names, titles, etc.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/ENXP",
+  "version" : "2.1.0-draft1",
+  "name" : "ENXP",
+  "title" : "ENXP: Entity Name Part (V3 Data Type)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "A character string token representing a part of a name. May have a type code signifying the role of the part in the whole entity name, and a qualifier code for more detail about the name part type. Typical name parts for person names are given names, and family names, titles, etc.",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "ENXP",
+  "baseDefinition" : "http://hl7.org/fhir/cda/StructureDefinition/ST",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "ENXP",
+      "path" : "ENXP",
+      "short" : "Base for all types and resources",
+      "definition" : "The character string data type stands for text data, primarily intended for machine processing (e.g., sorting, querying, indexing, etc.) Used for names, symbols, and formal expressions.",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "ENXP.nullFlavor",
+      "path" : "ENXP.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
+    },
+    {
+      "id" : "ENXP.charset",
+      "path" : "ENXP.charset",
+      "representation" : ["xmlAttr"],
+      "label" : "Charset",
+      "definition" : "For character-based encoding types, this property specifies the character set and character encoding used. The charset shall be identified by an Internet Assigned Numbers Authority (IANA) Charset Registration [] in accordance with RFC 2978 [].",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ED.charset",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "ENXP.compression",
+      "path" : "ENXP.compression",
+      "representation" : ["xmlAttr"],
+      "label" : "Compression",
+      "definition" : "Indicates whether the raw byte data is compressed, and what compression algorithm was used.",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "ED.compression",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-CompressionAlgorithm"
+      }
+    },
+    {
+      "id" : "ENXP.integrityCheck",
+      "path" : "ENXP.integrityCheck",
+      "representation" : ["xmlAttr"],
+      "label" : "Integrity Check",
+      "definition" : "The integrity check is a short binary value representing a cryptographically strong checksum that is calculated over the binary data. The purpose of this property, when communicated with a reference is for anyone to validate later whether the reference still resolved to the same data that the reference resolved to when the encapsulated data value with reference was created.",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "ED.integrityCheck",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "base64Binary"
+      }]
+    },
+    {
+      "id" : "ENXP.integrityCheckAlgorithm",
+      "path" : "ENXP.integrityCheckAlgorithm",
+      "representation" : ["xmlAttr"],
+      "label" : "Integrity Check Algorithm",
+      "definition" : "Specifies the algorithm used to compute the integrityCheck value. The cryptographically strong checksum algorithm Secure Hash Algorithm-1 (SHA-1) is currently the industry standard. It has superseded the MD5 algorithm only a couple of years ago, when certain flaws in the security of MD5 were discovered. Currently the SHA-1 hash algorithm is the default choice for the integrity check algorithm. Note that SHA-256 is also entering widespread usage.",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "ED.integrityCheckAlgorithm",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-IntegrityCheckAlgorithm"
+      }
+    },
+    {
+      "id" : "ENXP.language",
+      "path" : "ENXP.language",
+      "representation" : ["xmlAttr"],
+      "label" : "Language",
+      "definition" : "For character based information the language property specifies the human language of the text.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ED.language",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "ENXP.mediaType",
+      "path" : "ENXP.mediaType",
+      "representation" : ["xmlAttr"],
+      "label" : "Media Type",
+      "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ED.mediaType",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "fixedCode" : "text/plain"
+    },
+    {
+      "id" : "ENXP.representation",
+      "path" : "ENXP.representation",
+      "representation" : ["xmlAttr"],
+      "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ED.representation",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "fixedCode" : "TXT"
+    },
+    {
+      "id" : "ENXP.data[x]",
+      "path" : "ENXP.data[x]",
+      "representation" : ["xmlText"],
+      "definition" : "The string value",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ED.data[x]",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string"
+      }]
+    },
+    {
+      "id" : "ENXP.reference",
+      "path" : "ENXP.reference",
+      "label" : "Reference",
+      "definition" : "A telecommunication address (TEL), such as a URL for HTTP or FTP, which will resolve to precisely the same binary data that could as well have been provided as inline data.",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "ED.reference",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TEL"
+      }]
+    },
+    {
+      "id" : "ENXP.thumbnail",
+      "path" : "ENXP.thumbnail",
+      "label" : "Thumbnail",
+      "definition" : "An abbreviated rendition of the full data. A thumbnail requires significantly fewer resources than the full data, while still maintaining some distinctive similarity with the full data. A thumbnail is typically used with by-reference encapsulated data. It allows a user to select data more efficiently before actually downloading through the reference.",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "ED.thumbnail",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+      }]
+    },
+    {
+      "id" : "ENXP.partType",
+      "path" : "ENXP.partType",
+      "representation" : ["xmlAttr"],
+      "label" : "Name Part Type Code",
+      "definition" : "Indicates whether the name part is a given name, family name, prefix, suffix, etc.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ENXP.partType",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityNamePartType"
+      }
+    },
+    {
+      "id" : "ENXP.qualifier",
+      "path" : "ENXP.qualifier",
+      "representation" : ["xmlAttr"],
+      "label" : "Qualifier Code",
+      "definition" : "qualifier is a set of codes each of which specifies a certain subcategory of the name part in addition to the main name part type. For example, a given name may be flagged as a nickname, a family name may be a pseudonym or a name of public records.",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ENXP.qualifier",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityNamePartQualifier"
+      }
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "ENXP",
+      "path" : "ENXP",
+      "min" : 1,
+      "max" : "*"
+    },
+    {
+      "id" : "ENXP.partType",
+      "path" : "ENXP.partType",
+      "representation" : ["xmlAttr"],
+      "label" : "Name Part Type Code",
+      "definition" : "Indicates whether the name part is a given name, family name, prefix, suffix, etc.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityNamePartType"
+      }
+    },
+    {
+      "id" : "ENXP.qualifier",
+      "path" : "ENXP.qualifier",
+      "representation" : ["xmlAttr"],
+      "label" : "Qualifier Code",
+      "definition" : "qualifier is a set of codes each of which specifies a certain subcategory of the name part in addition to the main name part type. For example, a given name may be flagged as a nickname, a family name may be a pseudonym or a name of public records.",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "code"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityNamePartQualifier"
+      }
+    }]
+  }
+}

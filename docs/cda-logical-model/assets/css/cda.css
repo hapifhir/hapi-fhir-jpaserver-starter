@@ -1,0 +1,6 @@
+/* CDA family-specific colors */
+:root {
+  --navbar-bg-color: #2E8B57; /* 2. Header container color */
+  --footer-container-bg-color: #2E8B57; /* 4. Footer container color */
+  --btn-hover-color: #34d379;  /* 6. Menu button hover color */  
+}

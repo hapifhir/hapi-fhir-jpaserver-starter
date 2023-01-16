@@ -1,0 +1,22 @@
+"Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
+"LegalAuthenticator","LegalAuthenticator","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"LegalAuthenticator.nullFlavor","LegalAuthenticator.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"LegalAuthenticator.nullFlavor",0,1,"",""
+"LegalAuthenticator.typeCode","LegalAuthenticator.typeCode","","","",0,1,"","","","code {[]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""LA""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationType","",,,,"LegalAuthenticator.typeCode",0,1,"",""
+"LegalAuthenticator.contextControlCode","LegalAuthenticator.contextControlCode","","","",0,1,"","","","code {[]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ContextControl","",,,,"LegalAuthenticator.contextControlCode",0,1,"",""
+"LegalAuthenticator.realmCode","LegalAuthenticator.realmCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/CS {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question","","","","","","","","","",,,,,"",,,,"LegalAuthenticator.realmCode",0,*,"",""
+"LegalAuthenticator.typeId","LegalAuthenticator.typeId","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.","","","","","","","","","",,,,,"",,,,"LegalAuthenticator.typeId",0,1,"",""
+"LegalAuthenticator.templateId","LegalAuthenticator.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"LegalAuthenticator.templateId",0,*,"",""
+"LegalAuthenticator.time","LegalAuthenticator.time","","","",1,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/TS {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"LegalAuthenticator.time",1,1,"",""
+"LegalAuthenticator.signatureCode","LegalAuthenticator.signatureCode","","","",1,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CS {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"LegalAuthenticator.signatureCode",1,1,"",""
+"LegalAuthenticator.sdtcSignatureText","LegalAuthenticator.sdtcSignatureText","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ED {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"LegalAuthenticator.sdtcSignatureText",0,1,"",""
+"LegalAuthenticator.assignedEntity","LegalAuthenticator.assignedEntity","","","",1,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"LegalAuthenticator.assignedEntity",1,1,"",""

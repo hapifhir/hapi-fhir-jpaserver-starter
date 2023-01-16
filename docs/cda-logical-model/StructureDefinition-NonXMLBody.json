@@ -1,0 +1,217 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "NonXMLBody",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The NonXMLBody class represents a document body that is in some format other than XML. NonXMLBody.text is used to reference data that is stored externally to the CDA document or to encode the data directly inline.</p>\n      <p>Rendering a referenced non-XML body requires a software tool that recognizes the particular MIME media type of the blob.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/NonXMLBody",
+  "version" : "2.1.0-draft1",
+  "name" : "CDAR2.NonXMLBody",
+  "title" : "NonXMLBody (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "The NonXMLBody class represents a document body that is in some format other than XML. NonXMLBody.text is used to reference data that is stored externally to the CDA document or to encode the data directly inline.\nRendering a referenced non-XML body requires a software tool that recognizes the particular MIME media type of the blob.",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "NonXMLBody",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "NonXMLBody",
+      "path" : "NonXMLBody",
+      "short" : "Base for all types and resources",
+      "definition" : "Base definition for all types defined in FHIR type system.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "NonXMLBody.classCode",
+      "path" : "NonXMLBody.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "NonXMLBody.classCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "DOCBODY",
+      "fixedCode" : "DOCBODY",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer"
+      }
+    },
+    {
+      "id" : "NonXMLBody.moodCode",
+      "path" : "NonXMLBody.moodCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "NonXMLBody.moodCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "EVN",
+      "fixedCode" : "EVN",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActMood"
+      }
+    },
+    {
+      "id" : "NonXMLBody.text",
+      "path" : "NonXMLBody.text",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "NonXMLBody.text",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+      }]
+    },
+    {
+      "id" : "NonXMLBody.confidentialityCode",
+      "path" : "NonXMLBody.confidentialityCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "NonXMLBody.confidentialityCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }]
+    },
+    {
+      "id" : "NonXMLBody.languageCode",
+      "path" : "NonXMLBody.languageCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "NonXMLBody.languageCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-HumanLanguage"
+      }
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "NonXMLBody",
+      "path" : "NonXMLBody",
+      "min" : 1,
+      "max" : "1"
+    },
+    {
+      "id" : "NonXMLBody.classCode",
+      "path" : "NonXMLBody.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "DOCBODY",
+      "fixedCode" : "DOCBODY",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer"
+      }
+    },
+    {
+      "id" : "NonXMLBody.moodCode",
+      "path" : "NonXMLBody.moodCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "EVN",
+      "fixedCode" : "EVN",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActMood"
+      }
+    },
+    {
+      "id" : "NonXMLBody.text",
+      "path" : "NonXMLBody.text",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+      }]
+    },
+    {
+      "id" : "NonXMLBody.confidentialityCode",
+      "path" : "NonXMLBody.confidentialityCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }]
+    },
+    {
+      "id" : "NonXMLBody.languageCode",
+      "path" : "NonXMLBody.languageCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-HumanLanguage"
+      }
+    }]
+  }
+}

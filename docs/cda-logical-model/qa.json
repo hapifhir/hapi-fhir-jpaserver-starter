@@ -1,0 +1,12 @@
+{
+  "url" : "http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core",
+  "name" : "ClinicalDocumentArchitectureV201",
+  "package-id" : "hl7.fhir.cda",
+  "ig-ver" : "2.1.0-draft1",
+  "date" : "Mon, 16 Jan, 2023 15:52:41 +0100",
+  "errs" : 442,
+  "warnings" : 20,
+  "hints" : 0,
+  "version" : "5.0.0-ballot",
+  "tool" : "5.0.0-snapshot2 (3)"
+}

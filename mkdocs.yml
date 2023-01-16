@@ -13,3 +13,4 @@ nav:
   - changelog.md
   - api.md
   - docker.md
+  - matchbox-engine.md

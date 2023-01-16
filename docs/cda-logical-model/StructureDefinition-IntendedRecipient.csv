@@ -1,0 +1,18 @@
+"Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
+"IntendedRecipient","IntendedRecipient","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"IntendedRecipient.classCode","IntendedRecipient.classCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ASSIGNED""/>","","","","","","",,,,,"",,,,"IntendedRecipient.classCode",1,1,"",""
+"IntendedRecipient.templateId","IntendedRecipient.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"IntendedRecipient.templateId",0,*,"",""
+"IntendedRecipient.id","IntendedRecipient.id","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"IntendedRecipient.id",0,*,"",""
+"IntendedRecipient.sdtcIdentifiedBy","IntendedRecipient.sdtcIdentifiedBy","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/IdentifiedBy {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"IntendedRecipient.sdtcIdentifiedBy",0,*,"",""
+"IntendedRecipient.addr","IntendedRecipient.addr","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/AD {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"IntendedRecipient.addr",0,*,"",""
+"IntendedRecipient.telecom","IntendedRecipient.telecom","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/TEL {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"IntendedRecipient.telecom",0,*,"",""
+"IntendedRecipient.informationRecipient","IntendedRecipient.informationRecipient","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Person {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"IntendedRecipient.informationRecipient",0,1,"",""
+"IntendedRecipient.receivedOrganization","IntendedRecipient.receivedOrganization","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Organization {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"IntendedRecipient.receivedOrganization",0,1,"",""

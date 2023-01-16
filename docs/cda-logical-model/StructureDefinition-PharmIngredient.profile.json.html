@@ -1,0 +1,514 @@
+<!-- get modelType -->
+
+
+
+
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <title>HL7.FHIR.CDA\PharmIngredient (CDA Pharm Class) - JSON Representation - FHIR v5.0.0-ballot</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="http://hl7.org/fhir"/>
+
+    <link href="fhir.css" rel="stylesheet"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap-fhir.css" rel="stylesheet"/>
+
+    <!-- Project extras -->
+    <link href="assets/css/project.css" rel="stylesheet"/>
+    <link href="assets/css/pygments-manni.css" rel="stylesheet"/>
+    <link href="assets/css/jquery-ui.css" rel="stylesheet"/>
+  	<link href="assets/css/prism.css" rel="stylesheet" />
+    <!-- Placeholder for child template CSS declarations -->
+    <link href="assets/css/hl7.css" rel="stylesheet"/>
+    <link href="assets/css/cda.css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="fhir-table-scripts.js"> </script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png"/>
+    <link rel="shortcut icon" href="assets/ico/favicon.png"/>
+  </head>
+  <body onload="document.body.style.opacity='1'">
+
+	  <script src="assets/js/prism.js"></script>
+
+    <style type="text/css">h2{--heading-prefix:"3.86"}
+    h3,h4,h5,h6{--heading-prefix:"3.86"}</style>
+    <div id="segment-header" class="segment">  <!-- segment-header -->
+      <div class="container">  <!-- container -->
+        <!-- Placeholder for child template header declarations -->
+
+        <div id="hl7-nav">
+          <a id="hl7-logo" no-external="true" href="http://hl7.org">
+            <img height="50" alt="Visit the HL7 website" src="assets/images/hl7-logo-header.png"/>
+          </a>
+        </div>
+        <div id="family-nav">
+          <a id="family-logo" no-external="true" href="http://hl7.org/cda"><img height="50" alt="Visit the CDA website" src="assets/images/cda_both_trans.jpg"/> </a>
+        </div>
+        <div id="hl7-search">
+          <a id="hl7-search-lnk" no-external="true" href="http://hl7.org/fhir/search.cfm"><img alt="Search FHIR" src="assets/images/search.png"/></a>
+        </div>
+
+
+        <div id="ig-status">
+          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture V2.0.1</span>
+            <br/>
+            <span style="display:inline-block;">2.1.0-draft1 - 1st Draft
+
+
+            </span>
+          </p>
+        </div>
+      </div> <!-- /container -->
+    </div>  <!-- /segment-header -->
+
+    <div id="segment-navbar" class="segment">  <!-- segment-navbar -->
+      <div id="stripe"> </div>
+      <div class="container">  <!-- container -->
+        <!-- HEADER CONTENT -->
+
+        <nav class="navbar navbar-inverse">
+          <!--status-bar-->
+          <div class="container">
+            <button data-target=".navbar-inverse-collapse" class="navbar-toggle" data-toggle="collapse" type="button">
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+            </button>
+            <a class="navbar-brand hidden" href="http://build.fhir.org/index.html">FHIR</a>
+            <div class="nav-collapse collapse navbar-inverse-collapse">
+              <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
+  <li><a href="index.html">IG Home</a></li>
+  <li><a href="toc.html">Table of Contents</a></li>
+  <li><a href="artifacts.html">Artifact Index</a></li>
+  <li><a href="downloads.html">Downloads</a></li>
+</ul>      
+            </div>  <!-- /.nav-collapse -->
+          </div>  <!-- /.container -->
+        </nav>  <!-- /.navbar -->
+      <!-- /HEADER CONTENT -->
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-navbar -->
+    <!--status-bar-->
+
+    <div id="segment-breadcrumb" class="segment">  <!-- segment-breadcrumb -->
+      <div class="container">  <!-- container -->
+        <ul class="breadcrumb">
+          <li><a href='toc.html'><b>Table of Contents</b></a></li><li><a href='artifacts.html'><b>Artifacts Summary</b></a></li><li><b>PharmIngredient (CDA Pharm Class)</b></li>
+
+        </ul>
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-breadcrumb -->
+
+    <a name="top"> </a>
+    <div id="segment-content" class="segment">  <!-- segment-content -->
+      <div class="container">  <!-- container -->
+        <div class="row">
+          <div class="inner-wrapper">
+
+<div style="counter-reset: section 8" class="col-12">
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture V2.0.1 - Local Development build (v2.1.0-draft1). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  
+
+
+
+
+
+
+
+
+
+
+
+<ul class="nav nav-tabs">
+
+  <li>
+    <a href="StructureDefinition-PharmIngredient.html">Content</a>
+  </li>
+
+
+
+  <li>
+    <a href="StructureDefinition-PharmIngredient-definitions.html">Detailed Descriptions</a>
+  </li>
+
+
+
+  
+    <li>
+      <a href="StructureDefinition-PharmIngredient-mappings.html">Mappings</a>
+    </li>
+  
+
+
+
+
+
+
+
+  
+    <li>
+      <a href="StructureDefinition-PharmIngredient.profile.xml.html">XML</a>
+    </li>
+  
+
+
+  
+    <li class="active">
+      <a href="#">JSON</a>
+    </li>
+  
+
+
+  
+    <li>
+      <a href="StructureDefinition-PharmIngredient.profile.ttl.html">TTL</a>
+    </li>
+  
+
+
+</ul>
+
+
+<a name="root"> </a>
+<h2 id="root">Logical Model: CDAR2.PharmIngredient - JSON Profile</h2>
+  <table class="colsi">
+    <tr>
+
+      <td colspan="2">
+        
+          Active
+          
+            as of 2023-01-16
+          
+        
+      </td>
+
+    </tr>
+  </table>
+
+
+<p>JSON representation of the PharmIngredient logical model.</p>
+
+<p><a href="StructureDefinition-PharmIngredient.json" no-download="true">Raw json</a> | <a href="StructureDefinition-PharmIngredient.json" download>Download</a></p>
+
+  <!-- insert intro if present -->
+  
+
+
+
+  <pre class="json" style="white-space: pre; overflow: hidden"><code class="language-json">
+{
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition">resourceType</a>" : "StructureDefinition",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.id">id</a>" : "PharmIngredient",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.text">text</a>" : {
+    "<a href="http://build.fhir.org/narrative.html#Narrative#Narrative.status">status</a>" : "extensions",
+    "<a href="http://build.fhir.org/narrative.html#Narrative#Narrative.div">div</a>" : "&lt;div xmlns=\&quot;http://www.w3.org/1999/xhtml\&quot;&gt;&lt;table border=\&quot;0\&quot; cellpadding=\&quot;0\&quot; cellspacing=\&quot;0\&quot; style=\&quot;border: 0px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;\&quot;&gt;&lt;tr style=\&quot;border: 1px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top\&quot;&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;The logical name of the element\&quot;&gt;Name&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Information about the use of the element\&quot;&gt;Flags&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Minimum and Maximum # of times the the element can appear in the instance\&quot;&gt;Card.&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;width: 100px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Reference to the type of the element\&quot;&gt;Type&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Additional information about the element\&quot;&gt;Description &amp;amp; Constraints&lt;/a&gt;&lt;span style=\&quot;float: right\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Legend for this format\&quot;&gt;&lt;img src=\&quot;http://build.fhir.org/help16.png\&quot; alt=\&quot;doco\&quot; style=\&quot;background-color: inherit\&quot;/&gt;&lt;/a&gt;&lt;/span&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck1.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_element.gif\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Element\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-PharmIngredient-definitions.html#PharmIngredient\&quot;&gt;PharmIngredient&lt;/a&gt;&lt;a name=\&quot;PharmIngredient\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;1..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;http://build.fhir.org/types.html#Base\&quot;&gt;Base&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;span style=\&quot;font-weight:bold\&quot;&gt;XML Namespace: &lt;/span&gt;urn:ihe:pharm&lt;br/&gt;&lt;span style=\&quot;opacity: 0.5\&quot;&gt;Base for all types and resources&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_primitive.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: #F7F7F7; background-color: inherit\&quot; title=\&quot;Primitive Data Type\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-PharmIngredient-definitions.html#PharmIngredient.classCode\&quot;&gt;@classCode&lt;/a&gt;&lt;a name=\&quot;PharmIngredient.classCode\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;span style=\&quot;padding-left: 3px; padding-right: 3px; color: white; background-color: red\&quot; title=\&quot;This element must be supported\&quot;&gt;S&lt;/span&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;1..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;http://build.fhir.org/datatypes.html#code\&quot;&gt;code&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;span style=\&quot;font-weight:bold\&quot;&gt;Fixed Value: &lt;/span&gt;&lt;span style=\&quot;color: darkgreen\&quot;&gt;ACTI&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_resource.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Resource\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-PharmIngredient-definitions.html#PharmIngredient.quantity\&quot;&gt;quantity&lt;/a&gt;&lt;a name=\&quot;PharmIngredient.quantity\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-RTO-PQ-PQ.html\&quot;&gt;RTO_PQ_PQ&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;span style=\&quot;font-weight:bold\&quot;&gt;XML Namespace: &lt;/span&gt;urn:ihe:pharm&lt;/td&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck00.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin_end.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_resource.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: #F7F7F7; background-color: inherit\&quot; title=\&quot;Resource\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-PharmIngredient-definitions.html#PharmIngredient.ingredient\&quot;&gt;ingredient&lt;/a&gt;&lt;a name=\&quot;PharmIngredient.ingredient\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-PharmSubstance.html\&quot;&gt;PharmSubstance&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;span style=\&quot;font-weight:bold\&quot;&gt;XML Namespace: &lt;/span&gt;urn:ihe:pharm&lt;/td&gt;&lt;/tr&gt;\r\n&lt;tr&gt;&lt;td colspan=\&quot;5\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;br/&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Legend for this format\&quot;&gt;&lt;img src=\&quot;http://build.fhir.org/help16.png\&quot; alt=\&quot;doco\&quot; style=\&quot;background-color: inherit\&quot;/&gt; Documentation for this format&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;"<a name="end-xhtml"></a>
+  },
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.extension">extension</a>" : [
+    {
+      "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+      "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:ihe:pharm"
+    }
+  ],
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.url">url</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PharmIngredient",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.version">version</a>" : "2.1.0-draft1",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.name">name</a>" : "CDAR2.PharmIngredient",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.title">title</a>" : "PharmIngredient (CDA Pharm Class)",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.status">status</a>" : "active",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.experimental">experimental</a>" : false,
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.date">date</a>" : "2023-01-16T15:52:41+01:00",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.publisher">publisher</a>" : "Health Level 7",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.contact">contact</a>" : [
+    {
+      "<a href="http://build.fhir.org/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>" : [
+        {
+          "<a href="http://build.fhir.org/datatypes.html#ContactPoint#ContactPoint.system">system</a>" : "url",
+          "<a href="http://build.fhir.org/datatypes.html#ContactPoint#ContactPoint.value">value</a>" : "http://www.hl7.org/Special/committees/structure"
+        }
+      ]
+    }
+  ],
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a>" : "5.0.0-ballot",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping">mapping</a>" : [
+    {
+      "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.identity">identity</a>" : "rim",
+      "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.uri">uri</a>" : "http://hl7.org/v3",
+      "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.name">name</a>" : "RIM Mapping"
+    }
+  ],
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.kind">kind</a>" : "logical",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.abstract">abstract</a>" : false,
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.type">type</a>" : "PharmIngredient",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a>" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.derivation">derivation</a>" : "specialization",
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>" : {
+    "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a>" : [
+      {
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "PharmIngredient",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "PharmIngredient",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a>" : "Base for all types and resources",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Base definition for all types defined in FHIR type system.",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Base",
+          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
+        },
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a>" : false,
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>" : [
+          {
+            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a>" : "rim",
+            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a>" : "n/a"
+          }
+        ]
+      },
+      {
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "PharmIngredient.classCode",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "PharmIngredient.classCode",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+          "xmlAttr"
+        ],
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "PharmIngredient.classCode",
+          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 1,
+          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        },
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+          }
+        ],
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a>" : "ACTI",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "ACTI",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mustSupport">mustSupport</a>" : true
+      },
+      {
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "PharmIngredient.quantity",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>" : [
+          {
+            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:ihe:pharm"
+          }
+        ],
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "PharmIngredient.quantity",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "PharmIngredient.quantity",
+          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        },
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/RTO-PQ-PQ"
+          }
+        ]
+      },
+      {
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "PharmIngredient.ingredient",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>" : [
+          {
+            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:ihe:pharm"
+          }
+        ],
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "PharmIngredient.ingredient",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "PharmIngredient.ingredient",
+          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        },
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PharmSubstance"
+          }
+        ]
+      }
+    ]
+  },
+  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential">differential</a>" : {
+    "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a>" : [
+      {
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "PharmIngredient",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "PharmIngredient",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1"
+      },
+      {
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "PharmIngredient.classCode",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "PharmIngredient.classCode",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+          "xmlAttr"
+        ],
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+          }
+        ],
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a>" : "ACTI",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "ACTI",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mustSupport">mustSupport</a>" : true
+      },
+      {
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "PharmIngredient.quantity",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>" : [
+          {
+            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:ihe:pharm"
+          }
+        ],
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "PharmIngredient.quantity",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/RTO-PQ-PQ"
+          }
+        ]
+      },
+      {
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "PharmIngredient.ingredient",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>" : [
+          {
+            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:ihe:pharm"
+          }
+        ],
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "PharmIngredient.ingredient",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PharmSubstance"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+
+  <!-- insert notes if present -->
+  
+
+
+
+</div>
+
+        </div>  <!-- /inner-wrapper -->
+      </div>  <!-- /row -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-content -->
+
+  <script type="text/javascript" src="assets/js/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
+  <script type="text/javascript" src="assets/js/jquery-ui.min.js"> </script>
+
+  <script type="text/javascript">
+    try {
+      var currentTabIndex = sessionStorage.getItem('fhir-resource-tab-index');
+    } catch(exception) {
+    }
+
+    if (!currentTabIndex)
+      currentTabIndex = '0';
+
+    $( '#tabs' ).tabs({
+      active: currentTabIndex,
+      activate: function( event, ui ) {
+        var active = $('.selector').tabs('option', 'active');
+        currentTabIndex = ui.newTab.index();
+        document.activeElement.blur();
+        try {
+          sessionStorage.setItem('fhir-resource-tab-index', currentTabIndex);
+        } catch(exception) {
+        }
+      }
+    });
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      if(window.location.hash != "") {
+          $('a[href="' + window.location.hash + '"]').click()
+      }
+    });
+  </script>
+  <a name="bottom"> </a>
+  <div id="segment-footer" igtool="footer" class="segment">  <!-- segment-footer -->
+    <div class="container">  <!-- container -->
+
+      <div class="inner-wrapper">
+        <p>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.fhir.cda#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-ballot</a>. Generated <span title="Mon, Jan 16, 2023 15:52+0100">2023-01-16</span>
+          <br/>
+          <span style="color: var(--footer-highlight-text-color)">
+                      Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
+                 <a style="color: var(--footer-hyperlink-text-color)" href="qa.html">QA Report</a>
+                 
+                
+                 | <a style="color: #81BEF7" target="_blank" href="http://hl7.org/cda/stds/core/history.html">Version History <img alt="external" style="vertical-align: baseline" src="external.png"/></a></a> |
+                 <a style="color: #81BEF7" rel="license" href="http://build.fhir.org/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
+                 <!--<a style="color: #81BEF7" href="todo.html">Search</a> | --> 
+                 <a style="color: #81BEF7" target="_blank" href="https://jira.hl7.org/projects/CDA/issues">Propose a change <img alt="external" style="vertical-align: baseline" src="external.png"/></a>
+
+          </span>
+        </p>
+      </div>  <!-- /inner-wrapper -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-footer -->
+  
+  <div id="segment-post-footer" class="segment hidden">  <!-- segment-post-footer -->
+    <div class="container">  <!-- container -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-post-footer -->
+  
+  <!-- JS and analytics only. -->
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="assets/js/bootstrap.min.js"> </script>
+  <script type="text/javascript" src="assets/js/respond.min.js"> </script>
+  <script type="text/javascript" src="assets/js/anchor.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard-btn.js"> </script>
+  <script>anchors.options.visible = 'hover'
+anchors.add()</script>
+  
+<!-- feedback form - Google forms -->
+<!-- v0.1, 2021-01-09 -->
+
+
+
+<!-- / feedback form  -->
+
+  <!-- Analytics Below
+  ================================================== -->
+  </body>
+</html>
+

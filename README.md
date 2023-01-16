@@ -8,7 +8,7 @@
 - SDC (Structured Data Capture) [extraction](https://build.fhir.org/ig/HL7/sdc/extraction.html#map-extract) support based on the FHIR Mapping language and [Questionnaire/$extract](http://build.fhir.org/ig/HL7/sdc/OperationDefinition-QuestionnaireResponse-extract.html)
 
 
-a public test server is hosted at [https://test.ahdis.ch/matchbox/fhir](https://test.ahdis.ch/matchbox/fhir) with a corresponding gui [https://test.ahdis.ch/matchbox/](https://test.ahdis.ch/matchbox/#)
+a public test server is hosted at [https://test.ahdis.ch/matchboxv3/fhir](https://test.ahdis.ch/matchboxv3/fhir) with a corresponding gui [https://test.ahdis.ch/matchboxv3/](https://test.ahdis.ch/matchboxv3/#)
 
 see also additional [documentation](https://ahdis.github.io/matchbox) 
 
@@ -47,9 +47,9 @@ mvn clean install -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="-X
 
 Then, browse to the following link to use the server:
 
-[http://localhost:8080/matchbox/fhir](http://localhost:8080/matchbox/fhir)
+[http://localhost:8080/matchbox/fhir](http://localhost:8080/matchboxv3/fhir)
 or
-[http://localhost:8080/matchbox/#/](http://localhost:8080/matchbox/#/)
+[http://localhost:8080/matchbox/#/](http://localhost:8080/matchboxv3/#/)
 
 ## Using docker-compose with a persistent postgreSQL database
 
@@ -71,8 +71,8 @@ docker build -t matchbox .
 docker-compose up
 ```
 
-Matchbox will be available at [http://localhost:8080/matchbox/fhir](http://localhost:8080/matchbox/fhir)
-Matchbox-gui will be available at [http://localhost:8080/matchbox/#/](http://localhost:8080/matchbox/#/)
+Matchbox will be available at [http://localhost:8080/matchboxv3/fhir](http://localhost:8080/matchboxv3/fhir)
+Matchbox-gui will be available at [http://localhost:8080/matchboxv3/#/](http://localhost:8080/matchboxv3/#/)
 
 
 Export the DB data:
@@ -95,16 +95,16 @@ mvn package -DskipTests
 docker build -t matchbox .
 docker run -d --name matchbox -p 8080:8080 -v /Users/oliveregger/apps/:/apps/ matchbox
 ```
-Server will then be accessible at http://localhost:8080/matchbox/fhir/metadata. 
+Server will then be accessible at http://localhost:8080/matchboxv3/fhir/metadata. 
 
 To dynamically configure run in a kubernetes environment and add a kubernetes config map that provides /config/application.yaml file with implementation guide list like in "with-preload/application.yaml" 
 
 
 ### making container available
 ```
-docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v230-p2
+docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v300
 
-docker push eu.gcr.io/fhir-ch/matchbox:v230-p2
+docker push eu.gcr.io/fhir-ch/matchbox:v300
 ```
 
 

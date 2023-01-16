@@ -1,0 +1,2055 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "SubstanceAdministration",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A derivative of the RIM SubstanceAdministration class, used for representing medication-related events such as medication history or planned medication administration orders.</p>\n      <p>SubstanceAdministration.negationInd, when set to &quot;true&quot;, is a positive assertion that the SubstanceAdministration as a whole is negated. Some properties such as SubstanceAdministration.id, SubstanceAdministration.moodCode, and the participations are not affected. These properties always have the same meaning: i.e., the author remains the author of the negative SubstanceAdministration. A substance administration statement with negationInd is still a statement about the specific fact described by the SubstanceAdministration. For instance, a negated &quot;aspirin administration&quot; means that the author positively denies that aspirin is being administered, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.</p>\n      <p>SubstanceAdministration.priorityCode categorizes the priority of a substance administration. SubstanceAdministration.doseQuantity indicates how much medication is given per dose. SubstanceAdministration.rateQuantity can be used to indicate the rate at which the dose is to be administered (e.g., the flow rate for intravenous infusions). SubstanceAdministration.maxDoseQuantity is used to capture the maximum dose of the medication that can be given over a stated time interval (e.g., maximum daily dose of morphine, maximum lifetime dose of doxorubicin). SubstanceAdministration.effectiveTime is used to describe the timing of administration. It is modeled using the GTS data type to accommodate various dosing scenarios.</p>\n      <p>The capture of medication-related information also involves the interrelationship of SubstanceAdministration with several other classes. The consumable participation is used to bring in the LabeledDrug or Material entity that describes the administered substance. The LabeledDrug class, which is an Entity class playing the Role of Manufactured Product, identifies the drug that is consumed in the substance administration. The medication is identified by means of the LabeledDrug.code or the LabeledDrug.name. The Material entity is used to identify non-drug administered substances such as vaccines and blood products.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  }],
+  "url" : "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration",
+  "version" : "2.1.0-draft1",
+  "name" : "CDAR2.SubstanceAdministration",
+  "title" : "SubstanceAdministration (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-01-16T15:52:41+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    }]
+  }],
+  "description" : "A derivative of the RIM SubstanceAdministration class, used for representing medication-related events such as medication history or planned medication administration orders.\nSubstanceAdministration.negationInd, when set to \"true\", is a positive assertion that the SubstanceAdministration as a whole is negated. Some properties such as SubstanceAdministration.id, SubstanceAdministration.moodCode, and the participations are not affected. These properties always have the same meaning: i.e., the author remains the author of the negative SubstanceAdministration. A substance administration statement with negationInd is still a statement about the specific fact described by the SubstanceAdministration. For instance, a negated \"aspirin administration\" means that the author positively denies that aspirin is being administered, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.\nSubstanceAdministration.priorityCode categorizes the priority of a substance administration. SubstanceAdministration.doseQuantity indicates how much medication is given per dose. SubstanceAdministration.rateQuantity can be used to indicate the rate at which the dose is to be administered (e.g., the flow rate for intravenous infusions). SubstanceAdministration.maxDoseQuantity is used to capture the maximum dose of the medication that can be given over a stated time interval (e.g., maximum daily dose of morphine, maximum lifetime dose of doxorubicin). SubstanceAdministration.effectiveTime is used to describe the timing of administration. It is modeled using the GTS data type to accommodate various dosing scenarios.\nThe capture of medication-related information also involves the interrelationship of SubstanceAdministration with several other classes. The consumable participation is used to bring in the LabeledDrug or Material entity that describes the administered substance. The LabeledDrug class, which is an Entity class playing the Role of Manufactured Product, identifies the drug that is consumed in the substance administration. The medication is identified by means of the LabeledDrug.code or the LabeledDrug.name. The Material entity is used to identify non-drug administered substances such as vaccines and blood products.",
+  "fhirVersion" : "5.0.0-ballot",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "SubstanceAdministration",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "SubstanceAdministration",
+      "path" : "SubstanceAdministration",
+      "short" : "Base for all types and resources",
+      "definition" : "Base definition for all types defined in FHIR type system.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.classCode",
+      "path" : "SubstanceAdministration.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.classCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "SBADM",
+      "fixedCode" : "SBADM",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClass"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.moodCode",
+      "path" : "SubstanceAdministration.moodCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.moodCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.realmCode",
+      "path" : "SubstanceAdministration.realmCode",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.realmCode",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.typeId",
+      "path" : "SubstanceAdministration.typeId",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.typeId",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.templateId",
+      "path" : "SubstanceAdministration.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.id",
+      "path" : "SubstanceAdministration.id",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.id",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.code",
+      "path" : "SubstanceAdministration.code",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.code",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CD"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActSubstanceAdministrationCode"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.negationInd",
+      "path" : "SubstanceAdministration.negationInd",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.negationInd",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.text",
+      "path" : "SubstanceAdministration.text",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.text",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.statusCode",
+      "path" : "SubstanceAdministration.statusCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.statusCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActStatus"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.effectiveTime",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype",
+        "valueCanonical" : "http://hl7.org/fhir/cda/StructureDefinition/SXCM-TS"
+      }],
+      "path" : "SubstanceAdministration.effectiveTime",
+      "representation" : ["typeAttr"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.effectiveTime",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SXCM-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/PIVL-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.priorityCode",
+      "path" : "SubstanceAdministration.priorityCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.priorityCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActPriority"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.repeatNumber",
+      "path" : "SubstanceAdministration.repeatNumber",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.repeatNumber",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-INT"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.routeCode",
+      "path" : "SubstanceAdministration.routeCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.routeCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-RouteOfAdministration"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.approachSiteCode",
+      "path" : "SubstanceAdministration.approachSiteCode",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.approachSiteCode",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CD"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActSite"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.doseQuantity",
+      "path" : "SubstanceAdministration.doseQuantity",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.doseQuantity",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-PQ"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.rateQuantity",
+      "path" : "SubstanceAdministration.rateQuantity",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.rateQuantity",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-PQ"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.maxDoseQuantity",
+      "path" : "SubstanceAdministration.maxDoseQuantity",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.maxDoseQuantity",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RTO-PQ-PQ"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.administrationUnitCode",
+      "path" : "SubstanceAdministration.administrationUnitCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.administrationUnitCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-AdministrableDrugForm"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.consumable",
+      "path" : "SubstanceAdministration.consumable",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.consumable",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.consumable.id",
+      "path" : "SubstanceAdministration.consumable.id",
+      "representation" : ["xmlAttr"],
+      "short" : "Unique id for inter-element referencing",
+      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.consumable.extension",
+      "path" : "SubstanceAdministration.consumable.extension",
+      "slicing" : {
+        "discriminator" : [{
+          "type" : "value",
+          "path" : "url"
+        }],
+        "description" : "Extensions are always sliced by (at least) url",
+        "rules" : "open"
+      },
+      "short" : "Additional content defined by implementations",
+      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
+      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
+      "alias" : ["extensions",
+      "user content"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.consumable.typeCode",
+      "path" : "SubstanceAdministration.consumable.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.consumable.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "CSM",
+      "fixedCode" : "CSM",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetDirect"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.consumable.manufacturedProduct",
+      "path" : "SubstanceAdministration.consumable.manufacturedProduct",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.consumable.manufacturedProduct",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ManufacturedProduct"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.subject",
+      "path" : "SubstanceAdministration.subject",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.subject",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.subject.id",
+      "path" : "SubstanceAdministration.subject.id",
+      "representation" : ["xmlAttr"],
+      "short" : "Unique id for inter-element referencing",
+      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.subject.extension",
+      "path" : "SubstanceAdministration.subject.extension",
+      "slicing" : {
+        "discriminator" : [{
+          "type" : "value",
+          "path" : "url"
+        }],
+        "description" : "Extensions are always sliced by (at least) url",
+        "rules" : "open"
+      },
+      "short" : "Additional content defined by implementations",
+      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
+      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
+      "alias" : ["extensions",
+      "user content"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.subject.typeCode",
+      "path" : "SubstanceAdministration.subject.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.subject.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "SBJ",
+      "fixedCode" : "SBJ",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.subject.contextControlCode",
+      "path" : "SubstanceAdministration.subject.contextControlCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.subject.contextControlCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "OP",
+      "fixedCode" : "OP",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.subject.awarenessCode",
+      "path" : "SubstanceAdministration.subject.awarenessCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.subject.awarenessCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-TargetAwareness"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.subject.relatedSubject",
+      "path" : "SubstanceAdministration.subject.relatedSubject",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.subject.relatedSubject",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.specimen",
+      "path" : "SubstanceAdministration.specimen",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.specimen",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Specimen"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.performer",
+      "path" : "SubstanceAdministration.performer",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.performer",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Performer2"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.author",
+      "path" : "SubstanceAdministration.author",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.author",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Author"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.informant",
+      "path" : "SubstanceAdministration.informant",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.informant",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.informant.id",
+      "path" : "SubstanceAdministration.informant.id",
+      "representation" : ["xmlAttr"],
+      "short" : "Unique id for inter-element referencing",
+      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.informant.extension",
+      "path" : "SubstanceAdministration.informant.extension",
+      "slicing" : {
+        "discriminator" : [{
+          "type" : "value",
+          "path" : "url"
+        }],
+        "description" : "Extensions are always sliced by (at least) url",
+        "rules" : "open"
+      },
+      "short" : "Additional content defined by implementations",
+      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
+      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
+      "alias" : ["extensions",
+      "user content"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.informant.typeCode",
+      "path" : "SubstanceAdministration.informant.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.informant.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "INF",
+      "fixedCode" : "INF",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.informant.contextControlCode",
+      "path" : "SubstanceAdministration.informant.contextControlCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.informant.contextControlCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "OP",
+      "fixedCode" : "OP",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.informant.assignedEntity",
+      "path" : "SubstanceAdministration.informant.assignedEntity",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.informant.assignedEntity",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.informant.relatedEntity",
+      "path" : "SubstanceAdministration.informant.relatedEntity",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.informant.relatedEntity",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.participant",
+      "path" : "SubstanceAdministration.participant",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.participant",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Participant2"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship",
+      "path" : "SubstanceAdministration.entryRelationship",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "subst-er-1",
+        "severity" : "error",
+        "human" : "Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act",
+        "expression" : "(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1"
+      },
+      {
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.id",
+      "path" : "SubstanceAdministration.entryRelationship.id",
+      "representation" : ["xmlAttr"],
+      "short" : "Unique id for inter-element referencing",
+      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.extension",
+      "path" : "SubstanceAdministration.entryRelationship.extension",
+      "slicing" : {
+        "discriminator" : [{
+          "type" : "value",
+          "path" : "url"
+        }],
+        "description" : "Extensions are always sliced by (at least) url",
+        "rules" : "open"
+      },
+      "short" : "Additional content defined by implementations",
+      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
+      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
+      "alias" : ["extensions",
+      "user content"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.typeCode",
+      "path" : "SubstanceAdministration.entryRelationship.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.inversionInd",
+      "path" : "SubstanceAdministration.entryRelationship.inversionInd",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.inversionInd",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.contextConductionInd",
+      "path" : "SubstanceAdministration.entryRelationship.contextConductionInd",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.contextConductionInd",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean"
+      }],
+      "defaultValueBoolean" : true
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.sequenceNumber",
+      "path" : "SubstanceAdministration.entryRelationship.sequenceNumber",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.sequenceNumber",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/INT"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.negationInd",
+      "path" : "SubstanceAdministration.entryRelationship.negationInd",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.negationInd",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.seperatableInd",
+      "path" : "SubstanceAdministration.entryRelationship.seperatableInd",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.seperatableInd",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.observation",
+      "path" : "SubstanceAdministration.entryRelationship.observation",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.observation",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Observation"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.regionOfInterest",
+      "path" : "SubstanceAdministration.entryRelationship.regionOfInterest",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.regionOfInterest",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.observationMedia",
+      "path" : "SubstanceAdministration.entryRelationship.observationMedia",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.observationMedia",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.substanceAdministration",
+      "path" : "SubstanceAdministration.entryRelationship.substanceAdministration",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.substanceAdministration",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.supply",
+      "path" : "SubstanceAdministration.entryRelationship.supply",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.supply",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Supply"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.procedure",
+      "path" : "SubstanceAdministration.entryRelationship.procedure",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.procedure",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Procedure"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.encounter",
+      "path" : "SubstanceAdministration.entryRelationship.encounter",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.encounter",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Encounter"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.organizer",
+      "path" : "SubstanceAdministration.entryRelationship.organizer",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.organizer",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Organizer"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.act",
+      "path" : "SubstanceAdministration.entryRelationship.act",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.entryRelationship.act",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Act"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference",
+      "path" : "SubstanceAdministration.reference",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.reference",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.id",
+      "path" : "SubstanceAdministration.reference.id",
+      "representation" : ["xmlAttr"],
+      "short" : "Unique id for inter-element referencing",
+      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.extension",
+      "path" : "SubstanceAdministration.reference.extension",
+      "slicing" : {
+        "discriminator" : [{
+          "type" : "value",
+          "path" : "url"
+        }],
+        "description" : "Extensions are always sliced by (at least) url",
+        "rules" : "open"
+      },
+      "short" : "Additional content defined by implementations",
+      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
+      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
+      "alias" : ["extensions",
+      "user content"],
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.typeCode",
+      "path" : "SubstanceAdministration.reference.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.reference.typeCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.seperatableInd",
+      "path" : "SubstanceAdministration.reference.seperatableInd",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.reference.seperatableInd",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.externalAct",
+      "path" : "SubstanceAdministration.reference.externalAct",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.reference.externalAct",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalAct"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.externalObservation",
+      "path" : "SubstanceAdministration.reference.externalObservation",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.reference.externalObservation",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.externalProcedure",
+      "path" : "SubstanceAdministration.reference.externalProcedure",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.reference.externalProcedure",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.externalDocument",
+      "path" : "SubstanceAdministration.reference.externalDocument",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SubstanceAdministration.reference.externalDocument",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.precondition",
+      "path" : "SubstanceAdministration.precondition",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "SubstanceAdministration.precondition",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Precondition"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "SubstanceAdministration",
+      "path" : "SubstanceAdministration",
+      "min" : 1,
+      "max" : "1"
+    },
+    {
+      "id" : "SubstanceAdministration.classCode",
+      "path" : "SubstanceAdministration.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "SBADM",
+      "fixedCode" : "SBADM",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClass"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.moodCode",
+      "path" : "SubstanceAdministration.moodCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.realmCode",
+      "path" : "SubstanceAdministration.realmCode",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.typeId",
+      "path" : "SubstanceAdministration.typeId",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.templateId",
+      "path" : "SubstanceAdministration.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.id",
+      "path" : "SubstanceAdministration.id",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.code",
+      "path" : "SubstanceAdministration.code",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CD"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActSubstanceAdministrationCode"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.negationInd",
+      "path" : "SubstanceAdministration.negationInd",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "boolean"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.text",
+      "path" : "SubstanceAdministration.text",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.statusCode",
+      "path" : "SubstanceAdministration.statusCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActStatus"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.effectiveTime",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype",
+        "valueCanonical" : "http://hl7.org/fhir/cda/StructureDefinition/SXCM-TS"
+      }],
+      "path" : "SubstanceAdministration.effectiveTime",
+      "representation" : ["typeAttr"],
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SXCM-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/PIVL-TS"
+      },
+      {
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.priorityCode",
+      "path" : "SubstanceAdministration.priorityCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActPriority"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.repeatNumber",
+      "path" : "SubstanceAdministration.repeatNumber",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-INT"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.routeCode",
+      "path" : "SubstanceAdministration.routeCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-RouteOfAdministration"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.approachSiteCode",
+      "path" : "SubstanceAdministration.approachSiteCode",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CD"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActSite"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.doseQuantity",
+      "path" : "SubstanceAdministration.doseQuantity",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-PQ"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.rateQuantity",
+      "path" : "SubstanceAdministration.rateQuantity",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-PQ"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.maxDoseQuantity",
+      "path" : "SubstanceAdministration.maxDoseQuantity",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RTO-PQ-PQ"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.administrationUnitCode",
+      "path" : "SubstanceAdministration.administrationUnitCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-AdministrableDrugForm"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.consumable",
+      "path" : "SubstanceAdministration.consumable",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "Element"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.consumable.typeCode",
+      "path" : "SubstanceAdministration.consumable.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "CSM",
+      "fixedCode" : "CSM",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetDirect"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.consumable.manufacturedProduct",
+      "path" : "SubstanceAdministration.consumable.manufacturedProduct",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ManufacturedProduct"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.subject",
+      "path" : "SubstanceAdministration.subject",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "Element"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.subject.typeCode",
+      "path" : "SubstanceAdministration.subject.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "SBJ",
+      "fixedCode" : "SBJ",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.subject.contextControlCode",
+      "path" : "SubstanceAdministration.subject.contextControlCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "OP",
+      "fixedCode" : "OP",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.subject.awarenessCode",
+      "path" : "SubstanceAdministration.subject.awarenessCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "extensible",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-TargetAwareness"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.subject.relatedSubject",
+      "path" : "SubstanceAdministration.subject.relatedSubject",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.specimen",
+      "path" : "SubstanceAdministration.specimen",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Specimen"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.performer",
+      "path" : "SubstanceAdministration.performer",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Performer2"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.author",
+      "path" : "SubstanceAdministration.author",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Author"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.informant",
+      "path" : "SubstanceAdministration.informant",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "Element"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.informant.typeCode",
+      "path" : "SubstanceAdministration.informant.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "INF",
+      "fixedCode" : "INF",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.informant.contextControlCode",
+      "path" : "SubstanceAdministration.informant.contextControlCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }],
+      "defaultValueCode" : "OP",
+      "fixedCode" : "OP",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
+      }
+    },
+    {
+      "id" : "SubstanceAdministration.informant.assignedEntity",
+      "path" : "SubstanceAdministration.informant.assignedEntity",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.informant.relatedEntity",
+      "path" : "SubstanceAdministration.informant.relatedEntity",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.participant",
+      "path" : "SubstanceAdministration.participant",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Participant2"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship",
+      "path" : "SubstanceAdministration.entryRelationship",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "Element"
+      }],
+      "constraint" : [{
+        "key" : "subst-er-1",
+        "severity" : "error",
+        "human" : "Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act",
+        "expression" : "(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.typeCode",
+      "path" : "SubstanceAdministration.entryRelationship.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.inversionInd",
+      "path" : "SubstanceAdministration.entryRelationship.inversionInd",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "boolean"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.contextConductionInd",
+      "path" : "SubstanceAdministration.entryRelationship.contextConductionInd",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "boolean"
+      }],
+      "defaultValueBoolean" : true
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.sequenceNumber",
+      "path" : "SubstanceAdministration.entryRelationship.sequenceNumber",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/INT"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.negationInd",
+      "path" : "SubstanceAdministration.entryRelationship.negationInd",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "boolean"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.seperatableInd",
+      "path" : "SubstanceAdministration.entryRelationship.seperatableInd",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.observation",
+      "path" : "SubstanceAdministration.entryRelationship.observation",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Observation"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.regionOfInterest",
+      "path" : "SubstanceAdministration.entryRelationship.regionOfInterest",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.observationMedia",
+      "path" : "SubstanceAdministration.entryRelationship.observationMedia",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.substanceAdministration",
+      "path" : "SubstanceAdministration.entryRelationship.substanceAdministration",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.supply",
+      "path" : "SubstanceAdministration.entryRelationship.supply",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Supply"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.procedure",
+      "path" : "SubstanceAdministration.entryRelationship.procedure",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Procedure"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.encounter",
+      "path" : "SubstanceAdministration.entryRelationship.encounter",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Encounter"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.organizer",
+      "path" : "SubstanceAdministration.entryRelationship.organizer",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Organizer"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.entryRelationship.act",
+      "path" : "SubstanceAdministration.entryRelationship.act",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Act"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference",
+      "path" : "SubstanceAdministration.reference",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "Element"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.typeCode",
+      "path" : "SubstanceAdministration.reference.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "code"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.seperatableInd",
+      "path" : "SubstanceAdministration.reference.seperatableInd",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.externalAct",
+      "path" : "SubstanceAdministration.reference.externalAct",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalAct"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.externalObservation",
+      "path" : "SubstanceAdministration.reference.externalObservation",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.externalProcedure",
+      "path" : "SubstanceAdministration.reference.externalProcedure",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.reference.externalDocument",
+      "path" : "SubstanceAdministration.reference.externalDocument",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument"
+      }]
+    },
+    {
+      "id" : "SubstanceAdministration.precondition",
+      "path" : "SubstanceAdministration.precondition",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Precondition"
+      }]
+    }]
+  }
+}

@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="SC"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
+      <p>A ST that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.</p>
+    </div>
+  </text>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics">
+    <valueCode value="can-bind"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-binding-style">
+    <valueCode value="CDA"/>
+  </extension>
+  <url value="http://hl7.org/fhir/cda/StructureDefinition/SC"/>
+  <version value="2.1.0-draft1"/>
+  <name value="SC"/>
+  <title value="SC: CharacterStringWithCode (V3 Data Type)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2023-01-16T15:52:41+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+  </contact>
+  <description value="A character string that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code."/>
+  <fhirVersion value="5.0.0-ballot"/>
+  <mapping>
+    <identity value="rim"/>
+    <uri value="http://hl7.org/v3"/>
+    <name value="RIM Mapping"/>
+  </mapping>
+  <kind value="logical"/>
+  <abstract value="false"/>
+  <type value="SC"/>
+  <baseDefinition value="http://hl7.org/fhir/cda/StructureDefinition/ST"/>
+  <derivation value="specialization"/>
+  <snapshot>
+    <element id="SC">
+      <path value="SC"/>
+      <short value="Base for all types and resources"/>
+      <definition value="An ST that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code."/>
+      <min value="1"/>
+      <max value="*"/>
+      <base>
+        <path value="Base"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <isModifier value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="SC.nullFlavor">
+      <path value="SC.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+      </binding>
+    </element>
+    <element id="SC.charset">
+      <path value="SC.charset"/>
+      <representation value="xmlAttr"/>
+      <label value="Charset"/>
+      <definition value="For character-based encoding types, this property specifies the character set and character encoding used. The charset shall be identified by an Internet Assigned Numbers Authority (IANA) Charset Registration [] in accordance with RFC 2978 []."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ED.charset"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+    </element>
+    <element id="SC.compression">
+      <path value="SC.compression"/>
+      <representation value="xmlAttr"/>
+      <label value="Compression"/>
+      <definition value="Indicates whether the raw byte data is compressed, and what compression algorithm was used."/>
+      <min value="0"/>
+      <max value="0"/>
+      <base>
+        <path value="ED.compression"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-CompressionAlgorithm"/>
+      </binding>
+    </element>
+    <element id="SC.integrityCheck">
+      <path value="SC.integrityCheck"/>
+      <representation value="xmlAttr"/>
+      <label value="Integrity Check"/>
+      <definition value="The integrity check is a short binary value representing a cryptographically strong checksum that is calculated over the binary data. The purpose of this property, when communicated with a reference is for anyone to validate later whether the reference still resolved to the same data that the reference resolved to when the encapsulated data value with reference was created."/>
+      <min value="0"/>
+      <max value="0"/>
+      <base>
+        <path value="ED.integrityCheck"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="base64Binary"/>
+      </type>
+    </element>
+    <element id="SC.integrityCheckAlgorithm">
+      <path value="SC.integrityCheckAlgorithm"/>
+      <representation value="xmlAttr"/>
+      <label value="Integrity Check Algorithm"/>
+      <definition value="Specifies the algorithm used to compute the integrityCheck value. The cryptographically strong checksum algorithm Secure Hash Algorithm-1 (SHA-1) is currently the industry standard. It has superseded the MD5 algorithm only a couple of years ago, when certain flaws in the security of MD5 were discovered. Currently the SHA-1 hash algorithm is the default choice for the integrity check algorithm. Note that SHA-256 is also entering widespread usage."/>
+      <min value="0"/>
+      <max value="0"/>
+      <base>
+        <path value="ED.integrityCheckAlgorithm"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-IntegrityCheckAlgorithm"/>
+      </binding>
+    </element>
+    <element id="SC.language">
+      <path value="SC.language"/>
+      <representation value="xmlAttr"/>
+      <label value="Language"/>
+      <definition value="For character based information the language property specifies the human language of the text."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ED.language"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+    </element>
+    <element id="SC.mediaType">
+      <path value="SC.mediaType"/>
+      <representation value="xmlAttr"/>
+      <label value="Media Type"/>
+      <definition value="Identifies the type of the encapsulated data and identifies a method to interpret or render the data."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ED.mediaType"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <fixedCode value="text/plain"/>
+    </element>
+    <element id="SC.representation">
+      <path value="SC.representation"/>
+      <representation value="xmlAttr"/>
+      <definition value="Specifies the representation of the binary data that is the content of the binary data value"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ED.representation"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <fixedCode value="TXT"/>
+    </element>
+    <element id="SC.data[x]">
+      <path value="SC.data[x]"/>
+      <representation value="xmlText"/>
+      <definition value="The string value"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ED.data[x]"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="SC.reference">
+      <path value="SC.reference"/>
+      <label value="Reference"/>
+      <definition value="A telecommunication address (TEL), such as a URL for HTTP or FTP, which will resolve to precisely the same binary data that could as well have been provided as inline data."/>
+      <min value="0"/>
+      <max value="0"/>
+      <base>
+        <path value="ED.reference"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/TEL"/>
+      </type>
+    </element>
+    <element id="SC.thumbnail">
+      <path value="SC.thumbnail"/>
+      <label value="Thumbnail"/>
+      <definition value="An abbreviated rendition of the full data. A thumbnail requires significantly fewer resources than the full data, while still maintaining some distinctive similarity with the full data. A thumbnail is typically used with by-reference encapsulated data. It allows a user to select data more efficiently before actually downloading through the reference."/>
+      <min value="0"/>
+      <max value="0"/>
+      <base>
+        <path value="ED.thumbnail"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+      </type>
+    </element>
+    <element id="SC.code">
+      <path value="SC.code"/>
+      <representation value="xmlAttr"/>
+      <label value="Code"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="SC.code"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="SC.codeSystem">
+      <path value="SC.codeSystem"/>
+      <representation value="xmlAttr"/>
+      <label value="Code System"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="SC.codeSystem"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="SC.codeSystemName">
+      <path value="SC.codeSystemName"/>
+      <representation value="xmlAttr"/>
+      <label value="Code System Name"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="SC.codeSystemName"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="SC.codeSystemVersion">
+      <path value="SC.codeSystemVersion"/>
+      <representation value="xmlAttr"/>
+      <label value="Code System Version"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="SC.codeSystemVersion"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="SC.displayName">
+      <path value="SC.displayName"/>
+      <representation value="xmlAttr"/>
+      <label value="Display Name"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="SC.displayName"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="SC">
+      <path value="SC"/>
+      <definition value="An ST that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code."/>
+      <min value="1"/>
+      <max value="*"/>
+    </element>
+    <element id="SC.code">
+      <path value="SC.code"/>
+      <representation value="xmlAttr"/>
+      <label value="Code"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="SC.codeSystem">
+      <path value="SC.codeSystem"/>
+      <representation value="xmlAttr"/>
+      <label value="Code System"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="SC.codeSystemName">
+      <path value="SC.codeSystemName"/>
+      <representation value="xmlAttr"/>
+      <label value="Code System Name"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="SC.codeSystemVersion">
+      <path value="SC.codeSystemVersion"/>
+      <representation value="xmlAttr"/>
+      <label value="Code System Version"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="SC.displayName">
+      <path value="SC.displayName"/>
+      <representation value="xmlAttr"/>
+      <label value="Display Name"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

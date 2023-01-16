@@ -1,0 +1,154 @@
+"Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
+"Supply","Supply","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"Supply.classCode","Supply.classCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SPLY""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SPLY""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassSupply","",,,,"Supply.classCode",1,1,"",""
+"Supply.moodCode","Supply.moodCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.moodCode",1,1,"",""
+"Supply.realmCode","Supply.realmCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/CS {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.realmCode",0,*,"",""
+"Supply.typeId","Supply.typeId","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.typeId",0,1,"",""
+"Supply.templateId","Supply.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"Supply.templateId",0,*,"",""
+"Supply.id","Supply.id","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.id",0,*,"",""
+"Supply.code","Supply.code","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CD {[]} {[]}
+","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActCode","",,,,"Supply.code",0,1,"",""
+"Supply.text","Supply.text","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ED {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.text",0,1,"",""
+"Supply.statusCode","Supply.statusCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CS {[]} {[]}
+","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActStatus","",,,,"Supply.statusCode",0,1,"",""
+"Supply.effectiveTime","Supply.effectiveTime","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/SXCM-TS {[]} {[]}
+http://hl7.org/fhir/cda/StructureDefinition/IVL-TS {[]} {[]}http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS {[]} {[]}http://hl7.org/fhir/cda/StructureDefinition/PIVL-TS {[]} {[]}http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS {[]} {[]}","","","","","","","","","","","",,,,,"",,,,"Supply.effectiveTime",0,*,"",""
+"Supply.priorityCode","Supply.priorityCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActPriority","",,,,"Supply.priorityCode",0,*,"",""
+"Supply.repeatNumber","Supply.repeatNumber","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/IVL-INT {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.repeatNumber",0,1,"",""
+"Supply.independentInd","Supply.independentInd","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/BL {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.independentInd",0,1,"",""
+"Supply.quantity","Supply.quantity","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/PQ {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.quantity",0,1,"",""
+"Supply.expectedUseTime","Supply.expectedUseTime","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/IVL-TS {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.expectedUseTime",0,1,"",""
+"Supply.product","Supply.product","","","",0,1,"","","","Element {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.product",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
+"Supply.product.id","Supply.product.id","","","",0,1,"","","","id {[]} {[]}
+","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
+"Supply.product.extension","Supply.product.extension","","extensions
+user content","",0,*,"","","","Extension {[]} {[]}
+","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
+","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
+"Supply.product.typeCode","Supply.product.typeCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PRD""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PRD""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationTargetDirect","",,,,"Supply.product.typeCode",1,1,"",""
+"Supply.product.manufacturedProduct","Supply.product.manufacturedProduct","","","",1,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ManufacturedProduct {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.product.manufacturedProduct",1,1,"",""
+"Supply.subject","Supply.subject","","","",0,1,"","","","Element {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.subject",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
+"Supply.subject.id","Supply.subject.id","","","",0,1,"","","","id {[]} {[]}
+","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
+"Supply.subject.extension","Supply.subject.extension","","extensions
+user content","",0,*,"","","","Extension {[]} {[]}
+","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
+","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
+"Supply.subject.typeCode","Supply.subject.typeCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBJ""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBJ""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject","",,,,"Supply.subject.typeCode",1,1,"",""
+"Supply.subject.contextControlCode","Supply.subject.contextControlCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ContextControl","",,,,"Supply.subject.contextControlCode",1,1,"",""
+"Supply.subject.awarenessCode","Supply.subject.awarenessCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-TargetAwareness","",,,,"Supply.subject.awarenessCode",0,1,"",""
+"Supply.subject.relatedSubject","Supply.subject.relatedSubject","","","",1,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.subject.relatedSubject",1,1,"",""
+"Supply.specimen","Supply.specimen","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Specimen {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.specimen",0,*,"",""
+"Supply.performer","Supply.performer","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Performer2 {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.performer",0,*,"",""
+"Supply.author","Supply.author","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Author {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.author",0,*,"",""
+"Supply.informant","Supply.informant","","","",0,*,"","","","Element {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.informant",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
+"Supply.informant.id","Supply.informant.id","","","",0,1,"","","","id {[]} {[]}
+","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
+"Supply.informant.extension","Supply.informant.extension","","extensions
+user content","",0,*,"","","","Extension {[]} {[]}
+","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
+","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
+"Supply.informant.typeCode","Supply.informant.typeCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""INF""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""INF""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator","",,,,"Supply.informant.typeCode",1,1,"",""
+"Supply.informant.contextControlCode","Supply.informant.contextControlCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ContextControl","",,,,"Supply.informant.contextControlCode",1,1,"",""
+"Supply.informant.assignedEntity","Supply.informant.assignedEntity","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.informant.assignedEntity",0,1,"",""
+"Supply.informant.relatedEntity","Supply.informant.relatedEntity","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.informant.relatedEntity",0,1,"",""
+"Supply.participant","Supply.participant","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Participant2 {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.participant",0,*,"",""
+"Supply.entryRelationship","Supply.entryRelationship","","","",0,*,"","","","Element {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship",0,*,"","sup-er-1:Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act {(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1}
+ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}"
+"Supply.entryRelationship.id","Supply.entryRelationship.id","","","",0,1,"","","","id {[]} {[]}
+","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
+"Supply.entryRelationship.extension","Supply.entryRelationship.extension","","extensions
+user content","",0,*,"","","","Extension {[]} {[]}
+","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
+","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
+"Supply.entryRelationship.typeCode","Supply.entryRelationship.typeCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.typeCode",1,1,"",""
+"Supply.entryRelationship.inversionInd","Supply.entryRelationship.inversionInd","","","",0,1,"","","","boolean {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.inversionInd",0,1,"",""
+"Supply.entryRelationship.contextConductionInd","Supply.entryRelationship.contextConductionInd","","","",1,1,"","","","boolean {[]} {[]}
+","","","","","<valueBoolean xmlns=""http://hl7.org/fhir"" value=""true""/>","","","","","","",,,,,"",,,,"Supply.entryRelationship.contextConductionInd",1,1,"",""
+"Supply.entryRelationship.sequenceNumber","Supply.entryRelationship.sequenceNumber","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/INT {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.sequenceNumber",0,1,"",""
+"Supply.entryRelationship.negationInd","Supply.entryRelationship.negationInd","","","",0,1,"","","","boolean {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.negationInd",0,1,"",""
+"Supply.entryRelationship.seperatableInd","Supply.entryRelationship.seperatableInd","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/BL {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.seperatableInd",0,1,"",""
+"Supply.entryRelationship.observation","Supply.entryRelationship.observation","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Observation {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.observation",0,1,"",""
+"Supply.entryRelationship.regionOfInterest","Supply.entryRelationship.regionOfInterest","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.regionOfInterest",0,1,"",""
+"Supply.entryRelationship.observationMedia","Supply.entryRelationship.observationMedia","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.observationMedia",0,1,"",""
+"Supply.entryRelationship.substanceAdministration","Supply.entryRelationship.substanceAdministration","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.substanceAdministration",0,1,"",""
+"Supply.entryRelationship.supply","Supply.entryRelationship.supply","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Supply {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.supply",0,1,"",""
+"Supply.entryRelationship.procedure","Supply.entryRelationship.procedure","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Procedure {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.procedure",0,1,"",""
+"Supply.entryRelationship.encounter","Supply.entryRelationship.encounter","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Encounter {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.encounter",0,1,"",""
+"Supply.entryRelationship.organizer","Supply.entryRelationship.organizer","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Organizer {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.organizer",0,1,"",""
+"Supply.entryRelationship.act","Supply.entryRelationship.act","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Act {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship.act",0,1,"",""
+"Supply.reference","Supply.reference","","","",0,*,"","","","Element {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.reference",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
+"Supply.reference.id","Supply.reference.id","","","",0,1,"","","","id {[]} {[]}
+","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
+"Supply.reference.extension","Supply.reference.extension","","extensions
+user content","",0,*,"","","","Extension {[]} {[]}
+","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
+","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
+"Supply.reference.typeCode","Supply.reference.typeCode","","","",1,1,"","","","code {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.reference.typeCode",1,1,"",""
+"Supply.reference.seperatableInd","Supply.reference.seperatableInd","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/BL {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.reference.seperatableInd",0,1,"",""
+"Supply.reference.externalAct","Supply.reference.externalAct","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ExternalAct {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.reference.externalAct",0,1,"",""
+"Supply.reference.externalObservation","Supply.reference.externalObservation","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.reference.externalObservation",0,1,"",""
+"Supply.reference.externalProcedure","Supply.reference.externalProcedure","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.reference.externalProcedure",0,1,"",""
+"Supply.reference.externalDocument","Supply.reference.externalDocument","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.reference.externalDocument",0,1,"",""
+"Supply.precondition","Supply.precondition","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Precondition {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Supply.precondition",0,*,"",""

@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="Patient"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
+      <p>A LivingSubject as a recipient of health care services from a healthcare provider.</p>
+      <p>The patient is the player; the provider is the scoper.</p>
+    </div>
+  </text>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <url value="http://hl7.org/fhir/cda/StructureDefinition/Patient"/>
+  <version value="2.1.0-draft1"/>
+  <name value="CDAR2.Patient"/>
+  <title value="Patient (CDA Class)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2023-01-16T15:52:41+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+  </contact>
+  <description value="A LivingSubject as a recipient of health care services from a healthcare provider.&#xA;The patient is the player; the provider is the scoper."/>
+  <fhirVersion value="5.0.0-ballot"/>
+  <mapping>
+    <identity value="rim"/>
+    <uri value="http://hl7.org/v3"/>
+    <name value="RIM Mapping"/>
+  </mapping>
+  <kind value="logical"/>
+  <abstract value="false"/>
+  <type value="Patient"/>
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
+  <derivation value="specialization"/>
+  <snapshot>
+    <element id="Patient">
+      <path value="Patient"/>
+      <short value="Base for all types and resources"/>
+      <definition value="Base definition for all types defined in FHIR type system."/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Base"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <isModifier value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="Patient.classCode">
+      <path value="Patient.classCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.classCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="PSN"/>
+      <fixedCode value="PSN"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityClassLivingSubject"/>
+      </binding>
+    </element>
+    <element id="Patient.determinerCode">
+      <path value="Patient.determinerCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.determinerCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="INSTANCE"/>
+      <fixedCode value="INSTANCE"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityDeterminer"/>
+      </binding>
+    </element>
+    <element id="Patient.templateId">
+      <path value="Patient.templateId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Patient.templateId"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Patient.id">
+      <path value="Patient.id"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.id"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Patient.name">
+      <path value="Patient.name"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Patient.name"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/EN"/>
+      </type>
+    </element>
+    <element id="Patient.sdtcDesc">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="desc"/>
+      </extension>
+      <path value="Patient.sdtcDesc"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.sdtcDesc"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+      </type>
+    </element>
+    <element id="Patient.administrativeGenderCode">
+      <path value="Patient.administrativeGenderCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.administrativeGenderCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-AdministrativeGender"/>
+      </binding>
+    </element>
+    <element id="Patient.birthTime">
+      <path value="Patient.birthTime"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.birthTime"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/TS"/>
+      </type>
+    </element>
+    <element id="Patient.sdtcDeceasedInd">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="deceasedInd"/>
+      </extension>
+      <path value="Patient.sdtcDeceasedInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.sdtcDeceasedInd"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="Patient.sdtcDeceasedTime">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="deceasedTime"/>
+      </extension>
+      <path value="Patient.sdtcDeceasedTime"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.sdtcDeceasedTime"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/TS"/>
+      </type>
+    </element>
+    <element id="Patient.sdtcMultipleBirthInd">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="multipleBirthInd"/>
+      </extension>
+      <path value="Patient.sdtcMultipleBirthInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.sdtcMultipleBirthInd"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="Patient.sdtcMultipleBirthOrderNumber">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="multipleBirthOrderNumber"/>
+      </extension>
+      <path value="Patient.sdtcMultipleBirthOrderNumber"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.sdtcMultipleBirthOrderNumber"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/INT-POS"/>
+      </type>
+    </element>
+    <element id="Patient.maritalStatusCode">
+      <path value="Patient.maritalStatusCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.maritalStatusCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-MaritalStatus"/>
+      </binding>
+    </element>
+    <element id="Patient.religiousAffiliationCode">
+      <path value="Patient.religiousAffiliationCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.religiousAffiliationCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ReligiousAffiliation"/>
+      </binding>
+    </element>
+    <element id="Patient.raceCode">
+      <path value="Patient.raceCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.raceCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-Race"/>
+      </binding>
+    </element>
+    <element id="Patient.sdtcRaceCode">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="raceCode"/>
+      </extension>
+      <path value="Patient.sdtcRaceCode"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Patient.sdtcRaceCode"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-Race"/>
+      </binding>
+    </element>
+    <element id="Patient.ethnicGroupCode">
+      <path value="Patient.ethnicGroupCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.ethnicGroupCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-Ethnicity"/>
+      </binding>
+    </element>
+    <element id="Patient.sdtcEthnicGroupCode">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="ethnicGroupCode"/>
+      </extension>
+      <path value="Patient.sdtcEthnicGroupCode"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Patient.sdtcEthnicGroupCode"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-Ethnicity"/>
+      </binding>
+    </element>
+    <element id="Patient.guardian">
+      <path value="Patient.guardian"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Patient.guardian"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Guardian"/>
+      </type>
+    </element>
+    <element id="Patient.birthplace">
+      <path value="Patient.birthplace"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Patient.birthplace"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Birthplace"/>
+      </type>
+    </element>
+    <element id="Patient.languageCommunication">
+      <path value="Patient.languageCommunication"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Patient.languageCommunication"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/LanguageCommunication"/>
+      </type>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="Patient">
+      <path value="Patient"/>
+      <min value="1"/>
+      <max value="1"/>
+    </element>
+    <element id="Patient.classCode">
+      <path value="Patient.classCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="PSN"/>
+      <fixedCode value="PSN"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityClassLivingSubject"/>
+      </binding>
+    </element>
+    <element id="Patient.determinerCode">
+      <path value="Patient.determinerCode"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <defaultValueCode value="INSTANCE"/>
+      <fixedCode value="INSTANCE"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityDeterminer"/>
+      </binding>
+    </element>
+    <element id="Patient.templateId">
+      <path value="Patient.templateId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Patient.id">
+      <path value="Patient.id"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Patient.name">
+      <path value="Patient.name"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/EN"/>
+      </type>
+    </element>
+    <element id="Patient.sdtcDesc">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="desc"/>
+      </extension>
+      <path value="Patient.sdtcDesc"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+      </type>
+    </element>
+    <element id="Patient.administrativeGenderCode">
+      <path value="Patient.administrativeGenderCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-AdministrativeGender"/>
+      </binding>
+    </element>
+    <element id="Patient.birthTime">
+      <path value="Patient.birthTime"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/TS"/>
+      </type>
+    </element>
+    <element id="Patient.sdtcDeceasedInd">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="deceasedInd"/>
+      </extension>
+      <path value="Patient.sdtcDeceasedInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="Patient.sdtcDeceasedTime">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="deceasedTime"/>
+      </extension>
+      <path value="Patient.sdtcDeceasedTime"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/TS"/>
+      </type>
+    </element>
+    <element id="Patient.sdtcMultipleBirthInd">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="multipleBirthInd"/>
+      </extension>
+      <path value="Patient.sdtcMultipleBirthInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="Patient.sdtcMultipleBirthOrderNumber">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="multipleBirthOrderNumber"/>
+      </extension>
+      <path value="Patient.sdtcMultipleBirthOrderNumber"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/INT-POS"/>
+      </type>
+    </element>
+    <element id="Patient.maritalStatusCode">
+      <path value="Patient.maritalStatusCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-MaritalStatus"/>
+      </binding>
+    </element>
+    <element id="Patient.religiousAffiliationCode">
+      <path value="Patient.religiousAffiliationCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ReligiousAffiliation"/>
+      </binding>
+    </element>
+    <element id="Patient.raceCode">
+      <path value="Patient.raceCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-Race"/>
+      </binding>
+    </element>
+    <element id="Patient.sdtcRaceCode">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="raceCode"/>
+      </extension>
+      <path value="Patient.sdtcRaceCode"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-Race"/>
+      </binding>
+    </element>
+    <element id="Patient.ethnicGroupCode">
+      <path value="Patient.ethnicGroupCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-Ethnicity"/>
+      </binding>
+    </element>
+    <element id="Patient.sdtcEthnicGroupCode">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+        <valueString value="ethnicGroupCode"/>
+      </extension>
+      <path value="Patient.sdtcEthnicGroupCode"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+      </type>
+      <binding>
+        <strength value="extensible"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-Ethnicity"/>
+      </binding>
+    </element>
+    <element id="Patient.guardian">
+      <path value="Patient.guardian"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Guardian"/>
+      </type>
+    </element>
+    <element id="Patient.birthplace">
+      <path value="Patient.birthplace"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/Birthplace"/>
+      </type>
+    </element>
+    <element id="Patient.languageCommunication">
+      <path value="Patient.languageCommunication"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/LanguageCommunication"/>
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

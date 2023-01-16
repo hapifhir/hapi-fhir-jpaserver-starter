@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="TEL"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
+      <p>A telephone number (voice or fax), e-mail address, or other locator for a resource (information or service) mediated by telecommunication equipment. The address is specified as a Universal Resource Locator (URL) qualified by time specification and use codes that help in deciding which address to use for a given time and purpose.</p>
+    </div>
+  </text>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <url value="http://hl7.org/fhir/cda/StructureDefinition/TEL"/>
+  <version value="2.1.0-draft1"/>
+  <name value="TEL"/>
+  <title value="TEL: TelecommunicationAddress (V3 Data Type)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2023-01-16T15:52:41+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+  </contact>
+  <description value="A telephone number (voice or fax), e-mail address, or other locator for a resource mediated by telecommunication equipment. The address is specified as a Universal Resource Locator (URL) qualified by time specification and use codes that help in deciding which address to use for a given time and purpose."/>
+  <fhirVersion value="5.0.0-ballot"/>
+  <mapping>
+    <identity value="rim"/>
+    <uri value="http://hl7.org/v3"/>
+    <name value="RIM Mapping"/>
+  </mapping>
+  <kind value="logical"/>
+  <abstract value="false"/>
+  <type value="TEL"/>
+  <baseDefinition value="http://hl7.org/fhir/cda/StructureDefinition/ANY"/>
+  <derivation value="specialization"/>
+  <snapshot>
+    <element id="TEL">
+      <path value="TEL"/>
+      <short value="Base for all types and resources"/>
+      <definition value="Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type."/>
+      <min value="1"/>
+      <max value="*"/>
+      <base>
+        <path value="Base"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <isModifier value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="TEL.nullFlavor">
+      <path value="TEL.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+      </binding>
+    </element>
+    <element id="TEL.value">
+      <path value="TEL.value"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="TEL.value"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="uri"/>
+      </type>
+    </element>
+    <element id="TEL.useablePeriod">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype">
+        <valueCanonical value="http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"/>
+      </extension>
+      <path value="TEL.useablePeriod"/>
+      <representation value="typeAttr"/>
+      <label value="Useable Period"/>
+      <definition value="Specifies the periods of time during which the telecommunication address can be used. For a telephone number, this can indicate the time of day in which the party can be reached on that telephone. For a web address, it may specify a time range in which the web content is promised to be available under the given address."/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="TEL.useablePeriod"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/PIVL-TS"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"/>
+      </type>
+    </element>
+    <element id="TEL.use">
+      <path value="TEL.use"/>
+      <representation value="xmlAttr"/>
+      <label value="Use Code"/>
+      <definition value="One or more codes advising a system or user which telecommunication address in a set of like addresses to select for a given telecommunication need."/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="TEL.use"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="code"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-AddressUse"/>
+      </binding>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="TEL">
+      <path value="TEL"/>
+      <min value="1"/>
+      <max value="*"/>
+    </element>
+    <element id="TEL.value">
+      <path value="TEL.value"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="uri"/>
+      </type>
+    </element>
+    <element id="TEL.useablePeriod">
+      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype">
+        <valueCanonical value="http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"/>
+      </extension>
+      <path value="TEL.useablePeriod"/>
+      <representation value="typeAttr"/>
+      <label value="Useable Period"/>
+      <definition value="Specifies the periods of time during which the telecommunication address can be used. For a telephone number, this can indicate the time of day in which the party can be reached on that telephone. For a web address, it may specify a time range in which the web content is promised to be available under the given address."/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/PIVL-TS"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"/>
+      </type>
+    </element>
+    <element id="TEL.use">
+      <path value="TEL.use"/>
+      <representation value="xmlAttr"/>
+      <label value="Use Code"/>
+      <definition value="One or more codes advising a system or user which telecommunication address in a set of like addresses to select for a given telecommunication need."/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="code"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-AddressUse"/>
+      </binding>
+    </element>
+  </differential>
+</StructureDefinition>
