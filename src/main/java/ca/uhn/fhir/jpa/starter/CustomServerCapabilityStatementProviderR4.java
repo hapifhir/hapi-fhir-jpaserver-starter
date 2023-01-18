@@ -7,9 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.r4.model.CapabilityStatement;
+import org.hl7.fhir.r4.model.CapabilityStatement.CapabilityStatementImplementationComponent;
 import org.hl7.fhir.r4.model.CapabilityStatement.CapabilityStatementRestSecurityComponent;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.UriType;
+
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.provider.ServerCapabilityStatementProvider;
@@ -17,23 +19,22 @@ import ca.uhn.fhir.rest.server.provider.ServerCapabilityStatementProvider;
 
 public class CustomServerCapabilityStatementProviderR4 extends ServerCapabilityStatementProvider {
 
-	
-	public CustomServerCapabilityStatementProviderR4(RestfulServer theServer) {
-		super(theServer);
-		// TODO Auto-generated constructor stub
-	}
-	
 	private static final String OAUTH_TOKEN_URL = System.getenv("OAUTH_TOKEN_URL");
 	private static final String OAUTH_MANAGE_URL = System.getenv("OAUTH_MANAGE_URL");
 	
 	private CapabilityStatement capabilityStatement;
+	private String myImplementationDescription;
 	
+	public CustomServerCapabilityStatementProviderR4(RestfulServer theServer,String myImplementationDescription) {
+		super(theServer);
+		this.myImplementationDescription = myImplementationDescription;
+	}
 	
 	@Override
 	public IBaseConformance getServerConformance(HttpServletRequest theRequest, RequestDetails theRequestDetails) {
-		// TODO Auto-generated method stub
 		capabilityStatement =  (CapabilityStatement) super.getServerConformance(theRequest, theRequestDetails);
 		capabilityStatement.getRest().get(0).setSecurity(getSecurityComponent());
+		capabilityStatement.setImplementation(new CapabilityStatementImplementationComponent().setDescription(myImplementationDescription));
 		return capabilityStatement;
 	}
 

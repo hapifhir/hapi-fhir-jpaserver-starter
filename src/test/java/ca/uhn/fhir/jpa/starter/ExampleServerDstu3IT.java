@@ -39,7 +39,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
   {
-     "spring.batch.job.enabled=false",
      "spring.datasource.url=jdbc:h2:mem:dbr3",
      "hapi.fhir.cql_enabled=true",
      "hapi.fhir.fhir_version=dstu3",
@@ -113,7 +112,7 @@ public class ExampleServerDstu3IT implements IServerSupport {
       .execute();
 
     List<Parameters.ParametersParameterComponent> response = outParams.getParameter();
-    Assert.assertTrue(!response.isEmpty());
+	  Assert.assertFalse(response.isEmpty());
     Parameters.ParametersParameterComponent component = response.get(0);
     Assert.assertTrue(component.getResource() instanceof MeasureReport);
     MeasureReport report = (MeasureReport) component.getResource();
@@ -149,7 +148,7 @@ public class ExampleServerDstu3IT implements IServerSupport {
   private Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
     String json = stringFromResource(theLocation);
     Bundle bundle = (Bundle) theCtx.newJsonParser().parseResource(json);
-    Bundle result = (Bundle) theClient.transaction().withBundle(bundle).execute();
+    Bundle result = theClient.transaction().withBundle(bundle).execute();
     return result;
   }
 

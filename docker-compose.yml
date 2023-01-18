@@ -5,35 +5,24 @@ services:
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
     ports:
-      - '8080:8080'
+      - "8080:8080"
     environment:
-      datasource.driver: 'com.mysql.jdbc.Driver'
-      datasource.password: 'admin'
-      datasource.url: 'jdbc:mysql://hapi-fhir-mysql/hapi'
-      datasource.username: 'admin'
-      fhir_version: 'DSTU2'
-      hapi.fhir.server_address: 'http://localhost:8080/fhir/'
-      hibernate.dialect: 'org.hibernate.dialect.MySQL5InnoDBDialect'
-      reuse_cached_search_results_millis: '0'
-      spring.config.location: 'classpath:/application-custom.yaml'
-      subscription.resthook.enabled: 'true'
-      subscription.websocket.enabled: 'true'
-      url_pattern: "/fhir/*"
-      enable-web: false
-  hapi-fhir-mysql:
-    image: mysql:latest
-    container_name: hapi-fhir-mysql
-    #https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html
-    command: --lower_case_table_names=1
+      fhir_version: 'R4'
+      hapi.fhir.server_address: 'http://localhost:8080/baseR4'
+      spring.datasource.url: 'jdbc:postgresql://hapi-fhir-postgres:5432/hapi'
+      spring.datasource.username: admin
+      spring.datasource.password: admin
+      spring.datasource.driverClassName: org.postgresql.Driver
+      spring.jpa.properties.hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+  hapi-fhir-postgres:
+    image: postgres:13-alpine
+    container_name: hapi-fhir-postgres
     restart: always
     environment:
-      MYSQL_DATABASE: 'hapi'
-      MYSQL_USER: 'admin'
-      MYSQL_PASSWORD: 'admin'
-      MYSQL_ROOT_PASSWORD: 'admin'
+      POSTGRES_DB: "hapi"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
     volumes:
-      - hapi-fhir-mysql:/var/lib/mysql
+      - hapi-fhir-postgres:/var/lib/postgresql/data
 volumes:
-  hapi-fhir-mysql:
-
-    
+  hapi-fhir-postgres:

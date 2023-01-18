@@ -1,4 +1,4 @@
-package ca.uhn.fhir.jpa.starter;
+package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
@@ -7,6 +7,8 @@ import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
+import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.util.JpaHibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.EmailSenderImpl;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
@@ -14,6 +16,7 @@ import ca.uhn.fhir.rest.server.mail.IMailSvc;
 import ca.uhn.fhir.rest.server.mail.MailConfig;
 import ca.uhn.fhir.rest.server.mail.MailSvc;
 import com.google.common.base.Strings;
+import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.hl7.fhir.dstu2.model.Subscription;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +28,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * This is the primary configuration file for the example server
@@ -78,54 +82,84 @@ public class FhirServerConfigCommon {
    */
   @Bean
   public DaoConfig daoConfig(AppProperties appProperties) {
-    DaoConfig retVal = new DaoConfig();
+    DaoConfig daoConfig = new DaoConfig();
 
-    retVal.setIndexMissingFields(appProperties.getEnable_index_missing_fields() ? DaoConfig.IndexEnabledEnum.ENABLED : DaoConfig.IndexEnabledEnum.DISABLED);
-    retVal.setAutoCreatePlaceholderReferenceTargets(appProperties.getAuto_create_placeholder_reference_targets());
-    retVal.setEnforceReferentialIntegrityOnWrite(appProperties.getEnforce_referential_integrity_on_write());
-    retVal.setEnforceReferentialIntegrityOnDelete(appProperties.getEnforce_referential_integrity_on_delete());
-    retVal.setAllowContainsSearches(appProperties.getAllow_contains_searches());
-    retVal.setAllowMultipleDelete(appProperties.getAllow_multiple_delete());
-    retVal.setAllowExternalReferences(appProperties.getAllow_external_references());
-    retVal.setSchedulingDisabled(!appProperties.getDao_scheduling_enabled());
-    retVal.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
-    retVal.setExpungeEnabled(appProperties.getExpunge_enabled());
+    daoConfig.setIndexMissingFields(appProperties.getEnable_index_missing_fields() ? DaoConfig.IndexEnabledEnum.ENABLED : DaoConfig.IndexEnabledEnum.DISABLED);
+    daoConfig.setAutoCreatePlaceholderReferenceTargets(appProperties.getAuto_create_placeholder_reference_targets());
+    daoConfig.setEnforceReferentialIntegrityOnWrite(appProperties.getEnforce_referential_integrity_on_write());
+    daoConfig.setEnforceReferentialIntegrityOnDelete(appProperties.getEnforce_referential_integrity_on_delete());
+    daoConfig.setAllowContainsSearches(appProperties.getAllow_contains_searches());
+    daoConfig.setAllowMultipleDelete(appProperties.getAllow_multiple_delete());
+    daoConfig.setAllowExternalReferences(appProperties.getAllow_external_references());
+    daoConfig.setSchedulingDisabled(!appProperties.getDao_scheduling_enabled());
+    daoConfig.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
+    daoConfig.setExpungeEnabled(appProperties.getExpunge_enabled());
     if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
-      retVal.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
+      daoConfig.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
 
     Integer maxFetchSize =  appProperties.getMax_page_size();
-    retVal.setFetchSizeDefaultMaximum(maxFetchSize);
+    daoConfig.setFetchSizeDefaultMaximum(maxFetchSize);
     ourLog.info("Server configured to have a maximum fetch size of " + (maxFetchSize == Integer.MAX_VALUE ? "'unlimited'" : maxFetchSize));
 
     Long reuseCachedSearchResultsMillis = appProperties.getReuse_cached_search_results_millis();
-    retVal.setReuseCachedSearchResultsForMillis(reuseCachedSearchResultsMillis);
+    daoConfig.setReuseCachedSearchResultsForMillis(reuseCachedSearchResultsMillis);
     ourLog.info("Server configured to cache search results for {} milliseconds", reuseCachedSearchResultsMillis);
 
 
     Long retainCachedSearchesMinutes = appProperties.getRetain_cached_searches_mins();
-    retVal.setExpireSearchResultsAfterMillis(retainCachedSearchesMinutes * 60 * 1000);
+    daoConfig.setExpireSearchResultsAfterMillis(retainCachedSearchesMinutes * 60 * 1000);
 
     if(appProperties.getSubscription() != null) {
       // Subscriptions are enabled by channel type
       if (appProperties.getSubscription().getResthook_enabled()) {
         ourLog.info("Enabling REST-hook subscriptions");
-        retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
+        daoConfig.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
       }
       if (appProperties.getSubscription().getEmail() != null) {
         ourLog.info("Enabling email subscriptions");
-        retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
+        daoConfig.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
       }
       if (appProperties.getSubscription().getWebsocket_enabled()) {
         ourLog.info("Enabling websocket subscriptions");
-        retVal.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
+        daoConfig.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
       }
     }
 
-    retVal.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
-	 retVal.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
-	 retVal.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
+    daoConfig.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
+	 daoConfig.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
+	 daoConfig.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
 
-    return retVal;
+	      if (appProperties.getLastn_enabled()) {
+      daoConfig.setLastNEnabled(true);
+    }
+
+	  if(appProperties.getInline_resource_storage_below_size() != 0){
+		  daoConfig.setInlineResourceTextBelowSize(appProperties.getInline_resource_storage_below_size());
+	  }
+
+	  daoConfig.setStoreResourceInHSearchIndex(appProperties.getStore_resource_in_lucene_index_enabled());
+	  daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
+	  daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
+
+
+
+    if (appProperties.getAllowed_bundle_types() != null) {
+      daoConfig.setBundleTypesAllowedForStorage(appProperties.getAllowed_bundle_types().stream().map(BundleType::toCode).collect(Collectors.toSet()));
+    }
+
+	  daoConfig.setDeferIndexingForCodesystemsOfSize(appProperties.getDefer_indexing_for_codesystems_of_size());
+
+
+    if (appProperties.getClient_id_strategy() == DaoConfig.ClientIdStrategyEnum.ANY) {
+		 daoConfig.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
+		 daoConfig.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
+    }
+    //Parallel Batch GET execution settings
+	  daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
+	  daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());
+
+
+    return daoConfig;
   }
 
   @Bean
@@ -167,39 +201,12 @@ public class FhirServerConfigCommon {
     if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
       modelConfig.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
 
-    // You can enable these if you want to support Subscriptions from your server
-    if (appProperties.getSubscription() != null && appProperties.getSubscription().getResthook_enabled() != null) {
-      modelConfig.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.RESTHOOK);
-    }
-
-    if (appProperties.getSubscription()  != null && appProperties.getSubscription().getEmail() != null) {
-      modelConfig.addSupportedSubscriptionType(Subscription.SubscriptionChannelType.EMAIL);
-    }
-
     modelConfig.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 
     modelConfig.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
     modelConfig.setIndexIdentifierOfType(appProperties.getEnable_index_of_type());
     return modelConfig;
   }
-
-  /**
-   * The following bean configures the database connection. The 'url' property value of "jdbc:derby:directory:jpaserver_derby_files;create=true" indicates that the server should save resources in a
-   * directory called "jpaserver_derby_files".
-   * <p>
-   * A URL to a remote database could also be placed here, along with login credentials and other properties supported by BasicDataSource.
-   */
-  /*@Bean(destroyMethod = "close")
-  public BasicDataSource dataSource() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-    BasicDataSource retVal = new BasicDataSource();
-    Driver driver = (Driver) Class.forName(HapiProperties.getDataSourceDriver()).getConstructor().newInstance();
-    retVal.setDriver(driver);
-    retVal.setUrl(HapiProperties.getDataSourceUrl());
-    retVal.setUsername(HapiProperties.getDataSourceUsername());
-    retVal.setPassword(HapiProperties.getDataSourcePassword());
-    retVal.setMaxTotal(HapiProperties.getDataSourceMaxPoolSize());
-    return retVal;
-  }*/
 
   @Lazy
   @Bean

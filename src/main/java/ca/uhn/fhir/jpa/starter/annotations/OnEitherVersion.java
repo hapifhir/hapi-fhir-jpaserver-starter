@@ -28,6 +28,10 @@ public class OnEitherVersion extends AnyNestedCondition {
   static class OnR4 {
   }
 
+	@Conditional(OnR4BCondition.class)
+	static class OnR4B {
+	}
+
   @Conditional(OnR5Condition.class)
   static class OnR5 {
   }
