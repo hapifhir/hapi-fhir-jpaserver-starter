@@ -530,6 +530,15 @@ public class HelperService {
 		}
 	}
 
+	public ResponseEntity<?> getTabularIndicators() {
+		try {
+			List<TabularItem> indicators = getTabularItemListFromFile();
+			return ResponseEntity.ok(indicators);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok("Error : Config File Not Found");
+		}
+	}
 
 	public ResponseEntity<?> getFilters() {
 		try {
@@ -658,6 +667,81 @@ public class HelperService {
 			return null;
 		}
 		return analyticItems;
+	}
+
+	public ResponseEntity<?> getTabularDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, LinkedHashMap<String, String> filters) {
+		List<ScoreCardItem> scoreCardItems = new ArrayList<>();
+		try {
+			List<TabularItem> tabularItemList = getTabularItemListFromFile();
+			List<String> fhirSearchList = getFhirSearchListByFilters(filters);
+
+			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+
+			Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
+
+			if (fhirSearchList.isEmpty()) {
+				Date start = Date.valueOf(startDate);
+				Date end = Date.valueOf(endDate);
+				performCachingForTabularData(tabularItemList, idsAndOrgIdToChildrenMapPair.first, start, end);
+				for (TabularItem indicator : tabularItemList) {
+					Double cacheValueSum = notificationDataSource
+						.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
+							Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), idsAndOrgIdToChildrenMapPair.first);
+					scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+						cacheValueSum.toString(), startDate, endDate));
+				}
+			} else {
+				scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getTabularData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), tabularItemList, fhirSearchList);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok("Error : Config File Not Found");
+		}
+		return ResponseEntity.ok(scoreCardItems);
+	}
+
+	private void performCachingForTabularData(List<TabularItem> indicators, List<String> facilityIds, Date startDate, Date endDate) {
+		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.getMd5StringFromFhirPath(indicatorItem.getFhirPath())).collect(Collectors.toList());
+
+		List<Date> dates = new ArrayList<>();
+		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
+
+		List<String> existingIndicators = new ArrayList<>();
+		List<String> nonExistingIndicators = new ArrayList<>();
+
+		for (String indicator : currentIndicatorMD5List) {
+			if (presentIndicators.contains(indicator)) {
+				existingIndicators.add(indicator);
+			} else {
+				nonExistingIndicators.add(indicator);
+			}
+		}
+		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate, nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
+
+		Date start = startDate;
+		Date end = Date.valueOf(endDate.toLocalDate().plusDays(1));
+		while (!start.equals(end)) {
+			if (!presentDates.contains(start)) {
+				dates.add(start);
+			}
+			start = Date.valueOf(start.toLocalDate().plusDays(1));
+		}
+
+		facilityIds.forEach(facilityId -> {
+			dates.forEach(date -> {
+				cachingService.cacheTabularData(facilityId, date, indicators);
+			});
+		});
+
+		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
+		//Always cache current date data if it lies between start and end date.
+		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+			facilityIds.forEach(facilityId -> {
+				cachingService.cacheTabularData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators);
+			});
+		}
+
 	}
 
 	public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type) {
@@ -823,6 +907,12 @@ public class HelperService {
 	List<IndicatorItem> getIndicatorItemListFromFile() throws FileNotFoundException {
 		JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
 		return new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>() {
+		}.getType());
+	}
+
+	List<TabularItem> getTabularItemListFromFile() throws FileNotFoundException {
+		JsonReader reader = new JsonReader(new FileReader(appProperties.getTabular_config_file()));
+		return new Gson().fromJson(reader, new TypeToken<List<TabularItem>>() {
 		}.getType());
 	}
 

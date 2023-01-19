@@ -54,6 +54,28 @@ public class CachingService {
 		}
 	}
 
+	public void cacheTabularData(String orgId, Date date, List<TabularItem> indicators) {
+		notificationDataSource = NotificationDataSource.getInstance();
+		LinkedHashMap<Integer, String> mapOfIdToMd5 = new LinkedHashMap<>();
+		for (TabularItem item : indicators) {
+			mapOfIdToMd5.put(item.getId(), Utils.getMd5StringFromFhirPath(item.getFhirPath()));
+		}
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getTabularData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList());
+
+		for (ScoreCardItem item : data) {
+			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
+			if (cacheEntities.isEmpty()) {
+				CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()));
+				notificationDataSource.insert(cacheEntity);
+			} else {
+				CacheEntity cacheEntity = cacheEntities.get(0);
+				cacheEntity.setValue(Double.valueOf(item.getValue()));
+				notificationDataSource.update(cacheEntity);
+			}
+		}
+	}
+
 
 	@Scheduled(fixedDelay = 24 * DELAY, initialDelay = DELAY)
 	private void cacheDailyData() {

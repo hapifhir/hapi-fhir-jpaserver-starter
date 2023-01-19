@@ -56,6 +56,7 @@ hapi:
       gcp_credential_file_path: C:\workspace\IPRD\ANC\anc-oyo\data\hapi\gcpCredential.json
       sql_screen_time_file_path: C:\workspace\IPRD\ANC\anc-oyo\data\hapi\sql_screen_time.txt
       anc_config_file : C:\workspace\IPRD\ANC\anc-oyo\data\hapi\anc_config.json
+      tabular_config_file : C:\workspace\IPRD\ANC\anc-oyo\data\hapi\tabular_config.json
       filters_config_file : C:\workspace\IPRD\ANC\anc-oyo\data\hapi\filters_config.json
       daily_and_summary_config_file :  C:\workspace\IPRD\ANC\anc-oyo\data\hapi\daily_and_summary_config.json
       analytics_config_file : C:\workspace\IPRD\ANC\anc-oyo\data\hapi\analytics_config.json

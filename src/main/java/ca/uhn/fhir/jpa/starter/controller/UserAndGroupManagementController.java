@@ -137,6 +137,11 @@ public class UserAndGroupManagementController {
 		return helperService.getIndicators();
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/tabularIndicator")
+	public ResponseEntity<?> tabularIndicators() {
+		return helperService.getTabularIndicators();
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/filters")
 	public ResponseEntity<?> filter() {
 		return helperService.getFilters();
@@ -164,6 +169,24 @@ public class UserAndGroupManagementController {
 			return helperService.getDataByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, type, filters);
 		}
 		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/tabularData")
+	public ResponseEntity<?> getTabularData(
+		@RequestHeader(name = "Authorization") String token,
+		@RequestParam Map<String, String> allFilters
+	) {
+		String startDate = allFilters.get("from");
+		String endDate = allFilters.get("to");
+		allFilters.remove("from");
+		allFilters.remove("to");
+		allFilters.remove("lga");
+		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		if (practitionerRoleId == null) {
+			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
+		}
+		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
+		return helperService.getTabularDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, filters);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/analytics")

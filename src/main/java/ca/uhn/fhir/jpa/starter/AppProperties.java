@@ -61,6 +61,7 @@ public class AppProperties {
 	private String fhir_hapi_client_secret = "xyz";
 	private String hapi_server_address = null;
 	private String anc_config_file = null;
+   private String tabular_config_file = null;
 	private String analytics_config_file = null;
 	private String country_org_id = null;
 	private String filters_config_file = null;
@@ -317,6 +318,14 @@ public class AppProperties {
 
 	public void setAnc_config_file(String anc_config_file) {
 		this.anc_config_file = anc_config_file;
+	}
+
+	public String getTabular_config_file() {
+		return tabular_config_file;
+	}
+
+	public void setTabular_config_file(String tabular_config_file) {
+		this.tabular_config_file = tabular_config_file;
 	}
 
 	public String getAnalytics_config_file() {
