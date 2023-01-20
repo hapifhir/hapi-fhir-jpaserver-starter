@@ -61,6 +61,7 @@ public class AppProperties {
 	private String fhir_hapi_client_secret = "xyz";
 	private String hapi_server_address = null;
 	private String anc_config_file = null;
+	private String line_chart_definitions_file = null;
    private String tabular_config_file = null;
 	private String analytics_config_file = null;
 	private String country_org_id = null;
@@ -311,7 +312,17 @@ public class AppProperties {
 	public void setHapi_Server_address(String hapi_server_address) {
 		this.hapi_server_address = hapi_server_address;
 	}
+	
+	
+	public String getLine_chart_definitions_file() {
+		return line_chart_definitions_file;
+	}
 
+	public void setLine_chart_definitions_file(String line_chart_definitions_file) {
+		this.line_chart_definitions_file = line_chart_definitions_file;
+	}
+
+	
 	public String getAnc_config_file() {
 		return anc_config_file;
 	}

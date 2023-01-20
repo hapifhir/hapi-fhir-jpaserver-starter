@@ -15,7 +15,7 @@
       <artifactId>itext7-core</artifactId>
       <version>7.2.2</version>
       <scope>compile</scope>
-      <type>pom</type>
+      <type>pom</type>      
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>

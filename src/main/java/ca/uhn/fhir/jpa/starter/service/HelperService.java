@@ -530,6 +530,15 @@ public class HelperService {
 		}
 	}
 
+	public ResponseEntity<?> getLineChartDefinitions() {
+		try {
+			List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile();
+			return ResponseEntity.ok(lineCharts);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok("Error : Config File Not Found");
+		}
+	}
 	public ResponseEntity<?> getTabularIndicators() {
 		try {
 			List<TabularItem> indicators = getTabularItemListFromFile();
@@ -879,7 +888,157 @@ public class HelperService {
 
 	}
 
+	public ResponseEntity<?> getLineChartByPractitionerRoleIdWithFilters(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters) {
+		notificationDataSource = NotificationDataSource.getInstance();
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		List<LineChartItemCollection> lineChartItemCollections = new ArrayList<>();
+		HashMap<Integer,List<LineChartItem>> lineChartIdMap = new HashMap<Integer,List<LineChartItem>>();
+		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+		try {
+			List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile();
+			List<String> fhirSearchList = getFhirSearchListByFilters(filters);
+			List<Pair<Date, Date>> datePairList = DateUtilityHelper.getQuarterlyDates(Date.valueOf(startDate), Date.valueOf(endDate));
+			switch (type) {
+				case quarterly: {
+					datePairList = DateUtilityHelper.getQuarterlyDates(Date.valueOf(startDate), Date.valueOf(endDate));
+					break;
+				}
+				case weekly: {
+					datePairList = DateUtilityHelper.getWeeklyDates(Date.valueOf(startDate), Date.valueOf(endDate));
+					break;
+				}
+				case monthly: {
+					datePairList = DateUtilityHelper.getMonthlyDates(Date.valueOf(startDate), Date.valueOf(endDate));
+					break;
+				}
+				case daily: {
+					datePairList = DateUtilityHelper.getDailyDates(Date.valueOf(startDate), Date.valueOf(endDate));
+					break;
+				}
+			}
+			for (Pair<Date, Date> pair : datePairList) {
+				List<LineChartItemCollection> lineChartItemCollectionsForDate = ReportGeneratorFactory.INSTANCE.reportGenerator().getLineChartData(fhirClientProvider, organizationId, new DateRange(pair.first.toString(), pair.second.toString()), lineCharts, fhirSearchList);
+				for(LineChartItemCollection lineChartItemCollection : lineChartItemCollectionsForDate ) {
+					if(lineChartIdMap.get(lineChartItemCollection.getChartId())!=null) {
+						lineChartIdMap.get(lineChartItemCollection.getChartId()).addAll(lineChartItemCollection.getValue());
+					}else {
+						List<LineChartItem> tempLineChartList = new ArrayList<LineChartItem>();
+						tempLineChartList.addAll(lineChartItemCollection.getValue());
+						lineChartIdMap.put(lineChartItemCollection.getChartId(),tempLineChartList);
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok("Error : Config File Not Found");
+		}
+		lineChartIdMap.entrySet().parallelStream().forEach(entry ->
+			lineChartItemCollections.add(new LineChartItemCollection(entry.getKey(), entry.getValue()))
+		);
+		return ResponseEntity.ok(lineChartItemCollections);
+	}
+	
+	public ResponseEntity<?> getLineChartByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type) {
+		notificationDataSource = NotificationDataSource.getInstance();
+		List<LineChartItemCollection> lineChartItemCollections = new ArrayList<>();
+		try {
+			List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile();
+			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
+			Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
+
+			Date start = Date.valueOf(startDate);
+			Date end = Date.valueOf(endDate);
+
+			performCachingForLineChartIfNotPresent(lineCharts, idsAndOrgIdToChildrenMapPair.first, start, end);
+			List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+			List<Pair<Date, Date>> datePairList = DateUtilityHelper.getDailyDates(start, end);
+			switch (type) {
+				case quarterly: {
+					datePairList = DateUtilityHelper.getQuarterlyDates(start, end);
+					break;
+				}
+				case weekly: {
+					datePairList = DateUtilityHelper.getWeeklyDates(start, end);		
+					break;
+				}
+				case monthly: {
+					datePairList = DateUtilityHelper.getMonthlyDates(start, end);
+					break;
+				}
+				case daily: {
+					datePairList = DateUtilityHelper.getDailyDates(start, end);
+					break;
+				}
+			default:
+				break;
+			}
+			
+			for (LineChart lineChart : lineCharts) {
+				ArrayList<LineChartItem> lineChartItems = new ArrayList<LineChartItem>();
+				for (Pair<Date, Date> weekDayPair : datePairList) {
+					for(LineChartItemDefinition lineChartDefinition : lineChart.getLineChartItemDefinitions()) {
+						Double cacheValueSum = notificationDataSource
+								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(weekDayPair.first, weekDayPair.second,
+									Utils.getMd5KeyForLineCacheMd5(lineChartDefinition.getFhirPath(),lineChartDefinition.getId(),lineChart.getId()), facilityIds);
+						lineChartItems.add(new LineChartItem(lineChartDefinition.getId(),String.valueOf(cacheValueSum), weekDayPair.first.toString(), weekDayPair.second.toString()));
+					}
+				}
+				lineChartItemCollections.add(new LineChartItemCollection(lineChart.getId(), lineChartItems));
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok("Error : Config File Not Found");
+		}
+		return ResponseEntity.ok(lineChartItemCollections);
+	}
+	
+	private void performCachingForLineChartIfNotPresent(List<LineChart> lineCharts, List<String> facilityIds, Date startDate, Date endDate) {
+		List<String> currentIndicatorMD5List = lineCharts.stream().flatMap(lineChart ->
+				lineChart.getLineChartItemDefinitions().stream().map(lineDefinition->
+						Utils.getMd5KeyForLineCacheMd5(lineDefinition.getFhirPath(), lineDefinition.getId(), lineChart.getId())
+					)
+				).collect(Collectors.toList());
+
+		List<Date> dates = new ArrayList<>();
+		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
+
+		List<String> existingIndicators = new ArrayList<>();
+		List<String> nonExistingIndicators = new ArrayList<>();
+
+		for (String indicator : currentIndicatorMD5List) {
+			if (presentIndicators.contains(indicator)) {
+				existingIndicators.add(indicator);
+			} else {
+				nonExistingIndicators.add(indicator);
+			}
+		}
+		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate, nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
+
+		Date start = startDate;
+		Date end = Date.valueOf(endDate.toLocalDate().plusDays(1));
+		while (!start.equals(end)) {
+			if (!presentDates.contains(start)) {
+				dates.add(start);
+			}
+			start = Date.valueOf(start.toLocalDate().plusDays(1));
+		}
+
+		facilityIds.forEach(facilityId -> {
+			dates.forEach(date -> {
+				cachingService.cacheDataLineChart(facilityId, date, lineCharts);
+			});
+		});
+
+		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
+		//Always cache current date data if it lies between start and end date.
+		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+			facilityIds.forEach(facilityId -> {
+				cachingService.cacheDataLineChart(facilityId, DateUtilityHelper.getCurrentSqlDate(), lineCharts);
+			});
+		}
+	}
+	
 	List<String> getFhirSearchListByFilters(LinkedHashMap<String, String> filters) throws FileNotFoundException {
 		List<String> fhirSearchList = new ArrayList<>();
 		List<FilterItem> filterItemList = getFilterItemListFromFile();
@@ -910,6 +1069,12 @@ public class HelperService {
 		}.getType());
 	}
 
+	List<LineChart> getLineChartDefinitionsItemListFromFile() throws FileNotFoundException {
+		JsonReader reader = new JsonReader(new FileReader(appProperties.getLine_chart_definitions_file()));
+		return new Gson().fromJson(reader, new TypeToken<List<LineChart>>() {
+		}.getType());
+	}
+	
 	List<TabularItem> getTabularItemListFromFile() throws FileNotFoundException {
 		JsonReader reader = new JsonReader(new FileReader(appProperties.getTabular_config_file()));
 		return new Gson().fromJson(reader, new TypeToken<List<TabularItem>>() {

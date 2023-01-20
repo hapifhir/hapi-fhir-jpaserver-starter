@@ -41,19 +41,29 @@ public class Utils {
 		}
 		return digest;
 	}
-
-	public static String getMd5StringFromFhirPath(FhirPath fhirPath) {
+	
+	public static String getStringFromFhirPath(FhirPath fhirPath) {
 		String fhirPathString = "";
 		if(fhirPath.getOperand().isEmpty()) {
-			return md5Bytes(fhirPathString.getBytes(StandardCharsets.UTF_8));
+			return fhirPathString;
 		}
-		if(fhirPath.getOperand().size() == 1) {
-			return md5Bytes(fhirPath.getOperand().get(0).getBytes(StandardCharsets.UTF_8));
+		else if(fhirPath.getOperand().size() == 1) {
+			return fhirPath.getOperand().get(0);
 		}
-		if(fhirPath.getOperator() == null && fhirPath.getOperand().size() > 1) {
-			return md5Bytes(fhirPathString.getBytes(StandardCharsets.UTF_8));
+		else if(fhirPath.getOperator() == null && fhirPath.getOperand().size() > 1) {
+			throw new IllegalArgumentException("Multiple Operands passed without operator");
 		}
 		fhirPathString = fhirPath.getOperator() + "," + String.join(",",fhirPath.getOperand());
+		return fhirPathString;
+	}
+
+	public static String getMd5StringFromFhirPath(FhirPath fhirPath) {
+		String fhirPathString = getStringFromFhirPath(fhirPath);
 		return md5Bytes(fhirPathString.getBytes(StandardCharsets.UTF_8));
+	}
+	
+	public static String getMd5KeyForLineCacheMd5(FhirPath fhirPath, Integer lineId, Integer chartId) {
+		String combinedString = getStringFromFhirPath(fhirPath)+"_"+lineId.toString()+"_"+chartId.toString();
+		return  md5Bytes(combinedString.getBytes(StandardCharsets.UTF_8));
 	}
 }

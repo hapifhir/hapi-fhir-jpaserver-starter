@@ -24,8 +24,6 @@ public class NotificationDataSource {
 		
 	Configuration conf;
 	SessionFactory sf;
-	Session session;
-	Transaction transaction;
 	private static NotificationDataSource notificationDataSource;
 	private Class<?> aClass;
 
@@ -48,16 +46,16 @@ public class NotificationDataSource {
 	}
 
 	public void insert(Object object) {
-		session = sf.openSession();
-		transaction = session.beginTransaction();
+		Session session = sf.openSession();
+		Transaction transaction = session.beginTransaction();
 		session.save(object);
 		transaction.commit();
 		session.close();
 	}
 
 	public void persist(Object object) {
-		session = sf.openSession();
-		transaction = session.beginTransaction();
+		Session session = sf.openSession();
+		Transaction transaction = session.beginTransaction();
 		try {
 			session.persist(object);
 			transaction.commit();
@@ -70,23 +68,23 @@ public class NotificationDataSource {
 	}
 
 	public void update(Object object) {
-		session = sf.openSession();
-		transaction = session.beginTransaction();
+		Session session = sf.openSession();
+		Transaction transaction = session.beginTransaction();
 		session.update(object);
 		transaction.commit();
 		session.close();
 	}
 
 	public void delete(Object object) {
-		session = sf.openSession();
-		transaction = session.beginTransaction();
+		Session session = sf.openSession();
+		Transaction transaction = session.beginTransaction();
 		session.delete(object);
 		transaction.commit();
 		session.close();
 	}
 	
 	public List<ComGenerator> fetchRecordsByScheduledDateAndStatus(Date date, MessageStatus status) {
-		session = sf.openSession();
+		Session session = sf.openSession();
 		Query query = session.createQuery("FROM ComGenerator WHERE communicationStatus=:param1 AND scheduledDate=:param2");
 		query.setParameter("param1", status.name());
 		query.setParameter("param2", date);
@@ -96,7 +94,7 @@ public class NotificationDataSource {
 	}
 
 	public List<EncounterIdEntity> fetchAllFromEncounterIdEntity() {
-		session = sf.openSession();
+		Session session = sf.openSession();
 		Query query = session.createQuery("From EncounterIdEntity");
 		List<EncounterIdEntity> encounterIds = query.getResultList();
 		session.close();
@@ -104,7 +102,7 @@ public class NotificationDataSource {
 	}
 
 	public ArrayList<ApiAsyncTaskEntity> fetchStatus(String uuid) {
-		session = sf.openSession();
+		Session session = sf.openSession();
 		Query query = session.createQuery("FROM ApiAsyncTaskEntity WHERE uuid=:param1");
 		query.setParameter("param1", uuid);
 		ArrayList<ApiAsyncTaskEntity> resultList = (ArrayList<ApiAsyncTaskEntity>) query.getResultList();
@@ -113,7 +111,7 @@ public class NotificationDataSource {
 	}
 
 	public List<CacheEntity> getCacheByDateIndicatorAndOrgId(Date date, String indicator, String orgId) {
-		session = sf.openSession();
+		Session session = sf.openSession();
 		Query query = session.createQuery("FROM CacheEntity WHERE date=:param1 AND indicator=:param2 AND org_id=:param3");
 		query.setParameter("param1", date);
 		query.setParameter("param2", indicator);
@@ -124,7 +122,7 @@ public class NotificationDataSource {
 	}
 
 	public Double getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(Date from, Date to, String indicator, List<String> orgIds) {
-		session = sf.openSession();
+		Session session = sf.openSession();
 		Query query = session.createQuery("SELECT SUM(value) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2 AND indicator=:param3 AND org_id IN (:param4)");
 		query.setParameter("param1", from);
 		query.setParameter("param2", to);
@@ -135,11 +133,12 @@ public class NotificationDataSource {
 		if(resultList.isEmpty() || resultList.get(0) == null) {
 			return 0.0;
 		}
+		
 		return (Double) resultList.get(0);
 	}
 
 	public List<Date> getDatesPresent(Date from, Date to, List<String> indicatorMD5List, List<String> facilityIds) {
-		session = sf.openSession();
+		Session session = sf.openSession();
 		Query query = session.createQuery("SELECT DISTINCT(date) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2 AND indicator IN (:param3) AND org_id IN (:param4)");
 		query.setParameter("param1",from);
 		query.setParameter("param2",to);
@@ -152,7 +151,7 @@ public class NotificationDataSource {
 	}
 
 	public List<String> getIndicatorsPresent(Date from, Date to) {
-		session = sf.openSession();
+		Session session = sf.openSession();
 		Query query = session.createQuery("SELECT DISTINCT(indicator) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2");
 		query.setParameter("param1",from);
 		query.setParameter("param2",to);
@@ -163,8 +162,8 @@ public class NotificationDataSource {
 	
 	
 	public void deleteRecordsByTimePeriod(Date date) {
-		session = sf.openSession();
-		transaction = session.beginTransaction();
+		Session session = sf.openSession();
+		Transaction transaction = session.beginTransaction();
 		Query query = session.createQuery("DELETE ComGenerator WHERE scheduledDate < :param1 AND communicationStatus=:param2");
 		query.setParameter("param1", date);
 		query.setParameter("param2", MessageStatus.SENT.name());
@@ -174,8 +173,8 @@ public class NotificationDataSource {
 	}
 
 	public void clearAsyncTable(){
-		session = sf.openSession();
-		transaction = session.beginTransaction();
+		Session session = sf.openSession();
+		Transaction transaction = session.beginTransaction();
 		Query query = session.createQuery("DELETE ApiAsyncTaskEntity");
 		query.executeUpdate();
 		transaction.commit();
@@ -183,8 +182,8 @@ public class NotificationDataSource {
 	}
 
 	public void deleteFromEncounterIdEntityByEncounterId(String encounterId) {
-		session = sf.openSession();
-		transaction = session.beginTransaction();
+		Session session = sf.openSession();
+		Transaction transaction = session.beginTransaction();
 		Query query = session.createQuery("DELETE EncounterIdEntity WHERE encounterId = :param1");
 		query.setParameter("param1", encounterId);
 		query.executeUpdate();

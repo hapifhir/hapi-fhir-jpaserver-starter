@@ -77,6 +77,33 @@ public class CachingService {
 	}
 
 
+	public void cacheDataLineChart(String orgId, Date date, List<LineChart> lineCharts) {
+		notificationDataSource = NotificationDataSource.getInstance();
+		LinkedHashMap<String, String> mapOfIdToMd5 = new LinkedHashMap<>();
+		for (LineChart lineChart : lineCharts) {
+			for(LineChartItemDefinition lineDefinition: lineChart.getLineChartItemDefinitions()) {
+				mapOfIdToMd5.put(String.valueOf(lineChart.getId())+" "+String.valueOf(lineDefinition.getId()), Utils.getMd5KeyForLineCacheMd5(lineDefinition.getFhirPath(), lineDefinition.getId(), lineChart.getId()));	
+			}
+		}
+		
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		List<LineChartItemCollection> lineChartItemCollections = ReportGeneratorFactory.INSTANCE.reportGenerator().getLineChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), lineCharts, Collections.emptyList());
+
+		for (LineChartItemCollection lineChartItemCollection : lineChartItemCollections) {
+			for(LineChartItem lineChartItem: lineChartItemCollection.getValue()) {
+				List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId())+" "+String.valueOf(lineChartItem.getLineId())), orgId);
+				if (cacheEntities.isEmpty()) {
+					CacheEntity cacheEntity = new CacheEntity(orgId,mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId())+" "+String.valueOf(lineChartItem.getLineId())), date, Double.valueOf(lineChartItem.getValue()));
+					notificationDataSource.insert(cacheEntity);
+				} else {
+					CacheEntity cacheEntity = cacheEntities.get(0);
+					cacheEntity.setValue(Double.valueOf(lineChartItem.getValue()));
+					notificationDataSource.update(cacheEntity);
+				}	
+			}
+		}
+	}
+	
 	@Scheduled(fixedDelay = 24 * DELAY, initialDelay = DELAY)
 	private void cacheDailyData() {
 		try {

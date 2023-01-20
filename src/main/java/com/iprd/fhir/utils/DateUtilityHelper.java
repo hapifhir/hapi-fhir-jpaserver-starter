@@ -111,7 +111,7 @@ public class DateUtilityHelper {
 		  List<Pair<Date, Date>> dailyDatePairs = new ArrayList<>();
 
 		  for (int i = 0; i < dayNumber; i++) {
-		    LocalDate endOfDay = startDate.plusDays(1);
+		    LocalDate endOfDay = startDate;
 		    dailyDatePairs.add(new Pair<Date,Date>(Date.valueOf(startDate),Date.valueOf(endOfDay)));
 		    startDate = startDate.plusDays(1);
 		  }
