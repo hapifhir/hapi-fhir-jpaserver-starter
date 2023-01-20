@@ -137,6 +137,11 @@ public class UserAndGroupManagementController {
 		return helperService.getIndicators();
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/pieChartDefinition")
+	public ResponseEntity<?> pieChartDefinition(){
+		return helperService.getPieChartDefinition();
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/linechartdefinition")
 	public ResponseEntity<?> lineChartDefinition() {
 		return helperService.getLineChartDefinitions();
@@ -198,6 +203,23 @@ public class UserAndGroupManagementController {
 			return helperService.getLineChartByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, type, filters);
 		}
 		return helperService.getLineChartByPractitionerRoleId(practitionerRoleId, startDate, endDate, type);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/pieChartData")
+	public ResponseEntity<?> pieChartData(
+		@RequestHeader(name = "Authorization") String token,
+		@RequestParam Map<String, String> allFilters
+	){
+		String startDate = allFilters.get("from");
+		String endDate = allFilters.get("to");
+		allFilters.remove("from");
+		allFilters.remove("to");
+		allFilters.remove("type");
+		allFilters.remove("lga");
+		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
+		filters.putAll(allFilters);
+		return helperService.getPieChartData(practitionerRoleId, startDate, endDate, filters);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/tabularData")

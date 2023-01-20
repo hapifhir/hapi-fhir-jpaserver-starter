@@ -549,6 +549,15 @@ public class HelperService {
 		}
 	}
 
+	public ResponseEntity<?> getPieChartDefinition() {
+		try {
+			List<PieChartDefinition> pieChartIndicators = getPieChartItemDefinitionFromFile();
+			return ResponseEntity.ok(pieChartIndicators);
+		} catch (FileNotFoundException e){
+			e.printStackTrace();
+			return ResponseEntity.ok("Error : Config File Not Found");
+		}
+	}
 	public ResponseEntity<?> getFilters() {
 		try {
 			List<FilterItem> filters = getFilterItemListFromFile();
@@ -564,6 +573,20 @@ public class HelperService {
 		return getOrganizationHierarchy(organizationId);
 	}
 
+	public ResponseEntity<?> getPieChartData(String practitionerRoleId, String startDate, String endDate, LinkedHashMap<String, String> filters){
+		List<PieChartItem> pieChartItems = new ArrayList<>();
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		try{
+			List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile();
+			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+			List<String> fhirSearchList = getFhirSearchListByFilters(filters);
+			pieChartItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getPieChartData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), pieChartDefinitions, fhirSearchList);
+		} catch (FileNotFoundException e){
+			e.printStackTrace();
+			return null;
+		}
+		return ResponseEntity.ok(pieChartItems);
+	}
 	public ResponseEntity<?> getDataByPractitionerRoleIdWithFilters(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<ScoreCardItem> scoreCardItems = new ArrayList<>();
@@ -1066,6 +1089,12 @@ public class HelperService {
 	List<IndicatorItem> getIndicatorItemListFromFile() throws FileNotFoundException {
 		JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
 		return new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>() {
+		}.getType());
+	}
+
+	List<PieChartDefinition> getPieChartItemDefinitionFromFile() throws FileNotFoundException {
+		JsonReader reader = new JsonReader(new FileReader(appProperties.getPie_config_file()));
+		return new Gson().fromJson(reader, new TypeToken<List<PieChartDefinition>>(){
 		}.getType());
 	}
 

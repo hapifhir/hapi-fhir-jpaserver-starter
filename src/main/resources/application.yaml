@@ -1,6 +1,6 @@
 server:
    port: 8085
-   address: testhost.dashboard
+   address: testhost.dashboard	   
 spring:
    main:
       allow-circular-references: true
@@ -52,14 +52,16 @@ hapi:
       fhir_version: R4
       image_path: Images
       country_org_id: nigeria
-      notification_datasource_config_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\notificationDataSourceConfig.xml
+      notification_datasource_config_path: D:\realm_script\anc-oyo\data\hapi\notificationDataSourceConfig.xml
+      anc_config_file : D:\realm_script\anc-oyo\data\hapi\anc_config.json
+      filters_config_file : D:\realm_script\anc-oyo\data\hapi\filters_config.json
+      daily_and_summary_config_file :  D:\realm_script\anc-oyo\data\hapi\daily_and_summary_config.json
+      pie_config_file : D:\realm_script\anc-oyo\data\hapi\pie_config.json
       gcp_credential_file_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\gcpCredential.json
       sql_screen_time_file_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\sql_screen_time.txt
-      anc_config_file : C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\anc_config.json
       line_chart_definitions_file : C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\chart_definition.json      
       tabular_config_file : C:\workspace\IPRD\ANC\anc-oyo\data\hapi\tabular_config.json
-      filters_config_file : C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\filters_config.json
-      daily_and_summary_config_file :  C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\daily_and_summary_config.json
+
       analytics_config_file : C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\analytics_config.json
 ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
       keycloak_server_address: http://testhost.dashboard:8081/auth
@@ -144,7 +146,6 @@ hapi:
       tester:
          home:
             name: Local Tester
-
             server_address: http://testhost.dashboard:8085/fhir
 # Threadpool size for BATCH'ed GETs in a bundle.
 #    bundle_batch_pool_size: 10
