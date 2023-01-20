@@ -385,6 +385,7 @@ public class HelperService {
 	}
 
 
+	//@Scheduled(fixedDelay = 300000)
 	@Scheduled(cron = "0 0 23 * * *")
 	public void removeAsyncTableCache() {
 		datasource.clearAsyncTable();
@@ -530,6 +531,15 @@ public class HelperService {
 		}
 	}
 
+	public ResponseEntity<?> getBarChartDefinition() {
+		try {
+			List<BarChartDefinition> barChartDefinition = getBarChartItemListFromFile();
+			return ResponseEntity.ok(barChartDefinition);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok("Error : Config File Not Found");
+		}
+	}
 	public ResponseEntity<?> getLineChartDefinitions() {
 		try {
 			List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile();
@@ -872,6 +882,41 @@ public class HelperService {
 		return ResponseEntity.ok(scoreCardItems);
 	}
 
+	public ResponseEntity<?> getBarChartData(String practitionerRoleId, String startDate, String endDate, ReportType type) {
+		notificationDataSource = NotificationDataSource.getInstance();
+		List<BarChartItemDataCollection> barChartItems = new ArrayList<>();
+		try {
+			List<BarChartDefinition> barCharts = getBarChartItemListFromFile();
+			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+
+			Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
+
+			Date start = Date.valueOf(startDate);
+			Date end = Date.valueOf(endDate);
+
+			performCachingIfNotPresentForBarChart(barCharts, idsAndOrgIdToChildrenMapPair.first, start, end);
+			for (BarChartDefinition barChart : barCharts) {
+				
+				for(BarChartItemDefinition barChartItem : barChart.getBarChartItemDefinitions() ) {
+					ArrayList<BarComponentData> barComponents = new ArrayList<BarComponentData>();
+					for(BarComponent barComponent: barChartItem.getBarComponentList()) {
+						Double cacheValueSum = notificationDataSource
+								.getCacheValueSumByDateRangeIndicatorAndOrgId(start, end,
+									Utils.getMd5KeyForLineCacheMd5(barComponent.getFhirPath(), barComponent.getBarChartItemId(), barChartItem.getChartId()), organizationId);
+						barComponents.add(new BarComponentData(barComponent.getId(), barComponent.getBarChartItemId(),
+								cacheValueSum.toString()));		
+					}
+					barChartItems.add(new BarChartItemDataCollection(barChartItem.getId(), barChart.getId(), barComponents));
+				}
+			}
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok("Error : Config File Not Found");
+		}
+		return ResponseEntity.ok(barChartItems);
+	}
+	
 	private void performCachingIfNotPresent(List<IndicatorItem> indicators, List<String> facilityIds, Date startDate, Date endDate) {
 		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.getMd5StringFromFhirPath(indicatorItem.getFhirPath())).collect(Collectors.toList());
 
@@ -915,6 +960,55 @@ public class HelperService {
 
 	}
 
+	private void performCachingIfNotPresentForBarChart(List<BarChartDefinition> barCharts, List<String> facilityIds, Date startDate, Date endDate) {
+		
+		List<String> currentIndicatorMD5List = barCharts.stream().flatMap(barChart -> 
+			barChart.getBarChartItemDefinitions().stream().flatMap(barItemDefinition ->
+				barItemDefinition.getBarComponentList().stream().map( barComponent ->
+					Utils.getMd5KeyForLineCacheMd5(barComponent.getFhirPath(), barComponent.getBarChartItemId(), barItemDefinition.getChartId())
+					)
+				)
+			).collect(Collectors.toList());
+
+		List<Date> dates = new ArrayList<>();
+		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
+
+		List<String> existingIndicators = new ArrayList<>();
+		List<String> nonExistingIndicators = new ArrayList<>();
+
+		for (String indicator : currentIndicatorMD5List) {
+			if (presentIndicators.contains(indicator)) {
+				existingIndicators.add(indicator);
+			} else {
+				nonExistingIndicators.add(indicator);
+			}
+		}
+		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate, nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
+
+		Date start = startDate;
+		Date end = Date.valueOf(endDate.toLocalDate().plusDays(1));
+		while (!start.equals(end)) {
+			if (!presentDates.contains(start)) {
+				dates.add(start);
+			}
+			start = Date.valueOf(start.toLocalDate().plusDays(1));
+		}
+
+		facilityIds.forEach(facilityId -> {
+			dates.forEach(date -> {
+				cachingService.cacheDataForBarChart(facilityId, date, barCharts);
+			});
+		});
+
+		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
+		//Always cache current date data if it lies between start and end date.
+		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+			facilityIds.forEach(facilityId -> {
+				cachingService.cacheDataForBarChart(facilityId, DateUtilityHelper.getCurrentSqlDate(), barCharts);
+			});
+		}
+
+	}
 	public ResponseEntity<?> getLineChartByPractitionerRoleIdWithFilters(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
@@ -1093,6 +1187,12 @@ public class HelperService {
 	List<IndicatorItem> getIndicatorItemListFromFile() throws FileNotFoundException {
 		JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
 		return new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>() {
+		}.getType());
+	}
+
+	List<BarChartDefinition> getBarChartItemListFromFile() throws FileNotFoundException {
+		JsonReader reader = new JsonReader(new FileReader(appProperties.getBarChart_config_file()));
+		return new Gson().fromJson(reader, new TypeToken<List<BarChartDefinition>>() {
 		}.getType());
 	}
 

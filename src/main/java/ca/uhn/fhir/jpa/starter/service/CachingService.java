@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -53,7 +52,37 @@ public class CachingService {
 			}
 		}
 	}
+	
+	public void cacheDataForBarChart(String orgId, Date date, List<BarChartDefinition> barCharts) {
+		notificationDataSource = NotificationDataSource.getInstance();
+		LinkedHashMap<String, String> mapOfIdToMd5 = new LinkedHashMap<>();
+		for (BarChartDefinition barChart : barCharts) {
+			for(BarChartItemDefinition barChartItem: barChart.getBarChartItemDefinitions()) {
+				for(BarComponent barComponent:barChartItem.getBarComponentList()) {
+					mapOfIdToMd5.put(String.valueOf(barChart.getId())+" "+String.valueOf(barChartItem.getId())+" "+String.valueOf(barComponent.getId()),Utils.getMd5KeyForLineCacheMd5(barComponent.getFhirPath(), barChartItem.getId(), barChart.getId()));
+				}
+			}
+			
+		}
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		List<BarChartItemDataCollection> barChartItemCollections = ReportGeneratorFactory.INSTANCE.reportGenerator().getBarChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), barCharts, Collections.emptyList());
 
+		for (BarChartItemDataCollection barChartItemCollection : barChartItemCollections) {
+			for(BarComponentData barComponent: barChartItemCollection.getBarComponentData()) {
+			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId())+" "+String.valueOf(barChartItemCollection.getId())+" "+String.valueOf(barComponent.getId())), orgId);
+			if (cacheEntities.isEmpty()) {
+				CacheEntity cacheEntityForPatient = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId())+" "+String.valueOf(barChartItemCollection.getId())+" "+String.valueOf(barComponent.getId())), date, Double.valueOf(barComponent.getValue()));
+				notificationDataSource.insert(cacheEntityForPatient);
+		
+			} else {
+				CacheEntity cacheEntityForPatient = cacheEntities.get(0);
+				cacheEntityForPatient.setValue(Double.valueOf(barComponent.getValue()));
+				notificationDataSource.update(cacheEntityForPatient);
+				}
+			}
+		}
+	}
+	
 	public void cacheTabularData(String orgId, Date date, List<TabularItem> indicators) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<Integer, String> mapOfIdToMd5 = new LinkedHashMap<>();

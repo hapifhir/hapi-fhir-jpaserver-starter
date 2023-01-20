@@ -132,6 +132,11 @@ public class UserAndGroupManagementController {
 		return ResponseEntity.ok(orgItemsList);
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/barchartDefinition")
+	public ResponseEntity<?> barchartDefinition() {
+		return helperService.getBarChartDefinition();
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/indicator")
 	public ResponseEntity<?> indicator() {
 		return helperService.getIndicators();
@@ -238,6 +243,30 @@ public class UserAndGroupManagementController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
 		return helperService.getTabularDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, filters);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/barChartData")
+	public ResponseEntity<?> getBarChartData(
+		@RequestHeader(name = "Authorization") String token,
+		@RequestParam Map<String, String> allFilters
+	) {
+		String startDate = allFilters.get("from");
+		String endDate = allFilters.get("to");
+		ReportType type = ReportType.valueOf(allFilters.get("type"));
+		allFilters.remove("from");
+		allFilters.remove("to");
+		allFilters.remove("type");
+		allFilters.remove("lga");
+		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		if (practitionerRoleId == null) {
+			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
+		}
+		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
+		filters.putAll(allFilters);
+//		if (!filters.isEmpty()) {
+//			return helperService.getDataByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, type, filters);
+//		}
+		return helperService.getBarChartData(practitionerRoleId, startDate, endDate, type);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/analytics")
