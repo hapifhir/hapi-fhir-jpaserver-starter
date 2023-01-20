@@ -137,6 +137,23 @@ public class NotificationDataSource {
 		return (Double) resultList.get(0);
 	}
 
+	public Double getCacheValueSumByDateRangeIndicatorAndOrgId(Date from, Date to, String indicator, String orgId) {
+		Session session = sf.openSession();
+		Query query = session.createQuery("SELECT SUM(value) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2 AND indicator=:param3 AND org_id=:param4");
+		query.setParameter("param1", from);
+		query.setParameter("param2", to);
+		query.setParameter("param3", indicator);
+		query.setParameter("param4", orgId);
+		List resultList = query.getResultList();
+		session.close();
+		if(resultList.isEmpty() || resultList.get(0) == null) {
+			return 0.0;
+		}
+
+		return (Double) resultList.get(0);
+	}
+
+
 	public List<Date> getDatesPresent(Date from, Date to, List<String> indicatorMD5List, List<String> facilityIds) {
 		Session session = sf.openSession();
 		Query query = session.createQuery("SELECT DISTINCT(date) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2 AND indicator IN (:param3) AND org_id IN (:param4)");

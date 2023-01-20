@@ -715,13 +715,16 @@ public class HelperService {
 			if (fhirSearchList.isEmpty()) {
 				Date start = Date.valueOf(startDate);
 				Date end = Date.valueOf(endDate);
+				notificationDataSource = NotificationDataSource.getInstance();
 				performCachingForTabularData(tabularItemList, idsAndOrgIdToChildrenMapPair.first, start, end);
-				for (TabularItem indicator : tabularItemList) {
-					Double cacheValueSum = notificationDataSource
-						.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
-							Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), idsAndOrgIdToChildrenMapPair.first);
-					scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-						cacheValueSum.toString(), startDate, endDate));
+				for (String orgId : idsAndOrgIdToChildrenMapPair.first) {
+					for (TabularItem indicator : tabularItemList) {
+						Double cacheValueSum = notificationDataSource
+							.getCacheValueSumByDateRangeIndicatorAndOrgId(start, end,
+								Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), orgId);
+						scoreCardItems.add(new ScoreCardItem(orgId, indicator.getId(),
+							cacheValueSum.toString(), startDate, endDate));
+					}
 				}
 			} else {
 				scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getTabularData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), tabularItemList, fhirSearchList);
@@ -734,6 +737,7 @@ public class HelperService {
 	}
 
 	private void performCachingForTabularData(List<TabularItem> indicators, List<String> facilityIds, Date startDate, Date endDate) {
+		notificationDataSource = NotificationDataSource.getInstance();
 		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.getMd5StringFromFhirPath(indicatorItem.getFhirPath())).collect(Collectors.toList());
 
 		List<Date> dates = new ArrayList<>();
