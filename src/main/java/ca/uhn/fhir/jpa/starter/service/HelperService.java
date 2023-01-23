@@ -882,6 +882,25 @@ public class HelperService {
 		return ResponseEntity.ok(scoreCardItems);
 	}
 
+	public ResponseEntity<?> getBarChartDataWithFilters(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters) {
+		notificationDataSource = NotificationDataSource.getInstance();
+		List<BarChartItemDataCollection> barChartItems = new ArrayList<>();
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+
+		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+		try {
+			List<BarChartDefinition> barCharts = getBarChartItemListFromFile();
+			List<String> fhirSearchList = getFhirSearchListByFilters(filters);
+			barChartItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getBarChartData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), barCharts, fhirSearchList);
+		}
+		catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return ResponseEntity.ok("Error : Config File Not Found");
+			}
+			return ResponseEntity.ok(barChartItems);
+		}
+
+
 	public ResponseEntity<?> getBarChartData(String practitionerRoleId, String startDate, String endDate, ReportType type) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<BarChartItemDataCollection> barChartItems = new ArrayList<>();

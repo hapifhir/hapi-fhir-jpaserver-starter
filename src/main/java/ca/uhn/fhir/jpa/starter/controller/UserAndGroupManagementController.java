@@ -263,9 +263,9 @@ public class UserAndGroupManagementController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-//		if (!filters.isEmpty()) {
-//			return helperService.getDataByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, type, filters);
-//		}
+		if (!filters.isEmpty()) {
+			return helperService.getBarChartDataWithFilters(practitionerRoleId, startDate, endDate, type, filters);
+		}
 		return helperService.getBarChartData(practitionerRoleId, startDate, endDate, type);
 	}
 
