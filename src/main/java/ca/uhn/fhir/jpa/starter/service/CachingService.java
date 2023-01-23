@@ -105,6 +105,27 @@ public class CachingService {
 		}
 	}
 
+	public void cachePieChartData(String orgId, Date date, List<PieChartDefinition> pieChartDefinitions){
+		notificationDataSource = NotificationDataSource.getInstance();
+		LinkedHashMap<String, String> mapOfIdToMd5 = new LinkedHashMap<>();
+		for(PieChartDefinition pieChartDefinition : pieChartDefinitions){
+			mapOfIdToMd5.put(String.valueOf(pieChartDefinition.getId()), Utils.getMd5StringFromFhirPath(pieChartDefinition.getFhirPath()));
+		}
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		List<PieChartItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getPieChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), pieChartDefinitions, Collections.emptyList());
+
+		for(PieChartItem item: data){
+			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(item.getId())), item.getOrgId());
+			if(cacheEntities.isEmpty()){
+				CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(String.valueOf(item.getId())), date, Double.valueOf(item.getValue()));
+				notificationDataSource.insert(cacheEntity);
+			} else {
+				CacheEntity cacheEntity = cacheEntities.get(0);
+				cacheEntity.setValue(Double.valueOf(item.getValue()));
+				notificationDataSource.update(cacheEntity);
+			}
+		}
+	}
 
 	public void cacheDataLineChart(String orgId, Date date, List<LineChart> lineCharts) {
 		notificationDataSource = NotificationDataSource.getInstance();

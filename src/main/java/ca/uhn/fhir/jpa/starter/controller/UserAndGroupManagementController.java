@@ -217,6 +217,7 @@ public class UserAndGroupManagementController {
 	){
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
+		ReportType type = ReportType.valueOf(allFilters.get("type"));
 		allFilters.remove("from");
 		allFilters.remove("to");
 		allFilters.remove("type");
@@ -224,7 +225,10 @@ public class UserAndGroupManagementController {
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		return helperService.getPieChartData(practitionerRoleId, startDate, endDate, filters);
+		if(!filters.isEmpty()){
+			return helperService.getPieChartDataByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, filters);
+		}
+		return helperService.getPieChartDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/tabularData")
