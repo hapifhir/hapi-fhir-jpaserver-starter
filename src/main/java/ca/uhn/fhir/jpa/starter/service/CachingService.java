@@ -59,7 +59,7 @@ public class CachingService {
 		for (BarChartDefinition barChart : barCharts) {
 			for(BarChartItemDefinition barChartItem: barChart.getBarChartItemDefinitions()) {
 				for(BarComponent barComponent:barChartItem.getBarComponentList()) {
-					mapOfIdToMd5.put(String.valueOf(barChart.getId())+" "+String.valueOf(barChartItem.getId())+" "+String.valueOf(barComponent.getId()),Utils.getMd5KeyForLineCacheMd5(barComponent.getFhirPath(), barChartItem.getId(), barChart.getId()));
+					mapOfIdToMd5.put(String.valueOf(barChart.getId())+" "+String.valueOf(barChartItem.getId())+" "+String.valueOf(barComponent.getId()),Utils.getMd5KeyForLineCacheMd5(barComponent.getFhirPath(), barComponent.getBarChartItemId(), barChart.getId()));
 				}
 			}
 			

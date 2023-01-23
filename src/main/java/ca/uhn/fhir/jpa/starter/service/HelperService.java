@@ -909,19 +909,20 @@ public class HelperService {
 			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
 			Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
+			List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
 
 			Date start = Date.valueOf(startDate);
 			Date end = Date.valueOf(endDate);
 
 			performCachingIfNotPresentForBarChart(barCharts, idsAndOrgIdToChildrenMapPair.first, start, end);
 			for (BarChartDefinition barChart : barCharts) {
-				
 				for(BarChartItemDefinition barChartItem : barChart.getBarChartItemDefinitions() ) {
 					ArrayList<BarComponentData> barComponents = new ArrayList<BarComponentData>();
 					for(BarComponent barComponent: barChartItem.getBarComponentList()) {
+						String md5 = Utils.getMd5KeyForLineCacheMd5(barComponent.getFhirPath(), barComponent.getBarChartItemId(), barChartItem.getChartId());
 						Double cacheValueSum = notificationDataSource
-								.getCacheValueSumByDateRangeIndicatorAndOrgId(start, end,
-									Utils.getMd5KeyForLineCacheMd5(barComponent.getFhirPath(), barComponent.getBarChartItemId(), barChartItem.getChartId()), organizationId);
+								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
+										md5, facilityIds);
 						barComponents.add(new BarComponentData(barComponent.getId(), barComponent.getBarChartItemId(),
 								cacheValueSum.toString()));		
 					}
@@ -1028,6 +1029,7 @@ public class HelperService {
 		}
 
 	}
+	
 	public ResponseEntity<?> getLineChartByPractitionerRoleIdWithFilters(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
