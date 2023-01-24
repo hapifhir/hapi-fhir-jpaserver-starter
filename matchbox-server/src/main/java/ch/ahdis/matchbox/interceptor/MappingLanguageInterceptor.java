@@ -103,7 +103,7 @@ public class MappingLanguageInterceptor extends InterceptorAdapter {
 //	}
 
 	public StructureMap parseMap(String content) throws FHIRException {
-		MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", null, false);
+		MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", null, true, false);
 		return matchboxEngine.parseMap(content);
 	}
 

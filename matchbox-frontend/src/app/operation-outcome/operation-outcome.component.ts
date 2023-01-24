@@ -115,10 +115,12 @@ export class OperationOutcomeComponent implements AfterViewInit, OnInit {
 
   @Input() set operationOutcome(value: fhir.r4.OperationOutcome) {
     this.outcome = value;
-    this.outcome.issue?.sort(
-      (issue1, issue2) => this.getLineNo(issue1) - this.getLineNo(issue2)
-    );
-    this.ngAfterViewInit();
+    if (this.outcome && this.outcome.issue?.length > 0) {
+      this.outcome.issue?.sort(
+        (issue1, issue2) => this.getLineNo(issue1) - this.getLineNo(issue2)
+      );
+      this.ngAfterViewInit();
+    }
   }
 
   getJson(): String {

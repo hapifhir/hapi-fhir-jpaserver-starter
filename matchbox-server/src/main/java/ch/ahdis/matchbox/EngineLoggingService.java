@@ -17,7 +17,7 @@ public class EngineLoggingService implements IWorkerContext.ILoggingService {
 
   @Override
   public void logMessage(String message) {
-    System.out.println(message);
+    log.info(message);
   }
 
   @Override

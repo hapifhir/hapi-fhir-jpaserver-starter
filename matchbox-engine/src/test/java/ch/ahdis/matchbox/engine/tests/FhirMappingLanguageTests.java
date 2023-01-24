@@ -1,5 +1,7 @@
 package ch.ahdis.matchbox.engine.tests;
 
+import static org.junit.Assert.assertNotEquals;
+
 /*
  * #%L
  * Matchbox Engine
@@ -82,7 +84,7 @@ class FhirMappingLanguageTests {
 	}
 
 	@Test
-	void testQemberOf() throws FHIRException, IOException {
+	void testMemberOf() throws FHIRException, IOException {
 		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
 		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/memberof.map"));
 		assertTrue(sm != null);
@@ -93,6 +95,34 @@ class FhirMappingLanguageTests {
 		assertEquals("Patient", res.getResourceType().name());
 		Patient patient = (Patient) res;
 		assertEquals("MALE", patient.getGender().name());
+	}
+
+	@Test
+	void testConformsTo() throws FHIRException, IOException {
+		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
+		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/conformsto.map"));
+		assertTrue(sm != null);
+		engine.addCanonicalResource(sm);
+		Resource res = engine.transformToFhir(getFileAsStringFromResources("/pat.json"), true,
+				"http://ahdis.ch/matchbox/fml/conformsto");
+		assertTrue(res != null);
+		assertEquals("Patient", res.getResourceType().name());
+		Patient patient = (Patient) res;
+		assertEquals("MALE", patient.getGender().name());
+	}
+
+	@Test
+	void testConformsToNeg() throws FHIRException, IOException {
+		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
+		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/conformstoneg.map"));
+		assertTrue(sm != null);
+		engine.addCanonicalResource(sm);
+		Resource res = engine.transformToFhir(getFileAsStringFromResources("/pat.json"), true,
+				"http://ahdis.ch/matchbox/fml/conformstoneg");
+		assertTrue(res != null);
+		assertEquals("Patient", res.getResourceType().name());
+		Patient patient = (Patient) res;
+		assertTrue(patient.getGender() == null);
 	}
 
 	@Test

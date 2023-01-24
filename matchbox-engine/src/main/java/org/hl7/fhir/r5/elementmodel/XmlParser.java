@@ -541,7 +541,7 @@ public class XmlParser extends ParserBase {
   }
 
   private String convertForDateFormatToExternal(String fmt, String av) throws FHIRException {
-    if ("v3".equals(fmt)) {
+    if ("v3".equals(fmt)|| "YYYYMMDDHHMMSS.UUUU[+|-ZZzz]".equals(fmt)) {
       DateTimeType d = new DateTimeType(av);
       return d.getAsV3();
     } else

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.PathEngineException;
 import org.hl7.fhir.r5.elementmodel.Element;
+import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.r5.model.TypeDetails;
@@ -12,6 +13,7 @@ import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +83,14 @@ public class FFHIRPathHostServices implements FHIRPathEngine.IEvaluationContext 
 
   @Override
   public boolean conformsToProfile(Object appContext, Base item, String url) throws FHIRException {
-    IResourceValidator val = structureMapUtilities.getWorker().newValidator();
+//    IResourceValidator val = structureMapUtilities.getWorker().newValidator();
+//    we need the same conformToProfile context as we have in the matchbox engine
+    IResourceValidator val = null;
+    try {
+      val = ((ch.ahdis.matchbox.mappinglanguage.MatchboxStructureMapUtilities) structureMapUtilities).getEngine().getValidator(FhirFormat.JSON);
+    } catch (IOException e) {
+      throw new NotImplementedException("Not done yet (FFHIRPathHostServices.conformsToProfile), engine could not be created");
+    }
     List<ValidationMessage> valerrors = new ArrayList<ValidationMessage>();
     if (item instanceof Resource) {
       val.validate(appContext, valerrors, (Resource) item, url);

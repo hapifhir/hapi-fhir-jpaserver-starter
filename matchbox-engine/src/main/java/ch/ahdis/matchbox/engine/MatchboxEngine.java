@@ -208,14 +208,14 @@ public class MatchboxEngine extends ValidationEngine {
 		SimpleWorkerContext context = this.getContext();
 		List<Base> outputs = new ArrayList<>();
 		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context,
-				new TransformSupportServices(context, outputs));
+				new TransformSupportServices(context, outputs), this);
 		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
 		if (map == null) {
 			log.error("Unable to find map " + mapUri + " (Known Maps = " + context.listMapUrls() + ")");
 			throw new Error("Unable to find map " + mapUri + " (Known Maps = " + context.listMapUrls() + ")");
 		}
-		log.info("Using map " + map.getUrl() + "|" + map.getVersion() + " "
-				+ (map.getDateElement() != null ? "(" + map.getDateElement().asStringValue() + ")" : ""));
+		log.info("Using map " + map.getUrl() + (map.getVersion()!=null ? "|" + map.getVersion() + " " : "" )
+				+ (map.getDateElement() != null && !map.getDateElement().isEmpty()  ? "(" + map.getDateElement().asStringValue() + ")" : ""));
 		org.hl7.fhir.r5.elementmodel.Element resource = getTargetResourceFromStructureMap(map);
 		scu.transform(null, src, map, resource);
 		resource.populatePaths(null);
@@ -395,8 +395,29 @@ public class MatchboxEngine extends ValidationEngine {
 	 */
 	public org.hl7.fhir.r4.model.Resource getCanonicalResource(String canonical) {
 		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical);
-		if (fetched != null) {
-			return VersionConvertorFactory_40_50.convertResource(fetched);
+		// allResourcesById is not package aware (???) so we need to fetch it again
+		if (fetched!=null) {
+			org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
+			if (fetched2 != null) {
+				return VersionConvertorFactory_40_50.convertResource(fetched2);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns a canonical resource defined by its type and uri
+	 * 
+	 * @param type resource type
+	 * @param uri  resource uri
+	 * @return
+	 */
+	public org.hl7.fhir.r4.model.Resource getCanonicalResourceById(String type, String uri) {
+		if (this.getContext().hasResource(type, uri)) {
+			org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResourceById(type, uri);
+			if (fetched != null) {
+				return VersionConvertorFactory_40_50.convertResource(fetched);
+			}
 		}
 		return null;
 	}
@@ -414,7 +435,7 @@ public class MatchboxEngine extends ValidationEngine {
 		SimpleWorkerContext context = this.getContext();
 		List<Base> outputs = new ArrayList<>();
 		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context,
-				new TransformSupportServices(context, outputs));
+				new TransformSupportServices(context, outputs), this);
 		org.hl7.fhir.r5.model.StructureMap mapR5 = scu.parse(content, "map");
 		mapR5.getText().setStatus(NarrativeStatus.GENERATED);
 		mapR5.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));

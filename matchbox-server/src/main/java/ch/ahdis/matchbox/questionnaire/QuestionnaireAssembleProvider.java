@@ -91,7 +91,7 @@ public class QuestionnaireAssembleProvider {
   
   public Questionnaire getQuestionnaire(String canonical) {
   	
-    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(canonical, null, false);
+    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(canonical, null, true, false);
     if (matchboxEngine !=null) {
 	    return (Questionnaire) matchboxEngine.getCanonicalResource(canonical);
     }
@@ -108,7 +108,7 @@ public class QuestionnaireAssembleProvider {
           for (Extension extensionVariable : extensionVariables) {
             Expression expr = (Expression) extensionVariable.getValue();
             if ("linkIdPrefix".equals(expr.getName())) {
-              MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", null, false);
+              MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", null, true, false);
               FHIRPathEngine fp = matchboxEngine.getFhirPathEngine();
               ExpressionNode exp = fp.parse(expr.getExpression());
               // TODO: need to add linkIdPrefix as a variable to the FHIRPath expression, expression could also be    "expression" : "%linkIdPrefix + 'name.'", see https://build.fhir.org/ig/HL7/sdc/Parameters-sdc-modular-root-assembled.json.html

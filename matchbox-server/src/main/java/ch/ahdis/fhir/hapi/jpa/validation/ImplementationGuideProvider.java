@@ -101,7 +101,7 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
     
     // initialize matchbox engine
     log.info("Initializing matchbox engine(s): " +VersionUtil.getMemory());
-    matchboxEngineSupport.getMatchboxEngine("default", null, true);
+    matchboxEngineSupport.getMatchboxEngine("default", null, false, true);
     log.info("Initializing matchbox engine finished: "+VersionUtil.getMemory());
     
     return outcome;
@@ -211,7 +211,7 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
     }
 	    // initialize matchbox engine
     log.info("Initializing matchbox engine(s): " +VersionUtil.getMemory());
-    matchboxEngineSupport.getMatchboxEngine("default", null, true);
+    matchboxEngineSupport.getMatchboxEngine("default", null, false, true);
     log.info("Initializing matchbox engine finished: "+VersionUtil.getMemory());
 
     return installOutcome;

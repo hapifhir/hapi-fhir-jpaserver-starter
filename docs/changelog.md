@@ -1,5 +1,13 @@
+2023/01/24 Release 3.1.0-snapshost
+
+- Reenable FHIR Mapping Language tutorial, xml and json issues with matchbox [#51](https://github.com/ahdis/matchbox/issues/51)
+- Enable create and update on conformance resources [#70](https://github.com/ahdis/matchbox/issues/70)
+- GUI: more intuitive order for validation [#69](https://github.com/ahdis/matchbox/issues/69)
+- GUI: paged ig's page does not work [#67](https://github.com/ahdis/matchbox/issues/67)
+
 2023/01/16 Release 3.0.0
 
+- Update to https://github.com/hapifhir/org.hl7.fhir.core/releases/tag/5.6.88
 - Extracting matchbox-engine out of matchbox for validation and transformation with standalone validation engine
 - CDA transformation: Updating to latest [CDA Core 2.0 logical model](cda-logical-model/index.html) with lab/pharm additions, [package](https://github.com/ahdis/cda-core-2.0/releases/download/v0.0.4-dev/cda-core-2.0.2.1.0-cibuild.tgz)
 - matchbox-server for validation and transformation but not storage of FHIR resources

@@ -440,6 +440,7 @@ export class ValidateComponent implements OnInit {
   }
 
   selectRow(row: ValidationEntry) {
+    this.errMsg = '';
     this.selectedEntry = row;
     if (row) {
       this.operationOutcome = row.operationOutcome;
@@ -447,12 +448,16 @@ export class ValidateComponent implements OnInit {
       this.resourceName = '';
       this.resourceId = '';
       if (row.mimetype === 'application/fhir+json') {
-        const res = <fhir.r4.Resource>JSON.parse(this.json);
-        if (res?.resourceType) {
-          this.resourceName = res.resourceType;
-          this.resourceId = res.id;
+        try {
+          const res = <fhir.r4.Resource>JSON.parse(this.json);
+          if (res?.resourceType) {
+            this.resourceName = res.resourceType;
+            this.resourceId = res.id;
+          }
+          this.selectedProfile = res.meta?.profile?.[0];
+        } catch (error) {
+          this.errMsg = error.message;
         }
-        this.selectedProfile = res.meta?.profile?.[0];
       }
       if (row.mimetype === 'application/fhir+xml') {
         let pos = this.json.indexOf('<?') + 1;

@@ -160,11 +160,11 @@ public class ValidationProvider {
 			reload = theRequest.getParameter("reload").equals("true");
 		}
 
-		MatchboxEngine engine = matchboxEngineSupport.getMatchboxEngine(profile, cliContext, reload);
+		MatchboxEngine engine = matchboxEngineSupport.getMatchboxEngine(profile, cliContext, true, reload);
 		if (engine == null) {
 			return getValidationMessageProfileNotSupported(profile);
 		}
-		
+
 		if (engine.getStructureDefinition(profile) == null) {
 			return getValidationMessageProfileNotSupported(profile);
 		}
