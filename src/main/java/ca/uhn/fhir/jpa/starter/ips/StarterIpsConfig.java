@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.ips.api.IIpsGenerationStrategy;
-import ca.uhn.fhir.jpa.ips.generator.DefaultIpsGenerationStrategy;
+import ca.uhn.fhir.jpa.ips.strategy.DefaultIpsGenerationStrategy;
 import ca.uhn.fhir.jpa.ips.generator.IIpsGeneratorSvc;
 import org.springframework.context.annotation.Conditional;
 import ca.uhn.fhir.jpa.ips.provider.IpsOperationProvider;
