@@ -26,7 +26,6 @@
         <hapi.fhir.version>6.1.0</hapi.fhir.version>
         <spring_boot_version>2.5.6</spring_boot_version>
         <java.version>11</java.version>
-        <maven.compiler.release>17</maven.compiler.release>
     </properties>
 
     <prerequisites>
@@ -150,11 +149,11 @@
             <classifier>classes</classifier>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.smartregister</groupId>-->
-<!--            <artifactId>hapi-fhir-keycloak</artifactId>-->
-<!--            <version>0.0.7-SNAPSHOT</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.smartregister</groupId>
+            <artifactId>hapi-fhir-keycloak</artifactId>
+            <version>0.0.7-SNAPSHOT</version>
+        </dependency>
 
         <!-- This dependency holds all the code extensions that OpenSRP will build on top of Hapi-Fhir-->
         <dependency>
