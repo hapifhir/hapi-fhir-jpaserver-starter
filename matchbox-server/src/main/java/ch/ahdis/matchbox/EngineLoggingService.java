@@ -26,4 +26,9 @@ public class EngineLoggingService implements IWorkerContext.ILoggingService {
         log.debug(" -" + category.name().toLowerCase() + ": " + message);
     }
   }
+
+  @Override
+  public boolean isDebugLogging() {
+    return debug;
+  }
 }

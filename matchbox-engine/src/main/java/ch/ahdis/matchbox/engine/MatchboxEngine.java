@@ -33,7 +33,7 @@ import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.Resource;
-import org.hl7.fhir.r5.conformance.ProfileUtilities;
+import org.hl7.fhir.r5.context.ContextUtilities;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.Manager;
@@ -42,6 +42,7 @@ import org.hl7.fhir.r5.formats.IParser;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.ExpressionNode;
 import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
+import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureMap;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
@@ -455,12 +456,14 @@ public class MatchboxEngine extends ValidationEngine {
 	 */
 	public org.hl7.fhir.r4.model.StructureDefinition createSnapshot(org.hl7.fhir.r4.model.StructureDefinition sd)
 			throws FHIRException, IOException {
-		StructureDefinition base = this.getContext().fetchResource(StructureDefinition.class, sd.getBaseDefinition());
 		StructureDefinition sdR5 = (StructureDefinition) VersionConvertorFactory_40_50.convertResource(sd);
-
-		new ProfileUtilities(this.getContext(), null, null).setAutoFixSliceNames(true).generateSnapshot(base, sdR5,
-				sdR5.getUrl(), null, sdR5.getName());
-
+		try {
+			new ContextUtilities(this.getContext()).generateSnapshot(sdR5, sdR5.getKind() !=null && sdR5.getKind() == StructureDefinitionKind.LOGICAL); 
+		  } catch (Exception e) {
+			// not sure what to do in this case?
+			log.error("Unable to generate snapshot for "+sd.getUrl(), e);
+			return null;
+		  }
 		return (org.hl7.fhir.r4.model.StructureDefinition) VersionConvertorFactory_40_50.convertResource(sdR5);
 	}
 

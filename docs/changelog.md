@@ -1,9 +1,10 @@
-2023/01/24 Release 3.1.0-snapshost
+2023/01/24 Release 3.1.0
 
 - Reenable FHIR Mapping Language tutorial, xml and json issues with matchbox [#51](https://github.com/ahdis/matchbox/issues/51)
-- Enable create and update on conformance resources [#70](https://github.com/ahdis/matchbox/issues/70)
+- Enable create and update on conformance resources [#70](https://github.com/ahdis/matchbox/issues/70), valid for 60 minutes (not persisting)
 - GUI: more intuitive order for validation [#69](https://github.com/ahdis/matchbox/issues/69)
 - GUI: paged ig's page does not work [#67](https://github.com/ahdis/matchbox/issues/67)
+- Update to https://github.com/hapifhir/org.hl7.fhir.core/releases/tag/5.6.92
 
 2023/01/16 Release 3.0.0
 

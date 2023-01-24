@@ -85,6 +85,7 @@ public class FFHIRPathHostServices implements FHIRPathEngine.IEvaluationContext 
   public boolean conformsToProfile(Object appContext, Base item, String url) throws FHIRException {
 //    IResourceValidator val = structureMapUtilities.getWorker().newValidator();
 //    we need the same conformToProfile context as we have in the matchbox engine
+//    matchbox 3.1.0
     IResourceValidator val = null;
     try {
       val = ((ch.ahdis.matchbox.mappinglanguage.MatchboxStructureMapUtilities) structureMapUtilities).getEngine().getValidator(FhirFormat.JSON);

@@ -25,7 +25,7 @@ import java.util.List;
 
 
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.r5.conformance.ProfileUtilities.ProfileKnowledgeProvider;
+import org.hl7.fhir.r5.conformance.profile.ProfileKnowledgeProvider;
 import org.hl7.fhir.r5.context.ContextUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.model.Base;

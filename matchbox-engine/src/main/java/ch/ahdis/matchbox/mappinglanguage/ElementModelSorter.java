@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.hl7.fhir.r5.conformance.ProfileUtilities;
 import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.model.ElementDefinition;
 import org.hl7.fhir.r5.model.StructureDefinition;
@@ -57,8 +56,7 @@ class ElementSortComparator implements Comparator<Element> {
 	public ElementSortComparator(Element e, org.hl7.fhir.r5.elementmodel.Property property) {
 		String tn = e.getType();
 //    StructureDefinition sd = property.getContext().fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(tn, property.getContext().getOverrideVersionNs()));
-		StructureDefinition sd = property.getContext().fetchResource(StructureDefinition.class,
-				ProfileUtilities.sdNs(tn, null));
+		StructureDefinition sd = property.getContext().fetchResource(StructureDefinition.class, "http://hl7.org/fhir/StructureDefinition/"+tn);
 		children = new ArrayList<String>();
 		if (sd != null && !sd.getAbstract())
 			for (ElementDefinition def : sd.getSnapshot().getElement()) {
