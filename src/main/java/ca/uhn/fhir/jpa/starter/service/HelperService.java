@@ -583,27 +583,16 @@ public class HelperService {
 		return getOrganizationHierarchy(organizationId);
 	}
 
-	public ResponseEntity<?> getPieChartDataByPractitionerRoleIdWithFilters(String practitionerRoleId, String startDate, String endDate, LinkedHashMap<String, String> filters){
+	public ResponseEntity<?> getPieChartDataByPractitionerRoleIdWithFilters(String practitionerRoleId, String startDate, String endDate, LinkedHashMap<String, String> filters) {
 		List<PieChartItem> pieChartItems = new ArrayList<>();
-		try{
+		try {
 			List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile();
 			List<String> fhirSearchList = getFhirSearchListByFilters(filters);
 			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
 
-			Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
-			if (fhirSearchList.isEmpty()){
-				Date start = Date.valueOf(startDate);
-				Date end = Date.valueOf(endDate);
-				performCachingForPieChartData(pieChartDefinitions, idsAndOrgIdToChildrenMapPair.first, start, end);
-				for (PieChartDefinition pieChartDefinition: pieChartDefinitions){
-					Double cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end, Utils.getMd5StringFromFhirPath(pieChartDefinition.getFhirPath()), idsAndOrgIdToChildrenMapPair.first);
-					pieChartItems.add(new PieChartItem(pieChartDefinition.getId(), organizationId, pieChartDefinition.getName(), cacheValueSum.toString(), pieChartDefinition.getChartId(), pieChartDefinition.getColorHex()));
-				}
-			} else {
-				pieChartItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getPieChartData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), pieChartDefinitions, fhirSearchList);
-			}
-		} catch (FileNotFoundException e){
+			pieChartItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getPieChartData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), pieChartDefinitions, fhirSearchList);
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -623,35 +612,12 @@ public class HelperService {
 			Date end = Date.valueOf(endDate);
 			performCachingForPieChartData(pieChartDefinitions, idsAndOrgIdToChildrenMapPair.first, start, end);
 			List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-			List<Pair<Date, Date>> datePairList = DateUtilityHelper.getDailyDates(start, end);
-			switch (type) {
-				case quarterly: {
-					datePairList  = DateUtilityHelper.getQuarterlyDates(start, end);
-					break;
-				}
-				case weekly: {
-					datePairList = DateUtilityHelper.getWeeklyDates(start, end);
-					break;
-				}
-				case monthly: {
-					datePairList = DateUtilityHelper.getMonthlyDates(start, end);
-					break;
-				}
-				case daily: {
-					datePairList = DateUtilityHelper.getDailyDates(start, end);
-					break;
-				}
-				default:
-					break;
-			}
 
 			for(PieChartDefinition pieChartDefinition: pieChartDefinitions){
-				for(Pair<Date, Date> weekDayPair: datePairList){
 					Double cacheValueSum = notificationDataSource
-						.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(weekDayPair.first, weekDayPair.second,
+						.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
 							Utils.getMd5StringFromFhirPath(pieChartDefinition.getFhirPath()), facilityIds);
 					pieChartItems.add(new PieChartItem(pieChartDefinition.getId(), organizationId, pieChartDefinition.getName(), String.valueOf(cacheValueSum), pieChartDefinition.getChartId(), pieChartDefinition.getColorHex()));
-				}
 			}
 		} catch (FileNotFoundException e){
 			e.printStackTrace();
