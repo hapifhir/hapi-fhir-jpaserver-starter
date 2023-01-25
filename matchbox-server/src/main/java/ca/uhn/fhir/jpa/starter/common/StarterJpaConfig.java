@@ -82,27 +82,7 @@ public class StarterJpaConfig {
 
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(StarterJpaConfig.class);
 	
-	public class DummyInstanceValidatorModule implements IInstanceValidatorModule {
 
-		@Override
-		public void validateResource(IValidationContext<IBaseResource> theCtx) {
-		}
-
-	}
-
-	public class DummyValidationSupport implements IValidationSupport {
-
-		FhirContext context;
-		
-		DummyValidationSupport(FhirContext context) {
-			this.context = context;
-		}
-		
-		@Override
-		public FhirContext getFhirContext() {
-			return context;
-		}
-	}
 
 	@Bean
 	public IFulltextSearchSvc fullTextSearchSvc() {
@@ -114,19 +94,6 @@ public class StarterJpaConfig {
 		return new StaleSearchDeletingSvcImpl();
 	}
 
-	
-  @Primary
-	@Bean(name = "myInstanceValidator")
-	public IInstanceValidatorModule instanceValidator() {
-  	return new DummyInstanceValidatorModule();
-  }
-
-
-	@Primary
-	@Bean
-	public CachingValidationSupport validationSupportChain() {
-		return new CachingValidationSupport(new DummyValidationSupport(FhirContext.forR4Cached()));
-	}
 
 	@Autowired
 	private ConfigurableEnvironment configurableEnvironment;
