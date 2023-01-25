@@ -42,20 +42,5 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     // Add your own customization here
     fhirClientAuthenticatorService.initializeKeycloak();
     NotificationDataSource.getInstance().configure(appProperties.getNotification_datasource_config_path());
-
-	 Map<String, Map<String, String>> directoryToFilesMap = new HashMap<>();
-	  File[] directories = new File(appProperties.getEnvs()).listFiles(File::isDirectory);
-	  if (directories != null) {
-		  for (File directory : directories) {
-			  Map<String, String> fileNameToPathMap = new HashMap<>();
-			  File[] files = new File(directory.getAbsolutePath()).listFiles(File::isFile);
-			  if (files != null) {
-				  for (File file : files) {
-					  fileNameToPathMap.put(FilenameUtils.removeExtension(file.getName()), file.getAbsolutePath());
-				  }
-			  }
-			  directoryToFilesMap.put(directory.getName(), fileNameToPathMap);
-		  }
-	  }
   }
 }

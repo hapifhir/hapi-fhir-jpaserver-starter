@@ -2,6 +2,8 @@ package ca.uhn.fhir.jpa.starter.controller;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.starter.ConfigDefinitionTypes;
+import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
 import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
 import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
@@ -20,12 +22,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
+
+import javax.annotation.PostConstruct;
+
 import java.time.LocalDateTime;
 
 @CrossOrigin(origins = {"http://localhost:3000/", "http://testhost.dashboard:3000/", "https://oclink.io/", "https://opencampaignlink.org/"}, maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/iprd")
-
 public class UserAndGroupManagementController {
 	NotificationDataSource datasource = NotificationDataSource.getInstance();
 	@Autowired
@@ -34,6 +38,15 @@ public class UserAndGroupManagementController {
 	NotificationService notificationService;
 	@Autowired
 	BigQueryService bigQueryService;
+	@Autowired
+	DashboardEnvironmentConfig dashboardEnvironmentConfig;
+	
+	private Map<String, Map<ConfigDefinitionTypes, String>> envToFileMap;
+	
+	@PostConstruct
+	public void init() {
+		envToFileMap = dashboardEnvironmentConfig.getEnvToFilePathMapping();
+	}
 
 	IParser iParser = FhirContext.forCached(FhirVersionEnum.R4).newJsonParser();
 
@@ -64,12 +77,13 @@ public class UserAndGroupManagementController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getAncDailySummaryData")
-	public ResponseEntity<?> getAncDailySummaryData(@RequestParam("organizationId") String organizationId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
-		return helperService.getAncDailySummaryData(organizationId, startDate, endDate, new LinkedHashMap<>());
+	public ResponseEntity<?> getAncDailySummaryData(@RequestParam("env") String env,@RequestParam("organizationId") String organizationId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
+		return helperService.getAncDailySummaryData(organizationId, startDate, endDate, new LinkedHashMap<>(),env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/details")
 	public ResponseEntity<?> getDetails(
+			@RequestParam("env") String env,
 		@RequestParam Map<String, String> allFilters
 	) throws SQLException, IOException {
 		String organizationId = allFilters.get("lga");
@@ -95,7 +109,7 @@ public class UserAndGroupManagementController {
 				e.printStackTrace();
 			}
 
-			helperService.saveQueryResult(organizationId, startDate, endDate, filters, hashOfFormattedId);
+			helperService.saveQueryResult(organizationId, startDate, endDate, filters, hashOfFormattedId,env);
 			return ResponseEntity.ok(hashOfFormattedId);
 		}
 		return ResponseEntity.ok(helperService.checkIfDataExistsInAsyncTable(hashOfFormattedId));
@@ -133,38 +147,39 @@ public class UserAndGroupManagementController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/barchartDefinition")
-	public ResponseEntity<?> barchartDefinition() {
-		return helperService.getBarChartDefinition();
+	public ResponseEntity<?> barchartDefinition(@RequestParam("env") String env) {
+		return helperService.getBarChartDefinition(env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/indicator")
-	public ResponseEntity<?> indicator() {
-		return helperService.getIndicators();
+	public ResponseEntity<?> indicator(@RequestParam("env") String env) {
+		return helperService.getIndicators(env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/pieChartDefinition")
-	public ResponseEntity<?> pieChartDefinition(){
-		return helperService.getPieChartDefinition();
+	public ResponseEntity<?> pieChartDefinition(@RequestParam("env") String env){
+		return helperService.getPieChartDefinition(env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/linechartdefinition")
-	public ResponseEntity<?> lineChartDefinition() {
-		return helperService.getLineChartDefinitions();
+	public ResponseEntity<?> lineChartDefinition(@RequestParam("env") String env) {
+		return helperService.getLineChartDefinitions(env);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/tabularIndicator")
-	public ResponseEntity<?> tabularIndicators() {
-		return helperService.getTabularIndicators();
+	public ResponseEntity<?> tabularIndicators(@RequestParam("env") String env) {
+		return helperService.getTabularIndicators(env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/filters")
-	public ResponseEntity<?> filter() {
-		return helperService.getFilters();
+	public ResponseEntity<?> filter(@RequestParam("env") String env) {
+		return helperService.getFilters(env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/data")
 	public ResponseEntity<?> data(
 		@RequestHeader(name = "Authorization") String token,
+		@RequestParam("env") String env,
 		@RequestParam Map<String, String> allFilters
 	) {
 		String startDate = allFilters.get("from");
@@ -181,14 +196,15 @@ public class UserAndGroupManagementController {
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
 		if (!filters.isEmpty()) {
-			return helperService.getDataByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, type, filters);
+			return helperService.getDataByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, type, filters,env);
 		}
-		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type);
+		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type,env);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/linechart")
 	public ResponseEntity<?> lineChart(
 		@RequestHeader(name = "Authorization") String token,
+		@RequestParam("env") String env,
 		@RequestParam Map<String, String> allFilters
 	) {
 		String startDate = allFilters.get("from");
@@ -205,14 +221,15 @@ public class UserAndGroupManagementController {
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
 		if (!filters.isEmpty()) {
-			return helperService.getLineChartByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, type, filters);
+			return helperService.getLineChartByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, type, filters,env);
 		}
-		return helperService.getLineChartByPractitionerRoleId(practitionerRoleId, startDate, endDate, type);
+		return helperService.getLineChartByPractitionerRoleId(practitionerRoleId, startDate, endDate, type,env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/pieChartData")
 	public ResponseEntity<?> pieChartData(
 		@RequestHeader(name = "Authorization") String token,
+		@RequestParam("env") String env,
 		@RequestParam Map<String, String> allFilters
 	){
 		String startDate = allFilters.get("from");
@@ -226,14 +243,15 @@ public class UserAndGroupManagementController {
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
 		if(!filters.isEmpty()){
-			return helperService.getPieChartDataByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, filters);
+			return helperService.getPieChartDataByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, filters,env);
 		}
-		return helperService.getPieChartDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type);
+		return helperService.getPieChartDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type,env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/tabularData")
 	public ResponseEntity<?> getTabularData(
 		@RequestHeader(name = "Authorization") String token,
+		@RequestParam("env") String env,
 		@RequestParam Map<String, String> allFilters
 	) {
 		String startDate = allFilters.get("from");
@@ -246,12 +264,13 @@ public class UserAndGroupManagementController {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
-		return helperService.getTabularDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, filters);
+		return helperService.getTabularDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, filters,env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/barChartData")
 	public ResponseEntity<?> getBarChartData(
 		@RequestHeader(name = "Authorization") String token,
+		@RequestParam("env") String env,
 		@RequestParam Map<String, String> allFilters
 	) {
 		String startDate = allFilters.get("from");
@@ -268,13 +287,13 @@ public class UserAndGroupManagementController {
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
 		if (!filters.isEmpty()) {
-			return helperService.getBarChartDataWithFilters(practitionerRoleId, startDate, endDate, type, filters);
+			return helperService.getBarChartDataWithFilters(practitionerRoleId, startDate, endDate, type, filters,env);
 		}
-		return helperService.getBarChartData(practitionerRoleId, startDate, endDate, type);
+		return helperService.getBarChartData(practitionerRoleId, startDate, endDate, type,env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/analytics")
-	public ResponseEntity<?> analytics(@RequestHeader(name = "Authorization") String token) {
+	public ResponseEntity<?> analytics(@RequestHeader(name = "Authorization") String token,@RequestParam("env") String env) {
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
@@ -289,7 +308,7 @@ public class UserAndGroupManagementController {
 			return ResponseEntity.ok("Error: Unable to find file or fetch screen view information");
 		}
 		analyticItems.addAll(timeSpentAnalyticsItems);
-		List<AnalyticItem> maternalAnalyticsItems = helperService.getMaternalAnalytics(organization.getId());
+		List<AnalyticItem> maternalAnalyticsItems = helperService.getMaternalAnalytics(organization.getId(),env);
 		if (maternalAnalyticsItems == null) {
 			return ResponseEntity.ok("Error: Unable to find analytics file");
 		}
