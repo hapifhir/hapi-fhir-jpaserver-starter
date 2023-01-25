@@ -1,10 +1,11 @@
-2023/01/24 Release 3.1.0
+2023/01/25 Release 3.1.0
 
 - Reenable FHIR Mapping Language tutorial, xml and json issues with matchbox [#51](https://github.com/ahdis/matchbox/issues/51)
 - Enable create and update on conformance resources [#70](https://github.com/ahdis/matchbox/issues/70), valid for 60 minutes (not persisting)
 - GUI: more intuitive order for validation [#69](https://github.com/ahdis/matchbox/issues/69)
 - GUI: paged ig's page does not work [#67](https://github.com/ahdis/matchbox/issues/67)
-- Update to https://github.com/hapifhir/org.hl7.fhir.core/releases/tag/5.6.92
+- Update to https://github.com/hapifhir/org.hl7.fhir.core/releases/tag/5.6.92 and hapi-fhir 6.2.5
+- validation difference to HL7 FHIR validator [#71](https://github.com/ahdis/matchbox/issues/71): only selected ig (and dependencies) for selected canonical will be used for validation if configured on matchbox (including no dynamic loading of packages depending on meta.profile)
 
 2023/01/16 Release 3.0.0
 

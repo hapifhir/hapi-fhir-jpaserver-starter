@@ -91,6 +91,7 @@ docker-compose exec -T matchbox-test-db pg_restore -c -U matchbox -d matchbox < 
 ### Configurable base image:
 
 ```bash
+cd matchbox-server
 mvn package -DskipTests
 docker build -t matchbox .
 docker run -d --name matchbox -p 8080:8080 -v /Users/oliveregger/apps/:/apps/ matchbox
@@ -102,9 +103,9 @@ To dynamically configure run in a kubernetes environment and add a kubernetes co
 
 ### making container available
 ```
-docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v300
+docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v310
 
-docker push eu.gcr.io/fhir-ch/matchbox:v300
+docker push eu.gcr.io/fhir-ch/matchbox:v310
 ```
 
 

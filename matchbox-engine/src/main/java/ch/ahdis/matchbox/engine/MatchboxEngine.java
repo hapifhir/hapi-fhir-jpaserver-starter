@@ -40,6 +40,7 @@ import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.formats.IParser;
 import org.hl7.fhir.r5.model.Base;
+import org.hl7.fhir.r5.model.CanonicalResource;
 import org.hl7.fhir.r5.model.ExpressionNode;
 import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
@@ -48,6 +49,7 @@ import org.hl7.fhir.r5.model.StructureMap;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
+import org.hl7.fhir.r5.utils.validation.IResourceValidator;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
@@ -404,6 +406,31 @@ public class MatchboxEngine extends ValidationEngine {
 			}
 		}
 		return null;
+	}
+
+	// same as above but called from the validator on the meta data type
+	// @Override
+	// public CanonicalResource fetchCanonicalResource(IResourceValidator validator, String url) throws URISyntaxException {
+	// 	return super.fetchCanonicalResource(validator, url);
+		// we have an issue when just override the above, however we look not to get into here and d
+		// aused by: java.lang.Error: The version 0.0 is not currently supported
+        // at org.hl7.fhir.convertors.txClient.TerminologyClientFactory.makeClient(TerminologyClientFactory.java:57)
+        // at org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher.fetchCanonicalResource(StandAloneValidatorFetcher.java:260)
+        // at org.hl7.fhir.validation.ValidationEngine.fetchCanonicalResource(ValidationEngine.java:1051)
+        // at ch.ahdis.matchbox.engine.MatchboxEngine.fetchCanonicalResource(MatchboxEngine.java:414)
+        // at org.hl7.fhir.validation.instance.InstanceValidator.lookupProfileReference(InstanceValidator.java:4861)
+        // at org.hl7.fhir.validation.instance.InstanceValidator.start(InstanceValidator.java:4782)
+        // at org.hl7.fhir.validation.instance.InstanceValidator.validateResource(InstanceValidator.java:6184)
+        // at org.hl7.fhir.validation.instance.InstanceValidator.validate(InstanceValidator.java:879)
+        // at org.hl7.fhir.validation.instance.InstanceValidator.validate(InstanceValidator.java:713)
+        // at ch.ahdis.matchbox.engine.MatchboxEngine.validate(MatchboxEngine.java:344)
+	// }
+
+	@Override
+	public boolean fetchesCanonicalResource(IResourceValidator validator, String url) {
+		// don't use the fetcher, should we do this better in directly in StandAloneValidatorFetcher implmentation
+		// https://github.com/ahdis/matchbox/issues/67
+		return getCanonicalResource(url) != null;
 	}
 
 	/**

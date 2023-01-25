@@ -5,10 +5,13 @@ import java.net.URISyntaxException;
 
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4.model.MetadataResource;
+import org.hl7.fhir.r5.conformance.R5ExtensionsLoader;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
 import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.utilities.TimeTracker;
+import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.validation.IgLoader;
+import org.hl7.fhir.validation.cli.services.IPackageInstaller;
 import org.hl7.fhir.validation.cli.services.SessionCache;
 import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,13 +214,13 @@ public class MatchboxEngineSupport {
 				matchboxEngine = new MatchboxEngine(engine);
 				MatchboxEngine validator = matchboxEngine;
 
-	// FIXME should we load this			if (!VersionUtilities.isR5Ver(validator.getContext().getVersion())) {
-	//				log.info("  Load R5 Extensions");
-	//				R5ExtensionsLoader r5e = new R5ExtensionsLoader(validator.getPcm(), validator.getContext());
-	//				r5e.load();
-	//				r5e.loadR5Extensions();
-	//				log.info(" - " + r5e.getCount() + " resources (" + tt.milestone() + ")");
-	//			}
+				if (!VersionUtilities.isR5Ver(validator.getContext().getVersion())) {
+					log.info("  Load R5 Extensions");
+					R5ExtensionsLoader r5e = new R5ExtensionsLoader(validator.getPcm(), validator.getContext());
+					r5e.load();
+					r5e.loadR5Extensions();
+					log.info(" - " + r5e.getCount() + " resources (" + tt.milestone() + ")");
+				}
 				log.info("  Terminology server " + cliContext.getTxServer());
 				String txServer = cliContext.getTxServer();
 				if ("n/a".equals(cliContext.getTxServer())) {
@@ -238,7 +241,9 @@ public class MatchboxEngineSupport {
 				IgLoaderFromJpaPackageCache igLoader = new IgLoaderFromJpaPackageCache(validator.getPcm(), validator.getContext(), validator.getVersion(),
 				validator.isDebug(), myPackageCacheManager, myNpmPackageVersionDao, myDaoRegistry, myBinaryStorageSvc, myTxManager);
 				validator.setIgLoader(igLoader);
-				validator.getIgLoader().loadIg(validator.getIgs(), validator.getBinaries(), ig, true);
+				if (ig!=null) {	
+					validator.getIgLoader().loadIg(validator.getIgs(), validator.getBinaries(), ig, true);
+				}
 
 				log.info("  Package Summary: "+validator.getContext().loadedPackageSummary());
 
@@ -269,7 +274,17 @@ public class MatchboxEngineSupport {
 				validator.setForPublication(cliContext.isForPublication());
 				validator.setShowTimes(true);
 				validator.setAllowExampleUrls(cliContext.isAllowExampleUrls());
-				StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(validator.getPcm(), validator.getContext(), validator);    
+				StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(validator.getPcm(), validator.getContext(), new IPackageInstaller()  {
+					// https://github.com/ahdis/matchbox/issues/67
+					@Override
+					public boolean packageExists(String id, String ver) throws IOException, FHIRException {
+					  return false;
+					}
+			
+					@Override
+					public void loadPackage(String id, String ver) throws IOException, FHIRException {
+					}}
+				  );
 				validator.setFetcher(fetcher);
 				validator.getContext().setLocator(fetcher);
 	//			validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());

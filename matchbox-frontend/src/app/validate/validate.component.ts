@@ -243,6 +243,10 @@ export class ValidateComponent implements OnInit {
         'application/fhir+xml',
         null
       );
+      this.selectRow(entry);
+      if (this.selectedProfile != null) {
+        entry.profiles = [this.selectedProfile];
+      }
       this.validate(entry);
     };
   }
@@ -455,6 +459,9 @@ export class ValidateComponent implements OnInit {
             this.resourceId = res.id;
           }
           this.selectedProfile = res.meta?.profile?.[0];
+          if (this.selectedProfile == null && res?.resourceType) {
+            this.selectedProfile = 'http://hl7.org/fhir/StructureDefinition/' + res.resourceType;
+          }
         } catch (error) {
           this.errMsg = error.message;
         }
@@ -474,6 +481,20 @@ export class ValidateComponent implements OnInit {
             tag = tag.substring(posTag + 1);
           }
           this.resourceName = tag;
+
+          let posProfileLeft = this.json.indexOf('profile', posRight);
+          if (posProfileLeft > 0) {
+            let posProfileValue = this.json.indexOf('value="', posProfileLeft)+7;
+            let posProfileValueRight = this.json.indexOf('"', posProfileValue);
+            if (posProfileValue < posProfileValueRight) {
+              this.selectedProfile = this.json.substring(posProfileValue, posProfileValueRight);
+            }
+          }
+
+          if (this.selectedProfile == null && this.resourceName!=null) {
+            this.selectedProfile = 'http://hl7.org/fhir/StructureDefinition/' + this.resourceName;
+          }
+
         }
       }
     } else {
