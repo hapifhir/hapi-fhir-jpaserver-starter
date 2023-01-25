@@ -48,6 +48,7 @@ public class AppProperties {
 	private Integer keycloak_max_group_count = 20;
 	private Long retain_cached_searches_mins = 60L;
 	private Long reuse_cached_search_results_millis = 60000L;
+	private String envs = null;
 	private String server_address = null;
 	private String keycloak_server_address = null;
 	private String keycloak_realm = "master";
@@ -185,6 +186,14 @@ public class AppProperties {
 
 	public void setAllowed_bundle_types(List<Bundle.BundleType> allowed_bundle_types) {
 		this.allowed_bundle_types = allowed_bundle_types;
+	}
+
+	public String getEnvs() {
+		return envs;
+	}
+
+	public void setEnvs(String envs) {
+		this.envs = envs;
 	}
 
 	public String getServer_address() {

@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import org.apache.commons.io.FilenameUtils;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
@@ -14,6 +15,9 @@ import ca.uhn.fhir.jpa.starter.service.ServerInterceptor;
 
 import javax.servlet.ServletException;
 import javax.ws.rs.client.ClientBuilder;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 @Import(AppProperties.class)
 public class JpaRestfulServer extends BaseJpaRestfulServer {
@@ -23,7 +27,7 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
 
   @Autowired
   FhirClientAuthenticatorService fhirClientAuthenticatorService;
-  
+
   private static final long serialVersionUID = 1L;
   public static Keycloak keycloak;
   public JpaRestfulServer() {
@@ -38,5 +42,20 @@ public class JpaRestfulServer extends BaseJpaRestfulServer {
     // Add your own customization here
     fhirClientAuthenticatorService.initializeKeycloak();
     NotificationDataSource.getInstance().configure(appProperties.getNotification_datasource_config_path());
+
+	 Map<String, Map<String, String>> directoryToFilesMap = new HashMap<>();
+	  File[] directories = new File(appProperties.getEnvs()).listFiles(File::isDirectory);
+	  if (directories != null) {
+		  for (File directory : directories) {
+			  Map<String, String> fileNameToPathMap = new HashMap<>();
+			  File[] files = new File(directory.getAbsolutePath()).listFiles(File::isFile);
+			  if (files != null) {
+				  for (File file : files) {
+					  fileNameToPathMap.put(FilenameUtils.removeExtension(file.getName()), file.getAbsolutePath());
+				  }
+			  }
+			  directoryToFilesMap.put(directory.getName(), fileNameToPathMap);
+		  }
+	  }
   }
 }

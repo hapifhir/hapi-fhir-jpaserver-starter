@@ -52,6 +52,7 @@ hapi:
       fhir_version: R4
       image_path: Images
       country_org_id: nigeria
+      envs: C:\workspace\IPRD\ANC\anc-oyo\data\hapi\envs
       notification_datasource_config_path: D:\realm_script\anc-oyo\data\hapi\notificationDataSourceConfig.xml
       anc_config_file : D:\realm_script\anc-oyo\data\hapi\anc_config.json
       filters_config_file : D:\realm_script\anc-oyo\data\hapi\filters_config.json
