@@ -34,6 +34,9 @@ public class ServerInterceptor {
 	
 	
 	private static final Logger logger = LoggerFactory.getLogger(ServerInterceptor.class);
+
+	private static final String ENCOUNTER_MIGRATED_SYSTEM = "https://iprdgroup.com/identifier";
+	private static final String ENCOUNTER_MIGRATED_VALUE = "argusoft-migrated";
 	
 	public ServerInterceptor(String path) {
 		imagePath = path;
@@ -68,19 +71,21 @@ public class ServerInterceptor {
 			Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 			String messageStatus = ComGenerator.MessageStatus.PENDING.name();
 
-			EncounterIdEntity encounterIdEntity = new EncounterIdEntity(encounterId);
-			notificationDataSource.insert(encounterIdEntity);
+			if (!isEncounterMigrated(encounter)) {
+				EncounterIdEntity encounterIdEntity = new EncounterIdEntity(encounterId);
+				notificationDataSource.insert(encounterIdEntity);
 
-			ComGenerator comGen = new ComGenerator(
-				"Encounter",
-				encounterId,
-				currentDate,
-				messageStatus,
-				patientId,
-				null
-			);
+				ComGenerator comGen = new ComGenerator(
+					"Encounter",
+					encounterId,
+					currentDate,
+					messageStatus,
+					patientId,
+					null
+				);
 
-			notificationDataSource.insert(comGen);
+				notificationDataSource.insert(comGen);
+			}
 		}
 		else if(theResource.fhirType().equals("Appointment")) {
 			Appointment appointment = (Appointment) theResource;
@@ -149,9 +154,11 @@ public class ServerInterceptor {
 			Encounter encounter = (Encounter) theResource;
 			String encounterId = encounter.getIdElement().getIdPart();
 
-			EncounterIdEntity encounterIdEntity = new EncounterIdEntity(encounterId);
-			// Using persist to add entry only if it is not exists
-			notificationDataSource.persist(encounterIdEntity);
+			if (!isEncounterMigrated(encounter)) {
+				EncounterIdEntity encounterIdEntity = new EncounterIdEntity(encounterId);
+				// Using persist to add entry only if it is not exists
+				notificationDataSource.persist(encounterIdEntity);
+			}
 		}
 	}
 
@@ -163,5 +170,17 @@ public class ServerInterceptor {
 			String encounterId = encounter.getIdElement().getIdPart();
 			notificationDataSource.deleteFromEncounterIdEntityByEncounterId(encounterId);
 		}
+	}
+
+	private boolean isEncounterMigrated(Encounter encounter) {
+		for (Identifier identifier: encounter.getIdentifier()) {
+			if (
+				identifier.hasSystem() && identifier.getSystem().equals(ENCOUNTER_MIGRATED_SYSTEM) &&
+					identifier.hasValue() && identifier.getValue().equals(ENCOUNTER_MIGRATED_VALUE)
+			) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
