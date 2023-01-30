@@ -3,10 +3,14 @@ package ch.ahdis.validation;
 import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,35 +18,37 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.FHIRFormatError;
-import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome.IssueSeverity;
 import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
-import org.hl7.fhir.r4.model.Parameters.ParametersParameterComponent;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.springframework.test.context.ActiveProfiles;
 import org.yaml.snakeyaml.Yaml;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.AppProperties.ImplementationGuide;
-import ca.uhn.fhir.rest.api.EncodingEnum;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ch.ahdis.matchbox.util.PackageCacheInitializer;
+
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * see https://www.baeldung.com/springjunit4classrunner-parameterized read the
@@ -53,27 +59,51 @@ import ch.ahdis.matchbox.util.PackageCacheInitializer;
  * @author oliveregger
  */
 @RunWith(Parameterized.class)
+@ActiveProfiles("test-ch")
 @Ignore
 public class IgValidateR4TestStandalone {
 
   static private Set<String> loadedIgs = new HashSet<String>();
 
-    private Resource resource;
+  private Resource resource;
   private String name;
+
+
+  private String targetServer = "http://localhost:8080/matchboxv3/fhir";
+
+
+  @BeforeClass
+	public static void beforeClass() throws Exception {
+		Path dir = Paths.get("database");
+		if (Files.exists(dir)) {
+			for (Path file : Files.list(dir).collect(Collectors.toList())) {
+				if (Files.isRegularFile(file)) {
+					Files.delete(file);
+				}
+			}	
+		}
+  }
+
+  @BeforeAll void waitUntilStartup() throws InterruptedException {
+    Thread.sleep(20000); // give the server some time to start up
+    FhirContext contextR4 = FhirVersionEnum.R4.newContext();
+    ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);
+    validationClient.capabilities();
+  }
   
   
   public static List<ImplementationGuide> getImplementationGuides() {
     Yaml yaml = new Yaml();
     InputStream inputStream = null;
     try {
-      inputStream = new FileInputStream("./with-preload/application.yaml");
-    } catch (FileNotFoundException e) {
+      org.springframework.core.io.ClassPathResource resource = new ClassPathResource("application-test-ch.yaml");
+        inputStream = new FileInputStream(resource.getFile());
+    } catch (IOException e) {
       return null;
     }
     Map<String, Object> obj = yaml.load(inputStream);
     return PackageCacheInitializer.getIgs(obj);
   }
-
 
   @Parameters(name = "{index}: file {0}")
   public static Iterable<Object[]> data() throws ParserConfigurationException, IOException, FHIRFormatError {

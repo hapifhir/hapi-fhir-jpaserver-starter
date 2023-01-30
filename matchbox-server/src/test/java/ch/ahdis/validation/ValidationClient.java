@@ -30,6 +30,7 @@ public class ValidationClient extends GenericClient{
   public ValidationClient(FhirContext theContext, String theServerBase) {
     super(theContext, null, theServerBase, null);
     setDontValidateConformance(true);
+    theContext.getRestfulClientFactory().setSocketTimeout(200 * 1000);
   }
     
   private final class OutcomeResponseHandler implements IClientResponseHandler<MethodOutcome> {

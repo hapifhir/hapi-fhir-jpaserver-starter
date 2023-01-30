@@ -66,334 +66,259 @@ import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
  *
  */
 @DisallowConcurrentExecution
-public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider implements Job, ApplicationContextAware {
+public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider
+		implements Job, ApplicationContextAware {
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ImplementationGuideProvider.class);
 
 	@Autowired
 	protected MatchboxEngineSupport matchboxEngineSupport;
-	
-  @Override
-  public MethodOutcome delete(HttpServletRequest theRequest, IIdType theResource, String theConditional,
-      RequestDetails theRequestDetails) {
-  	ImplementationGuide guide = new ImplementationGuide();
-  	int pos =  theResource.getIdPart().lastIndexOf("-");
-  	String version = theResource.getIdPart().substring(pos+1);
-  	int space = version.indexOf(' ');
-  	if (space>0) {
-  		version = version.substring(0, space);
-  	}
-  	guide.setVersion(version);
-  	String name = theResource.getIdPart().substring(0,pos);
-  	guide.setName(name);
-    MethodOutcome outcome =  new MethodOutcome();
-    OperationOutcome oo = uninstall(guide);
-    outcome.setOperationOutcome(oo);
-    return outcome;
-  }
 
-  @Override
-  public MethodOutcome update(HttpServletRequest theRequest, ImplementationGuide theResource, IIdType theId,
-      String theConditional, RequestDetails theRequestDetails) {
-    OperationOutcome oo = load(theResource);
-    MethodOutcome outcome =  new MethodOutcome();
-    outcome.setOperationOutcome(oo);
-    
-    // initialize matchbox engine
-    log.info("Initializing matchbox engine(s): " +VersionUtil.getMemory());
-    matchboxEngineSupport.getMatchboxEngine("default", null, false, true);
-    log.info("Initializing matchbox engine finished: "+VersionUtil.getMemory());
-    
-    return outcome;
-  }
+	@Override
+	public MethodOutcome delete(HttpServletRequest theRequest, IIdType theResource, String theConditional,
+			RequestDetails theRequestDetails) {
+		ImplementationGuide guide = new ImplementationGuide();
+		int pos = theResource.getIdPart().lastIndexOf("-");
+		String version = theResource.getIdPart().substring(pos + 1);
+		int space = version.indexOf(' ');
+		if (space > 0) {
+			version = version.substring(0, space);
+		}
+		guide.setVersion(version);
+		String name = theResource.getIdPart().substring(0, pos);
+		guide.setName(name);
+		MethodOutcome outcome = new MethodOutcome();
+		OperationOutcome oo = uninstall(guide);
+		outcome.setOperationOutcome(oo);
+		return outcome;
+	}
 
-  @Override
-  public MethodOutcome create(HttpServletRequest theRequest, ImplementationGuide theResource, String theConditional,
-    RequestDetails theRequestDetails) {
-    OperationOutcome oo = load(theResource);
-    MethodOutcome outcome =  new MethodOutcome();
-    outcome.setOperationOutcome(oo);
-    return outcome;
-  }
+	@Override
+	public MethodOutcome update(HttpServletRequest theRequest, ImplementationGuide theResource, IIdType theId,
+			String theConditional, RequestDetails theRequestDetails) {
+		OperationOutcome oo = load(theResource);
+		MethodOutcome outcome = new MethodOutcome();
+		outcome.setOperationOutcome(oo);
 
-  @Autowired
-  MatchboxPackageInstallerImpl packageInstallerSvc;
+		// initialize matchbox engine
+		log.info("Initializing matchbox engine(s): " + VersionUtil.getMemory());
+		matchboxEngineSupport.getMatchboxEngine("default", null, false, true);
+		log.info("Initializing matchbox engine finished: " + VersionUtil.getMemory());
 
-  @Autowired
-  AppProperties appProperties;
+		return outcome;
+	}
 
-  @Autowired
-  private INpmPackageVersionDao myPackageVersionDao;
+	@Override
+	public MethodOutcome create(HttpServletRequest theRequest, ImplementationGuide theResource, String theConditional,
+			RequestDetails theRequestDetails) {
+		OperationOutcome oo = load(theResource);
+		MethodOutcome outcome = new MethodOutcome();
+		outcome.setOperationOutcome(oo);
+		return outcome;
+	}
 
-  @Autowired
-  private PlatformTransactionManager myTxManager;
-  
-  public OperationOutcome getOperationOutcome(PackageInstallOutcomeJson pkgOutcome) {
-    if (pkgOutcome==null) {
-      return null;
-    }
-    OperationOutcome outcome = new OperationOutcome();
-    for(String message: pkgOutcome.getMessage())  {
-      outcome.addIssue().setSeverity(IssueSeverity.INFORMATION).setCode(IssueType.PROCESSING).setDiagnostics(message);
-    }
-    for(String resource: pkgOutcome.getResourcesInstalled().keySet())  {
-      outcome.addIssue().setSeverity(IssueSeverity.INFORMATION).setCode(IssueType.PROCESSING).setDiagnostics(resource + ": "+pkgOutcome.getResourcesInstalled().get(resource));
-    }
-    return outcome;
-  }
+	@Autowired
+	MatchboxPackageInstallerImpl packageInstallerSvc;
 
-  public OperationOutcome getOperationOutcome(PackageDeleteOutcomeJson pkgOutcome) {
-    if (pkgOutcome==null) {
-      return null;
-    }
-    OperationOutcome outcome = new OperationOutcome();
-    for(String message: pkgOutcome.getMessage())  {
-      outcome.addIssue().setSeverity(IssueSeverity.INFORMATION).setCode(IssueType.PROCESSING).setDiagnostics(message);
-    }
-    return outcome;
-  }
+	@Autowired
+	AppProperties appProperties;
 
-  public OperationOutcome uninstall(ImplementationGuide theResource) {
-    return getOperationOutcome(packageInstallerSvc.uninstall(this.getPackageInstallationSpec()
-        .setPackageUrl(theResource.getUrl())
-        .setName(theResource.getName())
-        .setVersion(theResource.getVersion())));
-  }
-  
-  public PackageInstallationSpec getPackageInstallationSpec() {
-  	return new PackageInstallationSpec()
-    .addInstallResourceTypes(MatchboxPackageInstallerImpl.DEFAULT_INSTALL_TYPES.toArray(new String[0]))
-    .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_ONLY)
-    .addDependencyExclude("hl7.fhir.r4.core")
-    .addDependencyExclude("hl7.terminology")
-    .addDependencyExclude("hl7.terminology.r4")    
-    .addDependencyExclude("hl7.fhir.r4.examples");	
-    }
+	@Autowired
+	private INpmPackageVersionDao myPackageVersionDao;
 
-  public PackageInstallOutcomeJson load(ImplementationGuide theResource, PackageInstallOutcomeJson install) {
-    PackageInstallOutcomeJson installOutcome = packageInstallerSvc.install(this.getPackageInstallationSpec().setName(theResource.getName()).setPackageUrl(theResource.getUrl()).setVersion(theResource.getVersion()));
-    if (install != null) {
-      install.getMessage().addAll(installOutcome.getMessage());
-      return install;
-    }
-    return installOutcome;
-  }
+	@Autowired
+	private PlatformTransactionManager myTxManager;
+
+	public OperationOutcome getOperationOutcome(PackageInstallOutcomeJson pkgOutcome) {
+		if (pkgOutcome == null) {
+			return null;
+		}
+		OperationOutcome outcome = new OperationOutcome();
+		for (String message : pkgOutcome.getMessage()) {
+			outcome.addIssue().setSeverity(IssueSeverity.INFORMATION).setCode(IssueType.PROCESSING)
+					.setDiagnostics(message);
+		}
+		for (String resource : pkgOutcome.getResourcesInstalled().keySet()) {
+			outcome.addIssue().setSeverity(IssueSeverity.INFORMATION).setCode(IssueType.PROCESSING)
+					.setDiagnostics(resource + ": " + pkgOutcome.getResourcesInstalled().get(resource));
+		}
+		return outcome;
+	}
+
+	public OperationOutcome getOperationOutcome(PackageDeleteOutcomeJson pkgOutcome) {
+		if (pkgOutcome == null) {
+			return null;
+		}
+		OperationOutcome outcome = new OperationOutcome();
+		for (String message : pkgOutcome.getMessage()) {
+			outcome.addIssue().setSeverity(IssueSeverity.INFORMATION).setCode(IssueType.PROCESSING)
+					.setDiagnostics(message);
+		}
+		return outcome;
+	}
+
+	public OperationOutcome uninstall(ImplementationGuide theResource) {
+		return getOperationOutcome(packageInstallerSvc.uninstall(this.getPackageInstallationSpec()
+				.setPackageUrl(theResource.getUrl())
+				.setName(theResource.getName())
+				.setVersion(theResource.getVersion())));
+	}
+
+	public PackageInstallationSpec getPackageInstallationSpec() {
+		return new PackageInstallationSpec()
+				.addInstallResourceTypes(MatchboxPackageInstallerImpl.DEFAULT_INSTALL_TYPES.toArray(new String[0]))
+				.setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_ONLY)
+				.addDependencyExclude("hl7.fhir.r4.core")
+				.addDependencyExclude("hl7.terminology")
+				.addDependencyExclude("hl7.terminology.r4")
+				.addDependencyExclude("hl7.fhir.r4.examples");
+	}
+
+	public PackageInstallOutcomeJson load(ImplementationGuide theResource, PackageInstallOutcomeJson install) {
+		PackageInstallOutcomeJson installOutcome = packageInstallerSvc
+				.install(this.getPackageInstallationSpec().setName(theResource.getName())
+						.setPackageUrl(theResource.getUrl()).setVersion(theResource.getVersion()));
+		if (install != null) {
+			install.getMessage().addAll(installOutcome.getMessage());
+			return install;
+		}
+		return installOutcome;
+	}
 
 	public OperationOutcome load(ImplementationGuide theResource) {
-	  PackageInstallOutcomeJson installOutcome = packageInstallerSvc.install(this.getPackageInstallationSpec()
-        .setPackageUrl(theResource.getUrl())
-        .addInstallResourceTypes(MatchboxPackageInstallerImpl.DEFAULT_INSTALL_TYPES.toArray(new String[0]))
-        .setName(theResource.getName())
-        .setVersion(theResource.getVersion())
-          .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_ONLY));
-    return getOperationOutcome(installOutcome);
+		PackageInstallOutcomeJson installOutcome = packageInstallerSvc.install(this.getPackageInstallationSpec()
+				.setPackageUrl(theResource.getUrl())
+				.addInstallResourceTypes(MatchboxPackageInstallerImpl.DEFAULT_INSTALL_TYPES.toArray(new String[0]))
+				.setName(theResource.getName())
+				.setVersion(theResource.getVersion())
+				.setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_ONLY));
+		return getOperationOutcome(installOutcome);
 	}
-	
-	public PackageInstallOutcomeJson loadAll(boolean replace) {
-    log.info("Initializing packages" +VersionUtil.getMemory());
-	  PackageInstallOutcomeJson installOutcome = null;
-    if (appProperties.getImplementationGuides() != null) {
-      Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
-      for (AppProperties.ImplementationGuide guide : guides.values()) {
-        boolean exists = new TransactionTemplate(myTxManager).execute(tx -> {
-          Optional<NpmPackageVersionEntity> existing = myPackageVersionDao.findByPackageIdAndVersion(guide.getName(), guide.getVersion());
-          return existing.isPresent();
-        });
-        if (!exists || replace) {
-          ImplementationGuide ig = new ImplementationGuide();
-          ig.setName(guide.getName());
-          ig.setPackageId(guide.getName());
-          ig.setUrl(guide.getUrl());
-          ig.setVersion(guide.getVersion());
-          installOutcome = load(ig, installOutcome);
-        }
-      }
-    }
-	    // initialize matchbox engine
-    log.info("Initializing matchbox engine(s): " +VersionUtil.getMemory());
-    matchboxEngineSupport.getMatchboxEngine("default", null, false, true);
-    log.info("Initializing matchbox engine finished: "+VersionUtil.getMemory());
 
-    return installOutcome;
+	public PackageInstallOutcomeJson loadAll(boolean replace) {
+		matchboxEngineSupport.setInitialized(false);
+		log.info("Initializing packages" + VersionUtil.getMemory());
+		PackageInstallOutcomeJson installOutcome = null;
+		if (appProperties.getImplementationGuides() != null) {
+			Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
+			for (AppProperties.ImplementationGuide guide : guides.values()) {
+				boolean exists = new TransactionTemplate(myTxManager).execute(tx -> {
+					Optional<NpmPackageVersionEntity> existing = myPackageVersionDao
+							.findByPackageIdAndVersion(guide.getName(), guide.getVersion());
+					return existing.isPresent();
+				});
+				if (!exists || replace) {
+					ImplementationGuide ig = new ImplementationGuide();
+					ig.setName(guide.getName());
+					ig.setPackageId(guide.getName());
+					ig.setUrl(guide.getUrl());
+					ig.setVersion(guide.getVersion());
+					installOutcome = load(ig, installOutcome);
+				}
+			}
+		}
+		matchboxEngineSupport.setInitialized(true);
+		return installOutcome;
 	}
-	
+
 	@Operation(name = "$load-all", type = ImplementationGuide.class, idempotent = false)
 	public OperationOutcome loadAll() {
-	  return this.getOperationOutcome(loadAll(true));
+		return this.getOperationOutcome(loadAll(true));
 	}
 
-  @Override
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-  }
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+	}
 
-  @Override
-  public void execute(JobExecutionContext context) throws JobExecutionException {
-    try {
-      context.getScheduler().unscheduleJob(context.getTrigger().getKey());
-      this.loadAll(false);
-    } catch (SchedulerException e) {
-      e.printStackTrace();
-    }
-  }
-  
-  
-  @Override
-	@Search(allowUnknownParams=true)
+	@Override
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		try {
+			context.getScheduler().unscheduleJob(context.getTrigger().getKey());
+			this.loadAll(false);
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	@Search(allowUnknownParams = true)
 	public ca.uhn.fhir.rest.api.server.IBundleProvider search(
 			javax.servlet.http.HttpServletRequest theServletRequest,
 			javax.servlet.http.HttpServletResponse theServletResponse,
 
 			ca.uhn.fhir.rest.api.server.RequestDetails theRequestDetails,
 
-			@Description(shortDefinition="Search the contents of the resource's data using a filter")
-			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_FILTER)
-			StringAndListParam theFtFilter,
+			@Description(shortDefinition = "Search the contents of the resource's data using a filter") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_FILTER) StringAndListParam theFtFilter,
 
-			@Description(shortDefinition="Search the contents of the resource's data using a fulltext search")
-			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_CONTENT)
-			StringAndListParam theFtContent, 
+			@Description(shortDefinition = "Search the contents of the resource's data using a fulltext search") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_CONTENT) StringAndListParam theFtContent,
 
-			@Description(shortDefinition="Search the contents of the resource's narrative using a fulltext search")
-			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_TEXT)
-			StringAndListParam theFtText, 
+			@Description(shortDefinition = "Search the contents of the resource's narrative using a fulltext search") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_TEXT) StringAndListParam theFtText,
 
-			@Description(shortDefinition="Search for resources which have the given tag")
-			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_TAG)
-			TokenAndListParam theSearchForTag, 
+			@Description(shortDefinition = "Search for resources which have the given tag") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_TAG) TokenAndListParam theSearchForTag,
 
-			@Description(shortDefinition="Search for resources which have the given security labels")
-			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_SECURITY)
-			TokenAndListParam theSearchForSecurity, 
-  
-			@Description(shortDefinition="Search for resources which have the given profile")
-			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_PROFILE)
-			UriAndListParam theSearchForProfile,
+			@Description(shortDefinition = "Search for resources which have the given security labels") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_SECURITY) TokenAndListParam theSearchForSecurity,
 
-			@Description(shortDefinition="Search for resources which have the given source value (Resource.meta.source)")
-			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_SOURCE)
-			UriAndListParam theSearchForSource,
+			@Description(shortDefinition = "Search for resources which have the given profile") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_PROFILE) UriAndListParam theSearchForProfile,
 
-			@Description(shortDefinition="Return resources linked to by the given target")
-			@OptionalParam(name="_has")
-			HasAndListParam theHas, 
+			@Description(shortDefinition = "Search for resources which have the given source value (Resource.meta.source)") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_SOURCE) UriAndListParam theSearchForSource,
 
-   
+			@Description(shortDefinition = "Return resources linked to by the given target") @OptionalParam(name = "_has") HasAndListParam theHas,
 
-			@Description(shortDefinition="The ID of the resource")
-			@OptionalParam(name="_id")
-			TokenAndListParam the_id,
-   
+			@Description(shortDefinition = "The ID of the resource") @OptionalParam(name = "_id") TokenAndListParam the_id,
 
-			@Description(shortDefinition="A use context assigned to the implementation guide")
-			@OptionalParam(name="context")
-			TokenAndListParam theContext,
-   
+			@Description(shortDefinition = "A use context assigned to the implementation guide") @OptionalParam(name = "context") TokenAndListParam theContext,
 
-			@Description(shortDefinition="A quantity- or range-valued use context assigned to the implementation guide")
-			@OptionalParam(name="context-quantity")
-			QuantityAndListParam theContext_quantity, 
-   
+			@Description(shortDefinition = "A quantity- or range-valued use context assigned to the implementation guide") @OptionalParam(name = "context-quantity") QuantityAndListParam theContext_quantity,
 
-			@Description(shortDefinition="A type of use context assigned to the implementation guide")
-			@OptionalParam(name="context-type")
-			TokenAndListParam theContext_type,
-   
+			@Description(shortDefinition = "A type of use context assigned to the implementation guide") @OptionalParam(name = "context-type") TokenAndListParam theContext_type,
 
-			@Description(shortDefinition="A use context type and quantity- or range-based value assigned to the implementation guide")
-			@OptionalParam(name="context-type-quantity", compositeTypes= { TokenParam.class, QuantityParam.class })
-			CompositeAndListParam<TokenParam, QuantityParam> theContext_type_quantity,
-   
+			@Description(shortDefinition = "A use context type and quantity- or range-based value assigned to the implementation guide") @OptionalParam(name = "context-type-quantity", compositeTypes = {
+					TokenParam.class,
+					QuantityParam.class }) CompositeAndListParam<TokenParam, QuantityParam> theContext_type_quantity,
 
-			@Description(shortDefinition="A use context type and value assigned to the implementation guide")
-			@OptionalParam(name="context-type-value", compositeTypes= { TokenParam.class, TokenParam.class })
-			CompositeAndListParam<TokenParam, TokenParam> theContext_type_value,
-   
+			@Description(shortDefinition = "A use context type and value assigned to the implementation guide") @OptionalParam(name = "context-type-value", compositeTypes = {
+					TokenParam.class,
+					TokenParam.class }) CompositeAndListParam<TokenParam, TokenParam> theContext_type_value,
 
-			@Description(shortDefinition="The implementation guide publication date")
-			@OptionalParam(name="date")
-			DateRangeParam theDate, 
-   
+			@Description(shortDefinition = "The implementation guide publication date") @OptionalParam(name = "date") DateRangeParam theDate,
 
-			@Description(shortDefinition="Identity of the IG that this depends on")
-			@OptionalParam(name="depends-on", targetTypes={  } )
-			ReferenceAndListParam theDepends_on, 
-   
+			@Description(shortDefinition = "Identity of the IG that this depends on") @OptionalParam(name = "depends-on", targetTypes = {}) ReferenceAndListParam theDepends_on,
 
-			@Description(shortDefinition="The description of the implementation guide")
-			@OptionalParam(name="description")
-			StringAndListParam theDescription, 
-   
+			@Description(shortDefinition = "The description of the implementation guide") @OptionalParam(name = "description") StringAndListParam theDescription,
 
-			@Description(shortDefinition="For testing purposes, not real usage")
-			@OptionalParam(name="experimental")
-			TokenAndListParam theExperimental,
-   
+			@Description(shortDefinition = "For testing purposes, not real usage") @OptionalParam(name = "experimental") TokenAndListParam theExperimental,
 
-			@Description(shortDefinition="Profile that all resources must conform to")
-			@OptionalParam(name="global", targetTypes={  } )
-			ReferenceAndListParam theGlobal, 
-   
+			@Description(shortDefinition = "Profile that all resources must conform to") @OptionalParam(name = "global", targetTypes = {}) ReferenceAndListParam theGlobal,
 
-			@Description(shortDefinition="Intended jurisdiction for the implementation guide")
-			@OptionalParam(name="jurisdiction")
-			TokenAndListParam theJurisdiction,
-   
+			@Description(shortDefinition = "Intended jurisdiction for the implementation guide") @OptionalParam(name = "jurisdiction") TokenAndListParam theJurisdiction,
 
-			@Description(shortDefinition="Computationally friendly name of the implementation guide")
-			@OptionalParam(name="name")
-			StringAndListParam theName, 
-   
+			@Description(shortDefinition = "Computationally friendly name of the implementation guide") @OptionalParam(name = "name") StringAndListParam theName,
 
-			@Description(shortDefinition="Name of the publisher of the implementation guide")
-			@OptionalParam(name="publisher")
-			StringAndListParam thePublisher, 
-   
+			@Description(shortDefinition = "Name of the publisher of the implementation guide") @OptionalParam(name = "publisher") StringAndListParam thePublisher,
 
-			@Description(shortDefinition="Location of the resource")
-			@OptionalParam(name="resource", targetTypes={  } )
-			ReferenceAndListParam theResource, 
-   
+			@Description(shortDefinition = "Location of the resource") @OptionalParam(name = "resource", targetTypes = {}) ReferenceAndListParam theResource,
 
-			@Description(shortDefinition="The current status of the implementation guide")
-			@OptionalParam(name="status")
-			TokenAndListParam theStatus,
-   
+			@Description(shortDefinition = "The current status of the implementation guide") @OptionalParam(name = "status") TokenAndListParam theStatus,
 
-			@Description(shortDefinition="The human-friendly name of the implementation guide")
-			@OptionalParam(name="title")
-			StringAndListParam theTitle, 
-   
+			@Description(shortDefinition = "The human-friendly name of the implementation guide") @OptionalParam(name = "title") StringAndListParam theTitle,
 
-			@Description(shortDefinition="The uri that identifies the implementation guide")
-			@OptionalParam(name="url")
-			UriAndListParam theUrl, 
-   
+			@Description(shortDefinition = "The uri that identifies the implementation guide") @OptionalParam(name = "url") UriAndListParam theUrl,
 
-			@Description(shortDefinition="The business version of the implementation guide")
-			@OptionalParam(name="version")
-			TokenAndListParam theVersion,
+			@Description(shortDefinition = "The business version of the implementation guide") @OptionalParam(name = "version") TokenAndListParam theVersion,
 
-			@RawParam
-			Map<String, List<String>> theAdditionalRawParams,
+			@RawParam Map<String, List<String>> theAdditionalRawParams,
 
-			@Description(shortDefinition="Only return resources which were last updated as specified by the given range")
-			@OptionalParam(name="_lastUpdated")
-			DateRangeParam theLastUpdated, 
+			@Description(shortDefinition = "Only return resources which were last updated as specified by the given range") @OptionalParam(name = "_lastUpdated") DateRangeParam theLastUpdated,
 
-			@IncludeParam
-			Set<Include> theIncludes,
+			@IncludeParam Set<Include> theIncludes,
 
-			@IncludeParam(reverse=true)
-			Set<Include> theRevIncludes,
+			@IncludeParam(reverse = true) Set<Include> theRevIncludes,
 
-			@Sort
-			SortSpec theSort,
-			
-			@ca.uhn.fhir.rest.annotation.Count
-			Integer theCount,
+			@Sort SortSpec theSort,
 
-			@ca.uhn.fhir.rest.annotation.Offset
-			Integer theOffset,
+			@ca.uhn.fhir.rest.annotation.Count Integer theCount,
+
+			@ca.uhn.fhir.rest.annotation.Offset Integer theOffset,
 
 			SummaryEnum theSummaryMode,
 
@@ -401,48 +326,49 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
 
 			SearchContainedModeEnum theSearchContainedMode
 
-			) {
+	) {
 		startRequest(theServletRequest);
 		try {
-	  	List<NpmPackageVersionEntity> packages = myPackageVersionDao.findAll(org.springframework.data.domain.Sort.by(Direction.ASC, "myPackageId","myVersionId"));
-  		List<ImplementationGuide> list = new ArrayList<ImplementationGuide>();
-  				
-  		for (NpmPackageVersionEntity npmPackage: packages) {
-  			ImplementationGuide ig = new ImplementationGuide();
-  			ig.setId(npmPackage.getPackageId()+"-"+npmPackage.getVersionId());
-  			ig.setTitle(npmPackage.getDescription());
-  			ig.setDate(npmPackage.getUpdatedTime());
-	        ig.setPackageId(npmPackage.getPackageId());
-			if (npmPackage.isCurrentVersion()) {
-				ig.setVersion(npmPackage.getVersionId()+" (current)");
-			} else {
-				ig.setVersion(npmPackage.getVersionId());
+			List<NpmPackageVersionEntity> packages = myPackageVersionDao
+					.findAll(org.springframework.data.domain.Sort.by(Direction.ASC, "myPackageId", "myVersionId"));
+			List<ImplementationGuide> list = new ArrayList<ImplementationGuide>();
+
+			for (NpmPackageVersionEntity npmPackage : packages) {
+				ImplementationGuide ig = new ImplementationGuide();
+				ig.setId(npmPackage.getPackageId() + "-" + npmPackage.getVersionId());
+				ig.setTitle(npmPackage.getDescription());
+				ig.setDate(npmPackage.getUpdatedTime());
+				ig.setPackageId(npmPackage.getPackageId());
+				if (npmPackage.isCurrentVersion()) {
+					ig.setVersion(npmPackage.getVersionId() + " (current)");
+				} else {
+					ig.setVersion(npmPackage.getVersionId());
+				}
+				list.add(ig);
 			}
-  			list.add(ig);
-  		}
-  		
-  		SimpleBundleProvider simpleBundleProivder = new SimpleBundleProvider(list);
-  		return simpleBundleProivder;
-  		
+
+			SimpleBundleProvider simpleBundleProivder = new SimpleBundleProvider(list);
+			return simpleBundleProivder;
+
 		} finally {
 			endRequest(theServletRequest);
 		}
 	}
 
-
 	@Override
-	public ImplementationGuide read(HttpServletRequest theServletRequest, IIdType theId, RequestDetails theRequestDetails) {
+	public ImplementationGuide read(HttpServletRequest theServletRequest, IIdType theId,
+			RequestDetails theRequestDetails) {
 
 		startRequest(theServletRequest);
 		try {
 			return new TransactionTemplate(myTxManager).execute(tx -> {
 				String id = theId.getIdPart().substring(0, theId.getIdPart().lastIndexOf("-"));
-				String version = theId.getIdPart().substring(theId.getIdPart().lastIndexOf("-")+1);
+				String version = theId.getIdPart().substring(theId.getIdPart().lastIndexOf("-") + 1);
 				Optional<NpmPackageVersionEntity> packages = myPackageVersionDao.findByPackageIdAndVersion(id, version);
 				if (packages.isPresent()) {
 					NpmPackageVersionEntity npmPackage = packages.get();
 					ImplementationGuide ig = new ImplementationGuide();
-					ig.setId(npmPackage.getPackageId()+"-"+npmPackage.getVersionId());
+					ig.setId(npmPackage.getPackageId() + "-" + npmPackage.getVersionId());
 					ig.setTitle(npmPackage.getDescription());
 					ig.setDate(npmPackage.getUpdatedTime());
 					ig.setPackageId(npmPackage.getPackageId());

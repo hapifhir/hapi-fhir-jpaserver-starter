@@ -136,7 +136,15 @@ public class MatchboxEngineSupport {
 	 */
 	public synchronized MatchboxEngine getMatchboxEngine(String canonical, CliContext cliContext, boolean create, boolean reload) {
 		TimeTracker tt = new TimeTracker();
-		
+
+		while (!this.isInitialized()) {
+			log.info("ValidationEngine is not yet, waiting for initialization of packages");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				log.error("error waiting for initialization", e);
+			}
+		}		
 		if (reload) {
 			engine = null;
 			if ("default".endsWith(canonical)){
@@ -171,15 +179,10 @@ public class MatchboxEngineSupport {
 						// FIXME if we want to validate against different version we would probably no need to load theses packages
 						engine.loadPackage("hl7.terminology",  "5.0.0");
 						engine.loadPackage("hl7.fhir.r4.core",  "4.0.1");
-						this.initialized = true;
 					} catch (FHIRException | IOException e) {
 						log.error("error connecting to terminology server ");
 						return null;
 					}
-		}
-		
-		if (!this.isInitialized()) {
-			log.error("ValidationEngine is not yet initialized");
 		}
 
 		String ig = cliContext.getIg();
