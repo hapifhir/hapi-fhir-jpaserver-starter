@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class ResourceMapperService {
 	private static final Logger logger = LoggerFactory.getLogger(ResourceMapperService.class);
-	private static final long DELAY = 2 * 60000;
+	private static final long DELAY = 10 * 60000;
 
 	/**
 	 * Maps the resources of temporary patient to actual patient when the patient not found on client and service is provided with the OCL-ID
