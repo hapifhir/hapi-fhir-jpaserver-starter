@@ -96,6 +96,7 @@ import javax.sql.DataSource;
 import java.util.*;
 
 import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory.ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR;
+import static org.smartregister.utils.Constants.*;
 
 @Configuration
 public class StarterJpaConfig {
@@ -464,7 +465,7 @@ public class StarterJpaConfig {
 	}
 
 	private void registerLocationHierarchyTypes(RestfulServer restfulServer, DaoRegistry daoRegistry) {
-		IFhirResourceDao<Location> locationIFhirResourceDao = daoRegistry.getResourceDao("Location");
+		IFhirResourceDao<Location> locationIFhirResourceDao = daoRegistry.getResourceDao(LOCATION);
 		LocationHierarchyResourceProvider locationHierarchyResourceProvider = new LocationHierarchyResourceProvider();
 		locationHierarchyResourceProvider.setLocationIFhirResourceDao(locationIFhirResourceDao);
 
@@ -479,12 +480,13 @@ public class StarterJpaConfig {
 	}
 
 	private void registerPracitionerDetailsTypes(RestfulServer restfulServer, DaoRegistry daoRegistry) {
-		IFhirResourceDao<Practitioner> practitionerIFhirResourceDao = daoRegistry.getResourceDao("Practitioner");
-		IFhirResourceDao<PractitionerRole> practitionerRoleIFhirResourceDao = daoRegistry.getResourceDao("PractitionerRole");
-		IFhirResourceDao<CareTeam> careTeamIFhirResourceDao = daoRegistry.getResourceDao("CareTeam");
-		IFhirResourceDao<OrganizationAffiliation> organizationAffiliationIFhirResourceDao = daoRegistry.getResourceDao("OrganizationAffiliation");
-		IFhirResourceDao<Organization> organizationIFhirResourceDao = daoRegistry.getResourceDao("Organization");
-		IFhirResourceDao<Location> locationIFhirResourceDao = daoRegistry.getResourceDao("Location");
+		IFhirResourceDao<Practitioner> practitionerIFhirResourceDao = daoRegistry.getResourceDao(_PRACTITIONER);
+		IFhirResourceDao<PractitionerRole> practitionerRoleIFhirResourceDao = daoRegistry.getResourceDao(PRACTITIONER_ROLE);
+		IFhirResourceDao<CareTeam> careTeamIFhirResourceDao = daoRegistry.getResourceDao(CARE_TEAM);
+		IFhirResourceDao<OrganizationAffiliation> organizationAffiliationIFhirResourceDao = daoRegistry.getResourceDao(ORGANIZATION_AFFILIATION);
+		IFhirResourceDao<Organization> organizationIFhirResourceDao = daoRegistry.getResourceDao(ORGANIZATION);
+		IFhirResourceDao<Location> locationIFhirResourceDao = daoRegistry.getResourceDao(LOCATION);
+		IFhirResourceDao<Group> groupIFhirResourceDao = daoRegistry.getResourceDao(GROUP);
 		LocationHierarchyResourceProvider locationHierarchyResourceProvider = new LocationHierarchyResourceProvider();
 		locationHierarchyResourceProvider.setLocationIFhirResourceDao(locationIFhirResourceDao);
 		PractitionerDetailsResourceProvider practitionerDetailsResourceProvider = new PractitionerDetailsResourceProvider();
@@ -495,6 +497,7 @@ public class StarterJpaConfig {
 		practitionerDetailsResourceProvider.setLocationHierarchyResourceProvider(locationHierarchyResourceProvider);
 		practitionerDetailsResourceProvider.setOrganizationIFhirResourceDao(organizationIFhirResourceDao);
 		practitionerDetailsResourceProvider.setLocationIFhirResourceDao(locationIFhirResourceDao);
+		practitionerDetailsResourceProvider.setGroupIFhirResourceDao(groupIFhirResourceDao);
 
 		restfulServer.registerProvider(practitionerDetailsResourceProvider);
 		restfulServer.getFhirContext().registerCustomType(PractitionerDetails.class);
