@@ -92,6 +92,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("from");
 		allFilters.remove("to");
 		allFilters.remove("lga");
+		allFilters.remove("env");
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
 
 		LocalDateTime dateTimeNow = LocalDateTime.now();
@@ -190,6 +191,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("to");
 		allFilters.remove("type");
 		allFilters.remove("lga");
+		allFilters.remove("env");
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
@@ -215,6 +217,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("to");
 		allFilters.remove("type");
 		allFilters.remove("lga");
+		allFilters.remove("env");
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
@@ -240,6 +243,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("to");
 		allFilters.remove("type");
 		allFilters.remove("lga");
+		allFilters.remove("env");
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
@@ -260,6 +264,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("from");
 		allFilters.remove("to");
 		allFilters.remove("lga");
+		allFilters.remove("env");
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
@@ -281,6 +286,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("to");
 		allFilters.remove("type");
 		allFilters.remove("lga");
+		allFilters.remove("env");
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");

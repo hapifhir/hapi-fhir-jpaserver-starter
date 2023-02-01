@@ -897,7 +897,7 @@ public class HelperService {
 
 		facilityIds.forEach(facilityId -> {
 			dates.forEach( date -> {
-				cachingService.cachePieChartData(facilityId, DateUtilityHelper.getCurrentSqlDate(), pieChartDefinitions);
+				cachingService.cachePieChartData(facilityId, date, pieChartDefinitions);
 			});
 		});
 		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
