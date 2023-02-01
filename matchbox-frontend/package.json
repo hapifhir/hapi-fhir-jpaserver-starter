@@ -34,7 +34,7 @@
     "browserify-zlib": "^0.2.0",
     "core-js": "^2.6.2",
     "debug": "^4.3.1",
-    "fhir-kit-client": "file:../fhir-kit-client",
+    "fhir-kit-client": "1.9.2",
     "fhirpath": "^2.10.2",
     "jasmine": "^3.7.0",
     "js-base64": "^3.7.2",
