@@ -163,7 +163,6 @@ public class NotificationDataSource {
 		query.setParameterList("param4", facilityIds);
 		List resultList = query.getResultList();
 		session.close();
-
 		return resultList;
 	}
 
@@ -204,6 +203,7 @@ public class NotificationDataSource {
 		Query query = session.createQuery("DELETE EncounterIdEntity WHERE encounterId = :param1");
 		query.setParameter("param1", encounterId);
 		query.executeUpdate();
+		session.close();
 	}
 	
 }
