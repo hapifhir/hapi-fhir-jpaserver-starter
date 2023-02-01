@@ -40,6 +40,8 @@ public class FhirClientAuthenticatorService {
 
 	public void initializeKeycloak() {
 		  ctx = FhirContext.forCached(FhirVersionEnum.R4);
+		  ctx.getRestfulClientFactory().setSocketTimeout(90 * 1000);
+		  ctx.getRestfulClientFactory().setConnectionRequestTimeout(90 * 1000);
 		  serverBase = appProperties.getHapi_Server_address();
 		  fhirClient = ctx.newRestfulGenericClient(serverBase);     
 		  ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
