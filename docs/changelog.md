@@ -1,4 +1,4 @@
-2023/01/25 Release 3.1.0
+2023/02/01 Release 3.1.0
 
 - Reenable FHIR Mapping Language tutorial, xml and json issues with matchbox [#51](https://github.com/ahdis/matchbox/issues/51)
 - Enable create and update on conformance resources [#70](https://github.com/ahdis/matchbox/issues/70), valid for 60 minutes (not persisting)
@@ -6,6 +6,10 @@
 - GUI: paged ig's page does not work [#67](https://github.com/ahdis/matchbox/issues/67)
 - Update to https://github.com/hapifhir/org.hl7.fhir.core/releases/tag/5.6.92 and hapi-fhir 6.2.5
 - validation difference to HL7 FHIR validator [#71](https://github.com/ahdis/matchbox/issues/71): only selected ig (and dependencies) for selected canonical will be used for validation if configured on matchbox (including no dynamic loading of packages depending on meta.profile)
+- spurios validation erros with package validation [#72](https://github.com/ahdis/matchbox/issues/72)
+- Fixed package configuration, not loading additional ig / conformance resources [#71](https://github.com/ahdis/matchbox/issues/71)
+- loading IG from package by filepath does not work [#26](https://github.com/ahdis/matchbox/issues/26)
+- base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v312
 
 2023/01/16 Release 3.0.0
 
@@ -52,7 +56,7 @@
 - allow xml in gui for validation [#38](https://github.com/ahdis/matchbox/issues/38)
 - mobile access gateway gui: prefix DocumentEntry.identifier with urn:uuid in GUI [#41](https://github.com/ahdis/matchbox/issues/41)
 - base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v200
-  
+
 2022/03/21 Release 1.9.1
 
 - custom log banner, thanks [ralych](https://github.com/ralych)
@@ -68,11 +72,11 @@
 2022/02/21 Release 1.8.2
 
 - OAuth integration for [Mobile Access Gateway](https://github.com/i4mi/MobileAccessGateway) in webapp
-  
+
 2022/02/21 Release 1.8.1
 
 - Parsing of bundles adds additional contained resources [#11|(https://github.com/ahdis/matchbox/issues/11)
-  
+
 2022/02/08 Release 1.8.0
 
 - Integrate webapp running on matchbox port and root itself [#35](https://github.com/ahdis/matchbox/issues/35)
@@ -86,7 +90,7 @@
 - Validation: Uploaded StructureDefinitions via NPM are not available in same session for $validate [#29](https://github.com/ahdis/matchbox/issues/29)
 - StructureMap transformation: Bundle request element not correctly ordered [#27](https://github.com/ahdis/matchbox/issues/27)
 - Error on release V1.6.0 [#24](https://github.com/ahdis/matchbox/issues/24), thanks [@delcroip](https://github.com/delcroip)
-- Integrated [PR](https://github.com/ahdis/matchbox/pull/25) and [PR](https://github.com/ahdis/matchbox/pull/32)  for translate in Structure Map, thanks [@aralych](https://github.com/ralych) 
+- Integrated [PR](https://github.com/ahdis/matchbox/pull/25) and [PR](https://github.com/ahdis/matchbox/pull/32) for translate in Structure Map, thanks [@aralych](https://github.com/ralych)
 - base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v171
 
 2022/01/04 Release 1.6.0
@@ -128,7 +132,7 @@
 - updated hapi-fhir to 5.2.0
 - updated ch-epr-mhealth to 0.1.2
 - Release is available here:
-docker pull eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator:v120
+  docker pull eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator:v120
 
 2020/10/22 Release 1.1.0
 
@@ -136,7 +140,7 @@ docker pull eu.gcr.io/fhir-ch/hapi-fhir-jpavalidator:v120
 - updated fhir.core.version 5.1.15, later is not yet possible due to class name changes
 - [fixed EHS-439](https://github.com/ahdis/hapi-fhir-jpaserver-validator/issues/2) added testcase for EHS-439 to verify correct behaviour with fhir.core.version 5.1.15 https://github.com/hapifhir/org.hl7.fhir.core/releases/tag/5.1.15
 - [fixed Parameters evaluation](https://github.com/ahdis/hapi-fhir-jpaserver-validator/issues/1) two different versions for calling the $validate operation: with Parameters resource and containing the resource to validate within as additional name "resource" parameter
-with Resource to validate directly according to [7.5.5 Asking a FHIR Server](https://www.hl7.org/fhir/validation.html#op)
+  with Resource to validate directly according to [7.5.5 Asking a FHIR Server](https://www.hl7.org/fhir/validation.html#op)
 - [fixed EHS-431](https://gazelle.ihe.net/jira/browse/EHS-431) Validator crashes and does not give a result if the JSON starts with a [ ] (square bracket).
 - [fixed EHS-419](https://gazelle.ihe.net/jira/browse/EHS-419) warning instead of crash for Byte order mark in validation request
 - changed docker build: ig's will be installed during docker build process, no connection to the internet is needed for validation
