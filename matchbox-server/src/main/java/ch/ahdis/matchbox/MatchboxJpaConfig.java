@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.Environment;
 
 import ca.uhn.fhir.batch2.model.StatusEnum;
 import ca.uhn.fhir.batch2.api.IJobCoordinator;
@@ -66,16 +68,18 @@ import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import org.springframework.data.domain.Page;
 
-import com.github.jsonldjava.shaded.com.google.common.annotations.VisibleForTesting;
 import ca.uhn.fhir.jpa.bulk.export.model.ExportPIDIteratorParameters;
 import ca.uhn.fhir.rest.api.server.storage.ResourcePersistentId;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
 @Configuration
 @Import(ThreadPoolFactoryConfig.class)
-public class MatchboxJpaConfig extends StarterJpaConfig {
+public class MatchboxJpaConfig extends StarterJpaConfig {	
 
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(MatchboxJpaConfig.class);
+
+	@Autowired
+	private Environment environment;
 
 	@Autowired
 	QuestionnaireAssembleProvider assembleProvider;
@@ -119,6 +123,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Autowired
 	protected StructureMapTransformProvider structureMapTransformProvider;
 
+
+
 	// removed GraphQlProvider
 	// removed IVAldiationSupport
 	
@@ -155,7 +161,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 			}
 		}
 		
-		fhirServer.setServerConformanceProvider(new MatchboxCapabilityStatementProvider(fhirServer, structureDefinitionProvider));
+		fhirServer.setServerConformanceProvider(new MatchboxCapabilityStatementProvider(fhirServer, structureDefinitionProvider, getCliContext()));
 		
 		ScheduledJobDefinition jobDefinition = new ScheduledJobDefinition();
 		jobDefinition.setId(this.getClass().getName());
@@ -163,6 +169,11 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		mySvc.scheduleLocalJob(DateUtils.MILLIS_PER_MINUTE, jobDefinition);
 
 		return fhirServer;
+	}
+
+	@Bean
+	public CliContext getCliContext() {
+	  	return new CliContext(this.environment);
 	}
 	
 	@Bean

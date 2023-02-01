@@ -1,12 +1,15 @@
 package ch.ahdis.matchbox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.hl7.fhir.r5.terminologies.JurisdictionUtilities;
 import org.hl7.fhir.r5.utils.validation.BundleValidationRule;
 import org.hl7.fhir.utilities.VersionUtilities;
@@ -14,6 +17,12 @@ import org.hl7.fhir.validation.cli.model.HtmlInMarkdownCheck;
 import org.hl7.fhir.validation.cli.utils.EngineMode;
 import org.hl7.fhir.validation.cli.utils.QuestionnaireMode;
 import org.hl7.fhir.validation.cli.utils.ValidationLevel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,7 +31,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Needed to copy the class because the setters with CliContext as return type are not accessible via reflection
  * In addition we have parameters from the CliContext which do not make sense to expose for the Web APi
  */
+@Component
 public class CliContext {
+
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CliContext.class);
+
 
   @JsonProperty("doNative")
   private boolean doNative = false;
@@ -129,6 +142,45 @@ public class CliContext {
 
   @JsonProperty("jurisdiction")
   private String jurisdiction = JurisdictionUtilities.getJurisdictionFromLocale(Locale.getDefault().getCountry());
+
+  @Autowired
+  public CliContext(Environment environment) {
+    		// get al list of all JsonProperty of cliContext with return values property name and property type
+		List<Field> cliContextProperties = getValidateEngineParameters();
+
+		// check for each cliContextProperties if it is in the request parameter
+		for (Field field : cliContextProperties) {
+			String cliContextProperty = field.getName();
+      String value = environment.getProperty("matchbox.fhir.context." + cliContextProperty);
+			if (value!=null && value.length()>0) {
+				try {
+					if (field.getType() == boolean.class) {
+						BeanUtils.setProperty(this, cliContextProperty, Boolean.parseBoolean(value));
+					} else {
+						BeanUtils.setProperty(this, cliContextProperty, value);
+					}
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					log.error("error setting property " + cliContextProperty + " to " + value);
+				}
+			}
+		}  
+  }
+
+  public CliContext(CliContext other) {
+    List<Field> cliContextProperties = getValidateEngineParameters();
+		// check for each cliContextProperties if it is in the request parameter
+		for (Field field : cliContextProperties) {
+      try {
+        String value = BeanUtils.getProperty(other, field.getName());
+  			if (value!=null) {
+	  			BeanUtils.setProperty(this, field.getName(), value);
+  	  	}
+      }
+      catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException   e) {
+				log.error("error setting property " + field.getName() );
+			} 
+		}
+  }
 
   @JsonProperty("ig")
   public String getIg() {
@@ -254,22 +306,13 @@ public class CliContext {
   }
 
   @JsonProperty("locale")
-  public String getLanguageCode() {
+  public String getLocale() {
     return locale;
   }
 
-  public Locale getLocale() {
-    return Locale.forLanguageTag(this.locale);
-  }
-
   @JsonProperty("locale")
-  public void setLocale(String languageString) {
-    this.locale = languageString;
-  }
-
-  @JsonProperty("locale")
-  public void setLocale(Locale locale) {
-    this.locale = locale.getLanguage();
+  public void setLocale(String locale) {
+    this.locale = locale;
   }
 
   @JsonProperty("mode")
@@ -531,4 +574,15 @@ public class CliContext {
       ", locations=" + locations +
       '}';
   }
+
+
+  public List<Field> getValidateEngineParameters() {
+		List<Field> cliContextProperties = Arrays.asList(this.getClass().getDeclaredFields()).stream()
+				.filter(f -> f.isAnnotationPresent(JsonProperty.class))
+				.filter(f -> f.getName() != "profile")
+				.filter(f -> f.getType() == String.class || f.getType() == boolean.class)
+				.collect(Collectors.toList());
+		return cliContextProperties;
+	}	
+
 }

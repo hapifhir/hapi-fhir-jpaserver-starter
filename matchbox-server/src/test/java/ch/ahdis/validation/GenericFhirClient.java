@@ -31,7 +31,7 @@ import org.hl7.fhir.r4.model.CapabilityStatement;
  */
 public class GenericFhirClient extends GenericClient{
 
-  static final public String testServer = "http://localhost:8080/matchbox/fhir";
+  static final public String testServer = "http://localhost:8080/matchboxv3/fhir";
 
   public GenericFhirClient(FhirContext theContext, String theServerBase) {
     super(theContext, null, theServerBase, null);

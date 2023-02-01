@@ -55,12 +55,12 @@ public class PackageCacheInitializer {
   }
   
 
-  public static List<ImplementationGuide> getImplementationGuides() {
+  public static List<ImplementationGuide> getImplementationGuides(boolean noSystems) {
     Yaml yaml = new Yaml();
     PackageCacheInitializer pci = new PackageCacheInitializer();
     InputStream inputStream = yaml.getClass().getClassLoader().getResourceAsStream("application.yaml");
     Map<String, Object> obj = yaml.load(inputStream);
-    List<ImplementationGuide> igs = getIgs(obj);
+    List<ImplementationGuide> igs = getIgs(obj, noSystems);
     return igs;
   }
 
@@ -72,7 +72,7 @@ public class PackageCacheInitializer {
    * @param map
    * @return
    */
-  public static List<ImplementationGuide> getIgs(Map<String, Object> map) {
+  public static List<ImplementationGuide> getIgs(Map<String, Object> map, boolean noSystems) {
     Map<String, Object> hapi = (Map<String, Object>) map.get("hapi");
     if (hapi != null) {
       Map<String, Object> fhir = (Map<String, Object>) hapi.get("fhir");
@@ -86,7 +86,9 @@ public class PackageCacheInitializer {
             igProperty.setName(ig.get("name"));
             igProperty.setVersion(ig.get("version"));
             igProperty.setUrl(ig.get("url"));
-            igProperties.add(igProperty);
+            if (!noSystems || !(igProperty.getName().equals("hl7.fhir.r4.core") || igProperty.getName().equals("hl7.terminology"))) {
+              igProperties.add(igProperty);
+            }
           }
           return igProperties;
         }
@@ -114,7 +116,7 @@ public class PackageCacheInitializer {
       }
     }
     if (hasParam(args, "-auto")) {
-      List<ImplementationGuide> igs = getImplementationGuides();
+      List<ImplementationGuide> igs = getImplementationGuides(true);
       
       for (ImplementationGuide ig : igs) {
         PackageInstallationSpec spec = new PackageInstallationSpec()

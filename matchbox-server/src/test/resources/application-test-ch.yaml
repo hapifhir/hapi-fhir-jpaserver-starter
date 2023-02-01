@@ -126,34 +126,6 @@ hapi:
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
 
-    # Threadpool size for BATCH'ed GETs in a bundle.
-#    bundle_batch_pool_size: 10
-#    bundle_batch_pool_max_size: 50
-
-#    logger:
-    #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
-    #      format: >-
-    #        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
-    #        Operation[${operationType} ${operationName} ${idOrResourceName}]
-    #        UA[${requestHeader.user-agent}] Params[${requestParameters}]
-    #        ResponseEncoding[${responseEncodingNoDefault}]
-    #      log_exceptions: true
-    #      name: fhirtest.access
-    #    max_binary_size: 104857600
-    #    max_page_size: 200
-    #    retain_cached_searches_mins: 60
-    #    reuse_cached_search_results_millis: 60000
-    tester:
-        home:
-          name: Local Tester
-          server_address: 'http://localhost:8080/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
-        global:
-          name: Global Tester
-          server_address: "http://test.ahdis.ch/matchbox/fhir"
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
     implementationguides:
       fhir_r4_core:
         name: hl7.fhir.r4.core
@@ -163,38 +135,11 @@ hapi:
         name: hl7.terminology
         version: 5.0.0
         url: classpath:/hl7.terminology#5.0.0.tgz
-#    validation:
-#      requests_enabled: true
-#      responses_enabled: true
-#    binary_storage_enabled: true
-#    subscription:
-#      resthook_enabled: true
-#      websocket_enabled: false
-#      email:
-#        from: some@test.com
-#        host: google.com
-#        port:
-#        username:
-#        password:
-#        auth:
-#        startTlsEnable:
-#        startTlsRequired:
-#        quitWait:
-#    lastn_enabled: true
-#    store_resource_in_lucene_index_enabled: true
-###  This is configuration for normalized quantity serach level default is 0
-###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
-###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
-###   2: NORMALIZED_QUANTITY_SEARCH_SUPPORTED
-#    normalized_quantity_search_level: 2
-#elasticsearch:
-#  debug:
-#    pretty_print_json_log: false
-#    refresh_after_write: false
-#  enabled: false
-#  password: SomePassword
-#  required_index_status: YELLOW
-#  rest_url: 'localhost:9200'
-#  protocol: 'http'
-#  schema_management_strategy: CREATE
-#  username: SomeUsername
+      ch-emed:
+        name: ch.fhir.ig.ch-emed
+        version: 3.0.0
+        url: classpath:/ch.fhir.ig.ch-emed#3.0.0.tgz
+matchbox:
+  fhir:
+    context:
+      txServer: n/a

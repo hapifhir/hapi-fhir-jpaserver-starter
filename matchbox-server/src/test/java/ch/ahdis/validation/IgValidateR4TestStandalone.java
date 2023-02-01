@@ -46,6 +46,7 @@ import org.yaml.snakeyaml.Yaml;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.AppProperties.ImplementationGuide;
+import ca.uhn.fhir.util.ClasspathUtil;
 import ch.ahdis.matchbox.util.PackageCacheInitializer;
 
 import org.springframework.core.io.ClassPathResource;
@@ -67,30 +68,6 @@ public class IgValidateR4TestStandalone {
 
   private Resource resource;
   private String name;
-
-
-  private String targetServer = "http://localhost:8080/matchboxv3/fhir";
-
-
-  @BeforeClass
-	public static void beforeClass() throws Exception {
-		Path dir = Paths.get("database");
-		if (Files.exists(dir)) {
-			for (Path file : Files.list(dir).collect(Collectors.toList())) {
-				if (Files.isRegularFile(file)) {
-					Files.delete(file);
-				}
-			}	
-		}
-  }
-
-  @BeforeAll void waitUntilStartup() throws InterruptedException {
-    Thread.sleep(20000); // give the server some time to start up
-    FhirContext contextR4 = FhirVersionEnum.R4.newContext();
-    ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);
-    validationClient.capabilities();
-  }
-  
   
   public static List<ImplementationGuide> getImplementationGuides() {
     Yaml yaml = new Yaml();
@@ -102,7 +79,7 @@ public class IgValidateR4TestStandalone {
       return null;
     }
     Map<String, Object> obj = yaml.load(inputStream);
-    return PackageCacheInitializer.getIgs(obj);
+    return PackageCacheInitializer.getIgs(obj, true);
   }
 
   @Parameters(name = "{index}: file {0}")
@@ -111,10 +88,9 @@ public class IgValidateR4TestStandalone {
     List<ImplementationGuide> igs = getImplementationGuides();
     List<Object[]> objects = new ArrayList<Object[]>();
     for (ImplementationGuide ig : igs) {
-      String igName = ig.getName() + "#" + ig.getVersion();
-      List<Resource> resources = getResources(igName);
+      List<Resource> resources = getResources(ig);
       for (Resource fn : resources) {
-        String name = igName + "-" + fn.getResourceType() + "-" + fn.getId();
+        String name = ig.getName() + "-" + fn.getResourceType() + "-" + fn.getId();
         objects.add(new Object[] { name, fn });
       }
     }
@@ -123,14 +99,16 @@ public class IgValidateR4TestStandalone {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(IgValidateR4TestStandalone.class);
 
-  static private Map<String, byte[]> fetchByPackage(String src, boolean examples) throws Exception {
-    String pkg = src.replace('#', '-');
-    String home = System.getProperty("user.home");
-    String tgz = home + "/.fhir/package-client/packages.fhir.org-" + pkg + ".tgz";
-
-    InputStream inputStream = new FileInputStream(tgz);
-    NpmPackage pi = NpmPackage.fromPackage(inputStream, null, true);
-    return loadPackage(pi, examples);
+  static private Map<String, byte[]> fetchByPackage(ImplementationGuide src, boolean examples) throws Exception {
+    String thePackageUrl = src.getUrl();
+		if (thePackageUrl.startsWith("classpath:")) {
+			InputStream inputStream = new ByteArrayInputStream(ClasspathUtil.loadResourceAsByteArray(thePackageUrl.substring("classpath:" .length())));
+      NpmPackage pi = NpmPackage.fromPackage(inputStream, null, true);
+      return loadPackage(pi, examples);
+    } else {
+      log.error("not yet suported", thePackageUrl);
+      return null;
+    }
   }
 
   static public boolean process(String file) {
@@ -151,17 +129,6 @@ public class IgValidateR4TestStandalone {
 
   static public Map<String, byte[]> loadPackage(NpmPackage pi, boolean examples) throws Exception {
     Map<String, byte[]> res = new HashMap<String, byte[]>();
-    if (!examples) {
-      for (String s : pi.dependencies()) {
-        if (!loadedIgs.contains(s)) {
-          if (!VersionUtilities.isCorePackage(s)) {
-            System.out.println("+  .. load IG from " + s);
-            res.putAll(fetchByPackage(s, false));
-          }
-        }
-      }
-    }
-
     if (pi != null) {
       if (examples) {
         for (String s : pi.list("example")) {
@@ -184,7 +151,7 @@ public class IgValidateR4TestStandalone {
     return Utilities.existsInList(fn, "spec.internals", "version.info", "schematron.zip", "package.json");
   }
 
-  static public List<Resource> loadIg(String src, boolean examples) throws IOException, FHIRException, Exception {
+  static public List<Resource> loadIg(ImplementationGuide src, boolean examples) throws IOException, FHIRException, Exception {
     List<Resource> resources = new ArrayList<Resource>();
     try {
       Map<String, byte[]> source = fetchByPackage(src, examples);
@@ -231,7 +198,7 @@ public class IgValidateR4TestStandalone {
     return r;
   }
 
-  static private List<Resource> getResources(String implementationGuide) {
+  static private List<Resource> getResources(ImplementationGuide implementationGuide) {
     List<Resource> resources = null;
     try {
       resources = loadIg(implementationGuide, true);
@@ -273,18 +240,6 @@ public class IgValidateR4TestStandalone {
     return fails;
   }
 
-  public boolean upload(String implementationGuide, String targetServer) {
-    List<Resource> resources = getResources(implementationGuide);
-    try {
-      for (Resource resource : resources) {
-        validate(resource, targetServer);
-      }
-    } catch (Exception e) {
-      log.error("error loading R4 or ImplementationGuide", e);
-    }
-    return false;
-  }
-
   public OperationOutcome validate(Resource resource) throws IOException {
   	return validate(resource, GenericFhirClient.testServer);
   }
@@ -301,10 +256,10 @@ public class IgValidateR4TestStandalone {
       Assume.assumeFalse(skip);
     }
 
-    GenericFhirClient genericClient = new GenericFhirClient(contextR4);
+    ValidationClient genericClient = new ValidationClient(contextR4, targetServer);
 
     String content =  new org.hl7.fhir.r4.formats.JsonParser().composeString(resource);
-    OperationOutcome outcome = (OperationOutcome) genericClient.validate(content, null);
+    OperationOutcome outcome = (OperationOutcome) genericClient.validate(content, resource.getMeta().getProfile().get(0).getValue());
 
     if (outcome == null) {
       log.debug(contextR4.newXmlParser().encodeResourceToString(resource));
@@ -319,23 +274,6 @@ public class IgValidateR4TestStandalone {
     }
 
     return outcome;
-  }
-
-  public static void main(String[] args) throws Exception {
-
-    System.out.println("Matchbox IgValidateR4");
-    if (hasParam(args, "-ig") && hasParam(args, "-target")) {
-      String ig = getParam(args, "-ig");
-      String target = getParam(args, "-target");
-      IgValidateR4TestStandalone igupload = new IgValidateR4TestStandalone(null, null);
-      igupload.upload(ig, target);
-
-    } else {
-      System.out.println("-ig or -target missing.");
-      System.out.println("-ig [package]: an IG or profile definition to load with format package#version");
-      System.out.println("-target [url]: taget fhir server");
-    }
-
   }
 
   private static boolean hasParam(String[] args, String param) {

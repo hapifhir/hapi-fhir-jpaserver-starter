@@ -2,6 +2,7 @@ package ch.ahdis.matchbox;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Locale;
 
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4.model.MetadataResource;
@@ -57,6 +58,9 @@ public class MatchboxEngineSupport {
 	
 	@Autowired(required = false)
 	private IBinaryStorageSvc myBinaryStorageSvc;
+
+	@Autowired
+	private CliContext cliContext;
 
 	public MatchboxEngineSupport() {
 		this.sessionCache = new SessionCache();
@@ -138,7 +142,7 @@ public class MatchboxEngineSupport {
 		TimeTracker tt = new TimeTracker();
 
 		while (!this.isInitialized()) {
-			log.info("ValidationEngine is not yet, waiting for initialization of packages");
+			log.info("ValidationEngine is not yet initialized, waiting for initialization of packages");
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -153,7 +157,7 @@ public class MatchboxEngineSupport {
 			this.setInitialized(false);
 		}
 		if (cliContext == null) {
-			cliContext = new CliContext();
+			cliContext = new CliContext(this.cliContext);
 		}
 		if (engine == null) {
 				try {
@@ -203,6 +207,10 @@ public class MatchboxEngineSupport {
 			}
 		}
 
+		if (reload) {
+			this.setInitialized(true);
+		}
+
 		// check if we have already a validator in cache for that
 		MatchboxEngine matchboxEngine = (MatchboxEngine) this.sessionCache.fetchSessionValidatorEngine(""+cliContext.hashCode());
 		if (matchboxEngine!=null && reload == false) {
@@ -217,13 +225,14 @@ public class MatchboxEngineSupport {
 				matchboxEngine = new MatchboxEngine(engine);
 				MatchboxEngine validator = matchboxEngine;
 
-				if (!VersionUtilities.isR5Ver(validator.getContext().getVersion())) {
-					log.info("  Load R5 Extensions");
-					R5ExtensionsLoader r5e = new R5ExtensionsLoader(validator.getPcm(), validator.getContext());
-					r5e.load();
-					r5e.loadR5Extensions();
-					log.info(" - " + r5e.getCount() + " resources (" + tt.milestone() + ")");
-				}
+				// FIXME we need to figure out h
+				// if (!VersionUtilities.isR5Ver(validator.getContext().getVersion())) {
+				// 	log.info("  Load R5 Extensions");
+				// 	R5ExtensionsLoader r5e = new R5ExtensionsLoader(validator.getPcm(), validator.getContext());
+				// 	r5e.load();
+				// 	r5e.loadR5Extensions();
+				// 	log.info(" - " + r5e.getCount() + " resources (" + tt.milestone() + ")");
+				// }
 				log.info("  Terminology server " + cliContext.getTxServer());
 				String txServer = cliContext.getTxServer();
 				if ("n/a".equals(cliContext.getTxServer())) {
@@ -262,7 +271,7 @@ public class MatchboxEngineSupport {
 	//			}
 	//			}
 				validator.setLanguage(cliContext.getLang());
-				validator.setLocale(cliContext.getLocale());
+				validator.setLocale(Locale.forLanguageTag(cliContext.getLocale()));
 				validator.setSnomedExtension(cliContext.getSnomedCTCode());
 				validator.setAssumeValidRestReferences(cliContext.isAssumeValidRestReferences());
 				validator.setShowMessagesFromReferences(cliContext.isShowMessagesFromReferences());

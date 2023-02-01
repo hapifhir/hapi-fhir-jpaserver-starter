@@ -13,7 +13,6 @@ import ca.uhn.fhir.rest.annotation.Read;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.provider.ServerCapabilityStatementProvider;
-import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 
 public class MatchboxCapabilityStatementProvider extends ServerCapabilityStatementProvider {
 
@@ -21,10 +20,13 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(MatchboxCapabilityStatementProvider.class);
 	private StructureDefinitionResourceProvider structureDefinitionProvider;
 
-	public MatchboxCapabilityStatementProvider(RestfulServer theServerConfiguration, StructureDefinitionResourceProvider structureDefinitionProvider) {
+	protected CliContext cliContext;
+
+	public MatchboxCapabilityStatementProvider(RestfulServer theServerConfiguration, StructureDefinitionResourceProvider structureDefinitionProvider, CliContext cliContext) {
 		super(theServerConfiguration, null, null);
 		this.structureDefinitionProvider = structureDefinitionProvider;
 		this.setPublisher("matchbox-v3");
+		this.cliContext = cliContext;
 	}
 	
 	@Read(typeName = "OperationDefinition")
@@ -52,9 +54,7 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			parameter = operationDefintion.addParameter();
 			parameter.setName("reload").setUse(OperationParameterUse.IN).setMin(0).setMax("1").setType("boolean");
 
-			ch.ahdis.matchbox.CliContext cliContext = new ch.ahdis.matchbox.CliContext();
-			
-			List<Field> cliContextProperties = ValidationProvider.getValidateEngineParameters(cliContext);
+			List<Field> cliContextProperties = cliContext.getValidateEngineParameters();
 			for (Field field : cliContextProperties) {
 				parameter = operationDefintion.addParameter();
 				parameter.setName(field.getName()).setUse(OperationParameterUse.IN).setMin(0).setMax("1").setType(field.getType().equals(boolean.class) ? "boolean" : "string");

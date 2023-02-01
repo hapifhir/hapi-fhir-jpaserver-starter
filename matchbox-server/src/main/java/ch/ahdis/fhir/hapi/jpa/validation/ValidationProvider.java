@@ -69,6 +69,9 @@ public class ValidationProvider {
 	@Autowired
 	protected MatchboxEngineSupport matchboxEngineSupport;
 
+	@Autowired
+	protected CliContext cliContext;
+
 	// @Autowired
 	// protected DefaultProfileValidationSupport defaultProfileValidationSuport;
 	/*
@@ -99,15 +102,6 @@ public class ValidationProvider {
 //		return null;
 //	}
 
-	static public List<Field> getValidateEngineParameters(CliContext cliContext) {
-		List<Field> cliContextProperties = Arrays.asList(cliContext.getClass().getDeclaredFields()).stream()
-				.filter(f -> f.isAnnotationPresent(JsonProperty.class))
-				.filter(f -> f.getName() != "profile")
-				.filter(f -> f.getType() == String.class || f.getType() == boolean.class)
-				.collect(Collectors.toList());
-		return cliContextProperties;
-	}	
-
 	@Operation(name = "$validate", manualRequest = true, idempotent = true, returnParameters = {
 			@OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
 	public IBaseResource validate(HttpServletRequest theRequest) {
@@ -129,10 +123,10 @@ public class ValidationProvider {
 		boolean reload = false;
 
 		// we extract here all config
-		CliContext cliContext = new CliContext();
+		CliContext cliContext = new CliContext(this.cliContext);
 
 		// get al list of all JsonProperty of cliContext with return values property name and property type
-		List<Field> cliContextProperties = getValidateEngineParameters(cliContext);
+		List<Field> cliContextProperties = cliContext.getValidateEngineParameters();
 
 		// check for each cliContextProperties if it is in the request parameter
 		for (Field field : cliContextProperties) {
