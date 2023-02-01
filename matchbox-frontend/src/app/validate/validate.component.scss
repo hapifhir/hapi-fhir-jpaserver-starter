@@ -1,0 +1,63 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-table {
+  margin: 1rem;
+
+  .mat-row {
+    cursor: pointer;
+  }
+
+  .mat-cell,
+  .mat-header-cell {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+
+    &.name {
+      flex: 2;
+    }
+
+    &.profile {
+      flex: 4;
+    }
+
+    &.res {
+      flex: 0.5;
+      justify-content: flex-end;
+    }
+
+    &:first-child {
+      padding-left: 1rem;
+    }
+
+    &:last-child {
+      padding-right: 1rem;
+    }
+
+    .cell-content {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.form-field-group {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: flex;
+  flex-direction: row;
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.card-maps {
+  margin-bottom: 10px;
+}
+
+.column50 {
+  width: 40%;
+}

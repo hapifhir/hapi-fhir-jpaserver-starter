@@ -1,0 +1,42 @@
+<mat-card class="card-maps">
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>{{ client.baseUrl }}</mat-card-title>
+    </mat-card-header>
+
+    <div>Resource</div>
+
+    <app-upload (addFiles)="addFile($event)"> </app-upload>
+
+    <pre><code [highlight]="getSource()" [lineNumbers]="true"></code></pre>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="card-maps">
+  <mat-form-field appearance="fill">
+    <mat-label>Map for transforming</mat-label>
+    <mat-select [formControl]="selectedMap">
+      <mat-option
+        *ngFor="let structureMap of structureMaps"
+        value="{{ structureMap.url }}"
+        >{{ structureMap.name }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+</mat-card>
+
+<mat-card class="card-maps">
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>Transformed</mat-card-title>
+    </mat-card-header>
+    <mat-error *ngIf="operationOutcomeTransformed">
+      <ul>
+        <li *ngFor="let issue of operationOutcomeTransformed.issue">
+          {{ issue.diagnostics }}
+        </li>
+      </ul>
+    </mat-error>
+    <pre><code [highlight]="getMapped()" [lineNumbers]="true"></code></pre>
+  </mat-card-content>
+</mat-card>

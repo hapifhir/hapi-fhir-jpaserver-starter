@@ -3,10 +3,14 @@ package ch.ahdis.validation;
 import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,35 +18,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.FHIRFormatError;
-import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome.IssueSeverity;
 import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
-import org.hl7.fhir.r4.model.Parameters.ParametersParameterComponent;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.springframework.test.context.ActiveProfiles;
 import org.yaml.snakeyaml.Yaml;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.AppProperties.ImplementationGuide;
-import ca.uhn.fhir.rest.api.EncodingEnum;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.util.ClasspathUtil;
 import ch.ahdis.matchbox.util.PackageCacheInitializer;
+
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * see https://www.baeldung.com/springjunit4classrunner-parameterized read the
@@ -53,27 +60,27 @@ import ch.ahdis.matchbox.util.PackageCacheInitializer;
  * @author oliveregger
  */
 @RunWith(Parameterized.class)
+@ActiveProfiles("test-ch")
 @Ignore
 public class IgValidateR4TestStandalone {
 
   static private Set<String> loadedIgs = new HashSet<String>();
 
-    private Resource resource;
+  private Resource resource;
   private String name;
-  
   
   public static List<ImplementationGuide> getImplementationGuides() {
     Yaml yaml = new Yaml();
     InputStream inputStream = null;
     try {
-      inputStream = new FileInputStream("./with-preload/application.yaml");
-    } catch (FileNotFoundException e) {
+      org.springframework.core.io.ClassPathResource resource = new ClassPathResource("application-test-ch.yaml");
+        inputStream = new FileInputStream(resource.getFile());
+    } catch (IOException e) {
       return null;
     }
     Map<String, Object> obj = yaml.load(inputStream);
-    return PackageCacheInitializer.getIgs(obj);
+    return PackageCacheInitializer.getIgs(obj, true);
   }
-
 
   @Parameters(name = "{index}: file {0}")
   public static Iterable<Object[]> data() throws ParserConfigurationException, IOException, FHIRFormatError {
@@ -81,10 +88,9 @@ public class IgValidateR4TestStandalone {
     List<ImplementationGuide> igs = getImplementationGuides();
     List<Object[]> objects = new ArrayList<Object[]>();
     for (ImplementationGuide ig : igs) {
-      String igName = ig.getName() + "#" + ig.getVersion();
-      List<Resource> resources = getResources(igName);
+      List<Resource> resources = getResources(ig);
       for (Resource fn : resources) {
-        String name = igName + "-" + fn.getResourceType() + "-" + fn.getId();
+        String name = ig.getName() + "-" + fn.getResourceType() + "-" + fn.getId();
         objects.add(new Object[] { name, fn });
       }
     }
@@ -93,14 +99,16 @@ public class IgValidateR4TestStandalone {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(IgValidateR4TestStandalone.class);
 
-  static private Map<String, byte[]> fetchByPackage(String src, boolean examples) throws Exception {
-    String pkg = src.replace('#', '-');
-    String home = System.getProperty("user.home");
-    String tgz = home + "/.fhir/package-client/packages.fhir.org-" + pkg + ".tgz";
-
-    InputStream inputStream = new FileInputStream(tgz);
-    NpmPackage pi = NpmPackage.fromPackage(inputStream, null, true);
-    return loadPackage(pi, examples);
+  static private Map<String, byte[]> fetchByPackage(ImplementationGuide src, boolean examples) throws Exception {
+    String thePackageUrl = src.getUrl();
+		if (thePackageUrl.startsWith("classpath:")) {
+			InputStream inputStream = new ByteArrayInputStream(ClasspathUtil.loadResourceAsByteArray(thePackageUrl.substring("classpath:" .length())));
+      NpmPackage pi = NpmPackage.fromPackage(inputStream, null, true);
+      return loadPackage(pi, examples);
+    } else {
+      log.error("not yet suported", thePackageUrl);
+      return null;
+    }
   }
 
   static public boolean process(String file) {
@@ -121,17 +129,6 @@ public class IgValidateR4TestStandalone {
 
   static public Map<String, byte[]> loadPackage(NpmPackage pi, boolean examples) throws Exception {
     Map<String, byte[]> res = new HashMap<String, byte[]>();
-    if (!examples) {
-      for (String s : pi.dependencies()) {
-        if (!loadedIgs.contains(s)) {
-          if (!VersionUtilities.isCorePackage(s)) {
-            System.out.println("+  .. load IG from " + s);
-            res.putAll(fetchByPackage(s, false));
-          }
-        }
-      }
-    }
-
     if (pi != null) {
       if (examples) {
         for (String s : pi.list("example")) {
@@ -154,7 +151,7 @@ public class IgValidateR4TestStandalone {
     return Utilities.existsInList(fn, "spec.internals", "version.info", "schematron.zip", "package.json");
   }
 
-  static public List<Resource> loadIg(String src, boolean examples) throws IOException, FHIRException, Exception {
+  static public List<Resource> loadIg(ImplementationGuide src, boolean examples) throws IOException, FHIRException, Exception {
     List<Resource> resources = new ArrayList<Resource>();
     try {
       Map<String, byte[]> source = fetchByPackage(src, examples);
@@ -201,7 +198,7 @@ public class IgValidateR4TestStandalone {
     return r;
   }
 
-  static private List<Resource> getResources(String implementationGuide) {
+  static private List<Resource> getResources(ImplementationGuide implementationGuide) {
     List<Resource> resources = null;
     try {
       resources = loadIg(implementationGuide, true);
@@ -243,18 +240,6 @@ public class IgValidateR4TestStandalone {
     return fails;
   }
 
-  public boolean upload(String implementationGuide, String targetServer) {
-    List<Resource> resources = getResources(implementationGuide);
-    try {
-      for (Resource resource : resources) {
-        validate(resource, targetServer);
-      }
-    } catch (Exception e) {
-      log.error("error loading R4 or ImplementationGuide", e);
-    }
-    return false;
-  }
-
   public OperationOutcome validate(Resource resource) throws IOException {
   	return validate(resource, GenericFhirClient.testServer);
   }
@@ -271,10 +256,10 @@ public class IgValidateR4TestStandalone {
       Assume.assumeFalse(skip);
     }
 
-    GenericFhirClient genericClient = new GenericFhirClient(contextR4);
+    ValidationClient genericClient = new ValidationClient(contextR4, targetServer);
 
     String content =  new org.hl7.fhir.r4.formats.JsonParser().composeString(resource);
-    OperationOutcome outcome = (OperationOutcome) genericClient.validate(content, null);
+    OperationOutcome outcome = (OperationOutcome) genericClient.validate(content, resource.getMeta().getProfile().get(0).getValue());
 
     if (outcome == null) {
       log.debug(contextR4.newXmlParser().encodeResourceToString(resource));
@@ -289,23 +274,6 @@ public class IgValidateR4TestStandalone {
     }
 
     return outcome;
-  }
-
-  public static void main(String[] args) throws Exception {
-
-    System.out.println("Matchbox IgValidateR4");
-    if (hasParam(args, "-ig") && hasParam(args, "-target")) {
-      String ig = getParam(args, "-ig");
-      String target = getParam(args, "-target");
-      IgValidateR4TestStandalone igupload = new IgValidateR4TestStandalone(null, null);
-      igupload.upload(ig, target);
-
-    } else {
-      System.out.println("-ig or -target missing.");
-      System.out.println("-ig [package]: an IG or profile definition to load with format package#version");
-      System.out.println("-target [url]: taget fhir server");
-    }
-
   }
 
   private static boolean hasParam(String[] args, String param) {

@@ -1,12 +1,14 @@
 package ch.ahdis.matchbox.engine.cli;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r5.context.ContextUtilities;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.hl7.fhir.r5.context.SystemOutLoggingService;
@@ -50,6 +52,7 @@ import org.hl7.fhir.validation.cli.renderers.ESLintCompactRenderer;
 import org.hl7.fhir.validation.cli.renderers.NativeRenderer;
 import org.hl7.fhir.validation.cli.renderers.ValidationOutputRenderer;
 import org.hl7.fhir.validation.cli.services.HTMLOutputGenerator;
+import org.hl7.fhir.validation.cli.services.IPackageInstaller;
 import org.hl7.fhir.validation.cli.services.SessionCache;
 import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
 import org.hl7.fhir.validation.cli.utils.EngineMode;
@@ -411,7 +414,17 @@ public class MatchboxService {
       validator.setForPublication(cliContext.isForPublication());
       validator.setShowTimes(cliContext.isShowTimes());
       validator.setAllowExampleUrls(cliContext.isAllowExampleUrls());
-      StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(validator.getPcm(), validator.getContext(), validator);    
+      StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(validator.getPcm(), validator.getContext(), new IPackageInstaller()  {
+        // (https://github.com/ahdis/matchbox/issues/67)
+        @Override
+        public boolean packageExists(String id, String ver) throws IOException, FHIRException {
+          return false;
+        }
+
+        @Override
+        public void loadPackage(String id, String ver) throws IOException, FHIRException {
+        }}
+      );    
       validator.setFetcher(fetcher);
       validator.getContext().setLocator(fetcher);
       validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());

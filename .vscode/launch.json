@@ -30,6 +30,14 @@
         },
         {
             "type": "java",
+            "name": "Launch Matchbox-Server",
+            "request": "launch",
+            "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+            "projectName": "matchbox-server",
+            "cwd": "${workspaceFolder}/matchbox-server"
+        },
+        {
+            "type": "java",
             "name": "Launch PackageCacheInitializer",
             "request": "launch",
             "mainClass": "ch.ahdis.matchbox.util.PackageCacheInitializer",

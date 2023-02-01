@@ -1,4 +1,4 @@
-# Welcome to matchbox documentation
+# Welcome
 
 Matchbox is an open source initiative to support testing and implementation of FHIR-based solutions and to map or capture health data into [HL7® FHIR®](https://www.hl7.org/fhir/) , 
 the standard for healthcare interoperability. See [matchbox.health](https://www.matchbox.health/) for more information.

@@ -44,95 +44,21 @@ hapi:
       allowed_origin:
         - '*'
     implementationguides:
-      terminology:
-        name: hl7.terminology
-        version: 5.0.0
-        url: https://terminology.hl7.org/package.tgz
-      core:
+      fhir_r4_core:
         name: hl7.fhir.r4.core
         version: 4.0.1
-    ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
+        url: classpath:/hl7.fhir.r4.core.tgz
+      fhir_terminology:
+        name: hl7.terminology
+        version: 5.0.0
+        url: classpath:/hl7.terminology#5.0.0.tgz
     staticLocation: file:/apps/
     openapi_enabled: true
     fhir_version: R4
-    defer_indexing_for_codesystems_of_size: 0
-    fhirpath_interceptor_enabled: true
-    mdm_enabled: false
     delete_expunge_enabled: true
     retain_cached_searches_mins: 1
     reuse_cached_search_results_millis: 1000
-    bulk_export_enabled: false
-    allow_external_references: true
-    allow_cascading_deletes: true
-    allow_multiple_delete: true
-    narrative_enabled: false
-# This is an experimental feature, and does not fully support _total and other FHIR features.
-    advanced_lucene_indexing: false
-    # Search coordinator thread pool sizes
-    search-coord-core-pool-size: 20
-    search-coord-max-pool-size: 100
-    search-coord-queue-capacity: 200
-
-    # Threadpool size for BATCH'ed GETs in a bundle.
-#    bundle_batch_pool_size: 10
-#    bundle_batch_pool_max_size: 50
-
-#    logger:
-    #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
-    #      format: >-
-    #        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
-    #        Operation[${operationType} ${operationName} ${idOrResourceName}]
-    #        UA[${requestHeader.user-agent}] Params[${requestParameters}]
-    #        ResponseEncoding[${responseEncodingNoDefault}]
-    #      log_exceptions: true
-    #      name: fhirtest.access
-    #    max_binary_size: 104857600
-    #    max_page_size: 200
-    #    retain_cached_searches_mins: 60
-    #    reuse_cached_search_results_millis: 60000
-    tester:
-        home:
-          name: Local Tester
-          server_address: 'http://localhost:8080/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
-        global:
-          name: Global Tester
-          server_address: "http://test.ahdis.ch/matchbox/fhir"
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
-#    validation:
-#      requests_enabled: true
-#      responses_enabled: true
-#    binary_storage_enabled: true
-#    subscription:
-#      resthook_enabled: true
-#      websocket_enabled: false
-#      email:
-#        from: some@test.com
-#        host: google.com
-#        port:
-#        username:
-#        password:
-#        auth:
-#        startTlsEnable:
-#        startTlsRequired:
-#        quitWait:
-#    lastn_enabled: true
-#    store_resource_in_lucene_index_enabled: true
-###  This is configuration for normalized quantity serach level default is 0
-###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
-###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
-###   2: NORMALIZED_QUANTITY_SEARCH_SUPPORTED
-#    normalized_quantity_search_level: 2
-#elasticsearch:
-#  debug:
-#    pretty_print_json_log: false
-#    refresh_after_write: false
-#  enabled: false
-#  password: SomePassword
-#  required_index_status: YELLOW
-#  rest_url: 'localhost:9200'
-#  protocol: 'http'
-#  schema_management_strategy: CREATE
-#  username: SomeUsername
+matchbox:
+  fhir:
+    context:
+      txServer: n/a

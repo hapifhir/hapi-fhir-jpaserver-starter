@@ -1,7 +1,6 @@
 package ch.ahdis.matchbox.mappinglanguage;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,7 +32,6 @@ import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
-import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.StructureMap;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
@@ -78,34 +76,14 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
   public MethodOutcome create(HttpServletRequest theRequest, StructureMap theResource, String theConditional,
       RequestDetails theRequestDetails) {
     createNarrative(theResource);
-    // FIXME: is default correct: we would need to derive the package for new url
-
-    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", null, false);
-    Resource existing = matchboxEngine.getCanonicalResource(theResource.getUrl());
-    if (existing !=null) {
-    	matchboxEngine.dropResource("StructureMap", existing.getId());
-    }
-    matchboxEngine.addCanonicalResource(theResource);
-    MethodOutcome methodOutcome = new MethodOutcome();
-    methodOutcome.setCreated(true);
-    methodOutcome.setResource(theResource);
-    return methodOutcome;
+    return super.create(theRequest, theResource, theConditional, theRequestDetails);
   }
 
   @Override
   public MethodOutcome update(HttpServletRequest theRequest, StructureMap theResource, IIdType theId,
       String theConditional, RequestDetails theRequestDetails) {
     createNarrative(theResource);
-    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(theResource.getUrl(), null, false);
-    Resource existing = matchboxEngine.getCanonicalResource(theResource.getUrl());
-    if (existing !=null) {
-    	matchboxEngine.dropResource("StructureMap", existing.getId());
-    }
-    matchboxEngine.addCanonicalResource(theResource);
-    MethodOutcome methodOutcome = new MethodOutcome();
-    methodOutcome.setCreated(true);
-    methodOutcome.setResource(theResource);
-    return methodOutcome;
+    return super.update(theRequest, theResource, theId, theConditional, theRequestDetails);
   }
 
   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StructureMapTransformProvider.class);
@@ -160,9 +138,9 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
     Map<String, String[]> requestParams = theServletRequest.getParameterMap();
     String[] source = requestParams.get("source");
     if (source != null && source.length > 0) {
-      MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(source[0], null, false);
+      MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(source[0], null, true, false);
       if (matchboxEngine == null) {
-        throw new UnprocessableEntityException("matchbox engine cound not be initialized swith canonical url "+source[0]);
+        throw new UnprocessableEntityException("matchbox engine could not be initialized with canonical url "+source[0]);
       }
       org.hl7.fhir.r5.model.StructureMap map  = matchboxEngine.getContext().fetchResource(org.hl7.fhir.r5.model.StructureMap.class, source[0]);
       if (map == null) {
@@ -170,16 +148,16 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
       }
       for (StructureMapStructureComponent component  : map.getStructure()) {
         if (component.getUrl() != null && matchboxEngine.getStructureDefinition(component.getUrl()) == null) {
-          throw new UnprocessableEntityException("matchbox engine cound not be initialized with canonical url required for transform for "+source[0]+ " component "+component.getUrl());
+          throw new UnprocessableEntityException("matchbox engine could not be initialized with canonical url required for transform for "+source[0]+ " component "+component.getUrl());
         }
       }
-      transfrom(map, theServletRequest, theServletResponse, matchboxEngine);
+      transform(map, theServletRequest, theServletResponse, matchboxEngine);
     } else {
       throw new UnprocessableEntityException("No source parameter provided");
     }
   }
     
-  public void transfrom(org.hl7.fhir.r5.model.StructureMap map, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse, MatchboxEngine matchboxEngine) throws IOException {
+  public void transform(org.hl7.fhir.r5.model.StructureMap map, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse, MatchboxEngine matchboxEngine) throws IOException {
 
     String contentType = theServletRequest.getContentType();
 

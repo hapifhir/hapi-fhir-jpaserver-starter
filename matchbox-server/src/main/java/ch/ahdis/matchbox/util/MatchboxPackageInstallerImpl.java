@@ -169,12 +169,13 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 					ourLog.info("Package {}#{} is already installed", theInstallationSpec.getName(),
 							theInstallationSpec.getVersion());
 					// MODIFIED: This has been added to add remove packages based on url
-					if (theInstallationSpec.getPackageUrl() != null) {
+					if (theInstallationSpec.getPackageUrl() != null && !theInstallationSpec.getPackageUrl().startsWith("classpath:") && !theInstallationSpec.getPackageUrl().startsWith("file:")) {
 						ourLog.info("Remove Package {}#{} because it is a package based on an external url",
 								theInstallationSpec.getName(), theInstallationSpec.getVersion());
 						myPackageCacheManager.uninstallPackage(theInstallationSpec.getName(), theInstallationSpec.getVersion());
 					}
 				}
+
 				NpmPackage npmPackage = myPackageCacheManager.installPackage(theInstallationSpec);
 				if (npmPackage == null) {
 					throw new IOException("Package not found");

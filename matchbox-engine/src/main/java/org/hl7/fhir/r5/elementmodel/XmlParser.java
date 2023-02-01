@@ -50,10 +50,9 @@ import javax.xml.transform.sax.SAXSource;
 import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.FHIRFormatError;
-import org.hl7.fhir.r5.conformance.ProfileUtilities;
+import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element.SpecialElement;
-import org.hl7.fhir.r5.elementmodel.ParserBase.ValidationPolicy;
 import org.hl7.fhir.r5.formats.FormatUtilities;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.DateTimeType;
@@ -243,6 +242,9 @@ public class XmlParser extends ParserBase {
       return "sdtc:";
     if (ns.equals("urn:ihe:pharm"))
       return "pharm:";
+    if (ns.equals("urn:oid:1.3.6.1.4.1.19376.1.3.2")) {
+      return "lab:";
+    }
     return "?:";
   }
 
@@ -352,7 +354,7 @@ public class XmlParser extends ParserBase {
           String av = attr.getNodeValue();
           // matchbox-engine: if we are parsing from CDA we need to collapse non string types https://www.w3.org/TR/xmlschema-2/#rf-whiteSpace 
           // If the attribute type is not CDATA, then the XML processor must further process the normalized attribute value by discarding any leading and trailing space (#x20) characters
-          if ("urn:hl7-org:v3".equals(node.getNamespaceURI()) || "urn:hl7-org:sdtc".equals(node.getNamespaceURI()) || "urn:ihe:pharm".equals(node.getNamespaceURI())) {
+          if ("urn:hl7-org:v3".equals(node.getNamespaceURI()) || "urn:hl7-org:sdtc".equals(node.getNamespaceURI()) || "urn:ihe:pharm".equals(node.getNamespaceURI()) || "urn:oid:1.3.6.1.4.1.19376.1.3.2".equals(node.getNamespaceURI())) {
             av = av.trim();
           }
 	    	  if (ToolingExtensions.hasExtension(property.getDefinition(), "http://www.healthintersections.com.au/fhir/StructureDefinition/elementdefinition-dateformat"))
@@ -541,7 +543,7 @@ public class XmlParser extends ParserBase {
   }
 
   private String convertForDateFormatToExternal(String fmt, String av) throws FHIRException {
-    if ("v3".equals(fmt)) {
+    if ("v3".equals(fmt)|| "YYYYMMDDHHMMSS.UUUU[+|-ZZzz]".equals(fmt)) {
       DateTimeType d = new DateTimeType(av);
       return d.getAsV3();
     } else

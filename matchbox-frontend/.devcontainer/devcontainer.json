@@ -1,0 +1,6 @@
+{
+  "name": "Angular remote sample",
+  "dockerFile": "Dockerfile",
+  "appPort": 4200,
+  "postCreateCommand": "yarn install"
+}

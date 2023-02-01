@@ -1,0 +1,98 @@
+<mat-card class="card-igs">
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title
+        >FHIR ImplementationGuides installed on server</mat-card-title
+      >
+    </mat-card-header>
+    <mat-table #table [dataSource]="dataSource">
+      <ng-container matColumnDef="packageId">
+        <mat-header-cell *matHeaderCellDef class="packageId"
+          >Package Id</mat-header-cell
+        >
+        <mat-cell *matCellDef="let entry" class="packageId">{{
+          getPackageId(entry)
+        }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="version">
+        <mat-header-cell *matHeaderCellDef class="version"
+          >Version</mat-header-cell
+        >
+        <mat-cell *matCellDef="let entry" class="version">{{
+          getVersion(entry)
+        }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="title" class="title">
+        <mat-header-cell *matHeaderCellDef class="packageId"
+          >Title</mat-header-cell
+        >
+        <mat-cell *matCellDef="let entry">{{ getTitle(entry) }}</mat-cell>
+      </ng-container>
+      <mat-header-row
+        *matHeaderRowDef="['packageId', 'version', 'title']"
+      ></mat-header-row>
+      <mat-row
+        *matRowDef="let row; columns: ['packageId', 'version', 'title']"
+        (click)="selectRow(row)"
+      >
+      </mat-row>
+    </mat-table>
+    <mat-paginator
+      [pageIndex]="pageIndex"
+      [length]="length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="goToPage($event)"
+    ></mat-paginator>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="Search">
+  <mat-card-content>
+    <mat-form-field>
+      <mat-label>PackageId</mat-label>
+      <input matInput [formControl]="addPackageId" />
+    </mat-form-field>
+    &nbsp;
+    <mat-form-field>
+      <mat-label>Version</mat-label>
+      <input matInput [formControl]="addVersion" />
+    </mat-form-field>
+    &nbsp;
+    <mat-form-field style="width: 50vw">
+      <mat-label
+        >Package url (optional, use only if not available through
+        <a href="https://packages.fhir.org">packages.fhir.org</a>)</mat-label
+      >
+      <input matInput [formControl]="addUrl" />
+    </mat-form-field>
+
+    <mat-card-actions>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        (click)="onSubmit()"
+      >
+        Upload
+      </button>
+      <ng-container *ngIf="selection"
+        >&nbsp;
+        <button mat-button type="submit" (click)="onUpdate()">Update</button>
+      </ng-container>
+      <ng-container *ngIf="selection"
+        >&nbsp;
+        <button mat-button type="submit" (click)="onDelete()">Delete</button>
+      </ng-container>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>
+
+<ng-container *ngIf="update">
+  <mat-progress-spinner mode="indeterminate"> </mat-progress-spinner>
+</ng-container>
+
+<ng-container *ngIf="errMsg">
+  <app-operation-outcome [operationOutcome]="operationOutcome" [title]="errMsg">
+  </app-operation-outcome>
+</ng-container>

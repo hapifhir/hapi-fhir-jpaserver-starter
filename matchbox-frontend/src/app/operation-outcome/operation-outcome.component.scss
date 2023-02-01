@@ -1,0 +1,53 @@
+.card-maps {
+  margin-bottom: 10px;
+}
+
+.app-ace-editor {
+  border: 2px solid #f8f9fa;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.issue {
+  border: 2px solid #f8f9fa;
+  padding: 2px;
+}
+
+.fatal {
+  background: #cc3300; /* color */
+}
+
+.error {
+  background: #ff9966; /* color */
+}
+
+.warning {
+  background: #ffe69e; /* color */
+}
+
+.information {
+  background: #cde8a5; /* color */
+}
+
+::ng-deep .ace-highlight-fatal {
+  position: absolute; /* without this positions will be erong */
+  background: #cc3300; /* color */
+  opacity: 0.4;
+}
+
+::ng-deep .ace-highlight-error {
+  position: absolute; /* without this positions will be erong */
+  background: #ff9966; /* color */
+  opacity: 0.4;
+}
+
+::ng-deep .ace-highlight-warning {
+  position: absolute; /* without this positions will be erong */
+  background: #ffcc00; /* color */
+  opacity: 0.4;
+}
+
+::ng-deep .ace-highlight-information {
+  position: absolute; /* without this positions will be erong */
+  background: #99cc33; /* color */
+  opacity: 0.4;
+}

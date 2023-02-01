@@ -33,20 +33,23 @@ import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.Resource;
-import org.hl7.fhir.r5.conformance.ProfileUtilities;
+import org.hl7.fhir.r5.context.ContextUtilities;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.formats.IParser;
 import org.hl7.fhir.r5.model.Base;
+import org.hl7.fhir.r5.model.CanonicalResource;
 import org.hl7.fhir.r5.model.ExpressionNode;
 import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
+import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureMap;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
+import org.hl7.fhir.r5.utils.validation.IResourceValidator;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
@@ -208,14 +211,14 @@ public class MatchboxEngine extends ValidationEngine {
 		SimpleWorkerContext context = this.getContext();
 		List<Base> outputs = new ArrayList<>();
 		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context,
-				new TransformSupportServices(context, outputs));
+				new TransformSupportServices(context, outputs), this);
 		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
 		if (map == null) {
 			log.error("Unable to find map " + mapUri + " (Known Maps = " + context.listMapUrls() + ")");
 			throw new Error("Unable to find map " + mapUri + " (Known Maps = " + context.listMapUrls() + ")");
 		}
-		log.info("Using map " + map.getUrl() + "|" + map.getVersion() + " "
-				+ (map.getDateElement() != null ? "(" + map.getDateElement().asStringValue() + ")" : ""));
+		log.info("Using map " + map.getUrl() + (map.getVersion()!=null ? "|" + map.getVersion() + " " : "" )
+				+ (map.getDateElement() != null && !map.getDateElement().isEmpty()  ? "(" + map.getDateElement().asStringValue() + ")" : ""));
 		org.hl7.fhir.r5.elementmodel.Element resource = getTargetResourceFromStructureMap(map);
 		scu.transform(null, src, map, resource);
 		resource.populatePaths(null);
@@ -395,8 +398,54 @@ public class MatchboxEngine extends ValidationEngine {
 	 */
 	public org.hl7.fhir.r4.model.Resource getCanonicalResource(String canonical) {
 		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical);
-		if (fetched != null) {
-			return VersionConvertorFactory_40_50.convertResource(fetched);
+		// allResourcesById is not package aware (???) so we need to fetch it again
+		if (fetched!=null) {
+			org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
+			if (fetched2 != null) {
+				return VersionConvertorFactory_40_50.convertResource(fetched2);
+			}
+		}
+		return null;
+	}
+
+	// same as above but called from the validator on the meta data type
+	// @Override
+	// public CanonicalResource fetchCanonicalResource(IResourceValidator validator, String url) throws URISyntaxException {
+	// 	return super.fetchCanonicalResource(validator, url);
+		// we have an issue when just override the above, however we look not to get into here and d
+		// aused by: java.lang.Error: The version 0.0 is not currently supported
+        // at org.hl7.fhir.convertors.txClient.TerminologyClientFactory.makeClient(TerminologyClientFactory.java:57)
+        // at org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher.fetchCanonicalResource(StandAloneValidatorFetcher.java:260)
+        // at org.hl7.fhir.validation.ValidationEngine.fetchCanonicalResource(ValidationEngine.java:1051)
+        // at ch.ahdis.matchbox.engine.MatchboxEngine.fetchCanonicalResource(MatchboxEngine.java:414)
+        // at org.hl7.fhir.validation.instance.InstanceValidator.lookupProfileReference(InstanceValidator.java:4861)
+        // at org.hl7.fhir.validation.instance.InstanceValidator.start(InstanceValidator.java:4782)
+        // at org.hl7.fhir.validation.instance.InstanceValidator.validateResource(InstanceValidator.java:6184)
+        // at org.hl7.fhir.validation.instance.InstanceValidator.validate(InstanceValidator.java:879)
+        // at org.hl7.fhir.validation.instance.InstanceValidator.validate(InstanceValidator.java:713)
+        // at ch.ahdis.matchbox.engine.MatchboxEngine.validate(MatchboxEngine.java:344)
+	// }
+
+	@Override
+	public boolean fetchesCanonicalResource(IResourceValidator validator, String url) {
+		// don't use the fetcher, should we do this better in directly in StandAloneValidatorFetcher implmentation
+		// https://github.com/ahdis/matchbox/issues/67
+		return getCanonicalResource(url) != null;
+	}
+
+	/**
+	 * Returns a canonical resource defined by its type and uri
+	 * 
+	 * @param type resource type
+	 * @param uri  resource uri
+	 * @return
+	 */
+	public org.hl7.fhir.r4.model.Resource getCanonicalResourceById(String type, String uri) {
+		if (this.getContext().hasResource(type, uri)) {
+			org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResourceById(type, uri);
+			if (fetched != null) {
+				return VersionConvertorFactory_40_50.convertResource(fetched);
+			}
 		}
 		return null;
 	}
@@ -414,7 +463,7 @@ public class MatchboxEngine extends ValidationEngine {
 		SimpleWorkerContext context = this.getContext();
 		List<Base> outputs = new ArrayList<>();
 		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context,
-				new TransformSupportServices(context, outputs));
+				new TransformSupportServices(context, outputs), this);
 		org.hl7.fhir.r5.model.StructureMap mapR5 = scu.parse(content, "map");
 		mapR5.getText().setStatus(NarrativeStatus.GENERATED);
 		mapR5.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
@@ -434,12 +483,14 @@ public class MatchboxEngine extends ValidationEngine {
 	 */
 	public org.hl7.fhir.r4.model.StructureDefinition createSnapshot(org.hl7.fhir.r4.model.StructureDefinition sd)
 			throws FHIRException, IOException {
-		StructureDefinition base = this.getContext().fetchResource(StructureDefinition.class, sd.getBaseDefinition());
 		StructureDefinition sdR5 = (StructureDefinition) VersionConvertorFactory_40_50.convertResource(sd);
-
-		new ProfileUtilities(this.getContext(), null, null).setAutoFixSliceNames(true).generateSnapshot(base, sdR5,
-				sdR5.getUrl(), null, sdR5.getName());
-
+		try {
+			new ContextUtilities(this.getContext()).generateSnapshot(sdR5, sdR5.getKind() !=null && sdR5.getKind() == StructureDefinitionKind.LOGICAL); 
+		  } catch (Exception e) {
+			// not sure what to do in this case?
+			log.error("Unable to generate snapshot for "+sd.getUrl(), e);
+			return null;
+		  }
 		return (org.hl7.fhir.r4.model.StructureDefinition) VersionConvertorFactory_40_50.convertResource(sdR5);
 	}
 

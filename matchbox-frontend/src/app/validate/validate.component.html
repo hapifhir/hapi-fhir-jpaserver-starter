@@ -1,0 +1,151 @@
+<mat-card class="card-maps">
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>Validate FHIR Resource or example FHIR resources in provided
+        package</mat-card-title>
+    </mat-card-header>
+    <app-upload (addFiles)="addFile($event)"> </app-upload>
+
+    <div class="form-field-group">
+        New validation for: {{ resourceName }} / {{ resourceId }}
+    </div>
+
+    <div class="form-field-group">
+      <mat-form-field>
+        <mat-select placeholder="Validate against specific Profile" name="selectProfile"
+          [ngModel]="getSelectedProfile()" (ngModelChange)="setSelectedProfile($event)">
+          <mat-option *ngFor="let profile of getProfiles()" [value]="profile">
+            {{ profile }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field-group">
+      <mat-form-field>
+        <mat-select placeholder="Validate against specific Implementation Guide" name="selectIg"
+          [ngModel]="getSelectedIg()" (ngModelChange)="setSelectedIg($event)">
+          <mat-option *ngFor="let ig of igs" [value]="ig">
+            {{ ig }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit" (click)="onValidate()">
+        Validate
+      </button>
+
+      <button mat-raised-button color="primary" type="submit" (click)="onValidateIg()">
+        Validate all examples in IG on Server
+      </button>
+  
+    </mat-card-actions>
+
+    <ng-container *ngIf="validationInProgress > 0">
+      <mat-progress-spinner mode="indeterminate"> </mat-progress-spinner>
+    </ng-container>
+
+    <ng-container *ngIf="errMsg">
+      <app-operation-outcome [operationOutcome]="operationOutcome" [title]="errMsg">
+      </app-operation-outcome>
+    </ng-container>
+
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="card-maps">
+  <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>Validation Results</mat-card-title>
+    </mat-card-header>
+
+    <mat-table #table [dataSource]="dataSource">
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef class="name">Resource</mat-header-cell>
+        <mat-cell *matCellDef="let entry" class="name">{{
+          entry.name
+          }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="profile">
+        <mat-header-cell *matHeaderCellDef class="profile">Profile/IG</mat-header-cell>
+        <mat-cell *matCellDef="let entry" class="profile">
+          <div>
+            <div *ngFor="let profile of entry.profiles">
+              {{ profile }}
+            </div>
+            <div *ngIf="entry.ig">
+              {{ entry.ig }}
+            </div>
+          </div>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="error">
+        <mat-header-cell *matHeaderCellDef class="res">Errors</mat-header-cell>
+        <mat-cell *matCellDef="let entry" class="res">{{ entry.operationOutcome ? entry.getErrors() : '-' }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="warning">
+        <mat-header-cell *matHeaderCellDef class="res">Warnings</mat-header-cell>
+        <mat-cell *matCellDef="let entry" class="res">{{ entry.operationOutcome ? entry.getWarnings() : '-' }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="info">
+        <mat-header-cell *matHeaderCellDef class="res">Info</mat-header-cell>
+        <mat-cell *matCellDef="let entry" class="res">{{ entry.operationOutcome ? entry.getInfos() : '-' }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef class="res">Remove</mat-header-cell>
+        <mat-cell *matCellDef="let entry" class="res">
+          <button mat-icon-button aria-label="Remove" (click)="remove(entry)" type="button">
+            <mat-icon>remove</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="[
+          'name',
+          'profile',
+          'error',
+          'warning',
+          'info',
+          'action'
+        ]"></mat-header-row>
+      <mat-row *matRowDef="
+          let row;
+          columns: ['name', 'profile', 'error', 'warning', 'info', 'action']
+        " (click)="selectRow(row)">
+      </mat-row>
+    </mat-table>
+
+    <mat-card-actions>
+      <button mat-raised-button type="submit" (click)="onClear()">Clear</button>
+    </mat-card-actions>
+
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="card-maps">
+  <mat-card-content>
+    <button mat-menu-item (click)="toggleSettings()">
+      <mat-icon>settings</mat-icon>
+    </button>
+
+    <ng-container *ngIf="showSettings">
+      <div class="form-field-group" *ngFor="let setting of validatorSettings">
+        <mat-form-field class="column50">
+          <mat-label>{{ setting.param.name }}</mat-label>
+          <input matInput [formControl]="setting.formControl" />
+        </mat-form-field>
+      </div>
+    </ng-container>
+  </mat-card-content>
+</mat-card>
+
+<ng-container *ngIf="operationOutcome">
+  <app-operation-outcome [mode]="selectedEntry.mimetype" [operationOutcome]="operationOutcome" [json]="json"
+    [title]="validationOutcomeTitle()">
+  </app-operation-outcome>
+</ng-container>

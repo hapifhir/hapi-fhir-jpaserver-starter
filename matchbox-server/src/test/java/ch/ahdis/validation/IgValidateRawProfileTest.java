@@ -17,6 +17,7 @@ import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,33 +33,24 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
-import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.Application;
 
-import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
-import ca.uhn.fhir.jpa.starter.Application;
-import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(classes = {Application.class})
 @ActiveProfiles("test1")
-@Slf4j
-@Ignore
 public class IgValidateRawProfileTest {
 
 
-  @Autowired
-	private MatchboxPackageInstallerImpl packageInstallerSvc;
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(IgValidateRawProfileTest.class);
 
-  private String targetServer = "http://localhost:8080/matchbox/fhir";
+  private String targetServer = "http://localhost:8080/matchboxv3/fhir";
 
   @BeforeClass
 	public static void beforeClass() throws Exception {
@@ -72,29 +64,22 @@ public class IgValidateRawProfileTest {
 		}
   }
 
+  @BeforeAll void waitUntilStartup() throws InterruptedException {
+    Thread.sleep(20000); // give the server some time to start up
+    FhirContext contextR4 = FhirVersionEnum.R4.newContext();
+    ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);
+    validationClient.capabilities();
+  }
+
   @Test
   public void validateRaw() {
-
-    PackageInstallationSpec packageSpec = new PackageInstallationSpec()
-    .setName("hl7.fhir.r4.core")
-    .setVersion("4.0.1")
-    .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL);
-
-    packageInstallerSvc.install(packageSpec);
-		try {
-      Thread.sleep(2000L);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-
-    
     FhirContext contextR4 = FhirVersionEnum.R4.newContext();
     ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);
     String patient = "<Patient xmlns=\"http://hl7.org/fhir\">\n" + "            <id value=\"example\"/>\n"
         + "            <text>\n" + "               <status value=\"generated\"/>\n"
         + "               <div xmlns=\"http://www.w3.org/1999/xhtml\">42 </div>\n" + "            </text>\n"
         + "         </Patient>\n";
-    validationClient.capabilities();
+   
     IBaseOperationOutcome operationOutcome = validationClient.validate(patient,
         "http://hl7.org/fhir/StructureDefinition/Patient");
     assertEquals(0, IgValidateR4TestStandalone.getValidationFailures((OperationOutcome) operationOutcome));
@@ -104,33 +89,36 @@ public class IgValidateRawProfileTest {
   }
 
   @Test
-  @Ignore
   //  https://gazelle.ihe.net/jira/browse/EHS-431
   public void validateEhs431() throws IOException {
     // 
     FhirContext contextR4 = FhirVersionEnum.R4.newContext();
     ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);
 
+    validationClient.capabilities();
+
+//    IBaseOperationOutcome operationOutcome = validationClient.validate(getContent("ehs-431.json"),
+//        "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard");
     IBaseOperationOutcome operationOutcome = validationClient.validate(getContent("ehs-431.json"),
-        "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard");
+        "http://hl7.org/fhir/StructureDefinition/Bundle");
     log.debug(contextR4.newJsonParser().encodeResourceToString(operationOutcome));
     assertEquals(1, IgValidateR4TestStandalone.getValidationFailures((OperationOutcome) operationOutcome));
   }
 
   @Test
-  @Ignore
   //  https://gazelle.ihe.net/jira/browse/EHS-419
   public void validateEhs419() throws IOException {
     // 
     FhirContext contextR4 = FhirVersionEnum.R4.newContext();
     ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);
 
+    validationClient.capabilities();
+
     IBaseOperationOutcome operationOutcome = validationClient.validate(getContent("ehs-419.json"),
         "http://hl7.org/fhir/StructureDefinition/Patient");
     log.debug(contextR4.newJsonParser().encodeResourceToString(operationOutcome));
     assertEquals(0, IgValidateR4TestStandalone.getValidationFailures((OperationOutcome) operationOutcome));
   }
-
  
   private String getContent(String resourceName) throws IOException {
     Resource resource = new ClassPathResource(resourceName);

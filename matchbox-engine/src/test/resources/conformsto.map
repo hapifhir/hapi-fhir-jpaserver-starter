@@ -1,0 +1,7 @@
+map "http://ahdis.ch/matchbox/fml/conformsto" = "conformsto"
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as source
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as target
+
+group ConformsTo(source src : Patient, target tgt : Patient) {
+    src where $this.conformsTo('http://hl7.org/fhir/StructureDefinition/Patient') -> tgt.gender = 'male' "conformsTo";
+}

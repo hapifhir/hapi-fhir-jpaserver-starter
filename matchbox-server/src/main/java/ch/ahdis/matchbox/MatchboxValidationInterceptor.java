@@ -53,16 +53,16 @@ public class MatchboxValidationInterceptor {
 			}
 			case READ:
 			case VREAD:
-				if (resourceName.equals("QuestionnaireResponse")) {
-					return null;
-				}
+				// if (resourceName.equals("QuestionnaireResponse")) {
+				// 	return null;
+				// }
 				return theMethodBinding;
 			case UPDATE:
 			case CREATE:
-				if (resourceName.equals("StructureMap") || resourceName.equals("ImplementationGuide") || resourceName.equals("Questionnaire") ) {
+				// if (resourceName.equals("StructureMap") || resourceName.equals("ImplementationGuide") || resourceName.equals("Questionnaire") ) {
 					return theMethodBinding;
-				}
-				return null;
+				// }
+				// return null;
 			case DELETE:
 				if (resourceName.equals("ImplementationGuide") ) {
 					return theMethodBinding;

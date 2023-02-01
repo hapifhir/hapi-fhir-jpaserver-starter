@@ -232,6 +232,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   	
   	// matchbox-engine PATCH, we do not want to load from a package server for hl7.fhir.xver-extension :
   	if (CommonPackages.ID_XVER.equals(id)) {
+      version = "0.0.13";
 			InputStream stream = getClass().getResourceAsStream("/"+id+"#"+version+".tgz");
 			if (stream==null) {
 				ourLog.error("Unable to find/resolve/read from classpath (we dont' want go to the package server) for :" + id+"#"+version+".tgz");
@@ -376,6 +377,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   public NpmPackage addPackageToCache(String id, String version, InputStream packageTgzInputStream, String sourceDesc) throws IOException {
   	// matchbox-engine PATCH, we do not want to load from a package server for hl7.fhir.xver-extension :
   	if (CommonPackages.ID_XVER.equals(id)) {
+  		version = "0.0.13";
       NpmPackage npm = NpmPackage.fromPackage(packageTgzInputStream, sourceDesc, true);
       return npm;
   	}

@@ -1,4 +1,4 @@
-site_name: matchbox
+site_name: Matchbox
 theme:
   name: material
   logo: assets/matchbox_logo_color.png
@@ -14,3 +14,4 @@ nav:
   - api.md
   - docker.md
   - matchbox-engine.md
+  - cda-logical-model.md

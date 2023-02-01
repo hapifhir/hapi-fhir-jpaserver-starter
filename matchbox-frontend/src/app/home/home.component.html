@@ -1,0 +1,19 @@
+<mat-card class="primary">
+  <mat-card-content>
+    <button mat-menu-item routerLink="/validate">
+      <mat-icon>Validate</mat-icon>
+      <span>Validate ...</span>
+    </button>
+    <button mat-menu-item routerLink="/igs">
+      <mat-icon>info</mat-icon>
+      <span>IGs ...</span>
+    </button>
+    <button mat-menu-item routerLink="/settings">
+      <mat-icon>settings</mat-icon>
+      <span>Settings</span>
+    </button>
+  </mat-card-content>
+  <mat-card-footer>
+    <p>version: {{ version }} <a href="https://www.ahdis.ch">contact</a></p>
+  </mat-card-footer>
+</mat-card>

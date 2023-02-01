@@ -17,7 +17,7 @@ public class EngineLoggingService implements IWorkerContext.ILoggingService {
 
   @Override
   public void logMessage(String message) {
-    System.out.println(message);
+    log.info(message);
   }
 
   @Override
@@ -25,5 +25,10 @@ public class EngineLoggingService implements IWorkerContext.ILoggingService {
     if (debug) {
         log.debug(" -" + category.name().toLowerCase() + ": " + message);
     }
+  }
+
+  @Override
+  public boolean isDebugLogging() {
+    return debug;
   }
 }

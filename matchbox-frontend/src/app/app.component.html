@@ -1,0 +1,51 @@
+<mat-toolbar color="primary" role="header">
+  <div class="home-link" routerLink="/">
+    <div class="logo-container">
+      <img src="assets/matchbox_logo_color.png" />
+    </div>
+  </div>
+  <!-- This fills the remaining space of the current row -->
+  <span class="example-fill-remaining-space"> </span>
+  <span>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="/">
+        <mat-icon>home</mat-icon>
+        <span>Home</span>
+      </button>
+      <button mat-menu-item routerLink="/CapabilityStatement">
+        <mat-icon>info</mat-icon>
+        <span>CapabilityStatement</span>
+      </button>
+      <button mat-menu-item routerLink="/igs">
+        <mat-icon>info</mat-icon>
+        <span>IGs ...</span>
+      </button>
+      <button mat-menu-item routerLink="/fhirpath">
+        <mat-icon>search</mat-icon>
+        <span>FHIRPath ...</span>
+      </button>
+      <button mat-menu-item routerLink="/mappinglanguage">
+        <mat-icon>search</mat-icon>
+        <span>FHIR mapping language ...</span>
+      </button>
+      <button mat-menu-item routerLink="/transform">
+        <mat-icon>search</mat-icon>
+        <span>Transform ...</span>
+      </button>
+      <button mat-menu-item routerLink="/validate">
+        <mat-icon>Validate</mat-icon>
+        <span>Validate ...</span>
+      </button>
+      <button mat-menu-item routerLink="/settings">
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
+      </button>
+    </mat-menu>
+  </span>
+</mat-toolbar>
+<main class="mat-typography">
+  <router-outlet> </router-outlet>
+</main>

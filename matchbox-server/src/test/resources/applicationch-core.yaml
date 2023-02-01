@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /matchbox
+    context-path: /matchboxv3
 hapi:
   fhir:
     implementationguides:

@@ -23,8 +23,9 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.r5.conformance.ProfileUtilities.ProfileKnowledgeProvider;
+import org.hl7.fhir.r5.conformance.profile.ProfileKnowledgeProvider;
 import org.hl7.fhir.r5.context.ContextUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.model.Base;
@@ -45,6 +46,8 @@ import org.hl7.fhir.r5.utils.structuremap.SourceElementComponentWrapper;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.r5.utils.structuremap.TransformContext;
 
+import ch.ahdis.matchbox.engine.MatchboxEngine;
+
 /**
  * Class to overwrite translation method to fix certain problems with CDA2FHIR
  * mapping
@@ -52,28 +55,30 @@ import org.hl7.fhir.r5.utils.structuremap.TransformContext;
 public class MatchboxStructureMapUtilities extends StructureMapUtilities {
 
 	private IWorkerContext worker;
+	private MatchboxEngine engine;
 	private ContextUtilities contextUtilites;
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TransformSupportServices.class);
 
-	private void init(IWorkerContext worker) {
+	private void init(IWorkerContext worker, MatchboxEngine engine) {
 		this.worker = worker;
+		this.engine = engine;
 		this.contextUtilites = new ContextUtilities(this.worker);
 	}
 
-	public MatchboxStructureMapUtilities(IWorkerContext worker) {
+	public MatchboxStructureMapUtilities(IWorkerContext worker, MatchboxEngine engine) {
 		super(worker);
-		init(worker);
+		init(worker, engine);
 	}
 
 	public MatchboxStructureMapUtilities(IWorkerContext worker, ITransformerServices services,
-			ProfileKnowledgeProvider pkp) {
+			ProfileKnowledgeProvider pkp, MatchboxEngine engine) {
 		super(worker, services, pkp);
-		init(worker);
+		init(worker, engine);
 	}
 
-	public MatchboxStructureMapUtilities(IWorkerContext worker, ITransformerServices services) {
+	public MatchboxStructureMapUtilities(IWorkerContext worker, ITransformerServices services, MatchboxEngine engine) {
 		super(worker, services);
-		init(worker);
+		init(worker, engine);
 	}
 
 	@Override
@@ -232,6 +237,11 @@ public class MatchboxStructureMapUtilities extends StructureMapUtilities {
 			}
 			return outcome;
 		}
+	}
+
+	// getter for engine
+	public MatchboxEngine getEngine() {
+		return engine;
 	}
 
 }
