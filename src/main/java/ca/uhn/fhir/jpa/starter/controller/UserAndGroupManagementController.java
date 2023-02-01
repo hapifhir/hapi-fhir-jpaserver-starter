@@ -110,7 +110,8 @@ public class UserAndGroupManagementController {
 			}
 
 			helperService.saveQueryResult(organizationId, startDate, endDate, filters, hashOfFormattedId,env);
-			return ResponseEntity.ok(hashOfFormattedId);
+			//return ResponseEntity.ok(hashOfFormattedId);
+			return (ResponseEntity<?>) ResponseEntity.status(400);
 		}
 		return ResponseEntity.ok(helperService.checkIfDataExistsInAsyncTable(hashOfFormattedId));
 
