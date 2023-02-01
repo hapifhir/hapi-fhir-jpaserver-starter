@@ -9,7 +9,7 @@
 - spurios validation erros with package validation [#72](https://github.com/ahdis/matchbox/issues/72)
 - Fixed package configuration, not loading additional ig / conformance resources [#71](https://github.com/ahdis/matchbox/issues/71)
 - loading IG from package by filepath does not work [#26](https://github.com/ahdis/matchbox/issues/26)
-- base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v312
+- base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v313
 
 2023/01/16 Release 3.0.0
 
