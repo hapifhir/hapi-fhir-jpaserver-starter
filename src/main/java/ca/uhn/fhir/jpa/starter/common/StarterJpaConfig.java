@@ -13,6 +13,7 @@ import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.jpa.api.IDaoRegistry;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
+import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.batch.config.NonPersistedBatchConfigurer;
 import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
@@ -62,6 +63,20 @@ import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
+import org.hl7.fhir.r4.model.PractitionerRole;
+import org.hl7.fhir.r4.model.Practitioner;
+import org.hl7.fhir.r4.model.Group;
+import org.hl7.fhir.r4.model.Location;
+import org.hl7.fhir.r4.model.Organization;
+import org.hl7.fhir.r4.model.OrganizationAffiliation;
+import org.hl7.fhir.r4.model.CareTeam;
+import org.smartregister.extension.rest.LocationHierarchyResourceProvider;
+import org.smartregister.extension.rest.PractitionerDetailsResourceProvider;
+import org.smartregister.model.location.*;
+import org.smartregister.model.practitioner.FhirPractitionerDetails;
+import org.smartregister.model.practitioner.KeycloakUserDetails;
+import org.smartregister.model.practitioner.PractitionerDetails;
+import org.smartregister.model.practitioner.UserBioData;
 import org.springframework.batch.core.configuration.annotation.BatchConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -81,6 +96,7 @@ import javax.sql.DataSource;
 import java.util.*;
 
 import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory.ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR;
+import static org.smartregister.utils.Constants.*;
 
 @Configuration
 public class StarterJpaConfig {
@@ -416,9 +432,8 @@ public class StarterJpaConfig {
 
 
 		repositoryValidatingInterceptor.ifPresent(fhirServer::registerInterceptor);
-
-
-
+		registerPracitionerDetailsTypes(fhirServer,daoRegistry);
+		registerLocationHierarchyTypes(fhirServer,daoRegistry);
 		return fhirServer;
 	}
 
@@ -447,6 +462,48 @@ public class StarterJpaConfig {
 		} else {
 			throw new IllegalStateException();
 		}
+	}
+
+	private void registerLocationHierarchyTypes(RestfulServer restfulServer, DaoRegistry daoRegistry) {
+		IFhirResourceDao<Location> locationIFhirResourceDao = daoRegistry.getResourceDao(LOCATION);
+		LocationHierarchyResourceProvider locationHierarchyResourceProvider = new LocationHierarchyResourceProvider();
+		locationHierarchyResourceProvider.setLocationIFhirResourceDao(locationIFhirResourceDao);
+
+		restfulServer.registerProvider(locationHierarchyResourceProvider);
+		restfulServer.getFhirContext().registerCustomType(LocationHierarchy.class);
+		restfulServer.getFhirContext().registerCustomType(LocationHierarchyTree.class);
+		restfulServer.getFhirContext().registerCustomType(Tree.class);
+		restfulServer.getFhirContext().registerCustomType(ParentChildrenMap.class);
+		restfulServer.getFhirContext().registerCustomType(SingleTreeNode.class);
+		restfulServer.getFhirContext().registerCustomType(TreeNode.class);
+		restfulServer.getFhirContext().registerCustomType(ChildTreeNode.class);
+	}
+
+	private void registerPracitionerDetailsTypes(RestfulServer restfulServer, DaoRegistry daoRegistry) {
+		IFhirResourceDao<Practitioner> practitionerIFhirResourceDao = daoRegistry.getResourceDao(_PRACTITIONER);
+		IFhirResourceDao<PractitionerRole> practitionerRoleIFhirResourceDao = daoRegistry.getResourceDao(PRACTITIONER_ROLE);
+		IFhirResourceDao<CareTeam> careTeamIFhirResourceDao = daoRegistry.getResourceDao(CARE_TEAM);
+		IFhirResourceDao<OrganizationAffiliation> organizationAffiliationIFhirResourceDao = daoRegistry.getResourceDao(ORGANIZATION_AFFILIATION);
+		IFhirResourceDao<Organization> organizationIFhirResourceDao = daoRegistry.getResourceDao(ORGANIZATION);
+		IFhirResourceDao<Location> locationIFhirResourceDao = daoRegistry.getResourceDao(LOCATION);
+		IFhirResourceDao<Group> groupIFhirResourceDao = daoRegistry.getResourceDao(GROUP);
+		LocationHierarchyResourceProvider locationHierarchyResourceProvider = new LocationHierarchyResourceProvider();
+		locationHierarchyResourceProvider.setLocationIFhirResourceDao(locationIFhirResourceDao);
+		PractitionerDetailsResourceProvider practitionerDetailsResourceProvider = new PractitionerDetailsResourceProvider();
+		practitionerDetailsResourceProvider.setPractitionerIFhirResourceDao(practitionerIFhirResourceDao);
+		practitionerDetailsResourceProvider.setPractitionerRoleIFhirResourceDao(practitionerRoleIFhirResourceDao);
+		practitionerDetailsResourceProvider.setCareTeamIFhirResourceDao(careTeamIFhirResourceDao);
+		practitionerDetailsResourceProvider.setOrganizationAffiliationIFhirResourceDao(organizationAffiliationIFhirResourceDao);
+		practitionerDetailsResourceProvider.setLocationHierarchyResourceProvider(locationHierarchyResourceProvider);
+		practitionerDetailsResourceProvider.setOrganizationIFhirResourceDao(organizationIFhirResourceDao);
+		practitionerDetailsResourceProvider.setLocationIFhirResourceDao(locationIFhirResourceDao);
+		practitionerDetailsResourceProvider.setGroupIFhirResourceDao(groupIFhirResourceDao);
+
+		restfulServer.registerProvider(practitionerDetailsResourceProvider);
+		restfulServer.getFhirContext().registerCustomType(PractitionerDetails.class);
+		restfulServer.getFhirContext().registerCustomType(KeycloakUserDetails.class);
+		restfulServer.getFhirContext().registerCustomType(UserBioData.class);
+		restfulServer.getFhirContext().registerCustomType(FhirPractitionerDetails.class);
 	}
 }
 
