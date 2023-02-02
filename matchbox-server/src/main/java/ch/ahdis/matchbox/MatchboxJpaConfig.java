@@ -9,6 +9,8 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -124,6 +126,9 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	protected StructureMapTransformProvider structureMapTransformProvider;
 
 
+	@Autowired
+    private ApplicationContext context;
+
 
 	// removed GraphQlProvider
 	// removed IVAldiationSupport
@@ -157,7 +162,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 			((ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProvider) implementationGuideResourceProvider)
 					.loadAll(true);
 			if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages().booleanValue()) {
-				System.exit(0);
+				int exitCode = SpringApplication.exit(context, ()->0);
+				System.exit(exitCode);
 			}
 		}
 		

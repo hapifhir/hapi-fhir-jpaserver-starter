@@ -360,7 +360,7 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 		
 							String msg = "Indexing " + nextFile + " Resource[" + dirName + '/' + nextFile + "] with URL: " + defaultString(url) + "|" + defaultString(version);
 							getProcessingMessages(npmPackage).add(msg);
-							ourLog.info("Package[{}#{}] " + msg, thePackageId, packageVersionId);
+							ourLog.trace("Package[{}#{}] " + msg, thePackageId, packageVersionId);
 						}
 					}
 				}
