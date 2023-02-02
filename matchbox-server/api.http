@@ -1,0 +1,23 @@
+### @host = http://localhost:8080/matchbox
+@host = https://test.ahdis.ch/matchboxv3
+
+
+### Liveness check
+GET {{host}}/actuator/health/liveness HTTP/1.1
+Accept: application/vnd.spring-boot.actuator.v3+json
+
+### Readyness check
+GET {{host}}/actuator/health/readiness HTTP/1.1
+Accept: application/vnd.spring-boot.actuator.v3+json
+
+### Health Check
+GET {{host}}/actuator/health HTTP/1.1
+Accept: application/vnd.spring-boot.actuator.v3+json
+
+### CapabitlityStatement of server
+GET {{host}}/fhir/metadata HTTP/1.1
+Accept: application/fhir+json
+
+### $validate OperationDefinition
+GET {{host}}/fhir/OperationDefinition/-s-validate HTTP/1.1
+Accept: application/fhir+json
