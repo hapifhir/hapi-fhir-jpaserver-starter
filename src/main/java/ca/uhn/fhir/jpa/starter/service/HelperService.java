@@ -97,7 +97,7 @@ public class HelperService {
 	TokenManager tokenManager;
 	BearerTokenAuthInterceptor authInterceptor;
 	
-	Map <String,DashboardConfigContainer> dashboardEnvToConfigMap = new HashMap<String,DashboardConfigContainer>();
+	Map <String,DashboardConfigContainer> dashboardEnvToConfigMap = new HashMap<>();
 
 	private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
 	private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
@@ -113,53 +113,7 @@ public class HelperService {
 
 	@PostConstruct
 	public void init() {
-		dashboardEnvironmentConfig.getEnvToFilePathMapping().forEach((env,definitionTypeToFilePathMap) ->
-			{
-				DashboardConfigContainer envConfigContainer = new DashboardConfigContainer();
-				definitionTypeToFilePathMap.forEach((configType,filePath)->{
-					JsonReader reader;
-					try {
-						reader = new JsonReader(new FileReader(filePath));
-						switch(configType) {
-							case FILTER_DEFINITIONS:{
-								envConfigContainer.setFilterItems(new Gson().fromJson(reader, new TypeToken<List<FilterItem>>() {}.getType()));
-								break;
-							}
-							case SCORECARD_DEFINITIONS:{
-								envConfigContainer.setScoreCardIndicatorItems(new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>() {}.getType()));
-								break;
-							}
-							case ANALYTIC_DEFINITIONS:{
-								envConfigContainer.setAnalyticsIndicatorItems(new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>() {}.getType()));
-								break;
-							}
-							case LINECHART_DEFINITIONS:{
-								envConfigContainer.setLineCharts(new Gson().fromJson(reader, new TypeToken<List<LineChart>>() {}.getType()));
-								break;
-							}
-							case PIECHART_DEFINITIONS:{
-								envConfigContainer.setPieChartDefinitions(new Gson().fromJson(reader, new TypeToken<List<PieChartDefinition>>() {}.getType()));
-								break;
-							}
-							case BARCHART_DEFINITIONS:{
-								envConfigContainer.setBarChartDefinitions(new Gson().fromJson(reader, new TypeToken<List<BarChartDefinition>>() {}.getType()));
-								break;
-							}
-							case TABULARCHART_DEFINITIONS:{
-								envConfigContainer.setTabularItems(new Gson().fromJson(reader, new TypeToken<List<TabularItem>>() {}.getType()));
-								break;
-							}
-							case DAILY_SUMMARY_DEFINITIONS:{
-								envConfigContainer.setAncDailySummaryConfig(new Gson().fromJson(reader, ANCDailySummaryConfig.class));
-								break;
-							}
-						}
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-				});
-				dashboardEnvToConfigMap.put(env,envConfigContainer);
-			});
+		dashboardEnvToConfigMap = dashboardEnvironmentConfig.getDashboardEnvToConfigMap();
 	}
 	
 	public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {

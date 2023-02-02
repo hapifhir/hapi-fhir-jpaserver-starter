@@ -1,11 +1,10 @@
 package ca.uhn.fhir.jpa.starter.service;
 
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.DashboardConfigContainer;
+import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
 import ca.uhn.fhir.jpa.starter.model.CacheEntity;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 import com.iprd.fhir.utils.DateUtilityHelper;
 import com.iprd.fhir.utils.Utils;
 import com.iprd.report.*;
@@ -14,12 +13,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.sql.Date;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Import(AppProperties.class)
 @Service
@@ -28,6 +26,9 @@ public class CachingService {
 	AppProperties appProperties;
 
 	NotificationDataSource notificationDataSource;
+
+	@Autowired
+	DashboardEnvironmentConfig dashboardEnvironmentConfig;
 
 	private static final long DELAY = 3600000;
 
@@ -156,14 +157,13 @@ public class CachingService {
 	
 	@Scheduled(fixedDelay = 24 * DELAY, initialDelay = DELAY)
 	private void cacheDailyData() {
-		try {
-			JsonReader reader = new JsonReader(new FileReader(appProperties.getAnc_config_file()));
-			List<IndicatorItem> indicators = new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>() {
-			}.getType());
-			cacheData(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), indicators);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
+		Map<String, DashboardConfigContainer> dashboardEnvToConfigMap = dashboardEnvironmentConfig.getDashboardEnvToConfigMap();
+		dashboardEnvironmentConfig.getEnvToFilePathMapping().forEach((env, definitionTypeToFilePathMap) -> {
+			cacheData(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), dashboardEnvToConfigMap.get(env).getAnalyticsIndicatorItems());
+			cacheDataForBarChart(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), dashboardEnvToConfigMap.get(env).getBarChartDefinitions());
+			cacheTabularData(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), dashboardEnvToConfigMap.get(env).getTabularItems());
+			cachePieChartData(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), dashboardEnvToConfigMap.get(env).getPieChartDefinitions());
+			cacheDataLineChart(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), dashboardEnvToConfigMap.get(env).getLineCharts());
+		});
 	}
 }
