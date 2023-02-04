@@ -1,6 +1,6 @@
-# HAPI-FHIR Starter Project
+# Metriport HAPI-FHIR Server
 
-This project is a complete starter project you can use to deploy a FHIR server using HAPI FHIR JPA.
+This FHIR server is a fork of https://github.com/hapifhir/hapi-fhir-jpaserver-starter.
 
 Note that this project is specifically intended for end users of the HAPI FHIR JPA server module (in other words, it helps you implement HAPI FHIR, it is not the source of the library itself). If you are looking for the main HAPI FHIR project, see here: https://github.com/hapifhir/hapi-fhir
 
@@ -8,79 +8,16 @@ Need Help? Please see: https://github.com/hapifhir/hapi-fhir/wiki/Getting-Help
 
 ## Prerequisites
 
-In order to use this sample, you should have:
+In order to use this server, you should have:
 
-- [This project](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
+- This project checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
 
 ### and either
  - Oracle Java (JDK) installed: Minimum JDK8 or newer.
  - Apache Maven build tool (newest version)
 
 ### or
- - Docker, as the entire project can be built using multistage docker (with both JDK and maven wrapped in docker) or used directly from [Docker Hub](https://hub.docker.com/r/hapiproject/hapi)
-
-## Running via [Docker Hub](https://hub.docker.com/r/hapiproject/hapi)
-
-Each tagged/released version of `hapi-fhir-jpaserver` is built as a Docker image and published to Docker hub. To run the published Docker image from DockerHub:
-
-```
-docker pull hapiproject/hapi:latest
-docker run -p 8080:8080 hapiproject/hapi:latest
-```
-
-This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/` in the browser to access the HAPI FHIR server's UI or use `http://localhost:8080/fhir/` as the base URL for your REST requests.
-
-If you change the mapped port, you need to change the configuration used by HAPI to have the correct `hapi.fhir.tester` property/value.
-
-### Configuration via environment variables
-
-You can customize HAPI directly from the `run` command using environment variables. For example:
-
-```
-docker run -p 8080:8080 -e hapi.fhir.default_encoding=xml hapiproject/hapi:latest
-```
-
-HAPI looks in the environment variables for properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file for defaults.
-
-### Configuration via overridden application.yaml file and using Docker
-
-You can customize HAPI by telling HAPI to look for the configuration file in a different location, eg.:
-
-```
-docker run -p 8090:8080 -v $(pwd)/yourLocalFolder:/configs -e "--spring.config.location=file:///configs/another.application.yaml" hapiproject/hapi:latest
-```
-Here, the configuration file (*another.application.yaml*) is placed locally in the folder *yourLocalFolder*.
-
-
-
-```
-docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.application.yaml" hapiproject/hapi:latest
-```
-Here, the configuration file (*another.application.yaml*) is part of the compiled set of resources.
-
-### Example using docker-compose.yml for docker-compose
-
-```
-version: '3.7'
-services:
-  web:
-    image: "hapiproject/hapi:latest"
-    ports:
-      - "8090:8080"
-    configs:
-      - source: hapi
-        target: /data/hapi/application.yaml
-    volumes:
-      - hapi-data:/data/hapi
-    environment:
-      SPRING_CONFIG_LOCATION: 'file:///data/hapi/application.yaml'
-configs:
-  hapi:
-     external: true
-volumes:
-    hapi-data:
-        external: true
-```
+ - Docker, as the entire project can be built using multistage docker (with both JDK and maven wrapped in docker).
 
 ## Running locally
 
@@ -111,6 +48,9 @@ Server will then be accessible at http://localhost:8888/ and eg. http://localhos
 ```
 
 ### Using Spring Boot with :run
+
+⚠️ This is currently broken: https://github.com/hapifhir/hapi-fhir-jpaserver-starter/issues/165
+
 ```bash
 mvn clean spring-boot:run -Pboot
 ```
@@ -127,39 +67,11 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 ```
 
 ### Using Spring Boot
+
+This runs with Tomcat.
+
 ```bash
 mvn clean package spring-boot:repackage -Pboot && java -jar target/ROOT.war
-```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
-
-```yaml
-    tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
-```
-### Using Spring Boot and Google distroless
-```bash
-mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 distroless-hapi
-```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
-
-```yaml
-    tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
-```
-
-### Using the Dockerfile and multistage build
-```bash
-./build-docker-image.sh && docker run -p 8080:8080 hapi-fhir/hapi-fhir-jpaserver-starter:latest
 ```
 Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
 
@@ -175,37 +87,15 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 
 ## Configurations
 
-Much of this HAPI starter project can be configured using the yaml file in _src/main/resources/application.yaml_. By default, this starter project is configured to use H2 as the database.
+Much of this server can be configured using the yaml file in _src/main/resources/application<-env>.yaml_. There's a default `application.yaml` file included for
+simplicity and reference, configured to use H2 as the database.
 
-### MySql configuration
-
-To configure the starter app to use MySQL, instead of the default H2, update the application.yaml file to have the following:
-
-```yaml
-spring:
-  datasource:
-    url: 'jdbc:mysql://localhost:3306/hapi_dstu3'
-    username: admin
-    password: admin
-    driverClassName: com.mysql.jdbc.Driver
-```
-
-Also, make sure you are not setting the Hibernate dialect explicitly, in other words remove any lines similar to:
-
-```
-hibernate.dialect: {some none MySQL dialect}
-```
-
-On some systems, it might be necessary to override hibernate's default naming strategy. The naming strategy must be set using spring.jpa.hibernate.physical_naming_strategy.
-
-```yaml
-spring:
-  jpa:
-    hibernate.physical_naming_strategy: NAME_OF_PREFERRED_STRATEGY
-```
-On linux systems or when using docker mysql containers, it will be necessary to review the case-sensitive setup for
-mysql schema identifiers. See  https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html. We suggest you
-set `lower_case_table_names=1` during mysql startup.
+One can create multiple configuration files (e.g., one for each environment the server is deployed to). In order to do that:
+- duplicate/rename the `application.yaml` to `application-env.yaml`, where `env` is the environment name (e.g., `local`)
+- run the server with an environment variable defining the name of the environment (this also sets a different server port):
+  ```shell
+  S SPRING_PROFILES_ACTIVE=local mvn -Djetty.port=8888 jetty:run
+  ```
 
 ### PostgreSQL configuration
 
