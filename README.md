@@ -303,6 +303,9 @@ spring:
 jpa:
   properties:
     hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+    hibernate.search.enabled: false
+
+    # Then comment all hibernate.search.backend.*
 ```
 
 ## Running hapi-fhir-jpaserver directly from IntelliJ as Spring Boot
