@@ -28,10 +28,10 @@ spring:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
+
       #Hibernate dialect is automatically detected except Postgres and H2.
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
-
       hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
@@ -39,6 +39,7 @@ spring:
   #      hibernate.cache.use_second_level_cache: false
   #      hibernate.cache.use_structured_entries: false
   #      hibernate.cache.use_minimal_puts: false
+
   ###    These settings will enable fulltext search with lucene or elastic
       hibernate.search.enabled: true
   ### lucene parameters
