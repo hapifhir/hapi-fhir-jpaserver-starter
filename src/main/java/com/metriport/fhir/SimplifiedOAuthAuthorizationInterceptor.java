@@ -49,7 +49,6 @@ public class SimplifiedOAuthAuthorizationInterceptor extends AuthorizationInterc
 		return new RuleBuilder()
 					.allowAll()
 					.build();
-		// return new ArrayList<>(1);
 
 		/*
 		// From https://hapifhir.io/hapi-fhir/docs/security/authorization_interceptor.html
