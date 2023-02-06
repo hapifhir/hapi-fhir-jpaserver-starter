@@ -2,7 +2,7 @@
 
 This FHIR server is a fork of https://github.com/hapifhir/hapi-fhir-jpaserver-starter.
 
-The main difference from the original repository is Auth* - this is based on [Metriport](https://github.com/metriport/metriport)'s OAuth2:
+The main difference from the original repository is Authorization - this is based on [Metriport](https://github.com/metriport/metriport)'s OAuth2:
 - it assumes it's begin used behind API Gateway or similar, with that upstream service validating the JWT and passing it through;
 - it only checks JWT claims (no token validation), to make sure the request has access to the requested operation and information;
 - see [SimplifiedOAuthAuthorizationInterceptor](https://github.com/metriport/hapi-fhir-jpaserver/tree/master/src/main/java/com/metriport/fhir/SimplifiedOAuthAuthorizationInterceptor.java)

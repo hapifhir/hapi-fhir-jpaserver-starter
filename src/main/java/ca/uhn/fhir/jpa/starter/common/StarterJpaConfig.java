@@ -138,8 +138,7 @@ public class StarterJpaConfig {
 
 	/**
 	 * Customize the default/max page sizes for search results. You can set these
-	 * however
-	 * you want, although very large page sizes will require a lot of RAM.
+	 * however you want, although very large page sizes will require a lot of RAM.
 	 */
 	@Bean
 	public DatabaseBackedPagingProvider databaseBackedPagingProvider(AppProperties appProperties) {
@@ -357,8 +356,8 @@ public class StarterJpaConfig {
 		 * If you are hosting this server at a specific DNS name, the server will try to
 		 * figure out the FHIR base URL based on what the web container tells it, but
 		 * this doesn't always work. If you are setting links in your search bundles
-		 * that
-		 * just refer to "localhost", you might want to use a server address strategy:
+		 * that just refer to "localhost", you might want to use a server address
+		 * strategy:
 		 */
 		String serverAddress = appProperties.getServer_address();
 		if (!Strings.isNullOrEmpty(serverAddress)) {
@@ -373,14 +372,10 @@ public class StarterJpaConfig {
 
 		/*
 		 * If you are using DSTU3+, you may want to add a terminology uploader, which
-		 * allows
-		 * uploading of external terminologies such as Snomed CT. Note that this
-		 * uploader
-		 * does not have any security attached (any anonymous user may use it by
-		 * default)
-		 * so it is a potential security vulnerability. Consider using an
-		 * AuthorizationInterceptor
-		 * with this feature.
+		 * allows uploading of external terminologies such as Snomed CT. Note that this
+		 * uploader does not have any security attached (any anonymous user may use it
+		 * by default) so it is a potential security vulnerability. Consider using an
+		 * AuthorizationInterceptor with this feature.
 		 */
 		if (fhirSystemDao.getContext().getVersion().getVersion().isEqualOrNewerThan(FhirVersionEnum.DSTU3)) { // <--
 																																				// ENABLED
