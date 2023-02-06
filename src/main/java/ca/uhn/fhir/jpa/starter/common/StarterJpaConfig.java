@@ -383,9 +383,8 @@ public class StarterJpaConfig {
 		 * with this feature.
 		 */
 		if (fhirSystemDao.getContext().getVersion().getVersion().isEqualOrNewerThan(FhirVersionEnum.DSTU3)) { // <--
-																												// ENABLED
-																												// RIGHT
-																												// NOW
+																																				// ENABLED
+																																				// RIGHT NOW
 			fhirServer.registerProvider(terminologyUploaderProvider.get());
 		}
 
