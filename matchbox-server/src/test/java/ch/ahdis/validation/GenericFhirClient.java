@@ -36,6 +36,7 @@ public class GenericFhirClient extends GenericClient{
   public GenericFhirClient(FhirContext theContext, String theServerBase) {
     super(theContext, null, theServerBase, null);
     setDontValidateConformance(true);
+    theContext.getRestfulClientFactory().setSocketTimeout(600 * 1000);
   }
 
   public GenericFhirClient(FhirContext theContext) {

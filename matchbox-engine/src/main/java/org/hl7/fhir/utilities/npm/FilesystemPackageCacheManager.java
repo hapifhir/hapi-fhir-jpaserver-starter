@@ -381,9 +381,9 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
       NpmPackage npm = NpmPackage.fromPackage(packageTgzInputStream, sourceDesc, true);
       return npm;
   	}
-  	// matchbox-engine PATCH, we do not want to load from a package server for hl7.fhir.xver-extension :
-  	if ("hl7.cda.fhir".equals(id) && "dev".equals(version)) {
-  		version = "2.1.0-cibuild";
+
+    if ("hl7.cda.uv.core".equals(id)) {
+  		version = "2.1.0-draft1";
       NpmPackage npm = NpmPackage.fromPackage(packageTgzInputStream, sourceDesc, true);
       return npm;
   	}
