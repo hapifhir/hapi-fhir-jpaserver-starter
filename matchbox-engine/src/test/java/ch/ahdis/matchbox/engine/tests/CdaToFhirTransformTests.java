@@ -23,7 +23,6 @@ package ch.ahdis.matchbox.engine.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -49,7 +48,7 @@ class CdaToFhirTransformTests {
 	static private CdaMappingEngine engine;
 	static String cdaLabItaly;
 
-//	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CdaToFhirTransformTests.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CdaToFhirTransformTests.class);
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -80,6 +79,16 @@ class CdaToFhirTransformTests {
 		String attributeWithCdaWhiteSpace = cdaLabItaly.replaceAll("11502-2", " 11502-2");
 		assertTrue(attributeWithCdaWhiteSpace.indexOf(" 11502-2")>0);
 		assertEquals("11502-2",getEngine().evaluateFhirPath(attributeWithCdaWhiteSpace, false, "ClinicalDocument.code.code"));
+		assertEquals("REFERTO DI LABORATORIO",getEngine().evaluateFhirPath(cdaLabItaly, false, "ClinicalDocument.title.dataString"));
+		assertEquals("IT",getEngine().evaluateFhirPath(cdaLabItaly, false, "ClinicalDocument.realmCode.code"));
+		assertEquals("2.16.840.1.113883.1.3",getEngine().evaluateFhirPath(cdaLabItaly, false, "ClinicalDocument.typeId.root"));
+		assertEquals("POCD_MT000040UV02",getEngine().evaluateFhirPath(cdaLabItaly, false, "ClinicalDocument.typeId.extension"));
+		assertEquals("active",getEngine().evaluateFhirPath(cdaLabItaly, false, "ClinicalDocument.statusCode.code"));
+// 	<effectiveTime value="20220330112426+0100"/>
+		assertEquals("2022-03-30T11:24:26+01:00",getEngine().evaluateFhirPath(cdaLabItaly, false, "ClinicalDocument.effectiveTime.value"));
+		assertEquals("1993-06-19",getEngine().evaluateFhirPath(cdaLabItaly, false, "ClinicalDocument.recordTarget.patientRole.patient.birthTime.value"));
+		assertEquals("Verdi",getEngine().evaluateFhirPath(cdaLabItaly, false, "ClinicalDocument.recordTarget.patientRole.patient.name.family.dataString"));
+		assertEquals("Giuseppe",getEngine().evaluateFhirPath(cdaLabItaly, false, "ClinicalDocument.recordTarget.patientRole.patient.name.given.dataString"));
 	}
 
 	@Test
@@ -126,6 +135,26 @@ class CdaToFhirTransformTests {
 	*/
 
 	@Test
+	void TestValidateCdaCh() throws FHIRException, IOException, EOperationOutcome {
+		InputStream in = CdaToFhirTransformTests.class
+		.getResourceAsStream("/cda-ch.xml");
+		org.hl7.fhir.r4.model.OperationOutcome outcome = getEngine().validate(in,
+				FhirFormat.XML, "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument");
+		assertTrue(outcome != null);
+		assertEquals(0, errors(outcome));
+	}
+
+	@Test
+	void TestValidateCdaIt() throws FHIRException, IOException, EOperationOutcome {
+		InputStream in = CdaToFhirTransformTests.class
+		.getResourceAsStream("/cda-it.xml");
+		org.hl7.fhir.r4.model.OperationOutcome outcome = getEngine().validate(in,
+				FhirFormat.XML, "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument");
+		assertTrue(outcome != null);
+		assertEquals(0, errors(outcome));
+	}
+
+	@Test
 	void TestValidateFhir() throws FHIRException, IOException, EOperationOutcome {
 		InputStream in = CdaToFhirTransformTests.class
 				.getResourceAsStream("/pat.json");
@@ -159,8 +188,18 @@ class CdaToFhirTransformTests {
 	private int errors(OperationOutcome op) {
 		int i = 0;
 		for (OperationOutcomeIssueComponent vm : op.getIssue()) {
-			if (vm.getSeverity() == IssueSeverity.ERROR || vm.getSeverity() == IssueSeverity.FATAL)
-				i++;
+			if (vm.getSeverity() == IssueSeverity.ERROR || vm.getSeverity() == IssueSeverity.FATAL) {
+				log.error(vm.getDetails().getText());
+				// eg ('tel: 390 666 0581')
+				if (vm.getDetails().getText().startsWith("URI values cannot have whitespace")) {
+					continue;
+				}
+				// https://terminology.hl7.org/5.0.0/ValueSet-v3-RoleClassAssignedEntity.json.html has a filter with an is-a concept to ASSIGEND and this cannot be evaluated by org.hl7.fhir.r5.terminologies.ValueSetCheckerSimple
+				if (vm.getDetails().getText().startsWith("The value provided ('ASSIGNED') is not in the value set 'RoleClassAssignedEntity' (http://terminology.hl7.org/ValueSet/v3-RoleClassAssignedEntity|2.0.0), and a code is required from this value set) (error message = Unable to resolve system - value set http://terminology.hl7.org/ValueSet/v3-RoleClassAssignedEntity|2.0.0 include #0 has no system)")) {
+					continue;
+				}
+				++i;
+			}
 		}
 		return i;
 	}

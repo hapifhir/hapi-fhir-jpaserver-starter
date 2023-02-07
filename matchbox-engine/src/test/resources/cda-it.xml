@@ -226,9 +226,10 @@
 	
 	<documentationOf>
 		<serviceEvent moodCode="EVN">
-			<statusCode code="completed"/>
+			<lab:statusCode code="completed"/>
+<!-- FIXME should be in lab domain			<statusCode code="completed"/> -->
 			<effectiveTime value="20220324112426+0100"/>
-			<performer typeCode="PRF">
+				<performer typeCode="PRF">
 				<assignedEntity>
 					<id root="2.16.840.1.113883.2.9.4.3.2" extension="MRSSIO79H59Z317K" assigningAuthorityName="MEF"/>
 					<assignedPerson>
@@ -373,7 +374,6 @@
 														<high value="20.00" unit="mg/L"/>
 													</value>
 													<interpretationCode code="N" codeSystem="2.16.840.1.113883.5.83" codeSystemName="HL7 Observation Interpretation" displayName="Normal"/>
-													<!--extension: precondition-->
 													<lab:precondition> 
 														<lab:criterion>
 															<lab:code code="30525-0" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Età"/>
@@ -382,8 +382,10 @@
 															</lab:value>
 														</lab:criterion>
 													</lab:precondition>
+
 												</observationRange>
 											</referenceRange>
+
 										</observation>
 									</entryRelationship>
 								</act>
