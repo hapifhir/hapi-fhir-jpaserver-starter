@@ -2,6 +2,8 @@ database
 **/with-postgres/data
 **/with-preload/data
 
+gha-creds-*.json
+
 fhir.logdir
 fhir.logdir_IS_UNDEFINED
 mydump
