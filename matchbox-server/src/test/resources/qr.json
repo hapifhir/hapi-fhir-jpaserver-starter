@@ -1,0 +1,444 @@
+{
+  "resourceType": "QuestionnaireResponse",
+  "id": "HciVacDtppVaccAppliedQuestionnaireResponse2",
+  "questionnaire": "http://hcisolutions.ch/ig/ig-hci-vacd/Questionnaire/VaccinationDTPPForm",
+  "status": "completed",
+  "contained": [
+    {
+      "resourceType": "Patient",
+      "id": "1",
+      "identifier": [
+        {
+          "system": "urn:oid:1.2.3.4",
+          "value": "urn:uuid:71439925-4d97-4e4a-bf5b-ed24dabdd040"
+        }
+      ],
+      "gender": "male",
+      "birthDate": "1967-06-22",
+      "name": [
+        {
+          "family": "Family",
+          "given": ["Test"]
+        }
+      ],
+      "address": [
+        {
+          "line": ["Im Heimatli 1"],
+          "city": "Musterhausen",
+          "postalCode": "9999"
+        }
+      ]
+    },
+    {
+      "resourceType": "PractitionerRole",
+      "id": "2",
+      "practitioner": {
+        "reference": "#3"
+      },
+      "organization": {
+        "reference": "#4"
+      }
+    },
+    {
+      "resourceType": "Practitioner",
+      "id": "3",
+      "identifier": [
+        {
+          "system": "urn:oid:2.51.1.3",
+          "value": "7600000000000"
+        }
+      ],
+      "name": [
+        {
+          "family": "Arzt",
+          "given": ["Mein"]
+        }
+      ],
+      "address": [
+        {
+          "line": ["Praxisweg"],
+          "city": "Musterhausen",
+          "postalCode": "9999"
+        }
+      ]
+    },
+    {
+      "resourceType": "Organization",
+      "id": "4",
+      "name": "Praxis Arzt",
+      "address": [
+        {
+          "line": ["Praxisweg"],
+          "city": "Musterhausen",
+          "postalCode": "9999"
+        }
+      ]
+    }
+  ],
+  "subject": {
+    "reference": "#1"
+  },
+  "author": {
+    "reference": "#2"
+  },
+  "item": [
+    {
+      "linkId": "form",
+      "text": "Informationen zur Impfung gegen Diphtherie, Tetanus, Pertussis und/oder Poliomyelitis (dT, dTpa oder dTpa-IPV)",
+      "item": [
+        {
+          "linkId": "form.anamnese",
+          "text": "Anamnese",
+          "item": [
+            {
+              "linkId": "form.anamnese.questFeelUncomfortable",
+              "text": "Fühlen Sie sich unwohl?",
+              "answer": [
+                {
+                  "valueBoolean": false
+                }
+              ]
+            },
+            {
+              "linkId": "form.anamnese.questLast48HoursFeever",
+              "text": "Hatten Sie in den letzten 48 Stunden Fieber?",
+              "answer": [
+                {
+                  "valueBoolean": false
+                }
+              ]
+            },
+            {
+              "linkId": "form.anamnese.questAllergies",
+              "text": "Allergien/Erkrankungen:",
+              "answer": [
+                {
+                  "valueCoding": {
+                    "system": "http://snomed.info/sct",
+                    "code": "716186003",
+                    "display": "Keine Allergie bekannt"
+                  }
+                }
+              ]
+            },
+            {
+              "linkId": "form.anamnese.questSevereSideEffectsOnVaccination",
+              "text": "Hatten Sie jemals schwere Nebenwirkungen während oder nach einer Impfung?",
+              "answer": [
+                {
+                  "valueBoolean": false
+                }
+              ]
+            },
+            {
+              "linkId": "form.anamnese.questPregnancy",
+              "text": "Sind Sie schwanger?",
+              "answer": [
+                {
+                  "valueBoolean": true,
+                  "item": [
+                    {
+                      "linkId": "form.anamnese.questPregnancyDate",
+                      "text": "Berechneter Geburtstermin (ab letzter Menstruation)",
+                      "answer": [
+                        {
+                          "valueDate": "2022-03-31"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "form.anamnese.questImmunoDeficiencyDisease",
+              "text": "Leiden Sie an einer Immunschwäche oder -krankheit?",
+              "answer": [
+                {
+                  "valueBoolean": false
+                }
+              ]
+            },
+            {
+              "linkId": "form.anamnese.questIncreasedRiskofBleeding",
+              "text": "Haben Sie ein bekanntes erhöhtes Blutungsrisiko (z. B. vererbt)?",
+              "answer": [
+                {
+                  "valueBoolean": false
+                }
+              ]
+            },
+            {
+              "linkId": "form.anamnese.questTakeRegularly",
+              "text": "Nehmen Sie regelmässig Medikamente ein?",
+              "answer": [
+                {
+                  "valueCoding": {
+                    "system": "http://hcisolutions.ch/ig/ig-hci-vacd/CodeSystem/hci-vacd-hci-questionnaire-cs",
+                    "code": "10004",
+                    "display": "Ich nehme nicht regelmässig Medikamente ein"
+                  }
+                }
+              ]
+            },
+            {
+              "linkId": "form.anamnese.questRegularMedicalCheckUps",
+              "text": "Befinden Sie sich zur Zeit in regelmässiger ärztlicher Kontrolle?",
+              "answer": [
+                {
+                  "valueBoolean": false
+                }
+              ]
+            },
+            {
+              "linkId": "form.anamnese.questEverFaintedOrGotSick",
+              "text": "Sind Sie jemals bei einer Impfung oder Blutentnahme in Ohnmacht gefallen oder ist Ihnen übel geworden?",
+              "answer": [
+                {
+                  "valueBoolean": false
+                }
+              ]
+            },
+            {
+              "linkId": "form.anamnese.questPrescriptionVaccinationAvailable",
+              "text": "Rezept für die Impfung vorhanden? (z. B. bei besonderem Impfrisiko oder für Kantone, die die Impfung nur auf Rezept bewilligen)",
+              "answer": [
+                {
+                  "valueBoolean": true
+                }
+              ]
+            },
+            {
+              "linkId": "form.anamnese.questSufferingUnderlDiseaseChronicIllness",
+              "text": "Leiden Sie an einer Grunderkrankung oder chronischen Krankheit?",
+              "answer": [
+                {
+                  "valueBoolean": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "form.vacdtpa.title",
+          "item": [
+            {
+              "linkId": "form.vacdtpa.questInfoOnHistory",
+              "text": "Angabe zur Vorgeschichte",
+              "answer": [
+                {
+                  "valueCoding": {
+                    "system": "http://hcisolutions.ch/ig/ig-hci-vacd/CodeSystem/hci-vacd-hci-questionnaire-cs",
+                    "code": "30000",
+                    "display": "Basisimmunisierung (dTpa-IPV) vollständig durchgeführt"
+                  },
+                  "item": [
+                    {
+                      "linkId": "form.vacdtpa.groupBasicImmunDone",
+                      "item": [
+                        {
+                          "linkId": "form.vacdtpa.questBoosterVaccinationDone",
+                          "text": "Ist eine Auffrischimpfung dTpa (mit Pertussis) erfolgt?",
+                          "answer": [
+                            {
+                              "valueBoolean": false
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "linkId": "form.vacdtpa.questBasicImmunPolio",
+                      "text": "Wurde die Basisimpfung gegen Polio vollständig durchgeführt?",
+                      "answer": [
+                        {
+                          "valueBoolean": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "form.unwsideeffects",
+          "item": [
+            {
+              "linkId": "form.unwsideeffects.questInformedConsentAvailable",
+              "text": "Informiertes Einverständnis des Kunden liegt vor und die Person erfüllt die Impfindikation gemäss den am Tag der Impfung gültigen kantonalen Impfkriterien.",
+              "answer": [
+                {
+                  "valueBoolean": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "form.vaccact.title",
+          "item": [
+            {
+              "linkId": "form.vaccact.questVaccinationApplied",
+              "text": "Impfung durchgeführt",
+              "answer": [
+                {
+                  "valueBoolean": true,
+                  "item": [
+                    {
+                      "linkId": "form.vaccact.questVaccineProduct",
+                      "text": "Impfstoffname",
+                      "answer": [
+                        {
+                          "valueCoding": {
+                            "system": "http://fhir.ch/ig/ch-vacd/CodeSystem/ch-vacd-swissmedic-cs",
+                            "code": "637",
+                            "display": "Boostrix"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "linkId": "form.vaccact.questLotNumber",
+                      "text": "Lotnummer",
+                      "answer": [
+                        {
+                          "valueString": "123456"
+                        }
+                      ]
+                    },
+                    {
+                      "linkId": "form.vaccact.questVaccinationDate",
+                      "text": "Impfdatum",
+                      "answer": [
+                        {
+                          "valueDate": "2022-01-11"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "form.vaccact.questComments",
+              "text": "Bemerkungen",
+              "answer": [
+                {
+                  "valueString": "Alles gut gegangen"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "form.sideeffects",
+          "item": [
+            {
+              "linkId": "form.sideeffects.questLocalReaction",
+              "text": "lokale Reaktion",
+              "answer": [
+                {
+                  "valueBoolean": true
+                }
+              ]
+            },
+            {
+              "linkId": "form.sideeffects.questSystemicReaction",
+              "text": "systemische Reaktion",
+              "answer": [
+                {
+                  "valueBoolean": true,
+                  "item": [
+                    {
+                      "linkId": "form.sideeffects.questSystemicReactionWithEmergContact",
+                      "text": "mit Notfallkontakt",
+                      "answer": [
+                        {
+                          "valueBoolean": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "form.sideeffects.questDescriptionSideEffect",
+              "text": "Beschreibung (inkl. Follow-up)",
+              "answer": [
+                {
+                  "valueString": "No Follow-up."
+                }
+              ]
+            },
+            {
+              "linkId": "form.sideeffects.questConfirmationDate",
+              "text": "Rückmeldedatum",
+              "answer": [
+                {
+                  "valueDate": "2022-01-11"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "form.addvacinfo",
+          "item": [
+            {
+              "linkId": "form.addvacinfo.questLocationLastVaccination",
+              "text": "Wo erfolgte die letzte Impfung?",
+              "answer": [
+                {
+                  "valueCoding": {
+                    "system": "http://hcisolutions.ch/ig/ig-hci-vacd/CodeSystem/hci-vacd-hci-questionnaire-cs",
+                    "code": "locationpharmacy",
+                    "display": "in einer Apotheke"
+                  }
+                }
+              ]
+            },
+            {
+              "linkId": "form.addvacinfo.questMotivationServicePharmcy",
+              "text": "Wurden Sie spezifisch durch die Dienstleistung Impfen in der Apotheke zum Impfen motiviert?",
+              "answer": [
+                {
+                  "valueBoolean": false
+                }
+              ]
+            },
+            {
+              "linkId": "form.addvacinfo.questGeneralPractitioner",
+              "text": "Haben sie einen Hausarzt?",
+              "answer": [
+                {
+                  "valueBoolean": false
+                }
+              ]
+            },
+            {
+              "linkId": "form.addvacinfo.questAdminTime",
+              "text": "Ungefährer Zeitaufwand zum Ausfüllen des Fragebogens (Minuten)",
+              "answer": [
+                {
+                  "valueInteger": 5
+                }
+              ]
+            },
+            {
+              "linkId": "form.genericinfo.genericComments",
+              "text": "Bemerkungen",
+              "answer": [
+                {
+                  "valueString": "Abschlussbemerkung"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
