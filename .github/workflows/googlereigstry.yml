@@ -26,6 +26,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Build Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "adopt"
+          cache: "maven"
+      - run: mvn --batch-mode --update-snapshots verify
+      - run: mkdir staging && cp matchbox-engine/target/*.jar staging
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Package
+          path: staging
+
       # Configure Workload Identity Federation and generate an access token.
       - id: "auth"
         name: "Authenticate to Google Cloud"
