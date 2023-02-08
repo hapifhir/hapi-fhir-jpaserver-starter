@@ -1,6 +1,7 @@
 name: Build and Upload to Google Artifact registry
 
 on:
+  workflow_dispatch:
   push:
     tags: 
       - '*'
