@@ -33,7 +33,7 @@ jobs:
       with:
         token_format: 'access_token'
         workload_identity_provider: 'projects/1022310475153/locations/global/workloadIdentityPools/github-wif-pool/providers/oidc-github-provider'
-        service_account: 'github@$ahdis-ch.iam.gserviceaccount.com'
+        service_account: 'github@ahdis-ch.iam.gserviceaccount.com'
 
     - name: Docker configuration
       run: |-
