@@ -207,7 +207,7 @@ reached at http://localhost:8080/.
 In order to use another port, change the `ports` parameter
 inside `docker-compose.yml` to `8888:8080`, where 8888 is a port of your choice.
 
-The docker compose set also includes my PoPostgreSQL database, if you choose to use PostgreSQL instead of H2, change the following
+The docker compose set also includes PostgreSQL database, if you choose to use PostgreSQL instead of H2, change the following
 properties in `src/main/resources/application.yaml`:
 
 ```yaml
