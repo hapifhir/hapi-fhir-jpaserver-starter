@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -37,11 +40,6 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.collections4.comparators.ReverseComparator;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseBinary;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -510,17 +508,16 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 				throw new InternalErrorException(Msg.code(2031) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
 			}
 		} else {
-			HttpClientConnectionManager connManager = new BasicHttpClientConnectionManager();
-			try (CloseableHttpResponse request = HttpClientBuilder
-				.create()
-				.setConnectionManager(connManager)
-				.build()
-				.execute(new HttpGet(thePackageUrl))) {
-				if (request.getStatusLine().getStatusCode() != 200) {
-					throw new ResourceNotFoundException(Msg.code(1303) + "Received HTTP " + request.getStatusLine().getStatusCode() + " from URL: " + thePackageUrl);
+			// matchbox: https://github.com/ahdis/matchbox/issues/75
+			HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
+			try {
+				HttpRequest httpRequest = HttpRequest.newBuilder(new URI(thePackageUrl)).build();
+				HttpResponse<byte[]> res = client.send(httpRequest, HttpResponse.BodyHandlers.ofByteArray());
+				if (res.statusCode() != 200) {
+					throw new ResourceNotFoundException(Msg.code(1303) + "Received HTTP " + res.statusCode() + " from URL: " + thePackageUrl);
 				}
-				return IOUtils.toByteArray(request.getEntity().getContent());
-			} catch (IOException e) {
+				return res.body();
+			} catch (Exception e) {
 				throw new InternalErrorException(Msg.code(1304) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
 			}
 		}
