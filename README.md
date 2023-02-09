@@ -92,6 +92,8 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 Much of this server can be configured using the yaml file in _src/main/resources/application<-env>.yaml_. There's a default `application.yaml` file included for
 simplicity and reference, configured to use H2 as the database.
 
+It does not support MySQL as it is deprecated. See more at https://hapifhir.io/hapi-fhir/docs/server_jpa/database_support.html
+
 One can create multiple configuration files (e.g., one for each environment the server is deployed to). In order to do that:
 - duplicate/rename the `application.yaml` to `application-env.yaml`, where `env` is the environment name (e.g., `local`)
 - run the server with an environment variable defining the name of the environment (this also sets a different server port):
@@ -106,7 +108,7 @@ To configure the starter app to use PostgreSQL, instead of the default H2, updat
 ```yaml
 spring:
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/hapi_dstu3'
+    url: 'jdbc:postgresql://localhost:5432/hapi'
     username: admin
     password: admin
     driverClassName: org.postgresql.Driver
@@ -205,19 +207,20 @@ reached at http://localhost:8080/.
 In order to use another port, change the `ports` parameter
 inside `docker-compose.yml` to `8888:8080`, where 8888 is a port of your choice.
 
-The docker compose set also includes my MySQL database, if you choose to use MySQL instead of H2, change the following
-properties in application.yaml:
+The docker compose set also includes my PoPostgreSQL database, if you choose to use PostgreSQL instead of H2, change the following
+properties in `src/main/resources/application.yaml`:
 
 ```yaml
 spring:
   datasource:
-    url: 'jdbc:mysql://hapi-fhir-mysql:3306/hapi'
+    url: 'jdbc:postgresql://hapi-fhir-postgres:5432/hapi'
     username: admin
     password: admin
-    driverClassName: com.mysql.jdbc.Driver
+    driverClassName: org.postgresql.Driver
+jpa:
+  properties:
+    hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
 ```
-
-Also, make sure you are not setting the Hibernate Dialect explicitly, see more details in the section about MySQL.
 
 ## Running directly from IntelliJ as Spring Boot
 Make sure you run with the maven profile called ```boot``` and NOT also ```jetty```. Then you are ready to press debug the project directly without any extra Application Servers.
@@ -253,8 +256,6 @@ Run the configuration.
 - Wait for the console output to stop
 
 Point your browser (or fiddler, or what have you) to `http://localhost:8080/hapi/baseDstu3/Patient`
-
-It is important to use MySQL5Dialect when using MySQL version 5+.
 
 ## Enabling Subscriptions
 
