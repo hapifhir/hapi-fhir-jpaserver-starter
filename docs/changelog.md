@@ -1,3 +1,8 @@
+2023/03/xx Release 3.2.0-snapshot
+
+- updated CDA core logical model 2.0 and added tests
+- docker multiarchitecture support and ci-build setup [#76]https://github.com/ahdis/matchbox/issues/76)
+
 2023/02/01 Release 3.1.0
 
 - Reenable FHIR Mapping Language tutorial, xml and json issues with matchbox [#51](https://github.com/ahdis/matchbox/issues/51)
