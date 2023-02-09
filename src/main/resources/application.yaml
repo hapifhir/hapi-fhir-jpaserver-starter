@@ -131,6 +131,11 @@ hapi:
       # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
       allowed_origin:
         - '*'
+    # history_count_mode is an integer that represents the mode that the DAOConfig will use when getting the history count during a history request
+      # history_count_mode = 0 -> CACHED_ONLY_WITHOUT_OFFSET (default within hapi-fhir DAOConfig)
+      # history_count_mode = 1 -> COUNT_ACCURATE (ignores cache and always gets correct count)
+      # history_count_mode = 2 -> COUNT_DISABLED (does not return count at all)
+    history_count_mode: 1
 
     # Search coordinator thread pool sizes
     search-coord-core-pool-size: 20
