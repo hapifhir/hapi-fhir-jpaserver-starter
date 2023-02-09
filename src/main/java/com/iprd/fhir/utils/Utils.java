@@ -1,14 +1,21 @@
 package com.iprd.fhir.utils;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.iprd.report.FhirPath;
 
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.zip.GZIPOutputStream;
 
 public class Utils {
+	public static final int SHORT_ID_LENGTH = 12;
 
 	public static String convertToTitleCaseSplitting(String text) {
 		if (text == null || text.isEmpty()) {
@@ -65,5 +72,366 @@ public class Utils {
 	public static String getMd5KeyForLineCacheMd5(FhirPath fhirPath, Integer lineId, Integer chartId) {
 		String combinedString = getStringFromFhirPath(fhirPath)+"_"+lineId.toString()+"_"+chartId.toString();
 		return  md5Bytes(combinedString.getBytes(StandardCharsets.UTF_8));
+	}
+
+	public static byte[] getBytesFromFile(String filePath)  {
+		byte[] bFile = null;
+		try {
+			File file = new File(filePath);
+			int size = (int) file.length();
+			bFile = new byte[size];
+			try {
+				BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+				buf.read(bFile, 0, bFile.length);
+				buf.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return bFile;
+	}
+
+	public static String getGUID() {
+		UUID uuid = UUID.randomUUID();
+		return uuid.toString();
+	}
+
+	public static String getShortIDFromGUID(String guid) {
+		if (guid.length() >= 36) {
+			String strNew = guid.replace("-", "");
+			if (strNew.length() >= 32) guid = strNew;
+		}
+		String bin = guidToBinaryString(guid);
+		String shortID = generateShortBase32(bin);
+		return shortID.substring(0, 24);
+	}
+
+	static String guidToBinaryString(String guid) {
+		int i = 0;
+		StringBuilder ret = new StringBuilder();
+		char[] hexdec = new char[33];
+		String md5 = md5(guid);
+		hexdec = md5.toCharArray();
+		while (i < md5.length()) {
+			switch (hexdec[i]) {
+				case '0':
+					ret.append("0000");
+					break;
+				case '1':
+					ret.append("0001");
+					break;
+				case '2':
+					ret.append("0010");
+					break;
+				case '3':
+					ret.append("0011");
+					break;
+				case '4':
+					ret.append("0100");
+					break;
+				case '5':
+					ret.append("0101");
+					break;
+				case '6':
+					ret.append("0110");
+					break;
+				case '7':
+					ret.append("0111");
+					break;
+				case '8':
+					ret.append("1000");
+					break;
+				case '9':
+					ret.append("1001");
+					break;
+				case 'A':
+				case 'a':
+					ret.append("1010");
+					break;
+				case 'B':
+				case 'b':
+					ret.append("1011");
+					break;
+				case 'C':
+				case 'c':
+					ret.append("1100");
+					break;
+				case 'D':
+				case 'd':
+					ret.append("1101");
+					break;
+				case 'E':
+				case 'e':
+					ret.append("1110");
+					break;
+				case 'F':
+				case 'f':
+					ret.append("1111");
+					break;
+				default:
+					System.out.print("\nInvalid hexadecimal digit " + hexdec[i]);
+			}
+			i++;
+		}
+		return ret.toString();
+	}
+
+	public static String md5(final String s) {
+		final String MD5 = "MD5";
+		try {
+			MessageDigest digest = java.security.MessageDigest
+				.getInstance(MD5);
+			digest.update(s.getBytes());
+			byte[] messageDigest = digest.digest();
+
+			// Create Hex String
+			StringBuilder hexString = new StringBuilder();
+			for (byte aMessageDigest : messageDigest) {
+				String h = Integer.toHexString(0xFF & aMessageDigest);
+				while (h.length() < 2)
+					h = "0" + h;
+				hexString.append(h);
+			}
+			return hexString.toString();
+
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	static String generateShortBase32(String binaryString) {
+		StringBuilder base32Str = new StringBuilder();
+		while (binaryString.length() > 5) {
+			String fiveBitData = (binaryString.substring(0, 5));
+			base32Str.append(fiveBitDataToBase32(fiveBitData));
+			binaryString = binaryString.substring(5);
+		}
+		return base32Str.toString();
+	}
+
+	static String fiveBitDataToBase32(String inp) {
+		String b = "123456789ABCDEFGHJKLMNPQRSTVWXYZ";
+		int index = -1;
+		String ret = "";
+		switch (inp) {
+			case "0":
+			case "00":
+			case "000":
+			case "0000":
+			case "00000":
+				index = 0;
+				break;
+			case "1":
+			case "01":
+			case "001":
+			case "0001":
+			case "00001":
+				index = 1;
+				break;
+			case "10":
+			case "010":
+			case "0010":
+			case "00010":
+				index = 2;
+				break;
+			case "11":
+			case "011":
+			case "0011":
+			case "00011":
+				index = 3;
+				break;
+			case "100":
+			case "0100":
+			case "00100":
+				index = 4;
+				break;
+			case "101":
+			case "0101":
+			case "00101":
+				index = 5;
+				break;
+			case "110":
+			case "0110":
+			case "00110":
+				index = 6;
+				break;
+			case "111":
+			case "0111":
+			case "00111":
+				index = 7;
+				break;
+			case "1000":
+			case "01000":
+				index = 8;
+				break;
+			case "1001":
+			case "01001":
+				index = 9;
+				break;
+			case "1010":
+			case "01010":
+				index = 10;
+				break;
+			case "1011":
+			case "01011":
+				index = 11;
+				break;
+			case "1100":
+			case "01100":
+				index = 12;
+				break;
+			case "1101":
+			case "01101":
+				index = 13;
+				break;
+			case "1110":
+			case "01110":
+				index = 14;
+				break;
+			case "1111":
+			case "01111":
+				index = 15;
+				break;
+			case "10000":
+				index = 16;
+				break;
+			case "10001":
+				index = 17;
+				break;
+			case "10010":
+				index = 18;
+				break;
+			case "10011":
+				index = 19;
+				break;
+			case "10100":
+				index = 20;
+				break;
+			case "10101":
+				index = 21;
+				break;
+			case "10110":
+				index = 22;
+				break;
+			case "10111":
+				index = 23;
+				break;
+			case "11000":
+				index = 24;
+				break;
+			case "11001":
+				index = 25;
+				break;
+			case "11010":
+				index = 26;
+				break;
+			case "11011":
+				index = 27;
+				break;
+			case "11100":
+				index = 28;
+				break;
+			case "11101":
+				index = 29;
+				break;
+			case "11110":
+				index = 30;
+				break;
+			case "11111":
+				index = 31;
+				break;
+			default:
+				System.out.print("\nInvalid base32 digit " + index);
+		}
+		if (index >= 0) ret = b.charAt(index) + "";
+		return ret;
+	}
+
+	public static String getBase32CharFromMd5(String s) {
+		try {
+			//To upper
+			s = s.toUpperCase();
+			// Create MD5 Hash
+			MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+			digest.update(s.getBytes());
+			byte messageDigest[] = digest.digest();
+			// Create Hex String
+			String hexString = new String();
+			int b = 0xF8 & messageDigest[0]; // upper nibble
+			b = b >> 3;
+			String bin = Integer.toBinaryString(b);
+			hexString = fiveBitDataToBase32(bin);
+			return hexString.toUpperCase();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	public static String getOpenLinkJsonFormattedString(
+		String baseUrl,
+		String openCampLinkIdGUID,
+		String openCampLinkId,
+		String campaignGuid,
+		String campaignDescription,
+		String campaignURL,
+		String anonymizedLocation,
+		String locationPrecision,
+		String anonymizedTimeEpoch,
+		String humanReadableTime,
+		String timePrecision,
+		String verticalCode,
+		String verticalDescription,
+		String userDefinedDetails,
+		boolean humanReadableFlag
+	) {
+
+		JsonParser jsonParser = new JsonParser();
+		JsonObject openCampLinkJsonObject = new JsonObject();
+		openCampLinkJsonObject.addProperty("id", openCampLinkIdGUID);
+		openCampLinkJsonObject.addProperty("l", anonymizedLocation);
+		openCampLinkJsonObject.addProperty("lp", locationPrecision);
+		openCampLinkJsonObject.addProperty("t", anonymizedTimeEpoch);
+		openCampLinkJsonObject.addProperty("tp", timePrecision);
+		openCampLinkJsonObject.addProperty("cid", campaignGuid);
+		openCampLinkJsonObject.addProperty("vc", verticalCode);
+		openCampLinkJsonObject.addProperty("curl", campaignURL);
+		openCampLinkJsonObject.addProperty("cname", campaignDescription);
+		openCampLinkJsonObject.add("udf", jsonParser.parse(userDefinedDetails));
+
+		String openCampLinkSuffix =
+			"ID      : " + openCampLinkId + "\n" +
+				"Version : 1\n" +
+				"Location: " + anonymizedLocation + "\n" +
+				"Date    : " + humanReadableTime + "\n" +
+				"Campaign: " + campaignDescription + "\n" +
+				campaignURL + "\n" +
+				"Vertical: " + verticalDescription;
+
+		String base64String = Base64.getEncoder().encodeToString(zipStringData(openCampLinkJsonObject.toString()));
+		String finalQrString = baseUrl + "?s=" + openCampLinkId + "&v=3&d=" + base64String;
+		if(humanReadableFlag) {
+			finalQrString += "\0\n" + openCampLinkSuffix;
+		}
+		return finalQrString;
+	}
+
+	public static byte[] zipStringData(String s) {
+		if (s == null || s.length() == 0)
+			return null;
+		try {
+			ByteArrayOutputStream obj = new ByteArrayOutputStream(s.length());
+			GZIPOutputStream gzip = new GZIPOutputStream(obj);
+			gzip.write(s.getBytes());
+			gzip.flush();
+			gzip.close();
+			return obj.toByteArray();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

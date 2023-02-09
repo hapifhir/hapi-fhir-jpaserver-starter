@@ -78,6 +78,18 @@
             <version>18.0.0</version>
         </dependency>
         <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.imgscalr</groupId>
+            <artifactId>imgscalr-lib</artifactId>
+            <version>4.2</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-client</artifactId>
             <version>${jetty_version}</version>
@@ -535,6 +547,8 @@
                 <version>3.8.1</version>
                 <configuration>
                     <release>8</release>
+                    <source>9</source>
+                    <target>9</target>
                 </configuration>
             </plugin>
 

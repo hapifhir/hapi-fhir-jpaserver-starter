@@ -7,6 +7,8 @@ import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
 import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
 import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
+import ca.uhn.fhir.jpa.starter.model.OCLQrResponse;
+import ca.uhn.fhir.jpa.starter.model.OCLQrRequest;
 import ca.uhn.fhir.jpa.starter.service.*;
 import ca.uhn.fhir.parser.IParser;
 import com.iprd.fhir.utils.Validation;
@@ -38,6 +40,8 @@ public class UserAndGroupManagementController {
 	NotificationService notificationService;
 	@Autowired
 	BigQueryService bigQueryService;
+	@Autowired
+	QrService qrService;
 	@Autowired
 	DashboardEnvironmentConfig dashboardEnvironmentConfig;
 	
@@ -321,5 +325,35 @@ public class UserAndGroupManagementController {
 		}
 		analyticItems.addAll(maternalAnalyticsItems);
 		return ResponseEntity.ok(analyticItems);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/oclQr")
+	public ResponseEntity<OCLQrResponse> oclQr(@RequestParam(name = "baseUrl", defaultValue = "") String baseUrl,
+															 @RequestParam(name = "campaignGuid", defaultValue = "") String campaignGuid,
+															 @RequestParam(name = "campaignName", defaultValue = "") String campaignName,
+															 @RequestParam(name = "campaignUrl", defaultValue = "") String campaignUrl,
+															 @RequestParam(name = "location", defaultValue = "") String location,
+															 @RequestParam(name = "locationPre", defaultValue = "") String locationPre,
+															 @RequestParam(name = "timePre", defaultValue = "") String timePre,
+															 @RequestParam(name = "verticalCode", defaultValue = "") String verticalCode,
+															 @RequestParam(name = "verticalDescription", defaultValue = "") String verticalDescription,
+															 @RequestParam(name = "userDefinedData", defaultValue = "") String userDefinedData,
+															 @RequestParam(name = "humanReadableFlag", defaultValue = "true") boolean humanReadableFlag,
+															 @RequestParam(name = "errorCorrectionLevelBits", defaultValue = "2") int errorCorrectionLevelBits
+	) {
+		OCLQrRequest oclQrRequest = new OCLQrRequest();
+		oclQrRequest.setBaseUrl(baseUrl);
+		oclQrRequest.setCampGuid(campaignGuid);
+		oclQrRequest.setCampName(campaignName);
+		oclQrRequest.setCampUrl(campaignUrl);
+		oclQrRequest.setLocation(location);
+		oclQrRequest.setLocationPre(locationPre);
+		oclQrRequest.setTimePre(timePre);
+		oclQrRequest.setVerticalCode(verticalCode);
+		oclQrRequest.setVerticalDescription(verticalDescription);
+		oclQrRequest.setUserDefinedData(userDefinedData);
+		oclQrRequest.setHumanReadableFlag(humanReadableFlag);
+		oclQrRequest.setErrorCorrectionLevelBits(errorCorrectionLevelBits);
+		return ResponseEntity.ok(qrService.getOclQr(oclQrRequest));
 	}
 }
