@@ -508,6 +508,7 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 				throw new InternalErrorException(Msg.code(2031) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
 			}
 		} else {
+			// matchbox: https://github.com/ahdis/matchbox/issues/75
 			HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
 			try {
 				HttpRequest httpRequest = HttpRequest.newBuilder(new URI(thePackageUrl)).build();
