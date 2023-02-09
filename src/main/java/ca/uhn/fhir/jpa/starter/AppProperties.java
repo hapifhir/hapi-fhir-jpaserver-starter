@@ -63,6 +63,7 @@ public class AppProperties {
   private List<String> supported_resource_types = new ArrayList<>();
   private List<Bundle.BundleType> allowed_bundle_types = null;
   private Boolean narrative_enabled = true;
+  private Integer history_count_mode = 0;
 
   private Validation validation = new Validation();
   private Map<String, Tester> tester = null;
@@ -512,6 +513,16 @@ public class AppProperties {
   public void setNarrative_enabled(Boolean narrative_enabled)
   {
     this.narrative_enabled = narrative_enabled;
+  }
+
+  public Boolean getHistory_count_mode()
+  {
+    return history_count_mode;
+  }
+
+  public Boolean setHistory_count_mode(Integer history_count_mode)
+  {
+    this.history_count_mode = history_count_mode;
   }
 
   public Boolean getLastn_enabled() {

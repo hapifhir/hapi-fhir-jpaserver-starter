@@ -15,6 +15,7 @@ import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
+import ca.uhn.fhir.jpa.api.model.HistoryCountModeEnum;
 import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.bulk.export.provider.BulkDataExportProvider;
@@ -415,6 +416,18 @@ public class StarterJpaConfig {
 		if (!theIpsOperationProvider.isEmpty()) {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
 		}
+
+		// set history_count_mode
+		switch (appProperties.getHistory_count_mode()) {
+			// Ignore case 0 since default is HistoryCountModeEnum.CACHED_ONLY_WITHOUT_OFFSET
+			case 1: {
+				daoConfig.setHistoryCountMode(HistoryCountModeEnum.COUNT_ACCURATE);
+			}
+			case 2: {
+				daoConfig.setHistoryCountMode(HistoryCountModeEnum.COUNT_DISABLED);
+			}
+		}
+
 
 		return fhirServer;
 	}
