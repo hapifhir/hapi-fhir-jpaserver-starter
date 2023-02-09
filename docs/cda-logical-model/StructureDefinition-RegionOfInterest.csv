@@ -1,5 +1,6 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
-"RegionOfInterest","RegionOfInterest","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"RegionOfInterest","RegionOfInterest","","","",1,1,"","","","null {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
 "RegionOfInterest.ID","RegionOfInterest.ID","","","",0,1,"","","","string {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"RegionOfInterest.ID",0,1,"",""
 "RegionOfInterest.classCode","RegionOfInterest.classCode","","","",1,1,"","","","code {[]} {[]}
@@ -21,7 +22,7 @@
 "RegionOfInterest.subject","RegionOfInterest.subject","","","",0,1,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"RegionOfInterest.subject",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"RegionOfInterest.subject.id","RegionOfInterest.subject.id","","","",0,1,"","","","id {[]} {[]}
+"RegionOfInterest.subject.id","RegionOfInterest.subject.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "RegionOfInterest.subject.extension","RegionOfInterest.subject.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -45,7 +46,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "RegionOfInterest.informant","RegionOfInterest.informant","","","",0,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"RegionOfInterest.informant",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"RegionOfInterest.informant.id","RegionOfInterest.informant.id","","","",0,1,"","","","id {[]} {[]}
+"RegionOfInterest.informant.id","RegionOfInterest.informant.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "RegionOfInterest.informant.extension","RegionOfInterest.informant.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -65,7 +66,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "RegionOfInterest.entryRelationship","RegionOfInterest.entryRelationship","","","",0,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"RegionOfInterest.entryRelationship",0,*,"","roi-er-1:Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act {(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1}
 ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}"
-"RegionOfInterest.entryRelationship.id","RegionOfInterest.entryRelationship.id","","","",0,1,"","","","id {[]} {[]}
+"RegionOfInterest.entryRelationship.id","RegionOfInterest.entryRelationship.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "RegionOfInterest.entryRelationship.extension","RegionOfInterest.entryRelationship.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -105,7 +106,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "RegionOfInterest.reference","RegionOfInterest.reference","","","",0,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"RegionOfInterest.reference",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"RegionOfInterest.reference.id","RegionOfInterest.reference.id","","","",0,1,"","","","id {[]} {[]}
+"RegionOfInterest.reference.id","RegionOfInterest.reference.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "RegionOfInterest.reference.extension","RegionOfInterest.reference.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}

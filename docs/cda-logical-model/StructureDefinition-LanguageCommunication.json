@@ -15,16 +15,21 @@
   "title" : "LanguageCommunication (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-01-16T15:52:41+01:00",
+  "date" : "2023-02-07T19:43:49+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
+    "name" : "HL7 International - Cross-Group Projects",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structure"
+      "value" : "http://www.hl7.org/Special/committees/cgp"
+    },
+    {
+      "system" : "email",
+      "value" : "cgp@lists.HL7.org"
     }]
   }],
   "description" : "The language communication capabilities of an Entity.\nWhile it may seem on the surface that this class would be restricted in usage to only the LivingSubject subtypes, Devices also have the ability to communicate, such as automated telephony devices that transmit patient information to live operators on a triage line or provide automated laboratory results to clinicians.\nA patient who originally came from Mexico may have fluent language capabilities to speak, read and write in Spanish, and rudimentary capabilities in English. A person from Russia may have the capability to communicate equally well in spoken language in Russian, Armenian or Ukrainian, and a preference to speak in Armenian.",
-  "fhirVersion" : "5.0.0-ballot",
+  "fhirVersion" : "5.0.0-snapshot3",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -48,6 +53,13 @@
         "min" : 0,
         "max" : "*"
       },
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }],
       "isModifier" : false,
       "mapping" : [{
         "identity" : "rim",

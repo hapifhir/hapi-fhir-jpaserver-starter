@@ -15,16 +15,21 @@
   "title" : "MO: MonetaryAmount (V3 Data Type)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-01-16T15:52:41+01:00",
+  "date" : "2023-02-07T19:43:49+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
+    "name" : "HL7 International - Cross-Group Projects",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structure"
+      "value" : "http://www.hl7.org/Special/committees/cgp"
+    },
+    {
+      "system" : "email",
+      "value" : "cgp@lists.HL7.org"
     }]
   }],
   "description" : "A monetary amount is a quantity expressing the amount of money in some currency. Currencies are the units in which monetary amounts are denominated in different economic regions. While the monetary amount is a single kind of quantity (money) the exchange rates between the different units are variable. This is the principle difference between physical quantity and monetary amounts, and the reason why currency units are not physical units.",
-  "fhirVersion" : "5.0.0-ballot",
+  "fhirVersion" : "5.0.0-snapshot3",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -48,6 +53,13 @@
         "min" : 0,
         "max" : "*"
       },
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }],
       "isModifier" : false,
       "mapping" : [{
         "identity" : "rim",

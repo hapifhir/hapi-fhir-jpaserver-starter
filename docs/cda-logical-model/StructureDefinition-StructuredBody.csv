@@ -1,5 +1,6 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
-"StructuredBody","StructuredBody","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"StructuredBody","StructuredBody","","","",1,1,"","","","null {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
 "StructuredBody.classCode","StructuredBody.classCode","","","",1,1,"","","","code {[]} {[]}
 ","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DOCBODY""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DOCBODY""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer","",,,,"StructuredBody.classCode",1,1,"",""
 "StructuredBody.moodCode","StructuredBody.moodCode","","","",1,1,"","","","code {[]} {[]}
@@ -11,7 +12,7 @@
 "StructuredBody.component","StructuredBody.component","","","",1,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"StructuredBody.component",1,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"StructuredBody.component.id","StructuredBody.component.id","","","",0,1,"","","","id {[]} {[]}
+"StructuredBody.component.id","StructuredBody.component.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "StructuredBody.component.extension","StructuredBody.component.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}

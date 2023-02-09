@@ -23,18 +23,23 @@
   fhir:StructureDefinition.title [ fhir:value "ServiceEvent (CDA Class)"]; # 
   fhir:StructureDefinition.status [ fhir:value "active"]; # 
   fhir:StructureDefinition.experimental [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.date [ fhir:value "2023-01-16T15:52:41+01:00"^^xsd:dateTime]; # 
+  fhir:StructureDefinition.date [ fhir:value "2023-02-07T19:43:49+01:00"^^xsd:dateTime]; # 
   fhir:StructureDefinition.publisher [ fhir:value "Health Level 7"]; # 
   fhir:StructureDefinition.contact [
      fhir:index 0;
+     fhir:ContactDetail.name [ fhir:value "HL7 International - Cross-Group Projects" ];
      fhir:ContactDetail.telecom [
        fhir:index 0;
        fhir:ContactPoint.system [ fhir:value "url" ];
-       fhir:ContactPoint.value [ fhir:value "http://www.hl7.org/Special/committees/structure" ]
+       fhir:ContactPoint.value [ fhir:value "http://www.hl7.org/Special/committees/cgp" ]
+     ], [
+       fhir:index 1;
+       fhir:ContactPoint.system [ fhir:value "email" ];
+       fhir:ContactPoint.value [ fhir:value "cgp@lists.HL7.org" ]
      ]
   ]; # 
   fhir:StructureDefinition.description [ fhir:value "This class represents the main Act, such as a colonoscopy or an appendectomy, being documented.\nIn some cases, the ServiceEvent is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is \"History and Physical Report\" and the procedure being documented is a \"History and Physical\" act. A ServiceEvent can further specialize the act inherent in the ClinicalDocument.code, such as where the ClinicalDocument.code is simply \"Procedure Report\" and the procedure was a \"colonoscopy\". If ServiceEvent is included, it must be equivalent to or further specialize the value inherent in the ClinicalDocument.code, and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.\nServiceEvent.effectiveTime can be used to indicate the time the actual event (as opposed to the encounter surrounding the event) took place."]; # 
-  fhir:StructureDefinition.fhirVersion [ fhir:value "5.0.0-ballot"]; # 
+  fhir:StructureDefinition.fhirVersion [ fhir:value "5.0.0-snapshot3"]; # 
   fhir:StructureDefinition.mapping [
      fhir:index 0;
      fhir:StructureDefinition.mapping.identity [ fhir:value "rim" ];
@@ -62,6 +67,17 @@
          fhir:ElementDefinition.base.path [ fhir:value "Base" ];
          fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
          fhir:ElementDefinition.base.max [ fhir:value "*" ]
+       ];
+       fhir:ElementDefinition.constraint [
+         fhir:index 0;
+         fhir:ElementDefinition.constraint.key [ fhir:value "ele-1" ];
+         fhir:ElementDefinition.constraint.severity [ fhir:value "error" ];
+         fhir:ElementDefinition.constraint.human [ fhir:value "All FHIR elements must have a @value or children" ];
+         fhir:ElementDefinition.constraint.expression [ fhir:value "hasValue() or (children().count() > id.count())" ];
+         fhir:ElementDefinition.constraint.source [
+           fhir:value "http://hl7.org/fhir/StructureDefinition/Element";
+           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+         ]
        ];
        fhir:ElementDefinition.isModifier [ fhir:value "false"^^xsd:boolean ];
        fhir:ElementDefinition.mapping [
@@ -173,6 +189,30 @@
        ]
      ], [
        fhir:index 6;
+       fhir:Element.id [ fhir:value "ServiceEvent.statusCode" ];
+       fhir:Element.extension [
+         fhir:index 0;
+         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
+         fhir:Extension.valueUri [ fhir:value "urn:oid:1.3.6.1.4.1.19376.1.3.2" ]
+       ], [
+         fhir:index 1;
+         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name" ];
+         fhir:Extension.valueString [ fhir:value "statusCode" ]
+       ];
+       fhir:ElementDefinition.path [ fhir:value "ServiceEvent.statusCode" ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.base [
+         fhir:ElementDefinition.base.path [ fhir:value "ServiceEvent.statusCode" ];
+         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+         fhir:ElementDefinition.base.max [ fhir:value "1" ]
+       ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CS" ]
+       ]
+     ], [
+       fhir:index 7;
        fhir:Element.id [ fhir:value "ServiceEvent.effectiveTime" ];
        fhir:ElementDefinition.path [ fhir:value "ServiceEvent.effectiveTime" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -187,7 +227,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" ]
        ]
      ], [
-       fhir:index 7;
+       fhir:index 8;
        fhir:Element.id [ fhir:value "ServiceEvent.performer" ];
        fhir:ElementDefinition.path [ fhir:value "ServiceEvent.performer" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -289,6 +329,25 @@
        ]
      ], [
        fhir:index 6;
+       fhir:Element.id [ fhir:value "ServiceEvent.statusCode" ];
+       fhir:Element.extension [
+         fhir:index 0;
+         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
+         fhir:Extension.valueUri [ fhir:value "urn:oid:1.3.6.1.4.1.19376.1.3.2" ]
+       ], [
+         fhir:index 1;
+         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name" ];
+         fhir:Extension.valueString [ fhir:value "statusCode" ]
+       ];
+       fhir:ElementDefinition.path [ fhir:value "ServiceEvent.statusCode" ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CS" ]
+       ]
+     ], [
+       fhir:index 7;
        fhir:Element.id [ fhir:value "ServiceEvent.effectiveTime" ];
        fhir:ElementDefinition.path [ fhir:value "ServiceEvent.effectiveTime" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -298,7 +357,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" ]
        ]
      ], [
-       fhir:index 7;
+       fhir:index 8;
        fhir:Element.id [ fhir:value "ServiceEvent.performer" ];
        fhir:ElementDefinition.path [ fhir:value "ServiceEvent.performer" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];

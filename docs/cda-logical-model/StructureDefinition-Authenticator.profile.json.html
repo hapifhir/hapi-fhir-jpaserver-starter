@@ -11,7 +11,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title>HL7.FHIR.CDA\Authenticator (CDA Class) - JSON Representation - FHIR v5.0.0-ballot</title>
+    <title>HL7.CDA.UV.CORE\Authenticator (CDA Class) - JSON Representation - FHIR v5.0.0-snapshot3</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="author" content="http://hl7.org/fhir"/>
@@ -197,7 +197,7 @@
         
           Active
           
-            as of 2023-01-16
+            as of 2023-02-07
           
         
       </td>
@@ -217,382 +217,396 @@
 
   <pre class="json" style="white-space: pre; overflow: hidden"><code class="language-json">
 {
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition">resourceType</a>" : "StructureDefinition",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.id">id</a>" : "Authenticator",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.text">text</a>" : {
-    "<a href="http://build.fhir.org/narrative.html#Narrative#Narrative.status">status</a>" : "generated",
-    "<a href="http://build.fhir.org/narrative.html#Narrative#Narrative.div">div</a>" : "&lt;div xmlns=\&quot;http://www.w3.org/1999/xhtml\&quot;&gt;\n      &lt;p&gt;Represents a participant who has attested to the accuracy of the document, but who does not have privileges to legally authenticate the document. An example would be a resident physician who sees a patient and dictates a note, then later signs it.&lt;/p&gt;\n      &lt;p&gt;A clinical document can have zero to many authenticators. While electronic signatures are not captured in a CDA document, both authentication and legal authentication require that a document has been signed manually or electronically by the responsible individual. An authenticator has a required authenticator.time indicating the time of authentication, and a required authenticator.signatureCode, indicating that a signature has been obtained and is on file.&lt;/p&gt;\n    &lt;/div&gt;"<a name="end-xhtml"></a>
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition">resourceType</a>" : "StructureDefinition",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.id">id</a>" : "Authenticator",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.text">text</a>" : {
+    "<a href="http://hl7.org/fhir/5.0.0-snapshot3/narrative.html#Narrative#Narrative.status">status</a>" : "generated",
+    "<a href="http://hl7.org/fhir/5.0.0-snapshot3/narrative.html#Narrative#Narrative.div">div</a>" : "&lt;div xmlns=\&quot;http://www.w3.org/1999/xhtml\&quot;&gt;\n      &lt;p&gt;Represents a participant who has attested to the accuracy of the document, but who does not have privileges to legally authenticate the document. An example would be a resident physician who sees a patient and dictates a note, then later signs it.&lt;/p&gt;\n      &lt;p&gt;A clinical document can have zero to many authenticators. While electronic signatures are not captured in a CDA document, both authentication and legal authentication require that a document has been signed manually or electronically by the responsible individual. An authenticator has a required authenticator.time indicating the time of authentication, and a required authenticator.signatureCode, indicating that a signature has been obtained and is on file.&lt;/p&gt;\n    &lt;/div&gt;"<a name="end-xhtml"></a>
   },
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.extension">extension</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.extension">extension</a>" : [
     {
-      "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
-      "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:hl7-org:v3"
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:hl7-org:v3"
     }
   ],
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.url">url</a>" : "http://hl7.org/fhir/cda/StructureDefinition/Authenticator",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.version">version</a>" : "2.1.0-draft1",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.name">name</a>" : "CDAR2.Authenticator",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.title">title</a>" : "Authenticator (CDA Class)",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.status">status</a>" : "active",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.experimental">experimental</a>" : false,
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.date">date</a>" : "2023-01-16T15:52:41+01:00",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.publisher">publisher</a>" : "Health Level 7",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.contact">contact</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.url">url</a>" : "http://hl7.org/fhir/cda/StructureDefinition/Authenticator",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.version">version</a>" : "2.1.0-draft1",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.name">name</a>" : "CDAR2.Authenticator",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.title">title</a>" : "Authenticator (CDA Class)",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.status">status</a>" : "active",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.experimental">experimental</a>" : false,
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.date">date</a>" : "2023-02-07T19:43:49+01:00",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.publisher">publisher</a>" : "Health Level 7",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.contact">contact</a>" : [
     {
-      "<a href="http://build.fhir.org/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>" : [
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.name">name</a>" : "HL7 International - Cross-Group Projects",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>" : [
         {
-          "<a href="http://build.fhir.org/datatypes.html#ContactPoint#ContactPoint.system">system</a>" : "url",
-          "<a href="http://build.fhir.org/datatypes.html#ContactPoint#ContactPoint.value">value</a>" : "http://www.hl7.org/Special/committees/structure"
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.system">system</a>" : "url",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.value">value</a>" : "http://www.hl7.org/Special/committees/cgp"
+        },
+        {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.system">system</a>" : "email",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.value">value</a>" : "cgp@lists.HL7.org"
         }
       ]
     }
   ],
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.description">description</a>" : "Represents a participant who has attested to the accuracy of the document, but who does not have privileges to legally authenticate the document. An example would be a resident physician who sees a patient and dictates a note, then later signs it. A clinical document can have zero to many authenticators. While electronic signatures are not captured in a CDA document, both authentication and legal authentication require that a document has been signed manually or electronically by the responsible individual. An authenticator has a required authenticator.time indicating the time of authentication, and a required authenticator.signatureCode, indicating that a signature has been obtained and is on file.",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a>" : "5.0.0-ballot",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping">mapping</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.description">description</a>" : "Represents a participant who has attested to the accuracy of the document, but who does not have privileges to legally authenticate the document. An example would be a resident physician who sees a patient and dictates a note, then later signs it. A clinical document can have zero to many authenticators. While electronic signatures are not captured in a CDA document, both authentication and legal authentication require that a document has been signed manually or electronically by the responsible individual. An authenticator has a required authenticator.time indicating the time of authentication, and a required authenticator.signatureCode, indicating that a signature has been obtained and is on file.",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a>" : "5.0.0-snapshot3",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping">mapping</a>" : [
     {
-      "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.identity">identity</a>" : "rim",
-      "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.uri">uri</a>" : "http://hl7.org/v3",
-      "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.name">name</a>" : "RIM Mapping"
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.identity">identity</a>" : "rim",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.uri">uri</a>" : "http://hl7.org/v3",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.name">name</a>" : "RIM Mapping"
     }
   ],
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.kind">kind</a>" : "logical",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.abstract">abstract</a>" : false,
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.type">type</a>" : "Authenticator",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a>" : "http://hl7.org/fhir/StructureDefinition/Base",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.derivation">derivation</a>" : "specialization",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>" : {
-    "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.kind">kind</a>" : "logical",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.abstract">abstract</a>" : false,
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.type">type</a>" : "Authenticator",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a>" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.derivation">derivation</a>" : "specialization",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>" : {
+    "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a>" : [
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a>" : "Base for all types and resources",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Base definition for all types defined in FHIR type system.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Base",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a>" : "Base for all types and resources",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Base definition for all types defined in FHIR type system.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Base",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a>" : false,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint">constraint</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a>" : "rim",
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a>" : "n/a"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.key">key</a>" : "ele-1",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.severity">severity</a>" : "error",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.human">human</a>" : "All FHIR elements must have a @value or children",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.expression">expression</a>" : "hasValue() or (children().count() &gt; id.count())",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.source">source</a>" : "http://hl7.org/fhir/StructureDefinition/Element"
+          }
+        ],
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a>" : false,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>" : [
+          {
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a>" : "rim",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a>" : "n/a"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.nullFlavor",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.nullFlavor",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.nullFlavor",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.nullFlavor",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Exceptional Value Detail",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.nullFlavor",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Exceptional Value Detail",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.nullFlavor",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
         }
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.typeCode",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.typeCode",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.typeCode",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.typeCode",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.typeCode",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.typeCode",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "AUTHEN",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "AUTHEN",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType"
         }
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.realmCode",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.realmCode",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.realmCode",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.realmCode",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.realmCode",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.realmCode",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.typeId",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.typeId",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.typeId",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.typeId",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.typeId",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.typeId",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/II"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.templateId",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.templateId",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.templateId",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.templateId",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.templateId",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.templateId",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/II"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.time",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.time",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.time",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 1,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.time",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.time",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.time",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 1,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/TS"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/TS"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.signatureCode",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.signatureCode",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.signatureCode",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 1,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.signatureCode",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.signatureCode",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.signatureCode",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 1,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.sdtcSignatureText",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.sdtcSignatureText",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>" : [
           {
-            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
-            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:hl7-org:sdtc"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:hl7-org:sdtc"
           },
           {
-            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
-            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueString</a>" : "signatureText"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueString</a>" : "signatureText"
           }
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.sdtcSignatureText",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.sdtcSignatureText",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.sdtcSignatureText",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.sdtcSignatureText",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.assignedEntity",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.assignedEntity",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.assignedEntity",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 1,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.assignedEntity",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.assignedEntity",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Authenticator.assignedEntity",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 1,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
           }
         ]
       }
     ]
   },
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential">differential</a>" : {
-    "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential">differential</a>" : {
+    "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a>" : [
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1"
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.nullFlavor",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.nullFlavor",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.nullFlavor",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.nullFlavor",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Exceptional Value Detail",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Exceptional Value Detail",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
         }
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.typeCode",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.typeCode",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.typeCode",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.typeCode",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "AUTHEN",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "AUTHEN",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType"
         }
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.realmCode",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.realmCode",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.realmCode",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.realmCode",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.typeId",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.typeId",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.typeId",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.typeId",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/II"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.templateId",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.templateId",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.templateId",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.templateId",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/II"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.time",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.time",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.time",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.time",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/TS"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/TS"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.signatureCode",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.signatureCode",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.signatureCode",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.signatureCode",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.sdtcSignatureText",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.sdtcSignatureText",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>" : [
           {
-            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
-            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:hl7-org:sdtc"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:hl7-org:sdtc"
           },
           {
-            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
-            "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueString</a>" : "signatureText"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueString</a>" : "signatureText"
           }
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.sdtcSignatureText",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.sdtcSignatureText",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.assignedEntity",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.assignedEntity",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Authenticator.assignedEntity",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Authenticator.assignedEntity",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
           }
         ]
       }
@@ -652,7 +666,7 @@
 
       <div class="inner-wrapper">
         <p>
-          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.fhir.cda#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-ballot</a>. Generated <span title="Mon, Jan 16, 2023 15:52+0100">2023-01-16</span>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/cgp">Health Level 7</a>.  Package hl7.cda.uv.core#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-snapshot3</a>. Generated <span title="Tue, Feb 7, 2023 19:43+0100">2023-02-07</span>
           <br/>
           <span style="color: var(--footer-highlight-text-color)">
                       Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |

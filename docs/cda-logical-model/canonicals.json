@@ -1,8 +1,8 @@
 [
   {
-    "id" : "hl7.fhir.cda",
+    "id" : "hl7.cda.uv.core",
     "type" : "ImplementationGuide",
-    "url" : "http://hl7.org/cda/stds/core/ImplementationGuide/hl7.fhir.cda",
+    "url" : "http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core",
     "version" : "2.1.0-draft1",
     "name" : "ClinicalDocumentArchitectureV201"
   },

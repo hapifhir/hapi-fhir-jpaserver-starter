@@ -6,7 +6,7 @@
     <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
       <p>A subtype of Entity that is inanimate and locationally independent.</p>
       <p>Materials are entities that are neither Living Subjects nor places. Manufactured or processed products are considered material, even if they originate as living matter. Materials come in a wide variety of physical forms and can pass through different states (ie. Gas, liquid, solid) while still retaining their physical composition and material characteristics.</p>
-      <p>Clarify the meaning of &quot;locationally independent&quot; suggest removing it and supplanting with first Usage Note sentence.</p>
+      <p>Clarify the meaning of &quot;locationally independent&quot;; suggest removing it and supplanting with first Usage Note sentence.</p>
       <p>Pharmaceutical substances (including active vaccines containing retarded virus), disposable supplies, durable equipment, implantable devices, food items (including meat or plant products), waste, traded goods.</p>
     </div>
   </text>
@@ -19,16 +19,21 @@
   <title value="Material (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-01-16T15:52:41+01:00"/>
+  <date value="2023-02-07T19:43:49+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
+    <name value="HL7 International - Cross-Group Projects"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/structure"/>
+      <value value="http://www.hl7.org/Special/committees/cgp"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="cgp@lists.HL7.org"/>
     </telecom>
   </contact>
   <description value="A subtype of Entity that is inanimate and locationally independent.&#xA;Materials are entities that are neither Living Subjects nor places. Manufactured or processed products are considered material, even if they originate as living matter. Materials come in a wide variety of physical forms and can pass through different states (ie. Gas, liquid, solid) while still retaining their physical composition and material characteristics.&#xA;Clarify the meaning of &quot;locationally independent&quot;; suggest removing it and supplanting with first Usage Note sentence.&#xA;Pharmaceutical substances (including active vaccines containing retarded virus), disposable supplies, durable equipment, implantable devices, food items (including meat or plant products), waste, traded goods."/>
-  <fhirVersion value="5.0.0-ballot"/>
+  <fhirVersion value="5.0.0-snapshot3"/>
   <mapping>
     <identity value="rim"/>
     <uri value="http://hl7.org/v3"/>
@@ -51,6 +56,13 @@
         <min value="0"/>
         <max value="*"/>
       </base>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
       <isModifier value="false"/>
       <mapping>
         <identity value="rim"/>

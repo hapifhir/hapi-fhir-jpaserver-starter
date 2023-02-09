@@ -15,16 +15,21 @@
   "title" : "Guardian (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-01-16T15:52:41+01:00",
+  "date" : "2023-02-07T19:43:49+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
+    "name" : "HL7 International - Cross-Group Projects",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structure"
+      "value" : "http://www.hl7.org/Special/committees/cgp"
+    },
+    {
+      "system" : "email",
+      "value" : "cgp@lists.HL7.org"
     }]
   }],
   "description" : "A patient's guardian is a person or organization in the role of guardian (Guardian class). The entity playing the role of guardian is a person (Person class) or organization (Organization class). The entity scoping the role is the patient (Patient class).\nWhere a guardian is not explicitly stated, the value should default to local business practice (e.g. the patient makes their own health care decisions unless incapacitated in which case healthcare decisions are made by the patient's spouse).",
-  "fhirVersion" : "5.0.0-ballot",
+  "fhirVersion" : "5.0.0-snapshot3",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -48,6 +53,13 @@
         "min" : 0,
         "max" : "*"
       },
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }],
       "isModifier" : false,
       "mapping" : [{
         "identity" : "rim",

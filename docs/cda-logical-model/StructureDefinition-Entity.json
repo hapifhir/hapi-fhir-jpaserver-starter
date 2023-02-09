@@ -15,16 +15,21 @@
   "title" : "Entity (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-01-16T15:52:41+01:00",
+  "date" : "2023-02-07T19:43:49+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
+    "name" : "HL7 International - Cross-Group Projects",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structure"
+      "value" : "http://www.hl7.org/Special/committees/cgp"
+    },
+    {
+      "system" : "email",
+      "value" : "cgp@lists.HL7.org"
     }]
   }],
   "description" : "A physical thing, group of physical things or an organization capable of participating in Acts while in a role.\nAn entity is a physical object that has, had or will have existence. The only exception to this is Organization, which while not having a physical presence, fulfills the other characteristics of an Entity. Entity stipulates the thing itself, not the Roles it may play: the Role of Patient, e.g., is played by the Person Entity.\nLiving subjects (including human beings), organizations, materials, places and their specializations.",
-  "fhirVersion" : "5.0.0-ballot",
+  "fhirVersion" : "5.0.0-snapshot3",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -48,6 +53,13 @@
         "min" : 0,
         "max" : "*"
       },
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }],
       "isModifier" : false,
       "mapping" : [{
         "identity" : "rim",

@@ -11,7 +11,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title>HL7.FHIR.CDA\IVL_PQ: Interval (V3 Data Type) - JSON Representation - FHIR v5.0.0-ballot</title>
+    <title>HL7.CDA.UV.CORE\IVL_PQ: Interval (V3 Data Type) - JSON Representation - FHIR v5.0.0-snapshot3</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="author" content="http://hl7.org/fhir"/>
@@ -197,7 +197,7 @@
         
           Active
           
-            as of 2023-01-16
+            as of 2023-02-07
           
         
       </td>
@@ -217,312 +217,326 @@
 
   <pre class="json" style="white-space: pre; overflow: hidden"><code>
 {
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition">resourceType</a>" : "StructureDefinition",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.id">id</a>" : "IVL-PQ",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.text">text</a>" : {
-    "<a href="http://build.fhir.org/narrative.html#Narrative#Narrative.status">status</a>" : "extensions",
-    "<a href="http://build.fhir.org/narrative.html#Narrative#Narrative.div">div</a>" : "&lt;div xmlns=\&quot;http://www.w3.org/1999/xhtml\&quot;&gt;&lt;table border=\&quot;0\&quot; cellpadding=\&quot;0\&quot; cellspacing=\&quot;0\&quot; style=\&quot;border: 0px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;\&quot;&gt;&lt;tr style=\&quot;border: 1px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top\&quot;&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;The logical name of the element\&quot;&gt;Name&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Information about the use of the element\&quot;&gt;Flags&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Minimum and Maximum # of times the the element can appear in the instance\&quot;&gt;Card.&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;width: 100px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Reference to the type of the element\&quot;&gt;Type&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Additional information about the element\&quot;&gt;Description &amp;amp; Constraints&lt;/a&gt;&lt;span style=\&quot;float: right\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Legend for this format\&quot;&gt;&lt;img src=\&quot;http://build.fhir.org/help16.png\&quot; alt=\&quot;doco\&quot; style=\&quot;background-color: inherit\&quot;/&gt;&lt;/a&gt;&lt;/span&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck1.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_element.gif\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Element\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ\&quot;&gt;IVL_PQ&lt;/a&gt;&lt;a name=\&quot;IVL_PQ\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;1..*&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-ANY.html\&quot;&gt;ANY&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;span style=\&quot;font-weight:bold\&quot;&gt;XML Namespace: &lt;/span&gt;urn:hl7-org:v3&lt;br/&gt;&lt;span style=\&quot;opacity: 0.5\&quot;&gt;Base for all types and resources&lt;/span&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_primitive.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: #F7F7F7; background-color: inherit\&quot; title=\&quot;Primitive Data Type\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ.unit\&quot; title=\&quot;The unit of measure specified in the Unified Code for Units of Measure (UCUM) [].\&quot;&gt;@unit&lt;/a&gt;&lt;a name=\&quot;IVL_PQ.unit\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;http://build.fhir.org/datatypes.html#code\&quot;&gt;code&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_primitive.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Primitive Data Type\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ.value\&quot; title=\&quot;The magnitude of the quantity measured in terms of the unit.\&quot;&gt;@value&lt;/a&gt;&lt;a name=\&quot;IVL_PQ.value\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;http://build.fhir.org/datatypes.html#decimal\&quot;&gt;decimal&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_resource.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: #F7F7F7; background-color: inherit\&quot; title=\&quot;Resource\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ.low\&quot; title=\&quot;This is the low limit of the interval.\&quot;&gt;low&lt;/a&gt;&lt;a name=\&quot;IVL_PQ.low\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-PQ.html\&quot;&gt;PQ&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_resource.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Resource\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ.high\&quot; title=\&quot;This is the high limit of the interval.\&quot;&gt;high&lt;/a&gt;&lt;a name=\&quot;IVL_PQ.high\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-PQ.html\&quot;&gt;PQ&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_resource.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: #F7F7F7; background-color: inherit\&quot; title=\&quot;Resource\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ.width\&quot; title=\&quot;The difference between high and low boundary. The purpose of distinguishing a width property is to handle all cases of incomplete information symmetrically. In any interval representation only two of the three properties high, low, and width need to be stated and the third can be derived.\&quot;&gt;width&lt;/a&gt;&lt;a name=\&quot;IVL_PQ.width\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-PQ.html\&quot;&gt;PQ&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck00.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin_end.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_resource.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Resource\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ.center\&quot; title=\&quot;The arithmetic mean of the interval (low plus high divided by 2). The purpose of distinguishing the center as a semantic property is for conversions of intervals from and to point values.\&quot;&gt;center&lt;/a&gt;&lt;a name=\&quot;IVL_PQ.center\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-PQ.html\&quot;&gt;PQ&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr&gt;&lt;td colspan=\&quot;5\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;br/&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Legend for this format\&quot;&gt;&lt;img src=\&quot;http://build.fhir.org/help16.png\&quot; alt=\&quot;doco\&quot; style=\&quot;background-color: inherit\&quot;/&gt; Documentation for this format&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;"<a name="end-xhtml"></a>
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition">resourceType</a>" : "StructureDefinition",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.id">id</a>" : "IVL-PQ",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.text">text</a>" : {
+    "<a href="http://hl7.org/fhir/5.0.0-snapshot3/narrative.html#Narrative#Narrative.status">status</a>" : "extensions",
+    "<a href="http://hl7.org/fhir/5.0.0-snapshot3/narrative.html#Narrative#Narrative.div">div</a>" : "&lt;div xmlns=\&quot;http://www.w3.org/1999/xhtml\&quot;&gt;&lt;table border=\&quot;0\&quot; cellpadding=\&quot;0\&quot; cellspacing=\&quot;0\&quot; style=\&quot;border: 0px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;\&quot;&gt;&lt;tr style=\&quot;border: 1px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top\&quot;&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;The logical name of the element\&quot;&gt;Name&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Information about the use of the element\&quot;&gt;Flags&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Minimum and Maximum # of times the the element can appear in the instance\&quot;&gt;Card.&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;width: 100px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Reference to the type of the element\&quot;&gt;Type&lt;/a&gt;&lt;/th&gt;&lt;th style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Additional information about the element\&quot;&gt;Description &amp;amp; Constraints&lt;/a&gt;&lt;span style=\&quot;float: right\&quot;&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Legend for this format\&quot;&gt;&lt;img src=\&quot;http://build.fhir.org/help16.png\&quot; alt=\&quot;doco\&quot; style=\&quot;background-color: inherit\&quot;/&gt;&lt;/a&gt;&lt;/span&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck1.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_element.gif\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Element\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ\&quot;&gt;IVL_PQ&lt;/a&gt;&lt;a name=\&quot;IVL_PQ\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;1..*&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-ANY.html\&quot;&gt;ANY&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;span style=\&quot;font-weight:bold\&quot;&gt;XML Namespace: &lt;/span&gt;urn:hl7-org:v3&lt;br/&gt;&lt;span style=\&quot;opacity: 0.5\&quot;&gt;Base for all types and resources&lt;/span&gt;&lt;br/&gt;&lt;/td&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_primitive.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: #F7F7F7; background-color: inherit\&quot; title=\&quot;Primitive Data Type\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ.unit\&quot; title=\&quot;The unit of measure specified in the Unified Code for Units of Measure (UCUM) [].\&quot;&gt;@unit&lt;/a&gt;&lt;a name=\&quot;IVL_PQ.unit\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code\&quot;&gt;code&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_primitive.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Primitive Data Type\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ.value\&quot; title=\&quot;The magnitude of the quantity measured in terms of the unit.\&quot;&gt;@value&lt;/a&gt;&lt;a name=\&quot;IVL_PQ.value\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#decimal\&quot;&gt;decimal&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_resource.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: #F7F7F7; background-color: inherit\&quot; title=\&quot;Resource\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ.low\&quot; title=\&quot;This is the low limit of the interval.\&quot;&gt;low&lt;/a&gt;&lt;a name=\&quot;IVL_PQ.low\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-PQ.html\&quot;&gt;PQ&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_resource.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Resource\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ.high\&quot; title=\&quot;This is the high limit of the interval.\&quot;&gt;high&lt;/a&gt;&lt;a name=\&quot;IVL_PQ.high\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-PQ.html\&quot;&gt;PQ&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_resource.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: #F7F7F7; background-color: inherit\&quot; title=\&quot;Resource\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ.width\&quot; title=\&quot;The difference between high and low boundary. The purpose of distinguishing a width property is to handle all cases of incomplete information symmetrically. In any interval representation only two of the three properties high, low, and width need to be stated and the third can be derived.\&quot;&gt;width&lt;/a&gt;&lt;a name=\&quot;IVL_PQ.width\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-PQ.html\&quot;&gt;PQ&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr style=\&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white\&quot;&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck00.png)\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;img src=\&quot;tbl_spacer.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;tbl_vjoin_end.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: inherit\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;img src=\&quot;icon_resource.png\&quot; alt=\&quot;.\&quot; style=\&quot;background-color: white; background-color: inherit\&quot; title=\&quot;Resource\&quot; class=\&quot;hierarchy\&quot;/&gt; &lt;a href=\&quot;StructureDefinition-IVL-PQ-definitions.html#IVL_PQ.center\&quot; title=\&quot;The arithmetic mean of the interval (low plus high divided by 2). The purpose of distinguishing the center as a semantic property is for conversions of intervals from and to point values.\&quot;&gt;center&lt;/a&gt;&lt;a name=\&quot;IVL_PQ.center\&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;0..1&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;a href=\&quot;StructureDefinition-PQ.html\&quot;&gt;PQ&lt;/a&gt;&lt;/td&gt;&lt;td style=\&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px\&quot; class=\&quot;hierarchy\&quot;/&gt;&lt;/tr&gt;\r\n&lt;tr&gt;&lt;td colspan=\&quot;5\&quot; class=\&quot;hierarchy\&quot;&gt;&lt;br/&gt;&lt;a href=\&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views\&quot; title=\&quot;Legend for this format\&quot;&gt;&lt;img src=\&quot;http://build.fhir.org/help16.png\&quot; alt=\&quot;doco\&quot; style=\&quot;background-color: inherit\&quot;/&gt; Documentation for this format&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;"<a name="end-xhtml"></a>
   },
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.extension">extension</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.extension">extension</a>" : [
     {
-      "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
-      "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:hl7-org:v3"
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:hl7-org:v3"
     }
   ],
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.url">url</a>" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-PQ",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.version">version</a>" : "2.1.0-draft1",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.name">name</a>" : "IVL_PQ",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.title">title</a>" : "IVL_PQ: Interval (V3 Data Type)",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.status">status</a>" : "active",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.experimental">experimental</a>" : false,
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.date">date</a>" : "2023-01-16T15:52:41+01:00",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.publisher">publisher</a>" : "Health Level 7",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.contact">contact</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.url">url</a>" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-PQ",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.version">version</a>" : "2.1.0-draft1",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.name">name</a>" : "IVL_PQ",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.title">title</a>" : "IVL_PQ: Interval (V3 Data Type)",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.status">status</a>" : "active",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.experimental">experimental</a>" : false,
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.date">date</a>" : "2023-02-07T19:43:49+01:00",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.publisher">publisher</a>" : "Health Level 7",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.contact">contact</a>" : [
     {
-      "<a href="http://build.fhir.org/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>" : [
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.name">name</a>" : "HL7 International - Cross-Group Projects",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>" : [
         {
-          "<a href="http://build.fhir.org/datatypes.html#ContactPoint#ContactPoint.system">system</a>" : "url",
-          "<a href="http://build.fhir.org/datatypes.html#ContactPoint#ContactPoint.value">value</a>" : "http://www.hl7.org/Special/committees/structure"
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.system">system</a>" : "url",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.value">value</a>" : "http://www.hl7.org/Special/committees/cgp"
+        },
+        {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.system">system</a>" : "email",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.value">value</a>" : "cgp@lists.HL7.org"
         }
       ]
     }
   ],
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.description">description</a>" : "A set of consecutive values of an ordered base data type.",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a>" : "5.0.0-ballot",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping">mapping</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.description">description</a>" : "A set of consecutive values of an ordered base data type.",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a>" : "5.0.0-snapshot3",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping">mapping</a>" : [
     {
-      "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.identity">identity</a>" : "rim",
-      "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.uri">uri</a>" : "http://hl7.org/v3",
-      "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.name">name</a>" : "RIM Mapping"
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.identity">identity</a>" : "rim",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.uri">uri</a>" : "http://hl7.org/v3",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.name">name</a>" : "RIM Mapping"
     }
   ],
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.kind">kind</a>" : "logical",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.abstract">abstract</a>" : false,
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.type">type</a>" : "IVL_PQ",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a>" : "http://hl7.org/fhir/cda/StructureDefinition/ANY",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.derivation">derivation</a>" : "specialization",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>" : {
-    "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.kind">kind</a>" : "logical",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.abstract">abstract</a>" : false,
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.type">type</a>" : "IVL_PQ",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a>" : "http://hl7.org/fhir/cda/StructureDefinition/ANY",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.derivation">derivation</a>" : "specialization",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>" : {
+    "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a>" : [
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a>" : "Base for all types and resources",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Base",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a>" : "Base for all types and resources",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Base",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a>" : false,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint">constraint</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a>" : "rim",
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a>" : "n/a"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.key">key</a>" : "ele-1",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.severity">severity</a>" : "error",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.human">human</a>" : "All FHIR elements must have a @value or children",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.expression">expression</a>" : "hasValue() or (children().count() &gt; id.count())",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.source">source</a>" : "http://hl7.org/fhir/StructureDefinition/Element"
+          }
+        ],
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a>" : false,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>" : [
+          {
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a>" : "rim",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a>" : "n/a"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.nullFlavor",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.nullFlavor",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.nullFlavor",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.nullFlavor",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Exceptional Value Detail",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ANY.nullFlavor",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Exceptional Value Detail",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ANY.nullFlavor",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
         }
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.unit",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.unit",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.unit",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.unit",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Unit of Measure",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The unit of measure specified in the Unified Code for Units of Measure (UCUM) [].",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "IVL_PQ.unit",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Unit of Measure",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The unit of measure specified in the Unified Code for Units of Measure (UCUM) [].",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "IVL_PQ.unit",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.value",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.value",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.value",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.value",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Maginitude Value",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The magnitude of the quantity measured in terms of the unit.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "PQ.value",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Maginitude Value",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The magnitude of the quantity measured in terms of the unit.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "PQ.value",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "decimal"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "decimal"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.low",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.low",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Low Boundary",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "This is the low limit of the interval.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "IVL_PQ.low",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.low",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.low",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Low Boundary",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "This is the low limit of the interval.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "IVL_PQ.low",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.high",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.high",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "High Boundary",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "This is the high limit of the interval.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "IVL_PQ.high",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.high",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.high",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "High Boundary",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "This is the high limit of the interval.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "IVL_PQ.high",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.width",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.width",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Width",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The difference between high and low boundary. The purpose of distinguishing a width property is to handle all cases of incomplete information symmetrically. In any interval representation only two of the three properties high, low, and width need to be stated and the third can be derived.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "IVL_PQ.width",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.width",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.width",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Width",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The difference between high and low boundary. The purpose of distinguishing a width property is to handle all cases of incomplete information symmetrically. In any interval representation only two of the three properties high, low, and width need to be stated and the third can be derived.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "IVL_PQ.width",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.center",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.center",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Central Value",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The arithmetic mean of the interval (low plus high divided by 2). The purpose of distinguishing the center as a semantic property is for conversions of intervals from and to point values.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "IVL_PQ.center",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.center",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.center",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Central Value",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The arithmetic mean of the interval (low plus high divided by 2). The purpose of distinguishing the center as a semantic property is for conversions of intervals from and to point values.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "IVL_PQ.center",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
           }
         ]
       }
     ]
   },
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential">differential</a>" : {
-    "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential">differential</a>" : {
+    "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a>" : [
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*"
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.unit",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.unit",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.unit",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.unit",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Unit of Measure",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The unit of measure specified in the Unified Code for Units of Measure (UCUM) [].",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "IVL_PQ.unit",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Unit of Measure",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The unit of measure specified in the Unified Code for Units of Measure (UCUM) [].",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "IVL_PQ.unit",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.value",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.value",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.value",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.value",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Maginitude Value",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The magnitude of the quantity measured in terms of the unit.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "PQ.value",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Maginitude Value",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The magnitude of the quantity measured in terms of the unit.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "PQ.value",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "decimal"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "decimal"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.low",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.low",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Low Boundary",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "This is the low limit of the interval.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.low",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.low",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Low Boundary",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "This is the low limit of the interval.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.high",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.high",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "High Boundary",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "This is the high limit of the interval.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.high",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.high",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "High Boundary",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "This is the high limit of the interval.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.width",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.width",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Width",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The difference between high and low boundary. The purpose of distinguishing a width property is to handle all cases of incomplete information symmetrically. In any interval representation only two of the three properties high, low, and width need to be stated and the third can be derived.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.width",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.width",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Width",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The difference between high and low boundary. The purpose of distinguishing a width property is to handle all cases of incomplete information symmetrically. In any interval representation only two of the three properties high, low, and width need to be stated and the third can be derived.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.center",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.center",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Central Value",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The arithmetic mean of the interval (low plus high divided by 2). The purpose of distinguishing the center as a semantic property is for conversions of intervals from and to point values.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "IVL_PQ.center",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "IVL_PQ.center",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Central Value",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The arithmetic mean of the interval (low plus high divided by 2). The purpose of distinguishing the center as a semantic property is for conversions of intervals from and to point values.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/PQ"
           }
         ]
       }
@@ -582,7 +596,7 @@
 
       <div class="inner-wrapper">
         <p>
-          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.fhir.cda#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-ballot</a>. Generated <span title="Mon, Jan 16, 2023 15:52+0100">2023-01-16</span>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/cgp">Health Level 7</a>.  Package hl7.cda.uv.core#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-snapshot3</a>. Generated <span title="Tue, Feb 7, 2023 19:43+0100">2023-02-07</span>
           <br/>
           <span style="color: var(--footer-highlight-text-color)">
                       Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |

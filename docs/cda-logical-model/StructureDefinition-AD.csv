@@ -1,5 +1,6 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
-"AD","AD","","","",1,*,"","","","","Base for all types and resources","Mailing and home or office addresses. A sequence of address parts, such as street or post office Box, city, postal code, country, etc.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"AD","AD","","","",1,*,"","","","null {[]} {[]}
+","Base for all types and resources","Mailing and home or office addresses. A sequence of address parts, such as street or post office Box, city, postal code, country, etc.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
 "AD.nullFlavor","AD.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.isNotOrdered","AD.isNotOrdered","","","Is Not Ordered",0,1,"","","","boolean {[]} {[]}
@@ -7,7 +8,8 @@
 "AD.use","AD.use","","","Use Code",0,*,"","","","code {[]} {[]}
 ","","A set of codes advising a system or user which address in a set of like addresses to select for a given purpose.","","","","","","","","","",,,,,"",,,,"AD.use",0,*,"",""
 "AD.delimiter","AD.delimiter","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","Delimiters are printed without framing white space. If no value component is provided, the delimiter appears as a line break.","","","","","","","","","",,,,,"",,,,"AD.delimiter",0,*,"",""
+","","Delimiters are printed without framing white space. If no value component is provided, the delimiter appears as a line break.","","","","","","","","","",,,,,"",,,,"AD.delimiter",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.delimiter.nullFlavor","AD.delimiter.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.delimiter.charset","AD.delimiter.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -35,7 +37,8 @@
 "AD.delimiter.partType","AD.delimiter.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DEL""/>","","","","",,,,,"",,,,"AD.delimiter.partType",0,1,"",""
 "AD.country","AD.country","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","Country","","","","","","","","","",,,,,"",,,,"AD.country",0,*,"",""
+","","Country","","","","","","","","","",,,,,"",,,,"AD.country",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.country.nullFlavor","AD.country.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.country.charset","AD.country.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -63,7 +66,8 @@
 "AD.country.partType","AD.country.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CNT""/>","","","","",,,,,"",,,,"AD.country.partType",0,1,"",""
 "AD.state","AD.state","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","A sub-unit of a country with limited sovereignty in a federally organized country.","","","","","","","","","",,,,,"",,,,"AD.state",0,*,"",""
+","","A sub-unit of a country with limited sovereignty in a federally organized country.","","","","","","","","","",,,,,"",,,,"AD.state",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.state.nullFlavor","AD.state.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.state.charset","AD.state.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -91,7 +95,8 @@
 "AD.state.partType","AD.state.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""STA""/>","","","","",,,,,"",,,,"AD.state.partType",0,1,"",""
 "AD.county","AD.county","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","A sub-unit of a state or province. (49 of the United States of America use the term ""county;"" Louisiana uses the term ""parish"".)","","","","","","","","","",,,,,"",,,,"AD.county",0,*,"",""
+","","A sub-unit of a state or province. (49 of the United States of America use the term ""county;"" Louisiana uses the term ""parish"".)","","","","","","","","","",,,,,"",,,,"AD.county",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.county.nullFlavor","AD.county.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.county.charset","AD.county.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -119,7 +124,8 @@
 "AD.county.partType","AD.county.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CPA""/>","","","","",,,,,"",,,,"AD.county.partType",0,1,"",""
 "AD.city","AD.city","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","The name of the city, town, village, or other community or delivery center","","","","","","","","","",,,,,"",,,,"AD.city",0,*,"",""
+","","The name of the city, town, village, or other community or delivery center","","","","","","","","","",,,,,"",,,,"AD.city",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.city.nullFlavor","AD.city.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.city.charset","AD.city.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -147,7 +153,8 @@
 "AD.city.partType","AD.city.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CTY""/>","","","","",,,,,"",,,,"AD.city.partType",0,1,"",""
 "AD.postalCode","AD.postalCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","A postal code designating a region defined by the postal service.","","","","","","","","","",,,,,"",,,,"AD.postalCode",0,*,"",""
+","","A postal code designating a region defined by the postal service.","","","","","","","","","",,,,,"",,,,"AD.postalCode",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.postalCode.nullFlavor","AD.postalCode.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.postalCode.charset","AD.postalCode.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -175,7 +182,8 @@
 "AD.postalCode.partType","AD.postalCode.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ZIP""/>","","","","",,,,,"",,,,"AD.postalCode.partType",0,1,"",""
 "AD.streetAddressLine","AD.streetAddressLine","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","Street address line","","","","","","","","","",,,,,"",,,,"AD.streetAddressLine",0,*,"",""
+","","Street address line","","","","","","","","","",,,,,"",,,,"AD.streetAddressLine",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.streetAddressLine.nullFlavor","AD.streetAddressLine.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.streetAddressLine.charset","AD.streetAddressLine.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -203,7 +211,8 @@
 "AD.streetAddressLine.partType","AD.streetAddressLine.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SAL""/>","","","","",,,,,"",,,,"AD.streetAddressLine.partType",0,1,"",""
 "AD.houseNumber","AD.houseNumber","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","The number of a building, house or lot alongside the street. Also known as ""primary street number"". This does not number the street but rather the building.","","","","","","","","","",,,,,"",,,,"AD.houseNumber",0,*,"",""
+","","The number of a building, house or lot alongside the street. Also known as ""primary street number"". This does not number the street but rather the building.","","","","","","","","","",,,,,"",,,,"AD.houseNumber",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.houseNumber.nullFlavor","AD.houseNumber.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.houseNumber.charset","AD.houseNumber.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -231,7 +240,8 @@
 "AD.houseNumber.partType","AD.houseNumber.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""BNR""/>","","","","",,,,,"",,,,"AD.houseNumber.partType",0,1,"",""
 "AD.houseNumberNumeric","AD.houseNumberNumeric","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","The numeric portion of a building number","","","","","","","","","",,,,,"",,,,"AD.houseNumberNumeric",0,*,"",""
+","","The numeric portion of a building number","","","","","","","","","",,,,,"",,,,"AD.houseNumberNumeric",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.houseNumberNumeric.nullFlavor","AD.houseNumberNumeric.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.houseNumberNumeric.charset","AD.houseNumberNumeric.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -259,7 +269,8 @@
 "AD.houseNumberNumeric.partType","AD.houseNumberNumeric.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""BNN""/>","","","","",,,,,"",,,,"AD.houseNumberNumeric.partType",0,1,"",""
 "AD.direction","AD.direction","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","Direction (e.g., N, S, W, E)","","","","","","","","","",,,,,"",,,,"AD.direction",0,*,"",""
+","","Direction (e.g., N, S, W, E)","","","","","","","","","",,,,,"",,,,"AD.direction",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.direction.nullFlavor","AD.direction.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.direction.charset","AD.direction.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -287,7 +298,8 @@
 "AD.direction.partType","AD.direction.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DIR""/>","","","","",,,,,"",,,,"AD.direction.partType",0,1,"",""
 "AD.streetName","AD.streetName","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","Name of a roadway or artery recognized by a municipality (including street type and direction)","","","","","","","","","",,,,,"",,,,"AD.streetName",0,*,"",""
+","","Name of a roadway or artery recognized by a municipality (including street type and direction)","","","","","","","","","",,,,,"",,,,"AD.streetName",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.streetName.nullFlavor","AD.streetName.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.streetName.charset","AD.streetName.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -315,7 +327,8 @@
 "AD.streetName.partType","AD.streetName.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""STR""/>","","","","",,,,,"",,,,"AD.streetName.partType",0,1,"",""
 "AD.streetNameBase","AD.streetNameBase","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","The base name of a roadway or artery recognized by a municipality (excluding street type and direction)","","","","","","","","","",,,,,"",,,,"AD.streetNameBase",0,*,"",""
+","","The base name of a roadway or artery recognized by a municipality (excluding street type and direction)","","","","","","","","","",,,,,"",,,,"AD.streetNameBase",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.streetNameBase.nullFlavor","AD.streetNameBase.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.streetNameBase.charset","AD.streetNameBase.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -343,7 +356,8 @@
 "AD.streetNameBase.partType","AD.streetNameBase.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""STB""/>","","","","",,,,,"",,,,"AD.streetNameBase.partType",0,1,"",""
 "AD.streetNameType","AD.streetNameType","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","The designation given to the street. (e.g. Street, Avenue, Crescent, etc.)","","","","","","","","","",,,,,"",,,,"AD.streetNameType",0,*,"",""
+","","The designation given to the street. (e.g. Street, Avenue, Crescent, etc.)","","","","","","","","","",,,,,"",,,,"AD.streetNameType",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.streetNameType.nullFlavor","AD.streetNameType.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.streetNameType.charset","AD.streetNameType.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -371,7 +385,8 @@
 "AD.streetNameType.partType","AD.streetNameType.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""STTYP""/>","","","","",,,,,"",,,,"AD.streetNameType.partType",0,1,"",""
 "AD.additionalLocator","AD.additionalLocator","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","This can be a unit designator, such as apartment number, suite number, or floor. There may be several unit designators in an address (e.g., ""3rd floor, Appt. 342""). This can also be a designator pointing away from the location, rather than specifying a smaller location within some larger one (e.g., Dutch ""t.o."" means ""opposite to"" for house boats located across the street facing houses).","","","","","","","","","",,,,,"",,,,"AD.additionalLocator",0,*,"",""
+","","This can be a unit designator, such as apartment number, suite number, or floor. There may be several unit designators in an address (e.g., ""3rd floor, Appt. 342""). This can also be a designator pointing away from the location, rather than specifying a smaller location within some larger one (e.g., Dutch ""t.o."" means ""opposite to"" for house boats located across the street facing houses).","","","","","","","","","",,,,,"",,,,"AD.additionalLocator",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.additionalLocator.nullFlavor","AD.additionalLocator.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.additionalLocator.charset","AD.additionalLocator.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -399,7 +414,8 @@
 "AD.additionalLocator.partType","AD.additionalLocator.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ADL""/>","","","","",,,,,"",,,,"AD.additionalLocator.partType",0,1,"",""
 "AD.unitID","AD.unitID","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","The number or name of a specific unit contained within a building or complex, as assigned by that building or complex.","","","","","","","","","",,,,,"",,,,"AD.unitID",0,*,"",""
+","","The number or name of a specific unit contained within a building or complex, as assigned by that building or complex.","","","","","","","","","",,,,,"",,,,"AD.unitID",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.unitID.nullFlavor","AD.unitID.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.unitID.charset","AD.unitID.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -427,7 +443,8 @@
 "AD.unitID.partType","AD.unitID.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""UNID""/>","","","","",,,,,"",,,,"AD.unitID.partType",0,1,"",""
 "AD.unitType","AD.unitType","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","Indicates the type of specific unit contained within a building or complex. E.g. Appartment, Floor","","","","","","","","","",,,,,"",,,,"AD.unitType",0,*,"",""
+","","Indicates the type of specific unit contained within a building or complex. E.g. Appartment, Floor","","","","","","","","","",,,,,"",,,,"AD.unitType",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.unitType.nullFlavor","AD.unitType.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.unitType.charset","AD.unitType.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -455,7 +472,8 @@
 "AD.unitType.partType","AD.unitType.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""UNIT""/>","","","","",,,,,"",,,,"AD.unitType.partType",0,1,"",""
 "AD.careOf","AD.careOf","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","The name of the party who will take receipt at the specified address, and will take on responsibility for ensuring delivery to the target recipient","","","","","","","","","",,,,,"",,,,"AD.careOf",0,*,"",""
+","","The name of the party who will take receipt at the specified address, and will take on responsibility for ensuring delivery to the target recipient","","","","","","","","","",,,,,"",,,,"AD.careOf",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.careOf.nullFlavor","AD.careOf.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.careOf.charset","AD.careOf.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -483,7 +501,8 @@
 "AD.careOf.partType","AD.careOf.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CAR""/>","","","","",,,,,"",,,,"AD.careOf.partType",0,1,"",""
 "AD.censusTract","AD.censusTract","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","A geographic sub-unit delineated for demographic purposes.","","","","","","","","","",,,,,"",,,,"AD.censusTract",0,*,"",""
+","","A geographic sub-unit delineated for demographic purposes.","","","","","","","","","",,,,,"",,,,"AD.censusTract",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.censusTract.nullFlavor","AD.censusTract.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.censusTract.charset","AD.censusTract.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -511,7 +530,8 @@
 "AD.censusTract.partType","AD.censusTract.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CEN""/>","","","","",,,,,"",,,,"AD.censusTract.partType",0,1,"",""
 "AD.deliveryAddressLine","AD.deliveryAddressLine","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","A delivery address line is frequently used instead of breaking out delivery mode, delivery installation, etc. An address generally has only a delivery address line or a street address line, but not both.","","","","","","","","","",,,,,"",,,,"AD.deliveryAddressLine",0,*,"",""
+","","A delivery address line is frequently used instead of breaking out delivery mode, delivery installation, etc. An address generally has only a delivery address line or a street address line, but not both.","","","","","","","","","",,,,,"",,,,"AD.deliveryAddressLine",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.deliveryAddressLine.nullFlavor","AD.deliveryAddressLine.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.deliveryAddressLine.charset","AD.deliveryAddressLine.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -539,7 +559,8 @@
 "AD.deliveryAddressLine.partType","AD.deliveryAddressLine.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DAL""/>","","","","",,,,,"",,,,"AD.deliveryAddressLine.partType",0,1,"",""
 "AD.deliveryInstallationType","AD.deliveryInstallationType","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","Indicates the type of delivery installation (the facility to which the mail will be delivered prior to final shipping via the delivery mode.) Example: post office, letter carrier depot, community mail center, station, etc.","","","","","","","","","",,,,,"",,,,"AD.deliveryInstallationType",0,*,"",""
+","","Indicates the type of delivery installation (the facility to which the mail will be delivered prior to final shipping via the delivery mode.) Example: post office, letter carrier depot, community mail center, station, etc.","","","","","","","","","",,,,,"",,,,"AD.deliveryInstallationType",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.deliveryInstallationType.nullFlavor","AD.deliveryInstallationType.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.deliveryInstallationType.charset","AD.deliveryInstallationType.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -567,7 +588,8 @@
 "AD.deliveryInstallationType.partType","AD.deliveryInstallationType.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DINST""/>","","","","",,,,,"",,,,"AD.deliveryInstallationType.partType",0,1,"",""
 "AD.deliveryInstallationArea","AD.deliveryInstallationArea","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","The location of the delivery installation, usually a town or city, and is only required if the area is different from the municipality. Area to which mail delivery service is provided from any postal facility or service such as an individual letter carrier, rural route, or postal route.","","","","","","","","","",,,,,"",,,,"AD.deliveryInstallationArea",0,*,"",""
+","","The location of the delivery installation, usually a town or city, and is only required if the area is different from the municipality. Area to which mail delivery service is provided from any postal facility or service such as an individual letter carrier, rural route, or postal route.","","","","","","","","","",,,,,"",,,,"AD.deliveryInstallationArea",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.deliveryInstallationArea.nullFlavor","AD.deliveryInstallationArea.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.deliveryInstallationArea.charset","AD.deliveryInstallationArea.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -595,7 +617,8 @@
 "AD.deliveryInstallationArea.partType","AD.deliveryInstallationArea.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DINSTA""/>","","","","",,,,,"",,,,"AD.deliveryInstallationArea.partType",0,1,"",""
 "AD.deliveryInstallationQualifier","AD.deliveryInstallationQualifier","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","A number, letter or name identifying a delivery installation. E.g., for Station A, the delivery installation qualifier would be 'A'.","","","","","","","","","",,,,,"",,,,"AD.deliveryInstallationQualifier",0,*,"",""
+","","A number, letter or name identifying a delivery installation. E.g., for Station A, the delivery installation qualifier would be 'A'.","","","","","","","","","",,,,,"",,,,"AD.deliveryInstallationQualifier",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.deliveryInstallationQualifier.nullFlavor","AD.deliveryInstallationQualifier.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.deliveryInstallationQualifier.charset","AD.deliveryInstallationQualifier.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -623,7 +646,8 @@
 "AD.deliveryInstallationQualifier.partType","AD.deliveryInstallationQualifier.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DINSTQ""/>","","","","",,,,,"",,,,"AD.deliveryInstallationQualifier.partType",0,1,"",""
 "AD.deliveryMode","AD.deliveryMode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","Indicates the type of service offered, method of delivery. For example: post office box, rural route, general delivery, etc.","","","","","","","","","",,,,,"",,,,"AD.deliveryMode",0,*,"",""
+","","Indicates the type of service offered, method of delivery. For example: post office box, rural route, general delivery, etc.","","","","","","","","","",,,,,"",,,,"AD.deliveryMode",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.deliveryMode.nullFlavor","AD.deliveryMode.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.deliveryMode.charset","AD.deliveryMode.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -651,7 +675,8 @@
 "AD.deliveryMode.partType","AD.deliveryMode.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DMOD""/>","","","","",,,,,"",,,,"AD.deliveryMode.partType",0,1,"",""
 "AD.deliveryModeIdentifier","AD.deliveryModeIdentifier","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","Represents the routing information such as a letter carrier route number. It is the identifying number of the designator (the box number or rural route number).","","","","","","","","","",,,,,"",,,,"AD.deliveryModeIdentifier",0,*,"",""
+","","Represents the routing information such as a letter carrier route number. It is the identifying number of the designator (the box number or rural route number).","","","","","","","","","",,,,,"",,,,"AD.deliveryModeIdentifier",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.deliveryModeIdentifier.nullFlavor","AD.deliveryModeIdentifier.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.deliveryModeIdentifier.charset","AD.deliveryModeIdentifier.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -679,7 +704,8 @@
 "AD.deliveryModeIdentifier.partType","AD.deliveryModeIdentifier.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DMODID""/>","","","","",,,,,"",,,,"AD.deliveryModeIdentifier.partType",0,1,"",""
 "AD.buildingNumberSuffix","AD.buildingNumberSuffix","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","Any alphabetic character, fraction or other text that may appear after the numeric portion of a building number","","","","","","","","","",,,,,"",,,,"AD.buildingNumberSuffix",0,*,"",""
+","","Any alphabetic character, fraction or other text that may appear after the numeric portion of a building number","","","","","","","","","",,,,,"",,,,"AD.buildingNumberSuffix",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.buildingNumberSuffix.nullFlavor","AD.buildingNumberSuffix.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.buildingNumberSuffix.charset","AD.buildingNumberSuffix.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -707,7 +733,8 @@
 "AD.buildingNumberSuffix.partType","AD.buildingNumberSuffix.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""BNS""/>","","","","",,,,,"",,,,"AD.buildingNumberSuffix.partType",0,1,"",""
 "AD.postBox","AD.postBox","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","A numbered box located in a post station.","","","","","","","","","",,,,,"",,,,"AD.postBox",0,*,"",""
+","","A numbered box located in a post station.","","","","","","","","","",,,,,"",,,,"AD.postBox",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.postBox.nullFlavor","AD.postBox.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.postBox.charset","AD.postBox.charset","","","Charset",0,1,"","","","code {[]} {[]}
@@ -735,7 +762,8 @@
 "AD.postBox.partType","AD.postBox.partType","","","",0,1,"","","","code {[]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""POB""/>","","","","",,,,,"",,,,"AD.postBox.partType",0,1,"",""
 "AD.precinct","AD.precinct","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/ADXP {[]} {[]}
-","","A subsection of a municipality","","","","","","","","","",,,,,"",,,,"AD.precinct",0,*,"",""
+","","A subsection of a municipality","","","","","","","","","",,,,,"",,,,"AD.precinct",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
 "AD.precinct.nullFlavor","AD.precinct.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.precinct.charset","AD.precinct.charset","","","Charset",0,1,"","","","code {[]} {[]}

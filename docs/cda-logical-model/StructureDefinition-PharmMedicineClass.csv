@@ -1,5 +1,6 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
-"PharmMedicineClass","PharmMedicineClass","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"PharmMedicineClass","PharmMedicineClass","","","",1,1,"","","","null {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
 "PharmMedicineClass.classCode","PharmMedicineClass.classCode","","","",1,1,"Y","","","code {[]} {[]}
 ","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""MMAT""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""MMAT""/>","","","","",,,,,"",,,,"PharmMedicineClass.classCode",1,1,"",""
 "PharmMedicineClass.code","PharmMedicineClass.code","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}

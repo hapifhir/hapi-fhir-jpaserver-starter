@@ -23,18 +23,23 @@
   fhir:StructureDefinition.title [ fhir:value "ClinicalDocument (CDA Class)"]; # 
   fhir:StructureDefinition.status [ fhir:value "active"]; # 
   fhir:StructureDefinition.experimental [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.date [ fhir:value "2023-01-16T15:52:41+01:00"^^xsd:dateTime]; # 
+  fhir:StructureDefinition.date [ fhir:value "2023-02-07T19:43:49+01:00"^^xsd:dateTime]; # 
   fhir:StructureDefinition.publisher [ fhir:value "Health Level 7"]; # 
   fhir:StructureDefinition.contact [
      fhir:index 0;
+     fhir:ContactDetail.name [ fhir:value "HL7 International - Cross-Group Projects" ];
      fhir:ContactDetail.telecom [
        fhir:index 0;
        fhir:ContactPoint.system [ fhir:value "url" ];
-       fhir:ContactPoint.value [ fhir:value "http://www.hl7.org/Special/committees/structure" ]
+       fhir:ContactPoint.value [ fhir:value "http://www.hl7.org/Special/committees/cgp" ]
+     ], [
+       fhir:index 1;
+       fhir:ContactPoint.system [ fhir:value "email" ];
+       fhir:ContactPoint.value [ fhir:value "cgp@lists.HL7.org" ]
      ]
   ]; # 
   fhir:StructureDefinition.description [ fhir:value "This is a generated StructureDefinition that describes CDA - that is, CDA as it actually is for R2. The intent of this StructureDefinition is to enable CDA to be a FHIR resource. That enables the FHIR infrastructure - API, conformance, query - to be used directly against CDA"]; # 
-  fhir:StructureDefinition.fhirVersion [ fhir:value "5.0.0-ballot"]; # 
+  fhir:StructureDefinition.fhirVersion [ fhir:value "5.0.0-snapshot3"]; # 
   fhir:StructureDefinition.mapping [
      fhir:index 0;
      fhir:StructureDefinition.mapping.identity [ fhir:value "rim" ];
@@ -62,6 +67,17 @@
          fhir:ElementDefinition.base.path [ fhir:value "Base" ];
          fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
          fhir:ElementDefinition.base.max [ fhir:value "*" ]
+       ];
+       fhir:ElementDefinition.constraint [
+         fhir:index 0;
+         fhir:ElementDefinition.constraint.key [ fhir:value "ele-1" ];
+         fhir:ElementDefinition.constraint.severity [ fhir:value "error" ];
+         fhir:ElementDefinition.constraint.human [ fhir:value "All FHIR elements must have a @value or children" ];
+         fhir:ElementDefinition.constraint.expression [ fhir:value "hasValue() or (children().count() > id.count())" ];
+         fhir:ElementDefinition.constraint.source [
+           fhir:value "http://hl7.org/fhir/StructureDefinition/Element";
+           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+         ]
        ];
        fhir:ElementDefinition.isModifier [ fhir:value "false"^^xsd:boolean ];
        fhir:ElementDefinition.mapping [
@@ -227,6 +243,30 @@
        ]
      ], [
        fhir:index 9;
+       fhir:Element.id [ fhir:value "ClinicalDocument.statusCode" ];
+       fhir:Element.extension [
+         fhir:index 0;
+         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
+         fhir:Extension.valueUri [ fhir:value "urn:hl7-org:sdtc" ]
+       ], [
+         fhir:index 1;
+         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name" ];
+         fhir:Extension.valueString [ fhir:value "statusCode" ]
+       ];
+       fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.statusCode" ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.base [
+         fhir:ElementDefinition.base.path [ fhir:value "ClinicalDocument.statusCode" ];
+         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+         fhir:ElementDefinition.base.max [ fhir:value "1" ]
+       ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CS" ]
+       ]
+     ], [
+       fhir:index 10;
        fhir:Element.id [ fhir:value "ClinicalDocument.effectiveTime" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.effectiveTime" ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
@@ -241,7 +281,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/TS" ]
        ]
      ], [
-       fhir:index 10;
+       fhir:index 11;
        fhir:Element.id [ fhir:value "ClinicalDocument.confidentialityCode" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.confidentialityCode" ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
@@ -256,7 +296,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CE" ]
        ]
      ], [
-       fhir:index 11;
+       fhir:index 12;
        fhir:Element.id [ fhir:value "ClinicalDocument.languageCode" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.languageCode" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -278,7 +318,7 @@
          ]
        ]
      ], [
-       fhir:index 12;
+       fhir:index 13;
        fhir:Element.id [ fhir:value "ClinicalDocument.setId" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.setId" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -293,7 +333,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/II" ]
        ]
      ], [
-       fhir:index 13;
+       fhir:index 14;
        fhir:Element.id [ fhir:value "ClinicalDocument.versionNumber" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.versionNumber" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -308,7 +348,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/INT" ]
        ]
      ], [
-       fhir:index 14;
+       fhir:index 15;
        fhir:Element.id [ fhir:value "ClinicalDocument.copyTime" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.copyTime" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -323,7 +363,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/TS" ]
        ]
      ], [
-       fhir:index 15;
+       fhir:index 16;
        fhir:Element.id [ fhir:value "ClinicalDocument.recordTarget" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.recordTarget" ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
@@ -338,7 +378,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" ]
        ]
      ], [
-       fhir:index 16;
+       fhir:index 17;
        fhir:Element.id [ fhir:value "ClinicalDocument.author" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.author" ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
@@ -353,7 +393,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Author" ]
        ]
      ], [
-       fhir:index 17;
+       fhir:index 18;
        fhir:Element.id [ fhir:value "ClinicalDocument.dataEnterer" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.dataEnterer" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -368,7 +408,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/DataEnterer" ]
        ]
      ], [
-       fhir:index 18;
+       fhir:index 19;
        fhir:Element.id [ fhir:value "ClinicalDocument.informant" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.informant" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -383,7 +423,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Informant" ]
        ]
      ], [
-       fhir:index 19;
+       fhir:index 20;
        fhir:Element.id [ fhir:value "ClinicalDocument.custodian" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.custodian" ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
@@ -398,7 +438,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Custodian" ]
        ]
      ], [
-       fhir:index 20;
+       fhir:index 21;
        fhir:Element.id [ fhir:value "ClinicalDocument.informationRecipient" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.informationRecipient" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -413,7 +453,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/InformationRecipient" ]
        ]
      ], [
-       fhir:index 21;
+       fhir:index 22;
        fhir:Element.id [ fhir:value "ClinicalDocument.legalAuthenticator" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.legalAuthenticator" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -428,7 +468,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/LegalAuthenticator" ]
        ]
      ], [
-       fhir:index 22;
+       fhir:index 23;
        fhir:Element.id [ fhir:value "ClinicalDocument.authenticator" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.authenticator" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -443,7 +483,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Authenticator" ]
        ]
      ], [
-       fhir:index 23;
+       fhir:index 24;
        fhir:Element.id [ fhir:value "ClinicalDocument.participant" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.participant" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -458,7 +498,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Participant1" ]
        ]
      ], [
-       fhir:index 24;
+       fhir:index 25;
        fhir:Element.id [ fhir:value "ClinicalDocument.inFulfillmentOf" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.inFulfillmentOf" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -473,7 +513,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/InFulfillmentOf" ]
        ]
      ], [
-       fhir:index 25;
+       fhir:index 26;
        fhir:Element.id [ fhir:value "ClinicalDocument.documentationOf" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.documentationOf" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -488,7 +528,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/DocumentationOf" ]
        ]
      ], [
-       fhir:index 26;
+       fhir:index 27;
        fhir:Element.id [ fhir:value "ClinicalDocument.relatedDocument" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.relatedDocument" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -503,7 +543,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/RelatedDocument" ]
        ]
      ], [
-       fhir:index 27;
+       fhir:index 28;
        fhir:Element.id [ fhir:value "ClinicalDocument.authorization" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.authorization" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -518,7 +558,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Authorization" ]
        ]
      ], [
-       fhir:index 28;
+       fhir:index 29;
        fhir:Element.id [ fhir:value "ClinicalDocument.componentOf" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.componentOf" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -533,7 +573,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/ComponentOf" ]
        ]
      ], [
-       fhir:index 29;
+       fhir:index 30;
        fhir:Element.id [ fhir:value "ClinicalDocument.component" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.component" ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
@@ -674,6 +714,25 @@
        ]
      ], [
        fhir:index 9;
+       fhir:Element.id [ fhir:value "ClinicalDocument.statusCode" ];
+       fhir:Element.extension [
+         fhir:index 0;
+         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
+         fhir:Extension.valueUri [ fhir:value "urn:hl7-org:sdtc" ]
+       ], [
+         fhir:index 1;
+         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name" ];
+         fhir:Extension.valueString [ fhir:value "statusCode" ]
+       ];
+       fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.statusCode" ];
+       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
+       fhir:ElementDefinition.max [ fhir:value "1" ];
+       fhir:ElementDefinition.type [
+         fhir:index 0;
+         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CS" ]
+       ]
+     ], [
+       fhir:index 10;
        fhir:Element.id [ fhir:value "ClinicalDocument.effectiveTime" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.effectiveTime" ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
@@ -683,7 +742,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/TS" ]
        ]
      ], [
-       fhir:index 10;
+       fhir:index 11;
        fhir:Element.id [ fhir:value "ClinicalDocument.confidentialityCode" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.confidentialityCode" ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
@@ -693,7 +752,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CE" ]
        ]
      ], [
-       fhir:index 11;
+       fhir:index 12;
        fhir:Element.id [ fhir:value "ClinicalDocument.languageCode" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.languageCode" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -710,7 +769,7 @@
          ]
        ]
      ], [
-       fhir:index 12;
+       fhir:index 13;
        fhir:Element.id [ fhir:value "ClinicalDocument.setId" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.setId" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -720,7 +779,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/II" ]
        ]
      ], [
-       fhir:index 13;
+       fhir:index 14;
        fhir:Element.id [ fhir:value "ClinicalDocument.versionNumber" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.versionNumber" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -730,7 +789,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/INT" ]
        ]
      ], [
-       fhir:index 14;
+       fhir:index 15;
        fhir:Element.id [ fhir:value "ClinicalDocument.copyTime" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.copyTime" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -740,7 +799,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/TS" ]
        ]
      ], [
-       fhir:index 15;
+       fhir:index 16;
        fhir:Element.id [ fhir:value "ClinicalDocument.recordTarget" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.recordTarget" ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
@@ -750,7 +809,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/RecordTarget" ]
        ]
      ], [
-       fhir:index 16;
+       fhir:index 17;
        fhir:Element.id [ fhir:value "ClinicalDocument.author" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.author" ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
@@ -760,7 +819,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Author" ]
        ]
      ], [
-       fhir:index 17;
+       fhir:index 18;
        fhir:Element.id [ fhir:value "ClinicalDocument.dataEnterer" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.dataEnterer" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -770,7 +829,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/DataEnterer" ]
        ]
      ], [
-       fhir:index 18;
+       fhir:index 19;
        fhir:Element.id [ fhir:value "ClinicalDocument.informant" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.informant" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -780,7 +839,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Informant" ]
        ]
      ], [
-       fhir:index 19;
+       fhir:index 20;
        fhir:Element.id [ fhir:value "ClinicalDocument.custodian" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.custodian" ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
@@ -790,7 +849,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Custodian" ]
        ]
      ], [
-       fhir:index 20;
+       fhir:index 21;
        fhir:Element.id [ fhir:value "ClinicalDocument.informationRecipient" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.informationRecipient" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -800,7 +859,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/InformationRecipient" ]
        ]
      ], [
-       fhir:index 21;
+       fhir:index 22;
        fhir:Element.id [ fhir:value "ClinicalDocument.legalAuthenticator" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.legalAuthenticator" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -810,7 +869,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/LegalAuthenticator" ]
        ]
      ], [
-       fhir:index 22;
+       fhir:index 23;
        fhir:Element.id [ fhir:value "ClinicalDocument.authenticator" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.authenticator" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -820,7 +879,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Authenticator" ]
        ]
      ], [
-       fhir:index 23;
+       fhir:index 24;
        fhir:Element.id [ fhir:value "ClinicalDocument.participant" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.participant" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -830,7 +889,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Participant1" ]
        ]
      ], [
-       fhir:index 24;
+       fhir:index 25;
        fhir:Element.id [ fhir:value "ClinicalDocument.inFulfillmentOf" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.inFulfillmentOf" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -840,7 +899,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/InFulfillmentOf" ]
        ]
      ], [
-       fhir:index 25;
+       fhir:index 26;
        fhir:Element.id [ fhir:value "ClinicalDocument.documentationOf" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.documentationOf" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -850,7 +909,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/DocumentationOf" ]
        ]
      ], [
-       fhir:index 26;
+       fhir:index 27;
        fhir:Element.id [ fhir:value "ClinicalDocument.relatedDocument" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.relatedDocument" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -860,7 +919,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/RelatedDocument" ]
        ]
      ], [
-       fhir:index 27;
+       fhir:index 28;
        fhir:Element.id [ fhir:value "ClinicalDocument.authorization" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.authorization" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -870,7 +929,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Authorization" ]
        ]
      ], [
-       fhir:index 28;
+       fhir:index 29;
        fhir:Element.id [ fhir:value "ClinicalDocument.componentOf" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.componentOf" ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -880,7 +939,7 @@
          fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/ComponentOf" ]
        ]
      ], [
-       fhir:index 29;
+       fhir:index 30;
        fhir:Element.id [ fhir:value "ClinicalDocument.component" ];
        fhir:ElementDefinition.path [ fhir:value "ClinicalDocument.component" ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];

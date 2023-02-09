@@ -1,5 +1,6 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
-"Encounter","Encounter","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"Encounter","Encounter","","","",1,1,"","","","null {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
 "Encounter.classCode","Encounter.classCode","","","",1,1,"","","","code {[]} {[]}
 ","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ENC""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClass","",,,,"Encounter.classCode",1,1,"",""
 "Encounter.moodCode","Encounter.moodCode","","","",1,1,"","","","code {[]} {[]}
@@ -27,7 +28,7 @@
 "Encounter.subject","Encounter.subject","","","",0,1,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Encounter.subject",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"Encounter.subject.id","Encounter.subject.id","","","",0,1,"","","","id {[]} {[]}
+"Encounter.subject.id","Encounter.subject.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "Encounter.subject.extension","Encounter.subject.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -51,7 +52,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "Encounter.informant","Encounter.informant","","","",0,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Encounter.informant",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"Encounter.informant.id","Encounter.informant.id","","","",0,1,"","","","id {[]} {[]}
+"Encounter.informant.id","Encounter.informant.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "Encounter.informant.extension","Encounter.informant.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -71,7 +72,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "Encounter.entryRelationship","Encounter.entryRelationship","","","",0,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Encounter.entryRelationship",0,*,"","enc-er-1:Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act {(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1}
 ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}"
-"Encounter.entryRelationship.id","Encounter.entryRelationship.id","","","",0,1,"","","","id {[]} {[]}
+"Encounter.entryRelationship.id","Encounter.entryRelationship.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "Encounter.entryRelationship.extension","Encounter.entryRelationship.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -111,7 +112,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "Encounter.reference","Encounter.reference","","","",0,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Encounter.reference",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"Encounter.reference.id","Encounter.reference.id","","","",0,1,"","","","id {[]} {[]}
+"Encounter.reference.id","Encounter.reference.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "Encounter.reference.extension","Encounter.reference.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}

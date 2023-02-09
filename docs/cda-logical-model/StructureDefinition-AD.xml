@@ -19,16 +19,21 @@
   <title value="AD: PostalAddress (V3 Data Type)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-01-16T15:52:41+01:00"/>
+  <date value="2023-02-07T19:43:49+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
+    <name value="HL7 International - Cross-Group Projects"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/structure"/>
+      <value value="http://www.hl7.org/Special/committees/cgp"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="cgp@lists.HL7.org"/>
     </telecom>
   </contact>
   <description value="Mailing and home or office addresses. A sequence of address parts, such as street or post office Box, city, postal code, country, etc."/>
-  <fhirVersion value="5.0.0-ballot"/>
+  <fhirVersion value="5.0.0-snapshot3"/>
   <mapping>
     <identity value="rim"/>
     <uri value="http://hl7.org/v3"/>
@@ -51,6 +56,13 @@
         <min value="0"/>
         <max value="*"/>
       </base>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
       <isModifier value="false"/>
       <mapping>
         <identity value="rim"/>
@@ -122,6 +134,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.delimiter.nullFlavor">
       <path value="AD.delimiter.nullFlavor"/>
@@ -353,6 +372,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.country.nullFlavor">
       <path value="AD.country.nullFlavor"/>
@@ -584,6 +610,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.state.nullFlavor">
       <path value="AD.state.nullFlavor"/>
@@ -815,6 +848,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.county.nullFlavor">
       <path value="AD.county.nullFlavor"/>
@@ -1046,6 +1086,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.city.nullFlavor">
       <path value="AD.city.nullFlavor"/>
@@ -1277,6 +1324,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.postalCode.nullFlavor">
       <path value="AD.postalCode.nullFlavor"/>
@@ -1508,6 +1562,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.streetAddressLine.nullFlavor">
       <path value="AD.streetAddressLine.nullFlavor"/>
@@ -1739,6 +1800,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.houseNumber.nullFlavor">
       <path value="AD.houseNumber.nullFlavor"/>
@@ -1970,6 +2038,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.houseNumberNumeric.nullFlavor">
       <path value="AD.houseNumberNumeric.nullFlavor"/>
@@ -2201,6 +2276,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.direction.nullFlavor">
       <path value="AD.direction.nullFlavor"/>
@@ -2432,6 +2514,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.streetName.nullFlavor">
       <path value="AD.streetName.nullFlavor"/>
@@ -2663,6 +2752,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.streetNameBase.nullFlavor">
       <path value="AD.streetNameBase.nullFlavor"/>
@@ -2894,6 +2990,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.streetNameType.nullFlavor">
       <path value="AD.streetNameType.nullFlavor"/>
@@ -3125,6 +3228,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.additionalLocator.nullFlavor">
       <path value="AD.additionalLocator.nullFlavor"/>
@@ -3356,6 +3466,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.unitID.nullFlavor">
       <path value="AD.unitID.nullFlavor"/>
@@ -3587,6 +3704,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.unitType.nullFlavor">
       <path value="AD.unitType.nullFlavor"/>
@@ -3818,6 +3942,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.careOf.nullFlavor">
       <path value="AD.careOf.nullFlavor"/>
@@ -4049,6 +4180,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.censusTract.nullFlavor">
       <path value="AD.censusTract.nullFlavor"/>
@@ -4280,6 +4418,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.deliveryAddressLine.nullFlavor">
       <path value="AD.deliveryAddressLine.nullFlavor"/>
@@ -4511,6 +4656,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.deliveryInstallationType.nullFlavor">
       <path value="AD.deliveryInstallationType.nullFlavor"/>
@@ -4742,6 +4894,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.deliveryInstallationArea.nullFlavor">
       <path value="AD.deliveryInstallationArea.nullFlavor"/>
@@ -4973,6 +5132,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.deliveryInstallationQualifier.nullFlavor">
       <path value="AD.deliveryInstallationQualifier.nullFlavor"/>
@@ -5204,6 +5370,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.deliveryMode.nullFlavor">
       <path value="AD.deliveryMode.nullFlavor"/>
@@ -5435,6 +5608,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.deliveryModeIdentifier.nullFlavor">
       <path value="AD.deliveryModeIdentifier.nullFlavor"/>
@@ -5666,6 +5846,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.buildingNumberSuffix.nullFlavor">
       <path value="AD.buildingNumberSuffix.nullFlavor"/>
@@ -5897,6 +6084,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.postBox.nullFlavor">
       <path value="AD.postBox.nullFlavor"/>
@@ -6128,6 +6322,13 @@
       <type>
         <code value="http://hl7.org/fhir/cda/StructureDefinition/ADXP"/>
       </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
     </element>
     <element id="AD.precinct.nullFlavor">
       <path value="AD.precinct.nullFlavor"/>

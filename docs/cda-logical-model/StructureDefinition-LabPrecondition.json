@@ -3,15 +3,15 @@
   "id" : "LabPrecondition",
   "text" : {
     "status" : "generated",
-    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The precondition class, derived from the ActRelationship class, is used along with the LabPrecondition class to express a condition that must hold true before some over activity occurs.</p>\n    </div>"
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The precondition class, derived from the ActRelationship class, is used along with the LabPrecondition class to express a condition that must hold true before some over activity occurs.</p>\n  </div>"
   },
   "extension" : [{
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:oid:1.3.6.1.4.1.19376.1.3.2"
   },
   {
-    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
-    "valueUri" : "urn:hl7-org:v3"
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+    "valueString" : "LabPrecondition"
   }],
   "url" : "http://hl7.org/fhir/cda/StructureDefinition/LabPrecondition",
   "version" : "2.1.0-draft1",
@@ -19,16 +19,21 @@
   "title" : "LabPrecondition (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-01-16T15:52:41+01:00",
+  "date" : "2023-02-07T19:43:49+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
+    "name" : "HL7 International - Cross-Group Projects",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structure"
+      "value" : "http://www.hl7.org/Special/committees/cgp"
+    },
+    {
+      "system" : "email",
+      "value" : "cgp@lists.HL7.org"
     }]
   }],
-  "description" : "The precondition class, derived from the ActRelationship class, is used along with the LabPrecondition class to express a condition that must hold true before some over activity occurs.",
-  "fhirVersion" : "5.0.0-ballot",
+  "description" : "IHE Lab extension, [see confluence](https://confluence.hl7.org/display/SD/CDA+Extensions)",
+  "fhirVersion" : "5.0.0-snapshot3",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -52,6 +57,13 @@
         "min" : 0,
         "max" : "*"
       },
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }],
       "isModifier" : false,
       "mapping" : [{
         "identity" : "rim",
@@ -145,6 +157,10 @@
     },
     {
       "id" : "LabPrecondition.criterion",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "valueUri" : "urn:oid:1.3.6.1.4.1.19376.1.3.2"
+      }],
       "path" : "LabPrecondition.criterion",
       "min" : 1,
       "max" : "1",
@@ -227,6 +243,10 @@
     },
     {
       "id" : "LabPrecondition.criterion",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "valueUri" : "urn:oid:1.3.6.1.4.1.19376.1.3.2"
+      }],
       "path" : "LabPrecondition.criterion",
       "min" : 1,
       "max" : "1",

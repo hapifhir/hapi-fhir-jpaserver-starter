@@ -1,5 +1,6 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
-"ObservationRange","ObservationRange","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"ObservationRange","ObservationRange","","","",1,1,"","","","null {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
 "ObservationRange.classCode","ObservationRange.classCode","","","",1,1,"","","","code {[]} {[]}
 ","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OBS""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassObservation","",,,,"ObservationRange.classCode",1,1,"",""
 "ObservationRange.moodCode","ObservationRange.moodCode","","","",1,1,"","","","code {[]} {[]}

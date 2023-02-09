@@ -1,6 +1,6 @@
 {
   "version" : "2.1.0-draft1",
-  "fhirVersion" : ["5.0.0-ballot"],
-  "date" : "20230116155205",
-  "name" : "hl7.fhir.cda"
+  "fhirVersion" : ["5.0.0-snapshot3"],
+  "date" : "20230207194333",
+  "name" : "hl7.cda.uv.core"
 }

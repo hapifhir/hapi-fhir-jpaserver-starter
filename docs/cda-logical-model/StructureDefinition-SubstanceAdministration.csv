@@ -1,5 +1,6 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
-"SubstanceAdministration","SubstanceAdministration","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"SubstanceAdministration","SubstanceAdministration","","","",1,1,"","","","null {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
 "SubstanceAdministration.classCode","SubstanceAdministration.classCode","","","",1,1,"","","","code {[]} {[]}
 ","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBADM""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBADM""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClass","",,,,"SubstanceAdministration.classCode",1,1,"",""
 "SubstanceAdministration.moodCode","SubstanceAdministration.moodCode","","","",1,1,"","","","code {[]} {[]}
@@ -41,7 +42,7 @@ http://hl7.org/fhir/cda/StructureDefinition/IVL-TS {[]} {[]}http://hl7.org/fhir/
 "SubstanceAdministration.consumable","SubstanceAdministration.consumable","","","",1,1,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.consumable",1,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"SubstanceAdministration.consumable.id","SubstanceAdministration.consumable.id","","","",0,1,"","","","id {[]} {[]}
+"SubstanceAdministration.consumable.id","SubstanceAdministration.consumable.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "SubstanceAdministration.consumable.extension","SubstanceAdministration.consumable.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -55,7 +56,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "SubstanceAdministration.subject","SubstanceAdministration.subject","","","",0,1,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.subject",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"SubstanceAdministration.subject.id","SubstanceAdministration.subject.id","","","",0,1,"","","","id {[]} {[]}
+"SubstanceAdministration.subject.id","SubstanceAdministration.subject.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "SubstanceAdministration.subject.extension","SubstanceAdministration.subject.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -79,7 +80,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "SubstanceAdministration.informant","SubstanceAdministration.informant","","","",0,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.informant",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"SubstanceAdministration.informant.id","SubstanceAdministration.informant.id","","","",0,1,"","","","id {[]} {[]}
+"SubstanceAdministration.informant.id","SubstanceAdministration.informant.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "SubstanceAdministration.informant.extension","SubstanceAdministration.informant.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -99,7 +100,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "SubstanceAdministration.entryRelationship","SubstanceAdministration.entryRelationship","","","",0,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship",0,*,"","subst-er-1:Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act {(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1}
 ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}"
-"SubstanceAdministration.entryRelationship.id","SubstanceAdministration.entryRelationship.id","","","",0,1,"","","","id {[]} {[]}
+"SubstanceAdministration.entryRelationship.id","SubstanceAdministration.entryRelationship.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "SubstanceAdministration.entryRelationship.extension","SubstanceAdministration.entryRelationship.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -139,7 +140,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "SubstanceAdministration.reference","SubstanceAdministration.reference","","","",0,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.reference",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"SubstanceAdministration.reference.id","SubstanceAdministration.reference.id","","","",0,1,"","","","id {[]} {[]}
+"SubstanceAdministration.reference.id","SubstanceAdministration.reference.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "SubstanceAdministration.reference.extension","SubstanceAdministration.reference.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}

@@ -1,5 +1,6 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
-"Supply","Supply","","","",1,1,"","","","","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"Supply","Supply","","","",1,1,"","","","null {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
 "Supply.classCode","Supply.classCode","","","",1,1,"","","","code {[]} {[]}
 ","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SPLY""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SPLY""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassSupply","",,,,"Supply.classCode",1,1,"",""
 "Supply.moodCode","Supply.moodCode","","","",1,1,"","","","code {[]} {[]}
@@ -33,7 +34,7 @@ http://hl7.org/fhir/cda/StructureDefinition/IVL-TS {[]} {[]}http://hl7.org/fhir/
 "Supply.product","Supply.product","","","",0,1,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Supply.product",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"Supply.product.id","Supply.product.id","","","",0,1,"","","","id {[]} {[]}
+"Supply.product.id","Supply.product.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "Supply.product.extension","Supply.product.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -47,7 +48,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "Supply.subject","Supply.subject","","","",0,1,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Supply.subject",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"Supply.subject.id","Supply.subject.id","","","",0,1,"","","","id {[]} {[]}
+"Supply.subject.id","Supply.subject.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "Supply.subject.extension","Supply.subject.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -71,7 +72,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "Supply.informant","Supply.informant","","","",0,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Supply.informant",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"Supply.informant.id","Supply.informant.id","","","",0,1,"","","","id {[]} {[]}
+"Supply.informant.id","Supply.informant.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "Supply.informant.extension","Supply.informant.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -91,7 +92,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "Supply.entryRelationship","Supply.entryRelationship","","","",0,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Supply.entryRelationship",0,*,"","sup-er-1:Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act {(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1}
 ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}"
-"Supply.entryRelationship.id","Supply.entryRelationship.id","","","",0,1,"","","","id {[]} {[]}
+"Supply.entryRelationship.id","Supply.entryRelationship.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "Supply.entryRelationship.extension","Supply.entryRelationship.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}
@@ -131,7 +132,7 @@ ext-1:Must have either extensions or value[x], not both {extension.exists() != v
 "Supply.reference","Supply.reference","","","",0,*,"","","","Element {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Supply.reference",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"Supply.reference.id","Supply.reference.id","","","",0,1,"","","","id {[]} {[]}
+"Supply.reference.id","Supply.reference.id","","","",0,1,"","","","string {[]} {[]}
 ","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
 "Supply.reference.extension","Supply.reference.extension","","extensions
 user content","",0,*,"","","","Extension {[]} {[]}

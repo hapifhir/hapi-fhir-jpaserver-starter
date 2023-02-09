@@ -23,18 +23,23 @@
   fhir:StructureDefinition.title [ fhir:value "ST: CharacterString (V3 Data Type)"]; # 
   fhir:StructureDefinition.status [ fhir:value "active"]; # 
   fhir:StructureDefinition.experimental [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.date [ fhir:value "2023-01-16T15:52:41+01:00"^^xsd:dateTime]; # 
+  fhir:StructureDefinition.date [ fhir:value "2023-02-07T19:43:49+01:00"^^xsd:dateTime]; # 
   fhir:StructureDefinition.publisher [ fhir:value "Health Level 7"]; # 
   fhir:StructureDefinition.contact [
      fhir:index 0;
+     fhir:ContactDetail.name [ fhir:value "HL7 International - Cross-Group Projects" ];
      fhir:ContactDetail.telecom [
        fhir:index 0;
        fhir:ContactPoint.system [ fhir:value "url" ];
-       fhir:ContactPoint.value [ fhir:value "http://www.hl7.org/Special/committees/structure" ]
+       fhir:ContactPoint.value [ fhir:value "http://www.hl7.org/Special/committees/cgp" ]
+     ], [
+       fhir:index 1;
+       fhir:ContactPoint.system [ fhir:value "email" ];
+       fhir:ContactPoint.value [ fhir:value "cgp@lists.HL7.org" ]
      ]
   ]; # 
   fhir:StructureDefinition.description [ fhir:value "The character string data type stands for text data, primarily intended for machine processing (e.g., sorting, querying, indexing, etc.) Used for names, symbols, and formal expressions."]; # 
-  fhir:StructureDefinition.fhirVersion [ fhir:value "5.0.0-ballot"]; # 
+  fhir:StructureDefinition.fhirVersion [ fhir:value "5.0.0-snapshot3"]; # 
   fhir:StructureDefinition.mapping [
      fhir:index 0;
      fhir:StructureDefinition.mapping.identity [ fhir:value "rim" ];
@@ -43,17 +48,17 @@
   ]; # 
   fhir:StructureDefinition.kind [ fhir:value "logical"]; # 
   fhir:StructureDefinition.abstract [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.type [ fhir:value "ST"]; # 
+  fhir:StructureDefinition.type [ fhir:value "ED"]; # 
   fhir:StructureDefinition.baseDefinition [
      fhir:value "http://hl7.org/fhir/cda/StructureDefinition/ED";
      fhir:link <http://hl7.org/fhir/cda/StructureDefinition/ED>
   ]; # 
-  fhir:StructureDefinition.derivation [ fhir:value "specialization"]; # 
+  fhir:StructureDefinition.derivation [ fhir:value "constraint"]; # 
   fhir:StructureDefinition.snapshot [
      fhir:StructureDefinition.snapshot.element [
        fhir:index 0;
-       fhir:Element.id [ fhir:value "ST" ];
-       fhir:ElementDefinition.path [ fhir:value "ST" ];
+       fhir:Element.id [ fhir:value "ED" ];
+       fhir:ElementDefinition.path [ fhir:value "ED" ];
        fhir:ElementDefinition.short [ fhir:value "Base for all types and resources" ];
        fhir:ElementDefinition.definition [ fhir:value "The character string data type stands for text data, primarily intended for machine processing (e.g., sorting, querying, indexing, etc.) Used for names, symbols, and formal expressions." ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
@@ -63,6 +68,17 @@
          fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
          fhir:ElementDefinition.base.max [ fhir:value "*" ]
        ];
+       fhir:ElementDefinition.constraint [
+         fhir:index 0;
+         fhir:ElementDefinition.constraint.key [ fhir:value "ele-1" ];
+         fhir:ElementDefinition.constraint.severity [ fhir:value "error" ];
+         fhir:ElementDefinition.constraint.human [ fhir:value "All FHIR elements must have a @value or children" ];
+         fhir:ElementDefinition.constraint.expression [ fhir:value "hasValue() or (children().count() > id.count())" ];
+         fhir:ElementDefinition.constraint.source [
+           fhir:value "http://hl7.org/fhir/StructureDefinition/Element";
+           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+         ]
+       ];
        fhir:ElementDefinition.isModifier [ fhir:value "false"^^xsd:boolean ];
        fhir:ElementDefinition.mapping [
          fhir:index 0;
@@ -71,8 +87,8 @@
        ]
      ], [
        fhir:index 1;
-       fhir:Element.id [ fhir:value "ST.nullFlavor" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.nullFlavor" ];
+       fhir:Element.id [ fhir:value "ED.nullFlavor" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.nullFlavor" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -99,8 +115,8 @@
        ]
      ], [
        fhir:index 2;
-       fhir:Element.id [ fhir:value "ST.charset" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.charset" ];
+       fhir:Element.id [ fhir:value "ED.charset" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.charset" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -120,8 +136,8 @@
        ]
      ], [
        fhir:index 3;
-       fhir:Element.id [ fhir:value "ST.compression" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.compression" ];
+       fhir:Element.id [ fhir:value "ED.compression" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.compression" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -148,8 +164,8 @@
        ]
      ], [
        fhir:index 4;
-       fhir:Element.id [ fhir:value "ST.integrityCheck" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.integrityCheck" ];
+       fhir:Element.id [ fhir:value "ED.integrityCheck" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.integrityCheck" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -169,8 +185,8 @@
        ]
      ], [
        fhir:index 5;
-       fhir:Element.id [ fhir:value "ST.integrityCheckAlgorithm" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.integrityCheckAlgorithm" ];
+       fhir:Element.id [ fhir:value "ED.integrityCheckAlgorithm" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.integrityCheckAlgorithm" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -197,8 +213,8 @@
        ]
      ], [
        fhir:index 6;
-       fhir:Element.id [ fhir:value "ST.language" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.language" ];
+       fhir:Element.id [ fhir:value "ED.language" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.language" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -218,8 +234,8 @@
        ]
      ], [
        fhir:index 7;
-       fhir:Element.id [ fhir:value "ST.mediaType" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.mediaType" ];
+       fhir:Element.id [ fhir:value "ED.mediaType" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.mediaType" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -240,8 +256,8 @@
        fhir:ElementDefinition.fixedCode [ fhir:value "text/plain" ]
      ], [
        fhir:index 8;
-       fhir:Element.id [ fhir:value "ST.representation" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.representation" ];
+       fhir:Element.id [ fhir:value "ED.representation" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.representation" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -261,8 +277,8 @@
        fhir:ElementDefinition.fixedCode [ fhir:value "TXT" ]
      ], [
        fhir:index 9;
-       fhir:Element.id [ fhir:value "ST.data[x]" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.data[x]" ];
+       fhir:Element.id [ fhir:value "ED.data[x]" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.data[x]" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlText";
          fhir:index 0
@@ -281,8 +297,8 @@
        ]
      ], [
        fhir:index 10;
-       fhir:Element.id [ fhir:value "ST.reference" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.reference" ];
+       fhir:Element.id [ fhir:value "ED.reference" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.reference" ];
        fhir:ElementDefinition.label [ fhir:value "Reference" ];
        fhir:ElementDefinition.definition [ fhir:value "A telecommunication address (TEL), such as a URL for HTTP or FTP, which will resolve to precisely the same binary data that could as well have been provided as inline data." ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -298,8 +314,8 @@
        ]
      ], [
        fhir:index 11;
-       fhir:Element.id [ fhir:value "ST.thumbnail" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.thumbnail" ];
+       fhir:Element.id [ fhir:value "ED.thumbnail" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.thumbnail" ];
        fhir:ElementDefinition.label [ fhir:value "Thumbnail" ];
        fhir:ElementDefinition.definition [ fhir:value "An abbreviated rendition of the full data. A thumbnail requires significantly fewer resources than the full data, while still maintaining some distinctive similarity with the full data. A thumbnail is typically used with by-reference encapsulated data. It allows a user to select data more efficiently before actually downloading through the reference." ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
@@ -318,15 +334,15 @@
   fhir:StructureDefinition.differential [
      fhir:StructureDefinition.differential.element [
        fhir:index 0;
-       fhir:Element.id [ fhir:value "ST" ];
-       fhir:ElementDefinition.path [ fhir:value "ST" ];
+       fhir:Element.id [ fhir:value "ED" ];
+       fhir:ElementDefinition.path [ fhir:value "ED" ];
        fhir:ElementDefinition.definition [ fhir:value "The character string data type stands for text data, primarily intended for machine processing (e.g., sorting, querying, indexing, etc.) Used for names, symbols, and formal expressions." ];
        fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
        fhir:ElementDefinition.max [ fhir:value "*" ]
      ], [
        fhir:index 1;
-       fhir:Element.id [ fhir:value "ST.compression" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.compression" ];
+       fhir:Element.id [ fhir:value "ED.compression" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.compression" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -337,8 +353,8 @@
        fhir:ElementDefinition.max [ fhir:value "0" ]
      ], [
        fhir:index 2;
-       fhir:Element.id [ fhir:value "ST.integrityCheck" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.integrityCheck" ];
+       fhir:Element.id [ fhir:value "ED.integrityCheck" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.integrityCheck" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -349,8 +365,8 @@
        fhir:ElementDefinition.max [ fhir:value "0" ]
      ], [
        fhir:index 3;
-       fhir:Element.id [ fhir:value "ST.integrityCheckAlgorithm" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.integrityCheckAlgorithm" ];
+       fhir:Element.id [ fhir:value "ED.integrityCheckAlgorithm" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.integrityCheckAlgorithm" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -361,8 +377,8 @@
        fhir:ElementDefinition.max [ fhir:value "0" ]
      ], [
        fhir:index 4;
-       fhir:Element.id [ fhir:value "ST.mediaType" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.mediaType" ];
+       fhir:Element.id [ fhir:value "ED.mediaType" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.mediaType" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -378,8 +394,8 @@
        fhir:ElementDefinition.fixedCode [ fhir:value "text/plain" ]
      ], [
        fhir:index 5;
-       fhir:Element.id [ fhir:value "ST.representation" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.representation" ];
+       fhir:Element.id [ fhir:value "ED.representation" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.representation" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlAttr";
          fhir:index 0
@@ -394,8 +410,8 @@
        fhir:ElementDefinition.fixedCode [ fhir:value "TXT" ]
      ], [
        fhir:index 6;
-       fhir:Element.id [ fhir:value "ST.data[x]" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.data[x]" ];
+       fhir:Element.id [ fhir:value "ED.data[x]" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.data[x]" ];
        fhir:ElementDefinition.representation [
          fhir:value "xmlText";
          fhir:index 0
@@ -409,16 +425,16 @@
        ]
      ], [
        fhir:index 7;
-       fhir:Element.id [ fhir:value "ST.reference" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.reference" ];
+       fhir:Element.id [ fhir:value "ED.reference" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.reference" ];
        fhir:ElementDefinition.label [ fhir:value "Reference" ];
        fhir:ElementDefinition.definition [ fhir:value "A telecommunication address (TEL), such as a URL for HTTP or FTP, which will resolve to precisely the same binary data that could as well have been provided as inline data." ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
        fhir:ElementDefinition.max [ fhir:value "0" ]
      ], [
        fhir:index 8;
-       fhir:Element.id [ fhir:value "ST.thumbnail" ];
-       fhir:ElementDefinition.path [ fhir:value "ST.thumbnail" ];
+       fhir:Element.id [ fhir:value "ED.thumbnail" ];
+       fhir:ElementDefinition.path [ fhir:value "ED.thumbnail" ];
        fhir:ElementDefinition.label [ fhir:value "Thumbnail" ];
        fhir:ElementDefinition.definition [ fhir:value "An abbreviated rendition of the full data. A thumbnail requires significantly fewer resources than the full data, while still maintaining some distinctive similarity with the full data. A thumbnail is typically used with by-reference encapsulated data. It allows a user to select data more efficiently before actually downloading through the reference." ];
        fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];

@@ -11,7 +11,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title>HL7.FHIR.CDA\SC: CharacterStringWithCode (V3 Data Type) - JSON Representation - FHIR v5.0.0-ballot</title>
+    <title>HL7.CDA.UV.CORE\SC: CharacterStringWithCode (V3 Data Type) - JSON Representation - FHIR v5.0.0-snapshot3</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="author" content="http://hl7.org/fhir"/>
@@ -197,7 +197,7 @@
         
           Active
           
-            as of 2023-01-16
+            as of 2023-02-07
           
         
       </td>
@@ -217,500 +217,514 @@
 
   <pre class="json" style="white-space: pre; overflow: hidden"><code class="language-json">
 {
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition">resourceType</a>" : "StructureDefinition",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.id">id</a>" : "SC",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.text">text</a>" : {
-    "<a href="http://build.fhir.org/narrative.html#Narrative#Narrative.status">status</a>" : "generated",
-    "<a href="http://build.fhir.org/narrative.html#Narrative#Narrative.div">div</a>" : "&lt;div xmlns=\&quot;http://www.w3.org/1999/xhtml\&quot;&gt;\n      &lt;p&gt;A ST that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.&lt;/p&gt;\n    &lt;/div&gt;"<a name="end-xhtml"></a>
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition">resourceType</a>" : "StructureDefinition",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.id">id</a>" : "SC",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.text">text</a>" : {
+    "<a href="http://hl7.org/fhir/5.0.0-snapshot3/narrative.html#Narrative#Narrative.status">status</a>" : "generated",
+    "<a href="http://hl7.org/fhir/5.0.0-snapshot3/narrative.html#Narrative#Narrative.div">div</a>" : "&lt;div xmlns=\&quot;http://www.w3.org/1999/xhtml\&quot;&gt;\n      &lt;p&gt;A ST that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.&lt;/p&gt;\n    &lt;/div&gt;"<a name="end-xhtml"></a>
   },
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.extension">extension</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.extension">extension</a>" : [
     {
-      "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
-      "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:hl7-org:v3"
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:hl7-org:v3"
     },
     {
-      "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics",
-      "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueCode</a>" : "can-bind"
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueCode</a>" : "can-bind"
     },
     {
-      "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-binding-style",
-      "<a href="http://build.fhir.org/extensibility.html#Extension#Extension.value[x]">valueCode</a>" : "CDA"
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-binding-style",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueCode</a>" : "CDA"
     }
   ],
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.url">url</a>" : "http://hl7.org/fhir/cda/StructureDefinition/SC",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.version">version</a>" : "2.1.0-draft1",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.name">name</a>" : "SC",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.title">title</a>" : "SC: CharacterStringWithCode (V3 Data Type)",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.status">status</a>" : "active",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.experimental">experimental</a>" : false,
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.date">date</a>" : "2023-01-16T15:52:41+01:00",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.publisher">publisher</a>" : "Health Level 7",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.contact">contact</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.url">url</a>" : "http://hl7.org/fhir/cda/StructureDefinition/SC",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.version">version</a>" : "2.1.0-draft1",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.name">name</a>" : "SC",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.title">title</a>" : "SC: CharacterStringWithCode (V3 Data Type)",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.status">status</a>" : "active",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.experimental">experimental</a>" : false,
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.date">date</a>" : "2023-02-07T19:43:49+01:00",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.publisher">publisher</a>" : "Health Level 7",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.contact">contact</a>" : [
     {
-      "<a href="http://build.fhir.org/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>" : [
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.name">name</a>" : "HL7 International - Cross-Group Projects",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>" : [
         {
-          "<a href="http://build.fhir.org/datatypes.html#ContactPoint#ContactPoint.system">system</a>" : "url",
-          "<a href="http://build.fhir.org/datatypes.html#ContactPoint#ContactPoint.value">value</a>" : "http://www.hl7.org/Special/committees/structure"
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.system">system</a>" : "url",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.value">value</a>" : "http://www.hl7.org/Special/committees/cgp"
+        },
+        {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.system">system</a>" : "email",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.value">value</a>" : "cgp@lists.HL7.org"
         }
       ]
     }
   ],
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.description">description</a>" : "A character string that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a>" : "5.0.0-ballot",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping">mapping</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.description">description</a>" : "A character string that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a>" : "5.0.0-snapshot3",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping">mapping</a>" : [
     {
-      "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.identity">identity</a>" : "rim",
-      "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.uri">uri</a>" : "http://hl7.org/v3",
-      "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.mapping.name">name</a>" : "RIM Mapping"
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.identity">identity</a>" : "rim",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.uri">uri</a>" : "http://hl7.org/v3",
+      "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.name">name</a>" : "RIM Mapping"
     }
   ],
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.kind">kind</a>" : "logical",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.abstract">abstract</a>" : false,
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.type">type</a>" : "SC",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a>" : "http://hl7.org/fhir/cda/StructureDefinition/ST",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.derivation">derivation</a>" : "specialization",
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>" : {
-    "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.snapshot.element">element</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.kind">kind</a>" : "logical",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.abstract">abstract</a>" : false,
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.type">type</a>" : "SC",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a>" : "http://hl7.org/fhir/cda/StructureDefinition/ST",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.derivation">derivation</a>" : "specialization",
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>" : {
+    "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a>" : [
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a>" : "Base for all types and resources",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "An ST that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Base",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a>" : "Base for all types and resources",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "An ST that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Base",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a>" : false,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint">constraint</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a>" : "rim",
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a>" : "n/a"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.key">key</a>" : "ele-1",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.severity">severity</a>" : "error",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.human">human</a>" : "All FHIR elements must have a @value or children",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.expression">expression</a>" : "hasValue() or (children().count() &gt; id.count())",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.source">source</a>" : "http://hl7.org/fhir/StructureDefinition/Element"
+          }
+        ],
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a>" : false,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>" : [
+          {
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a>" : "rim",
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a>" : "n/a"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.nullFlavor",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.nullFlavor",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.nullFlavor",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.nullFlavor",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Exceptional Value Detail",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ANY.nullFlavor",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Exceptional Value Detail",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ANY.nullFlavor",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
         }
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.charset",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.charset",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.charset",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.charset",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Charset",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "For character-based encoding types, this property specifies the character set and character encoding used. The charset shall be identified by an Internet Assigned Numbers Authority (IANA) Charset Registration [] in accordance with RFC 2978 [].",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.charset",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Charset",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "For character-based encoding types, this property specifies the character set and character encoding used. The charset shall be identified by an Internet Assigned Numbers Authority (IANA) Charset Registration [] in accordance with RFC 2978 [].",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.charset",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.compression",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.compression",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.compression",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.compression",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Compression",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Indicates whether the raw byte data is compressed, and what compression algorithm was used.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "0",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.compression",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Compression",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Indicates whether the raw byte data is compressed, and what compression algorithm was used.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "0",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.compression",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-CompressionAlgorithm"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-CompressionAlgorithm"
         }
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.integrityCheck",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.integrityCheck",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.integrityCheck",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.integrityCheck",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Integrity Check",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The integrity check is a short binary value representing a cryptographically strong checksum that is calculated over the binary data. The purpose of this property, when communicated with a reference is for anyone to validate later whether the reference still resolved to the same data that the reference resolved to when the encapsulated data value with reference was created.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "0",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.integrityCheck",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Integrity Check",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The integrity check is a short binary value representing a cryptographically strong checksum that is calculated over the binary data. The purpose of this property, when communicated with a reference is for anyone to validate later whether the reference still resolved to the same data that the reference resolved to when the encapsulated data value with reference was created.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "0",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.integrityCheck",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "base64Binary"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "base64Binary"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.integrityCheckAlgorithm",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.integrityCheckAlgorithm",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.integrityCheckAlgorithm",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.integrityCheckAlgorithm",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Integrity Check Algorithm",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Specifies the algorithm used to compute the integrityCheck value. The cryptographically strong checksum algorithm Secure Hash Algorithm-1 (SHA-1) is currently the industry standard. It has superseded the MD5 algorithm only a couple of years ago, when certain flaws in the security of MD5 were discovered. Currently the SHA-1 hash algorithm is the default choice for the integrity check algorithm. Note that SHA-256 is also entering widespread usage.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "0",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.integrityCheckAlgorithm",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Integrity Check Algorithm",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Specifies the algorithm used to compute the integrityCheck value. The cryptographically strong checksum algorithm Secure Hash Algorithm-1 (SHA-1) is currently the industry standard. It has superseded the MD5 algorithm only a couple of years ago, when certain flaws in the security of MD5 were discovered. Currently the SHA-1 hash algorithm is the default choice for the integrity check algorithm. Note that SHA-256 is also entering widespread usage.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "0",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.integrityCheckAlgorithm",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-IntegrityCheckAlgorithm"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-IntegrityCheckAlgorithm"
         }
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.language",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.language",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.language",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.language",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Language",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "For character based information the language property specifies the human language of the text.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.language",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Language",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "For character based information the language property specifies the human language of the text.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.language",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.mediaType",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.mediaType",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.mediaType",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.mediaType",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Media Type",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.mediaType",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Media Type",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.mediaType",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "text/plain"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "text/plain"
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.representation",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.representation",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.representation",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.representation",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Specifies the representation of the binary data that is the content of the binary data value",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.representation",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Specifies the representation of the binary data that is the content of the binary data value",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.representation",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code"
           }
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "TXT"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "TXT"
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.data[x]",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.data[x]",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.data[x]",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.data[x]",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlText"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The string value",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.data[x]",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "The string value",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.data[x]",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.reference",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.reference",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Reference",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "A telecommunication address (TEL), such as a URL for HTTP or FTP, which will resolve to precisely the same binary data that could as well have been provided as inline data.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "0",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.reference",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.reference",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.reference",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Reference",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "A telecommunication address (TEL), such as a URL for HTTP or FTP, which will resolve to precisely the same binary data that could as well have been provided as inline data.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "0",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.reference",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/TEL"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/TEL"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.thumbnail",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.thumbnail",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Thumbnail",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "An abbreviated rendition of the full data. A thumbnail requires significantly fewer resources than the full data, while still maintaining some distinctive similarity with the full data. A thumbnail is typically used with by-reference encapsulated data. It allows a user to select data more efficiently before actually downloading through the reference.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "0",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.thumbnail",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.thumbnail",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.thumbnail",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Thumbnail",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "An abbreviated rendition of the full data. A thumbnail requires significantly fewer resources than the full data, while still maintaining some distinctive similarity with the full data. A thumbnail is typically used with by-reference encapsulated data. It allows a user to select data more efficiently before actually downloading through the reference.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "0",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ED.thumbnail",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.code",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.code",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.code",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.code",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "SC.code",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "SC.code",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.codeSystem",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.codeSystem",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.codeSystem",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.codeSystem",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code System",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "SC.codeSystem",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code System",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "SC.codeSystem",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.codeSystemName",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.codeSystemName",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.codeSystemName",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.codeSystemName",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code System Name",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "SC.codeSystemName",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code System Name",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "SC.codeSystemName",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.codeSystemVersion",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.codeSystemVersion",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.codeSystemVersion",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.codeSystemVersion",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code System Version",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "SC.codeSystemVersion",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code System Version",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "SC.codeSystemVersion",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.displayName",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.displayName",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.displayName",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.displayName",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Display Name",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "SC.displayName",
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Display Name",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "SC.displayName",
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
           }
         ]
       }
     ]
   },
-  "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential">differential</a>" : {
-    "<a href="http://build.fhir.org/structuredefinition.html#StructureDefinition.differential.element">element</a>" : [
+  "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential">differential</a>" : {
+    "<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a>" : [
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "An ST that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*"
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "An ST that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*"
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.code",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.code",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.code",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.code",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.codeSystem",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.codeSystem",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.codeSystem",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.codeSystem",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code System",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code System",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.codeSystemName",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.codeSystemName",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.codeSystemName",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.codeSystemName",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code System Name",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code System Name",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.codeSystemVersion",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.codeSystemVersion",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.codeSystemVersion",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.codeSystemVersion",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code System Version",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Code System Version",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
           }
         ]
       },
       {
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.displayName",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.displayName",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "SC.displayName",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "SC.displayName",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
           "xmlAttr"
         ],
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Display Name",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Display Name",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
           {
-            "<a href="http://build.fhir.org/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
+            "<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string"
           }
         ]
       }
@@ -770,7 +784,7 @@
 
       <div class="inner-wrapper">
         <p>
-          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.fhir.cda#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-ballot</a>. Generated <span title="Mon, Jan 16, 2023 15:52+0100">2023-01-16</span>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/cgp">Health Level 7</a>.  Package hl7.cda.uv.core#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-snapshot3</a>. Generated <span title="Tue, Feb 7, 2023 19:43+0100">2023-02-07</span>
           <br/>
           <span style="color: var(--footer-highlight-text-color)">
                       Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
