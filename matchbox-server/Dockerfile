@@ -9,6 +9,4 @@ RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles
 
 ENTRYPOINT java -Xmx1G -jar /matchbox.jar -Dspring.config.additional-location=optional:file:/config/application.yaml,optional:file:application.yaml
 
-# docker buildx build -t eu.gcr.io/fhir-ch/matchbox:v314 -f ./Dockerfile --push --platform=linux/arm64,linux/amd64 .
-# OSX: docker pull --platform linux/arm64 eu.gcr.io/fhir-ch/matchbox:v314
-# Linux: docker pull --platform linux/amnd64 eu.gcr.io/fhir-ch/matchbox:v314
+# used by .github/workflows/
