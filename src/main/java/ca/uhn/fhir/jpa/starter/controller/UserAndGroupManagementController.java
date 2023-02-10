@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter.controller;
 
+import android.util.Pair;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.ConfigDefinitionTypes;
@@ -365,4 +366,26 @@ public class UserAndGroupManagementController {
 		oclQrRequest.setErrorCorrectionLevelBits(errorCorrectionLevelBits);
 		return ResponseEntity.ok(qrService.getOclQr(oclQrRequest));
 	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/cacheDashboardData")
+	public ResponseEntity<?> cacheDashboardData(
+		@RequestHeader(name = "Authorization") String token,
+		@RequestParam("env") String env){
+		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		if (practitionerRoleId == null) {
+			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
+		}
+		String organizationId = helperService.getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+		if (organizationId == null) {
+			return ResponseEntity.ok("Error : This user is not mapped to any organization");
+		}
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = helperService.fetchIdsAndOrgIdToChildrenMapPair(organizationId);
+		helperService.cacheDashboardScoreCardData(idsAndOrgIdToChildrenMapPair.first, env);
+		helperService.cacheDashboardTabularData(idsAndOrgIdToChildrenMapPair.first, env);
+		helperService.cacheDashboardBarChartData(idsAndOrgIdToChildrenMapPair.first, env);
+		helperService.cacheDashboardPieChartData(idsAndOrgIdToChildrenMapPair.first, env);
+		helperService.cacheDashboardLineChartData(idsAndOrgIdToChildrenMapPair.first, env);
+		return ResponseEntity.ok("Caching in Progress");
+	}
+
 }

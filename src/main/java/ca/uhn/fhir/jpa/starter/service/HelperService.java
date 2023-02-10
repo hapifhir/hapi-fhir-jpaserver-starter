@@ -120,7 +120,7 @@ public class HelperService {
 		mapOfOrgHierarchy = new LinkedHashMap<String,List<OrgItem>>();
 	}
 	
-	private Pair<List<String>,LinkedHashMap<String,List<String>>> fetchIdsAndOrgIdToChildrenMapPair(String orgId) {
+	public Pair<List<String>,LinkedHashMap<String,List<String>>> fetchIdsAndOrgIdToChildrenMapPair(String orgId) {
 		if(!mapOfIdsAndOrgIdToChildrenMapPair.containsKey(orgId))
 		{
 			mapOfIdsAndOrgIdToChildrenMapPair.put(orgId, getFacilityIdsAndOrgIdToChildrenMapPair(orgId));
@@ -1266,6 +1266,77 @@ public class HelperService {
 //			});
 //		}
 	}
+
+	@Async
+	public void cacheDashboardTabularData(List<String> facilities, String env) {
+		Date currentDate =  DateUtilityHelper.getCurrentSqlDate();
+		Date startDate = Date.valueOf("2021-10-01");
+		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
+		for (String facilityId : facilities) {
+			while (!startDate.equals(currentDate)) {
+				logger.info("-- Caching TabularData for date "+ startDate + " and facility id "+ facilityId);
+				cachingService.cacheTabularData(facilityId, startDate, tabularItemList);
+				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
+			}
+		}
+	}
+
+	@Async
+	public void cacheDashboardLineChartData(List<String> facilities, String env) {
+		Date currentDate =  DateUtilityHelper.getCurrentSqlDate();
+		Date startDate = Date.valueOf("2021-10-01");
+		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
+		for (String facilityId : facilities) {
+			while (!startDate.equals(currentDate)) {
+				logger.info("-- Caching lineChart for date "+ startDate + " and facility id "+ facilityId);
+				cachingService.cacheDataLineChart(facilityId, startDate, lineCharts);
+				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
+			}
+		}
+	}
+
+	@Async
+	public void cacheDashboardBarChartData(List<String> facilities, String env) {
+		Date currentDate =  DateUtilityHelper.getCurrentSqlDate();
+		Date startDate = Date.valueOf("2021-10-01");
+		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
+		for (String facilityId : facilities) {
+			while (!startDate.equals(currentDate)) {
+				logger.info("-- Caching barCharts for date "+ startDate + " and facility id "+ facilityId);
+				cachingService.cacheDataForBarChart(facilityId, startDate, barCharts);
+				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
+			}
+		}
+	}
+
+	@Async
+	public void cacheDashboardPieChartData(List<String> facilities, String env) {
+		Date currentDate =  DateUtilityHelper.getCurrentSqlDate();
+		Date startDate = Date.valueOf("2021-10-01");
+		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
+		for (String facilityId : facilities) {
+			while (!startDate.equals(currentDate)) {
+				logger.info("-- Caching pieChart for date "+ startDate + " and facility id "+ facilityId);
+				cachingService.cachePieChartData(facilityId, startDate, pieChartDefinitions);
+				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
+			}
+		}
+	}
+
+	@Async
+	public void cacheDashboardScoreCardData(List<String> facilities, String env) {
+		Date currentDate =  DateUtilityHelper.getCurrentSqlDate();
+		Date startDate = Date.valueOf("2021-10-01");
+		List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
+		for (String facilityId : facilities) {
+			while (!startDate.equals(currentDate)) {
+				logger.info("-- Caching Scorecard for date "+ startDate + " and facility id "+ facilityId);
+				cachingService.cacheData(facilityId, startDate, indicators);
+				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
+			}
+		}
+	}
+
 	
 	List<String> getFhirSearchListByFilters(LinkedHashMap<String, String> filters,String env) throws FileNotFoundException {
 		List<String> fhirSearchList = new ArrayList<>();
