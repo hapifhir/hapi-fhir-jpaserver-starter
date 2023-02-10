@@ -110,11 +110,41 @@ public class HelperService {
 	private static final long DELAY = 2 * 60000;
 
 	NotificationDataSource notificationDataSource;
+	LinkedHashMap<String,Pair<List<String>, LinkedHashMap<String, List<String>>>> mapOfIdsAndOrgIdToChildrenMapPair;
+	LinkedHashMap<String,List<OrgItem>> mapOfOrgHierarchy;
 
 	@PostConstruct
 	public void init() {
 		dashboardEnvToConfigMap = dashboardEnvironmentConfig.getDashboardEnvToConfigMap();
+		mapOfIdsAndOrgIdToChildrenMapPair = new LinkedHashMap<String,Pair<List<String>, LinkedHashMap<String, List<String>>>>();
+		mapOfOrgHierarchy = new LinkedHashMap<String,List<OrgItem>>();
 	}
+	
+	private Pair<List<String>,LinkedHashMap<String,List<String>>> fetchIdsAndOrgIdToChildrenMapPair(String orgId) {
+		if(!mapOfIdsAndOrgIdToChildrenMapPair.containsKey(orgId))
+		{
+			mapOfIdsAndOrgIdToChildrenMapPair.put(orgId, getFacilityIdsAndOrgIdToChildrenMapPair(orgId));
+		}
+		return mapOfIdsAndOrgIdToChildrenMapPair.get(orgId);
+	}
+	
+	private List<OrgItem> fetchOrgHierarchy(String orgId) {
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+
+		if(!mapOfOrgHierarchy.containsKey(orgId))
+		{
+			mapOfOrgHierarchy.put(orgId, ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, orgId));
+		}
+		return mapOfOrgHierarchy.get(orgId);
+	}
+	
+	public void refreshMapForOrgId(String orgId) {
+		mapOfIdsAndOrgIdToChildrenMapPair.put(orgId, getFacilityIdsAndOrgIdToChildrenMapPair(orgId));
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		mapOfOrgHierarchy.put(orgId, ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, orgId));
+	}
+	
+	
 	
 	public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
 
@@ -594,7 +624,7 @@ public class HelperService {
 
 	public List<OrgItem> getOrganizationsByPractitionerRoleId(String practitionerRoleId) {
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
-		return getOrganizationHierarchy(organizationId);
+		return fetchOrgHierarchy(organizationId);
 	}
 
 	public ResponseEntity<?> getPieChartDataByPractitionerRoleIdWithFilters(String practitionerRoleId, String startDate, String endDate, LinkedHashMap<String, String> filters,String env) {
@@ -619,7 +649,7 @@ public class HelperService {
 		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 
 		Date start = Date.valueOf(startDate);
 		Date end = Date.valueOf(endDate);
@@ -721,7 +751,7 @@ public class HelperService {
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<AnalyticItem> analyticItems = new ArrayList<>();
 		List<IndicatorItem> analyticsItemListFromFile = getAnalyticsItemListFromFile(env);
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 
 		Pair<Date, Date> currentWeek = DateUtilityHelper.getCurrentWeekDates();
 		Pair<Date, Date> prevWeek = DateUtilityHelper.getPrevWeekDates();
@@ -752,7 +782,7 @@ public class HelperService {
 			String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
 
-			Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
+			Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 
 			if (fhirSearchList.isEmpty()) {
 				Date start = Date.valueOf(startDate);
@@ -814,12 +844,11 @@ public class HelperService {
 
 		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 		//Always cache current date data if it lies between start and end date.
-		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
-			facilityIds.forEach(facilityId -> {
-				cachingService.cacheTabularData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators);
-			});
-		}
-
+//		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+//			facilityIds.forEach(facilityId -> {
+//				cachingService.cacheTabularData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators);
+//			});
+//		}
 	}
 
 	private void performCachingForPieChartData(List<PieChartDefinition> pieChartDefinitions, List<String> facilityIds, Date startDate, Date endDate){
@@ -856,11 +885,11 @@ public class HelperService {
 		});
 		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 		//Always cache current date data if it lies between start and end date.
-		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
-			facilityIds.forEach(facilityId -> {
-				cachingService.cachePieChartData(facilityId, DateUtilityHelper.getCurrentSqlDate(), pieChartDefinitions);
-			});
-		}
+//		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+//			facilityIds.forEach(facilityId -> {
+//				cachingService.cachePieChartData(facilityId, DateUtilityHelper.getCurrentSqlDate(), pieChartDefinitions);
+//			});
+//		}
 	}
 
 	public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type,String env) {
@@ -869,7 +898,7 @@ public class HelperService {
 		List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 
 		Date start = Date.valueOf(startDate);
 		Date end = Date.valueOf(endDate);
@@ -975,7 +1004,7 @@ public class HelperService {
 		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 		List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
 
 		Date start = Date.valueOf(startDate);
@@ -1034,11 +1063,11 @@ public class HelperService {
 
 		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 		//Always cache current date data if it lies between start and end date.
-		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
-			facilityIds.forEach(facilityId -> {
-				cachingService.cacheData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators);
-			});
-		}
+//		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+//			facilityIds.forEach(facilityId -> {
+//				cachingService.cacheData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators);
+//			});
+//		}
 
 	}
 
@@ -1084,11 +1113,11 @@ public class HelperService {
 
 		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 		//Always cache current date data if it lies between start and end date.
-		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
-			facilityIds.forEach(facilityId -> {
-				cachingService.cacheDataForBarChart(facilityId, DateUtilityHelper.getCurrentSqlDate(), barCharts);
-			});
-		}
+//		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+//			facilityIds.forEach(facilityId -> {
+//				cachingService.cacheDataForBarChart(facilityId, DateUtilityHelper.getCurrentSqlDate(), barCharts);
+//			});
+//		}
 
 	}
 	
@@ -1148,7 +1177,7 @@ public class HelperService {
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = getFacilityIdsAndOrgIdToChildrenMapPair(organizationId);
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 
 		Date start = Date.valueOf(startDate);
 		Date end = Date.valueOf(endDate);
@@ -1231,11 +1260,11 @@ public class HelperService {
 
 		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 		//Always cache current date data if it lies between start and end date.
-		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
-			facilityIds.forEach(facilityId -> {
-				cachingService.cacheDataLineChart(facilityId, DateUtilityHelper.getCurrentSqlDate(), lineCharts);
-			});
-		}
+//		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+//			facilityIds.forEach(facilityId -> {
+//				cachingService.cacheDataLineChart(facilityId, DateUtilityHelper.getCurrentSqlDate(), lineCharts);
+//			});
+//		}
 	}
 	
 	List<String> getFhirSearchListByFilters(LinkedHashMap<String, String> filters,String env) throws FileNotFoundException {
@@ -1289,8 +1318,7 @@ public class HelperService {
 	}
 
 	public List<OrgItem> getOrganizationHierarchy(String organizationId) {
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-		return ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, organizationId);
+		return fetchOrgHierarchy(organizationId);
 	}
 
 	public String getOrganizationIdByPractitionerRoleId(String practitionerRoleId) {

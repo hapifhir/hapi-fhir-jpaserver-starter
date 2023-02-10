@@ -48,11 +48,19 @@ public class NotificationDataSource {
 	public void insert(Object object) {
 		Session session = sf.openSession();
 		Transaction transaction = session.beginTransaction();
-		session.save(object);
-		transaction.commit();
-		session.close();
+		try {
+			session.save(object);
+			transaction.commit();	
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			transaction.rollback();
+		}finally {
+			session.close();	
+		}
 	}
-
+	
 	public void persist(Object object) {
 		Session session = sf.openSession();
 		Transaction transaction = session.beginTransaction();
@@ -62,6 +70,7 @@ public class NotificationDataSource {
 		} catch (PersistenceException ex) {
 			// PersistenceException internally throws UniqueConstraintViolationError
 			logger.info("Duplicate entry. Entity " + object.toString() + "Already exists");
+			transaction.rollback();
 		} finally {
 			session.close();
 		}
@@ -70,8 +79,14 @@ public class NotificationDataSource {
 	public void update(Object object) {
 		Session session = sf.openSession();
 		Transaction transaction = session.beginTransaction();
-		session.update(object);
-		transaction.commit();
+		try {
+			session.update(object);
+			transaction.commit();
+		}catch(Exception e) {
+			e.printStackTrace();
+			transaction.rollback();
+		}
+		
 		session.close();
 	}
 

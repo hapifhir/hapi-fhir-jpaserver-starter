@@ -277,6 +277,15 @@ public class UserAndGroupManagementController {
 		return helperService.getTabularDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, filters,env);
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/refreshMapToOrgId")
+	public ResponseEntity<?> refreshMapToOrgId(
+		@RequestHeader(name = "Authorization") String token,
+		@RequestParam("orgId") String orgId
+	) {
+		helperService.refreshMapForOrgId(orgId);
+		return ResponseEntity.ok("Refresh done");
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/barChartData")
 	public ResponseEntity<?> getBarChartData(
 		@RequestHeader(name = "Authorization") String token,

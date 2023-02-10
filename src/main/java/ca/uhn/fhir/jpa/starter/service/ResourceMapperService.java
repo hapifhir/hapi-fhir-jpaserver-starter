@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class ResourceMapperService {
-	private static final Logger logger = LoggerFactory.getLogger(ResourceMapperService.class);
+//	private static final Logger logger = LoggerFactory.getLogger(ResourceMapperService.class);
 	private static final long DELAY = 10 * 60000;
 
 	/**
 	 * Maps the resources of temporary patient to actual patient when the patient not found on client and service is provided with the OCL-ID
 	 */
-	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
+//	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
 	public void mapResourcesToPatient() {
 		//Searching for patient created with OCL-ID
 		Bundle tempPatientBundle = new Bundle();
@@ -183,7 +183,7 @@ public class ResourceMapperService {
 	/**
 	 *  Updates partOf reference in the encounter if multiple encounters created for a patient on same day.
 	*/
-	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
+//	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
 	public void mapEncounters() {
 		NotificationDataSource notificationDataSource = NotificationDataSource.getInstance();
 		List<EncounterIdEntity> encounterIdEntityList = notificationDataSource.fetchAllFromEncounterIdEntity();
