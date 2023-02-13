@@ -1268,72 +1268,77 @@ public class HelperService {
 	}
 
 	@Async
-	public void cacheDashboardTabularData(List<String> facilities, String env) {
-		Date currentDate =  DateUtilityHelper.getCurrentSqlDate();
-		Date startDate = Date.valueOf("2021-10-01");
+	public void cacheDashboardTabularData(List<String> facilities, String start, String end, String env) {
+		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
+		Date startDate = Date.valueOf(start);
 		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
 		for (String facilityId : facilities) {
-			while (!startDate.equals(currentDate)) {
-				logger.info("-- Caching TabularData for date "+ startDate + " and facility id "+ facilityId);
+			while (!startDate.equals(endDate)) {
+				logger.info("-- Caching TabularData for date " + startDate + " and facility id " + facilityId);
 				cachingService.cacheTabularData(facilityId, startDate, tabularItemList);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
+			startDate = Date.valueOf(start);
 		}
 	}
 
 	@Async
-	public void cacheDashboardLineChartData(List<String> facilities, String env) {
-		Date currentDate =  DateUtilityHelper.getCurrentSqlDate();
-		Date startDate = Date.valueOf("2021-10-01");
+	public void cacheDashboardLineChartData(List<String> facilities, String start, String end, String env) {
+		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
+		Date startDate = Date.valueOf(start);
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
 		for (String facilityId : facilities) {
-			while (!startDate.equals(currentDate)) {
-				logger.info("-- Caching lineChart for date "+ startDate + " and facility id "+ facilityId);
+			while (!startDate.equals(endDate)) {
+				logger.info("-- Caching lineChart for date " + startDate + " and facility id " + facilityId);
 				cachingService.cacheDataLineChart(facilityId, startDate, lineCharts);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
+			startDate = Date.valueOf(start);
 		}
 	}
 
 	@Async
-	public void cacheDashboardBarChartData(List<String> facilities, String env) {
-		Date currentDate =  DateUtilityHelper.getCurrentSqlDate();
-		Date startDate = Date.valueOf("2021-10-01");
+	public void cacheDashboardBarChartData(List<String> facilities, String start, String end, String env) {
+		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
+		Date startDate = Date.valueOf(start);
 		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
 		for (String facilityId : facilities) {
-			while (!startDate.equals(currentDate)) {
-				logger.info("-- Caching barCharts for date "+ startDate + " and facility id "+ facilityId);
+			while (!startDate.equals(endDate)) {
+				logger.info("-- Caching barCharts for date " + startDate + " and facility id " + facilityId);
 				cachingService.cacheDataForBarChart(facilityId, startDate, barCharts);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
+			startDate = Date.valueOf(start);
 		}
 	}
 
 	@Async
-	public void cacheDashboardPieChartData(List<String> facilities, String env) {
-		Date currentDate =  DateUtilityHelper.getCurrentSqlDate();
-		Date startDate = Date.valueOf("2021-10-01");
+	public void cacheDashboardPieChartData(List<String> facilities, String start, String end, String env) {
+		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
+		Date startDate = Date.valueOf(start);
 		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
 		for (String facilityId : facilities) {
-			while (!startDate.equals(currentDate)) {
-				logger.info("-- Caching pieChart for date "+ startDate + " and facility id "+ facilityId);
+			while (!startDate.equals(endDate)) {
+				logger.info("-- Caching pieChart for date " + startDate + " and facility id " + facilityId);
 				cachingService.cachePieChartData(facilityId, startDate, pieChartDefinitions);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
+			startDate = Date.valueOf(start);
 		}
 	}
 
 	@Async
-	public void cacheDashboardScoreCardData(List<String> facilities, String env) {
-		Date currentDate =  DateUtilityHelper.getCurrentSqlDate();
-		Date startDate = Date.valueOf("2021-10-01");
+	public void cacheDashboardScoreCardData(List<String> facilities, String start, String end, String env) {
+		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
+		Date startDate = Date.valueOf(start);
 		List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
 		for (String facilityId : facilities) {
-			while (!startDate.equals(currentDate)) {
-				logger.info("-- Caching Scorecard for date "+ startDate + " and facility id "+ facilityId);
+			while (!startDate.equals(endDate)) {
+				logger.info("-- Caching Scorecard for date " + startDate + " and facility id " + facilityId);
 				cachingService.cacheData(facilityId, startDate, indicators);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
+			startDate = Date.valueOf(start);
 		}
 	}
 
