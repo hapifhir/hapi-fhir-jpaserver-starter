@@ -60,9 +60,14 @@ hapi:
       pie_config_file : C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\pie_config.json
       gcp_credential_file_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\gcpCredential.json
       sql_screen_time_file_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\sql_screen_time.txt
-      line_chart_definitions_file : C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\chart_definition.json      
+      line_chart_definitions_file : C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\chart_definition.json
       tabular_config_file : C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\tabular_config.json
       analytics_config_file : C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\analytics_config.json
+
+      executor_core_pool_size : 3
+      executor_max_pool_size : 3
+      executor_queue_capacity : 100
+      executor_thread_name_prefix : AsynchThread-
 ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
       keycloak_server_address: http://testhost.dashboard:8081/auth
 ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5

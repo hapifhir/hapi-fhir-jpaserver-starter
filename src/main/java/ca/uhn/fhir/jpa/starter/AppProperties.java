@@ -104,6 +104,43 @@ public class AppProperties {
 	private String gcp_credential_file_path = null;
 	private String sql_screen_time_file_path = null;
 
+	private Integer executor_core_pool_size = 3;
+	private Integer executor_max_pool_size = 3;
+	private Integer executor_queue_capacity = 100;
+	private String executor_thread_name_prefix = "AsyncThread-";
+
+	public Integer getExecutor_core_pool_size() {
+		return executor_core_pool_size;
+	}
+
+	public void setExecutor_core_pool_size(Integer executor_core_pool_size) {
+		this.executor_core_pool_size = executor_core_pool_size;
+	}
+
+	public Integer getExecutor_max_pool_size() {
+		return executor_max_pool_size;
+	}
+
+	public void setExecutor_max_pool_size(Integer executor_max_pool_size) {
+		this.executor_max_pool_size = executor_max_pool_size;
+	}
+
+	public Integer getExecutor_queue_capacity() {
+		return executor_queue_capacity;
+	}
+
+	public void setExecutor_queue_capacity(Integer executor_queue_capacity) {
+		this.executor_queue_capacity = executor_queue_capacity;
+	}
+
+	public String getExecutor_thread_name_prefix() {
+		return executor_thread_name_prefix;
+	}
+
+	public void setExecutor_thread_name_prefix(String executor_thread_name_prefix) {
+		this.executor_thread_name_prefix = executor_thread_name_prefix;
+	}
+
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
 	}

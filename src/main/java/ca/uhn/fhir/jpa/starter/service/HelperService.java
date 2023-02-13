@@ -413,7 +413,7 @@ public class HelperService {
 	}
 
 
-	@Async
+	@Async("asyncTaskExecutor")
 	public void saveQueryResult(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters, String id,String env) {
 
 		try {
@@ -1267,79 +1267,105 @@ public class HelperService {
 //		}
 	}
 
-	@Async
+	@Async("asyncTaskExecutor")
 	public void cacheDashboardTabularData(List<String> facilities, String start, String end, String env) {
 		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 		Date startDate = Date.valueOf(start);
 		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
 		for (String facilityId : facilities) {
 			while (!startDate.equals(endDate)) {
-				logger.info("-- Caching TabularData for date " + startDate + " and facility id " + facilityId);
+				logger.warn("-- Caching TabularData for date " + startDate + " and facility id " + facilityId);
 				cachingService.cacheTabularData(facilityId, startDate, tabularItemList);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
 			startDate = Date.valueOf(start);
 		}
+		logger.warn("-- Caching completed for TabularData");
 	}
 
-	@Async
+	@Async("asyncTaskExecutor")
 	public void cacheDashboardLineChartData(List<String> facilities, String start, String end, String env) {
 		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 		Date startDate = Date.valueOf(start);
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
 		for (String facilityId : facilities) {
 			while (!startDate.equals(endDate)) {
-				logger.info("-- Caching lineChart for date " + startDate + " and facility id " + facilityId);
+				logger.warn("-- Caching lineChart for date " + startDate + " and facility id " + facilityId);
 				cachingService.cacheDataLineChart(facilityId, startDate, lineCharts);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
 			startDate = Date.valueOf(start);
 		}
+		logger.warn("-- Caching completed for lineChart");
 	}
 
-	@Async
+	@Async("asyncTaskExecutor")
 	public void cacheDashboardBarChartData(List<String> facilities, String start, String end, String env) {
 		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 		Date startDate = Date.valueOf(start);
 		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
 		for (String facilityId : facilities) {
 			while (!startDate.equals(endDate)) {
-				logger.info("-- Caching barCharts for date " + startDate + " and facility id " + facilityId);
+				logger.warn("-- Caching barCharts for date " + startDate + " and facility id " + facilityId);
 				cachingService.cacheDataForBarChart(facilityId, startDate, barCharts);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
 			startDate = Date.valueOf(start);
 		}
+		logger.warn("-- Caching completed for barChart");
 	}
 
-	@Async
+	@Async("asyncTaskExecutor")
 	public void cacheDashboardPieChartData(List<String> facilities, String start, String end, String env) {
 		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 		Date startDate = Date.valueOf(start);
 		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
 		for (String facilityId : facilities) {
 			while (!startDate.equals(endDate)) {
-				logger.info("-- Caching pieChart for date " + startDate + " and facility id " + facilityId);
+				logger.warn("-- Caching pieChart for date " + startDate + " and facility id " + facilityId);
 				cachingService.cachePieChartData(facilityId, startDate, pieChartDefinitions);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
 			startDate = Date.valueOf(start);
 		}
+		logger.warn("-- Caching completed for pieChart");
 	}
 
-	@Async
+	@Async("asyncTaskExecutor")
 	public void cacheDashboardScoreCardData(List<String> facilities, String start, String end, String env) {
 		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 		Date startDate = Date.valueOf(start);
 		List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
 		for (String facilityId : facilities) {
 			while (!startDate.equals(endDate)) {
-				logger.info("-- Caching Scorecard for date " + startDate + " and facility id " + facilityId);
+				logger.warn("-- Caching Scorecard for date " + startDate + " and facility id " + facilityId);
 				cachingService.cacheData(facilityId, startDate, indicators);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
 			startDate = Date.valueOf(start);
 		}
+		logger.warn("-- Caching completed for Scorecard");
+	}
+
+	@Async("asyncTaskExecutor")
+	public void cacheDashboardData(List<String> facilities, String start, String end, String env) {
+		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
+		Date startDate = Date.valueOf(start);
+		List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
+		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
+		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
+		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
+		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
+
+		for (String facilityId : facilities) {
+			while (!startDate.equals(endDate)) {
+				cachingService.cacheDashboardData(facilityId, startDate, indicators, barCharts, tabularItemList, lineCharts, pieChartDefinitions);
+				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
+			}
+			startDate = Date.valueOf(start);
+			logger.warn("-- Caching completed for Overall Data from date " + startDate + " to "+ endDate +" with facility id " + facilityId);
+		}
+		logger.warn("-- Caching completed for Overall data");
 	}
 
 	

@@ -393,4 +393,26 @@ public class UserAndGroupManagementController {
 		return ResponseEntity.ok("Caching in Progress");
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/cacheDashboardDataSequential")
+	public ResponseEntity<?> cacheDashboardDataSequential(
+		@RequestHeader(name = "Authorization") String token,
+		@RequestParam("from") String from,
+		@RequestParam("to") String to,
+		@RequestParam(value = "organizationId", required = false) String organizationId,
+		@RequestParam("env") String env) {
+		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		if (practitionerRoleId == null) {
+			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
+		}
+		if (organizationId == null) {
+			organizationId = helperService.getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+			if (organizationId == null) {
+				return ResponseEntity.ok("Error : This user is not mapped to any organization");
+			}
+		}
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = helperService.fetchIdsAndOrgIdToChildrenMapPair(organizationId);
+		helperService.cacheDashboardData(idsAndOrgIdToChildrenMapPair.first, from, to, env);
+		return ResponseEntity.ok("Caching in Progress");
+	}
+
 }
