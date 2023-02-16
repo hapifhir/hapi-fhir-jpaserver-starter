@@ -515,12 +515,12 @@ public class AppProperties {
     this.narrative_enabled = narrative_enabled;
   }
 
-  public Boolean getHistory_count_mode()
+  public Integer getHistory_count_mode()
   {
     return history_count_mode;
   }
 
-  public Boolean setHistory_count_mode(Integer history_count_mode)
+  public void setHistory_count_mode(Integer history_count_mode)
   {
     this.history_count_mode = history_count_mode;
   }
