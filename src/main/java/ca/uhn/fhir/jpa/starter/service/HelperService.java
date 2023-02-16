@@ -789,15 +789,13 @@ public class HelperService {
 				Date end = Date.valueOf(endDate);
 				notificationDataSource = NotificationDataSource.getInstance();
 				performCachingForTabularData(tabularItemList, idsAndOrgIdToChildrenMapPair.first, start, end);
-				for (String orgId : idsAndOrgIdToChildrenMapPair.first) {
-					for (TabularItem indicator : tabularItemList) {
-						Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndOrgId(start, end,
-								Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), orgId);
-						scoreCardItems.add(new ScoreCardItem(orgId, indicator.getId(),
-							cacheValueSum.toString(), startDate, endDate));
-					}
-				}
+				scoreCardItems = idsAndOrgIdToChildrenMapPair.first.parallelStream()
+					.flatMap(orgId -> tabularItemList.parallelStream().map(indicator -> {
+						Double cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndOrgId(start, end,
+							Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), orgId);
+						return new ScoreCardItem(orgId, indicator.getId(), cacheValueSum.toString(), startDate, endDate);
+					}))
+					.collect(Collectors.toList());
 			} else {
 				scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getTabularData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), tabularItemList, fhirSearchList);
 			}
@@ -907,14 +905,14 @@ public class HelperService {
 		switch (type) {
 			case summary: {
 				LinkedHashMap<String, List<String>> mapOfIdToChildren = idsAndOrgIdToChildrenMapPair.second;
-				mapOfIdToChildren.forEach((id, children) -> {
+				mapOfIdToChildren.entrySet().parallelStream().forEach(entry -> {
+					String id = entry.getKey();
+					List<String> children = entry.getValue();
 					children.add(id);
 					for (IndicatorItem indicator : indicators) {
-						Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
-								Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), children);
-						scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(),
-							startDate, endDate));
+						Double cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
+							Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), children);
+						scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(), startDate, endDate));
 					}
 				});
 				break;
