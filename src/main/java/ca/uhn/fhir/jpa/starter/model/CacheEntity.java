@@ -33,14 +33,20 @@ public class CacheEntity {
 	@Column(name = "value", nullable = false)
 	private Double value;
 	
+
+	@Column(name = "lastUpdated", nullable = true)
+	private Date lastUpdated;
+	
+
 	// Default constructor required for entity.
 	public CacheEntity() {	}
 
-	public CacheEntity(String orgId, String indicator, Date date, Double value) {
+	public CacheEntity(String orgId, String indicator, Date date, Double value,Date lastUpdated) {
 		this.orgId = orgId;
 		this.indicator = indicator;
 		this.date = date;
 		this.value = value;
+		this.lastUpdated = lastUpdated;
 	}
 
 	public long getId() {
@@ -81,5 +87,13 @@ public class CacheEntity {
 
 	public void setValue(Double value) {
 		this.value = value;
+	}
+	
+	public Date getLastUpdated() {
+		return lastUpdated;
+	}
+
+	public void setLastUpdated(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
 	}
 }

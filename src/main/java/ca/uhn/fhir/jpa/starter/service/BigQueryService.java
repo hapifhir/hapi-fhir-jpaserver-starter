@@ -31,7 +31,7 @@ public class BigQueryService {
 	private static final String KEYCLOAK_IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System/KeycloakId";
 	
 	@Autowired
-	  AppProperties appProperties;
+	AppProperties appProperties;
 
 	public List<AnalyticItem> timeSpentOnScreenAnalyticItems(Organization organization) {
 		List<AnalyticItem> timeAnalyticItems = new ArrayList<>();

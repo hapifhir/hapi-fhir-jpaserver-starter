@@ -1345,7 +1345,6 @@ public class HelperService {
 		logger.warn("-- Caching completed for Scorecard");
 	}
 
-	@Async("asyncTaskExecutor")
 	public void cacheDashboardData(List<String> facilities, String start, String end, String env) {
 		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 		Date startDate = Date.valueOf(start);
