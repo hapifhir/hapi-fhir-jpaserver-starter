@@ -72,6 +72,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.stream.IntStream;
 
 import static org.hibernate.search.util.common.impl.CollectionHelper.asList;
 import static org.keycloak.util.JsonSerialization.mapper;
@@ -789,12 +790,22 @@ public class HelperService {
 				Date end = Date.valueOf(endDate);
 				notificationDataSource = NotificationDataSource.getInstance();
 				performCachingForTabularData(tabularItemList, idsAndOrgIdToChildrenMapPair.first, start, end);
+				List<String> orgIds = idsAndOrgIdToChildrenMapPair.first;
+				List<FhirPath> fhirPaths = tabularItemList.stream()
+					.map(TabularItem::getFhirPath)
+					.collect(Collectors.toList());
 				scoreCardItems = idsAndOrgIdToChildrenMapPair.first.parallelStream()
-					.flatMap(orgId -> tabularItemList.parallelStream().map(indicator -> {
-						Double cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndOrgId(start, end,
-							Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), orgId);
-						return new ScoreCardItem(orgId, indicator.getId(), cacheValueSum.toString(), startDate, endDate);
-					}))
+					.flatMap(orgId -> {
+						List<Double> cacheValueSums = notificationDataSource.getCacheValueSumByDateRangeIndicatorsAndMultipleOrgIds(start, end, Utils.getMd5StringsFromFhirPaths(fhirPaths), orgIds);
+						return IntStream.range(0, tabularItemList.size())
+							.mapToObj(i -> new ScoreCardItem(
+								orgId,
+								tabularItemList.get(i).getId(),
+								cacheValueSums.get(i).toString(),
+								startDate,
+								endDate
+							));
+					})
 					.collect(Collectors.toList());
 			} else {
 				scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getTabularData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), tabularItemList, fhirSearchList);
@@ -909,11 +920,18 @@ public class HelperService {
 					String id = entry.getKey();
 					List<String> children = entry.getValue();
 					children.add(id);
-					for (IndicatorItem indicator : indicators) {
-						Double cacheValueSum = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
-							Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), children);
-						scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(), startDate, endDate));
-					}
+					List<FhirPath> fhirPaths = indicators.stream()
+						.map(IndicatorItem::getFhirPath)
+						.collect(Collectors.toList());
+					List<Integer> indicatorIds = indicators.stream()
+						.map(IndicatorItem::getId)
+						.collect(Collectors.toList());
+					List<Double> cacheValueSumList = notificationDataSource.getCacheValueSumByDateRangeIndicatorsAndMultipleOrgIds(start, end, Utils.getMd5StringsFromFhirPaths(fhirPaths), children);
+					IntStream.range(0, indicatorIds.size()).parallel().forEach(index -> {
+						Integer indicatorId = indicatorIds.get(index);
+						Double cacheValueSum = cacheValueSumList.get(index);
+						scoreCardItems.add(new ScoreCardItem(id, indicatorId, cacheValueSum.toString(), startDate, endDate));
+					});
 				});
 				break;
 			}
