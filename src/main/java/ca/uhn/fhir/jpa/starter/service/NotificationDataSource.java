@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter.service;
 import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ca.uhn.fhir.jpa.starter.model.*;
@@ -152,6 +153,22 @@ public class NotificationDataSource {
 		return (Double) resultList.get(0);
 	}
 
+	public List<Double> getCacheValueSumByDateRangeIndicatorsAndMultipleOrgIds(Date from, Date to, List<String> indicators, List<String> orgIds) {
+		Session session = sf.openSession();
+		Query query = session.createQuery("SELECT SUM(value) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2 AND indicator=:param3 AND org_id IN (:param4) GROUP BY org_id");
+		query.setParameter("param1", from);
+		query.setParameter("param2", to);
+		query.setParameterList("param3", indicators);
+		query.setParameterList("param4", orgIds);
+		List<Double> resultList = query.getResultList();
+		session.close();
+		if(resultList.isEmpty()) {
+			return Collections.emptyList();
+		}
+		return resultList;
+	}
+
+
 	public Double getCacheValueSumByDateRangeIndicatorAndOrgId(Date from, Date to, String indicator, String orgId) {
 		Session session = sf.openSession();
 		Query query = session.createQuery("SELECT SUM(value) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2 AND indicator=:param3 AND org_id=:param4");
@@ -164,10 +181,8 @@ public class NotificationDataSource {
 		if(resultList.isEmpty() || resultList.get(0) == null) {
 			return 0.0;
 		}
-
 		return (Double) resultList.get(0);
 	}
-
 
 	public List<Date> getDatesPresent(Date from, Date to, List<String> indicatorMD5List, List<String> facilityIds) {
 		Session session = sf.openSession();

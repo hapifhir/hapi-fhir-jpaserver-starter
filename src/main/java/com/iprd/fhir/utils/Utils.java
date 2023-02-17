@@ -8,9 +8,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 
@@ -68,7 +66,35 @@ public class Utils {
 		String fhirPathString = getStringFromFhirPath(fhirPath);
 		return md5Bytes(fhirPathString.getBytes(StandardCharsets.UTF_8));
 	}
-	
+
+	public static List<String> getMd5StringsFromFhirPaths(List<FhirPath> fhirPaths){
+		List<String> fhirPathStrings = getStringListFromFhirPathList(fhirPaths);
+		List<String> md5Strings = new ArrayList<>();
+		for (String fhirPathString: fhirPathStrings){
+			String md5Bytes = md5Bytes(fhirPathString.getBytes(StandardCharsets.UTF_8));
+			md5Strings.add(md5Bytes);
+		}
+		return md5Strings;
+	}
+
+	public static List<String> getStringListFromFhirPathList(List<FhirPath> fhirPaths) {
+		List<String> fhirPathStrings = new ArrayList<>();
+		for (FhirPath fhirPath : fhirPaths) {
+			String fhirPathString = "";
+			if (fhirPath.getOperand().isEmpty()) {
+				fhirPathStrings.add(fhirPathString);
+			} else if (fhirPath.getOperand().size() == 1) {
+				fhirPathStrings.add(fhirPath.getOperand().get(0));
+			} else if (fhirPath.getOperator() == null && fhirPath.getOperand().size() > 1) {
+				throw new IllegalArgumentException("Multiple Operands passed without operator");
+			} else {
+				fhirPathString = fhirPath.getOperator() + "," + String.join(",", fhirPath.getOperand());
+				fhirPathStrings.add(fhirPathString);
+			}
+		}
+		return fhirPathStrings;
+	}
+
 	public static String getMd5KeyForLineCacheMd5(FhirPath fhirPath, Integer lineId, Integer chartId) {
 		String combinedString = getStringFromFhirPath(fhirPath)+"_"+lineId.toString()+"_"+chartId.toString();
 		return  md5Bytes(combinedString.getBytes(StandardCharsets.UTF_8));
