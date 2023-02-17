@@ -34,7 +34,6 @@ import static org.springframework.http.HttpMethod.PUT;
 
 //@ConditionalOnProperty(prefix = "keycloak", name = "enabled", havingValue = "true", matchIfMissing = true)
 @KeycloakConfiguration
-
 public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 	private static final String CORS_ALLOWED_HEADERS =
             "origin,content-type,accept,x-requested-with,Authorization,Access-Control-Allow-Credentials";
