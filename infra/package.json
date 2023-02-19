@@ -1,0 +1,37 @@
+{
+  "name": "infrastructure",
+  "version": "0.1.0",
+  "bin": {
+    "infrastructure": "bin/infrastructure.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "npx eslint bin/**/*.ts lib/**/*.ts",
+    "lint-fix": "npm run lint --fix",
+    "prettier-fix": "npx prettier '{bin,lib,test}/**/*.ts' --write",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.2",
+    "@types/jest": "^29.2.0",
+    "@types/node": "18.11.7",
+    "@types/prettier": "2.7.1",
+    "@typescript-eslint/eslint-plugin": "^5.48.2",
+    "@typescript-eslint/parser": "^5.48.2",
+    "aws-cdk": "2.49.0",
+    "esbuild": "^0.15.12",
+    "eslint": "^8.32.0",
+    "eslint-config-prettier": "^8.6.0",
+    "jest": "^29.2.2",
+    "prettier": "^2.8.3",
+    "ts-jest": "^29.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "~4.8.4"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.49.0",
+    "constructs": "^10.1.144",
+    "source-map-support": "^0.5.21"
+  }
+}

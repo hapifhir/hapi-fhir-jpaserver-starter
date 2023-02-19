@@ -16,8 +16,8 @@ import org.springframework.context.annotation.Import;
  * 2. It tells the tester which server(s) to talk to, via the testerConfig()
  *    method below
  */
-@Configuration
-@Import(FhirTesterMvcConfig.class)
+// @Configuration
+// @Import(FhirTesterMvcConfig.class)
 public class FhirTesterConfig {
 
 	/**
@@ -34,20 +34,22 @@ public class FhirTesterConfig {
 	 * deploying your server to a place with a fully qualified domain name,
 	 * you might want to use that instead of using the variable.
 	 */
-  @Bean
+//   @Bean
   public TesterConfig testerConfig(AppProperties appProperties) {
-    TesterConfig retVal = new TesterConfig();
-    appProperties.getTester().forEach((key, value) -> {
-		 retVal
-			 .addServer()
-			 .withId(key)
-			 .withFhirVersion(value.getFhir_version())
-			 .withBaseUrl(value.getServer_address())
-			 .withName(value.getName());
-		 retVal.setRefuseToFetchThirdPartyUrls(
-			 value.getRefuse_to_fetch_third_party_urls());
+	 TesterConfig retVal = new TesterConfig();
+	 if (appProperties.getTester() != null) {
+		appProperties.getTester().forEach((key, value) -> {
+			retVal
+				.addServer()
+				.withId(key)
+				.withFhirVersion(value.getFhir_version())
+				.withBaseUrl(value.getServer_address())
+				.withName(value.getName());
+			retVal.setRefuseToFetchThirdPartyUrls(
+				value.getRefuse_to_fetch_third_party_urls());
 
-	 });
+		});
+	 }
     return retVal;
   }
 
