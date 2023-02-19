@@ -8,5 +8,6 @@ target/war
 target/duplicate-finder-result.xml
 target/jacoco.exec
 target/*.original
+infra/
 .idea
 .git

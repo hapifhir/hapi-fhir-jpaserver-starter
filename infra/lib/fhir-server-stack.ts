@@ -16,7 +16,7 @@ interface FHIRServerProps extends StackProps {
   config: EnvConfig;
 }
 
-export class FhirServerStack extends Stack {
+export class FHIRServerStack extends Stack {
   constructor(scope: Construct, id: string, props: FHIRServerProps) {
     super(scope, id, props);
 
