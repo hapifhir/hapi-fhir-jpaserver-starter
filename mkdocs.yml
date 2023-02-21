@@ -11,7 +11,8 @@ nav:
   - index.md
   - features.md
   - changelog.md
+  - validation.md
   - api.md
   - docker.md
   - matchbox-engine.md
-  - cda-logical-model.md
+  - cda.md

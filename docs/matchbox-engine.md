@@ -10,7 +10,7 @@ Matchbox engine has been created to allow a standalone FHIR validation and trans
 
 default fhir package configuration:
 
-- cda-core-2.0#2.1.0-cibuild.tgz(*patched) 
+- cda-core-2.0#2.1.0-cibuild.tgz(\*patched)
 - hl7.fhir.r4.core.tgz
 - hl7.fhir.xver-extensions#0.0.11.tgz
 - hl7.terminology#5.0.0.tgz
@@ -19,20 +19,17 @@ default fhir package configuration:
 
 The transformation and validation functionality has been extracted out of matchbox ([https://github.com/ahdis/matchbox](https://github.com/ahdis/matchbox)) into the matchbox-engine ([https://github.com/ahdis/matchbox/tree/main/matchbox-engine](https://github.com/ahdis/matchbox/tree/main/matchbox-engine)) library. This has been done in a way, that the matchbox project contains different modules:
 
-
 ```
 [INFO] ------------------------------------------------------------------------
 [INFO] Reactor Build Order:
-[INFO] 
+[INFO]
 [INFO] matchbox                                                           [pom]
 [INFO] matchbox-engine                                                    [jar]
-[INFO] matchbox-engine-cli                                                [jar]
 [INFO] matchbox-server                                                    [jar]
-[INFO] 
+[INFO]
 [INFO] ----------------------< matchbox.health:matchbox >----------------------
 [INFO] Building matchbox 3.0.0-SNAPSHOT                                   [1/4]
 ```
-
 
 matchbox-engine creates the java library, matchbox-engine-cli adds all dependencies as a fat jar which can be directly executed (>100 MB) and matchbox-server provides the FHIR API as a microservice. It also uses matchbox-engine, so if matchbox is used during developing and testing the mapping, matchbox-engine will deliver the same result.
 
@@ -42,72 +39,60 @@ matchbox-engine is only based on org.hl7.fhir.core libraries (HAPI FHIR - HL7 FH
 
 The source code is documented with [Javadoc](https://ahdis.github.io/matchbox/apidocs/). Test cases illustrate the main functionality for transformation with the [FHIR Mapping Language](https://github.com/ahdis/matchbox/blob/main/matchbox-engine/src/test/java/ch/ahdis/matchbox/engine/tests/FhirMappingLanguageTests.java) and for [CDA to FHIR transformation](https://github.com/ahdis/matchbox/blob/main/matchbox-engine/src/test/java/ch/ahdis/matchbox/engine/tests/CdaToFhirTransformTests.java).
 
-For validation you need to instantiate a class of matchbox-engine.
+For valdiation or transformation you need to instantiate a matchbox-engine. This matchbox-engine can be configured with specific a version of an implmenentation guide and it's dependencies. You can instantiate multiple engines with different ig's.
 
+### Validation
+
+Validaton is currently supported for FHIR R4. You can get an instance of matchbox-engine the following way:
 
 ```java
 engine = new MatchboxEngineBuilder().getEngineR4();
 ```
 
-
-This engine is configured with the core libraries for FHIR Release 4 (hl7.fhir.r4.core.tgz, hl7.fhir.xver-extensions#0.0.11.tgz, hl7.terminology#5.0.0.tgz). You can then invoke the validation with 
-
+This engine is configured with the core libraries for FHIR Release 4 (hl7.fhir.r4.core.tgz, hl7.fhir.xver-extensions#0.0.11.tgz, hl7.terminology#5.0.0.tgz). You can then invoke the validation with
 
 ```java
 InputStream in = CdaToFhirTransformTests.class.getResourceAsStream("/pat.json");
 org.hl7.fhir.r4.model.OperationOutcome outcome = engine.validate(in,FhirFormat.JSON, "http://hl7.org/fhir/StructureDefinition/Patient");
 ```
 
-
 You have the ability to add additional implementation guides to the engine (e.g. if you wan’t to support validation for your implementation guide). The engine will look for the npm package provided in the classpath:
-
 
 ```java
 engine.getIgLoader().loadIg(engine.getIgs(), engine.getBinaries(), "myig.tgz", true);
 ```
 
+You can create also a new instance based on an existing engine. This might be needed if you want to update conformance resources in an instance or if you want to have support for validation with different versions of ig’s (an engine can only be configured with one ig version, there is no support that an engine has two versions of the same ig).
 
-You can create a new instance based on an existing engine. This might be needed if you want to update conformance resources in an instance or if you want to have support for validation with different versions of ig’s (an engine can only be configured with one ig version, there is no support that an engine has two versions of the same ig).
-
-
-### Using the FHIR Mapping Language for transformation 
+### Using the FHIR Mapping Language for transformation
 
 If the engine has been configured already with StructureMap resources (e.g. provided within an Implementation Guide) the transformation can be directly called:
-
 
 ```java
 Resource res = engine.transformToFhir(getFileAsStringFromResources("/qr.json"), true, "http://ahdis.ch/matchbox/fml/qr2patgender");
 ```
 
-
 If you wan’t to provide the StructureMap yourself you can parse a FHIR Mapping Language map file and add the StructureMap resource then to the engine.
-
 
 ```java
 StructureMap sm = engine.parseMap(getFileAsStringFromResources("/qr2patgender.map"));
 engine.addCanonicalResource(sm);
 ```
 
-
 For the transformation the canonical Url of the StructureMaps has to be used.
-
 
 ### CDA to FHIR mapping
 
-To support CDA to FHIR mapping (or vice versa) a specific CDAEngine is available, which is configured with [CDA Logical Model](https://ahdis.github.io/matchbox/cda-logical-model/index.html). To do CDA to FHIR transformations you need to write the mapping logic and provide them as StructureMap resources. E.g. for the Swiss medication project the following maps have been developed: [http://fhir.ch/ig/cda-fhir-maps/index.html](http://fhir.ch/ig/cda-fhir-maps/index.html) 
+To support CDA to FHIR mapping (or vice versa) a specific CDAEngine is available, which is configured with [CDA Logical Model](https://ahdis.github.io/matchbox/cda-logical-model/index.html). To do CDA to FHIR transformations you need to write the mapping logic and provide them as StructureMap resources. E.g. for the Swiss medication project the following maps have been developed: [http://fhir.ch/ig/cda-fhir-maps/index.html](http://fhir.ch/ig/cda-fhir-maps/index.html)
 
 You can the load the engine with those maps:
-
 
 ```java
 engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngine("/cda-fhir-maps-300.tgz");
 ```
 
-
-And then do the transformation with 
-
+And then do the transformation with
 
 ```java
 String result = engine.transform(cda, false, "http://fhir.ch/ig/cda-fhir-maps/StructureMap/CdaToBundle", true);
 ```
-
