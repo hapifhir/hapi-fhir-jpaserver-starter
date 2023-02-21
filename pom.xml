@@ -163,7 +163,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.4.1</version>
+            <version>42.5.4</version>
         </dependency>
 
         <!-- Needed for Email subscriptions -->
@@ -280,7 +280,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.31</version>
+            <version>1.33</version>
         </dependency>
 
         <!-- Used for CORS support -->
@@ -362,7 +362,7 @@
 			<dependency>
 				<groupId>org.webjars.bower</groupId>
 				<artifactId>moment</artifactId>
-				<version>2.27.0</version>
+				<version>2.29.4</version>
 			</dependency>
 
         <!-- The following dependencies are only needed for automated unit tests, you do not neccesarily need them to run the example. -->
