@@ -123,11 +123,6 @@
     <name>HAPI FHIR JPA Server - Starter Project</name>
 
     <repositories>
-		<repository>
-	      <id>project.local</id>
-        	<name>project</name>
-        	<url>file:${project.basedir}/repo</url>
-		</repository>
         <repository>
             <id>oss-snapshots</id>
             <snapshots>
