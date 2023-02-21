@@ -8,5 +8,5 @@ group QuestionnaireResponse(source src : QuestionnaireResponse, target tgt : Pat
 }
 
 group item(source src, target tgt: Patient) {
-  src.item as item where linkId in ('patient.sex') -> tgt.gender = (%item.answer.value);
+  src.item as item where linkId in ('patient.sex') log (src.item.linkId) -> tgt.gender = (%item.answer.value);
 }
