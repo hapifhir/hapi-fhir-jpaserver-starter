@@ -21,7 +21,8 @@ import java.util.Objects;
 @EnableConfigurationProperties
 public class AppProperties {
 
-  private Boolean cql_enabled = false;
+  private Boolean cr_enabled = false;
+  private Boolean ips_enabled = false;
   private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
   private boolean advanced_lucene_indexing = false;
@@ -45,6 +46,7 @@ public class AppProperties {
   private Boolean filter_search_enabled = true;
   private Boolean graphql_enabled = false;
   private Boolean binary_storage_enabled = false;
+  private Integer inline_resource_storage_below_size = 0;
   private Boolean bulk_export_enabled = false;
   private Boolean bulk_import_enabled = false;
   private Boolean default_pretty_print = true;
@@ -71,6 +73,8 @@ public class AppProperties {
   private Boolean install_transitive_ig_dependencies = true;
   private Map<String, ImplementationGuide> implementationGuides = null;
 
+	private String staticLocation = null;
+
   private Boolean lastn_enabled = false;
   private boolean store_resource_in_lucene_index_enabled = false;
   private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
@@ -80,7 +84,23 @@ public class AppProperties {
 
   private Integer bundle_batch_pool_size = 20;
   private Integer bundle_batch_pool_max_size = 100;
-  private List<String> local_base_urls = new ArrayList<>();
+  private final List<String> local_base_urls = new ArrayList<>();
+  
+  private final List<String> custom_interceptor_classes = new ArrayList<>();
+
+  public List<String> getCustomInterceptorClasses() {
+    return custom_interceptor_classes;
+  }
+
+
+	public String getStaticLocation() {
+		return staticLocation;
+	}
+
+	public void setStaticLocation(String staticLocation) {
+		this.staticLocation = staticLocation;
+	}
+
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
@@ -130,13 +150,22 @@ public class AppProperties {
     this.partitioning = partitioning;
   }
 
-  public Boolean getCql_enabled() {
-    return cql_enabled;
+  public Boolean getCr_enabled() {
+    return cr_enabled;
   }
 
-  public void setCql_enabled(Boolean cql_enabled) {
-    this.cql_enabled = cql_enabled;
+  public void setCr_enabled(Boolean cr_enabled) {
+    this.cr_enabled = cr_enabled;
   }
+
+  public Boolean getIps_enabled() {
+	return ips_enabled;
+ }
+
+ public void setIps_enabled(Boolean ips_enabled) {
+	this.ips_enabled = ips_enabled;
+ }
+
 
   public Boolean getMdm_enabled() {
     return mdm_enabled;
@@ -201,10 +230,6 @@ public class AppProperties {
   public void setSupported_resource_types(List<String> supported_resource_types) {
     this.supported_resource_types = supported_resource_types;
   }
-
-	public List<String> getSupported_resource_types(List<String> supported_resource_types) {
-		return this.supported_resource_types;
-	}
 
 	public Logger getLogger() {
     return logger;
@@ -395,7 +420,15 @@ public class AppProperties {
     this.binary_storage_enabled = binary_storage_enabled;
   }
 
-  public Boolean getBulk_export_enabled() {
+	public Integer getInline_resource_storage_below_size() {
+		return inline_resource_storage_below_size;
+	}
+
+	public void setInline_resource_storage_below_size(Integer inline_resource_storage_below_size) {
+		this.inline_resource_storage_below_size = inline_resource_storage_below_size;
+	}
+
+	public Boolean getBulk_export_enabled() {
     return bulk_export_enabled;
   }
 

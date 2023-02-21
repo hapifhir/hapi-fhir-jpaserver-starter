@@ -11,17 +11,13 @@ spec:
   restartPolicy: Never
   containers:
     - name: test-metadata-endpoint
-      image: busybox:1
-      command: ['wget', '-O', '-']
-      args: ['http://{{ include "hapi-fhir-jpaserver.fullname" . }}:{{ .Values.service.port }}/fhir/metadata']
+      image: docker.io/curlimages/curl:7.87.0@sha256:f7f265d5c64eb4463a43a99b6bf773f9e61a50aaa7cefaf564f43e42549a01dd
+      command: ["curl", "--fail-with-body"]
+      args: ["http://{{ include "hapi-fhir-jpaserver.fullname" . }}:{{ .Values.service.port }}/fhir/metadata?_summary=true"]
+      {{- with .Values.restrictedContainerSecurityContext }}
       securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-            - ALL
-        readOnlyRootFilesystem: true
-        runAsUser: 22222
-        runAsNonRoot: true
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       resources:
         limits:
           cpu: 100m
@@ -36,17 +32,34 @@ spec:
         exec:
           command: ["true"]
     - name: test-patient-endpoint
-      image: busybox:1
-      command: ['wget', '-O', '-']
-      args: ['http://{{ include "hapi-fhir-jpaserver.fullname" . }}:{{ .Values.service.port }}/fhir/Patient?_count=1']
+      image: docker.io/curlimages/curl:7.87.0@sha256:f7f265d5c64eb4463a43a99b6bf773f9e61a50aaa7cefaf564f43e42549a01dd
+      command: ["curl", "--fail-with-body"]
+      args: ["http://{{ include "hapi-fhir-jpaserver.fullname" . }}:{{ .Values.service.port }}/fhir/Patient?_count=1&_summary=true"]
+      {{- with .Values.restrictedContainerSecurityContext }}
       securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-            - ALL
-        readOnlyRootFilesystem: true
-        runAsUser: 22222
-        runAsNonRoot: true
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      livenessProbe:
+        exec:
+          command: ["true"]
+      readinessProbe:
+        exec:
+          command: ["true"]
+    - name: test-metrics-endpoint
+      image: docker.io/curlimages/curl:7.87.0@sha256:f7f265d5c64eb4463a43a99b6bf773f9e61a50aaa7cefaf564f43e42549a01dd
+      command: ["curl", "--fail-with-body"]
+      args: ["http://{{ include "hapi-fhir-jpaserver.fullname" . }}:{{ .Values.metrics.service.port }}/actuator/prometheus"]
+      {{- with .Values.restrictedContainerSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       resources:
         limits:
           cpu: 100m

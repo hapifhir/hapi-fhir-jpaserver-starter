@@ -36,9 +36,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties =
   {
-    "spring.batch.job.enabled=false",
     "spring.datasource.url=jdbc:h2:mem:dbr4",
     "hapi.fhir.fhir_version=r4",
     "hapi.fhir.lastn_enabled=true",
@@ -59,7 +58,7 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
 public class ElasticsearchLastNR4IT {
 
-  private IGenericClient ourClient;
+	private IGenericClient ourClient;
   private FhirContext ourCtx;
 
   private static final String ELASTIC_VERSION = "7.16.3";

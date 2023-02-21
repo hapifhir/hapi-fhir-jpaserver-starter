@@ -6,8 +6,8 @@ image:
   registry: docker.io
   # -- the path inside the repository
   repository: hapiproject/hapi
-  # -- defaults to `Chart.appVersion`. As of v5.7.0, this is the `distroless` flavor
-  tag: ""
+  # -- the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image.
+  tag: "v6.2.2@sha256:9c4e8af94d81ac0049dbb589e4cd855bf78c9c13be6f6844e814c63d63545b44"
   # -- image pullPolicy to use
   pullPolicy: IfNotPresent
 
@@ -39,6 +39,10 @@ securityContext:
   readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 65532
+  runAsGroup: 65532
+  privileged: false
+  seccompProfile:
+    type: RuntimeDefault
 
 # service to expose the server
 service:
@@ -123,6 +127,9 @@ postgresql:
       capabilities:
         drop:
           - ALL
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
 
 readinessProbe:
   failureThreshold: 5
@@ -133,7 +140,7 @@ readinessProbe:
 
 startupProbe:
   failureThreshold: 10
-  initialDelaySeconds: 60
+  initialDelaySeconds: 30
   periodSeconds: 30
   successThreshold: 1
   timeoutSeconds: 30
@@ -187,3 +194,17 @@ metrics:
     # scrapeTimeout: 10s
   service:
     port: 8081
+
+# @ignore
+restrictedContainerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  privileged: false
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  seccompProfile:
+    type: RuntimeDefault

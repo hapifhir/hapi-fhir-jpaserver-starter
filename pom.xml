@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
-    <!-- 'mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 -e spring.batch.job.enabled=false distroless-hapi' -->
+    <!-- 'mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 distroless-hapi' -->
     <!--
     Note: HAPI projects use the "hapi-fhir" POM as their base to provide easy management.
     You do not need to use this in your own projects, so the "parent" tag and it's
@@ -15,7 +15,7 @@
     <groupId>more.informatics</groupId>
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
     <packaging>war</packaging>
-    <version>6.1.0-IPS</version>
+    <version>6.4.0</version>
 
     <properties>
         <java.version>17.0.4</java.version>
@@ -114,6 +114,8 @@
         <maven.compiler.testSource>17</maven.compiler.testSource>
 		  <maven.compiler.testTarget>17</maven.compiler.testTarget>
 		  <maven.compiler.testRelease>17</maven.compiler.testRelease>
+        <logback-classic.version>1.2.11</logback-classic.version>
+        <slf4j-api.version>1.7.25</slf4j-api.version>
     </properties>
 
     <prerequisites>
@@ -135,12 +137,12 @@
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-api</artifactId>
+            <artifactId>websocket-jetty-api</artifactId>
             <version>${jetty_version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-client</artifactId>
+            <artifactId>websocket-jetty-client</artifactId>
             <version>${jetty_version}</version>
         </dependency>
         <dependency>
@@ -200,7 +202,7 @@
         <!-- This dependency includes the JPA CQL Server -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-jpaserver-cql</artifactId>
+            <artifactId>hapi-fhir-storage-cr</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- This dependency includes the JPA MDM Server -->
@@ -228,6 +230,12 @@
             <artifactId>hapi-fhir-testpage-overlay</artifactId>
             <version>${project.version}</version>
             <classifier>classes</classifier>
+        </dependency>
+        <!-- This dependency is used to include the IPS Base Implementation -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-jpaserver-ips</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
@@ -257,7 +265,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.30</version>
+            <version>1.31</version>
         </dependency>
 
         <!-- Used for CORS support -->
@@ -357,7 +365,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-server</artifactId>
+            <artifactId>websocket-jetty-server</artifactId>
             <version>${jetty_version}</version>
             <scope>test</scope>
         </dependency>
@@ -435,11 +443,18 @@
             <version>${spring_boot_version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-core -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>1.8.5</version>
+            <version>1.9.4</version>
         </dependency>
 
         <dependency>
@@ -467,6 +482,23 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring_boot_version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-classic.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback-classic.version}</version>
         </dependency>
 
     </dependencies>
@@ -517,20 +549,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- The following is not required for the application to build, but allows you to test it by issuing "mvn package jetty:run -Dspring.batch.job.enabled=false" from the command line. -->
-            <!--
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty_version}</version>
-                <configuration>
-                    <webApp>
-                        <contextPath>/hapi-fhir-jpaserver</contextPath>
-                        <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
-                    </webApp>
-                </configuration>
-            </plugin>
-            -->
 
             <!-- Tell Maven which Java source version you want to use -->
             <plugin>
@@ -735,8 +753,8 @@
             </dependencies>
         </profile>
         <!-- examples of how to start the server using the default profile-->
-        <!-- mvn clean package jetty:run -Dspring.batch.job.enabled=false -->
-        <!-- java -jar -Dspring.batch.job.enabled=false jetty-runner.jar target/hapi-fhir-jpaserver.war -->
+        <!-- mvn clean package jetty:run -->
+        <!-- java -jar jetty-runner.jar target/hapi-fhir-jpaserver.war -->
         <profile>
             <id>jetty</id>
             <dependencies>

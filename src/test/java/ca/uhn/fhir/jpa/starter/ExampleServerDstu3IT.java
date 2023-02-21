@@ -15,7 +15,6 @@ import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,13 +34,14 @@ import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties =
   {
-     "spring.batch.job.enabled=false",
      "spring.datasource.url=jdbc:h2:mem:dbr3",
-     "hapi.fhir.cql_enabled=true",
+     "hapi.fhir.cr_enabled=true",
      "hapi.fhir.fhir_version=dstu3",
      "hapi.fhir.subscription.websocket_enabled=true",
      "hapi.fhir.allow_external_references=true",
@@ -113,11 +113,11 @@ public class ExampleServerDstu3IT implements IServerSupport {
       .execute();
 
     List<Parameters.ParametersParameterComponent> response = outParams.getParameter();
-    Assert.assertTrue(!response.isEmpty());
+	  assertFalse(response.isEmpty());
     Parameters.ParametersParameterComponent component = response.get(0);
-    Assert.assertTrue(component.getResource() instanceof MeasureReport);
+    assertTrue(component.getResource() instanceof MeasureReport);
     MeasureReport report = (MeasureReport) component.getResource();
-    Assert.assertEquals("Measure/"+measureId, report.getMeasure());
+    assertEquals("Measure/"+measureId, report.getMeasure());
   }
 
   private int loadDataFromDirectory(String theDirectoryName) throws IOException {
@@ -149,7 +149,7 @@ public class ExampleServerDstu3IT implements IServerSupport {
   private Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
     String json = stringFromResource(theLocation);
     Bundle bundle = (Bundle) theCtx.newJsonParser().parseResource(json);
-    Bundle result = (Bundle) theClient.transaction().withBundle(bundle).execute();
+    Bundle result = theClient.transaction().withBundle(bundle).execute();
     return result;
   }
 

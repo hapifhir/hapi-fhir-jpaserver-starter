@@ -1,7 +1,7 @@
-package ca.uhn.fhir.jpa.starter;
+package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -10,12 +10,8 @@ import org.springframework.core.env.ConfigurableEnvironment;
 @Configuration
 public class ElasticsearchConfig {
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ElasticsearchConfig.class);
-
-	@Autowired
-	private ConfigurableEnvironment configurableEnvironment;
-
 	@Bean
-	public ElasticsearchSvcImpl elasticsearchSvc() {
+	public ElasticsearchSvcImpl elasticsearchSvc(ConfigurableEnvironment configurableEnvironment) {
 		if (EnvironmentHelper.isElasticsearchEnabled(configurableEnvironment)) {
 			String elasticsearchUrl = EnvironmentHelper.getElasticsearchServerUrl(configurableEnvironment);
 			if (elasticsearchUrl.startsWith("http")) {
