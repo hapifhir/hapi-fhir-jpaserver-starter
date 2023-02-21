@@ -641,7 +641,6 @@
   	
   <modules>
     <module>matchbox-engine</module>
-    <module>matchbox-engine-cli</module>
     <module>matchbox-server</module>
   </modules>
   
