@@ -58,28 +58,51 @@ docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.applicat
 ```
 Here, the configuration file (*another.application.yaml*) is part of the compiled set of resources.
 
-### Example using docker-compose.yml for docker-compose
+### Example using ``docker-compose.yml`` for docker-compose
 
-```
+```yaml
 version: '3.7'
+
 services:
-  web:
+  fhir:
+    container_name: fhir
     image: "hapiproject/hapi:latest"
     ports:
-      - "8090:8080"
+      - "8080:8080"
     configs:
       - source: hapi
-        target: /data/hapi/application.yaml
-    volumes:
-      - hapi-data:/data/hapi
+        target: /app/config/application.yaml
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    restart: always
     environment:
-      SPRING_CONFIG_LOCATION: 'file:///data/hapi/application.yaml'
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: hapi
+    volumes:
+      - ./hapi.postgress.data:/var/lib/postgresql/data
+
 configs:
   hapi:
-     external: true
-volumes:
-    hapi-data:
-        external: true
+     file: ./hapi.application.yaml
+```
+
+Provide the following content in ``./hapi.aplication.yaml``:
+
+```yaml
+spring:
+  datasource:
+    url: 'jdbc:postgresql://db:5432/hapi'
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.search.enabled: false
 ```
 
 ## Running locally
