@@ -168,6 +168,3 @@ Temporary Items
 
 # Helm Chart dependencies
 **/charts/*.tgz
-
-# Environment specific application properties
-application-*.yaml

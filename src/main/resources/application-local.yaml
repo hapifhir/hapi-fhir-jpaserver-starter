@@ -5,6 +5,11 @@ management:
     web:
       exposure:
         include: "health,prometheus"
+
+# https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.server
+server:
+  port: 8888 # not being picked up by Jetty embedded - gotta add `-Djetty.port=8888` for Jetty
+
 spring:
   main:
     allow-circular-references: true
@@ -14,12 +19,10 @@ spring:
     check-location: false
     baselineOnMigrate: true
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
-    #url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
-    max-active: 15
+    url: 'jdbc:postgresql://localhost:5432/db?currentSchema=hapi_fhir'
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
 
     # database connection pool size
     hikari:
@@ -32,7 +35,7 @@ spring:
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
 
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
   #      hibernate.cache.use_query_cache: false
@@ -50,11 +53,34 @@ spring:
   ### elastic parameters ===> see also elasticsearch section below <===
 #      hibernate.search.backend.type: elasticsearch
 #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
+  # security:
+  #   oauth2:
+  #     client:
+  #       registration:
+  #         cognito:
+  #           client-id: 2q5325sifo69hs7d4fmd7t0cpa
+  #           # client-secret: xxxxxxxxxxxxxxxxxxxxxxxxxx
+  #           client-name: Cognito Code Grant
+  #           provider: cognito
+  #           scope: openid
+  #           # redirect-uri-template: http://localhost:8888/login/oauth2/code/cognito
+  #           # redirect-uri: http://localhost:8888/fhir/metadata
+  #           redirect-uri: http://localhost:8888/login/oauth2/code/cognito
+  #           # redirect-uri-template: http://localhost:8888/fhir/metadata
+  #           authorization-grant-type: authorization_code
+  #       provider:
+  #         cognito:
+  #           authorization-uri: https://metriport.auth.us-west-1.amazoncognito.com/oauth2/authorize
+  #           token-uri: https://metriport.auth.us-west-1.amazoncognito.com/oauth2/token
+  #           user-info-uri: https://metriport.auth.us-west-1.amazoncognito.com/oauth2/userInfo
+  #           jwk-set-uri: https://cognito-idp.us-west-1.amazonaws.com/us-west-1_KPUDG7V0v/.well-known/jwks.json
+  #           user-name-attribute: cognito:username
+
 hapi:
   fhir:
 
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
-    openapi_enabled: true
+    openapi_enabled: false
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
     ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
@@ -67,7 +93,7 @@ hapi:
     ### the deepest folder level will be used. E.g. - if you put file:/foo/bar/bazz as value then the files are resolved under /static/bazz/**
     #staticLocation: file:/foo/bar/bazz
     ### enable to set the Server URL
-    #    server_address: http://hapi.fhir.org/baseR4
+    server_address: https://localhost:8080/oauth/fhir
     #    defer_indexing_for_codesystems_of_size: 101
     #    install_transitive_ig_dependencies: true
     #    implementationguides:
@@ -89,7 +115,7 @@ hapi:
     #    allowed_bundle_types: COLLECTION,DOCUMENT,MESSAGE,TRANSACTION,TRANSACTIONRESPONSE,BATCH,BATCHRESPONSE,HISTORY,SEARCHSET
     #    allow_cascading_deletes: true
     #    allow_contains_searches: true
-    #    allow_external_references: true
+    allow_external_references: true
     #    allow_multiple_delete: true
     #    allow_override_default_search_params: true
     #    auto_create_placeholder_reference_targets: false
@@ -162,17 +188,18 @@ hapi:
     #    max_page_size: 200
     #    retain_cached_searches_mins: 60
     #    reuse_cached_search_results_millis: 60000
-    tester:
-      home:
-        name: Local Tester
-        server_address: 'http://localhost:8080/fhir'
-        refuse_to_fetch_third_party_urls: false
-        fhir_version: R4
-      global:
-        name: Global Tester
-        server_address: "http://hapi.fhir.org/baseR4"
-        refuse_to_fetch_third_party_urls: false
-        fhir_version: R4
+    # tester:
+    #   home:
+    #     name: Local Tester
+    #     server_address: 'http://localhost:8888/fhir'
+    #     # server_address: 'https://fhir.staging.metriport.com/fhir'
+    #     refuse_to_fetch_third_party_urls: false
+    #     fhir_version: R4
+    #   global:
+    #     name: Global Tester
+    #     server_address: "http://hapi.fhir.org/baseR4"
+    #     refuse_to_fetch_third_party_urls: false
+    #     fhir_version: R4
     #    validation:
     #      requests_enabled: true
     #      responses_enabled: true

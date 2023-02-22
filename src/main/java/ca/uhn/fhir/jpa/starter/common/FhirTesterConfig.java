@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+// CONSIDER REMOVING THIS - NEED TO REPLACE BY A SUCCESSFUL HTTP ON / for healthcheck
 //@formatter:off
 /**
  * This spring config file configures the web testing module. It serves two
@@ -16,8 +17,8 @@ import org.springframework.context.annotation.Import;
  * 2. It tells the tester which server(s) to talk to, via the testerConfig()
  *    method below
  */
-// @Configuration
-// @Import(FhirTesterMvcConfig.class)
+@Configuration
+@Import(FhirTesterMvcConfig.class)
 public class FhirTesterConfig {
 
 	/**
@@ -34,7 +35,7 @@ public class FhirTesterConfig {
 	 * deploying your server to a place with a fully qualified domain name,
 	 * you might want to use that instead of using the variable.
 	 */
-//   @Bean
+  @Bean
   public TesterConfig testerConfig(AppProperties appProperties) {
 	 TesterConfig retVal = new TesterConfig();
 	 if (appProperties.getTester() != null) {

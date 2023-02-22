@@ -7,10 +7,10 @@ Help()
    # Display Help
    echo "Script used to build and deploy the docker image on ECR"
    echo
-   echo "Syntax: deploy.sh [h|e|g|p]"
+   echo "Syntax: deploy.sh [h|r|g|p]"
    echo "options:"
    echo "h     Print this Help."
-   echo "e     The environment to which to deploy to. Must be one of production|staging"
+   echo "r     The AWS region where the ECR is located at"
    echo "g     The ECR registry, usually in the format aws_account_id.dkr.ecr.region.amazonaws.com"
    echo "p     The ECR repository"
    echo
@@ -24,10 +24,10 @@ Help()
 ############################################################
 Deploy()
 {
-   echo "Deploying to env $env"
+   echo "Build and deploy image to ECR"
 
    docker build -t fhir-server .
-   aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin $registry
+   aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $registry
    # tag w/ current git commit SHA
    docker tag fhir-server $registry/$repository:$(git rev-parse --short HEAD)
    docker push $registry/$repository:$(git rev-parse --short HEAD)
@@ -49,13 +49,13 @@ Deploy()
 # Process the input options.                               #
 ############################################################
 # Get the options
-while getopts ":he:g:p:" option; do
+while getopts ":hr:g:p:" option; do
    case $option in
       h) # display Help
          Help
          exit;;
-      e) # the environment to deploy to
-         env=$OPTARG;;
+      r) # the AWS region
+         region=$OPTARG;;
       g) # the ECR registry
          registry=$OPTARG;;
       p) # the ECR repository
@@ -65,6 +65,11 @@ while getopts ":he:g:p:" option; do
          exit;;
    esac
 done
+
+if [[ -z "$region" ]]; then
+    echo "No AWS region specified! -r must be set to the name of the AWS region where the ECR is located at"
+    exit
+fi
 
 if [[ -z "$registry" ]]; then
     echo "No registry specified! -g must be set to the name of the ECR registry"
@@ -76,8 +81,4 @@ if [[ -z "$repository" ]]; then
     exit
 fi
 
-if [[ "$env" =~ ^production|staging$ ]]; then
-    Deploy
-else
-    echo "Invalid environment! -e must be one of production|staging"
-fi
+Deploy

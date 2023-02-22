@@ -14,6 +14,6 @@ Run these commands on the terminal from the root folder of this project:
 1. `cdk bootstrap -c env=<env>` (only needs to be run once)
 1. `cdk deploy -c env=<env> BaseStack`
 1. `cd ../`
-1. `./deploy.sh -e <env> -g <ecr-registry> -p <ecr-repository>`
+1. `./deploy-to-ecr.sh -r <aws-region> -g <ecr-registry> -p <ecr-repository>` (these are created when we deploy the `BaseStack`)
   - this will build the Docker image and deploy it to AWS ECR
 1. `cdk deploy -c env=<env> FHIRServerStack`

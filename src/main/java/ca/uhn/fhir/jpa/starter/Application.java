@@ -3,7 +3,7 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
-// import ca.uhn.fhir.jpa.starter.common.FhirTesterConfig;
+import ca.uhn.fhir.jpa.starter.common.FhirTesterConfig;
 import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
@@ -71,12 +71,14 @@ public class Application extends SpringBootServletInitializer {
   public ServletRegistrationBean overlayRegistrationBean() {
 
     AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
-   //  annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
+	 // CONSIDER REMOVING THIS - NEED TO REPLACE BY A SUCCESSFUL HTTP ON / for healthcheck
+    annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
 
     DispatcherServlet dispatcherServlet = new DispatcherServlet(
       annotationConfigWebApplicationContext);
     dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
-   //  dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
+	 // CONSIDER REMOVING THIS - NEED TO REPLACE BY A SUCCESSFUL HTTP ON / for healthcheck
+    dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
 
     ServletRegistrationBean registrationBean = new ServletRegistrationBean();
     registrationBean.setServlet(dispatcherServlet);

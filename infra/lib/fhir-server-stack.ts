@@ -7,6 +7,8 @@ import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as ecs_patterns from "aws-cdk-lib/aws-ecs-patterns";
 import * as rds from "aws-cdk-lib/aws-rds";
 import { Credentials } from "aws-cdk-lib/aws-rds";
+import * as r53 from "aws-cdk-lib/aws-route53";
+import * as r53_targets from "aws-cdk-lib/aws-route53-targets";
 import * as secret from "aws-cdk-lib/aws-secretsmanager";
 import { Construct } from "constructs";
 import { EnvConfig } from "./env-config";
@@ -16,6 +18,7 @@ interface FHIRServerProps extends StackProps {
   config: EnvConfig;
 }
 
+// TODO Consider moving infra parameters to the configuration files (EnvConfig)
 export class FHIRServerStack extends Stack {
   constructor(scope: Construct, id: string, props: FHIRServerProps) {
     super(scope, id, props);
@@ -27,7 +30,7 @@ export class FHIRServerStack extends Stack {
     //-------------------------------------------
     // Aurora Database
     //-------------------------------------------
-    const { dbCluster, dbCredsSecret } = this.setupDB(props, vpc);
+    const { dbCluster, dbCreds } = this.setupDB(props, vpc);
 
     //-------------------------------------------
     // ECS + Fargate for FHIR Server
@@ -36,10 +39,10 @@ export class FHIRServerStack extends Stack {
       props,
       vpc,
       dbCluster,
-      dbCredsSecret
+      dbCreds
     );
 
-    this.setupNetworking(vpc, fargateService);
+    this.setupNetworking(props, vpc, fargateService);
 
     //-------------------------------------------
     // Output
@@ -63,24 +66,23 @@ export class FHIRServerStack extends Stack {
     vpc: ec2.IVpc
   ): {
     dbCluster: rds.IDatabaseCluster;
-    dbCredsSecret: secret.ISecret;
+    dbCreds: { username: string; password: secret.Secret };
   } {
     // create database credentials
-    const dbUsername = props.config.dbUsername;
-    const dbName = props.config.dbName;
     const dbClusterName = "fhir-server";
-    const dbCredsSecret = new secret.Secret(this, "DBCreds", {
-      secretName: `FHIRServerDBCreds`,
+    const dbName = props.config.dbName;
+    const dbUsername = props.config.dbUsername;
+    const dbPasswordSecret = new secret.Secret(this, "FHIRServerDBPassword", {
+      secretName: "FHIRServerDBPassword",
       generateSecretString: {
-        secretStringTemplate: JSON.stringify({
-          username: dbUsername,
-        }),
         excludePunctuation: true,
         includeSpace: false,
-        generateStringKey: "password",
       },
     });
-    const dbCreds = Credentials.fromSecret(dbCredsSecret);
+    const dbCreds = Credentials.fromPassword(
+      dbUsername,
+      dbPasswordSecret.secretValue
+    );
     // aurora serverlessv2 db
     const dbCluster = new rds.DatabaseCluster(this, "FHIR_DB", {
       engine: rds.DatabaseClusterEngine.auroraPostgres({
@@ -110,14 +112,17 @@ export class FHIRServerStack extends Stack {
     if (this.isProd(props)) {
       this.addDBClusterPerformanceAlarms(dbCluster, dbClusterName);
     }
-    return { dbCluster, dbCredsSecret };
+    return {
+      dbCluster,
+      dbCreds: { username: dbUsername, password: dbPasswordSecret },
+    };
   }
 
   private setupFargateService(
     props: FHIRServerProps,
     vpc: ec2.IVpc,
     dbCluster: rds.IDatabaseCluster,
-    dbCredsSecret: secret.ISecret
+    dbCreds: { username: string; password: secret.Secret }
   ): ecs_patterns.NetworkLoadBalancedFargateService {
     // Create a new Amazon Elastic Container Service (ECS) cluster
     const cluster = new ecs.Cluster(this, "FHIRServerCluster", { vpc });
@@ -133,6 +138,15 @@ export class FHIRServerStack extends Stack {
       )
     );
 
+    // Prep DB related data to the server
+    if (!dbCreds.password) throw new Error(`Missing DB password`);
+    const dbAddress = dbCluster.clusterEndpoint.hostname;
+    const dbPort = dbCluster.clusterEndpoint.port;
+    // const dbSchema = props.config.dbName;
+    // const dbUrl = `jdbc:postgresql://${dbAddress}:${dbPort}/${props.config.dbName}?currentSchema=${dbSchema}`;
+    const dbName = props.config.dbName;
+    const dbUrl = `jdbc:postgresql://${dbAddress}:${dbPort}/${dbName}`;
+
     // Run some servers on fargate containers
     const fargateService = new ecs_patterns.NetworkLoadBalancedFargateService(
       this,
@@ -147,13 +161,12 @@ export class FHIRServerStack extends Stack {
           containerPort: 8080,
           containerName: "FHIR-Server",
           secrets: {
-            DB_CREDS: ecs.Secret.fromSecretsManager(dbCredsSecret), // TODO how to pass those to the FHIR Server?
+            DB_PASSWORD: ecs.Secret.fromSecretsManager(dbCreds.password),
           },
           environment: {
-            // TODO what env vars to pass to the FHIR Server?
-            ENV_TYPE: props.config.environmentType,
-            // API_URL: `https://${props.config.subdomain}.${props.config.domain}`,
-            // SYSTEM_ROOT_OID: props.config.systemRootOID,
+            SPRING_PROFILES_ACTIVE: props.config.environmentType,
+            DB_URL: dbUrl,
+            DB_USERNAME: dbCreds.username,
           },
         },
         healthCheckGracePeriod: Duration.seconds(60),
@@ -176,7 +189,7 @@ export class FHIRServerStack extends Stack {
     });
 
     // Access grant for Aurora DB
-    dbCredsSecret.grantRead(fargateService.taskDefinition.taskRole);
+    dbCreds.password.grantRead(fargateService.taskDefinition.taskRole);
     dbCluster.connections.allowDefaultPortFrom(fargateService.service);
 
     // hookup autoscaling based on 90% thresholds
@@ -198,6 +211,7 @@ export class FHIRServerStack extends Stack {
   }
 
   private setupNetworking(
+    props: FHIRServerProps,
     vpc: ec2.IVpc,
     fargateService: ecs_patterns.NetworkLoadBalancedFargateService
   ): void {
@@ -226,6 +240,17 @@ export class FHIRServerStack extends Stack {
     //   integrationHttpMethod: "ANY",
     //   uri: `http://${fhirServerAddress}/{proxy}`,
     // });
+
+    const zone = r53.HostedZone.fromLookup(this, "Zone", {
+      domainName: props.config.zone,
+      privateZone: true,
+    });
+    const serverUrl = `${props.config.subdomain}.${props.config.domain}`;
+    new r53.ARecord(this, "FHIRServerRecord", {
+      recordName: serverUrl,
+      zone,
+      target: r53.RecordTarget.fromAlias(new r53_targets.LoadBalancerTarget(fargateService.loadBalancer)),
+    });
   }
 
   // TODO REVIEW THESE THRESHOLDS
