@@ -9,5 +9,4 @@ export type EnvConfig = {
   subdomain: string;
   dbName: string;
   dbUsername: string;
-  fhirServerECRName: string;
 };

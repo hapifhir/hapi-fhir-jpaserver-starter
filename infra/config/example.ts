@@ -5,8 +5,10 @@ export const config: EnvConfig = {
   environmentType: EnvType.production,
   region: "us-east-1",
   vpcId: "my_vpcId",
+  zone: "metriport.com",
+  domain: "metriport.com",
+  subdomain: "fhir",
   dbName: "my_db",
   dbUsername: "my_db_user",
-  fhirServerECRName: "fhir-server-ecr-name",
 };
 export default config;

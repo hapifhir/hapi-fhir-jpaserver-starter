@@ -8,12 +8,9 @@ It uses AWS CDK + TypeScript.
 
 It requires AWS CLI setup properly.
 
-Run these commands on the terminal from the root folder of this project:
+Run these commands on the terminal from the `./infra` folder of this repository:
 
-1. `cd infra`
-1. `cdk bootstrap -c env=<env>` (only needs to be run once)
-1. `cdk deploy -c env=<env> BaseStack`
-1. `cd ../`
-1. `./deploy-to-ecr.sh -r <aws-region> -g <ecr-registry> -p <ecr-repository>` (these are created when we deploy the `BaseStack`)
-  - this will build the Docker image and deploy it to AWS ECR
-1. `cdk deploy -c env=<env> FHIRServerStack`
+```shell
+$ cdk bootstrap -c env=<env> # only needs to be run once
+$ cdk deploy -c env=<env> FHIRServerStack
+```

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
 import "source-map-support/register";
-import { BaseStack } from "../lib/base-stack";
 import { EnvConfig } from "../lib/env-config";
 import { EnvType } from "../lib/env-type";
 import { FHIRServerStack } from "../lib/fhir-server-stack";
@@ -41,11 +40,6 @@ async function deploy() {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: config.region,
   };
-
-  //---------------------------------------------------------------------------------
-  // Deploy the base stack - it should be done prior to the other ones.
-  //---------------------------------------------------------------------------------
-  new BaseStack(app, "BaseStack", { env, config });
 
   //---------------------------------------------------------------------------------
   // Deploy the FHIR server stack.
