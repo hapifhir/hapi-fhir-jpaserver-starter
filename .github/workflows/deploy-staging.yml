@@ -1,0 +1,19 @@
+name: Deploy - Staging
+
+on:
+  push: # a commit to the specified branches, if any
+    branches:
+      - develop
+  workflow_dispatch: # manually executed by a user
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/_reusable_deploy.yml
+    with:
+      deploy_env: "staging"
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.REGION_STAGING }}
+      ECR_IMAGE_NAME: ${{ secrets.ECR_IMAGE_NAME }}
+      INFRA_CONFIG: ${{ secrets.INFRA_CONFIG_STAGING }}
