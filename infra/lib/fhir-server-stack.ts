@@ -3,6 +3,7 @@ import * as cloudwatch from "aws-cdk-lib/aws-cloudwatch";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { InstanceType } from "aws-cdk-lib/aws-ec2";
 import * as ecr from "aws-cdk-lib/aws-ecr";
+import * as ecr_assets from "aws-cdk-lib/aws-ecr-assets";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as ecs_patterns from "aws-cdk-lib/aws-ecs-patterns";
 import * as rds from "aws-cdk-lib/aws-rds";
@@ -129,14 +130,9 @@ export class FHIRServerStack extends Stack {
       vpc: this.vpc,
     });
 
-    // Retrieve a Docker image from Amazon Elastic Container Registry (ECR)
-    const dockerImage = ecs.ContainerImage.fromEcrRepository(
-      ecr.Repository.fromRepositoryName(
-        this,
-        "FHIRServerECR",
-        props.config.fhirServerECRName
-      )
-    );
+    const dockerImage = new ecr_assets.DockerImageAsset(this, "FHIRImage", {
+      directory: "../",
+    });
 
     // Prep DB related data to the server
     if (!dbCreds.password) throw new Error(`Missing DB password`);
@@ -155,7 +151,7 @@ export class FHIRServerStack extends Stack {
         memoryLimitMiB: this.isProd(props) ? 4096 : 2048,
         desiredCount: this.isProd(props) ? 1 : 1, // TODO review once we go live
         taskImageOptions: {
-          image: dockerImage,
+          image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
           containerPort: 8080,
           containerName: "FHIR-Server",
           secrets: {
@@ -221,7 +217,9 @@ export class FHIRServerStack extends Stack {
     new r53.ARecord(this, "FHIRServerRecord", {
       recordName: `${props.config.subdomain}.${props.config.domain}`,
       zone: this.zone,
-      target: r53.RecordTarget.fromAlias(new r53_targets.LoadBalancerTarget(fargateService.loadBalancer)),
+      target: r53.RecordTarget.fromAlias(
+        new r53_targets.LoadBalancerTarget(fargateService.loadBalancer)
+      ),
     });
 
     return fargateService;
