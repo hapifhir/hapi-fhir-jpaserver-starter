@@ -27,7 +27,7 @@ The easiest way to run this server entirely depends on your environment requirem
 
 ### Using jetty
 ```bash
-DB_URL="jdbc:postgresql://localhost:5432/db?currentSchema=hapi_fhir" DB_USERNAME="admin" DB_PASSWORD="admin" SPRING_PROFILES_ACTIVE="local" mvn -Djetty.port=8888 jetty:run
+SPRING_PROFILES_ACTIVE="local" mvn -Djetty.port=8888 jetty:run
 ```
 
 Server will then be accessible at http://localhost:8888/ and eg. http://localhost:8888/fhir/metadata.

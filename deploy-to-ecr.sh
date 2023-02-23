@@ -24,11 +24,13 @@ Help()
 ############################################################
 Deploy()
 {
-   echo "Build and deploy image to ECR"
-
+   echo "Build Docker image..."
    docker build -t fhir-server .
+
+   echo "Push image to ECR with tag '$(git rev-parse --short HEAD)'..."
    aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $registry
    # tag w/ current git commit SHA
+   echo "Push image to ECR with tag 'latest'..."
    docker tag fhir-server $registry/$repository:$(git rev-parse --short HEAD)
    docker push $registry/$repository:$(git rev-parse --short HEAD)
    # tag w/ latest

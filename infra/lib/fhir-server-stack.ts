@@ -20,29 +20,30 @@ interface FHIRServerProps extends StackProps {
 
 // TODO Consider moving infra parameters to the configuration files (EnvConfig)
 export class FHIRServerStack extends Stack {
+  readonly vpc: ec2.IVpc;
+  readonly zone: r53.IHostedZone;
+
   constructor(scope: Construct, id: string, props: FHIRServerProps) {
     super(scope, id, props);
 
-    const vpc = ec2.Vpc.fromLookup(this, "APIVpc", {
+    // Initialize the stack w/ variables and references to existing assets
+    this.vpc = ec2.Vpc.fromLookup(this, "APIVpc", {
       vpcId: props.config.vpcId,
+    });
+    this.zone = r53.HostedZone.fromLookup(this, "Zone", {
+      domainName: props.config.zone,
+      privateZone: true,
     });
 
     //-------------------------------------------
     // Aurora Database
     //-------------------------------------------
-    const { dbCluster, dbCreds } = this.setupDB(props, vpc);
+    const { dbCluster, dbCreds } = this.setupDB(props);
 
     //-------------------------------------------
     // ECS + Fargate for FHIR Server
     //-------------------------------------------
-    const fargateService = this.setupFargateService(
-      props,
-      vpc,
-      dbCluster,
-      dbCreds
-    );
-
-    this.setupNetworking(props, vpc, fargateService);
+    const fargateService = this.setupFargateService(props, dbCluster, dbCreds);
 
     //-------------------------------------------
     // Output
@@ -61,10 +62,7 @@ export class FHIRServerStack extends Stack {
     });
   }
 
-  private setupDB(
-    props: FHIRServerProps,
-    vpc: ec2.IVpc
-  ): {
+  private setupDB(props: FHIRServerProps): {
     dbCluster: rds.IDatabaseCluster;
     dbCreds: { username: string; password: secret.Secret };
   } {
@@ -88,7 +86,10 @@ export class FHIRServerStack extends Stack {
       engine: rds.DatabaseClusterEngine.auroraPostgres({
         version: rds.AuroraPostgresEngineVersion.VER_14_4,
       }),
-      instanceProps: { vpc, instanceType: new InstanceType("serverless") },
+      instanceProps: {
+        vpc: this.vpc,
+        instanceType: new InstanceType("serverless"),
+      },
       credentials: dbCreds,
       defaultDatabaseName: dbName,
       clusterIdentifier: dbClusterName,
@@ -120,16 +121,15 @@ export class FHIRServerStack extends Stack {
 
   private setupFargateService(
     props: FHIRServerProps,
-    vpc: ec2.IVpc,
     dbCluster: rds.IDatabaseCluster,
     dbCreds: { username: string; password: secret.Secret }
   ): ecs_patterns.NetworkLoadBalancedFargateService {
     // Create a new Amazon Elastic Container Service (ECS) cluster
-    const cluster = new ecs.Cluster(this, "FHIRServerCluster", { vpc });
+    const cluster = new ecs.Cluster(this, "FHIRServerCluster", {
+      vpc: this.vpc,
+    });
 
     // Retrieve a Docker image from Amazon Elastic Container Registry (ECR)
-    // const dockerImage = ecs.EcrImage.fromRegistry(props.config.fhirServerECRName);
-    // const dockerImage = ecs.ContainerImage.fromRegistry(props.config.fhirServerECRName);
     const dockerImage = ecs.ContainerImage.fromEcrRepository(
       ecr.Repository.fromRepositoryName(
         this,
@@ -142,8 +142,6 @@ export class FHIRServerStack extends Stack {
     if (!dbCreds.password) throw new Error(`Missing DB password`);
     const dbAddress = dbCluster.clusterEndpoint.hostname;
     const dbPort = dbCluster.clusterEndpoint.port;
-    // const dbSchema = props.config.dbName;
-    // const dbUrl = `jdbc:postgresql://${dbAddress}:${dbPort}/${props.config.dbName}?currentSchema=${dbSchema}`;
     const dbName = props.config.dbName;
     const dbUrl = `jdbc:postgresql://${dbAddress}:${dbPort}/${dbName}`;
 
@@ -171,6 +169,10 @@ export class FHIRServerStack extends Stack {
         },
         healthCheckGracePeriod: Duration.seconds(60),
         publicLoadBalancer: false,
+        runtimePlatform: {
+          cpuArchitecture: ecs.CpuArchitecture.ARM64,
+          operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
+        },
       }
     );
 
@@ -207,54 +209,24 @@ export class FHIRServerStack extends Stack {
       scaleInCooldown: Duration.minutes(2),
       scaleOutCooldown: Duration.seconds(30),
     });
-    return fargateService;
-  }
 
-  private setupNetworking(
-    props: FHIRServerProps,
-    vpc: ec2.IVpc,
-    fargateService: ecs_patterns.NetworkLoadBalancedFargateService
-  ): void {
     // allow the NLB to talk to fargate
     fargateService.service.connections.allowFrom(
-      ec2.Peer.ipv4(vpc.vpcCidrBlock),
+      ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
       ec2.Port.allTraffic(),
       "Allow traffic from within the VPC to the service secure port"
     );
 
-    // // setup a private link so the API can talk to the NLB
-    // const link = new apig.VpcLink(this, "link", {
-    //   targets: [fargateService.loadBalancer],
-    // });
-
-    // const fhirServerAddress = fargateService.loadBalancer.loadBalancerDnsName;
-    // const integration = new apig.Integration({
-    //   type: apig.IntegrationType.HTTP_PROXY,
-    //   options: {
-    //     connectionType: apig.ConnectionType.VPC_LINK,
-    //     vpcLink: link,
-    //     requestParameters: {
-    //       "integration.request.path.proxy": "method.request.path.proxy",
-    //     },
-    //   },
-    //   integrationHttpMethod: "ANY",
-    //   uri: `http://${fhirServerAddress}/{proxy}`,
-    // });
-
-    const zone = r53.HostedZone.fromLookup(this, "Zone", {
-      domainName: props.config.zone,
-      privateZone: true,
-    });
-    const serverUrl = `${props.config.subdomain}.${props.config.domain}`;
+    // Add internal subdomain for the server
     new r53.ARecord(this, "FHIRServerRecord", {
-      recordName: serverUrl,
-      zone,
+      recordName: `${props.config.subdomain}.${props.config.domain}`,
+      zone: this.zone,
       target: r53.RecordTarget.fromAlias(new r53_targets.LoadBalancerTarget(fargateService.loadBalancer)),
     });
+
+    return fargateService;
   }
 
-  // TODO REVIEW THESE THRESHOLDS
-  // TODO REVIEW THESE THRESHOLDS
   // TODO REVIEW THESE THRESHOLDS
   private addDBClusterPerformanceAlarms(
     dbCluster: rds.DatabaseCluster,
