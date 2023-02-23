@@ -14,71 +14,13 @@ on:
         required: true
       AWS_REGION:
         required: true
-      ECR_IMAGE_NAME:
-        required: true
-        description: "The name of the image/resource on ECR"
       INFRA_CONFIG:
         required: true
         description: "The contents of the infra configuration file, in base64"
 
 jobs:
-  build-publish:
-    name: Build and Publish
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set short git commit SHA
-        id: vars
-        run: |
-          calculatedSha=$(git rev-parse --short=10 HEAD)
-          echo "::set-output name=short_sha::$calculatedSha"
-      - name: Confirm git commit SHA output
-        run: echo ${{ steps.vars.outputs.short_sha }}
-
-      - name: Build image
-        id: build-image
-        run: |
-          echo "Building docker image..."
-          docker build -t fhir-server .
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      # FROM https://aws.amazon.com/blogs/opensource/github-actions-aws-fargate/
-      # and FROM https://github.com/aws-actions/amazon-ecr-login
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Tag and push SHA based image to ECR
-        id: tag-sha
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ${{ env.ECR_IMAGE_NAME }}
-          TAG: ${{ steps.vars.outputs.short_sha }}
-        run: |
-          echo "Push image to ECR with tag '$TAG'..."
-          docker tag fhir-server $REGISTRY/$REPOSITORY:$TAG
-          docker push $REGISTRY/$REPOSITORY:$TAG
-
-      - name: Tag and push 'latest' image to ECR
-        id: tag-latest
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: ${{ env.ECR_IMAGE_NAME }}
-        run: |
-          echo "Push image to ECR with tag 'latest'..."
-          docker tag fhir-server $REGISTRY/$REPOSITORY:latest
-          docker push $REGISTRY/$REPOSITORY:latest
-
   deploy:
     name: Deploy
-    needs: build-publish
     # prevents 2+ devs/workflows trying to deploy to AWS at the same time
     # https://serverlessfirst.com/emails/how-to-prevent-concurrent-deployments-of-serverless-stacks-in-github-actions/
     # TODO Consider the solution here: https://github.com/tj-actions/aws-cdk/blob/main/action.yml
@@ -97,7 +39,7 @@ jobs:
       - run: env
         shell: bash
       - run: |
-          echo "Git ref: $(git rev-parse --short=10 HEAD)"
+          echo "Git ref: $(git rev-parse HEAD)"
         shell: bash
 
       # SET CONFIG FILES

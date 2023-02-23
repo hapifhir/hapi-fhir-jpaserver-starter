@@ -15,5 +15,4 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ${{ secrets.REGION_PRODUCTION }}
-      ECR_IMAGE_NAME: ${{ secrets.ECR_IMAGE_NAME }}
       INFRA_CONFIG: ${{ secrets.INFRA_CONFIG_PRODUCTION }}
