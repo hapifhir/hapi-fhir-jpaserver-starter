@@ -74,9 +74,7 @@ import org.smartregister.extension.rest.LocationHierarchyResourceProvider;
 import org.smartregister.extension.rest.PractitionerDetailsResourceProvider;
 import org.smartregister.model.location.*;
 import org.smartregister.model.practitioner.FhirPractitionerDetails;
-import org.smartregister.model.practitioner.KeycloakUserDetails;
 import org.smartregister.model.practitioner.PractitionerDetails;
-import org.smartregister.model.practitioner.UserBioData;
 import org.springframework.batch.core.configuration.annotation.BatchConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -501,8 +499,6 @@ public class StarterJpaConfig {
 
 		restfulServer.registerProvider(practitionerDetailsResourceProvider);
 		restfulServer.getFhirContext().registerCustomType(PractitionerDetails.class);
-		restfulServer.getFhirContext().registerCustomType(KeycloakUserDetails.class);
-		restfulServer.getFhirContext().registerCustomType(UserBioData.class);
 		restfulServer.getFhirContext().registerCustomType(FhirPractitionerDetails.class);
 	}
 }
