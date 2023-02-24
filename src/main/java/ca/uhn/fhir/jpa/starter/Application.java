@@ -71,11 +71,13 @@ public class Application extends SpringBootServletInitializer {
   public ServletRegistrationBean overlayRegistrationBean() {
 
     AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
+	 // CONSIDER REMOVING THIS - NEED TO REPLACE BY A SUCCESSFUL HTTP ON / for healthcheck
     annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
 
     DispatcherServlet dispatcherServlet = new DispatcherServlet(
       annotationConfigWebApplicationContext);
     dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
+	 // CONSIDER REMOVING THIS - NEED TO REPLACE BY A SUCCESSFUL HTTP ON / for healthcheck
     dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
 
     ServletRegistrationBean registrationBean = new ServletRegistrationBean();

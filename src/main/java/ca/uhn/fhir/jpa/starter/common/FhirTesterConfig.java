@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+// CONSIDER REMOVING THIS - NEED TO REPLACE BY A SUCCESSFUL HTTP ON / for healthcheck
 //@formatter:off
 /**
  * This spring config file configures the web testing module. It serves two
@@ -36,18 +37,20 @@ public class FhirTesterConfig {
 	 */
   @Bean
   public TesterConfig testerConfig(AppProperties appProperties) {
-    TesterConfig retVal = new TesterConfig();
-    appProperties.getTester().forEach((key, value) -> {
-		 retVal
-			 .addServer()
-			 .withId(key)
-			 .withFhirVersion(value.getFhir_version())
-			 .withBaseUrl(value.getServer_address())
-			 .withName(value.getName());
-		 retVal.setRefuseToFetchThirdPartyUrls(
-			 value.getRefuse_to_fetch_third_party_urls());
+	 TesterConfig retVal = new TesterConfig();
+	 if (appProperties.getTester() != null) {
+		appProperties.getTester().forEach((key, value) -> {
+			retVal
+				.addServer()
+				.withId(key)
+				.withFhirVersion(value.getFhir_version())
+				.withBaseUrl(value.getServer_address())
+				.withName(value.getName());
+			retVal.setRefuseToFetchThirdPartyUrls(
+				value.getRefuse_to_fetch_third_party_urls());
 
-	 });
+		});
+	 }
     return retVal;
   }
 
