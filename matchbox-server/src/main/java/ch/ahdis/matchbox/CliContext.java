@@ -143,6 +143,12 @@ public class CliContext {
   @JsonProperty("jurisdiction")
   private String jurisdiction = JurisdictionUtilities.getJurisdictionFromLocale(Locale.getDefault().getCountry());
 
+  private String igsPreloaded[];
+
+  public String[] getIgsPreloaded() {
+    return igsPreloaded;
+  }
+
   @Autowired
   public CliContext(Environment environment) {
     		// get al list of all JsonProperty of cliContext with return values property name and property type
@@ -163,7 +169,9 @@ public class CliContext {
 					log.error("error setting property " + cliContextProperty + " to " + value);
 				}
 			}
-		}  
+		}
+    // get properties array from the environment?
+    this.igsPreloaded = environment.getProperty("matchbox.fhir.context.igsPreloaded", String[].class);
   }
 
   public CliContext(CliContext other) {
@@ -180,6 +188,7 @@ public class CliContext {
 				log.error("error setting property " + field.getName() );
 			} 
 		}
+    this.igsPreloaded = other.igsPreloaded;
   }
 
   @JsonProperty("ig")

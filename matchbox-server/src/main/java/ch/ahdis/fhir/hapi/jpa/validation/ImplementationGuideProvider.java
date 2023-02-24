@@ -197,7 +197,7 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
 
 	public PackageInstallOutcomeJson loadAll(boolean replace) {
 		matchboxEngineSupport.setInitialized(false);
-		log.info("Initializing packages" + VersionUtil.getMemory());
+		log.info("Initializing packages " + VersionUtil.getMemory());
 		PackageInstallOutcomeJson installOutcome = null;
 		if (appProperties.getImplementationGuides() != null) {
 			Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
@@ -218,6 +218,10 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
 			}
 		}
 		matchboxEngineSupport.setInitialized(true);
+		log.info("Initializing packages finished " + VersionUtil.getMemory());
+		log.info("Creating cached engines during startup  " + VersionUtil.getMemory());
+		matchboxEngineSupport.getMatchboxEngine("default",null, false, false);
+		log.info("Finished engines during startup  " + VersionUtil.getMemory());
 		return installOutcome;
 	}
 
