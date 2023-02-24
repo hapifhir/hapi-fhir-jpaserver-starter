@@ -6,10 +6,6 @@ management:
       exposure:
         include: "health,prometheus"
 
-# https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.server
-server:
-  port: 8888 # not being picked up by Jetty embedded - gotta add `-Djetty.port=8888` for Jetty
-
 spring:
   main:
     allow-circular-references: true
@@ -19,7 +15,7 @@ spring:
     check-location: false
     baselineOnMigrate: true
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/db?currentSchema=hapi_fhir'
+    url: 'jdbc:postgresql://localhost:5432/db?currentSchema=fhir'
     username: admin
     password: admin
     driverClassName: org.postgresql.Driver

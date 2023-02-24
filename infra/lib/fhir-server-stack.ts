@@ -11,6 +11,7 @@ import { Credentials } from "aws-cdk-lib/aws-rds";
 import * as r53 from "aws-cdk-lib/aws-route53";
 import * as r53_targets from "aws-cdk-lib/aws-route53-targets";
 import * as secret from "aws-cdk-lib/aws-secretsmanager";
+import { execSync } from "child_process";
 import { Construct } from "constructs";
 import { EnvConfig } from "./env-config";
 import { isProd, mbToBytes } from "./util";
