@@ -119,7 +119,7 @@ POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-core/StructureDefinition/ch
 
 
 ### CH-Core Franz Muster )
-POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient HTTP/1.1
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient&ig=ch.fhir.ig.ch-core#3.0.0 HTTP/1.1
 
 < ./examples/PatientFranzMuster.xml
 

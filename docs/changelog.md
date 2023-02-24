@@ -3,6 +3,7 @@
 - updated CDA core logical model 2.0 and added tests
 - docker multiarchitecture support and ci-build setup [#76](https://github.com/ahdis/matchbox/issues/76)
 - proxy support for downloading packages, thanks @ValentinLorand for your [PR](https://github.com/ahdis/matchbox/pull/74), [#76](https://github.com/ahdis/matchbox/issues/76)
+- matchbox-server: disable caching for specific engines / implementation guides [#77](https://github.com/ahdis/matchbox/issues/77)
 
 2023/02/01 Release 3.1.0
 

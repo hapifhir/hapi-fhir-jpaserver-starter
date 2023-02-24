@@ -35,8 +35,33 @@ Validation for profile http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-pat
 Default validation parameters can be set directly in provided application.yaml
 
 ```yaml
+hapi:
+  fhir:
+    implementationguides:
+      fhir_r4_core:
+        name: hl7.fhir.r4.core
+        version: 4.0.1
+        url: classpath:/hl7.fhir.r4.core.tgz
+      fhir_terminology:
+        name: hl7.terminology
+        version: 5.0.0
+        url: classpath:/hl7.terminology#5.0.0.tgz
+      cda:
+        name: ch.fhir.ig.cda-fhir-maps
+        version: 0.4.0-cibuild
+        url: https://build.fhir.org/ig/hl7ch/cda-fhir-maps/package.tgz
+      chemd:
+        name: ch.fhir.ig.ch-emed
+        version: 3.0.0
 matchbox:
   fhir:
     context:
       txServer: n/a
+      igsPreloaded: ch.fhir.ig.cda-fhir-maps#0.4.0-cibuild, ch.fhir.ig.ch-emed#3.0.0
 ```
+
+| Parameter            | Card  | Description                                                                                                                                                                                                                                                                                                                                                                                      |
+| -------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| implementationguides | 0..\* | the Implementation Guide and version which with which matchbox will be configured, you can provide by classpath, file, http address, if none is specified the FHIR package servers will be used (need to be online)                                                                                                                                                                              |
+| txServer             | 0..1  | txServer to use, n/a if none (default)                                                                                                                                                                                                                                                                                                                                                           |
+| igsPreloaded         | 0..\* | For each mentioned ImplemetationGuide (comma seperated) an engine will be created, which will be cached in memory as long the application is running. Other IG's will created on demand and will be cached for an hour for subsequent calls. Tradeoff between memory consumption and first response time (creating of engine might have duration of half a minute). Default no igs are preloaded |
