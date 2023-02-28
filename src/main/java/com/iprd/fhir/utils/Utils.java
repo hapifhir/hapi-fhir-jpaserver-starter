@@ -61,14 +61,27 @@ public class Utils {
 		fhirPathString = fhirPath.getOperator() + "," + String.join(",",fhirPath.getOperand());
 		return fhirPathString;
 	}
+	
+	public static List<List<String>> partitionFacilities(List<String> facilities, int batchSize) {
+	    List<List<String>> facilityBatches = new ArrayList<>();
+	    int numBatches = (int) Math.ceil((double) facilities.size() / batchSize);
+	    for (int i = 0; i < numBatches; i++) {
+	        int fromIndex = i * batchSize;
+	        int toIndex = Math.min(fromIndex + batchSize, facilities.size());
+	        facilityBatches.add(facilities.subList(fromIndex, toIndex));
+	    }
+	    return facilityBatches;
+	}
+
 
 	public static String getMd5StringFromFhirPath(FhirPath fhirPath) {
 		String fhirPathString = getStringFromFhirPath(fhirPath);
 		return md5Bytes(fhirPathString.getBytes(StandardCharsets.UTF_8));
 	}
+	
+	
 
-	public static List<String> getMd5StringsFromFhirPaths(List<FhirPath> fhirPaths){
-		List<String> fhirPathStrings = getStringListFromFhirPathList(fhirPaths);
+	public static List<String> getMd5StringsFromFhirPaths(List<String> fhirPathStrings){
 		List<String> md5Strings = new ArrayList<>();
 		for (String fhirPathString: fhirPathStrings){
 			String md5Bytes = md5Bytes(fhirPathString.getBytes(StandardCharsets.UTF_8));
@@ -95,8 +108,8 @@ public class Utils {
 		return fhirPathStrings;
 	}
 
-	public static String getMd5KeyForLineCacheMd5(FhirPath fhirPath, Integer lineId, Integer chartId) {
-		String combinedString = getStringFromFhirPath(fhirPath)+"_"+lineId.toString()+"_"+chartId.toString();
+	public static String getMd5KeyForLineCacheMd5(String fhirPath, Integer lineId, Integer chartId) {
+		String combinedString = fhirPath+"_"+lineId.toString()+"_"+chartId.toString();
 		return  md5Bytes(combinedString.getBytes(StandardCharsets.UTF_8));
 	}
 

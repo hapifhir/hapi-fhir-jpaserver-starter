@@ -2,13 +2,14 @@ package ca.uhn.fhir.jpa.starter;
 
 import java.util.List;
 
-import com.iprd.report.ANCDailySummaryConfig;
-import com.iprd.report.BarChartDefinition;
-import com.iprd.report.FilterItem;
-import com.iprd.report.IndicatorItem;
-import com.iprd.report.LineChart;
-import com.iprd.report.PieChartDefinition;
-import com.iprd.report.TabularItem;
+import com.iprd.report.model.FilterItem;
+import com.iprd.report.model.definition.ANCDailySummaryConfig;
+import com.iprd.report.model.definition.BarChartDefinition;
+import com.iprd.report.model.definition.IndicatorItem;
+import com.iprd.report.model.definition.LineChart;
+import com.iprd.report.model.definition.PieChartDefinition;
+import com.iprd.report.model.definition.TabularItem;
+
 
 public class DashboardConfigContainer {
 	public List<FilterItem> getFilterItems() {

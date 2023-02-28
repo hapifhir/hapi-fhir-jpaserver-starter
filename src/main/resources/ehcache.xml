@@ -12,9 +12,9 @@
 
     <cache-template name="simple">
         <expiry>
-            <ttl unit="minutes">10</ttl>
+            <ttl unit="hours">8</ttl>
         </expiry>
-        <heap unit="entries">1000</heap>
+        <heap unit="entries">100000</heap>
 
     </cache-template>
     <cache alias="ca.uhn.fhir.jpa.starter.model.CacheEntity" uses-template="simple"/>

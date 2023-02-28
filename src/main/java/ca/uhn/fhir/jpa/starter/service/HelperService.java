@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter.service;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.AsyncConfiguration;
 import ca.uhn.fhir.jpa.starter.ConfigDefinitionTypes;
 import ca.uhn.fhir.jpa.starter.DashboardConfigContainer;
 import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
@@ -20,6 +21,23 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.iprd.fhir.utils.*;
 import com.iprd.report.*;
+import com.iprd.report.model.FilterItem;
+import com.iprd.report.model.FilterOptions;
+import com.iprd.report.model.data.BarChartItemDataCollection;
+import com.iprd.report.model.data.BarComponentData;
+import com.iprd.report.model.data.LineChartItem;
+import com.iprd.report.model.data.LineChartItemCollection;
+import com.iprd.report.model.data.PieChartItem;
+import com.iprd.report.model.data.ScoreCardItem;
+import com.iprd.report.model.definition.ANCDailySummaryConfig;
+import com.iprd.report.model.definition.BarChartDefinition;
+import com.iprd.report.model.definition.BarChartItemDefinition;
+import com.iprd.report.model.definition.BarComponent;
+import com.iprd.report.model.definition.IndicatorItem;
+import com.iprd.report.model.definition.LineChart;
+import com.iprd.report.model.definition.LineChartItemDefinition;
+import com.iprd.report.model.definition.PieChartDefinition;
+import com.iprd.report.model.definition.TabularItem;
 
 import android.util.Pair;
 
@@ -35,6 +53,12 @@ import java.sql.Clob;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -91,7 +115,8 @@ public class HelperService {
 	CachingService cachingService;
 	@Autowired
 	DashboardEnvironmentConfig dashboardEnvironmentConfig;
-	
+	@Autowired
+	AsyncConfiguration asyncConf;
 	
 	FhirContext ctx;
 	Keycloak instance;
@@ -660,7 +685,7 @@ public class HelperService {
 		for(PieChartDefinition pieChartDefinition: pieChartDefinitions){
 				Double cacheValueSum = notificationDataSource
 					.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
-						Utils.getMd5StringFromFhirPath(pieChartDefinition.getFhirPath()), facilityIds);
+						Utils.md5Bytes(pieChartDefinition.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 				pieChartItems.add(new PieChartItem(pieChartDefinition.getId(), organizationId, pieChartDefinition.getName(), String.valueOf(cacheValueSum), pieChartDefinition.getChartId(), pieChartDefinition.getColorHex()));
 		}
 		return ResponseEntity.ok(pieChartItems);
@@ -761,11 +786,11 @@ public class HelperService {
 		for (IndicatorItem indicator : analyticsItemListFromFile) {
 			Double currentWeekCacheValueSum = notificationDataSource
 				.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(currentWeek.first, currentWeek.second,
-					Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), idsAndOrgIdToChildrenMapPair.first);
+						Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), idsAndOrgIdToChildrenMapPair.first);
 
 			Double prevWeekCacheValueSum = notificationDataSource
 				.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(prevWeek.first, prevWeek.second,
-					Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), idsAndOrgIdToChildrenMapPair.first);
+						Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), idsAndOrgIdToChildrenMapPair.first);
 
 			AnalyticComparison comparisonValue = (currentWeekCacheValueSum > prevWeekCacheValueSum) ? AnalyticComparison.POSITIVE_UP : AnalyticComparison.NEGATIVE_DOWN;
 
@@ -791,7 +816,7 @@ public class HelperService {
 				notificationDataSource = NotificationDataSource.getInstance();
 				performCachingForTabularData(tabularItemList, idsAndOrgIdToChildrenMapPair.first, start, end);
 				List<String> orgIds = idsAndOrgIdToChildrenMapPair.first;
-				List<FhirPath> fhirPaths = tabularItemList.stream()
+				List<String> fhirPaths = tabularItemList.stream()
 					.map(TabularItem::getFhirPath)
 					.collect(Collectors.toList());
 				scoreCardItems = idsAndOrgIdToChildrenMapPair.first.parallelStream()
@@ -819,7 +844,7 @@ public class HelperService {
 
 	private void performCachingForTabularData(List<TabularItem> indicators, List<String> facilityIds, Date startDate, Date endDate) {
 		notificationDataSource = NotificationDataSource.getInstance();
-		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.getMd5StringFromFhirPath(indicatorItem.getFhirPath())).collect(Collectors.toList());
+		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.md5Bytes(indicatorItem.getFhirPath().getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
 
 		List<Date> dates = new ArrayList<>();
 		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
@@ -844,12 +869,14 @@ public class HelperService {
 			}
 			start = Date.valueOf(start.toLocalDate().plusDays(1));
 		}
-
-		facilityIds.forEach(facilityId -> {
+		
+		for(int count=0; count<facilityIds.size();count++) {
+			String facilityId = facilityIds.get(count);
+			final int finalcount = count;
 			dates.forEach(date -> {
-				cachingService.cacheTabularData(facilityId, date, indicators);
+				cachingService.cacheTabularData(facilityId, date, indicators,finalcount);
 			});
-		});
+		}
 
 		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 		//Always cache current date data if it lies between start and end date.
@@ -861,7 +888,7 @@ public class HelperService {
 	}
 
 	private void performCachingForPieChartData(List<PieChartDefinition> pieChartDefinitions, List<String> facilityIds, Date startDate, Date endDate){
-		List<String> currentIndicatorMd5List = pieChartDefinitions.stream().map(pieChartDefinitionItem -> Utils.getMd5StringFromFhirPath(pieChartDefinitionItem.getFhirPath())).collect(Collectors.toList());
+		List<String> currentIndicatorMd5List = pieChartDefinitions.stream().map(pieChartDefinitionItem -> Utils.md5Bytes(pieChartDefinitionItem.getFhirPath().getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
 
 		List<Date> dates = new ArrayList<>();
 		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
@@ -886,12 +913,15 @@ public class HelperService {
 			}
 			start = Date.valueOf(start.toLocalDate().plusDays(1));
 		}
-
-		facilityIds.forEach(facilityId -> {
-			dates.forEach( date -> {
-				cachingService.cachePieChartData(facilityId, date, pieChartDefinitions);
+		
+		for(int count=0; count<facilityIds.size();count++) {
+			String facilityId = facilityIds.get(count);
+			final int finalcount = count;
+			dates.forEach(date -> {
+				cachingService.cachePieChartData(facilityId, date, pieChartDefinitions,finalcount);
 			});
-		});
+		}
+
 		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 		//Always cache current date data if it lies between start and end date.
 //		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
@@ -920,7 +950,7 @@ public class HelperService {
 					String id = entry.getKey();
 					List<String> children = entry.getValue();
 					children.add(id);
-					List<FhirPath> fhirPaths = indicators.stream()
+					List<String> fhirPaths = indicators.stream()
 						.map(IndicatorItem::getFhirPath)
 						.collect(Collectors.toList());
 					List<Integer> indicatorIds = indicators.stream()
@@ -942,7 +972,7 @@ public class HelperService {
 					for (IndicatorItem indicator : indicators) {
 						Double cacheValueSum = notificationDataSource
 							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-								Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+								Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 					}
@@ -956,7 +986,7 @@ public class HelperService {
 					for (IndicatorItem indicator : indicators) {
 						Double cacheValueSum = notificationDataSource
 							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-								Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+								Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 					}
@@ -970,7 +1000,7 @@ public class HelperService {
 					for (IndicatorItem indicator : indicators) {
 						Double cacheValueSum = notificationDataSource
 							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-								Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+								Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 					}
@@ -984,7 +1014,7 @@ public class HelperService {
 					for (IndicatorItem indicator : indicators) {
 						Double cacheValueSum = notificationDataSource
 							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-								Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+								Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 					}
@@ -1045,7 +1075,7 @@ public class HelperService {
 	}
 	
 	private void performCachingIfNotPresent(List<IndicatorItem> indicators, List<String> facilityIds, Date startDate, Date endDate) {
-		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.getMd5StringFromFhirPath(indicatorItem.getFhirPath())).collect(Collectors.toList());
+		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.md5Bytes(indicatorItem.getFhirPath().getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
 
 		List<Date> dates = new ArrayList<>();
 		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
@@ -1070,12 +1100,14 @@ public class HelperService {
 			}
 			start = Date.valueOf(start.toLocalDate().plusDays(1));
 		}
-
-		facilityIds.forEach(facilityId -> {
+		
+		for(int count=0; count<facilityIds.size();count++) {
+			String facilityId = facilityIds.get(count);
+			final int finalcount = count;
 			dates.forEach(date -> {
-				cachingService.cacheData(facilityId, date, indicators);
+				cachingService.cacheData(facilityId, date, indicators,finalcount);
 			});
-		});
+		}
 
 		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 		//Always cache current date data if it lies between start and end date.
@@ -1121,11 +1153,13 @@ public class HelperService {
 			start = Date.valueOf(start.toLocalDate().plusDays(1));
 		}
 
-		facilityIds.forEach(facilityId -> {
+		for(int count=0; count<facilityIds.size();count++) {
+			String facilityId = facilityIds.get(count);
+			final int finalcount = count;
 			dates.forEach(date -> {
-				cachingService.cacheDataForBarChart(facilityId, date, barCharts);
+				cachingService.cacheDataForBarChart(facilityId, date, barCharts,finalcount);
 			});
-		});
+		}
 
 		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 		//Always cache current date data if it lies between start and end date.
@@ -1268,11 +1302,13 @@ public class HelperService {
 			start = Date.valueOf(start.toLocalDate().plusDays(1));
 		}
 
-		facilityIds.forEach(facilityId -> {
+		for(int count=0; count<facilityIds.size();count++) {
+			String facilityId = facilityIds.get(count);
+			final int finalcount = count;
 			dates.forEach(date -> {
-				cachingService.cacheDataLineChart(facilityId, date, lineCharts);
+				cachingService.cacheDataLineChart(facilityId, date, lineCharts,finalcount);
 			});
-		});
+		}
 
 		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 		//Always cache current date data if it lies between start and end date.
@@ -1288,10 +1324,12 @@ public class HelperService {
 		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 		Date startDate = Date.valueOf(start);
 		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
-		for (String facilityId : facilities) {
+		
+		for(int count=0; count<facilities.size();count++) {
+			String facilityId = facilities.get(count);
 			while (!startDate.equals(endDate)) {
 				logger.warn("-- Caching TabularData for date " + startDate + " and facility id " + facilityId);
-				cachingService.cacheTabularData(facilityId, startDate, tabularItemList);
+				cachingService.cacheTabularData(facilityId, startDate, tabularItemList,count);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
 			startDate = Date.valueOf(start);
@@ -1304,10 +1342,11 @@ public class HelperService {
 		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 		Date startDate = Date.valueOf(start);
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
-		for (String facilityId : facilities) {
+		for(int count=0; count<facilities.size();count++) {
+			String facilityId = facilities.get(count);
 			while (!startDate.equals(endDate)) {
 				logger.warn("-- Caching lineChart for date " + startDate + " and facility id " + facilityId);
-				cachingService.cacheDataLineChart(facilityId, startDate, lineCharts);
+				cachingService.cacheDataLineChart(facilityId, startDate, lineCharts,count);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
 			startDate = Date.valueOf(start);
@@ -1320,10 +1359,11 @@ public class HelperService {
 		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 		Date startDate = Date.valueOf(start);
 		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
-		for (String facilityId : facilities) {
+		for(int count=0; count<facilities.size();count++) {
+			String facilityId = facilities.get(count);
 			while (!startDate.equals(endDate)) {
 				logger.warn("-- Caching barCharts for date " + startDate + " and facility id " + facilityId);
-				cachingService.cacheDataForBarChart(facilityId, startDate, barCharts);
+				cachingService.cacheDataForBarChart(facilityId, startDate, barCharts,count);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
 			startDate = Date.valueOf(start);
@@ -1336,10 +1376,11 @@ public class HelperService {
 		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 		Date startDate = Date.valueOf(start);
 		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
-		for (String facilityId : facilities) {
+		for(int count=0; count<facilities.size();count++) {
+			String facilityId = facilities.get(count);
 			while (!startDate.equals(endDate)) {
 				logger.warn("-- Caching pieChart for date " + startDate + " and facility id " + facilityId);
-				cachingService.cachePieChartData(facilityId, startDate, pieChartDefinitions);
+				cachingService.cachePieChartData(facilityId, startDate, pieChartDefinitions,count);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
 			startDate = Date.valueOf(start);
@@ -1352,10 +1393,11 @@ public class HelperService {
 		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 		Date startDate = Date.valueOf(start);
 		List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
-		for (String facilityId : facilities) {
+		for(int count=0; count<facilities.size();count++) {
+			String facilityId = facilities.get(count);
 			while (!startDate.equals(endDate)) {
 				logger.warn("-- Caching Scorecard for date " + startDate + " and facility id " + facilityId);
-				cachingService.cacheData(facilityId, startDate, indicators);
+				cachingService.cacheData(facilityId, startDate, indicators,count);
 				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 			}
 			startDate = Date.valueOf(start);
@@ -1364,23 +1406,38 @@ public class HelperService {
 	}
 
 	public void cacheDashboardData(List<String> facilities, String start, String end, String env) {
-		Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
-		Date startDate = Date.valueOf(start);
+	
 		List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
 		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
 		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
 		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
+		
+		Executor executor =  asyncConf.asyncExecutor();
 
-		for (String facilityId : facilities) {
-			while (!startDate.equals(endDate)) {
-				cachingService.cacheDashboardData(facilityId, startDate, indicators, barCharts, tabularItemList, lineCharts, pieChartDefinitions);
-				startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
+		HashMap <String,Pair<Long,Long>> orgToTiming = new HashMap();
+		List<List<String>> facilityBatches = Utils.partitionFacilities(facilities, appProperties.getExecutor_max_pool_size());
+		try {
+			int count = 0;
+			for (List<String> facilityBatch : facilityBatches) {
+				count+=1;
+				final int countFinal = count;
+					for (String facilityId : facilityBatch) {
+						Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
+						Date startDate = Date.valueOf(start);
+						while (!startDate.equals(endDate)) {
+							cacheDashboardData(facilityId, startDate, indicators, barCharts, tabularItemList, lineCharts, pieChartDefinitions,countFinal,orgToTiming);
+							startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
+						}
+						startDate = Date.valueOf(start);
+					}
 			}
-			startDate = Date.valueOf(start);
-			logger.warn("-- Caching completed for Overall Data from date " + startDate + " to "+ endDate +" with facility id " + facilityId);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		logger.warn("-- Caching completed for Overall data");
+
 	}
 
 	
@@ -1402,6 +1459,63 @@ public class HelperService {
 		return fhirSearchList;
 	}
 
+	
+
+	public void cacheDashboardData(String orgId, Date date, List<IndicatorItem> indicators, List<BarChartDefinition> barCharts, List<TabularItem> tabularItems, List<LineChart> lineCharts, List<PieChartDefinition> pieChartDefinitions,int count,HashMap <String,Pair<Long,Long>> orgToTiming ) {
+		notificationDataSource = NotificationDataSource.getInstance();
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		long startTime = System.nanoTime();
+		DashboardModel dashboard = ReportGeneratorFactory.INSTANCE.reportGenerator().getOverallDataToCache(
+			fhirClientProvider,
+			orgId,
+			new DateRange(date.toString(), date.toString()),
+			indicators,
+			lineCharts,
+			barCharts,
+			tabularItems,
+			pieChartDefinitions,
+			Collections.emptyList()
+		);
+		long endTime = System.nanoTime();
+		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+		Future<Long> timeScoreCard = cachingService.cacheData(orgId, date, indicators,count,dashboard.getScoreCardItemList());
+		Future<Long> timeBarChart = cachingService.cacheDataForBarChart(orgId, date, barCharts,count,dashboard.getBarChartItemCollectionList());
+		Future<Long> timeLineChart = cachingService.cacheDataLineChart(orgId, date, lineCharts,count,dashboard.getLineChartItemCollections());
+		Future<Long> timePieChart = cachingService.cachePieChartData(orgId, date, pieChartDefinitions,count,dashboard.getPieChartItemList());
+		Future<Long> timeTabularChart = cachingService.cacheTabularData(orgId, date, tabularItems,count,dashboard.getTabularItemList());
+//		logger.warn(orgId+" "+date+" time for hapi search "+duration/1000000000.0);
+
+    	Pair<Long, Long> timeTakenFhirCache = null;
+		try {
+			timeTakenFhirCache = new Pair(duration,timeScoreCard.get()+timeBarChart.get()+timeLineChart.get()+timePieChart.get()+timeTabularChart.get());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	if(orgToTiming.containsKey(orgId)) {
+			final Pair<Long,Long> value = new Pair(orgToTiming.get(orgId).first+timeTakenFhirCache.first,orgToTiming.get(orgId).second+timeTakenFhirCache.second);
+			orgToTiming.put(orgId, value);
+		}else {
+			orgToTiming.put(orgId,timeTakenFhirCache);
+		}
+		   
+	}
+	
+//	@Scheduled(fixedDelay = 24 * DELAY, initialDelay = DELAY)
+	private void cacheDailyData() {
+		Map<String, DashboardConfigContainer> dashboardEnvToConfigMap = dashboardEnvironmentConfig.getDashboardEnvToConfigMap();
+		dashboardEnvironmentConfig.getEnvToFilePathMapping().forEach((env, definitionTypeToFilePathMap) -> {
+			cachingService.cacheData(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), dashboardEnvToConfigMap.get(env).getAnalyticsIndicatorItems(),0);
+			cachingService.cacheDataForBarChart(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), dashboardEnvToConfigMap.get(env).getBarChartDefinitions(),0);
+			cachingService.cacheTabularData(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), dashboardEnvToConfigMap.get(env).getTabularItems(),0);
+			cachingService.cachePieChartData(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), dashboardEnvToConfigMap.get(env).getPieChartDefinitions(),0);
+			cachingService.cacheDataLineChart(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), dashboardEnvToConfigMap.get(env).getLineCharts(),0);
+		});
+	}
+	
 	List<FilterItem> getFilterItemListFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getFilterItems();
 	}

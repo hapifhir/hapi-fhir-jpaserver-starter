@@ -1,5 +1,6 @@
 server:
    port: 8085
+
 spring:
    main:
       allow-circular-references: true
@@ -13,9 +14,16 @@ spring:
       username: admin
       password: admin
       driverClassName: com.mysql.cj.jdbc.Driver
-
-      hikari:
-         maximum-pool-size: 100
+      hikari:    
+         minimum-pool-size: 2
+         maximum-pool-size: 40
+         connection-timeout: 3000000
+         # idle-timeout: 60000
+         max-lifetime: 6000000
+         keepalive-time: 120000
+   cache:
+      jcache:
+         config: classpath:ehcache.xml
 # database connection pool size
    jpa:
       properties:
@@ -25,15 +33,30 @@ spring:
          hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
          hibernate.dialect.storage_engine: innodb
          hibernate.jdbc.batch_size: 20
+         hibernate.javax.cache.missing_cache_strategy: create
 #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
          hibernate.cache.use_query_cache: true
          hibernate.cache.use_second_level_cache: true
+         hibernate.cache.region: org.hibernate.cache.ehcache.EhCacheRegionFactory
+         
 #      hibernate.hbm2ddl.auto: update
+   batch:
 #      hibernate.jdbc.batch_size: 20
+      job:
+         enabled: false
+   logging:
+      level:
+         org:
+            hibernate:
+               type: trace
 hapi:
    fhir:
 #      hibernate.cache.use_structured_entries: false
+      openapi_enabled: true
+      fhir_version: R4
 #      hibernate.cache.use_minimal_puts: false
+      image_path: Images
+      country_org_id: nigeria
 ###    These settings will enable fulltext search with lucene
 #      hibernate.search.enabled: true
 #      hibernate.search.backend.type: lucene
@@ -41,10 +64,6 @@ hapi:
 #      hibernate.search.backend.directory.type: local-filesystem
 #      hibernate.search.backend.directory.root: target/lucenefiles
 #      hibernate.search.backend.lucene_version: lucene_current
-      openapi_enabled: true
-      fhir_version: R4
-      image_path: Images
-      country_org_id: nigeria
       envs: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\envs
       notification_datasource_config_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\notificationDataSourceConfig.xml
       anc_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\anc_config.json
@@ -57,9 +76,9 @@ hapi:
       tabular_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\tabular_config.json
       analytics_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\analytics_config.json
 
-      executor_core_pool_size: 3
-      executor_max_pool_size: 3
-      executor_queue_capacity: 100
+      executor_core_pool_size: 4
+      executor_max_pool_size: 6
+      executor_queue_capacity: 50000
       executor_thread_name_prefix: AsynchThread-
       keycloak_server_address: http://localhost:8081/auth
       keycloak_realm: master
@@ -80,7 +99,13 @@ hapi:
       cors:
          allow_Credentials: true
 ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
+      allowed_origin:
+#    enforce_referential_integrity_on_delete: false
+      - '*'
 ### to determine the FHIR server address
+      search-coord-core-pool-size: 2
+#    enforce_referential_integrity_on_write: false
+      search-coord-max-pool-size: 500
 #   use_apache_address_strategy: false
 ### forces the use of the https:// protocol for the returned server address.
 ### alternatively, it may be set using the X-Forwarded-Proto header.
@@ -117,33 +142,26 @@ hapi:
 #    enable_index_missing_fields: false
 #    enable_index_contained_resource: false
 #    advanced_lucene_indexing: false
-         allowed_origin:
-#    enforce_referential_integrity_on_delete: false
-#    enforce_referential_integrity_on_write: false
+#    filter_search_enabled: true
+#    graphql_enabled: true
+      search-coord-queue-capacity: 200000
 #    etag_support_enabled: true
 #    expunge_enabled: true
 #    daoconfig_client_id_strategy: null
 #    client_id_strategy: ALPHANUMERIC
-         - '*'
-#    filter_search_enabled: true
-#    graphql_enabled: true
-#    narrative_enabled: true
-#    mdm_enabled: true
-#    local_base_urls:
-#      - https://hapi.fhir.org/baseR4
-      search-coord-core-pool-size: 20
 #    partitioning:
-#      allow_references_across_partitions: false
-#      partitioning_include_in_search_hashes: false
-
-      search-coord-max-pool-size: 100
-      search-coord-queue-capacity: 200
 # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
       tester:
+#    narrative_enabled: true
+#    mdm_enabled: true
 
+#    local_base_urls:
+#      - https://hapi.fhir.org/baseR4
          home:
             name: Local Tester
-            server_address: http://10.102.10.133:8085/fhir
+            server_address: http://localhost:8085/fhir
+#      allow_references_across_partitions: false
+#      partitioning_include_in_search_hashes: false
 # Search coordinator thread pool sizes
             refuse_to_fetch_third_party_urls: false
             fhir_version: R4
@@ -151,23 +169,20 @@ hapi:
             name: Global Tester
             server_address: http://hapi.fhir.org/baseR4
 # Threadpool size for BATCH'ed GETs in a bundle.
-#    bundle_batch_pool_size: 10
-#    bundle_batch_pool_max_size: 50
             refuse_to_fetch_third_party_urls: false
-#    logger:
-#      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
-#      format: >-
-#        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
-#        Operation[${operationType} ${operationName} ${idOrResourceName}]
-#        UA[${requestHeader.user-agent}] Params[${requestParameters}]
-#        ResponseEncoding[${responseEncodingNoDefault}]
-#      log_exceptions: true
-#      name: fhirtest.access
-#    max_binary_size: 104857600
-#    max_page_size: 200
-#    retain_cached_searches_mins: 60
-#    reuse_cached_search_results_millis: 60000
             fhir_version: R4
+      logger:
+         error_format: ERROR - ${requestVerb} ${requestUrl}
+#    bundle_batch_pool_size: 10
+         format: Path[${servletPath}] Source[${requestHeader.x-forwarded-for}] Operation[${operationType} ${operationName}
+            ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}]
+         log_exceptions: true
+         name: fhirtest.accss
+#    bundle_batch_pool_max_size: 50
+      max_binary_size: 104857600
+      max_page_size: 200
+      retain_cached_searches_mins: 30
+      reuse_cached_search_results_millis: 6000
 keycloak:
    auth-server-url: http://localhost:8081/auth
    realm: fhir-hapi
@@ -175,46 +190,52 @@ keycloak:
    credentials:
       secret: d9ce06c8-9d26-48b6-a2ac-5f1069afc691
    ssl-required: external
-
+# ------------------
 # ------------------
 # Orphaned comments:
+
 # ------------------
-# Was at begin of line:184 :# ------------------
-# Was at begin of line:185 :# Orphaned comments:
-# Was at begin of line:186 :# ------------------
-# Was at begin of line:187 :# Was at begin of line:152 :#    validation:
-# Was at begin of line:188 :# Was at begin of line:153 :#      requests_enabled: true
-# Was at begin of line:189 :# Was at begin of line:154 :#      responses_enabled: true
-# Was at begin of line:190 :# Was at begin of line:155 :#    binary_storage_enabled: true
-# Was at begin of line:191 :# Was at begin of line:156 :#    bulk_export_enabled: true
-# Was at begin of line:192 :# Was at begin of line:157 :#    subscription:
-# Was at begin of line:193 :# Was at begin of line:158 :#      resthook_enabled: true
-# Was at begin of line:194 :# Was at begin of line:159 :#      websocket_enabled: false
-# Was at begin of line:195 :# Was at begin of line:160 :#      email:
-# Was at begin of line:196 :# Was at begin of line:161 :#        from: some@test.com
-# Was at begin of line:197 :# Was at begin of line:162 :#        host: google.com
-# Was at begin of line:198 :# Was at begin of line:163 :#        port:
-# Was at begin of line:199 :# Was at begin of line:164 :#        username:
-# Was at begin of line:200 :# Was at begin of line:165 :#        password:
-# Was at begin of line:201 :# Was at begin of line:166 :#        auth:
-# Was at begin of line:202 :# Was at begin of line:167 :#        startTlsEnable:
-# Was at begin of line:203 :# Was at begin of line:168 :#        startTlsRequired:
-# Was at begin of line:204 :# Was at begin of line:169 :#        quitWait:
-# Was at begin of line:205 :# Was at begin of line:170 :#    lastn_enabled: true
-# Was at begin of line:206 :# Was at begin of line:171 :#    store_resource_in_lucene_index_enabled: true
-# Was at begin of line:207 :# Was at begin of line:172 :###  This is configuration for normalized quantity serach level default is 0
-# Was at begin of line:208 :# Was at begin of line:173 :###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
-# Was at begin of line:209 :# Was at begin of line:174 :###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
-# Was at begin of line:210 :# Was at begin of line:175 :###   2: NORMALIZED_QUANTITY_SEARCH_SUPPORTED
-# Was at begin of line:211 :# Was at begin of line:176 :#    normalized_quantity_search_level: 2
-# Was at begin of line:212 :# Was at begin of line:177 :#elasticsearch:
-# Was at begin of line:213 :# Was at begin of line:178 :#  debug:
-# Was at begin of line:214 :# Was at begin of line:179 :#    pretty_print_json_log: false
-# Was at begin of line:215 :# Was at begin of line:180 :#    refresh_after_write: false
-# Was at begin of line:216 :# Was at begin of line:181 :#  enabled: false
-# Was at begin of line:217 :# Was at begin of line:182 :#  password: SomePassword
-# Was at begin of line:218 :# Was at begin of line:183 :#  required_index_status: YELLOW
-# Was at begin of line:219 :# Was at begin of line:184 :#  rest_url: 'localhost:9200'
-# Was at begin of line:220 :# Was at begin of line:185 :#  protocol: 'http'
-# Was at begin of line:221 :# Was at begin of line:186 :#  schema_management_strategy: CREATE
-# Was at begin of line:222 :# Was at begin of line:187 :#  username: SomeUsername
+# Was at begin of line:189 :# ------------------
+# Was at begin of line:190 :# Orphaned comments:
+# Was at begin of line:192 :# ------------------
+# Was at begin of line:193 :# Was at begin of line:193 :# Orphaned comments:
+# Was at begin of line:194 :# Was at begin of line:194 :# ------------------
+# Was at begin of line:195 :# Was at begin of line:195 :# Was at begin of line:184 :# ------------------
+# Was at begin of line:196 :# Was at begin of line:196 :# Was at begin of line:185 :# Orphaned comments:
+# Was at begin of line:197 :# Was at begin of line:197 :# Was at begin of line:186 :# ------------------
+# Was at begin of line:198 :# Was at begin of line:198 :# Was at begin of line:187 :# Was at begin of line:152 :#    validation:
+# Was at begin of line:199 :# Was at begin of line:199 :# Was at begin of line:188 :# Was at begin of line:153 :#      requests_enabled: true
+# Was at begin of line:200 :# Was at begin of line:200 :# Was at begin of line:189 :# Was at begin of line:154 :#      responses_enabled: true
+# Was at begin of line:201 :# Was at begin of line:201 :# Was at begin of line:190 :# Was at begin of line:155 :#    binary_storage_enabled: true
+# Was at begin of line:202 :# Was at begin of line:202 :# Was at begin of line:191 :# Was at begin of line:156 :#    bulk_export_enabled: true
+# Was at begin of line:203 :# Was at begin of line:203 :# Was at begin of line:192 :# Was at begin of line:157 :#    subscription:
+# Was at begin of line:204 :# Was at begin of line:204 :# Was at begin of line:193 :# Was at begin of line:158 :#      resthook_enabled: true
+# Was at begin of line:205 :# Was at begin of line:205 :# Was at begin of line:194 :# Was at begin of line:159 :#      websocket_enabled: false
+# Was at begin of line:206 :# Was at begin of line:206 :# Was at begin of line:195 :# Was at begin of line:160 :#      email:
+# Was at begin of line:207 :# Was at begin of line:207 :# Was at begin of line:196 :# Was at begin of line:161 :#        from: some@test.com
+# Was at begin of line:208 :# Was at begin of line:208 :# Was at begin of line:197 :# Was at begin of line:162 :#        host: google.com
+# Was at begin of line:209 :# Was at begin of line:209 :# Was at begin of line:198 :# Was at begin of line:163 :#        port:
+# Was at begin of line:210 :# Was at begin of line:210 :# Was at begin of line:199 :# Was at begin of line:164 :#        username:
+# Was at begin of line:211 :# Was at begin of line:211 :# Was at begin of line:200 :# Was at begin of line:165 :#        password:
+# Was at begin of line:212 :# Was at begin of line:212 :# Was at begin of line:201 :# Was at begin of line:166 :#        auth:
+# Was at begin of line:213 :# Was at begin of line:213 :# Was at begin of line:202 :# Was at begin of line:167 :#        startTlsEnable:
+# Was at begin of line:214 :# Was at begin of line:214 :# Was at begin of line:203 :# Was at begin of line:168 :#        startTlsRequired:
+# Was at begin of line:215 :# Was at begin of line:215 :# Was at begin of line:204 :# Was at begin of line:169 :#        quitWait:
+# Was at begin of line:216 :# Was at begin of line:216 :# Was at begin of line:205 :# Was at begin of line:170 :#    lastn_enabled: true
+# Was at begin of line:217 :# Was at begin of line:217 :# Was at begin of line:206 :# Was at begin of line:171 :#    store_resource_in_lucene_index_enabled: true
+# Was at begin of line:218 :# Was at begin of line:218 :# Was at begin of line:207 :# Was at begin of line:172 :###  This is configuration for normalized quantity serach level default is 0
+# Was at begin of line:219 :# Was at begin of line:219 :# Was at begin of line:208 :# Was at begin of line:173 :###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
+# Was at begin of line:220 :# Was at begin of line:220 :# Was at begin of line:209 :# Was at begin of line:174 :###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
+# Was at begin of line:221 :# Was at begin of line:221 :# Was at begin of line:210 :# Was at begin of line:175 :###   2: NORMALIZED_QUANTITY_SEARCH_SUPPORTED
+# Was at begin of line:222 :# Was at begin of line:222 :# Was at begin of line:211 :# Was at begin of line:176 :#    normalized_quantity_search_level: 2
+# Was at begin of line:223 :# Was at begin of line:223 :# Was at begin of line:212 :# Was at begin of line:177 :#elasticsearch:
+# Was at begin of line:224 :# Was at begin of line:224 :# Was at begin of line:213 :# Was at begin of line:178 :#  debug:
+# Was at begin of line:225 :# Was at begin of line:225 :# Was at begin of line:214 :# Was at begin of line:179 :#    pretty_print_json_log: false
+# Was at begin of line:226 :# Was at begin of line:226 :# Was at begin of line:215 :# Was at begin of line:180 :#    refresh_after_write: false
+# Was at begin of line:227 :# Was at begin of line:227 :# Was at begin of line:216 :# Was at begin of line:181 :#  enabled: false
+# Was at begin of line:228 :# Was at begin of line:228 :# Was at begin of line:217 :# Was at begin of line:182 :#  password: SomePassword
+# Was at begin of line:229 :# Was at begin of line:229 :# Was at begin of line:218 :# Was at begin of line:183 :#  required_index_status: YELLOW
+# Was at begin of line:230 :# Was at begin of line:230 :# Was at begin of line:219 :# Was at begin of line:184 :#  rest_url: 'localhost:9200'
+# Was at begin of line:231 :# Was at begin of line:231 :# Was at begin of line:220 :# Was at begin of line:185 :#  protocol: 'http'
+# Was at begin of line:232 :# Was at begin of line:232 :# Was at begin of line:221 :# Was at begin of line:186 :#  schema_management_strategy: CREATE
+# Was at begin of line:233 :# Was at begin of line:233 :# Was at begin of line:222 :# Was at begin of line:187 :#  username: SomeUsername

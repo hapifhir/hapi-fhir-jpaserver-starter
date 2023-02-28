@@ -48,19 +48,19 @@ hapi:
     #  allowed_origin:
     #    - '*'
 
-#    logger:
-#      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
-#      format: >-
-#        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
-#        Operation[${operationType} ${operationName} ${idOrResourceName}]
-#        UA[${requestHeader.user-agent}] Params[${requestParameters}]
-#        ResponseEncoding[${responseEncodingNoDefault}]
-#      log_exceptions: true
-#      name: fhirtest.access
-#    max_binary_size: 104857600
-#    max_page_size: 200
-#    retain_cached_searches_mins: 60
-#    reuse_cached_search_results_millis: 60000
+    logger:
+      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
+      format: >-
+        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
+        Operation[${operationType} ${operationName} ${idOrResourceName}]
+        UA[${requestHeader.user-agent}] Params[${requestParameters}]
+        ResponseEncoding[${responseEncodingNoDefault}]
+      log_exceptions: true
+      name: fhirtest.ss
+    max_binary_size: 104857600
+    max_page_size: 200
+    retain_cached_searches_mins: 60
+    reuse_cached_search_results_millis: 6000000
     tester:
       -
           id: home

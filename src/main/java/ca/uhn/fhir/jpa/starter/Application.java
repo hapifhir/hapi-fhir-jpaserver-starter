@@ -25,41 +25,40 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@ServletComponentScan(basePackageClasses = {
-  JpaRestfulServer.class})
-@SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
+@ServletComponentScan(basePackageClasses = { JpaRestfulServer.class })
+@SpringBootApplication(exclude = { ElasticsearchRestClientAutoConfiguration.class })
 @EnableScheduling
 @EnableAsync
-@Import({SubscriptionSubmitterConfig.class, SubscriptionProcessorConfig.class, SubscriptionChannelConfig.class, WebsocketDispatcherConfig.class, MdmConfig.class})
+@Import({ SubscriptionSubmitterConfig.class, SubscriptionProcessorConfig.class, SubscriptionChannelConfig.class,
+		WebsocketDispatcherConfig.class, MdmConfig.class })
 public class Application extends SpringBootServletInitializer {
 
-  public static void main(String[] args) {
+	public static void main(String[] args) {
 
-    SpringApplication.run(Application.class, args);
+		SpringApplication.run(Application.class, args);
 
-    //Server is now accessible at eg. http://localhost:8080/fhir/metadata
-    //UI is now accessible at http://localhost:8080/
-  }
+		// Server is now accessible at eg. http://localhost:8080/fhir/metadata
+		// UI is now accessible at http://localhost:8080/
+	}
 
-  @Override
-  protected SpringApplicationBuilder configure(
-    SpringApplicationBuilder builder) {
-    return builder.sources(Application.class);
-  }
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+		return builder.sources(Application.class);
+	}
 
-  @Autowired
-  AutowireCapableBeanFactory beanFactory;
+	@Autowired
+	AutowireCapableBeanFactory beanFactory;
 
-  @Bean
-  @Conditional(OnEitherVersion.class)
-  public ServletRegistrationBean hapiServletRegistration() {
-    ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
-    JpaRestfulServer jpaRestfulServer = new JpaRestfulServer();
-    beanFactory.autowireBean(jpaRestfulServer);
-    servletRegistrationBean.setServlet(jpaRestfulServer);
-    servletRegistrationBean.addUrlMappings("/fhir/*");
-    servletRegistrationBean.setLoadOnStartup(1);
+	@Bean
+	@Conditional(OnEitherVersion.class)
+	public ServletRegistrationBean hapiServletRegistration() {
+		ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
+		JpaRestfulServer jpaRestfulServer = new JpaRestfulServer();
+		beanFactory.autowireBean(jpaRestfulServer);
+		servletRegistrationBean.setServlet(jpaRestfulServer);
+		servletRegistrationBean.addUrlMappings("/fhir/*");
+		servletRegistrationBean.setLoadOnStartup(1);
 
-    return servletRegistrationBean;
-  }
+		return servletRegistrationBean;
+	}
 }

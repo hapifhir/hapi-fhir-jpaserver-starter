@@ -17,6 +17,11 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.iprd.fhir.utils.*;
 import com.iprd.report.*;
+import com.iprd.report.model.FilterItem;
+import com.iprd.report.model.FilterOptions;
+import com.iprd.report.model.data.ScoreCardItem;
+import com.iprd.report.model.definition.ANCDailySummaryConfig;
+import com.iprd.report.model.definition.IndicatorItem;
 
 import android.util.Pair;
 
@@ -642,11 +647,11 @@ public class ChartService {
 			for (IndicatorItem indicator : analyticsItemListFromFile) {
 				Double currentWeekCacheValueSum = notificationDataSource
 					.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(currentWeek.first, currentWeek.second,
-						Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), idsAndOrgIdToChildrenMapPair.first);
+							Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), idsAndOrgIdToChildrenMapPair.first);
 
 				Double prevWeekCacheValueSum = notificationDataSource
 					.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(prevWeek.first, prevWeek.second,
-						Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), idsAndOrgIdToChildrenMapPair.first);
+							Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), idsAndOrgIdToChildrenMapPair.first);
 
 				AnalyticComparison comparisonValue = (currentWeekCacheValueSum > prevWeekCacheValueSum) ? AnalyticComparison.POSITIVE_UP : AnalyticComparison.NEGATIVE_DOWN;
 
@@ -681,7 +686,7 @@ public class ChartService {
 						for (IndicatorItem indicator : indicators) {
 							Double cacheValueSum = notificationDataSource
 								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
-									Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), children);
+										Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), children);
 							scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(),
 								startDate, endDate));
 						}
@@ -695,7 +700,7 @@ public class ChartService {
 						for (IndicatorItem indicator : indicators) {
 							Double cacheValueSum = notificationDataSource
 								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-									Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+										Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 						}
@@ -709,7 +714,7 @@ public class ChartService {
 						for (IndicatorItem indicator : indicators) {
 							Double cacheValueSum = notificationDataSource
 								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-									Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+										Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 						}
@@ -723,7 +728,7 @@ public class ChartService {
 						for (IndicatorItem indicator : indicators) {
 							Double cacheValueSum = notificationDataSource
 								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-									Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+										Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 						}
@@ -737,7 +742,7 @@ public class ChartService {
 						for (IndicatorItem indicator : indicators) {
 							Double cacheValueSum = notificationDataSource
 								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-									Utils.getMd5StringFromFhirPath(indicator.getFhirPath()), facilityIds);
+										Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 						}
@@ -753,7 +758,7 @@ public class ChartService {
 	}
 
 	private void performCachingIfNotPresent(List<IndicatorItem> indicators, List<String> facilityIds, Date startDate, Date endDate) {
-		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.getMd5StringFromFhirPath(indicatorItem.getFhirPath())).collect(Collectors.toList());
+		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.md5Bytes(indicatorItem.getFhirPath().getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
 
 		List<Date> dates = new ArrayList<>();
 		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
@@ -779,18 +784,22 @@ public class ChartService {
 			start = Date.valueOf(start.toLocalDate().plusDays(1));
 		}
 
-		facilityIds.forEach(facilityId -> {
+		for(int count=0; count<facilityIds.size();count++) {
+			String facilityId = facilityIds.get(count);
+			final int finalcount = count;
 			dates.forEach(date -> {
-				cachingService.cacheData(facilityId, date, indicators);
+				cachingService.cacheData(facilityId, date, indicators,finalcount);
 			});
-		});
+		}
 
 		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
 		//Always cache current date data if it lies between start and end date.
 		if (currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
-			facilityIds.forEach(facilityId -> {
-				cachingService.cacheData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators);
-			});
+			for(int count=0; count<facilityIds.size();count++) {
+				String facilityId = facilityIds.get(count);
+				cachingService.cacheData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators,count);
+			}
+			
 		}
 
 	}

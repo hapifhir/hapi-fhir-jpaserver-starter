@@ -127,6 +127,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
      */
     // Customize supported resource types
     List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
+	System.setProperty("kotlinx.coroutines.io.parallelism",appProperties.getBundle_batch_pool_max_size().toString());
 
     if (!supportedResourceTypes.isEmpty() && !supportedResourceTypes.contains("SearchParameter")) {
       supportedResourceTypes.add("SearchParameter");

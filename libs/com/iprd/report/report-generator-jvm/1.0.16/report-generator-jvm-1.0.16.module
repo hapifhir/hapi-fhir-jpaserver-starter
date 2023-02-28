@@ -49,11 +49,11 @@
         {
           "name": "report-generator-jvm-1.0.16.jar",
           "url": "report-generator-jvm-1.0.16.jar",
-          "size": 264469,
-          "sha512": "91767674053898f6746816a02e38214b9ab8b7bb33ac3fa7674e1a09b5595ff9dcce4b6b1046fec4435e2bf312573fb2e4693a67dcb02dbf137013e6a0743d34",
-          "sha256": "1ce62bc1daefc3d20cd64582142bfe3f8ee604baff8e5c9d970d7620fc61a663",
-          "sha1": "a61ec3f93b2701bcc93c8bb8b66ad46de37bb8d6",
-          "md5": "7c10a5593f4287fc50bbf2514216d1a2"
+          "size": 271402,
+          "sha512": "282dab6dee3e973893228fcd802775ac00aaf1e9470a5f954d9033f0c4f1a00dd1c622d0bd1a1077f0303b57174ff444056d603033976e239ffb6bf55c36800a",
+          "sha256": "83f2e200ece585b03802aeb60a5eeb3284248546716d3526810b687ab2dce8e7",
+          "sha1": "7e897e4bb362c2843057637eb8f8a0916143cc9f",
+          "md5": "e1f8979a73a0b04c189fe10357b56864"
         }
       ]
     },
@@ -134,17 +134,24 @@
           "version": {
             "requires": "20200518"
           }
+        },
+        {
+          "group": "net.objecthunter",
+          "module": "exp4j",
+          "version": {
+            "requires": "0.4.8"
+          }
         }
       ],
       "files": [
         {
           "name": "report-generator-jvm-1.0.16.jar",
           "url": "report-generator-jvm-1.0.16.jar",
-          "size": 264469,
-          "sha512": "91767674053898f6746816a02e38214b9ab8b7bb33ac3fa7674e1a09b5595ff9dcce4b6b1046fec4435e2bf312573fb2e4693a67dcb02dbf137013e6a0743d34",
-          "sha256": "1ce62bc1daefc3d20cd64582142bfe3f8ee604baff8e5c9d970d7620fc61a663",
-          "sha1": "a61ec3f93b2701bcc93c8bb8b66ad46de37bb8d6",
-          "md5": "7c10a5593f4287fc50bbf2514216d1a2"
+          "size": 271402,
+          "sha512": "282dab6dee3e973893228fcd802775ac00aaf1e9470a5f954d9033f0c4f1a00dd1c622d0bd1a1077f0303b57174ff444056d603033976e239ffb6bf55c36800a",
+          "sha256": "83f2e200ece585b03802aeb60a5eeb3284248546716d3526810b687ab2dce8e7",
+          "sha1": "7e897e4bb362c2843057637eb8f8a0916143cc9f",
+          "md5": "e1f8979a73a0b04c189fe10357b56864"
         }
       ]
     }

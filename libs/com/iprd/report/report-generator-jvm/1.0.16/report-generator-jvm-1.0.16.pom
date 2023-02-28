@@ -71,5 +71,11 @@
       <version>20200518</version>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>net.objecthunter</groupId>
+      <artifactId>exp4j</artifactId>
+      <version>0.4.8</version>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
 </project>
