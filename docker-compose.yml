@@ -1,8 +1,8 @@
 version: "3"
 services:
-  fhir-jpaserver-start:
+  fhir-server:
     build: .
-    container_name: fhir-jpaserver-start
+    container_name: fhir-server
     depends_on:
       fhir-postgres:
         condition: service_healthy
