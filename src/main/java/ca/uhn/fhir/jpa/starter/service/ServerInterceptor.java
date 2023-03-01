@@ -42,7 +42,7 @@ public class ServerInterceptor {
 		imagePath = path;
 	}
 	
-//	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_CREATED)
+	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_CREATED)
 	public void insert(IBaseResource theResource) throws IOException {
 		notificationDataSource = NotificationDataSource.getInstance();
 		if(theResource.fhirType().equals("Media")) {
@@ -129,7 +129,7 @@ public class ServerInterceptor {
 		}
 	}
 	
-//	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_UPDATED)
+	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_UPDATED)
 	   public void update(IBaseResource theOldResource, IBaseResource theResource) throws IOException {
 		notificationDataSource = NotificationDataSource.getInstance();
 		if(theResource.fhirType().equals("Media")) {
@@ -162,7 +162,7 @@ public class ServerInterceptor {
 		}
 	}
 
-//	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_DELETED)
+	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_DELETED)
 	public void delete(IBaseResource theResource) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		if (theResource.fhirType().equals("Encounter")) {
