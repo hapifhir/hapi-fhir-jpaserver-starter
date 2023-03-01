@@ -1,20 +1,35 @@
 version: "3"
 services:
-  hapi-fhir-jpaserver-start:
+  fhir-jpaserver-start:
     build: .
-    container_name: hapi-fhir-jpaserver-start
+    container_name: fhir-jpaserver-start
+    depends_on:
+      fhir-postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: "local"
+      DB_USERNAME: "admin"
+      DB_PASSWORD: "admin"
+      DB_URL: "jdbc:postgresql://fhir-postgres:5432/db"
     restart: on-failure
     ports:
-      - "8080:8080"
-  hapi-fhir-postgres:
-    image: postgres:13-alpine
-    container_name: hapi-fhir-postgres
+      - "8888:8080"
+  fhir-postgres:
+    image: postgres:14.4-alpine
+    container_name: fhir-postgres
     restart: always
     environment:
-      POSTGRES_DB: "hapi"
+      POSTGRES_DB: "db"
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "admin"
+    ports:
+      - "5435:5432"
     volumes:
-      - hapi-fhir-postgres:/var/lib/postgresql/data
+      - fhir-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 2s
+      timeout: 2s
+      retries: 2
 volumes:
-  hapi-fhir-postgres:
+  fhir-postgres:
