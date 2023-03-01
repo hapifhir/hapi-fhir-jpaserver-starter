@@ -3,10 +3,11 @@
 This FHIR server is a fork of https://github.com/hapifhir/hapi-fhir-jpaserver-starter.
 
 The main difference from the original repository is Authorization - this is based on [Metriport](https://github.com/metriport/metriport)'s OAuth2:
+
 - it assumes it's begin used behind API Gateway or similar, with that upstream service validating the JWT and passing it through;
 - it only checks JWT claims (no token validation), to make sure the request has access to the requested operation and information;
 - see [SimplifiedOAuthAuthorizationInterceptor](https://github.com/metriport/hapi-fhir-jpaserver/tree/master/src/main/java/com/metriport/fhir/SimplifiedOAuthAuthorizationInterceptor.java)
-for implementation details.
+  for implementation details.
 
 ## Prerequisites
 
@@ -15,7 +16,7 @@ In order to use this server, you should have:
 - This project checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
 - Docker, as the entire project can be built using multistage docker (with both JDK and maven wrapped in docker).
 
-### Using Docker
+### Running Locally with Docker
 
 You can use the `docker-compose` to run the app and DB servers by executing the following command:
 
@@ -27,6 +28,21 @@ Run the server from the docker image, on a specific Spring profile (in this case
 
 Update environment variables in the `docker-compose.yml` file accordingly.
 
+### Alternative: Running Locally with Jetty
+
+Install the following:
+
+- Oracle Java (JDK) installed: Minimum JDK8 or newer.
+- Apache Maven build tool (newest version)
+
+Run the following command:
+
+```bash
+SPRING_PROFILES_ACTIVE="local" DB_URL="jdbc:postgresql://localhost:5432/db" DB_USERNAME="admin" DB_PASSWORD="admin" mvn -Djetty.port=8888 jetty:run
+```
+
+Server will then be accessible at http://localhost:8888/ and eg.http://localhost:8888/fhir/metadata.
+
 ## Configurations
 
 Much of this server can be configured using the yaml file in _src/main/resources/application<-env>.yaml_. There's a default `application.yaml` file included for
@@ -35,6 +51,7 @@ simplicity and reference, configured to use H2 as the database.
 It does not support MySQL as it is deprecated. See more at https://hapifhir.io/hapi-fhir/docs/server_jpa/database_support.html
 
 One can create multiple configuration files (e.g., one for each environment the server is deployed to). In order to do that:
+
 - duplicate/rename the `application.yaml` to `application-env.yaml`, where `env` is the environment name (e.g., `local`)
 - run the server with an environment variable defining the name of the environment (this also sets a different server port):
   ```shell
@@ -48,7 +65,7 @@ To configure the starter app to use PostgreSQL, instead of the default H2, updat
 ```yaml
 spring:
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/hapi'
+    url: "jdbc:postgresql://localhost:5432/hapi"
     username: admin
     password: admin
     driverClassName: org.postgresql.Driver
@@ -66,7 +83,7 @@ To configure the starter app to use MS SQL Server, instead of the default H2, up
 ```yaml
 spring:
   datasource:
-    url: 'jdbc:sqlserver://<server>:<port>;databaseName=<databasename>'
+    url: "jdbc:sqlserver://<server>:<port>;databaseName=<databasename>"
     username: admin
     password: admin
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
@@ -78,22 +95,21 @@ Also, make sure you are not setting the Hibernate dialect explicitly, in other w
 hibernate.dialect: {some none Microsoft SQL dialect}
 ```
 
-
 Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
-
 
 NOTE: MS SQL Server by default uses a case-insensitive codepage. This will cause errors with some operations - such as when expanding case-sensitive valuesets (UCUM) as there are unique indexes defined on the terminology tables for codes.
 It is recommended to deploy a case-sensitive database prior to running this server when using MS SQL Server to avoid these and potentially other issues.
 
 ## Adding custom interceptors
-Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server. 
-Interceptors will be discovered in one of two ways: 
 
-1) discovered from the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
+Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server.
+Interceptors will be discovered in one of two ways:
 
-or 
+1. discovered from the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
 
-2) classes will be instantiated via reflection if no matching Bean is found
+or
+
+2. classes will be instantiated via reflection if no matching Bean is found
 
 ## Customizing The Web Testpage UI
 
@@ -125,16 +141,15 @@ Again, browse to the following link to use the server (note that the port 8080 m
 
 You will then be able access the JPA server e.g. using http://localhost:8080/fhir/metadata.
 
-If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localhost:8080/hapi-fhir-jpaserver/ or http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata - then rename the WAR file to ```hapi-fhir-jpaserver.war``` and adjust the overlay configuration accordingly e.g.
+If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localhost:8080/hapi-fhir-jpaserver/ or http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata - then rename the WAR file to `hapi-fhir-jpaserver.war` and adjust the overlay configuration accordingly e.g.
 
 ```yaml
-    tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/hapi-fhir-jpaserver/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
+tester:
+  - id: home
+    name: Local Tester
+    server_address: "http://localhost:8080/hapi-fhir-jpaserver/fhir"
+    refuse_to_fetch_third_party_urls: false
+    fhir_version: R4
 ```
 
 ## Deploy with Docker on AWS
@@ -156,7 +171,7 @@ properties in `src/main/resources/application.yaml`:
 ```yaml
 spring:
   datasource:
-    url: 'jdbc:postgresql://hapi-fhir-postgres:5432/hapi'
+    url: "jdbc:postgresql://hapi-fhir-postgres:5432/hapi"
     username: admin
     password: admin
     driverClassName: org.postgresql.Driver
@@ -166,7 +181,8 @@ jpa:
 ```
 
 ## Running directly from IntelliJ as Spring Boot
-Make sure you run with the maven profile called ```boot``` and NOT also ```jetty```. Then you are ready to press debug the project directly without any extra Application Servers.
+
+Make sure you run with the maven profile called `boot` and NOT also `jetty`. Then you are ready to press debug the project directly without any extra Application Servers.
 
 ## Running in Tomcat from IntelliJ
 
@@ -216,7 +232,7 @@ Set `hapi.fhir.cr_enabled=true` in the [application.yaml](https://github.com/hap
 
 ## Enabling MDM (EMPI)
 
-Set `hapi.fhir.mdm_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable MDM on this server.  The MDM matching rules are configured in [mdm-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/mdm-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that MDM relies on subscriptions, so for MDM to work, subscriptions must be enabled.
+Set `hapi.fhir.mdm_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable MDM on this server. The MDM matching rules are configured in [mdm-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/mdm-rules.json). The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that MDM relies on subscriptions, so for MDM to work, subscriptions must be enabled.
 
 ## Using Elasticsearch
 
@@ -236,7 +252,7 @@ elasticsearch.schema_management_strategy=CREATE
 
 ## Enabling LastN
 
-Set `hapi.fhir.lastn_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable the $lastn operation on this server.  Note that the $lastn operation relies on Elasticsearch, so for $lastn to work, indexing must be enabled using Elasticsearch.
+Set `hapi.fhir.lastn_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable the $lastn operation on this server. Note that the $lastn operation relies on Elasticsearch, so for $lastn to work, indexing must be enabled using Elasticsearch.
 
 ## Enabling Resource to be stored in Lucene Index
 
@@ -293,5 +309,6 @@ We recommend to install the LTS (Long Term Support) version.
 ### VSCode IDE
 
 Install these extensions:
+
 - [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack): it will install 6 other extensions to support Java development on VSCode
 - [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig): apply formatting settings found on `.editorconfig` files
