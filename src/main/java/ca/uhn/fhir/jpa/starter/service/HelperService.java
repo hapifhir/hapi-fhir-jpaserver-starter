@@ -815,23 +815,15 @@ public class HelperService {
 				Date end = Date.valueOf(endDate);
 				notificationDataSource = NotificationDataSource.getInstance();
 				performCachingForTabularData(tabularItemList, idsAndOrgIdToChildrenMapPair.first, start, end);
-				List<String> orgIds = idsAndOrgIdToChildrenMapPair.first;
-				List<String> fhirPaths = tabularItemList.stream()
-					.map(TabularItem::getFhirPath)
-					.collect(Collectors.toList());
-				scoreCardItems = idsAndOrgIdToChildrenMapPair.first.parallelStream()
-					.flatMap(orgId -> {
-						List<Double> cacheValueSums = notificationDataSource.getCacheValueSumByDateRangeIndicatorsAndMultipleOrgIds(start, end, Utils.getMd5StringsFromFhirPaths(fhirPaths), orgIds);
-						return IntStream.range(0, tabularItemList.size())
-							.mapToObj(i -> new ScoreCardItem(
-								orgId,
-								tabularItemList.get(i).getId(),
-								cacheValueSums.get(i).toString(),
-								startDate,
-								endDate
-							));
-					})
-					.collect(Collectors.toList());
+				for (String orgId : idsAndOrgIdToChildrenMapPair.first) {
+					for (TabularItem indicator : tabularItemList) {
+						Double cacheValueSum = notificationDataSource
+							.getCacheValueSumByDateRangeIndicatorAndOrgId(start, end,
+									Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), orgId);
+						scoreCardItems.add(new ScoreCardItem(orgId, indicator.getId(),
+							cacheValueSum.toString(), startDate, endDate));
+					}
+				}
 			} else {
 				scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getTabularData(fhirClientProvider, organizationId, new DateRange(startDate, endDate), tabularItemList, fhirSearchList);
 			}
@@ -946,22 +938,15 @@ public class HelperService {
 		switch (type) {
 			case summary: {
 				LinkedHashMap<String, List<String>> mapOfIdToChildren = idsAndOrgIdToChildrenMapPair.second;
-				mapOfIdToChildren.entrySet().parallelStream().forEach(entry -> {
-					String id = entry.getKey();
-					List<String> children = entry.getValue();
+				mapOfIdToChildren.forEach((id, children) -> {
 					children.add(id);
-					List<String> fhirPaths = indicators.stream()
-						.map(IndicatorItem::getFhirPath)
-						.collect(Collectors.toList());
-					List<Integer> indicatorIds = indicators.stream()
-						.map(IndicatorItem::getId)
-						.collect(Collectors.toList());
-					List<Double> cacheValueSumList = notificationDataSource.getCacheValueSumByDateRangeIndicatorsAndMultipleOrgIds(start, end, Utils.getMd5StringsFromFhirPaths(fhirPaths), children);
-					IntStream.range(0, indicatorIds.size()).parallel().forEach(index -> {
-						Integer indicatorId = indicatorIds.get(index);
-						Double cacheValueSum = cacheValueSumList.get(index);
-						scoreCardItems.add(new ScoreCardItem(id, indicatorId, cacheValueSum.toString(), startDate, endDate));
-					});
+					for (IndicatorItem indicator : indicators) {
+						Double cacheValueSum = notificationDataSource
+							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
+									Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), children);
+						scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(),
+							startDate, endDate));
+					}
 				});
 				break;
 			}
@@ -972,7 +957,7 @@ public class HelperService {
 					for (IndicatorItem indicator : indicators) {
 						Double cacheValueSum = notificationDataSource
 							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-								Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
+									Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 					}
@@ -986,7 +971,7 @@ public class HelperService {
 					for (IndicatorItem indicator : indicators) {
 						Double cacheValueSum = notificationDataSource
 							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-								Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
+									Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 					}
@@ -1000,7 +985,7 @@ public class HelperService {
 					for (IndicatorItem indicator : indicators) {
 						Double cacheValueSum = notificationDataSource
 							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-								Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
+									Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 					}
@@ -1014,7 +999,7 @@ public class HelperService {
 					for (IndicatorItem indicator : indicators) {
 						Double cacheValueSum = notificationDataSource
 							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-								Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
+									Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), facilityIds);
 						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
 					}
@@ -1505,7 +1490,7 @@ public class HelperService {
 	}
 	
 //	@Scheduled(fixedDelay = 24 * DELAY, initialDelay = DELAY)
-	private void cacheDailyData() {
+	protected void cacheDailyData() {
 		Map<String, DashboardConfigContainer> dashboardEnvToConfigMap = dashboardEnvironmentConfig.getDashboardEnvToConfigMap();
 		dashboardEnvironmentConfig.getEnvToFilePathMapping().forEach((env, definitionTypeToFilePathMap) -> {
 			cachingService.cacheData(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), dashboardEnvToConfigMap.get(env).getAnalyticsIndicatorItems(),0);
