@@ -1,0 +1,17 @@
+version: 2
+updates:
+  # Keep maven dependencies up-to-date
+  - package-ecosystem: maven
+    # Look for `pom.xml`  in the `root` directory
+    directory: "/"
+    # Check the maven registry for updates every day (weekdays)
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 0
+    target-branch: "security-scans-integrations"    
+    # Raise all maven pull requests with custom labels
+    labels:
+      - "dependencies"
+    reviewers:
+      - "hilpitome"
+      - "ekigamba"
