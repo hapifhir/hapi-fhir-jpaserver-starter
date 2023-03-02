@@ -112,11 +112,11 @@ public class NodeStack {
       String n = res.literalPath.substring(res.literalPath.lastIndexOf(".") + 1);
       String en = element.getProperty().getName();
       if (en.endsWith("[x]")) {
-        en = en.substring(0, en.length() - 3);
-        String t = n.substring(en.length());
-        if (isPrimitiveType(Utilities.uncapitalize(t)))
-          t = Utilities.uncapitalize(t);
-        res.literalPath = res.literalPath.substring(0, res.literalPath.lastIndexOf(".")) + "." + en + ".ofType(" + t + ")";
+      en = en.substring(0, en.length() - 3);
+      String t = n.substring(en.length());
+      if (isPrimitiveType(Utilities.uncapitalize(t)))
+        t = Utilities.uncapitalize(t);
+      res.literalPath = res.literalPath.substring(0, res.literalPath.lastIndexOf(".")) + "." + en + ".ofType(" + t + ")";
       } else {
         res.literalPath = res.literalPath.substring(0, res.literalPath.lastIndexOf(".")) + "." + en;;
       }
@@ -181,8 +181,8 @@ public class NodeStack {
     return parent;
   }
 
-  public void qualifyPath(String qualifier) {
-    literalPath = literalPath + qualifier;
+  public void pathComment(String comment) {
+    literalPath = literalPath + "/*"+comment+"*/";
     
   }
 

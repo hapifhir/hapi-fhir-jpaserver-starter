@@ -151,7 +151,7 @@ public class FhirServerConfigR4 {
   public ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider rpStructureMapR4() {
   	StructureMapTransformProvider retVal;
     retVal = new StructureMapTransformProvider();
-    retVal.setContext(fhirContext);
+//    retVal.setContext(fhirContext);
 //    retVal.setDao(daoStructureMapR4());
     return retVal;
   }

@@ -13,6 +13,7 @@ import org.hl7.fhir.r4.model.ImplementationGuide;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome.IssueSeverity;
 import org.hl7.fhir.r4.model.OperationOutcome.IssueType;
+import org.hl7.fhir.r5.model.Enumerations.FHIRVersion;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -102,7 +103,7 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
 
 		// initialize matchbox engine
 		log.info("Initializing matchbox engine(s): " + VersionUtil.getMemory());
-		matchboxEngineSupport.getMatchboxEngine("default", null, false, true);
+		matchboxEngineSupport.getMatchboxEngine(FHIRVersion._4_0_1.getDisplay(), null, false, true);
 		log.info("Initializing matchbox engine finished: " + VersionUtil.getMemory());
 
 		return outcome;
@@ -220,7 +221,7 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
 		matchboxEngineSupport.setInitialized(true);
 		log.info("Initializing packages finished " + VersionUtil.getMemory());
 		log.info("Creating cached engines during startup  " + VersionUtil.getMemory());
-		matchboxEngineSupport.getMatchboxEngine("default",null, false, false);
+		matchboxEngineSupport.getMatchboxEngine(FHIRVersion._4_0_1.getDisplay(),null, false, false);
 		log.info("Finished engines during startup  " + VersionUtil.getMemory());
 		return installOutcome;
 	}

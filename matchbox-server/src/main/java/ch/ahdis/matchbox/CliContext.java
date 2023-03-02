@@ -90,8 +90,8 @@ public class CliContext {
   // private String fhirpath = null;
   @JsonProperty("snomedCT")
   private String snomedCT = "900000000000207008";
-  @JsonProperty("targetVer")
-  private String targetVer = null;
+  @JsonProperty("fhirVersion")
+  private String fhirVersion = null;
 
   // @JsonProperty("extensions")
   // private List<String> extensions = new ArrayList<String>();
@@ -389,14 +389,14 @@ public class CliContext {
     this.snomedCT = snomedCT;
   }
 
-  @JsonProperty("targetVer")
-  public String getTargetVer() {
-    return targetVer;
+  @JsonProperty("fhirVersion")
+  public String getFhirVersion() {
+    return fhirVersion;
   }
 
-  @JsonProperty("targetVer")
-  public void setTargetVer(String targetVer) {
-    this.targetVer = targetVer;
+  @JsonProperty("fhirVersion")
+  public void setFhirVersion(String targetVer) {
+    this.fhirVersion = targetVer;
   }
 
   @JsonProperty("doDebug")
@@ -533,7 +533,7 @@ public class CliContext {
       Objects.equals(txServer, that.txServer) &&
       Objects.equals(lang, that.lang) &&
       Objects.equals(snomedCT, that.snomedCT) &&
-      Objects.equals(targetVer, that.targetVer) &&
+      Objects.equals(fhirVersion, that.fhirVersion) &&
       Objects.equals(ig, that.ig) &&
       Objects.equals(questionnaireMode, that.questionnaireMode) &&
       Objects.equals(level, that.level) &&
@@ -550,7 +550,7 @@ public class CliContext {
   public int hashCode() {
     return Objects.hash(doNative,  hintAboutNonMustSupport, recursive, doDebug, assumeValidRestReferences, canDoNative, 
             noExtensibleBindingMessages, noInvariants, wantInvariantsInMessages, txServer, lang, snomedCT,
-            targetVer, ig, questionnaireMode, level, mode, locale, locations, crumbTrails, forPublication, allowExampleUrls, jurisdiction, noUnicodeBiDiControlChars);
+            fhirVersion, ig, questionnaireMode, level, mode, locale, locations, crumbTrails, forPublication, allowExampleUrls, jurisdiction, noUnicodeBiDiControlChars);
   }
 
   @Override
@@ -569,7 +569,7 @@ public class CliContext {
       ", txServer='" + txServer + '\'' +
       ", lang='" + lang + '\'' +
       ", snomedCT='" + snomedCT + '\'' +
-      ", targetVer='" + targetVer + '\'' +
+      ", fhirVersion='" + fhirVersion + '\'' +
       ", ig=" + ig +
       ", questionnaireMode=" + questionnaireMode +
       ", level=" + level +

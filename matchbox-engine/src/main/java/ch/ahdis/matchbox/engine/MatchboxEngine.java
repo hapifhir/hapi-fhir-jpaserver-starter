@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.checkerframework.common.returnsreceiver.qual.This;
+import org.hl7.fhir.convertors.conv40_50.VersionConvertor_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.OperationOutcome;
@@ -279,6 +281,19 @@ public class MatchboxEngine extends ValidationEngine {
 		getContext().cacheResource(r5);
 	}
 
+
+	/**
+	 * adds a canonical resource to the loaded packages, please note that it will
+	 * replace a resource with the same canonical url
+	 * 
+	 * @param resource canonical resource to add
+	 * @throws FHIRException FHIR Exception
+	 */
+	public void addCanonicalResource(org.hl7.fhir.r5.model.CanonicalResource resource) throws FHIRException {
+		getContext().cacheResource(resource);
+	}
+
+
 	/**
 	 * validates a FHIR resources and provides OperationOutcome as output
 	 * 
@@ -408,6 +423,32 @@ public class MatchboxEngine extends ValidationEngine {
 		return null;
 	}
 
+    /**
+	 * Returns a canonical resource defined by its url
+	 * 
+	 * @param canonical
+	 * @param fhirVersion
+	 * @return
+	 */
+	public IBaseResource getCanonicalResource(String canonical, String fhirVersion) {
+		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical);
+		// allResourcesById is not package aware (???) so we need to fetch it again
+		if (fetched!=null) {
+			org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
+			if (fetched2 != null) {
+				switch(fhirVersion) {
+					case "4.0.1":
+						return VersionConvertorFactory_40_50.convertResource(fetched2);
+					case "4.3.0":
+						return VersionConvertorFactory_43_50.convertResource(fetched2);
+					case "5.0.0":
+						return fetched2;
+				}
+			}
+		}
+		return null;
+	}
+
 	// same as above but called from the validator on the meta data type
 	// @Override
 	// public CanonicalResource fetchCanonicalResource(IResourceValidator validator, String url) throws URISyntaxException {
@@ -440,15 +481,44 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @param uri  resource uri
 	 * @return
 	 */
-	public org.hl7.fhir.r4.model.Resource getCanonicalResourceById(String type, String uri) {
+	public IBaseResource getCanonicalResourceById(String type, String uri) {
 		if (this.getContext().hasResource(type, uri)) {
 			org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResourceById(type, uri);
 			if (fetched != null) {
+				if ("5.0.0".equals(this.getVersion())) {
+					return fetched;
+				}
+				if ("4.3.0".equals(this.getVersion())) {
+					return VersionConvertorFactory_43_50.convertResource(fetched);
+				}
 				return VersionConvertorFactory_40_50.convertResource(fetched);
 			}
 		}
 		return null;
 	}
+
+    /**
+	 * Parses a FHIR Structure Map from the textual representation according to the
+	 * FHIR Mapping Language grammar (see
+	 * http://build.fhir.org/mapping-language.html#grammar) for FHIR release 5
+	 * 
+	 * @param content FHIR Mapping Language text
+	 * @return parsed StructureMap resource
+	 * @throws FHIRException FHIR Exception
+	 */
+	public org.hl7.fhir.r5.model.StructureMap parseMapR5(String content) throws FHIRException {
+		SimpleWorkerContext context = this.getContext();
+		List<Base> outputs = new ArrayList<>();
+		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context,
+				new TransformSupportServices(context, outputs), this);
+		org.hl7.fhir.r5.model.StructureMap mapR5 = scu.parse(content, "map");
+		mapR5.getText().setStatus(NarrativeStatus.GENERATED);
+		mapR5.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
+		String render = StructureMapUtilities.render(mapR5);
+		mapR5.getText().getDiv().addTag("pre").addText(render);
+		return mapR5;
+	}
+
 
 	/**
 	 * Parses a FHIR Structure Map from the textual representation according to the
@@ -460,15 +530,7 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @throws FHIRException FHIR Exception
 	 */
 	public org.hl7.fhir.r4.model.StructureMap parseMap(String content) throws FHIRException {
-		SimpleWorkerContext context = this.getContext();
-		List<Base> outputs = new ArrayList<>();
-		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context,
-				new TransformSupportServices(context, outputs), this);
-		org.hl7.fhir.r5.model.StructureMap mapR5 = scu.parse(content, "map");
-		mapR5.getText().setStatus(NarrativeStatus.GENERATED);
-		mapR5.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
-		String render = StructureMapUtilities.render(mapR5);
-		mapR5.getText().getDiv().addTag("pre").addText(render);
+		org.hl7.fhir.r5.model.StructureMap mapR5 = parseMapR5(content);
 		return (org.hl7.fhir.r4.model.StructureMap) VersionConvertorFactory_40_50.convertResource(mapR5);
 	}
 

@@ -29,6 +29,7 @@ import org.hl7.fhir.r4.model.Questionnaire;
 import org.hl7.fhir.r4.model.Questionnaire.QuestionnaireItemComponent;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.ExpressionNode;
+import org.hl7.fhir.r5.model.Enumerations.FHIRVersion;
 import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 

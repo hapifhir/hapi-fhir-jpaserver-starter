@@ -1,5 +1,5 @@
-### http://localhost:8080/matchboxv3/fhir
-@host = https://test.ahdis.ch/matchboxv3/fhir
+@host = http://localhost:8080/matchboxv3/fhir
+### @host = https://test.ahdis.ch/matchboxv3/fhir
 
 ###
 GET {{host}}/metadata HTTP/1.1
@@ -22,6 +22,41 @@ group QuestionnaireResponse(source src : QuestionnaireResponse, target tgt : Pat
 group item(source src, target tgt: Patient) {
   src.item as item where linkId.value in ('patient.sex') -> tgt.gender = (item.answer.valueString);
 }
+
+### FHIR Tutorial
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ../matchbox-engine/src/test/resources/tutorial/step1/map/step1.map
+
+###
+// cannot use comment like below in map file because it is considered as comment in RESTClient
+/// url = 'http://ahdis.ch/matchbox/fml/tutorial-left1'
+/// name = 'tutorial-step1'
+/// title = 'Tutorial Step 1'
+
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-left1" alias TLeft1 as source
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-right1" alias TRight1 as target
+
+group tutorial(source src : TLeft1, target tgt : TRight1) {
+    src.a as a -> tgt.a = a "rule_a";
+}
+
+
+### FHIR Tutorial
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml
+Content-Type: text/fhir-mapping;fhirVersion=5.0.0
+
+< ../matchbox-engine/src/test/resources/tutorial/step1/map/step1.map
+
+
+
+### FHIR Tutorial
+GET {{host}}/StructureMap/tutorial-step1 HTTP/1.1
+Accept: application/fhir+xml
+
 
 ###
 POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/matchbox/fml/qr2patgender

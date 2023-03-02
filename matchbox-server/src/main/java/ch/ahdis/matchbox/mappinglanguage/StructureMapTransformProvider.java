@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r4.model.StructureMap;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
@@ -45,8 +44,6 @@ import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.annotation.ResourceParam;
 import ca.uhn.fhir.rest.api.Constants;
-import ca.uhn.fhir.rest.api.MethodOutcome;
-import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.RestfulServerUtils;
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
 import ch.ahdis.matchbox.MatchboxEngineSupport;
@@ -72,19 +69,19 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
     }
   }
   
-  @Override
-  public MethodOutcome create(HttpServletRequest theRequest, StructureMap theResource, String theConditional,
-      RequestDetails theRequestDetails) {
-    createNarrative(theResource);
-    return super.create(theRequest, theResource, theConditional, theRequestDetails);
-  }
+//   @Override
+//   public MethodOutcome create(HttpServletRequest theRequest, IDomainResource theResource, String theConditional,
+//       RequestDetails theRequestDetails) {
+// // FIXME    createNarrative(theResource);
+//     return super.create(theRequest, theResource, theConditional, theRequestDetails);
+//   }
 
-  @Override
-  public MethodOutcome update(HttpServletRequest theRequest, StructureMap theResource, IIdType theId,
-      String theConditional, RequestDetails theRequestDetails) {
-    createNarrative(theResource);
-    return super.update(theRequest, theResource, theId, theConditional, theRequestDetails);
-  }
+//   @Override
+//   public MethodOutcome update(HttpServletRequest theRequest, IDomainResource theResource, IIdType theId,
+//       String theConditional, RequestDetails theRequestDetails) {
+// // FIXME    createNarrative(theResource);
+//     return super.update(theRequest, theResource, theId, theConditional, theRequestDetails);
+//   }
 
   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StructureMapTransformProvider.class);
   
