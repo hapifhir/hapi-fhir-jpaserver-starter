@@ -37,7 +37,6 @@ import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import ca.uhn.fhir.util.BinaryUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.jena.sparql.function.library.leviathan.log;
 import org.hl7.fhir.instance.model.api.IBaseBinary;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.model.Enumerations.FHIRVersion;

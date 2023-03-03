@@ -271,7 +271,7 @@ public class MatchboxEngine extends ValidationEngine {
 
 	/**
 	 * adds a canonical resource to the loaded packages, please note that it will
-	 * replace a resource with the same canonical url
+	 * replace a resource with the same canonical url for FHIR R4
 	 * 
 	 * @param resource canonical resource to add
 	 * @throws FHIRException FHIR Exception
@@ -281,10 +281,21 @@ public class MatchboxEngine extends ValidationEngine {
 		getContext().cacheResource(r5);
 	}
 
+	/**
+	 * adds a canonical resource to the loaded packages, please note that it will
+	 * replace a resource with the same canonical url for FHIR R4B
+	 * 
+	 * @param resource canonical resource to add
+	 * @throws FHIRException FHIR Exception
+	 */
+	public void addCanonicalResource(org.hl7.fhir.r4b.model.CanonicalResource resource) throws FHIRException {
+		org.hl7.fhir.r5.model.Resource r5 = VersionConvertorFactory_43_50.convertResource(resource);
+		getContext().cacheResource(r5);
+	}
 
 	/**
 	 * adds a canonical resource to the loaded packages, please note that it will
-	 * replace a resource with the same canonical url
+	 * replace a resource with the same canonical url  for FHIR R5
 	 * 
 	 * @param resource canonical resource to add
 	 * @throws FHIRException FHIR Exception
@@ -414,11 +425,14 @@ public class MatchboxEngine extends ValidationEngine {
 	public org.hl7.fhir.r4.model.Resource getCanonicalResource(String canonical) {
 		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical);
 		// allResourcesById is not package aware (???) so we need to fetch it again
-		if (fetched!=null) {
-			org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
-			if (fetched2 != null) {
-				return VersionConvertorFactory_40_50.convertResource(fetched2);
-			}
+		// if (fetched!=null) {
+		// 	org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
+		// 	if (fetched2 != null) {
+		// 		return VersionConvertorFactory_40_50.convertResource(fetched2);
+		// 	}
+		// }
+		if (fetched !=null) {
+			return VersionConvertorFactory_40_50.convertResource(fetched);
 		}
 		return null;
 	}
@@ -434,16 +448,24 @@ public class MatchboxEngine extends ValidationEngine {
 		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical);
 		// allResourcesById is not package aware (???) so we need to fetch it again
 		if (fetched!=null) {
-			org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
-			if (fetched2 != null) {
-				switch(fhirVersion) {
-					case "4.0.1":
-						return VersionConvertorFactory_40_50.convertResource(fetched2);
-					case "4.3.0":
-						return VersionConvertorFactory_43_50.convertResource(fetched2);
-					case "5.0.0":
-						return fetched2;
-				}
+			// org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
+			// if (fetched2 != null) {
+			// 	switch(fhirVersion) {
+			// 		case "4.0.1":
+			// 			return VersionConvertorFactory_40_50.convertResource(fetched2);
+			// 		case "4.3.0":
+			// 			return VersionConvertorFactory_43_50.convertResource(fetched2);
+			// 		case "5.0.0":
+			// 			return fetched2;
+			// 	}
+			// }
+			switch(fhirVersion) {
+				case "4.0.1":
+					return VersionConvertorFactory_40_50.convertResource(fetched);
+				case "4.3.0":
+					return VersionConvertorFactory_43_50.convertResource(fetched);
+				case "5.0.0":
+					return fetched;
 			}
 		}
 		return null;
@@ -478,21 +500,19 @@ public class MatchboxEngine extends ValidationEngine {
 	 * Returns a canonical resource defined by its type and uri
 	 * 
 	 * @param type resource type
-	 * @param uri  resource uri
+	 * @param uri  resource id
 	 * @return
 	 */
-	public IBaseResource getCanonicalResourceById(String type, String uri) {
-		if (this.getContext().hasResource(type, uri)) {
-			org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResourceById(type, uri);
-			if (fetched != null) {
-				if ("5.0.0".equals(this.getVersion())) {
-					return fetched;
-				}
-				if ("4.3.0".equals(this.getVersion())) {
-					return VersionConvertorFactory_43_50.convertResource(fetched);
-				}
-				return VersionConvertorFactory_40_50.convertResource(fetched);
+	public IBaseResource getCanonicalResourceById(String type, String id) {
+		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResourceById(type, id);
+		if (fetched != null) {
+			if ("5.0.0".equals(this.getVersion())) {
+				return fetched;
 			}
+			if ("4.3.0".equals(this.getVersion())) {
+				return VersionConvertorFactory_43_50.convertResource(fetched);
+			}
+			return VersionConvertorFactory_40_50.convertResource(fetched);
 		}
 		return null;
 	}

@@ -31,9 +31,11 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.r4.formats.XmlParser;
 import org.hl7.fhir.r4.model.ExplanationOfBenefit;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Questionnaire;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.r4.model.StructureMap;
@@ -41,6 +43,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ca.uhn.fhir.context.FhirContext;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.MatchboxEngine.MatchboxEngineBuilder;
 
@@ -109,6 +112,28 @@ class FhirMappingLanguageTests {
 		assertEquals("Patient", res.getResourceType().name());
 		Patient patient = (Patient) res;
 		assertEquals("MALE", patient.getGender().name());
+	}
+
+
+	@Test
+	void testMatchboxEngine() throws FHIRException, IOException {
+		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
+		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/conformstoneg.map"));
+		assertTrue(sm != null);
+		engine.addCanonicalResource(sm);
+		assertTrue(engine.getCanonicalResource(sm.getUrl())!= null);
+		assertTrue(engine.getContext().fetchResource( org.hl7.fhir.r5.model.StructureMap.class, sm.getUrl()) != null);
+
+		
+		String qr = getFileAsStringFromResources("/questionnairepatient.xml");
+
+		XmlParser xml = new XmlParser();
+        Questionnaire questionnaire = (Questionnaire) xml.parse(qr);
+
+		engine.addCanonicalResource(questionnaire);
+		assertTrue(engine.getCanonicalResource(questionnaire.getUrl())!= null);
+		assertTrue(engine.getContext().fetchResource( org.hl7.fhir.r5.model.Questionnaire.class, questionnaire.getUrl()) != null);
+		assertTrue(engine.getCanonicalResourceById("Questionnaire", questionnaire.getId())!= null);
 	}
 
 	@Test
@@ -189,7 +214,6 @@ class FhirMappingLanguageTests {
 		assertTrue(res != null);
 		assertEquals("Observation", res.getResourceType().name());
 	}
-	
 
 	@Test
 	void testTutorialStep1() throws FHIRException, IOException {

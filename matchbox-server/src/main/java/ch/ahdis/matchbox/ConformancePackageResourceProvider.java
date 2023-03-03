@@ -9,11 +9,9 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.hl7.fhir.convertors.factory.VersionConvertorFactory_30_40;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.instance.model.api.IBaseBinary;
-import org.hl7.fhir.instance.model.api.IBaseMetaType;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IDomainResource;
 import org.hl7.fhir.instance.model.api.IIdType;
@@ -21,8 +19,6 @@ import org.hl7.fhir.r4.model.CanonicalType;
 import org.hl7.fhir.r4.model.MetadataResource;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.Resource;
-import org.hl7.fhir.r4.model.StructureMap;
-import org.hl7.fhir.r5.model.Enumerations.FHIRVersion;
 import org.quartz.DisallowConcurrentExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -31,15 +27,14 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.i18n.Msg;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.binary.svc.NullBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
+import ca.uhn.fhir.jpa.model.dao.JpaPid;
 import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
-import ca.uhn.fhir.jpa.provider.BaseJpaResourceProvider;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.api.annotation.Description;
@@ -59,7 +54,6 @@ import ca.uhn.fhir.rest.api.SearchTotalModeEnum;
 import ca.uhn.fhir.rest.api.SortSpec;
 import ca.uhn.fhir.rest.api.SummaryEnum;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
-import ca.uhn.fhir.rest.api.server.storage.ResourcePersistentId;
 import ca.uhn.fhir.rest.param.TokenAndListParam;
 import ca.uhn.fhir.rest.param.UriAndListParam;
 import ca.uhn.fhir.rest.server.SimpleBundleProvider;
@@ -91,7 +85,7 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 	@Autowired
 	private DaoRegistry myDaoRegistry;
 
-	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ConformanceResourceProvider.class);
+	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ConformancePackageResourceProvider.class);
 
 	@Autowired
 	private FhirContext myCtx;
@@ -100,9 +94,9 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 	protected CliContext cliContext;
 
 	private String resourceType;
-	private final Class<R4> classR4;
-	private final Class<R4B> classR4B;
-	private final Class<R5> classR5;
+	protected final Class<R4> classR4;
+	protected final Class<R4B> classR4B;
+	protected final Class<R5> classR5;
 
 	public ConformancePackageResourceProvider(Class<R4> r4Type, Class<R4B> r4BType, Class<R5> r5Type) {
 		super();
@@ -231,33 +225,26 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 		return resource;
 	}
 
-	// private org.hl7.fhir.r4.model.Resource loadPackageEntity(NpmPackageVersionResourceEntity contents) {
-	// 	try {
-	// 		ResourcePersistentId binaryPid = new ResourcePersistentId(contents.getResourceBinary().getId());
-	// 		IBaseBinary binary = getBinaryDao().readByPid(binaryPid);
-	// 		byte[] resourceContentsBytes = fetchBlobFromBinary(binary);
-	// 		String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
-	// 		switch (contents.getFhirVersion()) {
-	// 			case R4:
-	// 				return new org.hl7.fhir.r4.formats.JsonParser().parse(resourceContents);
-	// 			case R4B:
-	// 				return VersionConvertorFactory_40_50.convertResource(VersionConvertorFactory_43_50
-	// 						.convertResource(new org.hl7.fhir.r4b.formats.JsonParser().parse(resourceContents)));
-	// 			case R5:
-	// 				return VersionConvertorFactory_40_50
-	// 						.convertResource(new org.hl7.fhir.r5.formats.JsonParser().parse(resourceContents));
-	// 			default:
-	// 				log.error("FHIR version not support for loading form matchbox case ");
-	// 				throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + contents);
-	// 		}
-	// 	} catch (Exception e) {
-	// 		throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + contents, e);
-	// 	}
-	// }
+	public org.hl7.fhir.r5.model.CanonicalResource getCanonical(IBaseResource theResource) {
+		if (classR4.isInstance(theResource)) {
+			R4 r4 = classR4.cast(theResource);
+			return (org.hl7.fhir.r5.model.CanonicalResource) VersionConvertorFactory_40_50.convertResource(r4);
+		}
+		if (classR4B.isInstance(theResource)) {
+			R4B r4b = classR4B.cast(theResource);
+			return (org.hl7.fhir.r5.model.CanonicalResource) VersionConvertorFactory_43_50.convertResource(r4b);
+		}
+		if (classR5.isInstance(theResource)) {
+			R5 r5 = classR5.cast(theResource);
+			return r5;
+		}
+		log.error("FHIR version not supported for resource "+theResource.fhirType()+": "+theResource.getIdElement().getIdPart()+ " : "+ theResource.getStructureFhirVersionEnum());
+		return null;
+	}
 
 	private IBaseResource loadPackageEntity(NpmPackageVersionResourceEntity contents) {
 		try {
-			ResourcePersistentId binaryPid = new ResourcePersistentId(contents.getResourceBinary().getId());
+			JpaPid binaryPid = JpaPid.fromId(contents.getResourceBinary().getId());
 			IBaseBinary binary = getBinaryDao().readByPid(binaryPid);
 			byte[] resourceContentsBytes = fetchBlobFromBinary(binary);
 			String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
@@ -386,11 +373,17 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 				} else {
 					if (theResource.getIdElement().isEmpty()) {
 						theResource.setId(url.substring(url.lastIndexOf("/") + 1));
+					}  else {
+						theResource.setId(theResource.getIdElement().getIdPart());
 					}
 				}
 				if (classR4.isInstance(theResource)) {
 					R4 r4 = classR4.cast(theResource);
 					matchboxEngine.addCanonicalResource(r4);
+				}
+				if (classR4B.isInstance(theResource)) {
+					R4B r4b = classR4B.cast(theResource);
+					matchboxEngine.addCanonicalResource(r4b);
 				}
 				if (classR5.isInstance(theResource)) {
 					R5 r5 = classR5.cast(theResource);
@@ -411,21 +404,71 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 		return outcome;
 	}
 
-	// @Update
-	// public MethodOutcome update(HttpServletRequest theRequest,  @ResourceParam IDomainResource theResource, IIdType theId,
-	// 		String theConditional, RequestDetails theRequestDetails) {
-	// 	// FIXME MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(theResource.getUrl(), null, true,
-	// 	// 		false);
-	// 	// Resource existing = matchboxEngine.getCanonicalResource(theResource.getUrl());
-	// 	// if (existing != null) {
-	// 	// 	matchboxEngine.dropResource(resourceType, existing.getId());
-	// 	// }
-	// 	// matchboxEngine.addCanonicalResource(theResource);
-	// 	MethodOutcome methodOutcome = new MethodOutcome();
-	// 	methodOutcome.setCreated(false);
-	// 	methodOutcome.setResource(theResource);
-	// 	return methodOutcome;
-	// }
+	@Update
+	public MethodOutcome update(HttpServletRequest theRequest,  @ResourceParam IDomainResource theResource,  @IdParam IIdType theId,
+		@ConditionalUrlParam String theConditional, RequestDetails theRequestDetails) {
+
+		String url = null;
+		CliContext cliContext = new CliContext(this.cliContext);
+		cliContext.setFhirVersion(getFhirVersion(theResource));
+
+		if (classR4.isInstance(theResource)) {
+			R4 r = classR4.cast(theResource);
+			url = r.getUrl();
+		}
+		if (classR4B.isInstance(theResource)) {
+			R4B r = classR4B.cast(theResource);
+			url = r.getUrl();
+		}
+		if (classR5.isInstance(theResource)) {
+			R5 r = classR5.cast(theResource);
+			url = r.getUrl();
+		}
+
+		if (url!=null) {
+			MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(url, cliContext, true, false);
+			if (matchboxEngine == null) {
+				matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", cliContext, true, false);
+			}
+			if (matchboxEngine != null) {
+				Resource existing = matchboxEngine.getCanonicalResource(url);
+				if (existing != null) {
+					theResource.setId(existing.getId());
+					matchboxEngine.dropResource(resourceType, existing.getId());
+				} else {
+					if (theResource.getIdElement().isEmpty()) {
+						theResource.setId(url.substring(url.lastIndexOf("/") + 1));
+					}  else {
+						theResource.setId(theResource.getIdElement().getIdPart());
+					}
+				}
+				if (classR4.isInstance(theResource)) {
+					R4 r4 = classR4.cast(theResource);
+					matchboxEngine.addCanonicalResource(r4);
+				}
+				if (classR4B.isInstance(theResource)) {
+					R4B r4b = classR4B.cast(theResource);
+					matchboxEngine.addCanonicalResource(r4b);
+				}
+				if (classR5.isInstance(theResource)) {
+					R5 r5 = classR5.cast(theResource);
+					matchboxEngine.addCanonicalResource(r5);
+				}
+				MethodOutcome methodOutcome = new MethodOutcome();
+				methodOutcome.setCreated(false);
+				methodOutcome.setResource(theResource);
+				return methodOutcome;
+			}
+		}
+		MethodOutcome outcome = new MethodOutcome();
+		outcome.setStatusCode(400);
+		outcome.setCreated(false);
+		OperationOutcome operationOutcome = new OperationOutcome();
+		operationOutcome.addIssue().setDiagnostics("machbox engine not found for url " + url + " and fhir version " + cliContext.getFhirVersion());
+		outcome.setOperationOutcome(operationOutcome);
+		return outcome;
+
+	}
 
 	@Override
 	public Class<? extends IBaseResource> getResourceType() {

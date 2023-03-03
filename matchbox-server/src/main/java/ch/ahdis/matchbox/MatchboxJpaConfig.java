@@ -20,6 +20,7 @@ import org.springframework.core.env.Environment;
 
 import ca.uhn.fhir.batch2.model.StatusEnum;
 import ca.uhn.fhir.batch2.api.IJobCoordinator;
+import ca.uhn.fhir.batch2.api.IJobPersistence;
 import ca.uhn.fhir.batch2.api.JobOperationResultJson;
 import ca.uhn.fhir.batch2.coordinator.JobCoordinatorImpl;
 import ca.uhn.fhir.batch2.jobs.imprt.BulkDataImportProvider;
@@ -35,10 +36,14 @@ import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.batch.models.Batch2JobStartResponse;
+import ca.uhn.fhir.jpa.batch2.JpaJobPersistenceImpl;
 import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.bulk.export.api.IBulkExportProcessor;
 import ca.uhn.fhir.jpa.bulk.export.provider.BulkDataExportProvider;
+import ca.uhn.fhir.jpa.config.util.ValidationSupportConfigUtil;
+import ca.uhn.fhir.jpa.dao.data.IBatch2JobInstanceRepository;
+import ca.uhn.fhir.jpa.dao.data.IBatch2WorkChunkRepository;
 import ca.uhn.fhir.jpa.dao.mdm.MdmExpansionCacheSvc;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
 import ca.uhn.fhir.jpa.model.sched.ISchedulerService;
@@ -53,6 +58,7 @@ import ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.common.StarterJpaConfig;
+import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
@@ -69,9 +75,11 @@ import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import ca.uhn.fhir.jpa.bulk.export.model.ExportPIDIteratorParameters;
-import ca.uhn.fhir.rest.api.server.storage.ResourcePersistentId;
+
+import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
 @Configuration
@@ -280,10 +288,17 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Primary
 	public IBulkExportProcessor jpaBulkExportProcessor() {
 		return new IBulkExportProcessor() {
-			public Iterator<ResourcePersistentId> getResourcePidIterator(ExportPIDIteratorParameters theParams) {
-				return null;
+			
+			@Override
+			public void expandMdmResources(List theResources) {
+				// TODO Auto-generated method stub
+				throw new UnsupportedOperationException("Unimplemented method 'expandMdmResources'");
 			}
-			 public void expandMdmResources(List<IBaseResource> theResources) {}
+			@Override
+			public Iterator getResourcePidIterator(ExportPIDIteratorParameters theParams) {
+				// TODO Auto-generated method stub
+				throw new UnsupportedOperationException("Unimplemented method 'getResourcePidIterator'");
+			}
 		};
 	}
 
@@ -291,6 +306,17 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	public MdmExpansionCacheSvc mdmExpansionCacheSvc() {
 		return new MdmExpansionCacheSvc();
 	}
+
+	@Bean
+	public CachingValidationSupport validationSupportChain(JpaValidationSupportChain theJpaValidationSupportChain) {
+		return ValidationSupportConfigUtil.newCachingValidationSupport(theJpaValidationSupportChain);
+	}
+
+	@Bean
+	public IJobPersistence batch2JobInstancePersister(IBatch2JobInstanceRepository theJobInstanceRepository, IBatch2WorkChunkRepository theWorkChunkRepository, PlatformTransactionManager theTransactionManager) {
+		return new JpaJobPersistenceImpl(theJobInstanceRepository, theWorkChunkRepository, theTransactionManager);
+	}
+
 
 
 }

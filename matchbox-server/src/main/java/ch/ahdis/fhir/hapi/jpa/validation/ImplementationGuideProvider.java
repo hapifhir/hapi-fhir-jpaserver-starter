@@ -221,7 +221,7 @@ public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.Implement
 		matchboxEngineSupport.setInitialized(true);
 		log.info("Initializing packages finished " + VersionUtil.getMemory());
 		log.info("Creating cached engines during startup  " + VersionUtil.getMemory());
-		matchboxEngineSupport.getMatchboxEngine(FHIRVersion._4_0_1.getDisplay(),null, false, false);
+		matchboxEngineSupport.getMatchboxEngine(null,null, false, false);
 		log.info("Finished engines during startup  " + VersionUtil.getMemory());
 		return installOutcome;
 	}

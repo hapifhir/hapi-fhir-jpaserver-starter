@@ -15,7 +15,6 @@ import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.config.r4.JpaR4Config;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
-import ca.uhn.fhir.jpa.starter.cql.StarterCqlR4Config;
 import ca.uhn.fhir.jpa.validation.ValidatorPolicyAdvisor;
 import ca.uhn.fhir.jpa.validation.ValidatorResourceFetcher;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
@@ -99,8 +98,6 @@ public class FhirServerConfigR4 {
   public QuestionnaireResourceProvider rpQuestionnaireR4() {
     QuestionnaireResourceProvider retVal;
     retVal = new  ch.ahdis.matchbox.QuestionnaireResourceProvider();
-    retVal.setContext(fhirContext);
-//    retVal.setDao(daoImplementationGuideR4());
     return retVal;
   }
   
@@ -108,7 +105,6 @@ public class FhirServerConfigR4 {
   @Primary
   public ch.ahdis.matchbox.ValueSetResourceProvider rpValueSetR4() {
   	ValueSetResourceProvider retVal = new ch.ahdis.matchbox.ValueSetResourceProvider();
-    retVal.setContext(fhirContext);
     return retVal;
   }
 
@@ -116,7 +112,6 @@ public class FhirServerConfigR4 {
   @Primary
   public ch.ahdis.matchbox.CodeSystemResourceProvider rpCodeSystem4() {
   	CodeSystemResourceProvider retVal = new ch.ahdis.matchbox.CodeSystemResourceProvider();
-    retVal.setContext(fhirContext);
     return retVal;
   }
   
@@ -124,7 +119,6 @@ public class FhirServerConfigR4 {
   @Primary
   public ch.ahdis.matchbox.ConceptMapResourceProvider rpConceptMap4() {
   	ConceptMapResourceProvider retVal = new ch.ahdis.matchbox.ConceptMapResourceProvider();
-    retVal.setContext(fhirContext);
     return retVal;
   }
 
@@ -132,7 +126,6 @@ public class FhirServerConfigR4 {
   @Primary
   public StructureDefinitionResourceProvider rpStructureDefintion4() {
   	StructureDefinitionResourceProvider retVal = new StructureDefinitionResourceProvider();
-    retVal.setContext(fhirContext);
     return retVal;
   }
 

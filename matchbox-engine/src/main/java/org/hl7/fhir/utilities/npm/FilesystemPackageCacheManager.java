@@ -261,7 +261,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
         try {
           return pc.getLatestVersion(id);
         } catch (IOException e) {
-          ourLog.info("Failed to determine latest version of package {} from server: {}", id, nextPackageServer);
+          ourLog.info("Failed to determine latest version of package {} from server: {}", id, nextPackageServer.toString());
         }
       }
     }

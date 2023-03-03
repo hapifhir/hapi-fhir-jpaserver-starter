@@ -5,64 +5,68 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.instance.model.api.IDomainResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.StructureDefinition;
-import org.quartz.DisallowConcurrentExecution;
 
+import ca.uhn.fhir.rest.annotation.ConditionalUrlParam;
+import ca.uhn.fhir.rest.annotation.ResourceParam;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@DisallowConcurrentExecution
-public class StructureDefinitionResourceProvider extends ConformanceResourceProvider<StructureDefinition> {
+public class StructureDefinitionResourceProvider extends
+		ConformancePackageResourceProvider<StructureDefinition, org.hl7.fhir.r4b.model.StructureDefinition, org.hl7.fhir.r5.model.StructureDefinition> {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(StructureDefinitionResourceProvider.class);
 
 	public StructureDefinitionResourceProvider() {
-		super("StructureDefinition");
+		super(StructureDefinition.class, org.hl7.fhir.r4b.model.StructureDefinition.class,
+				org.hl7.fhir.r5.model.StructureDefinition.class);
 	}
 
-	@Override
-	public Class<StructureDefinition> getResourceType() {
-		return StructureDefinition.class;
-	}
-
-	private MethodOutcome createSnapshot(StructureDefinition theResource) {
-		if (theResource.getSnapshot().isEmpty()) {
-			MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(theResource.getBaseDefinition(),
-					null, false, false);
-			try {
-				StructureDefinition theSnapShotResource = matchboxEngine.createSnapshot(theResource);
-				theResource.setSnapshot(theSnapShotResource.getSnapshot());
-			} catch (FHIRException | IOException e) {
-				ourLog.error("Error creating snapshot for StructureDefinition " + theResource.getUrl(), e);
-				MethodOutcome outcome = new MethodOutcome();
-				outcome.setStatusCode(400);
-				outcome.setCreated(false);
-				OperationOutcome operationOutcome = new OperationOutcome();
-				operationOutcome.addIssue().setDiagnostics(e.getMessage());
-				outcome.setOperationOutcome(operationOutcome);
-				return outcome;
+	private MethodOutcome createSnapshot(IBaseResource resource) {
+		// FIXME only supported for R4 at the moment
+		if (classR4.isInstance(resource)) {
+			StructureDefinition theResource = (StructureDefinition) classR4.cast(resource);
+			if (theResource.getSnapshot().isEmpty()) {
+				MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(theResource.getBaseDefinition(),
+						null, false, false);
+				try {
+					StructureDefinition theSnapShotResource = matchboxEngine.createSnapshot(theResource);
+					theResource.setSnapshot(theSnapShotResource.getSnapshot());
+				} catch (FHIRException | IOException e) {
+					ourLog.error("Error creating snapshot for StructureDefinition " + theResource.getUrl(), e);
+					MethodOutcome outcome = new MethodOutcome();
+					outcome.setStatusCode(400);
+					outcome.setCreated(false);
+					OperationOutcome operationOutcome = new OperationOutcome();
+					operationOutcome.addIssue().setDiagnostics(e.getMessage());
+					outcome.setOperationOutcome(operationOutcome);
+					return outcome;
+				}
 			}
 		}
 		return null;
 	}
 
 	@Override
-	public MethodOutcome create(HttpServletRequest theRequest, StructureDefinition theResource, String theConditional,
-			RequestDetails theRequestDetails) {
+	public MethodOutcome create(HttpServletRequest theRequest, @ResourceParam IBaseResource theResource,
+			@ConditionalUrlParam String theConditional, RequestDetails theRequestDetails) {
 		MethodOutcome outcome = createSnapshot(theResource);
-		return outcome==null ? super.create(theRequest, theResource, theConditional, theRequestDetails) : outcome;
+		return outcome == null ? super.create(theRequest, theResource, theConditional, theRequestDetails) : outcome;
 	}
 
 	@Override
-	public MethodOutcome update(HttpServletRequest theRequest, StructureDefinition theResource, IIdType theId,
+	public MethodOutcome update(HttpServletRequest theRequest, IDomainResource theResource, IIdType theId,
 			String theConditional, RequestDetails theRequestDetails) {
 		MethodOutcome outcome = createSnapshot(theResource);
-		return outcome==null ? super.update(theRequest, theResource, theId, theConditional, theRequestDetails) : outcome;
+		return outcome == null ? super.update(theRequest, theResource, theId, theConditional, theRequestDetails)
+				: outcome;
 	}
 
 }

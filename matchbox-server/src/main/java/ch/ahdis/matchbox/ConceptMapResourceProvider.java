@@ -1,18 +1,12 @@
 package ch.ahdis.matchbox;
 
 import org.hl7.fhir.r4.model.ConceptMap;
-import org.quartz.DisallowConcurrentExecution;
 
-@DisallowConcurrentExecution
-public class ConceptMapResourceProvider extends ConformanceResourceProvider<ConceptMap> {
+
+public class ConceptMapResourceProvider extends ConformancePackageResourceProvider<ConceptMap, org.hl7.fhir.r4b.model.ConceptMap, org.hl7.fhir.r5.model.ConceptMap> {
 
 	public ConceptMapResourceProvider() {
-		super("ConceptMap");
-	}
-	
-	@Override
-	public Class<ConceptMap> getResourceType() {
-		return ConceptMap.class;
+		super(ConceptMap.class, org.hl7.fhir.r4b.model.ConceptMap.class, org.hl7.fhir.r5.model.ConceptMap.class);
 	}
 
 }
