@@ -74,7 +74,9 @@ public class FhirServerConfigCommon {
 
     if (appProperties.getEnable_index_contained_resource() == Boolean.TRUE) {
         ourLog.info("Indexed on contained resource enabled");
-      }
+    }
+
+    ourLog.info("Server configured to {} OAuth2 authentication", appProperties.getOauth().getEnabled() ? "enable" : "disable");
   }
 
   /**

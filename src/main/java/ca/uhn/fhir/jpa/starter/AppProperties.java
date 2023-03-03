@@ -83,6 +83,8 @@ public class AppProperties {
   private Integer bundle_batch_pool_max_size = 100;
   private final List<String> local_base_urls = new ArrayList<>();
 
+  private Oauth oauth = new Oauth();
+
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
 	}
@@ -201,6 +203,14 @@ public class AppProperties {
 
   public void setSupported_resource_types(List<String> supported_resource_types) {
     this.supported_resource_types = supported_resource_types;
+  }
+
+  public Oauth getOauth() {
+    return oauth;
+  }
+
+  public void setOauth(Oauth oauth) {
+    this.oauth = oauth;
   }
 
 	public Logger getLogger() {
@@ -559,6 +569,63 @@ public class AppProperties {
     }
 
 
+  }
+
+  public static class Oauth {
+    private Boolean enabled = false;
+    private String token_url;
+    private String manage_url;
+    private String client_id;
+    private String user_role;
+    private String admin_role;
+
+    public Boolean getEnabled() {
+      return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+      this.enabled = enabled;
+    }
+
+    public String getToken_url() {
+      return token_url;
+    }
+
+    public void setToken_url(String token_url) {
+      this.token_url = token_url;
+    }
+
+    public String getManage_url() {
+      return manage_url;
+    }
+
+    public void setManage_url(String manage_url) {
+      this.manage_url = manage_url;
+    }
+
+    public String getClient_id() {
+      return client_id;
+    }
+
+    public void setClient_id(String client_id) {
+      this.client_id = client_id;
+    }
+    
+    public String getUser_role() {
+      return user_role;
+    }
+
+    public void setUser_role(String user_role) {
+      this.user_role = user_role;
+    }
+
+    public String getAdmin_role() {
+      return manage_url;
+    }
+
+    public void setAdmin_role(String admin_role) {
+      this.admin_role = admin_role;
+    }
   }
 
   public static class Logger {
