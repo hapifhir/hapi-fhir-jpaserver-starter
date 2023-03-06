@@ -20,7 +20,7 @@
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
 
     <groupId>org.smartregister</groupId>
-    <version>6.0.1-SNAPSHOT</version>
+    <version>6.1.2-SNAPSHOT</version>
 
     <properties>
         <hapi.fhir.version>6.1.0</hapi.fhir.version>
