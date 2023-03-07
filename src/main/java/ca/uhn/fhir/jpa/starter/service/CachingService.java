@@ -6,6 +6,8 @@ import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
 import ca.uhn.fhir.jpa.starter.model.CacheEntity;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import com.iprd.fhir.utils.DateUtilityHelper;
+import com.iprd.fhir.utils.Operation;
+import com.iprd.fhir.utils.OperationHelper;
 import com.iprd.fhir.utils.Utils;
 import com.iprd.report.*;
 import com.iprd.report.model.data.BarChartItemDataCollection;
@@ -53,6 +55,7 @@ public class CachingService {
 	DashboardEnvironmentConfig dashboardEnvironmentConfig;
 	
 	private static final Logger logger = LoggerFactory.getLogger(CachingService.class);
+	private static final int MAX_RETRY = 6;
 
 	private static final long DELAY = 3600000;
 	
@@ -69,15 +72,19 @@ public class CachingService {
 //		List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList());
 
 		for (ScoreCardItem item : data) {
-			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
-			if (cacheEntities.isEmpty()) {
-				CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
-				notificationDataSource.insert(cacheEntity);
-			} else {
-				CacheEntity cacheEntity = cacheEntities.get(0);
-				cacheEntity.setValue(Double.valueOf(item.getValue()));
-				notificationDataSource.update(cacheEntity);
-			}
+			OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
+			    @Override public void doIt() {
+			    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
+					if (cacheEntities.isEmpty()) {
+						CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
+						notificationDataSource.insert(cacheEntity);
+					} else {
+						CacheEntity cacheEntity = cacheEntities.get(0);
+						cacheEntity.setValue(Double.valueOf(item.getValue()));
+						notificationDataSource.update(cacheEntity);
+					}
+			    }
+			});
 		}
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
@@ -104,16 +111,20 @@ public class CachingService {
 
 		for (BarChartItemDataCollection barChartItemCollection : barChartItemCollections) {
 			for(BarComponentData barComponent: barChartItemCollection.getBarComponentData()) {
-			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId())+" "+String.valueOf(barChartItemCollection.getId())+" "+String.valueOf(barComponent.getId())), orgId);
-			if (cacheEntities.isEmpty()) {
-				CacheEntity cacheEntityForPatient = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId())+" "+String.valueOf(barChartItemCollection.getId())+" "+String.valueOf(barComponent.getId())), date, Double.valueOf(barComponent.getValue()),Date.valueOf(LocalDate.now()));
-				notificationDataSource.insert(cacheEntityForPatient);
-		
-			} else {
-				CacheEntity cacheEntityForPatient = cacheEntities.get(0);
-				cacheEntityForPatient.setValue(Double.valueOf(barComponent.getValue()));
-				notificationDataSource.update(cacheEntityForPatient);
-				}
+				OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
+				    @Override public void doIt() {
+				    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId())+" "+String.valueOf(barChartItemCollection.getId())+" "+String.valueOf(barComponent.getId())), orgId);
+						if (cacheEntities.isEmpty()) {
+							CacheEntity cacheEntityForPatient = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId())+" "+String.valueOf(barChartItemCollection.getId())+" "+String.valueOf(barComponent.getId())), date, Double.valueOf(barComponent.getValue()),Date.valueOf(LocalDate.now()));
+							notificationDataSource.insert(cacheEntityForPatient);
+					
+						} else {
+							CacheEntity cacheEntityForPatient = cacheEntities.get(0);
+							cacheEntityForPatient.setValue(Double.valueOf(barComponent.getValue()));
+							notificationDataSource.update(cacheEntityForPatient);
+						}
+				    }
+				});
 			}
 		}
 		long endTime = System.nanoTime();
@@ -135,15 +146,19 @@ public class CachingService {
 //		List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getTabularData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList());
 
 		for (ScoreCardItem item : scoreCardItems) {
-			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
-			if (cacheEntities.isEmpty()) {
-				CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
-				notificationDataSource.insert(cacheEntity);
-			} else {
-				CacheEntity cacheEntity = cacheEntities.get(0);
-				cacheEntity.setValue(Double.valueOf(item.getValue()));
-				notificationDataSource.update(cacheEntity);
-			}
+			OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
+			    @Override public void doIt() {
+			    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
+					if (cacheEntities.isEmpty()) {
+						CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
+						notificationDataSource.insert(cacheEntity);
+					} else {
+						CacheEntity cacheEntity = cacheEntities.get(0);
+						cacheEntity.setValue(Double.valueOf(item.getValue()));
+						notificationDataSource.update(cacheEntity);
+					}					
+			    }
+			});
 		}
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
@@ -164,15 +179,19 @@ public class CachingService {
 //		List<PieChartItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getPieChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), pieChartDefinitions, Collections.emptyList());
 
 		for(PieChartItem item: pieChartItems){
-			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(item.getId())), item.getOrgId());
-			if(cacheEntities.isEmpty()){
-				CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(String.valueOf(item.getId())), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
-				notificationDataSource.insert(cacheEntity);
-			} else {
-				CacheEntity cacheEntity = cacheEntities.get(0);
-				cacheEntity.setValue(Double.valueOf(item.getValue()));
-				notificationDataSource.update(cacheEntity);
-			}
+			OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
+			    @Override public void doIt() {
+			    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(item.getId())), item.getOrgId());
+					if(cacheEntities.isEmpty()){
+						CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(String.valueOf(item.getId())), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
+						notificationDataSource.insert(cacheEntity);
+					} else {
+						CacheEntity cacheEntity = cacheEntities.get(0);
+						cacheEntity.setValue(Double.valueOf(item.getValue()));
+						notificationDataSource.update(cacheEntity);
+					}					
+			    }
+			});
 		}
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
@@ -197,15 +216,19 @@ public class CachingService {
 
 		for (LineChartItemCollection lineChartItemCollection : lineChartItemCollections) {
 			for(LineChartItem lineChartItem: lineChartItemCollection.getValue()) {
-				List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId())+" "+String.valueOf(lineChartItem.getLineId())), orgId);
-				if (cacheEntities.isEmpty()) {
-					CacheEntity cacheEntity = new CacheEntity(orgId,mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId())+" "+String.valueOf(lineChartItem.getLineId())), date, Double.valueOf(lineChartItem.getValue()),Date.valueOf(LocalDate.now()));
-					notificationDataSource.insert(cacheEntity);
-				} else {
-					CacheEntity cacheEntity = cacheEntities.get(0);
-					cacheEntity.setValue(Double.valueOf(lineChartItem.getValue()));
-					notificationDataSource.update(cacheEntity);
-				}	
+				OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
+				    @Override public void doIt() {
+				    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId())+" "+String.valueOf(lineChartItem.getLineId())), orgId);
+						if (cacheEntities.isEmpty()) {
+							CacheEntity cacheEntity = new CacheEntity(orgId,mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId())+" "+String.valueOf(lineChartItem.getLineId())), date, Double.valueOf(lineChartItem.getValue()),Date.valueOf(LocalDate.now()));
+							notificationDataSource.insert(cacheEntity);
+						} else {
+							CacheEntity cacheEntity = cacheEntities.get(0);
+							cacheEntity.setValue(Double.valueOf(lineChartItem.getValue()));
+							notificationDataSource.update(cacheEntity);
+						}
+				    }
+				});	
 			}
 		}
 		long endTime = System.nanoTime();
@@ -227,15 +250,19 @@ public class CachingService {
 		List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList());
 
 		for (ScoreCardItem item : data) {
-			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
-			if (cacheEntities.isEmpty()) {
-				CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
-				notificationDataSource.insert(cacheEntity);
-			} else {
-				CacheEntity cacheEntity = cacheEntities.get(0);
-				cacheEntity.setValue(Double.valueOf(item.getValue()));
-				notificationDataSource.update(cacheEntity);
-			}
+			OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
+			    @Override public void doIt() {
+			    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
+					if (cacheEntities.isEmpty()) {
+						CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
+						notificationDataSource.insert(cacheEntity);
+					} else {
+						CacheEntity cacheEntity = cacheEntities.get(0);
+						cacheEntity.setValue(Double.valueOf(item.getValue()));
+						notificationDataSource.update(cacheEntity);
+					}
+			    }
+			});	
 		}
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
@@ -262,16 +289,20 @@ public class CachingService {
 
 		for (BarChartItemDataCollection barChartItemCollection : barChartItemCollections) {
 			for(BarComponentData barComponent: barChartItemCollection.getBarComponentData()) {
-			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId())+" "+String.valueOf(barChartItemCollection.getId())+" "+String.valueOf(barComponent.getId())), orgId);
-			if (cacheEntities.isEmpty()) {
-				CacheEntity cacheEntityForPatient = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId())+" "+String.valueOf(barChartItemCollection.getId())+" "+String.valueOf(barComponent.getId())), date, Double.valueOf(barComponent.getValue()),Date.valueOf(LocalDate.now()));
-				notificationDataSource.insert(cacheEntityForPatient);
-		
-			} else {
-				CacheEntity cacheEntityForPatient = cacheEntities.get(0);
-				cacheEntityForPatient.setValue(Double.valueOf(barComponent.getValue()));
-				notificationDataSource.update(cacheEntityForPatient);
-				}
+				OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
+				    @Override public void doIt() {
+				    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId())+" "+String.valueOf(barChartItemCollection.getId())+" "+String.valueOf(barComponent.getId())), orgId);
+						if (cacheEntities.isEmpty()) {
+							CacheEntity cacheEntityForPatient = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId())+" "+String.valueOf(barChartItemCollection.getId())+" "+String.valueOf(barComponent.getId())), date, Double.valueOf(barComponent.getValue()),Date.valueOf(LocalDate.now()));
+							notificationDataSource.insert(cacheEntityForPatient);
+					
+						} else {
+							CacheEntity cacheEntityForPatient = cacheEntities.get(0);
+							cacheEntityForPatient.setValue(Double.valueOf(barComponent.getValue()));
+							notificationDataSource.update(cacheEntityForPatient);
+						}	
+				    }
+				});	
 			}
 		}
 		long endTime = System.nanoTime();
@@ -293,15 +324,19 @@ public class CachingService {
 		List<ScoreCardItem> scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getTabularData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList());
 
 		for (ScoreCardItem item : scoreCardItems) {
-			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
-			if (cacheEntities.isEmpty()) {
-				CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
-				notificationDataSource.insert(cacheEntity);
-			} else {
-				CacheEntity cacheEntity = cacheEntities.get(0);
-				cacheEntity.setValue(Double.valueOf(item.getValue()));
-				notificationDataSource.update(cacheEntity);
-			}
+			OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
+			    @Override public void doIt() {
+			    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
+					if (cacheEntities.isEmpty()) {
+						CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
+						notificationDataSource.insert(cacheEntity);
+					} else {
+						CacheEntity cacheEntity = cacheEntities.get(0);
+						cacheEntity.setValue(Double.valueOf(item.getValue()));
+						notificationDataSource.update(cacheEntity);
+					}	
+			    }
+			});	
 		}
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
@@ -322,15 +357,19 @@ public class CachingService {
 		List<PieChartItem> pieChartItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getPieChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), pieChartDefinitions, Collections.emptyList());
 
 		for(PieChartItem item: pieChartItems){
-			List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(item.getId())), item.getOrgId());
-			if(cacheEntities.isEmpty()){
-				CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(String.valueOf(item.getId())), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
-				notificationDataSource.insert(cacheEntity);
-			} else {
-				CacheEntity cacheEntity = cacheEntities.get(0);
-				cacheEntity.setValue(Double.valueOf(item.getValue()));
-				notificationDataSource.update(cacheEntity);
-			}
+			OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
+			    @Override public void doIt() {
+			    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(item.getId())), item.getOrgId());
+					if(cacheEntities.isEmpty()){
+						CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(String.valueOf(item.getId())), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
+						notificationDataSource.insert(cacheEntity);
+					} else {
+						CacheEntity cacheEntity = cacheEntities.get(0);
+						cacheEntity.setValue(Double.valueOf(item.getValue()));
+						notificationDataSource.update(cacheEntity);
+					}	
+			    }
+			});	
 		}
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
@@ -354,15 +393,19 @@ public class CachingService {
 
 		for (LineChartItemCollection lineChartItemCollection : lineChartItemCollections) {
 			for(LineChartItem lineChartItem: lineChartItemCollection.getValue()) {
-				List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId())+" "+String.valueOf(lineChartItem.getLineId())), orgId);
-				if (cacheEntities.isEmpty()) {
-					CacheEntity cacheEntity = new CacheEntity(orgId,mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId())+" "+String.valueOf(lineChartItem.getLineId())), date, Double.valueOf(lineChartItem.getValue()),Date.valueOf(LocalDate.now()));
-					notificationDataSource.insert(cacheEntity);
-				} else {
-					CacheEntity cacheEntity = cacheEntities.get(0);
-					cacheEntity.setValue(Double.valueOf(lineChartItem.getValue()));
-					notificationDataSource.update(cacheEntity);
-				}	
+				OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
+				    @Override public void doIt() {
+				    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId())+" "+String.valueOf(lineChartItem.getLineId())), orgId);
+						if (cacheEntities.isEmpty()) {
+							CacheEntity cacheEntity = new CacheEntity(orgId,mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId())+" "+String.valueOf(lineChartItem.getLineId())), date, Double.valueOf(lineChartItem.getValue()),Date.valueOf(LocalDate.now()));
+							notificationDataSource.insert(cacheEntity);
+						} else {
+							CacheEntity cacheEntity = cacheEntities.get(0);
+							cacheEntity.setValue(Double.valueOf(lineChartItem.getValue()));
+							notificationDataSource.update(cacheEntity);
+						}	
+				    }
+				});		
 			}
 		}
 		long endTime = System.nanoTime();
