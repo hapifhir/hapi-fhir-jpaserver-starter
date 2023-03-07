@@ -30,20 +30,18 @@ public class FhirClientAuthenticatorService {
 	AppProperties appProperties;
 	
 	private static Keycloak keycloak;
-	private static IGenericClient fhirClient;
 
-	private FhirContext ctx;
+	private static FhirContext ctx;
 	static String serverBase;
 	private Keycloak instance;
 	private TokenManager tokenManager;
-	private BearerTokenAuthInterceptor authInterceptor;
+	private static BearerTokenAuthInterceptor authInterceptor;
 
 	public void initializeKeycloak() {
 		  ctx = FhirContext.forCached(FhirVersionEnum.R4);
-		  ctx.getRestfulClientFactory().setSocketTimeout(90 * 1000);
-		  ctx.getRestfulClientFactory().setConnectionRequestTimeout(90 * 1000);
+		  ctx.getRestfulClientFactory().setSocketTimeout(900 * 1000);
+		  ctx.getRestfulClientFactory().setConnectionRequestTimeout(900 * 1000);
 		  serverBase = appProperties.getHapi_Server_address();
-		  fhirClient = ctx.newRestfulGenericClient(serverBase);     
 		  ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
 		    keycloak = KeycloakBuilder
 		       .builder()
@@ -71,15 +69,7 @@ public class FhirClientAuthenticatorService {
 	@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
 	private void registerClientAuthInterceptor() {
 	  String accessToken = tokenManager.getAccessTokenString();
-	  try {
-	    fhirClient.unregisterInterceptor(authInterceptor);
-	  }catch(Exception e) {
-	    e.printStackTrace();
-	  }
-	  authInterceptor = new BearerTokenAuthInterceptor(accessToken); // the reason this is below is to unregister interceptors to avoid memory leak. Null pointer is caught in try catch.
-	  fhirClient = null;
-	  fhirClient = ctx.newRestfulGenericClient(serverBase);
-	  fhirClient.registerInterceptor(authInterceptor);
+	  authInterceptor = new BearerTokenAuthInterceptor(accessToken); // the reason this is below is to unregister interceptors to avoid memory leak. Null pointer is caught in try catch. 
 	}
 	
 	public static Keycloak getKeycloak() {
@@ -87,6 +77,8 @@ public class FhirClientAuthenticatorService {
 	}
 	
 	public static IGenericClient getFhirClient() {
+		IGenericClient fhirClient = ctx.newRestfulGenericClient(serverBase);
+		fhirClient.registerInterceptor(authInterceptor);
 		return fhirClient;
 	}
 
