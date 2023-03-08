@@ -49,23 +49,7 @@ public class ServerInterceptor {
 	public void insert(IBaseResource theResource) throws IOException {
 		notificationDataSource = NotificationDataSource.getInstance();
 		if(theResource.fhirType().equals("Media")) {
-			if(((Media) theResource).getContent().hasData()) {
-				byte[] bitmapdata = ((Media) theResource).getContent().getDataElement().getValue();
-				byte[] base64 = Base64.decode(bitmapdata, Base64.DEFAULT);
-				String md5Hash = md5Bytes(base64);
-				File image = new File(imagePath+"//"+md5Hash+".jpeg");
-				FileUtils.writeByteArrayToFile(image, base64);
-				String imagePath = image.getAbsolutePath();
-				long imageSize = Files.size(Paths.get(imagePath));
-				long byteSize = base64.length;
-				if(imageSize == byteSize) {
-					((Media) theResource).getContent().setDataElement(null);
-		 			((Media) theResource).getContent().setUrl(imagePath);
-				}
-				else {
-					logger.warn("Image Not Proper");
-				}
-			}
+			processMedia((Media) theResource);
 		}
 		else if (theResource.fhirType().equals("Encounter")) {
 			Encounter encounter = (Encounter) theResource;
@@ -131,85 +115,7 @@ public class ServerInterceptor {
 			notificationDataSource.insert(secondReminder);
 		}
 		else if (theResource.fhirType().equals("QuestionnaireResponse")) {
-			QuestionnaireResponse questionnaireResponse = (QuestionnaireResponse) theResource;
-			if (!questionnaireResponse.getQuestionnaire().equals("Questionnaire/labour")) {
-				return;
-			}
-			byte[] bitmapdata = null;
-
-			for (QuestionnaireResponse.QuestionnaireResponseItemComponent item : questionnaireResponse.getItem()) {
-				if (item.getLinkId().equals("8.0")) {
-					for (QuestionnaireResponse.QuestionnaireResponseItemComponent groupItem : item.getItem()) {
-						if (groupItem.getLinkId().equals("8.2")) {
-							for (QuestionnaireResponse.QuestionnaireResponseItemComponent answerItem : groupItem.getItem()) {
-								if (answerItem.getLinkId().equals("8.2.1")) {
-									List<QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent> answers = answerItem.getAnswer();
-									if (answers != null && !answers.isEmpty()) {
-										QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent answer = answers.get(0);
-										if (answer.getValueAttachment() != null && answer.getValueAttachment().getData() != null) {
-											bitmapdata = answer.getValueAttachment().getData();
-											break;
-										}
-									}
-								}
-							}
-							break;
-						}
-					}
-					break;
-				}
-			}
-
-			if (bitmapdata == null) {
-				return;
-			}
-
-			byte[] base64 = bitmapdata;
-			File image = new File(imagePath+"//"+md5Bytes(base64)+".jpeg");
-			FileUtils.writeByteArrayToFile(image, base64);
-			String imagePath = image.getAbsolutePath();
-			long imageSize = Files.size(Paths.get(imagePath));
-			long byteSize = base64.length;
-			if(imageSize == byteSize) {
-				for (QuestionnaireResponse.QuestionnaireResponseItemComponent item : questionnaireResponse.getItem()) {
-					if (item.getLinkId().equals("8.0")) {
-						for (QuestionnaireResponse.QuestionnaireResponseItemComponent groupItem : item.getItem()) {
-							if (groupItem.getLinkId().equals("8.2")) {
-								for (QuestionnaireResponse.QuestionnaireResponseItemComponent answerItem : groupItem.getItem()) {
-									if (answerItem.getLinkId().equals("8.2.1")) {
-										List<QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent> answers = answerItem.getAnswer();
-										if (answers != null && !answers.isEmpty()) {
-											QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent answer = answers.get(0);
-											Attachment valueAttachment = answer.getValueAttachment();
-											if (valueAttachment != null) {
-												valueAttachment.setData(null);
-												valueAttachment.setUrl(imagePath);
-											} else {
-												valueAttachment = new Attachment();
-												valueAttachment.setData(null);
-												valueAttachment.setUrl(imagePath);
-												answer.setValue(valueAttachment);
-											}
-										} else {
-											QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent answer = new QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent();
-											Attachment valueAttachment = new Attachment();
-											valueAttachment.setData(null);
-											valueAttachment.setUrl(imagePath);
-											answer.setValue(valueAttachment);
-											answerItem.addAnswer(answer);
-										}
-									}
-								}
-								break;
-							}
-						}
-						break;
-					}
-				}
-			}
-			else {
-				logger.warn("Image Not Proper");
-			}
+			processQuestionnaireResponse((QuestionnaireResponse) theResource);
 		}
 	}
 
@@ -217,22 +123,7 @@ public class ServerInterceptor {
 	   public void update(IBaseResource theOldResource, IBaseResource theResource) throws IOException {
 		notificationDataSource = NotificationDataSource.getInstance();
 		if(theResource.fhirType().equals("Media")) {
-			if(((Media) theResource).getContent().hasData()) {
-				byte[] bitmapdata = ((Media) theResource).getContent().getDataElement().getValue();
-				byte[] base64 = Base64.decode(bitmapdata, Base64.DEFAULT);
-				File image = new File(imagePath+"//"+ md5Bytes(base64) +".jpeg");
-				FileUtils.writeByteArrayToFile(image, base64);
-				String imagePath = image.getAbsolutePath();
-				long imageSize = Files.size(Paths.get(imagePath));
-				long byteSize = base64.length;
-				if(imageSize == byteSize) {
-					((Media) theResource).getContent().setDataElement(null);
-		 			((Media) theResource).getContent().setUrl(imagePath);
-				}
-				else {
-					logger.warn("Image Not Proper");
-				}	
-			}
+			processMedia((Media) theResource);
 		} else if (theResource.fhirType().equals("Encounter")) {
 			Encounter encounter = (Encounter) theResource;
 			String encounterId = encounter.getIdElement().getIdPart();
@@ -242,6 +133,9 @@ public class ServerInterceptor {
 				// Using persist to add entry only if it is not exists
 				notificationDataSource.persist(encounterIdEntity);
 			}
+		}
+		else if (theResource.fhirType().equals("QuestionnaireResponse")) {
+			processQuestionnaireResponse((QuestionnaireResponse) theResource);
 		}
 	}
 
@@ -265,6 +159,116 @@ public class ServerInterceptor {
 			}
 		}
 		return false;
+	}
+
+	private void processMedia(Media media) throws IOException {
+		if(media.getContent().hasData()) {
+			byte[] bitmapdata = media.getContent().getDataElement().getValue();
+			byte[] base64 = Base64.decode(bitmapdata, Base64.DEFAULT);
+			String md5Hash = md5Bytes(base64);
+			if (md5Hash == null) {
+				return;
+			}
+			File image = new File(imagePath+"//"+md5Hash+".jpeg");
+			FileUtils.writeByteArrayToFile(image, base64);
+			String imagePath = image.getAbsolutePath();
+			long imageSize = Files.size(Paths.get(imagePath));
+			long byteSize = base64.length;
+			if(imageSize == byteSize) {
+				media.getContent().setDataElement(null);
+				media.getContent().setUrl(imagePath);
+			}
+			else {
+				logger.warn("Image Not Proper");
+			}
+		}
+	}
+
+	private void processQuestionnaireResponse(QuestionnaireResponse questionnaireResponse) throws IOException {
+		if (!questionnaireResponse.getQuestionnaire().equals("Questionnaire/labour")) {
+			return;
+		}
+		byte[] bitmapdata = null;
+
+		for (QuestionnaireResponse.QuestionnaireResponseItemComponent item : questionnaireResponse.getItem()) {
+			if (item.getLinkId().equals("8.0")) {
+				for (QuestionnaireResponse.QuestionnaireResponseItemComponent groupItem : item.getItem()) {
+					if (groupItem.getLinkId().equals("8.2")) {
+						for (QuestionnaireResponse.QuestionnaireResponseItemComponent answerItem : groupItem.getItem()) {
+							if (answerItem.getLinkId().equals("8.2.1")) {
+								List<QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent> answers = answerItem.getAnswer();
+								if (answers != null && !answers.isEmpty()) {
+									QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent answer = answers.get(0);
+									if (answer.getValueAttachment() != null && answer.getValueAttachment().getData() != null) {
+										bitmapdata = answer.getValueAttachment().getData();
+										break;
+									}
+								}
+							}
+						}
+						break;
+					}
+				}
+				break;
+			}
+		}
+
+		if (bitmapdata == null) {
+			return;
+		}
+
+		byte[] base64 = bitmapdata;
+		String md5Hash = md5Bytes(base64);
+
+		if (md5Hash == null) {
+			return;
+		}
+
+		File image = new File(imagePath+"//"+md5Hash+".jpeg");
+		FileUtils.writeByteArrayToFile(image, base64);
+		String imagePath = image.getAbsolutePath();
+		long imageSize = Files.size(Paths.get(imagePath));
+		long byteSize = base64.length;
+		if(imageSize == byteSize) {
+			for (QuestionnaireResponse.QuestionnaireResponseItemComponent item : questionnaireResponse.getItem()) {
+				if (item.getLinkId().equals("8.0")) {
+					for (QuestionnaireResponse.QuestionnaireResponseItemComponent groupItem : item.getItem()) {
+						if (groupItem.getLinkId().equals("8.2")) {
+							for (QuestionnaireResponse.QuestionnaireResponseItemComponent answerItem : groupItem.getItem()) {
+								if (answerItem.getLinkId().equals("8.2.1")) {
+									List<QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent> answers = answerItem.getAnswer();
+									if (answers != null && !answers.isEmpty()) {
+										QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent answer = answers.get(0);
+										Attachment valueAttachment = answer.getValueAttachment();
+										if (valueAttachment != null) {
+											valueAttachment.setData(null);
+											valueAttachment.setUrl(imagePath);
+										} else {
+											valueAttachment = new Attachment();
+											valueAttachment.setData(null);
+											valueAttachment.setUrl(imagePath);
+											answer.setValue(valueAttachment);
+										}
+									} else {
+										QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent answer = new QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent();
+										Attachment valueAttachment = new Attachment();
+										valueAttachment.setData(null);
+										valueAttachment.setUrl(imagePath);
+										answer.setValue(valueAttachment);
+										answerItem.addAnswer(answer);
+									}
+								}
+							}
+							break;
+						}
+					}
+					break;
+				}
+			}
+		}
+		else {
+			logger.warn("Image Not Proper");
+		}
 	}
 
 	private String md5Bytes(byte[] bytes) {
