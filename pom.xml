@@ -117,9 +117,9 @@
   </prerequisites>
   	
   <scm>
-    <connection>scm:git:git@github.com:ahdis/matchbox-engine.git</connection>
-    <url>scm:git:git@github.com:ahdis/matchbox-engine.git</url>
-    <developerConnection>scm:git:git@github.com:ahdis/matchbox-engine.git</developerConnection>
+    <connection>scm:git:git://github.com/ahdis/matchbox.git</connection>
+    <url>https://github.com/ahdis/matchbox/tree/master</url>
+    <developerConnection>scm:git:ssh://github.com:ahdis/matchbox.git</developerConnection>
   </scm>
   	
   <repositories>
