@@ -5,10 +5,10 @@ import java.net.URISyntaxException;
 import java.util.Locale;
 
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.MetadataResource;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
 import org.hl7.fhir.utilities.FhirPublication;
-import org.hl7.fhir.utilities.TimeTracker;
 import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.cli.services.IPackageInstaller;
 import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
@@ -18,6 +18,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
@@ -64,7 +65,6 @@ public class MatchboxEngineSupport {
 		this.sessionCache = new EgineSessionCache();
 	}
 
-	// Note this assumes that the canonical and ig version are the same if the version is specified 
 	public NpmPackageVersionResourceEntity loadPackageAssetByUrl(String theCanonicalUrl) {
 		NpmPackageVersionResourceEntity resourceEntity  = new TransactionTemplate(myTxManager).execute(tx -> {
 			String canonicalUrl = theCanonicalUrl;
@@ -75,7 +75,7 @@ public class MatchboxEngineSupport {
 				canonicalUrl = canonicalUrl.substring(0, versionSeparator);
 				slice = myPackageVersionResourceDao.findByCanonicalUrlByCanonicalVersion(PageRequest.of(0, 2), canonicalUrl, canonicalVersion);
 			} else {
-				slice = myPackageVersionResourceDao.findCurrentByCanonicalUrl(PageRequest.of(0, 2), canonicalUrl);
+				slice = myPackageVersionResourceDao.findCurrentVersionByCanonicalUrl(PageRequest.of(0, 2), canonicalUrl);
 			}
 			if (slice.isEmpty()) {
 				return null;
@@ -88,7 +88,30 @@ public class MatchboxEngineSupport {
 		return resourceEntity;
 	}
 
-	public NpmPackageVersionResourceEntity loadPackageAssetByLikeCanonicalCurrent(String canonical) {
+	public NpmPackageVersionResourceEntity loadPackageAssetByUrl(String theCanonicalUrl, FhirVersionEnum theFhirVersion) {
+		NpmPackageVersionResourceEntity resourceEntity  = new TransactionTemplate(myTxManager).execute(tx -> {
+			String canonicalUrl = theCanonicalUrl;
+			int versionSeparator = canonicalUrl.lastIndexOf('|');
+			Slice<NpmPackageVersionResourceEntity> slice;
+			if (versionSeparator != -1) {
+				String canonicalVersion = canonicalUrl.substring(versionSeparator + 1);
+				canonicalUrl = canonicalUrl.substring(0, versionSeparator);
+				slice = myPackageVersionResourceDao.findByCanonicalUrlByCanonicalVersion(PageRequest.of(0, 2), theFhirVersion, canonicalUrl, canonicalVersion);
+			} else {
+				slice = myPackageVersionResourceDao.findCurrentVersionByCanonicalUrl(PageRequest.of(0, 2), theFhirVersion, canonicalUrl);
+			}
+			if (slice.isEmpty()) {
+				return null;
+			} 
+			if (slice.getContent().size()>1) {
+				log.error("multiple entries with same canonical (version) for "+theCanonicalUrl);
+			}
+			return slice.getContent().get(0);
+		});
+		return resourceEntity;
+	}
+
+	public NpmPackageVersionResourceEntity loadPackageAssetByLikeCanonicalCurrent(String canonical, FhirVersionEnum theFhirVersion) {
 		if (!canonical.contains("|")) {
 			if (canonical.contains("/")) {
 				// remove resource id
@@ -97,7 +120,7 @@ public class MatchboxEngineSupport {
 						// remove resource name
 					String canonicalUrlLike = canonical.substring(0, canonical.lastIndexOf("/")) +"*";
 					NpmPackageVersionResourceEntity resourceEntity  = new TransactionTemplate(myTxManager).execute(tx -> {
-						Slice<NpmPackageVersionResourceEntity> slice = myPackageVersionResourceDao.findCurrentVersionByLikeCanonicalUrl(PageRequest.of(0, 1), canonicalUrlLike);
+						Slice<NpmPackageVersionResourceEntity> slice = myPackageVersionResourceDao.findCurrentVersionByLikeCanonicalUrl(PageRequest.of(0, 1), theFhirVersion, canonicalUrlLike);
 						if (slice.isEmpty()) {
 							return null;
 						} 
@@ -116,12 +139,12 @@ public class MatchboxEngineSupport {
 	 * @param id
 	 * @return
 	 */
-	public MetadataResource getCachedResource(String resource, String id) {
+	public IBaseResource getCachedResource(String resource, String id) {
 		for (String sessionId : sessionCache.getSessionIds()) {
 			MatchboxEngine engine = (MatchboxEngine) sessionCache.fetchSessionValidatorEngine(sessionId);
-			org.hl7.fhir.r4.model.Resource res = engine.getCanonicalResourceById(resource, id);
+			IBaseResource res = engine.getCanonicalResourceById(resource, id);
 			if (res != null) {
-				return (MetadataResource) res;
+				return res;
 			}
 		}
 		return null;
@@ -222,6 +245,21 @@ public class MatchboxEngineSupport {
 		}
 		return null;
 	}
+
+	public String getIgPackage(CliContext cliContext) {
+		String ig = null;
+		if (cliContext.getFhirVersion().startsWith("4.0")) {
+			ig = "hl7.fhir.r4.core#4.0.1";
+		}
+		if (cliContext.getFhirVersion().startsWith("4.3")) {
+			ig = "hl7.fhir.r4b.core#4.3.0";
+		}
+		if (cliContext.getFhirVersion().startsWith("5.0")) {
+			// FIXME
+			ig = "hl7.fhir.core#5.0.0-snapshot3";
+		}
+		return ig;
+	}
 			
 	/**
 	 * returns a matchbox-engine for the specified canonical with cliClontext parameters
@@ -248,10 +286,8 @@ public class MatchboxEngineSupport {
 			}
 			this.setInitialized(false);
 		}
-		if (cliContext == null) {
-			cliContext = new CliContext(this.cliContext);
-		}
 		if (engine == null) {
+			cliContext = new CliContext(this.cliContext);
 			try {
 				engine = new MatchboxEngineBuilder().getEngine();
 			} catch (FHIRException e) {
@@ -272,15 +308,18 @@ public class MatchboxEngineSupport {
 			}
 			engine.setIgLoader(igLoader);
 			try {
-				// FIXME if we want to validate against different version we would probably no
-				// need to load theses packages
-				engine.loadPackage("hl7.terminology", "5.0.0");
-				engine.loadPackage("hl7.fhir.r4.core", "4.0.1");
+				if (cliContext.getFhirVersion().equals("4.0.1")) {
+					engine.loadPackage("hl7.terminology", "5.0.0");
+					engine.loadPackage("hl7.fhir.r4.core", "4.0.1");
+				}
+				cliContext.setIg(this.getIgPackage(cliContext));
 			} catch (FHIRException | IOException e) {
 				log.error("error connecting to terminology server ");
 				return null;
 			}
-
+			log.info("cached default engine forever" +(cliContext.getIg()!=null ? "for "+cliContext.getIg() : "" ) +" with parameters "+cliContext.hashCode());
+			sessionCache.cacheSessionForEver(""+cliContext.hashCode(), engine);
+			
 			if (cliContext.getIgsPreloaded()!=null && cliContext.getIgsPreloaded().length>0) {
 				for (String ig : cliContext.getIgsPreloaded()) {
 					CliContext cliContextCp = new CliContext(this.cliContext);
@@ -294,21 +333,31 @@ public class MatchboxEngineSupport {
 			}
 		}
 
-		String ig = cliContext.getIg();
-		if (ig == null) {
+		if (cliContext == null) {
+			cliContext = new CliContext(this.cliContext);
+		}
+
+		if (cliContext.getIg() == null) {
 			if ("default".equals(canonical) || canonical == null || engine.getCanonicalResource(canonical)!=null) {
-				ig = "hl7.fhir.r4.core#4.0.1";
+				cliContext.setIg(this.getIgPackage(cliContext));
 			} else {
-				NpmPackageVersionResourceEntity  npm = loadPackageAssetByUrl(canonical);
+				NpmPackageVersionResourceEntity  npm = loadPackageAssetByUrl(canonical, FhirVersionEnum.forVersionString(cliContext.getFhirVersion()));
 				if (npm==null) {
-					// lets try the special case where canonical should be created and there is already a package which uses this canonical in an ig which is current
-					npm = loadPackageAssetByLikeCanonicalCurrent(canonical);
+					npm = loadPackageAssetByLikeCanonicalCurrent(canonical, FhirVersionEnum.forVersionString(cliContext.getFhirVersion()));
 				}
 				if (npm != null) {
-					ig = npm.getPackageVersion().getPackageId()+"#"+npm.getPackageVersion().getVersionId();
+					String ig = npm.getPackageVersion().getPackageId()+"#"+npm.getPackageVersion().getVersionId();
 					log.info("using ig "+ig+" for canonical url "+canonical);
 					cliContext.setIg(ig); // set the ig in the cliContext that hashCode will be set
-				} 
+				} else {
+					// lets try to find a package that contains the canonical with a different FHIR version (e.g. for mapping between versions) 
+					npm = loadPackageAssetByUrl(canonical);
+					if (npm != null) {
+						String ig = npm.getPackageVersion().getPackageId()+"#"+npm.getPackageVersion().getVersionId();
+						cliContext.setFhirVersion(npm.getFhirVersion().getFhirVersionString());
+						cliContext.setIg(ig); // set the ig in the cliContext that hashCode will be set
+					}
+				}
 			}
 		}
 
@@ -319,14 +368,31 @@ public class MatchboxEngineSupport {
 		// check if we have already a validator in cache for that
 		MatchboxEngine matchboxEngine = (MatchboxEngine) this.sessionCache.fetchSessionValidatorEngine(""+cliContext.hashCode());
 		if (matchboxEngine!=null && reload == false) {
-			log.info("using cached validate engine" +(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContext.hashCode());
+			log.info("using cached validate engine" +(cliContext.getIg()!=null ? "for "+cliContext.getIg() : "" ) +" with parameters "+cliContext.hashCode());
 			return matchboxEngine;
 		}
 		
 		// create a new validator and cache it temporarly
-		if (create) {
-			log.info("creating new cached validate engine" +(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContext.hashCode());
-			MatchboxEngine created =  this.createMatchboxEngine(engine, ig, cliContext);
+		if (create && cliContext.getIg()!=null) {
+			log.info("creating new cached validate engine " +(cliContext.getIg()!=null ? "for "+cliContext.getIg() : "" ) +" with parameters "+cliContext.hashCode());
+			MatchboxEngine baseEngine = engine;
+			if (!cliContext.getFhirVersion().equals(baseEngine.getVersion())) {
+				log.info("creating base engine for" +(cliContext.getIg()!=null ? "for "+cliContext.getIg() : "" ) +" with parameters and fhir Version "+cliContext.getFhirVersion());
+				try {
+					baseEngine = new MatchboxEngineBuilder().getEngine();
+					baseEngine.setVersion(cliContext.getFhirVersion());
+				} catch (FHIRException e) {
+					log.error("error generating matchbox engine", e);
+					return null;
+				} catch (IOException e) {
+					log.error("error generating matchbox engine", e);
+					return null;
+				} catch (URISyntaxException e) {
+					log.error("error generating matchbox engine", e);
+					return null;
+				}
+			}
+			MatchboxEngine created =  this.createMatchboxEngine(baseEngine, cliContext.getIg(), cliContext);
 			sessionCache.cacheSession(""+cliContext.hashCode(), created);
 			return created;
 		}

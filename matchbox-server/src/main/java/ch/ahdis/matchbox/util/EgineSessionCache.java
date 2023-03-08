@@ -22,6 +22,7 @@ package ch.ahdis.matchbox.util;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.hl7.fhir.validation.ValidationEngine;
@@ -60,9 +61,10 @@ public class EgineSessionCache extends SessionCache {
      */
     @Override
     public Set<String> getSessionIds() {
-        Set<String> set = super.getSessionIds();
-        set.addAll(cachedSessionsNoTimeout.keySet());
-        return set;
+        Set<String> mergedSet = new HashSet<String>();
+        mergedSet.addAll(super.getSessionIds());
+        mergedSet.addAll(cachedSessionsNoTimeout.keySet());
+        return mergedSet;
     }
 
     /**

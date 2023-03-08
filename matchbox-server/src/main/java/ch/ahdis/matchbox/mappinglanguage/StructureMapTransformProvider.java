@@ -27,9 +27,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.instance.model.api.IDomainResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r4.model.StructureMap;
@@ -41,6 +41,7 @@ import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ca.uhn.fhir.rest.annotation.ConditionalUrlParam;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.annotation.ResourceParam;
@@ -49,6 +50,7 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.RestfulServerUtils;
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
+import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.MatchboxEngineSupport;
 import ch.ahdis.matchbox.StructureMapResourceProvider;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
@@ -63,82 +65,55 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 	@Autowired
 	protected MatchboxEngineSupport matchboxEngineSupport;
   
-  public void createNarrative(StructureMap map) {
+  public void createNarrative(IBaseResource theResource) {
+    org.hl7.fhir.r5.model.StructureMap map = (org.hl7.fhir.r5.model.StructureMap) this.getCanonical(theResource);
     if (!map.hasText()) {
-      map.getText().setStatus(NarrativeStatus.GENERATED);
-      map.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
-      String render = StructureMapUtilities.render((org.hl7.fhir.r5.model.StructureMap) VersionConvertorFactory_40_50.convertResource(map));
-      map.getText().getDiv().addTag("pre").addText(render);
+      String render = StructureMapUtilities.render(map);
+      if (classR4.isInstance(theResource)) {
+        org.hl7.fhir.r4.model.StructureMap  r4 = classR4.cast(theResource);
+        r4.getText().setStatus(NarrativeStatus.GENERATED);
+        r4.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
+        r4.getText().getDiv().addTag("pre").addText(render);
+        return ; 
+        }
+      if (classR4B.isInstance(theResource)) {
+        org.hl7.fhir.r4b.model.StructureMap  r4b = classR4B.cast(theResource);
+        r4b.getText().setStatus(org.hl7.fhir.r4b.model.Narrative.NarrativeStatus.GENERATED);
+        r4b.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
+        r4b.getText().getDiv().addTag("pre").addText(render);
+      }
+      if (classR5.isInstance(theResource)) {
+        org.hl7.fhir.r5.model.StructureMap  r5 = classR5.cast(theResource);
+        r5.getText().setStatus(org.hl7.fhir.r5.model.Narrative.NarrativeStatus.GENERATED);
+        r5.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
+        r5.getText().getDiv().addTag("pre").addText(render);
+      }
     }
   }
   
   @Override
-  public MethodOutcome create(HttpServletRequest theRequest, StructureMap theResource, String theConditional,
-      RequestDetails theRequestDetails) {
+	public MethodOutcome create(HttpServletRequest theRequest, @ResourceParam IBaseResource theResource, @ConditionalUrlParam String theConditional, RequestDetails theRequestDetails) {
     createNarrative(theResource);
     return super.create(theRequest, theResource, theConditional, theRequestDetails);
   }
 
   @Override
-  public MethodOutcome update(HttpServletRequest theRequest, StructureMap theResource, IIdType theId,
-      String theConditional, RequestDetails theRequestDetails) {
+  public MethodOutcome update(HttpServletRequest theRequest, IDomainResource theResource, IIdType theId,
+    String theConditional, RequestDetails theRequestDetails) {
     createNarrative(theResource);
     return super.update(theRequest, theResource, theId, theConditional, theRequestDetails);
   }
 
   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StructureMapTransformProvider.class);
-  
-  public StructureMap fixMap(@ResourceParam StructureMap theResource) {
-    if (theResource!=null) {
-      // don't know why a # is prefixed to the contained it
-      for (org.hl7.fhir.r4.model.Resource r : theResource.getContained()) {
-        if (r instanceof org.hl7.fhir.r4.model.ConceptMap && ((org.hl7.fhir.r4.model.ConceptMap) r).getId().startsWith("#")) {
-          r.setId(((org.hl7.fhir.r4.model.ConceptMap) r).getId().substring(1));
-        }
-      }
-    }
-    return theResource;
-  }
 
-//  private void removeBundleEntryIds(org.hl7.fhir.r5.elementmodel.Element bundle) {
-//    List<Element> ids = bundle.getChildrenByName("id");
-//    for(Element id: ids) {
-//      bundle.getChildren().remove(id);
-//    }
-//    List<Element> entries = bundle.getChildrenByName("entry");
-//    for(Element entry : entries) {
-//      Property fullUrl = entry.getChildByName("fullUrl");
-//      if (fullUrl.getValues()!=null && fullUrl.getValues().get(0).primitiveValue().startsWith("urn:uuid:")) {
-//        Property resource = entry.getChildByName("resource");
-//        if (resource!=null && resource.getValues()!=null) {
-//          Element entryResource = (Element) resource.getValues().get(0);
-//          ids = entryResource.getChildrenByName("id");
-//          for(Element id: ids) {
-//            entryResource.getChildren().remove(id);
-//          }
-//        }
-//      }
-//    }
-//  }
-
-  /*
-  @Operation(name = "$transform", manualResponse = true, manualRequest = true)
-  public void manualInputAndOutput(@IdParam IdType theStructureMap, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
-    org.hl7.fhir.r5.model.StructureMap map = (org.hl7.fhir.r5.model.StructureMap) baseWorkerContext.fetchResourceById(theStructureMap.getResourceType(), theStructureMap.getIdPart());
-    if (map == null) {
-      throw new UnprocessableEntityException("Map not available with id "+theStructureMap.getIdPart());
-    }
-    transfrom(map, theServletRequest, theServletResponse, baseWorkerContext);
-  }
-  */
- 
   @Operation(name = "$transform", type = StructureMap.class, manualResponse = true, manualRequest = true)
   public void manualInputAndOutput(HttpServletRequest theServletRequest, HttpServletResponse theServletResponse)
       throws IOException {
     Map<String, String[]> requestParams = theServletRequest.getParameterMap();
     String[] source = requestParams.get("source");
+    CliContext cliContext = new CliContext(this.cliContext);
     if (source != null && source.length > 0) {
-      MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(source[0], null, true, false);
+      MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(source[0], cliContext, true, false);
       if (matchboxEngine == null) {
         throw new UnprocessableEntityException("matchbox engine could not be initialized with canonical url "+source[0]);
       }
@@ -174,12 +149,6 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 
     org.hl7.fhir.r5.elementmodel.Element r = matchboxEngine.transform(theServletRequest.getInputStream().readAllBytes(), contentType.contains("xml") ? FhirFormat.XML : FhirFormat.JSON, map.getUrl());
     
-//    if (r.isResource() && "Bundle".contentEquals(r.getType())) {
-//      Property bundleType = r.getChildByName("type");
-//      if (bundleType!=null && bundleType.getValues()!=null && "document".equals(bundleType.getValues().get(0).primitiveValue())) {
-//        removeBundleEntryIds(r);
-//      }
-//    }
     theServletResponse.setContentType(responseContentType);
     theServletResponse.setCharacterEncoding("UTF-8");
     
@@ -212,4 +181,3 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
   }
 
 }
-

@@ -54,12 +54,12 @@ import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.binary.svc.NullBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
+import ca.uhn.fhir.jpa.model.dao.JpaPid;
 import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionEntity;
 import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ca.uhn.fhir.jpa.packages.JpaPackageCache;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager.PackageContents;
-import ca.uhn.fhir.rest.api.server.storage.ResourcePersistentId;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.util.BinaryUtil;
 
@@ -131,7 +131,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 
 	private org.hl7.fhir.r5.model.Resource loadPackageEntity(NpmPackageVersionResourceEntity contents) {
 		try {
-			ResourcePersistentId binaryPid = new ResourcePersistentId(contents.getResourceBinary().getId());
+			JpaPid binaryPid = JpaPid.fromId(contents.getResourceBinary().getId());
 			IBaseBinary binary = getBinaryDao().readByPid(binaryPid);
 			byte[] resourceContentsBytes = fetchBlobFromBinary(binary);
 			String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
@@ -264,7 +264,8 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 
 	private IHapiPackageCacheManager.PackageContents loadPackageContents(NpmPackageVersionEntity thePackageVersion) {
 		IFhirResourceDao<? extends IBaseBinary> binaryDao = getBinaryDao();
-		IBaseBinary binary = binaryDao.readByPid(new ResourcePersistentId(thePackageVersion.getPackageBinary().getId()));
+		JpaPid binaryPid = JpaPid.fromId(thePackageVersion.getPackageBinary().getId());
+		IBaseBinary binary = binaryDao.readByPid(binaryPid);
 		try {
 			byte[] content = fetchBlobFromBinary(binary);
 			PackageContents retVal = new PackageContents().setBytes(content).setPackageId(thePackageVersion.getPackageId())

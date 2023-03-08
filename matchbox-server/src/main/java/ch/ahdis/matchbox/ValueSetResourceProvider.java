@@ -1,18 +1,11 @@
 package ch.ahdis.matchbox;
 
 import org.hl7.fhir.r4.model.ValueSet;
-import org.quartz.DisallowConcurrentExecution;
 
-@DisallowConcurrentExecution
-public class ValueSetResourceProvider extends ConformanceResourceProvider<ValueSet> {
+public class ValueSetResourceProvider extends ConformancePackageResourceProvider<ValueSet, org.hl7.fhir.r4b.model.ValueSet, org.hl7.fhir.r5.model.ValueSet> {
 
 	public ValueSetResourceProvider() {
-		super("ValueSet");
-	}
-	
-	@Override
-	public Class<ValueSet> getResourceType() {
-		return ValueSet.class;
+		super(ValueSet.class, org.hl7.fhir.r4b.model.ValueSet.class, org.hl7.fhir.r5.model.ValueSet.class);
 	}
 
 }

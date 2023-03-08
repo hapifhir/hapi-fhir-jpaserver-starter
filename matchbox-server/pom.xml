@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <artifactId>matchbox</artifactId>
     <groupId>matchbox.health</groupId>
@@ -12,6 +14,7 @@
   <artifactId>matchbox-server</artifactId>
   <version>3.2.0-SNAPSHOT</version>
 
+  
   <name>matchbox-server</name>
   <description>An open-source implementation to support testing and implementation of FHIR based solutions and map or capture health data into HL7® FHIR®</description>
 	<url>https://matchbox.health</url>
@@ -50,7 +53,6 @@
 		</repository>
 	</repositories>
 
-
 	<dependencies>
 
       <dependency>
@@ -80,15 +82,29 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.3.3</version>
 		</dependency>
-
 		<!-- This dependency includes the core HAPI-FHIR classes -->
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>hapi-fhir-base</artifactId>
 			<version>${hapi.fhir.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>jcl-over-slf4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- This dependency includes the JPA server itself, which is packaged separately from the rest of HAPI FHIR -->
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>org.hl7.fhir.utilities</artifactId>
+			<version>${fhir.core.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>hapi-fhir-jpaserver-base</artifactId>
@@ -140,11 +156,6 @@
 			<version>${hapi.fhir.version}</version>
 		</dependency>
 		<!-- This dependency includes the JPA CQL Server -->
-		<dependency>
-			<groupId>ca.uhn.hapi.fhir</groupId>
-			<artifactId>hapi-fhir-jpaserver-cql</artifactId>
-			<version>${hapi.fhir.version}</version>
-		</dependency>
 		<!-- This dependency includes the OpenAPI Server -->
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
@@ -167,14 +178,6 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-to-slf4j</artifactId>
 			<version>${log4j_to_slf4j_version}</version>
-		</dependency>
-
-		<!-- Needed for JEE/Servlet support -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<scope>provided</scope>
-			<version>3.1.0</version>
 		</dependency>
 
 		<!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well. Otherwise the following can be omitted. <dependency> <groupId>org.thymeleaf</groupId> <artifactId>thymeleaf</artifactId> </dependency> -->

@@ -36,8 +36,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
-    <fhir.core.version>5.6.92</fhir.core.version>
-		<hapi.fhir.version>6.2.5</hapi.fhir.version>
+    <fhir.core.version>5.6.100</fhir.core.version>
+		<hapi.fhir.version>6.4.1</hapi.fhir.version>
 
     <log4j_to_slf4j_version>2.17.1</log4j_to_slf4j_version>
     <!-- Dependency Versions -->
@@ -225,16 +225,6 @@
       <groupId>org.eclipse.jetty</groupId>
       			
       <artifactId>jetty-servlet</artifactId>
-      			
-      <scope>test</scope>
-      			
-      <version>${jetty_version}</version>
-      </dependency>
-    <dependency>
-      			
-      <groupId>org.eclipse.jetty.websocket</groupId>
-      			
-      <artifactId>websocket-server</artifactId>
       			
       <scope>test</scope>
       			

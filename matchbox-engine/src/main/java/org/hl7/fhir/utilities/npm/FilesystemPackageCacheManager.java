@@ -107,8 +107,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
    */
   @Deprecated
   public FilesystemPackageCacheManager(boolean userMode, int toolsVersion) throws IOException {
-    addPackageServer(PackageClient.PRIMARY_SERVER);
-    addPackageServer(PackageClient.SECONDARY_SERVER);
+    myPackageServers.addAll(PackageServer.publicServers());
 
     if (userMode)
       cacheFolder = Utilities.path(System.getProperty("user.home"), ".fhir", "packages");
@@ -122,8 +121,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   }
 
   public FilesystemPackageCacheManager(boolean userMode) throws IOException {
-    addPackageServer(PackageClient.PRIMARY_SERVER);
-    addPackageServer(PackageClient.SECONDARY_SERVER);
+    myPackageServers.addAll(PackageServer.publicServers());
 
     if (userMode)
       cacheFolder = Utilities.path(System.getProperty("user.home"), ".fhir", "packages");
@@ -218,7 +216,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
     }
   }
 
-  private void listSpecs(Map<String, String> specList, String server) throws IOException {
+  private void listSpecs(Map<String, String> specList, PackageServer server) throws IOException {
     PackageClient pc = new PackageClient(server);
     List<PackageInfo> matches = pc.search(null, null, null, false);
     for (PackageInfo m : matches) {
@@ -256,14 +254,14 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   }
 
   public String getLatestVersion(String id) throws IOException {
-    for (String nextPackageServer : getPackageServers()) {
+    for (PackageServer nextPackageServer : getPackageServers()) {
       // special case:
-      if (!(Utilities.existsInList(id,CommonPackages.ID_PUBPACK, "hl7.terminology.r5") && PackageClient.PRIMARY_SERVER.equals(nextPackageServer))) {
+      if (!(Utilities.existsInList(id,CommonPackages.ID_PUBPACK, "hl7.terminology.r5") && PackageServer.PRIMARY_SERVER.equals(nextPackageServer.getUrl()))) {
         PackageClient pc = new PackageClient(nextPackageServer);
         try {
           return pc.getLatestVersion(id);
         } catch (IOException e) {
-          ourLog.info("Failed to determine latest version of package {} from server: {}", id, nextPackageServer);
+          ourLog.info("Failed to determine latest version of package {} from server: {}", id, nextPackageServer.toString());
         }
       }
     }
@@ -513,7 +511,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
     for (NpmPackage p : temporaryPackages) {
       specList.put(p.name(), p.canonical());
     }
-    for (String next : getPackageServers()) {
+    for (PackageServer next : getPackageServers()) {
       listSpecs(specList, next);
     }
     addCIBuildSpecs(specList);
@@ -970,7 +968,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
     if (packageInstalled(id, ver)) {
       return true;
     }
-    for (String s : getPackageServers()) {
+    for (PackageServer s : getPackageServers()) {
       if (new PackageClient(s).exists(id, ver)) {
         return true;
       }

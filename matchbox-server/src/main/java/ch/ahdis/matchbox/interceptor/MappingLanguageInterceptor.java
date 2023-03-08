@@ -40,9 +40,11 @@ import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r4.formats.IParser;
 import org.hl7.fhir.r4.formats.ParserFactory;
-import org.hl7.fhir.r4.model.StructureMap;
+import org.hl7.fhir.r4.hapi.ctx.FhirR4;
+import org.hl7.fhir.r5.model.StructureMap;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.hl7.fhir.r5.context.SimpleWorkerContext.SimpleWorkerContextBuilder;
+import org.hl7.fhir.r5.model.Enumerations.FHIRVersion;
 import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r5.utils.structuremap.ITransformerServices;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
@@ -50,8 +52,6 @@ import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.api.Constants;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.exceptions.AuthenticationException;
@@ -83,28 +83,29 @@ public class MappingLanguageInterceptor extends InterceptorAdapter {
 		this.matchboxEngineSupport = matchboxEngineSupport;
 	}
 
-//	private FhirVersionEnum extractFhirVersion(String header) {
-//		if (header == null) {
-//			return null;
-//		}
-//		StringTokenizer tok = new StringTokenizer(header, ";");
-//		String wantVersionString = null;
-//		while (tok.hasMoreTokens()) {
-//			String next = tok.nextToken().trim();
-//			if (next.startsWith("fhirVersion=")) {
-//				wantVersionString = next.substring("fhirVersion=".length()).trim();
-//				break;
-//			}
-//		}
-//		if (isNotBlank(wantVersionString)) {
-//			return FhirVersionEnum.forVersionString(wantVersionString);
-//		}
-//		return null;
-//	}
+	private FHIRVersion extractFhirVersion(String header) {
+		if (header == null) {
+			return null;
+		}
+		StringTokenizer tok = new StringTokenizer(header, ";");
+		String wantVersionString = null;
+		while (tok.hasMoreTokens()) {
+			String next = tok.nextToken().trim();
+			if (next.startsWith("fhirVersion=")) {
+				wantVersionString = next.substring("fhirVersion=".length()).trim();
+				break;
+			}
+		}
+		if (isNotBlank(wantVersionString)) {
+			return FHIRVersion.fromCode(wantVersionString);
+		}
+		return FHIRVersion._4_0_1;
+	}
 
 	public StructureMap parseMap(String content) throws FHIRException {
+		// TODO: should be changed to FHIR Version 5.0.0 ?
 		MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", null, true, false);
-		return matchboxEngine.parseMap(content);
+		return matchboxEngine.parseMapR5(content);
 	}
 
 	@Override
@@ -114,8 +115,10 @@ public class MappingLanguageInterceptor extends InterceptorAdapter {
 		String contentType = defaultString(theRequest.getHeader(Constants.HEADER_CONTENT_TYPE));
 		if (contentType.startsWith("text/fhir-mapping")) {
 			log.debug("processing text/fhir mapping - converting to json");
-			((MutableHttpServletRequest) theRequest).putHeader(Constants.HEADER_CONTENT_TYPE, "application/fhir+json");
+			FHIRVersion fhirVersion = this.extractFhirVersion(contentType);
+			((MutableHttpServletRequest) theRequest).putHeader(Constants.HEADER_CONTENT_TYPE, "application/fhir+json;fhirVersion="+fhirVersion.getDisplay());
 
+			
 			StructureMap structureMap = parseMap(new String(theRequestDetails.loadRequestContents()));
 			if ("PUT".equals(theRequest.getMethod())) {
 				IIdType id = theRequestDetails.getId();
@@ -123,15 +126,24 @@ public class MappingLanguageInterceptor extends InterceptorAdapter {
 					structureMap.setId(id.getIdPart());
 				}
 			}
-			IParser parserConverted = ParserFactory.parser(FhirFormat.JSON);
+
+			String json = null;
 			try {
-				log.debug(parserConverted.composeString(structureMap));
-				theRequestDetails.setRequestContents(parserConverted.composeString(structureMap).getBytes());
+				switch(fhirVersion) {
+					case _4_0_1:
+						org.hl7.fhir.r4.model.StructureMap sm4 =  (org.hl7.fhir.r4.model.StructureMap) VersionConvertorFactory_40_50.convertResource(structureMap);
+						json = new org.hl7.fhir.r4.formats.JsonParser().composeString(sm4);				
+						break;
+					case _5_0_0:
+						json = new org.hl7.fhir.r5.formats.JsonParser().composeString(structureMap);				
+						break;
+					default:
+						log.error("FHIR Version not supported "+fhirVersion.getDisplay());
+				}
+				theRequestDetails.setRequestContents(json.getBytes());
 			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
+				log.error("Exception while convertion to json", e);
 			}
-			return true;
 		}
 		return true;
 	}

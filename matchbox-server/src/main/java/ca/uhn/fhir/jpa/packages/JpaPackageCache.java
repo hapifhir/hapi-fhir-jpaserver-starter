@@ -1,66 +1,26 @@
 package ca.uhn.fhir.jpa.packages;
 
-import static ca.uhn.fhir.jpa.util.QueryParameterUtils.toPredicateArray;
-import static org.apache.commons.lang3.StringUtils.defaultString;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+/*-
+ * #%L
+ * HAPI FHIR JPA Server
+ * %%
+ * Copyright (C) 2014 - 2023 Smile CDR, Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.apache.commons.collections4.comparators.ReverseComparator;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.Validate;
-import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.instance.model.api.IBaseBinary;
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r5.model.CanonicalResource;
-import org.hl7.fhir.r5.model.Resource;
-import org.hl7.fhir.r5.model.StructureDefinition;
-import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
-import org.hl7.fhir.utilities.npm.BasePackageCacheManager;
-import org.hl7.fhir.utilities.npm.NpmPackage;
-import org.hl7.fhir.validation.IgLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
-
+import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.i18n.Msg;
@@ -74,23 +34,72 @@ import ca.uhn.fhir.jpa.dao.data.INpmPackageDao;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
+import ca.uhn.fhir.jpa.model.dao.JpaPid;
 import ca.uhn.fhir.jpa.model.entity.NpmPackageEntity;
 import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionEntity;
 import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import ca.uhn.fhir.jpa.model.entity.ResourceTable;
 import ca.uhn.fhir.jpa.model.util.JpaConstants;
-import ca.uhn.fhir.jpa.partition.SystemRequestDetails;
+import ca.uhn.fhir.rest.api.server.SystemRequestDetails;
+import ca.uhn.fhir.jpa.packages.loader.NpmPackageData;
+import ca.uhn.fhir.jpa.packages.loader.PackageLoaderSvc;
 import ca.uhn.fhir.rest.api.Constants;
 import ca.uhn.fhir.rest.api.EncodingEnum;
-import ca.uhn.fhir.rest.api.server.storage.ResourcePersistentId;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.util.BinaryUtil;
-import ca.uhn.fhir.util.ClasspathUtil;
-import ca.uhn.fhir.util.FhirTerser;
+import ca.uhn.fhir.util.ResourceUtil;
 import ca.uhn.fhir.util.StringUtil;
-import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
+import org.apache.commons.collections4.comparators.ReverseComparator;
+import org.apache.commons.lang3.Validate;
+import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.instance.model.api.IBaseBinary;
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.instance.model.api.IPrimitiveType;
+import org.hl7.fhir.utilities.npm.BasePackageCacheManager;
+import org.hl7.fhir.utilities.npm.NpmPackage;
+import org.hl7.fhir.utilities.npm.PackageServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static ca.uhn.fhir.jpa.util.QueryParameterUtils.toPredicateArray;
+import static ca.uhn.fhir.util.StringUtil.toUtf8String;
+import static org.apache.commons.lang3.StringUtils.defaultString;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class JpaPackageCache extends BasePackageCacheManager implements IHapiPackageCacheManager {
 
@@ -114,10 +123,42 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 	@Autowired
 	private PartitionSettings myPartitionSettings;
 
+	@Autowired
+	private PackageLoaderSvc myPackageLoaderSvc;
+
 	@Autowired(required = false)//It is possible that some implementers will not create such a bean.
 	private IBinaryStorageSvc myBinaryStorageSvc;
-	
-	static List<String> types;
+
+	@Override
+	public void addPackageServer(@Nonnull PackageServer thePackageServer) {
+		assert myPackageLoaderSvc != null;
+		myPackageLoaderSvc.addPackageServer(thePackageServer);
+	}
+
+	@Override
+	public String getPackageId(String theS) throws IOException {
+		return myPackageLoaderSvc.getPackageId(theS);
+	}
+
+	@Override
+	public void setSilent(boolean silent) {
+		myPackageLoaderSvc.setSilent(silent);
+	}
+
+	@Override
+	public String getPackageUrl(String theS) throws IOException {
+		return myPackageLoaderSvc.getPackageUrl(theS);
+	}
+
+	@Override
+	public List<PackageServer> getPackageServers() {
+		return myPackageLoaderSvc.getPackageServers();
+	}
+
+	@Override
+	protected BasePackageCacheManager.InputStreamWithSrc loadFromPackageServer(String id, String version) {
+		throw new UnsupportedOperationException(Msg.code(2220) + "Use PackageLoaderSvc for loading packages.");
+	}
 
 	@Override
 	@Transactional
@@ -167,7 +208,7 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 
 	private IHapiPackageCacheManager.PackageContents loadPackageContents(NpmPackageVersionEntity thePackageVersion) {
 		IFhirResourceDao<? extends IBaseBinary> binaryDao = getBinaryDao();
-		IBaseBinary binary = binaryDao.readByPid(new ResourcePersistentId(thePackageVersion.getPackageBinary().getId()));
+		IBaseBinary binary = binaryDao.readByPid(JpaPid.fromId(thePackageVersion.getPackageBinary().getId()));
 		try {
 			byte[] content = fetchBlobFromBinary(binary);
 			PackageContents retVal = new PackageContents()
@@ -206,22 +247,19 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 		return myDaoRegistry.getResourceDao("Binary");
 	}
 
-	@Override
-	public NpmPackage addPackageToCache(String thePackageId, String thePackageVersionId, InputStream thePackageTgzInputStream, String theSourceDesc) throws IOException {
-		Validate.notBlank(thePackageId, "thePackageId must not be null");
-		Validate.notBlank(thePackageVersionId, "thePackageVersionId must not be null");
-		Validate.notNull(thePackageTgzInputStream, "thePackageTgzInputStream must not be null");
+	private NpmPackage addPackageToCacheInternal(
+		NpmPackageData thePackageData
+	) {
+		NpmPackage npmPackage = thePackageData.getPackage();
+		String packageId = thePackageData.getPackageId();
+		String initialPackageVersionId = thePackageData.getPackageVersionId();
+		byte[] bytes = thePackageData.getBytes();
 
-		byte[] bytes = IOUtils.toByteArray(thePackageTgzInputStream);
-
-		ourLog.info("Parsing package .tar.gz ({} bytes) from {}", bytes.length, theSourceDesc);
-
-		NpmPackage npmPackage = NpmPackage.fromPackage(new ByteArrayInputStream(bytes));
-		if (!npmPackage.id().equalsIgnoreCase(thePackageId)) {
-			throw new InvalidRequestException(Msg.code(1297) + "Package ID " + npmPackage.id() + " doesn't match expected: " + thePackageId);
+		if (!npmPackage.id().equalsIgnoreCase(packageId)) {
+			throw new InvalidRequestException(Msg.code(1297) + "Package ID " + npmPackage.id() + " doesn't match expected: " + packageId);
 		}
-		if (!PackageVersionComparator.isEquivalent(thePackageVersionId, npmPackage.version())) {
-			throw new InvalidRequestException(Msg.code(1298) + "Package ID " + npmPackage.version() + " doesn't match expected: " + thePackageVersionId);
+		if (!PackageVersionComparator.isEquivalent(initialPackageVersionId, npmPackage.version())) {
+			throw new InvalidRequestException(Msg.code(1298) + "Package ID " + npmPackage.version() + " doesn't match expected: " + initialPackageVersionId);
 		}
 
 		String packageVersionId = npmPackage.version();
@@ -234,21 +272,18 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 		IBaseBinary binary = createPackageBinary(bytes);
 
 		return newTxTemplate().execute(tx -> {
-			
-			IgLoader igLoader = new IgLoader(null, null, null);
-
 			ResourceTable persistedPackage = createResourceBinary(binary);
-			NpmPackageEntity pkg = myPackageDao.findByPackageId(thePackageId).orElseGet(() -> createPackage(npmPackage));
-			NpmPackageVersionEntity packageVersion = myPackageVersionDao.findByPackageIdAndVersion(thePackageId, packageVersionId).orElse(null);
+			NpmPackageEntity pkg = myPackageDao.findByPackageId(packageId).orElseGet(() -> createPackage(npmPackage));
+			NpmPackageVersionEntity packageVersion = myPackageVersionDao.findByPackageIdAndVersion(packageId, packageVersionId).orElse(null);
 			if (packageVersion != null) {
 				NpmPackage existingPackage = loadPackageFromCacheOnly(packageVersion.getPackageId(), packageVersion.getVersionId());
-				String msg = "Package version already exists in local storage, no action taken: " + thePackageId + "#" + packageVersionId;
+				String msg = "Package version already exists in local storage, no action taken: " + packageId + "#" + packageVersionId;
 				getProcessingMessages(existingPackage).add(msg);
 				ourLog.info(msg);
 				return existingPackage;
 			}
 
-			boolean currentVersion = updateCurrentVersionFlagForAllPackagesBasedOnNewIncomingVersion(thePackageId, packageVersionId);
+			boolean currentVersion = updateCurrentVersionFlagForAllPackagesBasedOnNewIncomingVersion(packageId, packageVersionId);
 			String packageDesc = null;
 			if (npmPackage.description() != null) {
 				if (npmPackage.description().length() > NpmPackageVersionEntity.PACKAGE_DESC_LENGTH) {
@@ -258,16 +293,16 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 				}
 			}
 			if (currentVersion) {
-				getProcessingMessages(npmPackage).add("Marking package " + thePackageId + "#" + thePackageVersionId + " as current version");
+				getProcessingMessages(npmPackage).add("Marking package " + packageId + "#" + initialPackageVersionId + " as current version");
 				pkg.setCurrentVersionId(packageVersionId);
 				pkg.setDescription(packageDesc);
 				myPackageDao.save(pkg);
 			} else {
-				getProcessingMessages(npmPackage).add("Package " + thePackageId + "#" + thePackageVersionId + " is not the newest version");
+				getProcessingMessages(npmPackage).add("Package " + packageId + "#" + initialPackageVersionId + " is not the newest version");
 			}
 
 			packageVersion = new NpmPackageVersionEntity();
-			packageVersion.setPackageId(thePackageId);
+			packageVersion.setPackageId(packageId);
 			packageVersion.setVersionId(packageVersionId);
 			packageVersion.setPackage(pkg);
 			packageVersion.setPackageBinary(persistedPackage);
@@ -279,88 +314,68 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 			packageVersion.setPackageSizeBytes(bytes.length);
 			packageVersion = myPackageVersionDao.save(packageVersion);
 
-			// FIXME added example Folder also
-			String[] dirNames = {"package","example"};
-			for (String dirName : dirNames) {
-				NpmPackage.NpmPackageFolder packageFolder = npmPackage.getFolders().get(dirName);
-				if (packageFolder !=null ) {
-					for (Map.Entry<String, List<String>> nextTypeToFiles : packageFolder.getTypes().entrySet()) {
-						String nextType = nextTypeToFiles.getKey();
-						for (String nextFile : nextTypeToFiles.getValue()) {
-		
-							byte[] contents;
-							try {
-								contents = packageFolder.fetchFile(nextFile);
-							} catch (IOException e) {
-								throw new InternalErrorException(Msg.code(1300) + e);
-							}
-							
-							org.hl7.fhir.r5.model.Resource resource = null;
-							try {
-								resource = igLoader.loadResourceByVersion(npmPackage.fhirVersion(), contents, nextFile);
-							} catch (FHIRException e) {
-								getProcessingMessages(npmPackage).add("Error with parsing, not indexing file: " + nextFile);
-								continue;
-							} catch (IOException e) {
-								getProcessingMessages(npmPackage).add("Error with parsing, not indexing file: " + nextFile);
-								continue;
-							}
+			String dirName = "package";
+			NpmPackage.NpmPackageFolder packageFolder = npmPackage.getFolders().get(dirName);
+			for (Map.Entry<String, List<String>> nextTypeToFiles : packageFolder.getTypes().entrySet()) {
+				String nextType = nextTypeToFiles.getKey();
+				for (String nextFile : nextTypeToFiles.getValue()) {
 
-							// only store conformance resources
-							if (!MatchboxPackageInstallerImpl.DEFAULT_INSTALL_TYPES.contains(resource.fhirType())) {
-								getProcessingMessages(npmPackage).add("Not indexing file: " + nextFile);
-								continue;
-							}
-
-							// don't store StructureDefinitions that define Extensions
-							if (resource instanceof StructureDefinition) {
-								StructureDefinition sd = (StructureDefinition) resource;
-								if ("http://hl7.org/fhir/StructureDefinition/Extension".equals(sd.getBaseDefinition())) {
-									getProcessingMessages(npmPackage).add("Not indexing file: " + nextFile);
-									continue;
-								}
-								if (StructureDefinitionKind.PRIMITIVETYPE.equals(sd.getKind())) {
-									getProcessingMessages(npmPackage).add("Not indexing file: " + nextFile);
-									continue;
-								}
-								if (StructureDefinitionKind.COMPLEXTYPE.equals(sd.getKind())) {
-									getProcessingMessages(npmPackage).add("Not indexing file: " + nextFile);
-									continue;
-								}
-							}
-							
-							/*
-							 * Re-encode the resource as JSON with the narrative removed in order to reduce the footprint.
-							 * This is useful since we'll be loading these resources back and hopefully keeping lots of
-							 * them in memory in order to speed up validation activities.
-							 */
-							String contentType = Constants.CT_FHIR_JSON_NEW;
-//							ResourceUtil.removeNarrative(packageContext, resource);
-//							IBaseBinary resourceBinary = createPackageResourceBinary(nextFile, minimizedContents, contentType);
-							// FIXME: we are assuming anyway JSON but should make an error
-  						IBaseBinary resourceBinary = createPackageResourceBinary(nextFile, contents, contentType);
-							ResourceTable persistedResource = createResourceBinary(resourceBinary);
-		
-							NpmPackageVersionResourceEntity resourceEntity = new NpmPackageVersionResourceEntity();
-							resourceEntity.setPackageVersion(packageVersion);
-							resourceEntity.setResourceBinary(persistedResource);
-							resourceEntity.setDirectory(dirName);
-							resourceEntity.setFhirVersionId(npmPackage.fhirVersion());
-							resourceEntity.setFhirVersion(fhirVersion);
-							resourceEntity.setFilename(nextFile);
-							resourceEntity.setResourceType(nextType);
-							resourceEntity.setResSizeBytes(contents.length);
-							String url = getUrl(resource);
-							resourceEntity.setCanonicalUrl(getUrl(resource));
-							String version = getVersion(resource);
-							resourceEntity.setCanonicalVersion(getVersion(resource));
-							myPackageVersionResourceDao.save(resourceEntity);
-		
-							String msg = "Indexing " + nextFile + " Resource[" + dirName + '/' + nextFile + "] with URL: " + defaultString(url) + "|" + defaultString(version);
-							getProcessingMessages(npmPackage).add(msg);
-							ourLog.trace("Package[{}#{}] " + msg, thePackageId, packageVersionId);
-						}
+					byte[] contents;
+					String contentsString;
+					try {
+						contents = packageFolder.fetchFile(nextFile);
+						contentsString = toUtf8String(contents);
+					} catch (IOException e) {
+						throw new InternalErrorException(Msg.code(1300) + e);
 					}
+
+					IBaseResource resource;
+					if (nextFile.toLowerCase().endsWith(".xml")) {
+						resource = packageContext.newXmlParser().parseResource(contentsString);
+					} else if (nextFile.toLowerCase().endsWith(".json")) {
+						resource = packageContext.newJsonParser().parseResource(contentsString);
+					} else {
+						getProcessingMessages(npmPackage).add("Not indexing file: " + nextFile);
+						continue;
+					}
+
+					/*
+					 * Re-encode the resource as JSON with the narrative removed in order to reduce the footprint.
+					 * This is useful since we'll be loading these resources back and hopefully keeping lots of
+					 * them in memory in order to speed up validation activities.
+					 */
+					String contentType = Constants.CT_FHIR_JSON_NEW;
+					ResourceUtil.removeNarrative(packageContext, resource);
+					byte[] minimizedContents = packageContext.newJsonParser().encodeResourceToString(resource).getBytes(StandardCharsets.UTF_8);
+
+					IBaseBinary resourceBinary = createPackageResourceBinary(nextFile, minimizedContents, contentType);
+					ResourceTable persistedResource = createResourceBinary(resourceBinary);
+
+					NpmPackageVersionResourceEntity resourceEntity = new NpmPackageVersionResourceEntity();
+					resourceEntity.setPackageVersion(packageVersion);
+					resourceEntity.setResourceBinary(persistedResource);
+					resourceEntity.setDirectory(dirName);
+					resourceEntity.setFhirVersionId(npmPackage.fhirVersion());
+					resourceEntity.setFhirVersion(fhirVersion);
+					resourceEntity.setFilename(nextFile);
+					resourceEntity.setResourceType(nextType);
+					resourceEntity.setResSizeBytes(contents.length);
+					BaseRuntimeChildDefinition urlChild = packageContext.getResourceDefinition(nextType).getChildByName("url");
+					BaseRuntimeChildDefinition versionChild = packageContext.getResourceDefinition(nextType).getChildByName("version");
+					String url = null;
+					String version = null;
+					if (urlChild != null) {
+						url = urlChild.getAccessor().getFirstValueOrNull(resource).map(t -> ((IPrimitiveType<?>) t).getValueAsString()).orElse(null);
+						resourceEntity.setCanonicalUrl(url);
+						version = versionChild.getAccessor().getFirstValueOrNull(resource).map(t -> ((IPrimitiveType<?>) t).getValueAsString()).orElse(null);
+						resourceEntity.setCanonicalVersion(version);
+					}
+					myPackageVersionResourceDao.save(resourceEntity);
+
+					String resType = packageContext.getResourceType(resource);
+					String msg = "Indexing " + resType + " Resource[" + dirName + '/' + nextFile + "] with URL: " + defaultString(url) + "|" + defaultString(version);
+					getProcessingMessages(npmPackage).add(msg);
+					ourLog.info("Package[{}#{}] " + msg, packageId, packageVersionId);
 				}
 			}
 
@@ -368,21 +383,13 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 
 			return npmPackage;
 		});
-
 	}
 
-	private String getUrl(Resource r) {
-		if (r instanceof CanonicalResource) {
-			return ((CanonicalResource) r).getUrl();
-		}
-		return null;
-	}
-	
-	private String getVersion(IBaseResource r) {
-		if (r instanceof CanonicalResource) {
-			return ((CanonicalResource) r).getVersion();
-		}
-		return null;
+	@Override
+	public NpmPackage addPackageToCache(String thePackageId, String thePackageVersionId, InputStream thePackageTgzInputStream, String theSourceDesc) throws IOException {
+		NpmPackageData npmData = myPackageLoaderSvc.createNpmPackageDataFromData(thePackageId, thePackageVersionId, theSourceDesc, thePackageTgzInputStream);
+
+		return addPackageToCacheInternal(npmData);
 	}
 
 	private ResourceTable createResourceBinary(IBaseBinary theResourceBinary) {
@@ -447,24 +454,29 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 	@Override
 	@Transactional
 	public NpmPackage loadPackage(String thePackageId, String thePackageVersion) throws FHIRException, IOException {
+		// check package cache
 		NpmPackage cachedPackage = loadPackageFromCacheOnly(thePackageId, thePackageVersion);
 		if (cachedPackage != null) {
 			return cachedPackage;
 		}
 
-		InputStreamWithSrc pkg = super.loadFromPackageServer(thePackageId, thePackageVersion);
-		if (pkg == null) {
-			throw new ResourceNotFoundException(Msg.code(1301) + "Unable to locate package " + thePackageId + "#" + thePackageVersion);
-		}
+		// otherwise we have to load it from packageloader
+		NpmPackageData pkgData = myPackageLoaderSvc.fetchPackageFromPackageSpec(thePackageId, thePackageVersion);
 
 		try {
-			NpmPackage retVal = addPackageToCache(thePackageId, thePackageVersion == null ? pkg.version : thePackageVersion, pkg.stream, pkg.url);
-			getProcessingMessages(retVal).add(0, "Package fetched from server at: " + pkg.url);
+			// and add it to the cache
+			NpmPackage retVal = addPackageToCacheInternal(pkgData);
+			getProcessingMessages(retVal)
+				.add(0, "Package fetched from server at: " + pkgData.getPackage().url());
 			return retVal;
 		} finally {
-			pkg.stream.close();
+			pkgData.getInputStream().close();
 		}
+	}
 
+	@Override
+	public NpmPackage loadPackage(String theS) throws FHIRException, IOException {
+		return loadPackage(theS, null);
 	}
 
 	private TransactionTemplate newTxTemplate() {
@@ -479,7 +491,7 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 
 		String sourceDescription = "Embedded content";
 		if (isNotBlank(theInstallationSpec.getPackageUrl())) {
-			byte[] contents = loadPackageUrlContents(theInstallationSpec.getPackageUrl());
+			byte[] contents = myPackageLoaderSvc.loadPackageUrlContents(theInstallationSpec.getPackageUrl());
 			theInstallationSpec.setPackageContents(contents);
 			sourceDescription = theInstallationSpec.getPackageUrl();
 		}
@@ -495,32 +507,6 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 				throw new InternalErrorException(Msg.code(1302) + e);
 			}
 		});
-	}
-
-	protected byte[] loadPackageUrlContents(String thePackageUrl) {
-		if (thePackageUrl.startsWith("classpath:")) {
-			return ClasspathUtil.loadResourceAsByteArray(thePackageUrl.substring("classpath:" .length()));
-		} else if (thePackageUrl.startsWith("file:")) {
-			try {
-				byte[] bytes = Files.readAllBytes(Paths.get(new URI(thePackageUrl)));
-				return bytes;
-			} catch (IOException | URISyntaxException e) {
-				throw new InternalErrorException(Msg.code(2031) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
-			}
-		} else {
-			// matchbox: https://github.com/ahdis/matchbox/issues/75
-			HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
-			try {
-				HttpRequest httpRequest = HttpRequest.newBuilder(new URI(thePackageUrl)).build();
-				HttpResponse<byte[]> res = client.send(httpRequest, HttpResponse.BodyHandlers.ofByteArray());
-				if (res.statusCode() != 200) {
-					throw new ResourceNotFoundException(Msg.code(1303) + "Received HTTP " + res.statusCode() + " from URL: " + thePackageUrl);
-				}
-				return res.body();
-			} catch (Exception e) {
-				throw new InternalErrorException(Msg.code(1304) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
-			}
-		}
 	}
 
 	@Override
@@ -549,7 +535,7 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 
 	private IBaseResource loadPackageEntity(NpmPackageVersionResourceEntity contents) {
 		try {
-			ResourcePersistentId binaryPid = new ResourcePersistentId(contents.getResourceBinary().getId());
+			JpaPid binaryPid = JpaPid.fromId(contents.getResourceBinary().getId());
 			IBaseBinary binary = getBinaryDao().readByPid(binaryPid);
 			byte[] resourceContentsBytes= fetchBlobFromBinary(binary);
 			String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);

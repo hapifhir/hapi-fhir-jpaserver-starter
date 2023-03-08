@@ -36,8 +36,11 @@ public interface INpmPackageVersionResourceDao extends JpaRepository<NpmPackageV
 	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myCanonicalUrl = :url AND e.myFhirVersion = :fhirVersion AND e.myPackageVersion.myCurrentVersion = true")
 	Slice<NpmPackageVersionResourceEntity> findCurrentVersionByCanonicalUrl(Pageable thePage, @Param("fhirVersion") FhirVersionEnum theFhirVersion, @Param("url") String theCanonicalUrl);
 
-	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myCanonicalUrl LIKE :url AND e.myPackageVersion.myCurrentVersion = true")
-	Slice<NpmPackageVersionResourceEntity> findCurrentVersionByLikeCanonicalUrl(Pageable thePage, @Param("url") String theCanonicalUrl);
+	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myCanonicalUrl = :url AND e.myPackageVersion.myCurrentVersion = true")
+	Slice<NpmPackageVersionResourceEntity> findCurrentVersionByCanonicalUrl(Pageable thePage,  @Param("url") String theCanonicalUrl);
+
+	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myCanonicalUrl LIKE :url AND e.myFhirVersion = :fhirVersion AND e.myPackageVersion.myCurrentVersion = true")
+	Slice<NpmPackageVersionResourceEntity> findCurrentVersionByLikeCanonicalUrl(Pageable thePage,  @Param("fhirVersion") FhirVersionEnum theFhirVersion, @Param("url") String theCanonicalUrl);
 
 	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myCanonicalUrl = :url AND e.myPackageVersion.myCurrentVersion = true")
 	Slice<NpmPackageVersionResourceEntity> findCurrentByCanonicalUrl(Pageable thePage, @Param("url") String theCanonicalUrl);
@@ -60,11 +63,14 @@ public interface INpmPackageVersionResourceDao extends JpaRepository<NpmPackageV
 	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myResourceType = :resourceType AND e.myCanonicalUrl = :url AND e.myCanonicalVersion = :canonicalversion")
 	Slice<NpmPackageVersionResourceEntity> findByResourceTypeByCanonicalByCanonicalVersion(Pageable thePage, @Param("resourceType") String theResourceType, @Param("url") String theCanonicalUrl, @Param("canonicalversion") String theCanoncialVersion);
 
-	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myCanonicalUrl = :url")
-	Slice<NpmPackageVersionResourceEntity> findByCanonicalUrl(Pageable thePage, @Param("url") String theCanonicalUrl);
+	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myCanonicalUrl = :url AND e.myFhirVersion = :fhirVersion ")
+	Slice<NpmPackageVersionResourceEntity> findByCanonicalUrl(Pageable thePage,  @Param("fhirVersion") FhirVersionEnum theFhirVersion, @Param("url") String theCanonicalUrl);
 	
+	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myCanonicalUrl = :url AND e.myFhirVersion = :fhirVersion AND e.myCanonicalVersion = :canonicalversion")
+	Slice<NpmPackageVersionResourceEntity> findByCanonicalUrlByCanonicalVersion(Pageable thePage,  @Param("fhirVersion") FhirVersionEnum theFhirVersion, @Param("url") String theCanonicalUrl, @Param("canonicalversion") String theCanoncialVersion);
+
 	@Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myCanonicalUrl = :url AND e.myCanonicalVersion = :canonicalversion")
-	Slice<NpmPackageVersionResourceEntity> findByCanonicalUrlByCanonicalVersion(Pageable thePage, @Param("url") String theCanonicalUrl, @Param("canonicalversion") String theCanoncialVersion);
+	Slice<NpmPackageVersionResourceEntity> findByCanonicalUrlByCanonicalVersion(Pageable thePage,  @Param("url") String theCanonicalUrl, @Param("canonicalversion") String theCanoncialVersion);
 
 
 }
