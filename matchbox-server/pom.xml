@@ -6,13 +6,13 @@
   <parent>
     <artifactId>matchbox</artifactId>
     <groupId>matchbox.health</groupId>
-	<version>3.2.0-SNAPSHOT</version>
+	<version>3.2.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>matchbox.health</groupId>
   <artifactId>matchbox-server</artifactId>
-  <version>3.2.0-SNAPSHOT</version>
+  <version>3.2.0</version>
 
   
   <name>matchbox-server</name>
