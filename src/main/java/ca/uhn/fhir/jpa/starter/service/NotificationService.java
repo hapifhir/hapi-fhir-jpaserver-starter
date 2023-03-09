@@ -22,7 +22,7 @@ public class NotificationService {
 	private static final long DELAY = 3 * 60000;
 	private static final long DELETE_WORK_DELAY = 24 * 3600000;
 	
-	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
+//	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
 	private void sendSms() throws IOException {
 		NotificationDataSource datasource = NotificationDataSource.getInstance(); 
 		List<ComGenerator> records = datasource.fetchRecordsByScheduledDateAndStatus(DateUtilityHelper.getCurrentSqlDate(), MessageStatus.PENDING);
@@ -91,7 +91,7 @@ public class NotificationService {
 		}
 	}
 	
-	@Scheduled(fixedDelay = DELETE_WORK_DELAY, initialDelay = DELAY)
+//	@Scheduled(fixedDelay = DELETE_WORK_DELAY, initialDelay = DELAY)
 	public void deletePerviousRecords() {
 		NotificationDataSource datasource = NotificationDataSource.getInstance();
 		Date previousDate = DateUtilityHelper.getPreviousDateByDays(DateUtilityHelper.getCurrentSqlDate(), 15);

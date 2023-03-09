@@ -1391,38 +1391,25 @@ public class HelperService {
 	}
 
 	public void cacheDashboardData(List<String> facilities, String start, String end, String env) {
-	
 		List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
 		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
 		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
 		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
-		
 		Executor executor =  asyncConf.asyncExecutor();
-
 		HashMap <String,Pair<Long,Long>> orgToTiming = new HashMap();
 		List<List<String>> facilityBatches = Utils.partitionFacilities(facilities, appProperties.getExecutor_max_pool_size());
-		try {
-			int count = 0;
-			for (List<String> facilityBatch : facilityBatches) {
-				count+=1;
-				final int countFinal = count;
-					for (String facilityId : facilityBatch) {
-						Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
-						Date startDate = Date.valueOf(start);
-						while (!startDate.equals(endDate)) {
-							cacheDashboardData(facilityId, startDate, indicators, barCharts, tabularItemList, lineCharts, pieChartDefinitions,countFinal,orgToTiming);
-							startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
-						}
-						startDate = Date.valueOf(start);
-					}
+		int count = 0;
+		for (List<String> facilityBatch : facilityBatches) {
+			count+=1;
+			final int countFinal = count;
+			for (String facilityId : facilityBatch) {
+				Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
+				Date startDate = Date.valueOf(start);
+				cacheDashboardData(facilityId, startDate,endDate, indicators, barCharts, tabularItemList, lineCharts, pieChartDefinitions,countFinal,orgToTiming);
+				logger.warn("Data cached for clinic ******$$$******"+facilityId);
 			}
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-
 	}
 
 	
@@ -1446,14 +1433,14 @@ public class HelperService {
 
 	
 
-	public void cacheDashboardData(String orgId, Date date, List<IndicatorItem> indicators, List<BarChartDefinition> barCharts, List<TabularItem> tabularItems, List<LineChart> lineCharts, List<PieChartDefinition> pieChartDefinitions,int count,HashMap <String,Pair<Long,Long>> orgToTiming ) {
+	public void cacheDashboardData(String orgId, Date startDate, Date endDate, List<IndicatorItem> indicators, List<BarChartDefinition> barCharts, List<TabularItem> tabularItems, List<LineChart> lineCharts, List<PieChartDefinition> pieChartDefinitions,int count,HashMap <String,Pair<Long,Long>> orgToTiming ) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
 		long startTime = System.nanoTime();
 		DashboardModel dashboard = ReportGeneratorFactory.INSTANCE.reportGenerator().getOverallDataToCache(
 			fhirClientProvider,
 			orgId,
-			new DateRange(date.toString(), date.toString()),
+			new DateRange(startDate.toString(), endDate.toString()),
 			indicators,
 			lineCharts,
 			barCharts,
@@ -1463,28 +1450,14 @@ public class HelperService {
 		);
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
-		Future<Long> timeScoreCard = cachingService.cacheData(orgId, date, indicators,count,dashboard.getScoreCardItemList());
-		Future<Long> timeBarChart = cachingService.cacheDataForBarChart(orgId, date, barCharts,count,dashboard.getBarChartItemCollectionList());
-		Future<Long> timeLineChart = cachingService.cacheDataLineChart(orgId, date, lineCharts,count,dashboard.getLineChartItemCollections());
-		Future<Long> timePieChart = cachingService.cachePieChartData(orgId, date, pieChartDefinitions,count,dashboard.getPieChartItemList());
-		Future<Long> timeTabularChart = cachingService.cacheTabularData(orgId, date, tabularItems,count,dashboard.getTabularItemList());
-//		logger.warn(orgId+" "+date+" time for hapi search "+duration/1000000000.0);
-
-    	Pair<Long, Long> timeTakenFhirCache = null;
-		try {
-			timeTakenFhirCache = new Pair(duration,timeScoreCard.get()+timeBarChart.get()+timeLineChart.get()+timePieChart.get()+timeTabularChart.get());
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	if(orgToTiming.containsKey(orgId)) {
-			final Pair<Long,Long> value = new Pair(orgToTiming.get(orgId).first+timeTakenFhirCache.first,orgToTiming.get(orgId).second+timeTakenFhirCache.second);
-			orgToTiming.put(orgId, value);
-		}else {
-			orgToTiming.put(orgId,timeTakenFhirCache);
+		
+		while (!startDate.equals(endDate)) {
+			Future<Long> timeScoreCard = cachingService.cacheData(orgId, startDate, indicators,count,dashboard.getScoreCardItemList());
+			Future<Long> timeBarChart = cachingService.cacheDataForBarChart(orgId, startDate, barCharts,count,dashboard.getBarChartItemCollectionList());
+			Future<Long> timeLineChart = cachingService.cacheDataLineChart(orgId, startDate, lineCharts,count,dashboard.getLineChartItemCollections());
+			Future<Long> timePieChart = cachingService.cachePieChartData(orgId, startDate, pieChartDefinitions,count,dashboard.getPieChartItemList());
+			Future<Long> timeTabularChart = cachingService.cacheTabularData(orgId, startDate, tabularItems,count,dashboard.getTabularItemList());
+			startDate = Date.valueOf(startDate.toLocalDate().plusDays(1));
 		}
 		   
 	}
