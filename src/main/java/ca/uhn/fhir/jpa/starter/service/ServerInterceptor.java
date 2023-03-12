@@ -45,7 +45,7 @@ public class ServerInterceptor {
 		imagePath = path;
 	}
 	
-//	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_CREATED)
+	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_CREATED)
 	public void insert(IBaseResource theResource) throws IOException {
 		notificationDataSource = NotificationDataSource.getInstance();
 		if(theResource.fhirType().equals("Media")) {

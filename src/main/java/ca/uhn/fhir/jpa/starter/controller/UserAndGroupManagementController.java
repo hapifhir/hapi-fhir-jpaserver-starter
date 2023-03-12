@@ -98,6 +98,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("to");
 		allFilters.remove("lga");
 		allFilters.remove("env");
+		allFilters.remove("type");
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
 
 		LocalDateTime dateTimeNow = LocalDateTime.now();
@@ -116,8 +117,8 @@ public class UserAndGroupManagementController {
 			}
 
 			helperService.saveQueryResult(organizationId, startDate, endDate, filters, hashOfFormattedId,env);
-			//return ResponseEntity.ok(hashOfFormattedId);
-			return (ResponseEntity<?>) ResponseEntity.status(400);
+			return ResponseEntity.status(400).build();
+//			return (ResponseEntity<?>) ResponseEntity.status(400);
 		}
 		return ResponseEntity.ok(helperService.checkIfDataExistsInAsyncTable(hashOfFormattedId));
 
@@ -203,10 +204,7 @@ public class UserAndGroupManagementController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		if (!filters.isEmpty()) {
-			return helperService.getDataByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, type, filters,env);
-		}
-		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type,env);
+		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type,filters,env);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/linechart")
@@ -229,10 +227,7 @@ public class UserAndGroupManagementController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		if (!filters.isEmpty()) {
-			return helperService.getLineChartByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, type, filters,env);
-		}
-		return helperService.getLineChartByPractitionerRoleId(practitionerRoleId, startDate, endDate, type,env);
+		return helperService.getLineChartByPractitionerRoleId(practitionerRoleId, startDate, endDate, type,filters,env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/pieChartData")
@@ -243,7 +238,6 @@ public class UserAndGroupManagementController {
 	){
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
-		ReportType type = ReportType.valueOf(allFilters.get("type"));
 		allFilters.remove("from");
 		allFilters.remove("to");
 		allFilters.remove("type");
@@ -252,10 +246,8 @@ public class UserAndGroupManagementController {
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		if(!filters.isEmpty()){
-			return helperService.getPieChartDataByPractitionerRoleIdWithFilters(practitionerRoleId, startDate, endDate, filters,env);
-		}
-		return helperService.getPieChartDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type,env);
+		
+		return helperService.getPieChartDataByPractitionerRoleId(practitionerRoleId, startDate, endDate,filters,env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/tabularData")
@@ -270,6 +262,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("to");
 		allFilters.remove("lga");
 		allFilters.remove("env");
+		allFilters.remove("type");
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
@@ -295,7 +288,6 @@ public class UserAndGroupManagementController {
 	) {
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
-		ReportType type = ReportType.valueOf(allFilters.get("type"));
 		allFilters.remove("from");
 		allFilters.remove("to");
 		allFilters.remove("type");
@@ -307,10 +299,7 @@ public class UserAndGroupManagementController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		if (!filters.isEmpty()) {
-			return helperService.getBarChartDataWithFilters(practitionerRoleId, startDate, endDate, type, filters,env);
-		}
-		return helperService.getBarChartData(practitionerRoleId, startDate, endDate, type,env);
+		return helperService.getBarChartData(practitionerRoleId, startDate, endDate,filters,env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/analytics")
@@ -324,11 +313,16 @@ public class UserAndGroupManagementController {
 			return ResponseEntity.ok("Error : This user is not mapped to any organization");
 		}
 		List<AnalyticItem> analyticItems = new ArrayList<>();
-		List<AnalyticItem> timeSpentAnalyticsItems = bigQueryService.timeSpentOnScreenAnalyticItems(organization);
-		if (timeSpentAnalyticsItems == null) {
-			return ResponseEntity.ok("Error: Unable to find file or fetch screen view information");
+		try {
+			List<AnalyticItem> timeSpentAnalyticsItems = bigQueryService.timeSpentOnScreenAnalyticItems(organization);
+			if (timeSpentAnalyticsItems == null) {
+				return ResponseEntity.ok("Error: Unable to find file or fetch screen view information");
+			}	
+			analyticItems.addAll(timeSpentAnalyticsItems);
+		}catch(Exception e) {
+			
 		}
-		analyticItems.addAll(timeSpentAnalyticsItems);
+		
 		List<AnalyticItem> maternalAnalyticsItems = helperService.getMaternalAnalytics(organization.getId(),env);
 		if (maternalAnalyticsItems == null) {
 			return ResponseEntity.ok("Error: Unable to find analytics file");
@@ -365,32 +359,6 @@ public class UserAndGroupManagementController {
 		oclQrRequest.setHumanReadableFlag(humanReadableFlag);
 		oclQrRequest.setErrorCorrectionLevelBits(errorCorrectionLevelBits);
 		return ResponseEntity.ok(qrService.getOclQr(oclQrRequest));
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value = "/cacheDashboardData")
-	public ResponseEntity<?> cacheDashboardData(
-		@RequestHeader(name = "Authorization") String token,
-		@RequestParam("from") String from,
-		@RequestParam("to") String to,
-		@RequestParam(value = "organizationId", required = false) String organizationId,
-		@RequestParam("env") String env) {
-		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
-		if (practitionerRoleId == null) {
-			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
-		}
-		if (organizationId == null) {
-			organizationId = helperService.getOrganizationIdByPractitionerRoleId(practitionerRoleId);
-			if (organizationId == null) {
-				return ResponseEntity.ok("Error : This user is not mapped to any organization");
-			}
-		}
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = helperService.fetchIdsAndOrgIdToChildrenMapPair(organizationId);
-		helperService.cacheDashboardScoreCardData(idsAndOrgIdToChildrenMapPair.first,from, to, env);
-		helperService.cacheDashboardTabularData(idsAndOrgIdToChildrenMapPair.first,from, to, env);
-		helperService.cacheDashboardBarChartData(idsAndOrgIdToChildrenMapPair.first,from, to, env);
-		helperService.cacheDashboardPieChartData(idsAndOrgIdToChildrenMapPair.first,from, to, env);
-		helperService.cacheDashboardLineChartData(idsAndOrgIdToChildrenMapPair.first,from, to, env);
-		return ResponseEntity.ok("Caching in Progress");
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/cacheDashboardDataSequential")
