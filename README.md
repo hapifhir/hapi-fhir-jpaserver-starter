@@ -201,35 +201,11 @@ hapi-fhir/hapi-fhir-jpaserver-starter:latest
 
 Much of this HAPI starter project can be configured using the yaml file in _src/main/resources/application.yaml_. By default, this starter project is configured to use H2 as the database.
 
-### MySql configuration
+### MySQL configuration
 
-To configure the starter app to use MySQL, instead of the default H2, update the application.yaml file to have the following:
+HAPI FHIR JPA Server does not support MySQL as it is deprecated.
 
-```yaml
-spring:
-  datasource:
-    url: 'jdbc:mysql://localhost:3306/hapi_dstu3'
-    username: admin
-    password: admin
-    driverClassName: com.mysql.jdbc.Driver
-```
-
-Also, make sure you are not setting the Hibernate dialect explicitly, in other words remove any lines similar to:
-
-```
-hibernate.dialect: {some none MySQL dialect}
-```
-
-On some systems, it might be necessary to override hibernate's default naming strategy. The naming strategy must be set using spring.jpa.hibernate.physical_naming_strategy.
-
-```yaml
-spring:
-  jpa:
-    hibernate.physical_naming_strategy: NAME_OF_PREFERRED_STRATEGY
-```
-On linux systems or when using docker mysql containers, it will be necessary to review the case-sensitive setup for
-mysql schema identifiers. See  https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html. We suggest you
-set `lower_case_table_names=1` during mysql startup.
+See more at https://hapifhir.io/hapi-fhir/docs/server_jpa/database_support.html
 
 ### PostgreSQL configuration
 
@@ -238,13 +214,16 @@ To configure the starter app to use PostgreSQL, instead of the default H2, updat
 ```yaml
 spring:
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/hapi_dstu3'
+    url: 'jdbc:postgresql://localhost:5432/hapi'
     username: admin
     password: admin
     driverClassName: org.postgresql.Driver
   jpa:
     properties:
       hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.search.enabled: false
+
+      # Then comment all hibernate.search.backend.*
 ```
 
 Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
@@ -274,6 +253,16 @@ Because the integration tests within the project rely on the default H2 database
 
 NOTE: MS SQL Server by default uses a case-insensitive codepage. This will cause errors with some operations - such as when expanding case-sensitive valuesets (UCUM) as there are unique indexes defined on the terminology tables for codes.
 It is recommended to deploy a case-sensitive database prior to running HAPI FHIR when using MS SQL Server to avoid these and potentially other issues.
+
+## Adding custom interceptors
+Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server. 
+Interceptors will be discovered in one of two ways: 
+
+1) discovered from the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
+
+or 
+
+2) classes will be instantiated via reflection if no matching Bean is found
 
 ## Customizing The Web Testpage UI
 
@@ -327,19 +316,23 @@ reached at http://localhost:8080/.
 In order to use another port, change the `ports` parameter
 inside `docker-compose.yml` to `8888:8080`, where 8888 is a port of your choice.
 
-The docker compose set also includes my MySQL database, if you choose to use MySQL instead of H2, change the following
-properties in application.yaml:
+The docker compose set also includes PostgreSQL database, if you choose to use PostgreSQL instead of H2, change the following
+properties in `src/main/resources/application.yaml`:
 
 ```yaml
 spring:
   datasource:
-    url: 'jdbc:mysql://hapi-fhir-mysql:3306/hapi'
+    url: 'jdbc:postgresql://hapi-fhir-postgres:5432/hapi'
     username: admin
     password: admin
-    driverClassName: com.mysql.jdbc.Driver
-```
+    driverClassName: org.postgresql.Driver
+jpa:
+  properties:
+    hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+    hibernate.search.enabled: false
 
-Also, make sure you are not setting the Hibernate Dialect explicitly, see more details in the section about MySQL.
+    # Then comment all hibernate.search.backend.*
+```
 
 ## Running hapi-fhir-jpaserver directly from IntelliJ as Spring Boot
 Make sure you run with the maven profile called ```boot``` and NOT also ```jetty```. Then you are ready to press debug the project directly without any extra Application Servers.
@@ -376,8 +369,6 @@ Run the configuration.
 
 Point your browser (or fiddler, or what have you) to `http://localhost:8080/hapi/baseDstu3/Patient`
 
-It is important to use MySQL5Dialect when using MySQL version 5+.
-
 ## Enabling Subscriptions
 
 The server may be configured with subscription support by enabling properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file:
@@ -388,9 +379,9 @@ The server may be configured with subscription support by enabling properties in
 
 - `hapi.fhir.subscription.websocket_enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/websocket](ws://localhost:8080/websocket)
 
-## Enabling CQL
+## Enabling Clinical Reasoning
 
-Set `hapi.fhir.cql_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable [Clinical Quality Language](https://cql.hl7.org/) on this server.
+Set `hapi.fhir.cr_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable [Clinical Quality Language](https://cql.hl7.org/) on this server.
 
 ## Enabling MDM (EMPI)
 
@@ -459,4 +450,3 @@ docker run --rm -it -p 8080:8080 \
 ```
 
 You can configure the agent using environment variables or Java system properties, see <https://opentelemetry.io/docs/instrumentation/java/automatic/agent-config/> for details.
-

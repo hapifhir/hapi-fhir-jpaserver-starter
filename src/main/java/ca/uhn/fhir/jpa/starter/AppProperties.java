@@ -21,7 +21,8 @@ import java.util.Objects;
 @EnableConfigurationProperties
 public class AppProperties {
 
-  private Boolean cql_enabled = false;
+  private Boolean cr_enabled = false;
+  private Boolean ips_enabled = false;
   private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
   private boolean advanced_lucene_indexing = false;
@@ -72,6 +73,8 @@ public class AppProperties {
   private Boolean install_transitive_ig_dependencies = true;
   private Map<String, ImplementationGuide> implementationGuides = null;
 
+	private String staticLocation = null;
+
   private Boolean lastn_enabled = false;
   private boolean store_resource_in_lucene_index_enabled = false;
   private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
@@ -82,6 +85,24 @@ public class AppProperties {
   private Integer bundle_batch_pool_size = 20;
   private Integer bundle_batch_pool_max_size = 100;
   private final List<String> local_base_urls = new ArrayList<>();
+  
+  private final List<String> custom_interceptor_classes = new ArrayList<>();
+
+  public List<String> getCustomInterceptorClasses() {
+    return custom_interceptor_classes;
+  }
+
+
+	public String getStaticLocation() {
+		return staticLocation;
+	}
+
+	public void setStaticLocation(String staticLocation) {
+		this.staticLocation = staticLocation;
+	}
+
+
+  private Oauth oauth = new Oauth();
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
@@ -131,13 +152,22 @@ public class AppProperties {
     this.partitioning = partitioning;
   }
 
-  public Boolean getCql_enabled() {
-    return cql_enabled;
+  public Boolean getCr_enabled() {
+    return cr_enabled;
   }
 
-  public void setCql_enabled(Boolean cql_enabled) {
-    this.cql_enabled = cql_enabled;
+  public void setCr_enabled(Boolean cr_enabled) {
+    this.cr_enabled = cr_enabled;
   }
+
+  public Boolean getIps_enabled() {
+	return ips_enabled;
+ }
+
+ public void setIps_enabled(Boolean ips_enabled) {
+	this.ips_enabled = ips_enabled;
+ }
+
 
   public Boolean getMdm_enabled() {
     return mdm_enabled;
@@ -201,6 +231,14 @@ public class AppProperties {
 
   public void setSupported_resource_types(List<String> supported_resource_types) {
     this.supported_resource_types = supported_resource_types;
+  }
+
+  public Oauth getOauth() {
+    return oauth;
+  }
+
+  public void setOauth(Oauth oauth) {
+    this.oauth = oauth;
   }
 
 	public Logger getLogger() {
@@ -559,6 +597,63 @@ public class AppProperties {
     }
 
 
+  }
+
+  public static class Oauth {
+    private Boolean enabled = false;
+    private String token_url;
+    private String manage_url;
+    private String client_id;
+    private String user_role;
+    private String admin_role;
+
+    public Boolean getEnabled() {
+      return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+      this.enabled = enabled;
+    }
+
+    public String getToken_url() {
+      return token_url;
+    }
+
+    public void setToken_url(String token_url) {
+      this.token_url = token_url;
+    }
+
+    public String getManage_url() {
+      return manage_url;
+    }
+
+    public void setManage_url(String manage_url) {
+      this.manage_url = manage_url;
+    }
+
+    public String getClient_id() {
+      return client_id;
+    }
+
+    public void setClient_id(String client_id) {
+      this.client_id = client_id;
+    }
+    
+    public String getUser_role() {
+      return user_role;
+    }
+
+    public void setUser_role(String user_role) {
+      this.user_role = user_role;
+    }
+
+    public String getAdmin_role() {
+      return manage_url;
+    }
+
+    public void setAdmin_role(String admin_role) {
+      this.admin_role = admin_role;
+    }
   }
 
   public static class Logger {
