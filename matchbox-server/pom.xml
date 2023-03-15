@@ -6,52 +6,14 @@
         <artifactId>matchbox</artifactId>
         <groupId>matchbox.health</groupId>
         <version>3.2.0</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>matchbox.health</groupId>
     <artifactId>matchbox-server</artifactId>
-    <version>3.2.0</version>
-
     <name>matchbox-server</name>
     <description>An open-source implementation to support testing and implementation of FHIR based solutions and map or
         capture health data into HL7® FHIR®
     </description>
-    <url>https://matchbox.health</url>
-
-    <organization>
-        <name>ahdis ag</name>
-        <url>https://ahdis.ch</url>
-    </organization>
-
-    <inceptionYear>2020</inceptionYear>
-
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/ahdis/matchbox/issues</url>
-    </issueManagement>
-
-    <prerequisites>
-        <maven>3.6.3</maven>
-    </prerequisites>
-
     <packaging>jar</packaging>
-
-    <scm>
-        <connection>scm:git:git@github.com:ahdis/matchbox.git</connection>
-        <url>scm:git:git@github.com:ahdis/matchbox.git</url>
-        <developerConnection>scm:git:git@github.com:ahdis/matchbox.git</developerConnection>
-    </scm>
-
-    <repositories>
-        <repository>
-            <id>oss-snapshots</id>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
