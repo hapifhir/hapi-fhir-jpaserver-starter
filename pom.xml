@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
     <!-- 'mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 -e spring.batch.job.enabled=false distroless-hapi' -->
-    <!-- Note: HAPI projects use the "hapi-fhir" POM as their base to provide easy management. You do not need to use this in your own projects, so the "parent" tag and it's contents below may be removed if you are using this file as a basis for your own project. -->
-    <!-- <parent><groupId>matcbhox.</groupId><artifactId>matchbox</artifactId><version>6.0.0-PRE10-SNAPSHOT</version></parent> -->
+    <!-- Note: HAPI projects use the "hapi-fhir" POM as their base to provide easy management. You do not need to use this in your own projects, so the "parent" tag and its contents below may be removed if you are using this file as a basis for your own project. -->
+    <!-- <parent><groupId>matchbox.</groupId><artifactId>matchbox</artifactId><version>6.0.0-PRE10-SNAPSHOT</version></parent> -->
 
     <groupId>health.matchbox</groupId>
     <artifactId>matchbox</artifactId>
@@ -106,10 +106,6 @@
         <byte_buddy_version>1.10.21</byte_buddy_version>
         <apache_poi_version>4.1.1</apache_poi_version>
     </properties>
-
-    <prerequisites>
-        <maven>3.6.3</maven>
-    </prerequisites>
 
     <scm>
         <connection>scm:git:git://github.com/ahdis/matchbox.git</connection>
@@ -302,7 +298,6 @@
                 <version>1.2</version>
             </dependency>
             <dependency>
-                <!-- TODO: it should be in plugins, and new groupId for new releases -->
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
                 <version>4.9.10</version>
