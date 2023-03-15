@@ -500,7 +500,7 @@ public class MatchboxEngine extends ValidationEngine {
 	 * Returns a canonical resource defined by its type and uri
 	 * 
 	 * @param type resource type
-	 * @param uri  resource id
+	 * @param id   resource id
 	 * @return
 	 */
 	public IBaseResource getCanonicalResourceById(String type, String id) {

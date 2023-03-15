@@ -268,7 +268,6 @@ public class MatchboxEngineSupport {
 	 * @param create if true, create a new engine
 	 * @param reload if true, reload the engine
 	 * @return matchbox-engine
-	 * @throws IOException 
 	 */
 	public synchronized MatchboxEngine getMatchboxEngine(String canonical, CliContext cliContext, boolean create, boolean reload) {
 		while (!this.isInitialized()) {
