@@ -40,10 +40,10 @@
         <activation_api_version>1.2.0</activation_api_version>
         <apache_karaf_version>4.2.5</apache_karaf_version>
         <aries_spifly_version>1.2</aries_spifly_version>
-        <caffeine_version>2.9.1</caffeine_version>
+        <caffeine_version>3.1.1</caffeine_version>
         <commons_codec_version>1.15</commons_codec_version>
         <commons_compress_version>1.21</commons_compress_version>
-        <commons_text_version>1.9</commons_text_version>
+        <commons_text_version>1.10.0</commons_text_version>
         <commons_io_version>2.11.0</commons_io_version>
         <commons_lang3_version>3.12.0</commons_lang3_version>
         <com_jamesmurty_utils_version>1.2</com_jamesmurty_utils_version>
@@ -51,7 +51,7 @@
         <derby_version>10.14.2.0</derby_version>
         <!--<derby_version>10.15.1.3</derby_version> -->
         <error_prone_core_version>2.10.0</error_prone_core_version>
-        <mockito_version>4.2.0</mockito_version>
+        <mockito_version>4.8.1</mockito_version>
         <nullaway_version>0.7.9</nullaway_version>
         <guava_version>31.0.1-jre</guava_version>
         <gson_version>2.8.9</gson_version>
@@ -63,24 +63,23 @@
         <jersey_version>3.0.3</jersey_version>
         <jetty_version>9.4.44.v20210927</jetty_version>
         <jsr305_version>3.0.2</jsr305_version>
-        <junit_version>5.8.2</junit_version>
+        <junit_version>5.9.1</junit_version>
         <flexmark_version>0.50.40</flexmark_version>
-        <flyway_version>8.5.0</flyway_version>
-        <hibernate_version>5.6.2.Final</hibernate_version>
-        <hibernate_search_version>6.0.3.Final</hibernate_search_version>
-        <lombok-version>1.18.24</lombok-version>
+        <flyway_version>9.4.0</flyway_version>
+        <hibernate_version>5.6.12.Final</hibernate_version>
+        <hibernate_search_version>6.1.6.Final</hibernate_search_version>
         <!-- Update lucene version when you update hibernate-search version -->
-        <lucene_version>8.7.0</lucene_version>
+        <lucene_version>8.11.0</lucene_version>
         <hamcrest_version>2.2</hamcrest_version>
         <hibernate_validator_version>6.1.5.Final</hibernate_validator_version>
         <httpcore_version>4.4.13</httpcore_version>
         <httpclient_version>4.5.13</httpclient_version>
-        <jackson_version>2.13.2</jackson_version>
-        <jackson_databind_version>2.13.2.2</jackson_databind_version>
+        <jackson_version>2.14.1</jackson_version>
+        <jackson_databind_version>2.14.1</jackson_databind_version>
         <maven_assembly_plugin_version>3.3.0</maven_assembly_plugin_version>
         <maven_license_plugin_version>1.8</maven_license_plugin_version>
         <maven_surefire_version>3.0.0-M5</maven_surefire_version>
-        <okhttp_version>3.8.1</okhttp_version>
+        <okhttp_version>4.10.0</okhttp_version>
         <poi_version>4.1.2</poi_version>
         <poi_ooxml_schemas_version>1.4</poi_ooxml_schemas_version>
         <resteasy_version>5.0.2.Final</resteasy_version>
@@ -95,15 +94,15 @@
         <spring_version>5.3.18</spring_version>
         <spring_data_version>2.6.1</spring_data_version>
         <spring_batch_version>4.3.3</spring_batch_version>
-        <spring_boot_version>2.6.2</spring_boot_version>
+        <spring_boot_version>2.7.5</spring_boot_version>
         <spring_retry_version>1.2.2.RELEASE</spring_retry_version>
         <stax2_api_version>3.1.4</stax2_api_version>
-        <testcontainers_version>1.16.3</testcontainers_version>
+        <testcontainers_version>1.17.1</testcontainers_version>
         <thymeleaf-version>3.0.14.RELEASE</thymeleaf-version>
         <woodstox_core_asl_version>4.4.1</woodstox_core_asl_version>
         <jacoco_version>0.8.7</jacoco_version>
         <info_cqframework_version>1.5.1</info_cqframework_version>
-        <lombok_version>1.18.22</lombok_version>
+        <lombok_version>1.18.24</lombok_version>
         <byte_buddy_version>1.10.21</byte_buddy_version>
         <apache_poi_version>4.1.1</apache_poi_version>
     </properties>
@@ -128,138 +127,317 @@
         </repository>
     </repositories>
 
-    <dependencies>
-        <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>org.hl7.fhir.r4</artifactId>
-            <version>${fhir.core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>org.hl7.fhir.r5</artifactId>
-            <version>${fhir.core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>org.hl7.fhir.convertors</artifactId>
-            <version>${fhir.core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>org.hl7.fhir.validation</artifactId>
-            <version>${fhir.core.version}</version>
-        </dependency>
-        <!-- This dependency is used for the "FHIR Tester" web app overlay <dependency><groupId>ca.uhn.hapi.fhir</groupId><artifactId>hapi-fhir-testpage-overlay</artifactId><version>${hapi.fhir.version}</version><type>war</type><scope>provided</scope></dependency><dependency><groupId>ca.uhn.hapi.fhir</groupId><artifactId>hapi-fhir-testpage-overlay</artifactId><version>${hapi.fhir.version}</version><classifier>classes</classifier></dependency> -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-to-slf4j</artifactId>
-            <version>${log4j_to_slf4j_version}</version>
-        </dependency>
-        <!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well. Otherwise the following can be omitted. <dependency><groupId>org.thymeleaf</groupId><artifactId>thymeleaf</artifactId></dependency> -->
-        <!-- You may not need this if you are deploying to an application server which provides database connection pools itself. -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-dbcp2</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-            <version>2.9.0</version>
-        </dependency>
-        <!-- The following dependencies are only needed for automated unit tests, you do not neccesarily need them to run the example. -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlets</artifactId>
-            <scope>test</scope>
-            <version>${jetty_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <scope>test</scope>
-            <version>${jetty_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <scope>test</scope>
-            <version>${jetty_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-util</artifactId>
-            <scope>test</scope>
-            <version>${jetty_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <scope>test</scope>
-            <version>${jetty_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
-            <scope>test</scope>
-            <version>${testcontainers_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <scope>test</scope>
-            <version>${testcontainers_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-            <version>${testcontainers_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hl7.fhir.testcases</groupId>
-            <artifactId>fhir-test-cases</artifactId>
-            <version>1.1.56</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- For some reason JavaDoc crashed during site generation unless we have this dependency -->
-        <dependency>
-            <groupId>javax.interceptor</groupId>
-            <artifactId>javax.interceptor-api</artifactId>
-            <scope>provided</scope>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>pl.project13.maven</groupId>
-            <artifactId>git-commit-id-plugin</artifactId>
-            <version>4.9.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok-version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- dependencies for test -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.7.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.7.2</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>org.hl7.fhir.r4</artifactId>
+                <version>${fhir.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>org.hl7.fhir.r5</artifactId>
+                <version>${fhir.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>org.hl7.fhir.convertors</artifactId>
+                <version>${fhir.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>org.hl7.fhir.validation</artifactId>
+                <version>${fhir.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>hapi-fhir-base</artifactId>
+                <version>${hapi.fhir.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>jcl-over-slf4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>org.hl7.fhir.utilities</artifactId>
+                <version>${fhir.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>hapi-fhir-jpaserver-base</artifactId>
+                <version>${hapi.fhir.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-jcl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.zaxxer</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>hapi-fhir-jpaserver-mdm</artifactId>
+                <version>${hapi.fhir.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>hapi-fhir-server-openapi</artifactId>
+                <version>${hapi.fhir.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>hapi-fhir-client</artifactId>
+                <version>${hapi.fhir.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>hapi-fhir-test-utilities</artifactId>
+                <version>${hapi.fhir.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- This dependency is used for the "FHIR Tester" web app overlay <dependency><groupId>ca.uhn.hapi.fhir</groupId><artifactId>hapi-fhir-testpage-overlay</artifactId><version>${hapi.fhir.version}</version><type>war</type><scope>provided</scope></dependency><dependency><groupId>ca.uhn.hapi.fhir</groupId><artifactId>hapi-fhir-testpage-overlay</artifactId><version>${hapi.fhir.version}</version><classifier>classes</classifier></dependency> -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.10</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-to-slf4j</artifactId>
+                <version>${log4j_to_slf4j_version}</version>
+            </dependency>
+            <!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well. Otherwise the following can be omitted. <dependency><groupId>org.thymeleaf</groupId><artifactId>thymeleaf</artifactId></dependency> -->
+            <!-- You may not need this if you are deploying to an application server which provides database connection pools itself. -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-dbcp2</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+                <version>2.9.0</version>
+            </dependency>
+            <!-- The following dependencies are only needed for automated unit tests, you do not neccesarily need them to run the example. -->
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-servlets</artifactId>
+                <scope>test</scope>
+                <version>${jetty_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-servlet</artifactId>
+                <scope>test</scope>
+                <version>${jetty_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <scope>test</scope>
+                <version>${jetty_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-util</artifactId>
+                <scope>test</scope>
+                <version>${jetty_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-webapp</artifactId>
+                <scope>test</scope>
+                <version>${jetty_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.websocket</groupId>
+                <artifactId>websocket-server</artifactId>
+                <scope>test</scope>
+                <version>${jetty_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <scope>test</scope>
+                <version>${testcontainers_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <scope>test</scope>
+                <version>${testcontainers_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <scope>test</scope>
+                <version>${testcontainers_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hl7.fhir.testcases</groupId>
+                <artifactId>fhir-test-cases</artifactId>
+                <version>1.1.56</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- For some reason JavaDoc crashed during site generation unless we have this dependency -->
+            <dependency>
+                <groupId>javax.interceptor</groupId>
+                <artifactId>javax.interceptor-api</artifactId>
+                <scope>provided</scope>
+                <version>1.2</version>
+            </dependency>
+            <dependency>
+                <!-- TODO: it should be in plugins, and new groupId for new releases -->
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.9.10</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok_version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- dependencies for test -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>5.7.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>5.7.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.websocket</groupId>
+                <artifactId>websocket-api</artifactId>
+                <version>${jetty_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.websocket</groupId>
+                <artifactId>websocket-client</artifactId>
+                <version>${jetty_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.25</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.3.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>2.1.212</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>1.29</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>bootstrap</artifactId>
+                <version>5.1.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>Eonasdan-bootstrap-datetimepicker</artifactId>
+                <version>4.17.47</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>font-awesome</artifactId>
+                <version>5.8.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>awesome-bootstrap-checkbox</artifactId>
+                <version>1.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>jstimezonedetect</artifactId>
+                <version>1.0.6</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>select2</artifactId>
+                <version>4.0.13</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.webjars</groupId>
+                        <artifactId>jquery</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>jquery</artifactId>
+                <version>3.5.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>moment</artifactId>
+                <version>2.27.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.awaitility</groupId>
+                <artifactId>awaitility</artifactId>
+                <version>4.1.1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${spring_boot_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring_boot_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring_boot_version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <!-- Tells Maven to name the generated WAR file as ROOT.war -->
@@ -271,7 +449,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
                 <configuration>
                     <release>11</release>
                     <encoding>${project.build.sourceEncoding}</encoding>
@@ -280,7 +457,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.0</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
@@ -290,7 +466,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.2</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 </configuration>
@@ -306,7 +481,6 @@
             <plugin>
                 <groupId>org.basepom.maven</groupId>
                 <artifactId>duplicate-finder-maven-plugin</artifactId>
-                <version>1.5.1</version>
                 <executions>
                     <execution>
                         <id>default</id>
@@ -332,7 +506,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>3.0.0</version>
                 <inherited>true</inherited>
                 <executions>
                     <execution>
@@ -373,6 +546,46 @@
         </resources>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.22.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.basepom.maven</groupId>
+                    <artifactId>duplicate-finder-maven-plugin</artifactId>
+                    <version>1.5.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>buildnumber-maven-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring_boot_version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven_surefire_version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.3.2</version>
+                </plugin>
                 <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
