@@ -290,13 +290,6 @@
                 <version>1.1.56</version>
                 <scope>test</scope>
             </dependency>
-            <!-- For some reason JavaDoc crashed during site generation unless we have this dependency -->
-            <dependency>
-                <groupId>javax.interceptor</groupId>
-                <artifactId>javax.interceptor-api</artifactId>
-                <scope>provided</scope>
-                <version>1.2</version>
-            </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>

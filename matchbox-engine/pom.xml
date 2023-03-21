@@ -52,12 +52,6 @@
 
         <!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well. Otherwise the following can be omitted. <dependency> <groupId>org.thymeleaf</groupId> <artifactId>thymeleaf</artifactId> </dependency> -->
 
-        <!-- For some reason JavaDoc crashed during site generation unless we have this dependency -->
-        <dependency>
-            <groupId>javax.interceptor</groupId>
-            <artifactId>javax.interceptor-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
