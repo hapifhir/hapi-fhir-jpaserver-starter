@@ -69,7 +69,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 				return authorizeBasicAuth(theRequest);
 			}
 		} catch (Exception e) {
-			logger.info("Unexpected authorization error", e);
+			logger.warn("Unexpected authorization error :{}", e.getMessage());
 			return denyAll();
 		}
 
@@ -88,12 +88,12 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	private List<IAuthRule> authorizeOAuth(RequestDetails theRequest) throws Exception {
 		String token = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
 		if (ObjectUtils.isEmpty(token)) {
-			logger.info("Authorization failure - missing authorization header");
+			logger.warn("Authorization failure - missing authorization header");
 			return denyAll();
 		}
 
 		if (!token.toUpperCase().startsWith(OAUTH_TOKEN_PREFIX)) {
-			logger.info("Authorization failure - invalid authorization header");
+			logger.warn("Authorization failure - invalid authorization header");
 			return denyAll();
 		}
 
@@ -114,12 +114,12 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			  return ObjectUtils.isEmpty(patientId) ? allowAll() : allowForClaimResourceId(theRequest,patientId);
 			}
 		} catch (TokenExpiredException e) {
-			logger.info("Authorization failure - token has expired");
+			logger.warn("Authorization failure - token has expired");
 		} catch (Exception e) {
-			logger.info("Unexpected exception verifying token", e);
+			logger.warn("Unexpected exception verifying token: {}", e.getMessage());
 		}
 
-		logger.info("Authentication failure");
+		logger.warn("Authentication failure");
 		return denyAll();
 	}
 	
