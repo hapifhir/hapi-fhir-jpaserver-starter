@@ -1,7 +1,5 @@
 package ch.ahdis.matchbox.engine.tests;
 
-import static org.junit.Assert.assertNotEquals;
-
 /*
  * #%L
  * Matchbox Engine
@@ -11,9 +9,9 @@ import static org.junit.Assert.assertNotEquals;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,8 +20,8 @@ import static org.junit.Assert.assertNotEquals;
  * #L%
  */
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -124,7 +122,7 @@ class FhirMappingLanguageTests {
 		assertTrue(engine.getCanonicalResource(sm.getUrl())!= null);
 		assertTrue(engine.getContext().fetchResource( org.hl7.fhir.r5.model.StructureMap.class, sm.getUrl()) != null);
 
-		
+
 		String qr = getFileAsStringFromResources("/questionnairepatient.xml");
 
 		XmlParser xml = new XmlParser();
@@ -202,7 +200,7 @@ class FhirMappingLanguageTests {
 				eob.getType().getCodingFirstRep().getSystem());
 		assertEquals("notification", eob.getType().getCodingFirstRep().getCode());
 	}
-	
+
 	@Test
 	void testCast() throws FHIRException, IOException {
 		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);

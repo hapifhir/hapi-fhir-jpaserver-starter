@@ -258,13 +258,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- For some reason JavaDoc crashed during site generation unless we have this dependency -->
-        <dependency>
-            <groupId>javax.interceptor</groupId>
-            <artifactId>javax.interceptor-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-test-utilities</artifactId>
@@ -284,10 +277,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>pl.project13.maven</groupId>
-            <artifactId>git-commit-id-plugin</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -467,38 +456,6 @@
                 <filtering>false</filtering>
             </resource>
         </resources>
-        <pluginManagement>
-            <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            org.codehaus.mojo
-                                        </groupId>
-                                        <artifactId>
-                                            buildnumber-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [1.4,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>create-metadata</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 
     <profiles>

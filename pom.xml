@@ -28,6 +28,13 @@
         <url>https://github.com/ahdis/matchbox/issues</url>
     </issueManagement>
 
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -289,18 +296,6 @@
                 <artifactId>fhir-test-cases</artifactId>
                 <version>1.1.56</version>
                 <scope>test</scope>
-            </dependency>
-            <!-- For some reason JavaDoc crashed during site generation unless we have this dependency -->
-            <dependency>
-                <groupId>javax.interceptor</groupId>
-                <artifactId>javax.interceptor-api</artifactId>
-                <scope>provided</scope>
-                <version>1.2</version>
-            </dependency>
-            <dependency>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <version>4.9.10</version>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -587,30 +582,25 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <version>3.3.2</version>
                 </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
                 <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.codehaus.mojo</groupId>
-                                        <artifactId>buildnumber-maven-plugin</artifactId>
-                                        <versionRange>[1.4,)</versionRange>
-                                        <goals>
-                                            <goal>create-metadata</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore/>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.2.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.13</version>
                 </plugin>
             </plugins>
         </pluginManagement>
