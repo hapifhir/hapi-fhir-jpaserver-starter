@@ -3,11 +3,8 @@ import { FhirConfigService } from '../fhirConfig.service';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormControl, Validators } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import FhirClient from 'fhir-kit-client';
 import debug from 'debug';
-import { add } from 'ramda';
-import { timeStamp } from 'console';
 import { FhirPathService } from '../fhirpath.service';
 
 @Component({

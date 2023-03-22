@@ -2,11 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FhirConfigService } from '../fhirConfig.service';
 import { Subscription } from 'rxjs';
 import debug from 'debug';
-import { MatTableDataSource } from '@angular/material/table';
-import * as R from 'ramda';
 import Client from 'fhir-kit-client';
 import { Router } from '@angular/router';
-import { ThrowStmt } from '@angular/compiler';
 
 // currently R4 only 'http://localhost:8080/baseDstu3',
 // 'http://vonk.furore.com',
