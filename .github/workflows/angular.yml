@@ -1,0 +1,47 @@
+name: Build the Angular GUI and commit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-commit:
+    runs-on: ubuntu-latest
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+    defaults:
+      run:
+        working-directory: ./matchbox-fronted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          # https://github.com/actions/setup-node
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Remove the old GUI
+        run: rm -rf ../matchbox-server/src/main/resources/static
+
+      - name: Move the new GUI
+        run: mv dist ../matchbox-server/src/main/resources/static
+
+      - name: Commit
+        if: success()
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Update the Angular GUI
+          file_pattern: "matchbox-server/src/main/resources/static"
