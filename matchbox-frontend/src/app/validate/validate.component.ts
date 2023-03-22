@@ -2,13 +2,9 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FhirConfigService } from '../fhirConfig.service';
 import FhirClient from 'fhir-kit-client';
 import { FormControl } from '@angular/forms';
-import { buffer, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import pako from 'pako';
 import untar from 'js-untar';
 import { MatTableDataSource } from '@angular/material/table';
-import { DataSource } from '@angular/cdk/collections';
-import { timeStamp } from 'console';
-import { HighlightSpanKind } from 'typescript';
 import { IDroppedBlob } from '../upload/upload.component';
 
 interface ITarEntry {
@@ -460,7 +456,8 @@ export class ValidateComponent implements OnInit {
           }
           this.selectedProfile = res.meta?.profile?.[0];
           if (this.selectedProfile == null && res?.resourceType) {
-            this.selectedProfile = 'http://hl7.org/fhir/StructureDefinition/' + res.resourceType;
+            this.selectedProfile =
+              'http://hl7.org/fhir/StructureDefinition/' + res.resourceType;
           }
         } catch (error) {
           this.errMsg = error.message;
@@ -484,17 +481,21 @@ export class ValidateComponent implements OnInit {
 
           let posProfileLeft = this.json.indexOf('profile', posRight);
           if (posProfileLeft > 0) {
-            let posProfileValue = this.json.indexOf('value="', posProfileLeft)+7;
+            let posProfileValue =
+              this.json.indexOf('value="', posProfileLeft) + 7;
             let posProfileValueRight = this.json.indexOf('"', posProfileValue);
             if (posProfileValue < posProfileValueRight) {
-              this.selectedProfile = this.json.substring(posProfileValue, posProfileValueRight);
+              this.selectedProfile = this.json.substring(
+                posProfileValue,
+                posProfileValueRight
+              );
             }
           }
 
-          if (this.selectedProfile == null && this.resourceName!=null) {
-            this.selectedProfile = 'http://hl7.org/fhir/StructureDefinition/' + this.resourceName;
+          if (this.selectedProfile == null && this.resourceName != null) {
+            this.selectedProfile =
+              'http://hl7.org/fhir/StructureDefinition/' + this.resourceName;
           }
-
         }
       }
     } else {

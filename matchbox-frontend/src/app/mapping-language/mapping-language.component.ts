@@ -4,7 +4,6 @@ import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import FhirClient from 'fhir-kit-client';
 import debug from 'debug';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-mapping-language',
