@@ -1,21 +1,17 @@
 package ca.uhn.fhir.jpa.starter.model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import javax.persistence.Index;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import java.sql.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "cache",indexes = {@Index(columnList = "indicator")})
+@Table(name = "cache")
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CacheEntity {
