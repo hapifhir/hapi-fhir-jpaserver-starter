@@ -2,28 +2,32 @@ package ca.uhn.fhir.jpa.starter.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import javax.persistence.Index;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import java.sql.Date;
+import java.util.UUID;
 
 @Entity
-@Table(name = "cache")
+@Table(name = "cache",indexes = {@Index(columnList = "indicator")})
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CacheEntity {
 
 	@Id
-	@GeneratedValue
-	private long id;
+	@Column(name = "id",  columnDefinition = "VARCHAR(36)")
+	private String id;
 
 	@Column(name = "org_id", nullable = false)
 	private String orgId;
 
+	
 	@Column(name = "indicator", nullable = false)
 	private String indicator;
 
@@ -42,6 +46,7 @@ public class CacheEntity {
 	public CacheEntity() {	}
 
 	public CacheEntity(String orgId, String indicator, Date date, Double value,Date lastUpdated) {
+		this.id = UUID.randomUUID().toString();
 		this.orgId = orgId;
 		this.indicator = indicator;
 		this.date = date;
@@ -49,11 +54,11 @@ public class CacheEntity {
 		this.lastUpdated = lastUpdated;
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
