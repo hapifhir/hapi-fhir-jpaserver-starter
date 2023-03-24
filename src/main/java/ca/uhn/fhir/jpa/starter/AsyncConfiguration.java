@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.Executor;
 
 @Configuration
 @EnableAsync
@@ -18,7 +17,7 @@ public class AsyncConfiguration {
 	AppProperties appProperties;
 
 	@Bean(name = "asyncTaskExecutor")
-	public Executor asyncExecutor()
+	public ThreadPoolTaskExecutor asyncExecutor()
 	{
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(appProperties.getExecutor_core_pool_size());
@@ -28,4 +27,16 @@ public class AsyncConfiguration {
 		executor.initialize();
 		return executor;
 	}
+	
+//	@Bean(name = "cacheTaskExecutor")
+//	public ThreadPoolTaskExecutor cacheExecutor()
+//	{
+//		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+//		executor.setCorePoolSize(appProperties.getExecutor_core_pool_size()*2);
+//		executor.setMaxPoolSize(appProperties.getExecutor_max_pool_size()*2);
+//		executor.setQueueCapacity(appProperties.getExecutor_queue_capacity()*2);
+//		executor.setThreadNamePrefix(appProperties.getExecutor_thread_name_prefix()+"-Cache");
+//		executor.initialize();
+//		return executor;
+//	}
 }
