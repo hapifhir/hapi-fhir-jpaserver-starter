@@ -59,19 +59,23 @@ public class ServerInterceptor {
 			String messageStatus = ComGenerator.MessageStatus.PENDING.name();
 
 			if (!isEncounterMigrated(encounter)) {
-				EncounterIdEntity encounterIdEntity = new EncounterIdEntity(encounterId);
-				notificationDataSource.insert(encounterIdEntity);
+				try {
+					EncounterIdEntity encounterIdEntity = new EncounterIdEntity(encounterId);	
+					notificationDataSource.insert(encounterIdEntity);
+					ComGenerator comGen = new ComGenerator(
+						"Encounter",
+						encounterId,
+						currentDate,
+						messageStatus,
+						patientId,
+						null
+					);
 
-				ComGenerator comGen = new ComGenerator(
-					"Encounter",
-					encounterId,
-					currentDate,
-					messageStatus,
-					patientId,
-					null
-				);
-
-				notificationDataSource.insert(comGen);
+					notificationDataSource.insert(comGen);
+	
+				}catch(Exception e) {
+					
+				}
 			}
 		}
 		else if(theResource.fhirType().equals("Appointment")) {

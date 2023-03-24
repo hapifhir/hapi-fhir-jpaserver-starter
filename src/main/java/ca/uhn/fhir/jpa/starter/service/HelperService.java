@@ -91,6 +91,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -1164,25 +1165,26 @@ public class HelperService {
 		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
 		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
-		Executor executor =  asyncConf.asyncExecutor();
+		ThreadPoolTaskExecutor executor =  asyncConf.asyncExecutor();
 		HashMap <String,Pair<Long,Long>> orgToTiming = new HashMap();
 		List<List<String>> facilityBatches = Utils.partitionFacilities(facilities, appProperties.getExecutor_max_pool_size());
 		int count = 0;
+		long startTime = System.nanoTime();
+		List<Future<?>> futures = new ArrayList<Future<?>>();
 		for (List<String> facilityBatch : facilityBatches) {
 			count+=1;
 			final int countFinal = count;
-			executor.execute(
-			new Runnable() {
-				@Override
-				public void run() {
-				for (String facilityId : facilityBatch) {
-					Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
-					Date startDate = Date.valueOf(start);
-					cacheDashboardData(facilityId, startDate,endDate, indicators, barCharts, tabularItemList, lineCharts, pieChartDefinitions,countFinal,orgToTiming);
-					logger.warn("CACHING DONE **** "+facilityId);
-				}
-				}
-			});
+			 Runnable worker = new Runnable() {
+					@Override
+					public void run() {
+					for (String facilityId : facilityBatch) {
+						Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
+						Date startDate = Date.valueOf(start);
+						cacheDashboardData(facilityId, startDate,endDate, indicators, barCharts, tabularItemList, lineCharts, pieChartDefinitions,countFinal,orgToTiming);
+						}
+					}
+				};
+			 executor.submit(worker);
 		}
 	}
 
@@ -1210,7 +1212,6 @@ public class HelperService {
 	public void cacheDashboardData(String orgId, Date startDate, Date endDate, List<IndicatorItem> indicators, List<BarChartDefinition> barCharts, List<TabularItem> tabularItems, List<LineChart> lineCharts, List<PieChartDefinition> pieChartDefinitions,int count,HashMap <String,Pair<Long,Long>> orgToTiming ) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-		long startTime = System.nanoTime();
 		DashboardModel dashboard = ReportGeneratorFactory.INSTANCE.reportGenerator().getOverallDataToCache(
 			fhirClientProvider,
 			orgId,
@@ -1222,15 +1223,31 @@ public class HelperService {
 			pieChartDefinitions,
 			Collections.emptyList()
 		);
-		long endTime = System.nanoTime();
-		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
-		
-		cachingService.cacheData(orgId, startDate,endDate, indicators,count,dashboard.getScoreCardItemList(),"");
-		cachingService.cacheDataForBarChart(orgId, startDate,endDate, barCharts,count,dashboard.getBarChartItemCollectionList(),"");
-		cachingService.cacheDataLineChart(orgId, startDate,endDate, lineCharts,count,dashboard.getLineChartItemCollections(),"");
-		cachingService.cachePieChartData(orgId, startDate,endDate, pieChartDefinitions,count,dashboard.getPieChartItemList(),"");
-		cachingService.cacheTabularData(orgId, startDate,endDate, tabularItems,count,dashboard.getTabularItemList(),"");
+//		ThreadPoolTaskExecutor cacheExecutor =  asyncConf.cacheExecutor();
+
+//		Runnable worker = new Runnable() {
+//			@Override
+//			public void run() {
+				Date currentDate = startDate;
+				Double diff = 0.0;
+				while(!currentDate.equals(endDate)) {
+					Long start = System.nanoTime();
+					cachingService.cacheData(orgId, currentDate, indicators,count,dashboard.getScoreCardItemList(),"");
+					cachingService.cacheDataForBarChart(orgId, currentDate, barCharts,count,dashboard.getBarChartItemCollectionList(),"");
+					cachingService.cacheDataLineChart(orgId, currentDate, lineCharts,count,dashboard.getLineChartItemCollections(),"");
+					cachingService.cachePieChartData(orgId, currentDate, pieChartDefinitions,count,dashboard.getPieChartItemList(),"");
+					cachingService.cacheTabularData(orgId, currentDate, tabularItems,count,dashboard.getTabularItemList(),"");
+					currentDate = Date.valueOf(currentDate.toLocalDate().plusDays(1));
+					Long end = System.nanoTime();
+					diff+= (end-start)/1000000000.0;
+				}
+			   logger.warn("ALL Dates for org ****** "+orgId+" "+String.valueOf(diff));
+//			}
+//		};
+//		cacheExecutor.submit(worker);		
 	}
+	
+	
 	
 //	@Scheduled(fixedDelay = 24 * DELAY, initialDelay = DELAY)
 //	protected void cacheDailyData() {
