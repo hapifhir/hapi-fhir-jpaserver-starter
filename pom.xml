@@ -447,9 +447,8 @@
             <version>2.3.2</version>
         </dependency>
         <dependency>
-		    <groupId>org.hibernate.orm</groupId>
+		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-hikaricp</artifactId>
-		    <version>6.1.7.Final</version>
 		</dependency>
 
         <!-- Runtime, com.sun.xml.bind module -->
