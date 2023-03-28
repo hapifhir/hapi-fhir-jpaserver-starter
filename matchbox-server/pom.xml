@@ -472,7 +472,6 @@
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-web</artifactId>
-                    <version>${spring_boot_version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -485,7 +484,6 @@
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-web</artifactId>
-                    <version>${spring_boot_version}</version>
                     <exclusions>
                         <exclusion>
                             <groupId>org.springframework.boot</groupId>
