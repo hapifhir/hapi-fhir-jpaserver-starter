@@ -132,18 +132,6 @@
             <artifactId>spring-web</artifactId>
         </dependency>
 
-        <!-- You may not need this if you are deploying to an application server which provides database connection pools itself. -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-dbcp2</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- This example uses H2 embedded database. If you are using another database such as Mysql or Oracle, you may omit the following dependencies and replace them with an appropriate database client dependency for your database platform. -->
         <dependency>
             <groupId>com.h2database</groupId>
