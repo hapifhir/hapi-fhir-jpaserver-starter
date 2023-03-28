@@ -9,7 +9,7 @@
 
     <groupId>health.matchbox</groupId>
     <artifactId>matchbox</artifactId>
-    <version>3.2.0</version>
+    <version>3.2.1</version>
     <packaging>pom</packaging>
     <name>matchbox</name>
     <description>An open-source implementation to support testing and implementation of FHIR based solutions and map or
@@ -39,7 +39,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
-        <fhir.core.version>5.6.100</fhir.core.version>
+        <fhir.core.version>5.6.116</fhir.core.version>
         <hapi.fhir.version>6.4.1</hapi.fhir.version>
 
         <log4j_to_slf4j_version>2.17.1</log4j_to_slf4j_version>

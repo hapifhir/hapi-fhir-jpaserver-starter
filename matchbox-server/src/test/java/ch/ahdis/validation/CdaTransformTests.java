@@ -51,7 +51,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(classes = { Application.class })
 @ActiveProfiles("test-cda")
-@Ignore
 public class CdaTransformTests {
   
   private FhirContext contextR4 = FhirVersionEnum.R4.newContext();

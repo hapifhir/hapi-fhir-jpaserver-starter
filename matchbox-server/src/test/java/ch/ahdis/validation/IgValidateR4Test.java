@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(classes = {Application.class})
 @RunWith(Parameterized.class)
-@Ignore
 public class IgValidateR4Test extends IgValidateR4TestStandalone{
 
   @ClassRule

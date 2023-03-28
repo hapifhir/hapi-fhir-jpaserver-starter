@@ -1,3 +1,10 @@
+2023/03/28 Release 3.2.1
+
+- docker pull \
+   europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.2.1
+- reenable proxy support for downloading packages
+- update to core 5.6.116
+
 2023/03/06 Release 3.2.0
 
 - updated CDA core logical model 2.0 and added tests
