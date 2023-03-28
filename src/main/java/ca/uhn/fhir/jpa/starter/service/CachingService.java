@@ -327,7 +327,7 @@ public class CachingService {
 		}
 	}
 	
-	@Async("cacheTaskExecutor")
+	@Async("asyncTaskExecutor")
 	public void cacheData(String orgId, Date date, List<IndicatorItem> indicators,int count,String filterString) {
 //		logger.warn("-- Caching started for Score card chart data batch number "+String.valueOf(count));
 		long startTime = System.nanoTime();
@@ -378,7 +378,7 @@ public class CachingService {
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
 	}
 	
-	@Async("cacheTaskExecutor")
+	@Async("asyncTaskExecutor")
 	public void cacheDataForBarChart(String orgId, Date date, List<BarChartDefinition> barCharts,int count,String filterString) {
 //		logger.warn("-- Caching started for Bar chart data batch number "+String.valueOf(count));
 		long startTime = System.nanoTime();
@@ -437,7 +437,7 @@ public class CachingService {
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
 	}
 	
-	@Async("cacheTaskExecutor")
+	@Async("asyncTaskExecutor")
 	public void cacheTabularData(String orgId, Date date, List<TabularItem> indicators,int count,String filterString) {
 //		logger.warn("-- Caching started for Tabular data batch number "+String.valueOf(count));
 		long startTime = System.nanoTime();
@@ -484,7 +484,7 @@ public class CachingService {
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
 	}
 
-	@Async("cacheTaskExecutor")
+	@Async("asyncTaskExecutor")
 	public void cachePieChartData(String orgId, Date date, List<PieChartDefinition> pieChartDefinitions,int count,String filterString){
 //		logger.warn("-- Caching started for PieChart data batch number "+String.valueOf(count));
 		long startTime = System.nanoTime();
@@ -532,7 +532,7 @@ public class CachingService {
 		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
 	}
 	
-	@Async("cacheTaskExecutor")
+	@Async("asyncTaskExecutor")
 	public void cacheDataLineChart(String orgId, Date date, List<LineChart> lineCharts,int count,String filterString) {
 //		logger.warn("-- Caching started for Line data batch number "+String.valueOf(count));
 		long startTime = System.nanoTime();
