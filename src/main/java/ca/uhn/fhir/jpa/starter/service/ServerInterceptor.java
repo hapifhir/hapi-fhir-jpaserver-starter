@@ -71,7 +71,7 @@ public class ServerInterceptor {
 						null
 					);
 
-					notificationDataSource.insert(comGen);
+					notificationDataSource.persist(comGen);
 	
 				}catch(Exception e) {
 					
@@ -189,6 +189,8 @@ public class ServerInterceptor {
 	}
 
 	private void processQuestionnaireResponse(QuestionnaireResponse questionnaireResponse) throws IOException {
+		if(questionnaireResponse == null) return ;
+		if(questionnaireResponse.getQuestionnaire() == null) return ;
 		if (!questionnaireResponse.getQuestionnaire().equals("Questionnaire/labour")) {
 			return;
 		}
