@@ -68,7 +68,7 @@
         <jaxb_runtime_version>3.0.0</jaxb_runtime_version>
         <jena_version>4.2.0</jena_version>
         <jersey_version>3.0.3</jersey_version>
-        <jetty_version>9.4.44.v20210927</jetty_version>
+        <jetty_version>10.0.13</jetty_version>
         <jsr305_version>3.0.2</jsr305_version>
         <junit_version>5.9.1</junit_version>
         <flexmark_version>0.50.40</flexmark_version>
@@ -269,7 +269,7 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-server</artifactId>
+                <artifactId>websocket-jetty-server</artifactId>
                 <scope>test</scope>
                 <version>${jetty_version}</version>
             </dependency>
@@ -318,12 +318,12 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-api</artifactId>
+                <artifactId>websocket-jetty-api</artifactId>
                 <version>${jetty_version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-client</artifactId>
+                <artifactId>websocket-jetty-client</artifactId>
                 <version>${jetty_version}</version>
             </dependency>
             <dependency>
