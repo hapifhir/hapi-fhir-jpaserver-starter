@@ -103,9 +103,7 @@ public class UserAndGroupManagementController {
 
 		LocalDateTime dateTimeNow = LocalDateTime.now();
 		String[] extractedFromDateTimeNow = dateTimeNow.toString().split(":");
-		String FormattedId = organizationId + startDate + endDate + extractedFromDateTimeNow[0];
-		String hashOfFormattedId = String.valueOf(FormattedId.hashCode());
-
+		String hashOfFormattedId = organizationId + startDate + endDate + extractedFromDateTimeNow[0];
 		ArrayList<ApiAsyncTaskEntity> fetchAsyncData = datasource.fetchStatus(hashOfFormattedId);
 
 		if (fetchAsyncData == null || fetchAsyncData.isEmpty()) {
