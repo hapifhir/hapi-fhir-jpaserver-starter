@@ -45,7 +45,7 @@ public class NotificationDataSource {
 	public void configure(String filePath) {
 		conf = new Configuration().configure(new File(filePath)).addAnnotatedClass(ComGenerator.class)
 				.addAnnotatedClass(CacheEntity.class).addAnnotatedClass(ApiAsyncTaskEntity.class)
-				.addAnnotatedClass(EncounterIdEntity.class);
+				.addAnnotatedClass(EncounterIdEntity.class).addAnnotatedClass(PatientIdentifierEntity.class);
 		sf = conf.buildSessionFactory();
 	}
 
@@ -193,6 +193,43 @@ public class NotificationDataSource {
 		session.delete(object);
 		transaction.commit();
 		session.close();
+	}
+
+	public List<String> getPatientIdWithIdentifier(String identifier) {
+		Session session = sf.openSession();
+		Query query = session.createQuery("SELECT patientId FROM PatientIdentifierEntity WHERE patientIdentifier=:param1");
+		query.setParameter("param1", identifier);
+		List<String> resultList = query.getResultList();
+		session.close();
+		if(resultList.isEmpty()) {
+			return Collections.emptyList();
+		}
+		return resultList;
+	}
+	
+
+	public List<PatientIdentifierEntity> getPatientIdentifierEntity(String identifier,String patientId) {
+		Session session = sf.openSession();
+		Query query = session.createQuery("FROM PatientIdentifierEntity WHERE patientIdentifier=:param1 AND patientId=:param2");
+		query.setParameter("param1", identifier);
+		query.setParameter("param2", patientId);
+		List<PatientIdentifierEntity> resultList = query.getResultList();
+		session.close();
+		if(resultList.isEmpty()) {
+			return Collections.emptyList();
+		}
+		return resultList;
+	}
+	
+	public List<PatientIdentifierEntity> getPatientInfoResourceEntityDataBeyondLastUpdated(String lastUpdated){
+		Session session = sf.openSession();
+		Query query = session.createQuery("SELECT p FROM PatientIdentifierEntity p WHERE p.lastModified > :param1", PatientIdentifierEntity.class);
+		query.setParameter("param1", lastUpdated);
+		List<PatientIdentifierEntity> result = query.getResultList();
+		if(result.isEmpty()) {
+			return Collections.emptyList();
+		}
+		return result;
 	}
 
 	public List<ComGenerator> fetchRecordsByScheduledDateAndStatus(Date date, MessageStatus status) {
