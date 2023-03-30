@@ -15,6 +15,8 @@ import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
+import ca.uhn.fhir.jpa.starter.model.PatientIdentifierEntity;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -67,7 +69,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.hibernate.Session;
 import org.hibernate.engine.jdbc.ClobProxy;
+import org.hibernate.query.Query;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
@@ -360,6 +364,12 @@ public class HelperService {
 		map.put("Cannot create users with organization", invalidUsers);
 		map.put("uploadCsv", "Successful");
 		return new ResponseEntity<LinkedHashMap<String, Object>>(map, HttpStatus.OK);
+	}
+
+	public ResponseEntity<?> getTableData(String lastUpdated){
+		notificationDataSource = NotificationDataSource.getInstance();
+		List<PatientIdentifierEntity> patientInfoResourceEntities = notificationDataSource.getPatientInfoResourceEntityDataBeyondLastUpdated(lastUpdated);
+		return new ResponseEntity<List<PatientIdentifierEntity>>(patientInfoResourceEntities,HttpStatus.OK);
 	}
 
 	public List<GroupRepresentation> getGroupsByUser(String userId) {
@@ -1260,7 +1270,7 @@ public class HelperService {
 //			cachingService.cacheDataLineChart(appProperties.getCountry_org_id(), DateUtilityHelper.getCurrentSqlDate(), dashboardEnvToConfigMap.get(env).getLineCharts(),0);
 //		});
 //	}
-//	
+//
 	List<FilterItem> getFilterItemListFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getFilterItems();
 	}
@@ -1292,7 +1302,7 @@ public class HelperService {
 	ANCDailySummaryConfig getANCDailySummaryConfigFromFile(String env) throws NullPointerException{
 		return dashboardEnvToConfigMap.get(env).getAncDailySummaryConfig();
 	}
-
+	
 	public List<OrgItem> getOrganizationHierarchy(String organizationId) {
 		return fetchOrgHierarchy(organizationId);
 	}

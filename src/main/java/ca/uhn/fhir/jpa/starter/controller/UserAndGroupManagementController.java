@@ -5,11 +5,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.ConfigDefinitionTypes;
 import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
-import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
-import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
-import ca.uhn.fhir.jpa.starter.model.ReportType;
-import ca.uhn.fhir.jpa.starter.model.OCLQrResponse;
-import ca.uhn.fhir.jpa.starter.model.OCLQrRequest;
+import ca.uhn.fhir.jpa.starter.model.*;
 import ca.uhn.fhir.jpa.starter.service.*;
 import ca.uhn.fhir.parser.IParser;
 import com.iprd.fhir.utils.Validation;
@@ -18,6 +14,7 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Organization;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +24,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 import javax.annotation.PostConstruct;
+import javax.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
 
@@ -64,6 +62,11 @@ public class UserAndGroupManagementController {
 	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadHcw(@RequestParam("file") MultipartFile file)
 		throws Exception {
 		return helperService.createUsers(file);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/getTableData/{lastUpdated}")
+	public ResponseEntity<?> getTableData(@PathVariable String lastUpdated){
+		return helperService.getTableData(lastUpdated);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/dashboardUserBulkImport")
