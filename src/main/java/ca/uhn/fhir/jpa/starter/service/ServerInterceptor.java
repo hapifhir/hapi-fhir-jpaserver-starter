@@ -60,22 +60,16 @@ public class ServerInterceptor {
 			processMedia((Media) theResource);
 		}
 		else if (theResource.fhirType().equals("Encounter")) {
-			try {
-				Encounter encounter = (Encounter) theResource;
-				String encounterId = encounter.getIdElement().getIdPart();
-				String patientId = encounter.getSubject().getReferenceElement().getIdPart();
-				Date currentDate = DateUtilityHelper.getCurrentSqlDate();
-				String messageStatus = ComGenerator.MessageStatus.PENDING.name();
+			Encounter encounter = (Encounter) theResource;
+			String encounterId = encounter.getIdElement().getIdPart();
+			String patientId = encounter.getSubject().getReferenceElement().getIdPart();
+			Date currentDate = DateUtilityHelper.getCurrentSqlDate();
+			String messageStatus = ComGenerator.MessageStatus.PENDING.name();
 
-				if (!isEncounterMigrated(encounter)) {
-					try {
-						EncounterIdEntity encounterIdEntity = new EncounterIdEntity(encounterId);
-						notificationDataSource.insert(encounterIdEntity);
-					} catch(Exception ex) {
-						System.out.println("Duplicate encounter id found");
-						ex.printStackTrace();
-					}
-
+			if (!isEncounterMigrated(encounter)) {
+				try {
+					EncounterIdEntity encounterIdEntity = new EncounterIdEntity(encounterId);	
+					notificationDataSource.insert(encounterIdEntity);
 					ComGenerator comGen = new ComGenerator(
 						"Encounter",
 						encounterId,
@@ -85,11 +79,11 @@ public class ServerInterceptor {
 						null
 					);
 
-					notificationDataSource.insert(comGen);
+					notificationDataSource.persist(comGen);
+	
+				}catch(Exception e) {
+					
 				}
-			} catch(PersistenceException ex) {
-				System.out.println("Duplicate encounter entry found");
-				ex.printStackTrace();
 			}
 		}
 		else if(theResource.fhirType().equals("Appointment")) {
@@ -213,7 +207,7 @@ public class ServerInterceptor {
 						patientEntity.setStatus(PatientIdentifierStatus.DELETE.name());
 						notificationDataSource.update(patientEntity);
 					}
-				}	
+				}
 			}
 			// Handle Updated / New identifiers
 			if(!missingIdentifierNewIdentifier.getSecond().isEmpty()) {
@@ -237,7 +231,7 @@ public class ServerInterceptor {
 				}
 			}
 			if(!FhirUtils.isOclPatient(patient.getIdentifier())) {
-				
+
 				PatientIdentifierEntity patientInfoResourceEntityOCL = new PatientIdentifierEntity(
 						patientId,
 						patientOclId,
@@ -315,6 +309,8 @@ public class ServerInterceptor {
 	}
 
 	private void processQuestionnaireResponse(QuestionnaireResponse questionnaireResponse) throws IOException {
+		if(questionnaireResponse == null) return ;
+		if(questionnaireResponse.getQuestionnaire() == null) return ;
 		if (!questionnaireResponse.getQuestionnaire().equals("Questionnaire/labour")) {
 			return;
 		}
