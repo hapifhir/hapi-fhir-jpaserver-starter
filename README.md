@@ -75,6 +75,7 @@ services:
     depends_on:
       - db
 
+
   db:
     image: postgres
     restart: always
@@ -103,6 +104,87 @@ spring:
     properties:
       hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
       hibernate.search.enabled: false
+```
+
+### Example running custom interceptor using docker-compose
+
+This example is an extension of the above one, now adding a custom interceptor.
+
+```yaml
+version: '3.7'
+
+services:
+  fhir:
+    container_name: fhir
+    image: "hapiproject/hapi:latest"
+    ports:
+      - "8080:8080"
+    configs:
+      - source: hapi
+        target: /app/config/application.yaml
+      - source: hapi-extra-classes
+        target: /app/extra-classes
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: hapi
+    volumes:
+      - ./hapi.postgress.data:/var/lib/postgresql/data
+
+configs:
+  hapi:
+     file: ./hapi.application.yaml
+  hapi-extra-classes:
+     file: ./hapi-extra-classes
+```
+
+Provide the following content in ``./hapi.aplication.yaml``:
+
+```yaml
+spring:
+  datasource:
+    url: 'jdbc:postgresql://db:5432/hapi'
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.search.enabled: false
+hapi:
+  fhir:
+    custom-bean-packages: the.package.containing.your.interceptor
+    custom-interceptor-classes: the.package.containing.your.interceptor.YourInterceptor
+```
+
+The basic interceptor structure would be like this:
+
+```java
+package the.package.containing.your.interceptor;
+
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.springframework.stereotype.Component;
+
+import ca.uhn.fhir.interceptor.api.Hook;
+import ca.uhn.fhir.interceptor.api.Interceptor;
+import ca.uhn.fhir.interceptor.api.Pointcut;
+
+@Component
+@Interceptor
+public class YourInterceptor
+{
+    @Hook(Pointcut.STORAGE_PRECOMMIT_RESOURCE_CREATED)
+    public void resourceCreated(IBaseResource newResource)
+    {
+        System.out.println("YourInterceptor.resourceCreated");
+    }
+}
 ```
 
 ## Running locally
