@@ -232,6 +232,18 @@ public class NotificationDataSource {
 		return result;
 	}
 
+	public List<PatientIdentifierEntity> getExistingEntryWithPatientIdAndIdentifier(String patientId, String patientIdentifier){
+		Session session = sf.openSession();
+		Query query = session.createQuery("SELECT p FROM PatientIdentifierEntity p WHERE p.patientId=:param1 AND p.patientIdentifier=:param2", PatientIdentifierEntity.class);
+		query.setParameter("param1", patientId);
+		query.setParameter("param2", patientIdentifier);
+		List<PatientIdentifierEntity> result = query.getResultList();
+		if(result.isEmpty()){
+			return Collections.emptyList();
+		}
+		return result;
+	}
+
 	public List<ComGenerator> fetchRecordsByScheduledDateAndStatus(Date date, MessageStatus status) {
 		Session session = sf.openSession();
 		Query query = session
