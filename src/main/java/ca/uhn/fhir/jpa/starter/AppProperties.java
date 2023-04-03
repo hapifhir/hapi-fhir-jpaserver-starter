@@ -727,6 +727,8 @@ public class AppProperties {
 
     private Boolean partitioning_include_in_search_hashes = false;
     private Boolean allow_references_across_partitions = false;
+		private String header_key = "X-TENANT";
+		private String default_tenant_header_value = "DEFAULT";
 
     public Boolean getPartitioning_include_in_search_hashes() {
       return partitioning_include_in_search_hashes;
@@ -742,6 +744,22 @@ public class AppProperties {
     public void setAllow_references_across_partitions(Boolean allow_references_across_partitions) {
       this.allow_references_across_partitions = allow_references_across_partitions;
     }
+
+		public void setDefault_tenant_header_value(String default_tenant_header_value) {
+			this.default_tenant_header_value = default_tenant_header_value;
+	  }
+
+		public String getDefault_tenant_header_value() {
+			return this.default_tenant_header_value;
+	  }
+
+		public void setHeader_key(String header_key) {
+			this.header_key = header_key;
+	  }
+
+		public String getHeader_key() {
+			return this.header_key;
+	  }
   }
 
   public static class Subscription {
