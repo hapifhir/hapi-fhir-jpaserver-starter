@@ -30,7 +30,7 @@ public class FhirUtils {
 	public static Boolean isOclPatient(List<Identifier> identifiers) {
 		Boolean isOCLPatient = false;
 		for (Identifier identifier : identifiers) {
-			if (identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/patient_with_ocl")) {
+			if (identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/patientWithOcl")) {
 				isOCLPatient = true;
 				break;
 			}

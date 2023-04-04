@@ -139,39 +139,39 @@ public class ServerInterceptor {
 			String currentDate = String.valueOf(System.currentTimeMillis());
 			List<PatientIdentifierEntity> entitiesToSave = new ArrayList<>();
 			List<PatientIdentifierEntity> existingPatientInDB = notificationDataSource.getExistingEntryWithPatientIdAndIdentifier(patientId, patientOclId);
-			if(existingPatientInDB.isEmpty()){
-				if(!FhirUtils.isOclPatient(patient.getIdentifier())) {
-					PatientIdentifierEntity patientInfoResourceEntityOCL = new PatientIdentifierEntity(
-						patientId,
-						patientOclId,
-						patientOclUrlLink,
-						(notificationDataSource.getPatientIdWithIdentifier(patientOclId).size() >= 1) ?  PatientIdentifierStatus.DUPLICATE.name():PatientIdentifierStatus.OK.name(),
-						theResource.fhirType(),
-						currentDate.toString()
-					);
-					PatientIdentifierEntity patientInfoResourceEntityCardNumber = new PatientIdentifierEntity(
-						patientId,
-						patientCardNumber,
-						"http://iprdgroup.com/identifiers/patient-card",
-						(notificationDataSource.getPatientIdWithIdentifier(patientCardNumber).size() >= 1) ?  PatientIdentifierStatus.DUPLICATE.name(): PatientIdentifierStatus.OK.name(),
-						theResource.fhirType(),
-						currentDate.toString()
-					);
-					PatientIdentifierEntity patientInfoResourceEntityTelecom = new PatientIdentifierEntity(
-						patientId,
-						patientTelecom,
-						"phone",
-						(notificationDataSource.getPatientIdWithIdentifier(patientTelecom).size() >= 1) ?  PatientIdentifierStatus.DUPLICATE.name(): PatientIdentifierStatus.OK.name(),
-						theResource.fhirType(),
-						currentDate.toString()
-					);
-					notificationDataSource.insert(patientInfoResourceEntityOCL);
-					notificationDataSource.insert(patientInfoResourceEntityCardNumber);
-					notificationDataSource.insert(patientInfoResourceEntityTelecom);
-				}
+				if(existingPatientInDB.isEmpty()){
+					if(!FhirUtils.isOclPatient(patient.getIdentifier())) {
+						PatientIdentifierEntity patientInfoResourceEntityOCL = new PatientIdentifierEntity(
+							patientId,
+							patientOclId,
+							patientOclUrlLink,
+							(notificationDataSource.getPatientIdWithIdentifier(patientOclId).size() >= 1) ?  PatientIdentifierStatus.DUPLICATE.name():PatientIdentifierStatus.OK.name(),
+							theResource.fhirType(),
+							currentDate.toString()
+						);
+						PatientIdentifierEntity patientInfoResourceEntityCardNumber = new PatientIdentifierEntity(
+							patientId,
+							patientCardNumber,
+							"http://iprdgroup.com/identifiers/patient-card",
+							(notificationDataSource.getPatientIdWithIdentifier(patientCardNumber).size() >= 1) ?  PatientIdentifierStatus.DUPLICATE.name(): PatientIdentifierStatus.OK.name(),
+							theResource.fhirType(),
+							currentDate.toString()
+						);
+						PatientIdentifierEntity patientInfoResourceEntityTelecom = new PatientIdentifierEntity(
+							patientId,
+							patientTelecom,
+							"phone",
+							(notificationDataSource.getPatientIdWithIdentifier(patientTelecom).size() >= 1) ?  PatientIdentifierStatus.DUPLICATE.name(): PatientIdentifierStatus.OK.name(),
+							theResource.fhirType(),
+							currentDate.toString()
+						);
+						notificationDataSource.insert(patientInfoResourceEntityOCL);
+						notificationDataSource.insert(patientInfoResourceEntityCardNumber);
+						notificationDataSource.insert(patientInfoResourceEntityTelecom);
+					}
+				}	
 			}
 		}
-	}
 
 	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_UPDATED)
 	   public void update(IBaseResource theOldResource, IBaseResource theResource) throws IOException {
@@ -199,16 +199,22 @@ public class ServerInterceptor {
 			String patientTelecom = patient.getTelecomFirstRep().getValue();
 			String patientCardNumber = FhirUtils.getPatientCardNumber(patient.getIdentifier());
 			String currentDate = String.valueOf(System.currentTimeMillis());
-			List<PatientIdentifierEntity> entitiesToSave = new ArrayList<>();
 			Pair<List<String>, List<Identifier>> missingIdentifierNewIdentifier = FhirUtils.getMissingIdentifierAndNewIdentifier(((Patient)theOldResource).getIdentifier(),patient.getIdentifier());
-			List<PatientIdentifierEntity> existingPatientInDB = notificationDataSource.getExistingEntryWithPatientIdAndIdentifier(patientId, patientOclId);
-			if (existingPatientInDB.isEmpty()){
+			List<PatientIdentifierEntity> existingPatientWithOcl = notificationDataSource.getExistingEntryWithPatientIdAndIdentifier(patientId, patientOclId);
+			List<PatientIdentifierEntity> existingPatientWithANC = notificationDataSource.getExistingEntryWithPatientIdAndIdentifier(patientId, patientCardNumber);
+			if (existingPatientWithOcl.isEmpty() || existingPatientWithANC.isEmpty()){
 				// Handle Identifiers that are deleted
 				if(!missingIdentifierNewIdentifier.getFirst().isEmpty()) {
 					for(String identifierValue : missingIdentifierNewIdentifier.getFirst()) {
-						List<PatientIdentifierEntity> patientIdentifierEntitys =  notificationDataSource.getPatientIdentifierEntity(identifierValue,patientId);
-						if(patientIdentifierEntitys.size()>0) {
-							PatientIdentifierEntity patientEntity =  patientIdentifierEntitys.get(0);
+						List<PatientIdentifierEntity> patientIdentifierEntities;
+						if(identifierValue.contains("ocl")){
+							patientIdentifierEntities = notificationDataSource.getPatientIdentifierEntity(FhirUtils.getOclIdFromString(identifierValue),patientId);
+						} else{
+							patientIdentifierEntities = notificationDataSource.getPatientIdentifierEntity(identifierValue,patientId);
+						}
+
+						if(patientIdentifierEntities.size() > 0) {
+							PatientIdentifierEntity patientEntity = patientIdentifierEntities.get(0);
 							patientEntity.setStatus(PatientIdentifierStatus.DELETE.name());
 							notificationDataSource.update(patientEntity);
 						}
