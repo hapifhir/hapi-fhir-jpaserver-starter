@@ -543,7 +543,8 @@ class ModelScanner {
 							}
 
 						} catch (ClassNotFoundException e) {
-							throw new ConfigurationException(Msg.code(1725) + "Unknown class[" + nextValue + "] for data type definition: " + nextKey.substring("datatype.".length()), e);
+// https://github.com/ahdis/matchbox/issues/95							
+// FIXME matchbox, check with latest hapi release if model is fixed			 										throw new ConfigurationException(Msg.code(1725) + "Unknown class[" + nextValue + "] for data type definition: " + nextKey.substring("datatype.".length()), e);
 						}
 					}
 				} else if (nextKey.startsWith("resource.")) {
@@ -561,7 +562,8 @@ class ModelScanner {
 
 						theResourceTypes.put(resName, nextClass);
 					} catch (ClassNotFoundException e) {
-// FIXME matchbox, check with latest hapi release if model is fixed			 			throw new ConfigurationException(Msg.code(1727) + "Unknown class[" + nextValue + "] for resource definition: " + nextKey.substring("resource.".length()), e);
+// https://github.com/ahdis/matchbox/issues/95							
+						// FIXME matchbox, check with latest hapi release if model is fixed			 			throw new ConfigurationException(Msg.code(1727) + "Unknown class[" + nextValue + "] for resource definition: " + nextKey.substring("resource.".length()), e);
 						ourLog.error(Msg.code(1727) + "Unknown class[" + nextValue + "] for resource definition: " + nextKey.substring("resource.".length()));
 					}
 				} else {
