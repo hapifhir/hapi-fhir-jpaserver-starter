@@ -45,6 +45,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.packages.loader.PackageLoaderSvc;
 import ca.uhn.fhir.jpa.starter.AppProperties.ImplementationGuide;
 import ca.uhn.fhir.util.ClasspathUtil;
 import ch.ahdis.matchbox.util.PackageCacheInitializer;
@@ -101,14 +102,10 @@ public class IgValidateR4TestStandalone {
 
   static private Map<String, byte[]> fetchByPackage(ImplementationGuide src, boolean examples) throws Exception {
     String thePackageUrl = src.getUrl();
-		if (thePackageUrl.startsWith("classpath:")) {
-			InputStream inputStream = new ByteArrayInputStream(ClasspathUtil.loadResourceAsByteArray(thePackageUrl.substring("classpath:" .length())));
-      NpmPackage pi = NpmPackage.fromPackage(inputStream, null, true);
-      return loadPackage(pi, examples);
-    } else {
-      log.error("not yet suported", thePackageUrl);
-      return null;
-    }
+    PackageLoaderSvc loader = new PackageLoaderSvc();
+    InputStream inputStream = new ByteArrayInputStream(loader.loadPackageUrlContents(thePackageUrl));
+    NpmPackage pi = NpmPackage.fromPackage(inputStream, null, true);
+    return loadPackage(pi, examples);
   }
 
   static public boolean process(String file) {
