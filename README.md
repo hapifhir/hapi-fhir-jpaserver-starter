@@ -132,3 +132,18 @@ kubectl cp matchbox-test-app-d684cf865 ./fhir.logdir/
 # MVN run unit tests
 
 mvn -Dtest=CapabilityStatementTests test
+
+# Making a release
+
+To make a release, a [tag](https://github.com/ahdis/matchbox/tags) has to be created (e.g. `v.3.2.1`) in GitHub.
+It will trigger two workflows:
+
+1. The [Docker workflow](https://github.com/ahdis/matchbox/blob/main/.github/workflows/googleregistry.yml), that 
+   builds a Docker container around `matchbox-server` and publishes it to the Google Artifact registry.
+2. The [Maven workflow](https://github.com/ahdis/matchbox/blob/main/.github/workflows/central_repository.yml), that 
+   builds the `matchbox-engine` JAR and publishes it to the Maven Central Repository. The version used is the one 
+   specified in the POM.
+
+If a pull request is merged to create the release, and that it modifies files in the `matchbox-frontend` module, the 
+tag should not be created before the [Angular workflow](https://github.com/ahdis/matchbox/blob/main/.github/workflows/angular_build.yml)
+has completed. Otherwise, the Docker container will not contain the updated GUI.
