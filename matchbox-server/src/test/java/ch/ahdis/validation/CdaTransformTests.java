@@ -54,7 +54,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class CdaTransformTests {
   
   private FhirContext contextR4 = FhirVersionEnum.R4.newContext();
-  private GenericFhirClient genericClient = new GenericFhirClient(contextR4);
+  private GenericFhirClient genericClient = new GenericFhirClient(contextR4, "http://localhost:8083/matchboxv3/fhir");
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CdaTransformTests.class);
 

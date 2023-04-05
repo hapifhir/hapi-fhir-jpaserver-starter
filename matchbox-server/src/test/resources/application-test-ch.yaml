@@ -38,6 +38,7 @@ spring:
     job:
       enabled: false
 server:
+  port: 8082
   servlet:
     context-path: /matchboxv3
 management:

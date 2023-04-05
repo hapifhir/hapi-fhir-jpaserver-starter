@@ -69,6 +69,7 @@ public class IgValidateR4TestStandalone {
 
   private Resource resource;
   private String name;
+  private String targetServer;
   
   public static List<ImplementationGuide> getImplementationGuides() {
     Yaml yaml = new Yaml();
@@ -207,10 +208,15 @@ public class IgValidateR4TestStandalone {
     return resources;
   }
 
-  public IgValidateR4TestStandalone(String name, Resource resource) {
+	public IgValidateR4TestStandalone(String name, Resource resource) {
+		this(name, resource, GenericFhirClient.testServer);
+	}
+
+  public IgValidateR4TestStandalone(String name, Resource resource, String targetServer) {
     super();
     this.resource = resource;
     this.name = name;
+	 this.targetServer = targetServer;
   }
 
   @Test
@@ -238,7 +244,7 @@ public class IgValidateR4TestStandalone {
   }
 
   public OperationOutcome validate(Resource resource) throws IOException {
-  	return validate(resource, GenericFhirClient.testServer);
+  	return validate(resource, this.targetServer);
   }
 
 

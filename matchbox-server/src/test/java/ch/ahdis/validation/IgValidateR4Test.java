@@ -43,7 +43,8 @@ public class IgValidateR4Test extends IgValidateR4TestStandalone{
 
   @Rule
   public final SpringMethodRule smr = new SpringMethodRule();
-  
+
+  private static final String TARGET_SERVER = "http://localhost:8082/matchboxv3/fhir";
   
   private Resource resource;
   private String name;
@@ -52,7 +53,6 @@ public class IgValidateR4Test extends IgValidateR4TestStandalone{
 
 
 
-  private String targetServer = "http://localhost:8080/matchboxv3/fhir";
 
   static private boolean initialized = false;
 
@@ -75,14 +75,14 @@ public class IgValidateR4Test extends IgValidateR4TestStandalone{
       initialized = true;
       Thread.sleep(20000); // give the server some time to start up
       FhirContext contextR4 = FhirVersionEnum.R4.newContext();
-      ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);
+      ValidationClient validationClient = new ValidationClient(contextR4, TARGET_SERVER);
       validationClient.capabilities();
     }
   }
 
   
   public IgValidateR4Test(String name, Resource resource) {
-    super(name, resource);
+    super(name, resource, TARGET_SERVER);
     this.resource = resource;
     this.name = name;
   }
