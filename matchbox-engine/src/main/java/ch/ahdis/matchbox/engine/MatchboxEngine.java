@@ -425,14 +425,11 @@ public class MatchboxEngine extends ValidationEngine {
 	public org.hl7.fhir.r4.model.Resource getCanonicalResource(String canonical) {
 		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical);
 		// allResourcesById is not package aware (???) so we need to fetch it again
-		// if (fetched!=null) {
-		// 	org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
-		// 	if (fetched2 != null) {
-		// 		return VersionConvertorFactory_40_50.convertResource(fetched2);
-		// 	}
-		// }
-		if (fetched !=null) {
-			return VersionConvertorFactory_40_50.convertResource(fetched);
+		if (fetched!=null) {
+		 	org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
+		 	if (fetched2 != null) {
+		 		return VersionConvertorFactory_40_50.convertResource(fetched2);
+		 	}
 		}
 		return null;
 	}

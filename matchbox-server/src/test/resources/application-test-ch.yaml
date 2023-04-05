@@ -7,7 +7,7 @@ spring:
     check-location: false
     baselineOnMigrate: true
   datasource:
-    url: 'jdbc:h2:file:./database/h2'
+    url: "jdbc:h2:file:./database/h2"
     username: sa
     password: null
     driverClassName: org.h2.Driver
@@ -21,13 +21,13 @@ spring:
       hibernate.format_sql: false
       hibernate.show_sql: false
       hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
-  #      hibernate.hbm2ddl.auto: update
-  #      hibernate.jdbc.batch_size: 20
-  #      hibernate.cache.use_query_cache: false
-  #      hibernate.cache.use_second_level_cache: false
-  #      hibernate.cache.use_structured_entries: false
-  #      hibernate.cache.use_minimal_puts: false
-  ###    These settings will enable fulltext search with lucene
+      #      hibernate.hbm2ddl.auto: update
+      #      hibernate.jdbc.batch_size: 20
+      #      hibernate.cache.use_query_cache: false
+      #      hibernate.cache.use_second_level_cache: false
+      #      hibernate.cache.use_structured_entries: false
+      #      hibernate.cache.use_minimal_puts: false
+      ###    These settings will enable fulltext search with lucene
       hibernate.search.enabled: true
   #      hibernate.search.backend.type: lucene
   #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
@@ -37,7 +37,8 @@ spring:
   batch:
     job:
       enabled: false
-server: 
+server:
+  port: 8082
   servlet:
     context-path: /matchboxv3
 management:
@@ -65,41 +66,41 @@ hapi:
     allow_cascading_deletes: true
     allow_multiple_delete: true
     narrative_enabled: false
-# This is an experimental feature, and does not fully support _total and other FHIR features.
+    # This is an experimental feature, and does not fully support _total and other FHIR features.
     advanced_lucene_indexing: false
-### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
-### to determine the FHIR server address
-#   use_apache_address_strategy: false
-### forces the use of the https:// protocol for the returned server address.
-### alternatively, it may be set using the X-Forwarded-Proto header.
-#   use_apache_address_strategy_https: false
-### enable to set the Server URL
-#    server_address: http://hapi.fhir.org/baseR4
-#    defer_indexing_for_codesystems_of_size: 101
-#    implementationguides:
-###    example from registry (packages.fhir.org)
-#      swiss:
-#        name: swiss.mednet.fhir
-#        version: 0.8.0
-#      example not from registry
-#      ips_1_0_0:
-#        url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
-#        name: hl7.fhir.uv.ips
-#        version: 1.0.0
-#    supported_resource_types:
-#      - Patient
-#      - Observation
-#    allow_contains_searches: true
-#    allow_override_default_search_params: true
-#    auto_create_placeholder_reference_targets: false
-#    cql_enabled: true
-#    default_encoding: JSON
-#    default_pretty_print: true
-#    default_page_size: 20
-#    enable_repository_validating_interceptor: false
-#    enable_index_missing_fields: false
-#    enable_index_contained_resource: false
-#    enforce_referential_integrity_on_delete: false
+    ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
+    ### to determine the FHIR server address
+    #   use_apache_address_strategy: false
+    ### forces the use of the https:// protocol for the returned server address.
+    ### alternatively, it may be set using the X-Forwarded-Proto header.
+    #   use_apache_address_strategy_https: false
+    ### enable to set the Server URL
+    #    server_address: http://hapi.fhir.org/baseR4
+    #    defer_indexing_for_codesystems_of_size: 101
+    #    implementationguides:
+    ###    example from registry (packages.fhir.org)
+    #      swiss:
+    #        name: swiss.mednet.fhir
+    #        version: 0.8.0
+    #      example not from registry
+    #      ips_1_0_0:
+    #        url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
+    #        name: hl7.fhir.uv.ips
+    #        version: 1.0.0
+    #    supported_resource_types:
+    #      - Patient
+    #      - Observation
+    #    allow_contains_searches: true
+    #    allow_override_default_search_params: true
+    #    auto_create_placeholder_reference_targets: false
+    #    cql_enabled: true
+    #    default_encoding: JSON
+    #    default_pretty_print: true
+    #    default_page_size: 20
+    #    enable_repository_validating_interceptor: false
+    #    enable_index_missing_fields: false
+    #    enable_index_contained_resource: false
+    #    enforce_referential_integrity_on_delete: false
     #    enforce_referential_integrity_on_write: false
     #    etag_support_enabled: true
     #    expunge_enabled: true
@@ -110,8 +111,8 @@ hapi:
     #    graphql_enabled: true
     #    narrative_enabled: true
     #    mdm_enabled: true
-#    local_base_urls:
-#      - https://hapi.fhir.org/baseR4
+    #    local_base_urls:
+    #      - https://hapi.fhir.org/baseR4
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
@@ -119,7 +120,7 @@ hapi:
       allow_Credentials: true
       # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
       allowed_origin:
-        - '*'
+        - "*"
 
     # Search coordinator thread pool sizes
     search-coord-core-pool-size: 20
@@ -138,7 +139,7 @@ hapi:
       ch-emed:
         name: ch.fhir.ig.ch-emed
         version: 3.0.0
-        url: classpath:/ch.fhir.ig.ch-emed#3.0.0.tgz
+        url: https://fhir.ch/ig/ch-emed/package.tgz
 matchbox:
   fhir:
     context:

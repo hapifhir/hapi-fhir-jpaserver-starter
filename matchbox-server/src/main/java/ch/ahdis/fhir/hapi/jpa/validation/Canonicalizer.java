@@ -86,6 +86,10 @@ public class Canonicalizer {
     final Map<String, String> ids = new  HashMap<String, String>();
     int contained = 0;
     for (ResourceReferenceInfo resourceReference : resourceReferences) {
+		if (resourceReference.getResourceReference().getReferenceElement().isEmpty()) {
+			// The element has no reference
+			continue;
+		}
       String refContainted = resourceReference.getResourceReference().getReferenceElement().getValue();
       if (!resourceReference.getName().startsWith("contained") && refContainted.startsWith("#") && refContainted.length()>1) {
         String containedId = refContainted.substring(1);

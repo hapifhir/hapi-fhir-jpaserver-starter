@@ -36,6 +36,7 @@ import org.hl7.fhir.utilities.json.model.JsonArray;
 import org.hl7.fhir.utilities.json.model.JsonElement;
 import org.hl7.fhir.utilities.json.model.JsonObject;
 import org.hl7.fhir.utilities.json.parser.JsonParser;
+import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager.IPackageProvider;
 import org.hl7.fhir.utilities.npm.NpmPackage.NpmPackageFolder;
 import org.hl7.fhir.utilities.npm.PackageList.PackageListEntry;
 import org.slf4j.Logger;
@@ -87,6 +88,14 @@ import org.slf4j.LoggerFactory;
 public class FilesystemPackageCacheManager extends BasePackageCacheManager implements IPackageCacheManager {
 
 
+  // When running in testing mode, some packages are provided from the test case repository rather than by the normal means
+  // the PackageProvider is responsible for this. if no package provider is defined, or it declines to handle the package, 
+  // then the normal means will be used
+  public interface IPackageProvider {
+    boolean handlesPackage(String id, String version);
+    InputStreamWithSrc provide(String id, String version) throws IOException;
+  }
+  private static IPackageProvider packageProvider;
 
   //  private static final String SECONDARY_SERVER = "http://local.fhir.org:8080/packages";
   public static final String PACKAGE_REGEX = "^[a-zA-Z][A-Za-z0-9\\_\\-]*(\\.[A-Za-z0-9\\_\\-]+)+$";
@@ -404,8 +413,9 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
         throw new IOException("Attempt to import a mis-identified package. Expected " + id + ", got " + npm.name());
       }
     }
-    if (version == null)
+    if (version == null) {
       version = npm.version();
+    }
 
     String v = version;
     return new CacheLock(id + "#" + version).doWithLock(() -> {
@@ -555,7 +565,9 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
     // nup, don't have it locally (or it's expired)
     FilesystemPackageCacheManager.InputStreamWithSrc source;
-    if ("current".equals(version) || (version!= null && version.startsWith("current$"))) {
+    if (packageProvider != null && packageProvider.handlesPackage(id, version)) {
+      source = packageProvider.provide(id, version);
+    } else if ("current".equals(version) || (version!= null && version.startsWith("current$"))) {
       // special case - fetch from ci-build server
       source = loadFromCIBuild(id, version.startsWith("current$") ? version.substring(8) : null);
     } else {
@@ -1003,6 +1015,14 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
   public void setSuppressErrors(boolean suppressErrors) {
     this.suppressErrors = suppressErrors;
+  }
+
+  public static IPackageProvider getPackageProvider() {
+    return packageProvider;
+  }
+
+  public static void setPackageProvider(IPackageProvider packageProvider) {
+    FilesystemPackageCacheManager.packageProvider = packageProvider;
   }
 
   

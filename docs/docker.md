@@ -3,7 +3,7 @@
 if you have the rights you can download Matchbox as a docker container:
 
 ```
-docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.2.0-SNAPSHOT
+docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.2.1
 ```
 
 ## Configurable base image:

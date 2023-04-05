@@ -63,7 +63,7 @@ import org.hl7.fhir.r5.model.CanonicalResource;
 import org.hl7.fhir.r5.model.CanonicalType;
 import org.hl7.fhir.r5.model.CapabilityStatement;
 import org.hl7.fhir.r5.model.CodeSystem;
-import org.hl7.fhir.r5.model.CodeSystem.CodeSystemContentMode;
+import org.hl7.fhir.r5.model.Enumerations.CodeSystemContentMode;
 import org.hl7.fhir.r5.model.CodeSystem.ConceptDefinitionComponent;
 import org.hl7.fhir.r5.model.CodeableConcept;
 import org.hl7.fhir.r5.model.Coding;
@@ -793,7 +793,10 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     if (pIn == null) {
       throw new Error(formatMessage(I18nConstants.NO_PARAMETERS_PROVIDED_TO_EXPANDVS));
     }
-
+    if (vs.getUrl().equals("http://hl7.org/fhir/ValueSet/all-time-units") || vs.getUrl().equals("http://hl7.org/fhir/ValueSet/all-distance-units")) {
+      return new ValueSetExpansionOutcome("This value set is not expanded correctly at this time (will be fixed in a future version)", TerminologyServiceErrorClass.VALUESET_UNSUPPORTED);
+    }
+    
     Parameters p = pIn.copy();
 
     if (vs.hasExpansion()) {
@@ -827,21 +830,26 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     
     // ok, first we try to expand locally
     ValueSetExpanderSimple vse = constructValueSetExpanderSimple();
+    res = null;
     try {
       res = vse.expand(vs, p);
-      allErrors.addAll(vse.getAllErrors());
-      if (res.getValueset() != null) {
-        if (!res.getValueset().hasUrl()) {
-          throw new Error(formatMessage(I18nConstants.NO_URL_IN_EXPAND_VALUE_SET));
-        }
-        txCache.cacheExpansion(cacheToken, res, TerminologyCache.TRANSIENT);
-        return res;
-      }
     } catch (Exception e) {
       allErrors.addAll(vse.getAllErrors());
       e.printStackTrace();
+      res = new ValueSetExpansionOutcome(e.getMessage(), TerminologyServiceErrorClass.UNKNOWN);
     }
-    
+    allErrors.addAll(vse.getAllErrors());
+    if (res.getValueset() != null) {
+      if (!res.getValueset().hasUrl()) {
+        throw new Error(formatMessage(I18nConstants.NO_URL_IN_EXPAND_VALUE_SET));
+      }
+      txCache.cacheExpansion(cacheToken, res, TerminologyCache.TRANSIENT);
+      return res;
+    }
+    if (res.getErrorClass() == TerminologyServiceErrorClass.INTERNAL_ERROR) { // this class is created specifically to say: don't consult the server
+      return new ValueSetExpansionOutcome(res.getError(), res.getErrorClass());
+    }
+
     // if that failed, we try to expand on the server
     if (addDependentResources(p, vs)) {
       p.addParameter().setName("cache-id").setValue(new StringType(cacheId));              
@@ -1208,7 +1216,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       if (isTxCaching && cacheId != null && vs.getUrl() != null && cached.contains(vs.getUrl()+"|"+vs.getVersion())) {
         pin.addParameter().setName("url").setValue(new UriType(vs.getUrl()+(vs.hasVersion() ? "|"+vs.getVersion() : "")));        
       } else if (options.getVsAsUrl()){
-        pin.addParameter().setName("url").setValue(new StringType(vs.getUrl()));
+        pin.addParameter().setName("url").setValue(new UriType(vs.getUrl()));
       } else {
         pin.addParameter().setName("valueSet").setResource(vs);
         if (vs.getUrl() != null) {
@@ -1367,7 +1375,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 
   @Override
   public boolean isNoTerminologyServer() {
-    return noTerminologyServer;
+    return noTerminologyServer || txClient == null;
   }
 
   public void setNoTerminologyServer(boolean noTerminologyServer) {
@@ -2152,6 +2160,14 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     }
   }
 
+  @Override
+  public List<StructureDefinition> fetchTypeDefinitions(String typeName) {
+    List<StructureDefinition> res = new ArrayList<>();
+    structures.listAll(res);
+    res.removeIf(sd -> !sd.getType().equals(typeName));
+    return res;
+  }
+
   public boolean isTlogging() {
     return tlogging;
   }
@@ -2174,63 +2190,63 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     }
     
     if (codeSystems.has(url)) {
-      return codeSystems.get(url).getUserString("path");
+      return codeSystems.get(url).getWebPath();
     }
 
     if (valueSets.has(url)) {
-      return valueSets.get(url).getUserString("path");
+      return valueSets.get(url).getWebPath();
     }
 
     if (maps.has(url)) {
-      return maps.get(url).getUserString("path");
+      return maps.get(url).getWebPath();
     }
     
     if (transforms.has(url)) {
-      return transforms.get(url).getUserString("path");
+      return transforms.get(url).getWebPath();
     }
     
     if (actors.has(url)) {
-      return actors.get(url).getUserString("path");
+      return actors.get(url).getWebPath();
     }
     
     if (requirements.has(url)) {
-      return requirements.get(url).getUserString("path");
+      return requirements.get(url).getWebPath();
     }
     
     if (structures.has(url)) {
-      return structures.get(url).getUserString("path");
+      return structures.get(url).getWebPath();
     }
     
     if (guides.has(url)) {
-      return guides.get(url).getUserString("path");
+      return guides.get(url).getWebPath();
     }
     
     if (capstmts.has(url)) {
-      return capstmts.get(url).getUserString("path");
+      return capstmts.get(url).getWebPath();
     }
     
     if (measures.has(url)) {
-      return measures.get(url).getUserString("path");
+      return measures.get(url).getWebPath();
     }
 
     if (libraries.has(url)) {
-      return libraries.get(url).getUserString("path");
+      return libraries.get(url).getWebPath();
     }
 
     if (searchParameters.has(url)) {
-      return searchParameters.get(url).getUserString("path");
+      return searchParameters.get(url).getWebPath();
     }
         
     if (questionnaires.has(url)) {
-      return questionnaires.get(url).getUserString("path");
+      return questionnaires.get(url).getWebPath();
     }
 
     if (operations.has(url)) {
-      return operations.get(url).getUserString("path");
+      return operations.get(url).getWebPath();
     }
     
     if (plans.has(url)) {
-      return plans.get(url).getUserString("path");
+      return plans.get(url).getWebPath();
     }
 
     if (url.equals("http://loinc.org")) {

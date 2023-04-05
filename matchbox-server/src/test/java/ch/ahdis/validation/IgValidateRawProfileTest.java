@@ -50,7 +50,7 @@ public class IgValidateRawProfileTest {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(IgValidateRawProfileTest.class);
 
-  private String targetServer = "http://localhost:8080/matchboxv3/fhir";
+  private String targetServer = "http://localhost:8081/matchboxv3/fhir";
 
   @BeforeClass
 	public static void beforeClass() throws Exception {
