@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - 'matchbox-fronted/**'
+      - "matchbox-frontend/**"
 
 jobs:
   build-and-commit:
