@@ -46,5 +46,5 @@ jobs:
         if: success()
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: Update the Angular GUI
+          commit_message: "server: rebuild the Angular GUI resources"
           file_pattern: "matchbox-server/src/main/resources/static"
