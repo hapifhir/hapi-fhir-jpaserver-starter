@@ -18,18 +18,18 @@ jobs:
       - name: Setup Java 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'adopt'
+          java-version: "17"
+          distribution: "adopt"
           cache: maven
 
       - name: Build with Maven
-        run: mvn package --batch-mode --no-transfer-progress --file matchbox-engine/pom.xml
+        run: mvn package --batch-mode --no-transfer-progress --file pom.xml --projects :matchbox,:matchbox-engine
 
       - name: Setup Java 17
         uses: actions/setup-java@v3
         with: # running setup-java again overwrites the settings.xml
-          java-version: '17'
-          distribution: 'adopt'
+          java-version: "17"
+          distribution: "adopt"
           cache: maven
           server-id: ossrh
           server-username: OSSRH_USERNAME
@@ -43,7 +43,6 @@ jobs:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-
 # The requirements are described in https://central.sonatype.org/publish/requirements/
 # The secrets are managed in https://github.com/ahdis/matchbox/settings/secrets/actions
 # The GPG key pair shall have been distributed to a public key server.
