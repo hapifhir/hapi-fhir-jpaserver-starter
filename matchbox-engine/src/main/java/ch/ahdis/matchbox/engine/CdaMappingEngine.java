@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
 
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
@@ -81,36 +80,15 @@ public class CdaMappingEngine extends MatchboxEngine {
 			// if the version would have been set before (constructor) the package is loaded
 			// from the package cache, we don't want this
 			engine.setVersion("4.0.1");
-			IgLoader igLoader = new IgLoaderFromClassPath(engine.getPcm(), engine.getContext(), engine.getVersion(),
-					engine.isDebug());
-			engine.setIgLoader(igLoader);
-			igLoader.loadIg(engine.getIgs(), null, "/hl7.fhir.r4.core.tgz", false);
-			igLoader.loadIg(engine.getIgs(), null, "/hl7.terminology#5.0.0.tgz", false);
-			igLoader.loadIg(engine.getIgs(), null, "/cda-core-2.0#2.1.0-cibuild.tgz", false);
+			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
+			engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.0.0.tgz"));
+			engine.loadPackage(getClass().getResourceAsStream("/cda-core-2.0#2.1.0-cibuild.tgz"));
 			engine.getContext().setCanRunWithoutTerminology(true);
 			engine.getContext().setNoTerminologyServer(true);
 			engine.getContext().setPackageTracker(engine);
 
 			return engine;
 		}
-
-		/**
-		 * Create a CDA mapping engine with conformance resources provided as an FHIR Implementation Guide on the classpath 
-		 * 
-		 * @param mapIg path to FHIR Implementation Guide (IG) in NPM format which is on
-		 *              the classpath and contains the required conformance resources
-		 *              for mapping (StructureMap, CodeSystem, ValueSet, CoceptMaps etc)
-		 * @return MappingEngine configured with maps for transformation
-		 * @throws FHIRException FHIR Exception
-		 * @throws IOException IO Exception
-		 * @throws URISyntaxException
-		 */
-		public CdaMappingEngine getEngine(String mapIg) throws FHIRException, IOException, URISyntaxException {
-			CdaMappingEngine engine = this.getEngine();
-			engine.getIgLoader().loadIg(engine.getIgs(), null, mapIg, false);
-			return engine;
-		}
-
 	}
 
 	/**

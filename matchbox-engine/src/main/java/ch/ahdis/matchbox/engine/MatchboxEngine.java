@@ -26,9 +26,8 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import org.checkerframework.common.returnsreceiver.qual.This;
-import org.hl7.fhir.convertors.conv40_50.VersionConvertor_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.exceptions.FHIRException;
@@ -42,7 +41,6 @@ import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.formats.IParser;
 import org.hl7.fhir.r5.model.Base;
-import org.hl7.fhir.r5.model.CanonicalResource;
 import org.hl7.fhir.r5.model.ExpressionNode;
 import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
@@ -52,6 +50,8 @@ import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
+import org.hl7.fhir.utilities.json.model.JsonObject;
+import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
@@ -76,7 +76,8 @@ public class MatchboxEngine extends ValidationEngine {
 
 	public MatchboxEngine(ValidationEngine other) throws FHIRException, IOException {
 		super(other);
-
+		// Create a new IgLoader, otherwise the context is desynchronized between it and the engine
+		this.setIgLoader(new IgLoader(this.getPcm(), this.getContext(), this.getVersion(), this.isDebug()));
 	}
 
 	/**
@@ -106,11 +107,8 @@ public class MatchboxEngine extends ValidationEngine {
 			log.info(VersionUtil.getPoweredBy());
 			MatchboxEngine engine = new MatchboxEngine(super.fromNothing());
 			engine.setVersion("4.0.1");
-			IgLoader igLoader = new IgLoaderFromClassPath(engine.getPcm(), engine.getContext(), engine.getVersion(),
-					engine.isDebug());
-			engine.setIgLoader(igLoader);
-			igLoader.loadIg(engine.getIgs(), null, "/hl7.fhir.r4.core.tgz", false);
-			igLoader.loadIg(engine.getIgs(), null, "/hl7.terminology#5.0.0.tgz", false);
+			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
+			engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.0.0.tgz"));
 			engine.getContext().setCanRunWithoutTerminology(true);
 			engine.getContext().setNoTerminologyServer(true);
 			engine.getContext().setPackageTracker(engine);
@@ -588,6 +586,22 @@ public class MatchboxEngine extends ValidationEngine {
 				(inputJson ? FhirFormat.JSON : FhirFormat.XML));
 		ExpressionNode exp = fpe.parse(expression);
 		return fpe.evaluateToString(new ValidatorHostContext(this.getContext(), e), e, e, e, exp);
+	}
+
+	/**
+	 * Loads an IG in the engine from its NPM package as an {@link InputStream}, its ID and version. The
+	 * {@link InputStream} will be closed by {@link org.hl7.fhir.utilities.npm.NpmPackage#readStream}.
+	 *
+	 * The package dependencies shall be added manually, no recursive loading will be performed.
+	 *
+	 * @param inputStream The NPM package input stream. It will be closed.
+	 */
+	public void loadPackage(final InputStream inputStream) throws IOException {
+		final NpmPackage npmPackage = NpmPackage.fromPackage(Objects.requireNonNull(inputStream));
+
+		// Remove the dependencies to disable recursive loading
+		npmPackage.getNpm().set("dependencies", new JsonObject());
+		this.getIgLoader().loadPackage(npmPackage, true);
 	}
 
 	protected void txLog(String msg) {

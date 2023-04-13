@@ -60,7 +60,8 @@ class CdaToFhirTransformTests {
 	private CdaMappingEngine getEngine() {
 		if (engine == null) {
 			try {
-				engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngine("/cda-fhir-maps-300.tgz");
+				engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngine();
+				engine.loadPackage(getClass().getResourceAsStream("/cda-fhir-maps-300.tgz"));
 			} catch (FHIRException | IOException | URISyntaxException e) {
 				e.printStackTrace();
 			}
