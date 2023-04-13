@@ -34,6 +34,8 @@ spring:
           backend:
             directory:
               type: local-heap
+              locking:
+                strategy: none
   #      hibernate.search.backend.type: lucene
   #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiLuceneAnalysisConfigurer
   #      hibernate.search.backend.directory.type: local-filesystem
