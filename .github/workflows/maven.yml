@@ -1,5 +1,5 @@
-# This workflow will build a Java project with Maven
-name: Java CI with Maven
+# This workflow will build and test a Java project with Maven
+name: Maven test
 
 on:
   pull_request:
@@ -21,4 +21,6 @@ jobs:
           cache: "maven"
 
       - name: Run the tests in Maven
+        timeout-minutes: 15
+        # We need a timeout here
         run: mvn --batch-mode --no-transfer-progress --update-snapshots verify
