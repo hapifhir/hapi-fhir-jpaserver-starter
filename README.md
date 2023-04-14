@@ -58,28 +58,133 @@ docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.applicat
 ```
 Here, the configuration file (*another.application.yaml*) is part of the compiled set of resources.
 
-### Example using docker-compose.yml for docker-compose
+### Example using ``docker-compose.yml`` for docker-compose
 
-```
+```yaml
 version: '3.7'
+
 services:
-  web:
+  fhir:
+    container_name: fhir
     image: "hapiproject/hapi:latest"
     ports:
-      - "8090:8080"
+      - "8080:8080"
     configs:
       - source: hapi
-        target: /data/hapi/application.yaml
-    volumes:
-      - hapi-data:/data/hapi
+        target: /app/config/application.yaml
+    depends_on:
+      - db
+
+
+  db:
+    image: postgres
+    restart: always
     environment:
-      SPRING_CONFIG_LOCATION: 'file:///data/hapi/application.yaml'
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: hapi
+    volumes:
+      - ./hapi.postgress.data:/var/lib/postgresql/data
+
 configs:
   hapi:
-     external: true
-volumes:
-    hapi-data:
-        external: true
+     file: ./hapi.application.yaml
+```
+
+Provide the following content in ``./hapi.aplication.yaml``:
+
+```yaml
+spring:
+  datasource:
+    url: 'jdbc:postgresql://db:5432/hapi'
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.search.enabled: false
+```
+
+### Example running custom interceptor using docker-compose
+
+This example is an extension of the above one, now adding a custom interceptor.
+
+```yaml
+version: '3.7'
+
+services:
+  fhir:
+    container_name: fhir
+    image: "hapiproject/hapi:latest"
+    ports:
+      - "8080:8080"
+    configs:
+      - source: hapi
+        target: /app/config/application.yaml
+      - source: hapi-extra-classes
+        target: /app/extra-classes
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: hapi
+    volumes:
+      - ./hapi.postgress.data:/var/lib/postgresql/data
+
+configs:
+  hapi:
+     file: ./hapi.application.yaml
+  hapi-extra-classes:
+     file: ./hapi-extra-classes
+```
+
+Provide the following content in ``./hapi.aplication.yaml``:
+
+```yaml
+spring:
+  datasource:
+    url: 'jdbc:postgresql://db:5432/hapi'
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.search.enabled: false
+hapi:
+  fhir:
+    custom-bean-packages: the.package.containing.your.interceptor
+    custom-interceptor-classes: the.package.containing.your.interceptor.YourInterceptor
+```
+
+The basic interceptor structure would be like this:
+
+```java
+package the.package.containing.your.interceptor;
+
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.springframework.stereotype.Component;
+
+import ca.uhn.fhir.interceptor.api.Hook;
+import ca.uhn.fhir.interceptor.api.Interceptor;
+import ca.uhn.fhir.interceptor.api.Pointcut;
+
+@Component
+@Interceptor
+public class YourInterceptor
+{
+    @Hook(Pointcut.STORAGE_PRECOMMIT_RESOURCE_CREATED)
+    public void resourceCreated(IBaseResource newResource)
+    {
+        System.out.println("YourInterceptor.resourceCreated");
+    }
+}
 ```
 
 ## Running locally
