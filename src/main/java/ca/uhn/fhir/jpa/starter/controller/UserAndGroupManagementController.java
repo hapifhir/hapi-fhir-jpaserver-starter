@@ -165,6 +165,11 @@ public class UserAndGroupManagementController {
 		return helperService.getIndicators(env);
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/categories")
+	public ResponseEntity<?> categories(@RequestParam("env") String env) {
+		return helperService.getCategories(env);
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/pieChartDefinition")
 	public ResponseEntity<?> pieChartDefinition(@RequestParam("env") String env){
 		return helperService.getPieChartDefinition(env);

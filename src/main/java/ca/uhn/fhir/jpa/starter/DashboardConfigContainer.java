@@ -2,6 +2,8 @@ package ca.uhn.fhir.jpa.starter;
 
 import java.util.List;
 
+import ca.uhn.fhir.jpa.starter.model.CategoryItem;
+import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
 import com.iprd.report.model.FilterItem;
 import com.iprd.report.model.definition.ANCDailySummaryConfig;
 import com.iprd.report.model.definition.BarChartDefinition;
@@ -42,12 +44,21 @@ public class DashboardConfigContainer {
 	public void setTabularItems(List<TabularItem> tabularItems) {
 		this.tabularItems = tabularItems;
 	}
-	public List<IndicatorItem> getScoreCardIndicatorItems() {
+	public List<ScoreCardIndicatorItem> getScoreCardIndicatorItems() {
 		return scoreCardIndicatorItems;
 	}
-	public void setScoreCardIndicatorItems(List<IndicatorItem> scoreCardIndicatorItems) {
+	public void setScoreCardIndicatorItems(List<ScoreCardIndicatorItem> scoreCardIndicatorItems) {
 		this.scoreCardIndicatorItems = scoreCardIndicatorItems;
 	}
+
+	public CategoryItem getCategoryItem() {
+		return categoryItem;
+	}
+
+	public void setCategoryItem(CategoryItem categoryItem) {
+		this.categoryItem = categoryItem;
+	}
+
 	public List<IndicatorItem> getAnalyticsIndicatorItems() {
 		return analyticsIndicatorItems;
 	}
@@ -65,7 +76,9 @@ public class DashboardConfigContainer {
 	private List<PieChartDefinition> pieChartDefinitions;
 	private List<LineChart> lineCharts;
 	private List<TabularItem> tabularItems;
-	private List<IndicatorItem> scoreCardIndicatorItems;
+	private List<ScoreCardIndicatorItem> scoreCardIndicatorItems;
 	private List<IndicatorItem> analyticsIndicatorItems;
 	private ANCDailySummaryConfig ancDailySummaryConfig;
+
+	private CategoryItem categoryItem;
 }

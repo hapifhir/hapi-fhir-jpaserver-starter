@@ -6,16 +6,12 @@ import ca.uhn.fhir.jpa.starter.AsyncConfiguration;
 import ca.uhn.fhir.jpa.starter.ConfigDefinitionTypes;
 import ca.uhn.fhir.jpa.starter.DashboardConfigContainer;
 import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
-import ca.uhn.fhir.jpa.starter.model.AnalyticComparison;
-import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
-import ca.uhn.fhir.jpa.starter.model.ReportType;
+import ca.uhn.fhir.jpa.starter.model.*;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
-import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
-import ca.uhn.fhir.jpa.starter.model.PatientIdentifierEntity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
@@ -593,13 +589,24 @@ public class HelperService {
 
 	public ResponseEntity<?> getIndicators(String env) {
 		try {
-			List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
+			List<ScoreCardIndicatorItem> indicators = getIndicatorItemListFromFile(env);
 			return ResponseEntity.ok(indicators);
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			return ResponseEntity.ok("Error : ScoreCard Config File Not Found");
 		}
 	}
+
+	public ResponseEntity<?> getCategories(String env) {
+		try {
+			CategoryItem categoryItem = getCategoriesFromFile(env);
+			return ResponseEntity.ok(categoryItem);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok("Error : Category Config File Not Found");
+		}
+	}
+
 
 	public ResponseEntity<?> getBarChartDefinition(String env) {
 		try {
@@ -832,96 +839,110 @@ public class HelperService {
 		return ResponseEntity.ok(scoreCardItems);
 	}
 
-	public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String,String> filters,String env) {
+	public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters, String env) {
 		notificationDataSource = NotificationDataSource.getInstance();
-		List<ScoreCardItem> scoreCardItems = new ArrayList<>();
-		List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
+		List<ScoreCardResponseItem> scoreCardResponseItems = new ArrayList<>();
+		List<ScoreCardIndicatorItem> scoreCardIndicatorItemsList = getIndicatorItemListFromFile(env);
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
 		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 
 		Date start = Date.valueOf(startDate);
 		Date end = Date.valueOf(endDate);
-		List<String> fhirSearchList = getFhirSearchListByFilters(filters,env);
-		performCachingIfNotPresent(indicators, idsAndOrgIdToChildrenMapPair.first, start, end,fhirSearchList);
-		switch (type) {
-			case summary: {
-				LinkedHashMap<String, List<String>> mapOfIdToChildren = idsAndOrgIdToChildrenMapPair.second;
-				mapOfIdToChildren.forEach((id, children) -> {
-					children.add(id);
-					for (IndicatorItem indicator : indicators) {
-						String key = indicator.getFhirPath()+String.join(",", fhirSearchList);
-						Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
+		List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
+
+		List<IndicatorItem> indicators = new ArrayList<>();
+		scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
+
+		performCachingIfNotPresent(indicators, idsAndOrgIdToChildrenMapPair.first, start, end, fhirSearchList);
+
+		scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> {
+			ScoreCardResponseItem scoreCardResponseItem = new ScoreCardResponseItem();
+			scoreCardResponseItem.setCategoryId(scoreCardIndicatorItem.getCategoryId());
+			List<ScoreCardItem> scoreCardItems = new ArrayList<>();
+			switch (type) {
+				case summary: {
+					LinkedHashMap<String, List<String>> mapOfIdToChildren = idsAndOrgIdToChildrenMapPair.second;
+					mapOfIdToChildren.forEach((id, children) -> {
+						children.add(id);
+						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
+							Double cacheValueSum = notificationDataSource
+								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), children);
-						scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(),
-							startDate, endDate));
-					}
-				});
-				break;
-			}
-			case quarterly: {
-				List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-				List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates(start, end);
-				for (Pair<Date, Date> pair : quarterDatePairList) {
-					for (IndicatorItem indicator : indicators) {
-						String key = indicator.getFhirPath()+String.join(",", fhirSearchList);
-						Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
-					}
+							scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(),
+								startDate, endDate));
+						}
+					});
+					break;
 				}
-				break;
-			}
-			case weekly: {
-				List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-				List<Pair<Date, Date>> weeklyDatePairList = DateUtilityHelper.getWeeklyDates(start, end);
-				for (Pair<Date, Date> pair : weeklyDatePairList) {
-					for (IndicatorItem indicator : indicators) {
-						String key = indicator.getFhirPath()+String.join(",", fhirSearchList);
-						Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+				case quarterly: {
+					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates(start, end);
+					for (Pair<Date, Date> pair : quarterDatePairList) {
+						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
+							Double cacheValueSum = notificationDataSource
+								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+						}
 					}
+					break;
 				}
-				break;
-			}
-			case monthly: {
-				List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-				List<Pair<Date, Date>> monthlyDatePairList = DateUtilityHelper.getMonthlyDates(start, end);
-				for (Pair<Date, Date> pair : monthlyDatePairList) {
-					for (IndicatorItem indicator : indicators) {
-						String key = indicator.getFhirPath()+String.join(",", fhirSearchList);
-						Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+				case weekly: {
+					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+					List<Pair<Date, Date>> weeklyDatePairList = DateUtilityHelper.getWeeklyDates(start, end);
+					for (Pair<Date, Date> pair : weeklyDatePairList) {
+						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
+							Double cacheValueSum = notificationDataSource
+								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+						}
 					}
+					break;
 				}
-				break;
-			}
-			case daily: {
-				List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-				List<Pair<Date, Date>> dailyDatePairList = DateUtilityHelper.getDailyDates(start, end);
-				for (Pair<Date, Date> pair : dailyDatePairList) {
-					for (IndicatorItem indicator : indicators) {
-						String key = indicator.getFhirPath()+String.join(",", fhirSearchList);
-						Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+				case monthly: {
+					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+					List<Pair<Date, Date>> monthlyDatePairList = DateUtilityHelper.getMonthlyDates(start, end);
+					for (Pair<Date, Date> pair : monthlyDatePairList) {
+						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
+							Double cacheValueSum = notificationDataSource
+								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+						}
 					}
+					break;
 				}
-				break;
+				case daily: {
+					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+					List<Pair<Date, Date>> dailyDatePairList = DateUtilityHelper.getDailyDates(start, end);
+					for (Pair<Date, Date> pair : dailyDatePairList) {
+						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
+							Double cacheValueSum = notificationDataSource
+								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+						}
+					}
+					break;
+				}
 			}
-		}
-		return ResponseEntity.ok(scoreCardItems);
+
+			scoreCardResponseItem.setScoreCardItemList(scoreCardItems);
+			scoreCardResponseItems.add(scoreCardResponseItem);
+		});
+
+		return ResponseEntity.ok(scoreCardResponseItems);
 	}
 
 
@@ -1170,7 +1191,9 @@ public class HelperService {
 	}
 
 	public void cacheDashboardData(List<String> facilities, String start, String end, String env) {
-		List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
+		List<ScoreCardIndicatorItem> scoreCardIndicatorItemsList = getIndicatorItemListFromFile(env);
+		List<IndicatorItem> indicators = new ArrayList<>();
+		scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
 		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
 		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
@@ -1275,8 +1298,12 @@ public class HelperService {
 		return dashboardEnvToConfigMap.get(env).getFilterItems();
 	}
 
-	List<IndicatorItem> getIndicatorItemListFromFile(String env) throws NullPointerException{
+	List<ScoreCardIndicatorItem> getIndicatorItemListFromFile(String env) throws NullPointerException{
 		return dashboardEnvToConfigMap.get(env).getScoreCardIndicatorItems();
+	}
+
+	CategoryItem getCategoriesFromFile(String env) throws NullPointerException{
+		return dashboardEnvToConfigMap.get(env).getCategoryItem();
 	}
 
 	List<BarChartDefinition> getBarChartItemListFromFile(String env) throws NullPointerException{

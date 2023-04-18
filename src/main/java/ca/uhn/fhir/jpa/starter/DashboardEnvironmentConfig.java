@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ca.uhn.fhir.jpa.starter.model.CategoryItem;
+import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
 import com.iprd.report.model.data.BarChartItemDataCollection;
 import com.iprd.report.model.data.BarComponentData;
 import com.iprd.report.model.data.LineChartItem;
@@ -80,7 +83,7 @@ public class DashboardEnvironmentConfig {
 							break;
 						}
 						case SCORECARD_DEFINITIONS: {
-							envConfigContainer.setScoreCardIndicatorItems(new Gson().fromJson(reader, new TypeToken<List<IndicatorItem>>() {
+							envConfigContainer.setScoreCardIndicatorItems(new Gson().fromJson(reader, new TypeToken<List<ScoreCardIndicatorItem>>() {
 							}.getType()));
 							break;
 						}
@@ -111,6 +114,10 @@ public class DashboardEnvironmentConfig {
 						}
 						case DAILY_SUMMARY_DEFINITIONS: {
 							envConfigContainer.setAncDailySummaryConfig(new Gson().fromJson(reader, ANCDailySummaryConfig.class));
+							break;
+						}
+						case CATEGORY_DEFINITIONS: {
+							envConfigContainer.setCategoryItem(new Gson().fromJson(reader, CategoryItem.class));
 							break;
 						}
 					}
