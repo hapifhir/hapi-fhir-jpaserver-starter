@@ -1,7 +1,5 @@
 package ch.ahdis.validation;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * Attention: if it is the first test run, an error about not connecting to port 8080 appears, running IgValidateR4 first works 
  */
@@ -12,23 +10,16 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.runner.RunWith;
-import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,12 +30,13 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.Application;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(classes = {Application.class})
 @ActiveProfiles("test1")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class IgValidateRawProfileTest {
 
 
@@ -52,19 +44,15 @@ public class IgValidateRawProfileTest {
 
   private String targetServer = "http://localhost:8081/matchboxv3/fhir";
 
-  @BeforeClass
-	public static void beforeClass() throws Exception {
-		Path dir = Paths.get("database");
-		if (Files.exists(dir)) {
-			for (Path file : Files.list(dir).collect(Collectors.toList())) {
-				if (Files.isRegularFile(file)) {
-					Files.delete(file);
-				}
-			}	
-		}
-  }
-
-  @BeforeAll void waitUntilStartup() throws InterruptedException {
+  @BeforeAll void waitUntilStartup() throws Exception {
+	  Path dir = Paths.get("database");
+	  if (Files.exists(dir)) {
+		  for (Path file : Files.list(dir).collect(Collectors.toList())) {
+			  if (Files.isRegularFile(file)) {
+				  Files.delete(file);
+			  }
+		  }
+	  }
     Thread.sleep(20000); // give the server some time to start up
     FhirContext contextR4 = FhirVersionEnum.R4.newContext();
     ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);

@@ -1,12 +1,7 @@
 package ch.ahdis.validation;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,37 +15,26 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Identifier;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-
-import com.google.common.collect.MapDifference;
-import com.google.common.collect.MapDifference.ValueDifference;
-import com.google.common.collect.Maps;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.Application;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 
-import org.springframework.test.context.junit4.SpringRunner;
+import static org.junit.jupiter.api.Assertions.*;
 
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(classes = { Application.class })
 @ActiveProfiles("test-cda")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CdaTransformTests {
   
   private FhirContext contextR4 = FhirVersionEnum.R4.newContext();
@@ -58,21 +42,16 @@ public class CdaTransformTests {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CdaTransformTests.class);
 
-  
-  @BeforeClass
-	public static void beforeClass() throws Exception {
-		Path dir = Paths.get("database");
-		if (Files.exists(dir)) {
-			for (Path file : Files.list(dir).collect(Collectors.toList())) {
-				if (Files.isRegularFile(file)) {
-					Files.delete(file);
-				}
-			}	
-		}
-  }
-
   @BeforeAll 
-  void waitUntilStartup() throws InterruptedException {
+  void waitUntilStartup() throws Exception {
+	  Path dir = Paths.get("database");
+	  if (Files.exists(dir)) {
+		  for (Path file : Files.list(dir).collect(Collectors.toList())) {
+			  if (Files.isRegularFile(file)) {
+				  Files.delete(file);
+			  }
+		  }
+	  }
     Thread.sleep(20000); // give the server some time to start up
     genericClient.capabilities();
   }
@@ -136,7 +115,4 @@ public class CdaTransformTests {
     }
     return ids;
   }
-  
-
-
 }

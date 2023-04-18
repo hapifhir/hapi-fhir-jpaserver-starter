@@ -85,7 +85,7 @@
         <jackson_databind_version>2.14.1</jackson_databind_version>
         <maven_assembly_plugin_version>3.3.0</maven_assembly_plugin_version>
         <maven_license_plugin_version>1.8</maven_license_plugin_version>
-        <maven_surefire_version>3.0.0-M5</maven_surefire_version>
+        <maven_surefire_version>3.0.0</maven_surefire_version>
         <okhttp_version>4.10.0</okhttp_version>
         <poi_version>4.1.2</poi_version>
         <poi_ooxml_schemas_version>1.4</poi_ooxml_schemas_version>
@@ -320,13 +320,19 @@
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
-                <version>5.7.2</version>
+                <version>${junit_version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
-                <version>5.7.2</version>
+                <version>${junit_version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>${junit_version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

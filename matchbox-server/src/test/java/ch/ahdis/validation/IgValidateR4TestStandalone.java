@@ -3,14 +3,9 @@ package ch.ahdis.validation;
 import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -30,16 +24,10 @@ import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.Utilities;
-import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.npm.NpmPackage;
-import org.junit.Assume;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 import org.yaml.snakeyaml.Yaml;
 
@@ -47,7 +35,6 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.packages.loader.PackageLoaderSvc;
 import ca.uhn.fhir.jpa.starter.AppProperties.ImplementationGuide;
-import ca.uhn.fhir.util.ClasspathUtil;
 import ch.ahdis.matchbox.util.PackageCacheInitializer;
 
 import org.springframework.core.io.ClassPathResource;
@@ -57,12 +44,13 @@ import org.springframework.core.io.ClassPathResource;
  * implementation guides defined in ig and execute the validations
  * 
  * when running the testsuite we have sometime spurious errors during startup and alos during proccessing (Bundles to big?))
+ *
+ * UPDATE 2023/04/13 QL: This class was used as a base for IgValidateR4Test but it has been refactored for JUnit5.
  * 
  * @author oliveregger
  */
-@RunWith(Parameterized.class)
 @ActiveProfiles("test-ch")
-@Ignore
+@Disabled
 public class IgValidateR4TestStandalone {
 
   static private Set<String> loadedIgs = new HashSet<String>();
@@ -84,7 +72,6 @@ public class IgValidateR4TestStandalone {
     return PackageCacheInitializer.getIgs(obj, true);
   }
 
-  @Parameters(name = "{index}: file {0}")
   public static Iterable<Object[]> data() throws ParserConfigurationException, IOException, FHIRFormatError {
 
     List<ImplementationGuide> igs = getImplementationGuides();
@@ -256,7 +243,7 @@ public class IgValidateR4TestStandalone {
     skip = skip || "ch.fhir.ig.ch-epr-mhealth#0.1.2-Bundle-2-7-BundleProvideDocument".equals(name); // error in testcase, however cannot reproduce yet directly ???
     if (skip) {
       log.error("ignoring validation for " + name);
-      Assume.assumeFalse(skip);
+		 Assumptions.assumeFalse(skip);
     }
 
     ValidationClient genericClient = new ValidationClient(contextR4, targetServer);

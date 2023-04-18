@@ -2,8 +2,6 @@ package ch.ahdis.validation;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.Validate;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IPrimitiveType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -24,19 +22,16 @@ import ca.uhn.fhir.context.RuntimeResourceDefinition;
 import ca.uhn.fhir.fhirpath.IFhirPath;
 import ch.ahdis.fhir.hapi.jpa.validation.Canonicalizer;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // Strange, works only with JUNIT4, why?
 public class CanonicalizerTests {
   
   @Test
-  public void elementsInJsonOrderAsXml() {
+  public void elementsInJsonOrderAsXml() throws IOException {
     
     String contentString = "";
-    try {
-      contentString = this.getContent("canonicalize-elements.json");
-    } catch(Exception e) {
-      assertTrue("catched exception", false);
-    }
+	 contentString = this.getContent("canonicalize-elements.json");
     
     FhirContext contextR4 = FhirVersionEnum.R4.newContext();
 
@@ -59,15 +54,11 @@ public class CanonicalizerTests {
   }
   
   @Test
-  public void patient() {
+  public void patient() throws IOException {
     
     String contentString = "";
-    try {
-      contentString = this.getContent("canonicalize-patient.json");
-    } catch(Exception e) {
-      assertTrue("catched exception", false);
-    }
-    
+    contentString = this.getContent("canonicalize-patient.json");
+
     FhirContext contextR4 = FhirVersionEnum.R4.newContext();
     IBaseResource resource = contextR4.newJsonParser().parseResource(contentString);
     
@@ -84,14 +75,10 @@ public class CanonicalizerTests {
   }
   
   @Test
-  public void chargeItem() {
+  public void chargeItem() throws IOException {
     
     String contentString = "";
-    try {
-      contentString = this.getContent("canonicalize-chargeitem.json");
-    } catch(Exception e) {
-      assertTrue("catched exception", false);
-    }
+    contentString = this.getContent("canonicalize-chargeitem.json");
     
     FhirContext contextR4 = FhirVersionEnum.R4.newContext();
     IBaseResource resource = contextR4.newJsonParser().parseResource(contentString);
