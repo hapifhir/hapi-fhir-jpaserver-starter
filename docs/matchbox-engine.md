@@ -56,10 +56,17 @@ InputStream in = CdaToFhirTransformTests.class.getResourceAsStream("/pat.json");
 org.hl7.fhir.r4.model.OperationOutcome outcome = engine.validate(in,FhirFormat.JSON, "http://hl7.org/fhir/StructureDefinition/Patient");
 ```
 
-You have the ability to add additional implementation guides to the engine (e.g. if you wan’t to support validation for your implementation guide). The engine will look for the npm package provided in the classpath:
+You have the ability to add additional implementation guides to the engine (e.g. if you wan’t to support validation for your implementation guide).
+The engine will look for it in the local disk cache or in the remote FHIR package repository.
 
 ```java
-engine.getIgLoader().loadIg(engine.getIgs(), engine.getBinaries(), "myig.tgz", true);
+engine.loadPackage("ihe.formatcode.fhir", "1.0.0");
+```
+
+It is possible to load an IG from the content of its NPM package, but its dependencies won't be automatically fetched.
+
+```java
+engine.loadPackage(getClass().getResourceAsStream("/myig.tgz"));
 ```
 
 You can create also a new instance based on an existing engine. This might be needed if you want to update conformance resources in an instance or if you want to have support for validation with different versions of ig’s (an engine can only be configured with one ig version, there is no support that an engine has two versions of the same ig).
@@ -88,7 +95,8 @@ To support CDA to FHIR mapping (or vice versa) a specific CDAEngine is available
 You can the load the engine with those maps:
 
 ```java
-engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngine("/cda-fhir-maps-300.tgz");
+engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngine();
+engine.loadPackage(getClass().getResourceAsStream("/cda-fhir-maps-300.tgz"));
 ```
 
 And then do the transformation with
