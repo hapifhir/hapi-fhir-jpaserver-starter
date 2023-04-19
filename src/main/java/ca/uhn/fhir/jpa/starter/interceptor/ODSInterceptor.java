@@ -46,7 +46,7 @@ public class ODSInterceptor extends InterceptorAdapter {
 
     private static final Pattern lastUpdatedRequestParameterPattern = Pattern.compile("gt\\d{4}-\\d{2}-\\d{2}");
 
-    private static final Pattern integerPattern = Pattern.compile("^\\d+$");
+    private static final Pattern integerPattern = Pattern.compile("^\\d+(,\\d+)*$");
 
     @Hook(Pointcut.SERVER_OUTGOING_RESPONSE)
     public boolean outgoingResponse(RequestDetails theRequestDetails, ResponseDetails theResponseDetails, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) {
@@ -187,64 +187,63 @@ public class ODSInterceptor extends InterceptorAdapter {
 	public boolean incomingRequestPostProcessed(RequestDetails theRequestDetails, HttpServletRequest theRequest, HttpServletResponse theResponse) throws InvalidRequestException {
         logger.debug("incomingRequestPostProcessed - validating parameters" );
 
-        // If _lastUpdated is supplied (as ods-lastUpdated), validate it
-        var lastUpdated = getRequestParameter(theRequestDetails, "ods-lastUpdated");
-        if (lastUpdated!=null) {
-            logger.debug("Validating ods-lastUpdated parameter" );
-            Matcher m = lastUpdatedRequestParameterPattern.matcher(lastUpdated);
-            
-            
-            if (!m.find()) {
-                if (!lastUpdated.contains("gt")) {
-                    throw new InvalidRequestException("Last Updated Parameter Validation Error", buildOperationOutcome(IssueType.INVALID, "INVALID_VALUE", "An input field has an invalid value for its type", "Supplied date prefix is invalid, must be gt"));
-                } else {
-                    throw new InvalidRequestException("Last Updated Parameter Validation Error", buildOperationOutcome(IssueType.INVALID, "INVALID_VALUE", "An input field has an invalid value for its type", "Supplied date is invalid"));
-                }
+        if (theRequestDetails.getHeaders("X-Fhir-Modified") != null && theRequestDetails.getHeaders("X-Fhir-Modified").size()>0) {
 
+            // If _lastUpdated is supplied (as ods-lastUpdated), validate it
+            var lastUpdated = getRequestParameter(theRequestDetails, "ods-lastUpdated");
+            if (lastUpdated!=null) {
+                logger.debug("Validating ods-lastUpdated parameter" );
+                Matcher m = lastUpdatedRequestParameterPattern.matcher(lastUpdated);
                 
-            }
-        }
-
-        // If identifier is specified, make sure the system is valid
-        String identifier = getRequestParameter(theRequestDetails, "identifier");
-        logger.debug("identifier supplied: " + identifier );
-        if (identifier!=null && identifier.contains("|") ) {
-            String[] parts = identifier.split(Pattern.quote("|"));
-            //logger.debug("identifier system: " + parts[0] );
-            //logger.debug("identifier value: " + parts[1] );
-            String identifierSystem = parts[0];
-            //String identifierValue = parts[1];
-            if (identifierSystem!=null && !identifierSystem.equals("https://fhir.nhs.uk/Id/ods-organization-code")) {
-                logger.debug("Error thrown as identifier system is: `" + identifierSystem + "`" );
-                throw new InvalidRequestException("Identifier System Parameter Validation Error", buildOperationOutcome(IssueType.CODEINVALID, "INVALID_IDENTIFIER_SYSTEM", "Invalid identifier system", "Invalid ods-org-role parameter. Should be https://fhir.nhs.uk/Id/ods-organization-code."));
-            }
-        }
-
-
-        // ods-org-role needs to be a number
-        String odsorgrole = getRequestParameter(theRequestDetails, "ods-org-role");
-        String orgroleSystem = "";
-        String orgroleIdentifier = "";
-        if (odsorgrole!=null) {
-            if (odsorgrole.contains("|") ) {
-                String[] parts = odsorgrole.split(Pattern.quote("|"));
-                orgroleSystem = parts[0];
-                orgroleIdentifier = parts[1];
-                if (orgroleSystem!=null && !orgroleSystem.equals("https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1")) {
-                    logger.debug("Error thrown as ods-org-role system is: `" + orgroleSystem + "`" );
-                    throw new InvalidRequestException("Identifier System Parameter Validation Error", buildOperationOutcome(IssueType.CODEINVALID, "INVALID_CODE_SYSTEM", "Invalid code system", "Invalid ods-org-role parameter. Should be https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1."));
+                
+                if (!m.find()) {
+                    if (!lastUpdated.contains("gt")) {
+                        throw new InvalidRequestException("Last Updated Parameter Validation Error", buildOperationOutcome(IssueType.INVALID, "INVALID_VALUE", "An input field has an invalid value for its type", "Supplied date prefix is invalid, must be gt"));
+                    } else {
+                        throw new InvalidRequestException("Last Updated Parameter Validation Error", buildOperationOutcome(IssueType.INVALID, "INVALID_VALUE", "An input field has an invalid value for its type", "Supplied date is invalid"));
+                    }
                 }
-            } else {
-                orgroleIdentifier = odsorgrole;
             }
-            logger.debug("Validating regex ods-org-role parameter value " + orgroleIdentifier );
-            Matcher m = integerPattern.matcher(orgroleIdentifier);
-            if (!m.find()) {
-                throw new InvalidRequestException("Last Updated Parameter Validation Error", buildOperationOutcome(IssueType.CODEINVALID, "INVALID_CODE_VALUE", "Invalid code value", "Invalid FHIR ods-org-role parameter"));
+
+            // If identifier is specified, make sure the system is valid
+            String identifier = getRequestParameter(theRequestDetails, "identifier");
+            logger.debug("identifier supplied: " + identifier );
+            if (identifier!=null && identifier.contains("|") ) {
+                String[] parts = identifier.split(Pattern.quote("|"));
+                //logger.debug("identifier system: " + parts[0] );
+                //logger.debug("identifier value: " + parts[1] );
+                String identifierSystem = parts[0];
+                //String identifierValue = parts[1];
+                if (identifierSystem!=null && !identifierSystem.equals("https://fhir.nhs.uk/Id/ods-organization-code")) {
+                    logger.debug("Error thrown as identifier system is: `" + identifierSystem + "`" );
+                    throw new InvalidRequestException("Identifier System Parameter Validation Error", buildOperationOutcome(IssueType.CODEINVALID, "INVALID_IDENTIFIER_SYSTEM", "Invalid identifier system", "Invalid ods-org-role parameter. Should be https://fhir.nhs.uk/Id/ods-organization-code."));
+                }
+            }
+
+            // ods-org-role needs to be a number
+            String odsorgrole = getRequestParameter(theRequestDetails, "ods-org-role");
+            String orgroleSystem = "";
+            String orgroleIdentifier = "";
+            if (odsorgrole!=null) {
+                if (odsorgrole.contains("|") ) {
+                    String[] parts = odsorgrole.split(Pattern.quote("|"));
+                    orgroleSystem = parts[0];
+                    orgroleIdentifier = parts[1];
+                    if (orgroleSystem!=null && !orgroleSystem.equals("https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1")) {
+                        logger.debug("Error thrown as ods-org-role system is: `" + orgroleSystem + "`" );
+                        throw new InvalidRequestException("Identifier System Parameter Validation Error", buildOperationOutcome(IssueType.CODEINVALID, "INVALID_CODE_SYSTEM", "Invalid code system", "Invalid ods-org-role parameter. Should be https://directory.spineservices.nhs.uk/STU3/CodeSystem/ODSAPI-OrganizationRole-1."));
+                    }
+                } else {
+                    orgroleIdentifier = odsorgrole;
+                }
+                logger.debug("Validating regex ods-org-role parameter value " + orgroleIdentifier );
+                Matcher m = integerPattern.matcher(orgroleIdentifier);
+                if (!m.find()) {
+                    throw new InvalidRequestException("Last Updated Parameter Validation Error", buildOperationOutcome(IssueType.CODEINVALID, "INVALID_CODE_VALUE", "Invalid code value", "Invalid FHIR ods-org-role parameter"));
+                }
             }
         }
         
-
         return true;
         
 	}
