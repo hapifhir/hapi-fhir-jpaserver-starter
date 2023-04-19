@@ -43,6 +43,7 @@ import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.starter.interceptor.DC4HAuthorizationInterceptor;
+import ca.uhn.fhir.jpa.starter.interceptor.ODSInterceptor;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
@@ -372,6 +373,12 @@ public class StarterJpaConfig {
 			fhirServer.registerInterceptor(new DC4HAuthorizationInterceptor(appProperties));
 		} else {
 			ourLog.info("DC4HAuthorizationInterceptor is not enabled on this server");
+		}
+
+		if (appProperties.getOds_interceptor_enabled()) {
+			ourLog.info("ODS Interceptor is enabled on this server");
+			//DC4H - Add ODS Interceptor
+			fhirServer.registerInterceptor(new ODSInterceptor());
 		}
 
 		// Validation

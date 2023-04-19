@@ -68,6 +68,7 @@ public class AppProperties {
   private String authorization_token_claim_name = "authorities";
   private String authorization_token_write_perm= "";
   private String authorization_token_read_perm= "";
+  private Boolean ods_interceptor_enabled = false;
 
   private Validation validation = new Validation();
   private Map<String, Tester> tester = null;
@@ -594,6 +595,14 @@ public class AppProperties {
 	public void setAuthorization_token_read_perm(String authorization_token_read_perm) {
 		this.authorization_token_read_perm = authorization_token_read_perm;
 	}
+
+  public Boolean getOds_interceptor_enabled() {
+    return ods_interceptor_enabled;
+  }
+
+  public void setOds_interceptor_enabled(Boolean ods_interceptor_enabled) {
+    this.ods_interceptor_enabled = ods_interceptor_enabled;
+  }
 
 
 	public static class Cors {
