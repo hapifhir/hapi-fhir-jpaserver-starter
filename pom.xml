@@ -159,13 +159,13 @@
         <dependency>
             <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
             <artifactId>location</artifactId>
-            <version>0.0.7-SNAPSHOT</version>
+            <version>0.0.8-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
             <artifactId>practitioner</artifactId>
-            <version>0.0.10-SNAPSHOT</version>
+            <version>0.0.11-SNAPSHOT</version>
         </dependency>
 
         <dependency>
