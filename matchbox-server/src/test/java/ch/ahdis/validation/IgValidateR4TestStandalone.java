@@ -195,10 +195,6 @@ public class IgValidateR4TestStandalone {
     return resources;
   }
 
-	public IgValidateR4TestStandalone(String name, Resource resource) {
-		this(name, resource, GenericFhirClient.testServer);
-	}
-
   public IgValidateR4TestStandalone(String name, Resource resource, String targetServer) {
     super();
     this.resource = resource;
