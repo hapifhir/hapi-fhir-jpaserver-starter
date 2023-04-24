@@ -1,20 +1,18 @@
 package ca.uhn.fhir.jpa.starter.service;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
+
 import ca.uhn.fhir.jpa.starter.model.*;
+import com.iprd.fhir.utils.PatientIdentifierStatus;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.query.Query;
 
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
@@ -195,10 +193,11 @@ public class NotificationDataSource {
 		session.close();
 	}
 
-	public List<String> getPatientIdWithIdentifier(String identifier) {
+	public List<String> getPatientIdWithIdentifier(String patientId, String identifier) {
 		Session session = sf.openSession();
-		Query query = session.createQuery("SELECT patientId FROM PatientIdentifierEntity WHERE patientIdentifier=:param1");
-		query.setParameter("param1", identifier);
+		Query query = session.createQuery("SELECT patientId FROM PatientIdentifierEntity WHERE patientId !=:param1 AND patientIdentifier=:param2");
+		query.setParameter("param1", patientId);
+		query.setParameter("param2", identifier);
 		List<String> resultList = query.getResultList();
 		session.close();
 		if(resultList.isEmpty()) {
@@ -208,9 +207,9 @@ public class NotificationDataSource {
 	}
 	
 
-	public List<PatientIdentifierEntity> getPatientIdentifierEntity(String identifier,String patientId) {
+	public List<PatientIdentifierEntity> getPatientIdentifierEntityByPatientIdAndIdentifier(String patientId, String identifier) {
 		Session session = sf.openSession();
-		Query query = session.createQuery("FROM PatientIdentifierEntity WHERE patientIdentifier=:param1 AND patientId=:param2");
+		Query query = session.createQuery("FROM PatientIdentifierEntity WHERE patientIdentifier=:param1 AND patientId=:param2", PatientIdentifierEntity.class);
 		query.setParameter("param1", identifier);
 		query.setParameter("param2", patientId);
 		List<PatientIdentifierEntity> resultList = query.getResultList();
@@ -221,9 +220,9 @@ public class NotificationDataSource {
 		return resultList;
 	}
 	
-	public List<PatientIdentifierEntity> getPatientInfoResourceEntityDataBeyondLastUpdated(String lastUpdated){
+	public List<PatientIdentifierEntity> getPatientInfoResourceEntityDataBeyondLastUpdated(Long lastUpdated){
 		Session session = sf.openSession();
-		Query query = session.createQuery("SELECT p FROM PatientIdentifierEntity p WHERE p.lastModified > :param1", PatientIdentifierEntity.class);
+		Query query = session.createQuery("SELECT p FROM PatientIdentifierEntity p WHERE p.updatedTime > :param1", PatientIdentifierEntity.class);
 		query.setParameter("param1", lastUpdated);
 		List<PatientIdentifierEntity> result = query.getResultList();
 		if(result.isEmpty()) {
@@ -242,6 +241,21 @@ public class NotificationDataSource {
 			return Collections.emptyList();
 		}
 		return result;
+	}
+
+	public PatientIdentifierEntity getPatientIdentifierEntityWithDuplicateStatus(String patientId, String patientIdentifier) {
+		// select * from patientIdentifierEntity where identifier = oldOclId and patientId != patientId and status = duplicate order by createdTime limit 1
+		Session session = sf.openSession();
+		Query query = session.createQuery("SELECT p FROM PatientIdentifierEntity p WHERE p.patientId !=:param1 AND p.patientIdentifier=:param2 AND p.status=:param3 ORDER BY createdTime", PatientIdentifierEntity.class);
+		query.setParameter("param1", patientId);
+		query.setParameter("param2", patientIdentifier);
+		query.setParameter("param3", PatientIdentifierStatus.DUPLICATE.name());
+		query.setMaxResults(1);
+		List<PatientIdentifierEntity> result = query.getResultList();
+		if(result.isEmpty()){
+			return null;
+		}
+		return result.get(0);
 	}
 
 	public List<ComGenerator> fetchRecordsByScheduledDateAndStatus(Date date, MessageStatus status) {

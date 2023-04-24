@@ -11,11 +11,10 @@ import java.util.Set;
 
 
 import ca.uhn.fhir.jpa.starter.service.FhirClientAuthenticatorService;
+import kotlin.Triple;
 import org.hl7.fhir.r4.model.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.iprd.report.FhirPath;
 
 import ca.uhn.fhir.jpa.starter.service.ServerInterceptor;
 import kotlin.Pair;
@@ -28,55 +27,50 @@ public class FhirUtils {
 	private static final Logger logger = LoggerFactory.getLogger(ServerInterceptor.class);
 
 	public static Boolean isOclPatient(List<Identifier> identifiers) {
-		Boolean isOCLPatient = false;
 		for (Identifier identifier : identifiers) {
 			if (identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/patientWithOcl")) {
-				isOCLPatient = true;
-				break;
+				return true;
 			}
 		}
-		
-		return isOCLPatient;
+		return false;
 	}
 	
-	public static String getOclIdentifier(List<Identifier> identifiers) {
-		String oclId = null;
+	public static Triple<String, String, String> getOclIdFromIdentifier(List<Identifier> identifiers) {
+		Triple<String, String, String> oclId = null;
+		String oclIdentifierValue = null;
 		for (Identifier identifier : identifiers) {
 			if (identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/ocl")) {
-				oclId = identifier.getValue();
+				oclIdentifierValue = identifier.getValue();
 				break;
 			}
 		}
 		try {
-			oclId = getOclIdFromString(oclId);
+			oclId = getOclIdFromString(oclIdentifierValue);
 		} catch (MalformedURIException e) {
 			logger.debug(e.getMessage());
 		}
 		return oclId;
 	}
 
-	public static String getPatientCardNumber(List<Identifier> identifiers){
-		String patientCardNumber = null;
-		for(Identifier identifier: identifiers){
-			if(identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/patient-card")){
-				patientCardNumber = identifier.getValue();
-				break;
+	public static String getPatientCardNumber(List<Identifier> identifiers) {
+		for (Identifier identifier : identifiers) {
+			if (identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/patient-card")) {
+				return identifier.getValue();
 			}
 		}
-		return patientCardNumber;
+		return null;
 	}
 
 	public static String getOclLink(List<Identifier> identifiers) {
-		String oclId = null;
 		for (Identifier identifier : identifiers) {
 			if (identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/ocl")) {
-				oclId = identifier.getValue();
+				return identifier.getValue();
 			}
 		}
-		return oclId;
+		return null;
 	}
 	
-	public static String getOclIdFromString(String query) throws MalformedURIException {
+	public static Triple<String, String, String> getOclIdFromString(String query) throws MalformedURIException {
 		try {
 			URL url = new URL(query);
 			String queryUrl = url.getQuery();
@@ -84,7 +78,7 @@ public class FhirUtils {
 				return null;
 			Map<String, String> queryMap = getQueryMap(queryUrl);
 			if (queryMap.isEmpty() || !queryMap.containsKey("s")) return null;
-			return queryMap.get("s");
+			return new Triple<>(queryMap.get("s"), queryMap.get("v"), queryMap.get("g"));
 
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block

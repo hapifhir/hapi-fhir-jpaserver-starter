@@ -30,7 +30,7 @@ public class NotificationService {
 			
 			String patientId = record.getPatientId();
 			Patient patient = FhirClientAuthenticatorService.getFhirClient().read().resource(Patient.class).withId(patientId).execute();
-			String patientOclId = FhirUtils.getOclIdentifier(patient.getIdentifier()).replaceAll(".(?!$)", "$0 ").replaceAll(".{8}", "$0\n");
+			String patientOclId = FhirUtils.getOclIdFromIdentifier(patient.getIdentifier()).getFirst().replaceAll(".(?!$)", "$0 ").replaceAll(".{8}", "$0\n");
 			String patientName = patient.getName().get(0).getNameAsSingleString();
 			String patientOclLink = FhirUtils.getOclLink(patient.getIdentifier());
 			String mobile = patient.getTelecom().get(0).getValue();

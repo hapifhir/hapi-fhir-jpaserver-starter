@@ -366,7 +366,7 @@ public class HelperService {
 		return new ResponseEntity<LinkedHashMap<String, Object>>(map, HttpStatus.OK);
 	}
 
-	public ResponseEntity<?> getTableData(String lastUpdated){
+	public ResponseEntity<?> getTableData(Long lastUpdated){
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<PatientIdentifierEntity> patientInfoResourceEntities = notificationDataSource.getPatientInfoResourceEntityDataBeyondLastUpdated(lastUpdated);
 		return new ResponseEntity<List<PatientIdentifierEntity>>(patientInfoResourceEntities,HttpStatus.OK);
