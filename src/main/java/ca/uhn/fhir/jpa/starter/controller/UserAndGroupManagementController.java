@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 import javax.annotation.PostConstruct;
-import javax.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
 
@@ -43,9 +42,9 @@ public class UserAndGroupManagementController {
 	QrService qrService;
 	@Autowired
 	DashboardEnvironmentConfig dashboardEnvironmentConfig;
-	
+
 	private Map<String, Map<ConfigDefinitionTypes, String>> envToFileMap;
-	
+
 	@PostConstruct
 	public void init() {
 		envToFileMap = dashboardEnvironmentConfig.getEnvToFilePathMapping();
@@ -65,7 +64,7 @@ public class UserAndGroupManagementController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getTableData/{lastUpdated}")
-	public ResponseEntity<?> getTableData(@PathVariable String lastUpdated){
+	public ResponseEntity<?> getTableData(@PathVariable Long lastUpdated){
 		return helperService.getTableData(lastUpdated);
 	}
 
@@ -174,7 +173,7 @@ public class UserAndGroupManagementController {
 	public ResponseEntity<?> lineChartDefinition(@RequestParam("env") String env) {
 		return helperService.getLineChartDefinitions(env);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/tabularIndicator")
 	public ResponseEntity<?> tabularIndicators(@RequestParam("env") String env) {
 		return helperService.getTabularIndicators(env);
@@ -207,7 +206,7 @@ public class UserAndGroupManagementController {
 		filters.putAll(allFilters);
 		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type,filters,env);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/linechart")
 	public ResponseEntity<?> lineChart(
 		@RequestHeader(name = "Authorization") String token,
@@ -247,7 +246,7 @@ public class UserAndGroupManagementController {
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		
+
 		return helperService.getPieChartDataByPractitionerRoleId(practitionerRoleId, startDate, endDate,filters,env);
 	}
 
@@ -280,7 +279,7 @@ public class UserAndGroupManagementController {
 		helperService.refreshMapForOrgId(orgId);
 		return ResponseEntity.ok("Refresh done");
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/barChartData")
 	public ResponseEntity<?> getBarChartData(
 		@RequestHeader(name = "Authorization") String token,
@@ -318,12 +317,12 @@ public class UserAndGroupManagementController {
 			List<AnalyticItem> timeSpentAnalyticsItems = bigQueryService.timeSpentOnScreenAnalyticItems(organization);
 			if (timeSpentAnalyticsItems == null) {
 				return ResponseEntity.ok("Error: Unable to find file or fetch screen view information");
-			}	
+			}
 			analyticItems.addAll(timeSpentAnalyticsItems);
 		}catch(Exception e) {
-			
+
 		}
-		
+
 		List<AnalyticItem> maternalAnalyticsItems = helperService.getMaternalAnalytics(organization.getId(),env);
 		if (maternalAnalyticsItems == null) {
 			return ResponseEntity.ok("Error: Unable to find analytics file");
@@ -383,5 +382,4 @@ public class UserAndGroupManagementController {
 		helperService.cacheDashboardData(idsAndOrgIdToChildrenMapPair.first, from, to, env);
 		return ResponseEntity.ok("Caching in Progress");
 	}
-
 }
