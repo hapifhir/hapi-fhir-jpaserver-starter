@@ -39,7 +39,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 import org.hl7.fhir.instance.model.api.IBaseBinary;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r5.model.Enumerations.FHIRVersion;
+import org.hl7.fhir.r5.model.Enumerations;
 
 import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
@@ -146,7 +146,7 @@ public class ResourceParameter implements IParameter {
 	}
 
     // modified for matchbox becuase of github issue https://github.com/ahdis/matchbox/issues/55
-	static private FHIRVersion extractFhirVersion(String header) {
+	static private Enumerations.FHIRVersion extractFhirVersion(String header) {
 		if (header == null) {
 			return null;
 		}
@@ -160,17 +160,16 @@ public class ResourceParameter implements IParameter {
 			}
 		}
 		if (isNotBlank(wantVersionString)) {
-			return FHIRVersion.fromCode(wantVersionString);
+			return Enumerations.FHIRVersion.fromCode(wantVersionString);
 		}
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	static <T extends IBaseResource> T loadResourceFromRequest(RequestDetails theRequest, @Nonnull BaseMethodBinding theMethodBinding, Class<T> theResourceType) {
-
 		FhirContext ctx = theRequest.getServer().getFhirContext();
 		// added for matchbox to adjust the context with the FHIR Release according of github issue https://github.com/ahdis/matchbox/issues/55
-		FHIRVersion version = extractFhirVersion(theRequest.getHeader(Constants.HEADER_CONTENT_TYPE));
+		Enumerations.FHIRVersion version = extractFhirVersion(theRequest.getHeader(Constants.HEADER_CONTENT_TYPE));
 		if (version != null && !ctx.getVersion().getVersion().getFhirVersionString().equals(version.toCode())) {
 			ctx = FhirContext.forCached(FhirVersionEnum.forVersionString(version.toCode()));
 			theResourceType = null;

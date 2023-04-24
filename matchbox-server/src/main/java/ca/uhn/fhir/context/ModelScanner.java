@@ -314,7 +314,7 @@ class ModelScanner {
 			}
 			if (isBlank(resourceName)) {
 				throw new ConfigurationException(Msg.code(1719) + "Resource type @" + ResourceDef.class.getSimpleName() + " annotation contains no resource name(): " + theClass.getCanonicalName()
-					+ " - This is only allowed for types that extend other resource types ");
+																+ " - This is only allowed for types that extend other resource types ");
 			}
 		}
 
@@ -331,7 +331,7 @@ class ModelScanner {
 		if (!isBlank(resourceId)) {
 			if (myIdToResourceDefinition.containsKey(resourceId)) {
 				throw new ConfigurationException(Msg.code(1720) + "The following resource types have the same ID of '" + resourceId + "' - " + theClass.getCanonicalName() + " and "
-					+ myIdToResourceDefinition.get(resourceId).getImplementingClass().getCanonicalName());
+																+ myIdToResourceDefinition.get(resourceId).getImplementingClass().getCanonicalName());
 			}
 		}
 

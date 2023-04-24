@@ -338,7 +338,7 @@ public class RestfulServerUtils {
 
 	public static String createPagingLink(BundleLinks theBundleLinks, RequestDetails theRequestDetails, String theSearchId, String thePageId, Map<String, String[]> theRequestParameters) {
 		return createPagingLink(theBundleLinks, theRequestDetails, theSearchId, null, null, theRequestParameters,
-			thePageId);
+										thePageId);
 	}
 
 	private static String createPagingLink(BundleLinks theBundleLinks, RequestDetails theRequestDetails, String theSearchId, Integer theOffset, Integer theCount, Map<String, String[]> theRequestParameters,
