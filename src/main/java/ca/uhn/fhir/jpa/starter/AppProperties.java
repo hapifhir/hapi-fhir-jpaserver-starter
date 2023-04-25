@@ -63,6 +63,10 @@ public class AppProperties {
 	private String hapi_server_address = null;
 	private String anc_config_file = null;
 	private String pie_config_file = null;
+
+	private String app_public_key_file = null;
+
+	private String dashboard_public_key_file = null;
 	private String line_chart_definitions_file = null;
    	private String tabular_config_file = null;
 	private String barChart_config_file = null;
@@ -387,6 +391,19 @@ public class AppProperties {
 	}
 	public void setPie_config_file(String pie_config_file) { this.pie_config_file = pie_config_file; }
 
+	public String getApp_public_key_file(){
+		return app_public_key_file;
+	}
+
+	public void setApp_public_key_file(String app_public_key_file){
+		this.app_public_key_file = app_public_key_file;
+	}
+
+	public String getDashboard_public_key_file(){
+		return dashboard_public_key_file;
+	}
+
+	public void setDashboard_public_key_file(String dashboard_public_key_file){ this.dashboard_public_key_file = dashboard_public_key_file; }
 	public String getTabular_config_file() {
 		return tabular_config_file;
 	}

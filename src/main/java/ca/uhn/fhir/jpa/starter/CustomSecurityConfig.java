@@ -11,6 +11,7 @@ import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticatio
 import org.keycloak.adapters.springsecurity.client.KeycloakClientRequestFactory;
 import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
+import org.keycloak.adapters.springsecurity.filter.KeycloakAuthenticationProcessingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
@@ -24,6 +25,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import interceptor.SignatureInterceptor;
+
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -46,6 +50,9 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     @Autowired 
     private KeycloakClientRequestFactory keycloakClientRequestFactory;
+
+    @Autowired
+    AppProperties appProperties;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
@@ -74,6 +81,7 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
+        http.addFilterBefore(new SignatureInterceptor(appProperties), KeycloakAuthenticationProcessingFilter.class);
         logger.info("Inside configure method");
         http.cors()
                 .and()
@@ -126,7 +134,16 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers("/*")
                 .and()
                 .ignoring()
-                .antMatchers("/fhir/metadata");
+                .antMatchers("/fhir/metadata")
+			  .and()
+			  .ignoring()
+			  .antMatchers("/fhir/PractitionerRole/**")
+		  		.and()
+			 .ignoring()
+			 .antMatchers("/fhir/swagger-ui/**");
+//			  .and()
+//			  .ignoring()
+//			  .antMatchers("/iprd/user/**");
     }
 
     @Bean
