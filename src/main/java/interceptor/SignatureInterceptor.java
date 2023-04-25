@@ -91,17 +91,20 @@ public class SignatureInterceptor extends GenericFilterBean{
 
 	public byte[] readPublicKeyFile(String keyId) throws IOException {
 		if (publicKeyCache.containsKey(keyId)) {
-			// Return the cached public key if available
+		// Return the cached public key if available
 			return publicKeyCache.get(keyId);
 		} else {
-			// Read the public key file and store it in cache
+		// Read the public key file and store it in cache
 			byte[] publicKey;
-			if (keyId.equals(FhirUtils.KeyId.App_Client.name())) {
-				publicKey = Files.readAllBytes(Paths.get(appProperties.getApp_public_key_file()));
-			} else if (keyId.equals(FhirUtils.KeyId.Dashboard.name())) {
-				publicKey = Files.readAllBytes(Paths.get(appProperties.getDashboard_public_key_file()));
-			} else {
-				return null; // Return null for unknown keyId
+			switch (keyId) {
+				case "APPCLIENT":
+					publicKey = Files.readAllBytes(Paths.get(appProperties.getApp_public_key_file()));
+					break;
+				case "DASHBOARD":
+					publicKey = Files.readAllBytes(Paths.get(appProperties.getDashboard_public_key_file()));
+					break;
+				default:
+					return null; // Return null for unknown keyId
 			}
 			publicKeyCache.put(keyId, publicKey); // Store the public key in cache
 			return publicKey;
@@ -114,7 +117,7 @@ public class SignatureInterceptor extends GenericFilterBean{
 		long timeDifference = Math.abs(currentTimestamp - receivedTimeStamp);
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		//check if the timestamp is within 10 minutes of the current timestamp
-		if(timeDifference <= appProperties.getAPI_REQUEST_MAX_TIME()){
+		if(timeDifference <= appProperties.getApi_request_max_time()){
 			String messageToVerify = practitionerRoleId.concat(timeStampHeader);
 			//get the decoded public key in bytes
 			byte[] publicKeyByte = Base64.getDecoder().decode(readPublicKeyFile(keyId));

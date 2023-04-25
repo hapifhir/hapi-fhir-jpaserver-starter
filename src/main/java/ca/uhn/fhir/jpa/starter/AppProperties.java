@@ -46,7 +46,7 @@ public class AppProperties {
 	private Integer max_page_size = Integer.MAX_VALUE;
 	private Integer defer_indexing_for_codesystems_of_size = 100;
 	private Integer keycloak_max_group_count = 20;
-	private Long API_REQUEST_MAX_TIME = 600L;
+	private Long api_request_max_time = 600L;
 	private Long retain_cached_searches_mins = 60L;
 	private Long reuse_cached_search_results_millis = 60000L;
 	private String envs = null;
@@ -114,12 +114,12 @@ public class AppProperties {
 	private Integer executor_queue_capacity = 100;
 	private String executor_thread_name_prefix = "AsyncThread-";
 
-	public void setAPI_REQUEST_MAX_TIME(Long api_request_max_time){
-		this.API_REQUEST_MAX_TIME = api_request_max_time;
+	public void setApi_request_max_time(Long api_request_max_time){
+		this.api_request_max_time = api_request_max_time;
 	}
 
-	public Long getAPI_REQUEST_MAX_TIME() {
-		return API_REQUEST_MAX_TIME;
+	public Long getApi_request_max_time() {
+		return api_request_max_time;
 	}
 
 	public Integer getExecutor_core_pool_size() {

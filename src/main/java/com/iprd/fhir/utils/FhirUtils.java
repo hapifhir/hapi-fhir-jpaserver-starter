@@ -167,7 +167,7 @@ public class FhirUtils {
 	}
 
 	public enum KeyId{
-		App_Client,
-		Dashboard
+		APPCLIENT,
+		DASHBOARD
 	}
 }
