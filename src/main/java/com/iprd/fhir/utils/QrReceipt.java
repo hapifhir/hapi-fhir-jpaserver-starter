@@ -8,7 +8,10 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.imgscalr.Scalr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -25,6 +28,8 @@ public class QrReceipt {
 
 	private static final String BASE_PATH = "./data/QR_Lines.png";
 	private static final String LOGO_PATH = "./data/ocl.png";
+
+	private static final Logger logger = LoggerFactory.getLogger(QrReceipt.class);
 
     public static byte[] generatePlainQRReceipt(String data) {
 
@@ -65,7 +70,7 @@ public class QrReceipt {
 
         } catch (WriterException | IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+			  logger.warn(ExceptionUtils.getStackTrace(e));
         }
         return null;
     }
@@ -175,7 +180,7 @@ public class QrReceipt {
 			return os.toByteArray();
 
 		} catch (WriterException | IOException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 
 		return null;

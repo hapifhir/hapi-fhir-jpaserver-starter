@@ -3,6 +3,8 @@ package com.iprd.fhir.utils;
 import java.util.*;
 import java.lang.String;
 
+import ca.uhn.fhir.jpa.starter.service.HelperService;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.*;
@@ -13,6 +15,8 @@ import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Location.LocationMode;
 import org.hl7.fhir.r4.model.Location.LocationStatus;
 import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,6 +35,8 @@ public class FhirResourceTemplateHelper {
 	private static String SYSTEM_ORG_TYPE = "https://www.iprdgroup.com/ValueSet/OrganizationType/tags";
 	private static String CODE_GOVT = "govt";
 	private static String DISPLAY_GOVERNMENT = "Government";
+
+	private static final Logger logger = LoggerFactory.getLogger(FhirResourceTemplateHelper.class);
 	
 	public static Organization state(String name)
 	{
@@ -230,7 +236,7 @@ public class FhirResourceTemplateHelper {
 			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
 			practitioner.setBirthDate(dateOfBirth);
 		}catch(ParseException exception) {
-			exception.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(exception));
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;
@@ -269,7 +275,7 @@ public class FhirResourceTemplateHelper {
 			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
 			practitioner.setBirthDate(dateOfBirth);
 		}catch(ParseException exception) {
-			exception.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(exception));
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;

@@ -8,6 +8,7 @@ import java.util.List;
 
 import ca.uhn.fhir.jpa.starter.model.*;
 import com.iprd.fhir.utils.PatientIdentifierStatus;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
@@ -54,7 +55,7 @@ public class NotificationDataSource {
 			session.save(object);
 			transaction.commit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			transaction.rollback();
 		} finally {
 			session.close();
@@ -113,7 +114,7 @@ public class NotificationDataSource {
 			session.update(object);
 			transaction.commit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			transaction.rollback();
 		}
 
@@ -130,7 +131,7 @@ public class NotificationDataSource {
 			}
 			transaction.commit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			transaction.rollback();
 		} finally {
 			session.close();
@@ -148,7 +149,7 @@ public class NotificationDataSource {
 
 			transaction.commit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			transaction.rollback();
 		} finally {
 			session.close();

@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
+import com.iprd.fhir.utils.FhirResourceTemplateHelper;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.Patient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +25,8 @@ public class NotificationService {
 	
 	private static final long DELAY = 3 * 60000;
 	private static final long DELETE_WORK_DELAY = 24 * 3600000;
+
+	private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
 	
 	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
 	private void sendSms() throws IOException {
@@ -63,7 +69,7 @@ public class NotificationService {
 					} catch (Exception e) {
 						record.setCommunicationStatus(MessageStatus.FAILED.name());
 						datasource.update(record);
-						e.printStackTrace();
+						logger.warn(ExceptionUtils.getStackTrace(e));
 					} finally {
 						responseVisitDetails.body().close();
 						responseQrImage.body().close();
@@ -82,7 +88,7 @@ public class NotificationService {
 					} catch (Exception e) {
 						record.setCommunicationStatus(MessageStatus.FAILED.name());
 						datasource.update(record);
-						e.printStackTrace();
+						logger.warn(ExceptionUtils.getStackTrace(e));
 					} finally {
 						responseVisitDetails.body().close();
 					}

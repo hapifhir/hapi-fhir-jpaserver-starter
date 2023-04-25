@@ -44,6 +44,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.engine.jdbc.ClobProxy;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -317,7 +318,7 @@ public class ChartService {
 			DataResult dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
 			return ResponseEntity.ok(dataResult);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error : Config File Not Found");
 		}
 	}
@@ -337,7 +338,7 @@ public class ChartService {
 			asyncRecord.setSummaryResult(ClobProxy.generateProxy(base64SummaryResult));
 			datasource.update(asyncRecord);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 
 	}
@@ -385,7 +386,7 @@ public class ChartService {
 			DataResult dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
 			saveInAsyncTable(dataResult, id);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 	}
 
@@ -530,7 +531,7 @@ public class ChartService {
 			List<IndicatorItem> indicators = getIndicatorItemListFromFile();
 			return ResponseEntity.ok(indicators);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error : Config File Not Found");
 		}
 	}
@@ -541,7 +542,7 @@ public class ChartService {
 			List<FilterItem> filters = getFilterItemListFromFile();
 			return ResponseEntity.ok(filters);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error:Config File Not Found");
 		}
 	}
@@ -699,10 +700,10 @@ public class ChartService {
 			obj.setValue(keycloakId);
 			MethodOutcome outcome = FhirClientAuthenticatorService.getFhirClient().update().resource(resource).execute();
 		} catch (SecurityException | NoSuchMethodException | InvocationTargetException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 	}
 
@@ -717,7 +718,7 @@ public class ChartService {
 			return CreatedResponseUtil.getCreatedId(response);
 		} catch (WebApplicationException e) {
 			logger.error("Cannot create user " + userRep.getUsername() + " with groups " + userRep.getGroups() + "\n");
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return null;
 		}
 	}

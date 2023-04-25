@@ -20,6 +20,7 @@ import com.iprd.fhir.utils.PatientIdentifierStatus;
 
 import kotlin.Triple;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.jena.ext.xerces.util.URI;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
@@ -481,7 +482,7 @@ public class ServerInterceptor {
 			}
 			digest = stringBuilder.toString();
 		} catch (NoSuchAlgorithmException ex) {
-			ex.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(ex));
 		}
 		return digest;
 	}

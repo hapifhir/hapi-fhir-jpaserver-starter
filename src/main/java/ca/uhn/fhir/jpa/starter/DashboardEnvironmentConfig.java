@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ca.uhn.fhir.jpa.starter.service.BigQueryService;
 import com.iprd.report.model.data.BarChartItemDataCollection;
 import com.iprd.report.model.data.BarComponentData;
 import com.iprd.report.model.data.LineChartItem;
@@ -27,6 +29,9 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.iprd.report.model.definition.ANCDailySummaryConfig;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +40,8 @@ import org.springframework.context.annotation.Import;
 @Import(AppProperties.class)
 @Configuration
 public class DashboardEnvironmentConfig {
+
+	private static final Logger logger = LoggerFactory.getLogger(DashboardEnvironmentConfig.class);
 
 	@Autowired
 	AppProperties appProperties;
@@ -53,7 +60,7 @@ public class DashboardEnvironmentConfig {
 							ConfigDefinitionTypes configDefinitionTypes = ConfigDefinitionTypes.valueOf(FilenameUtils.removeExtension(file.getName()));
 							fileNameToPathMap.put(configDefinitionTypes, file.getAbsolutePath());
 						} catch (IllegalArgumentException exception) {
-							exception.printStackTrace();
+							logger.warn(ExceptionUtils.getStackTrace(exception));
 						}
 
 					}
@@ -115,7 +122,7 @@ public class DashboardEnvironmentConfig {
 						}
 					}
 				} catch (FileNotFoundException e) {
-					e.printStackTrace();
+					logger.warn(ExceptionUtils.getStackTrace(e));
 				}
 			});
 			dashboardEnvToConfigMap.put(env, envConfigContainer);

@@ -69,6 +69,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
 import org.hibernate.engine.jdbc.ClobProxy;
 import org.hibernate.query.Query;
@@ -407,7 +408,7 @@ public class HelperService {
 			asyncRecord.setSummaryResult(ClobProxy.generateProxy(base64SummaryResult));
 			datasource.update(asyncRecord);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 
 	}
@@ -596,7 +597,7 @@ public class HelperService {
 			List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
 			return ResponseEntity.ok(indicators);
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error : ScoreCard Config File Not Found");
 		}
 	}
@@ -606,7 +607,7 @@ public class HelperService {
 			List<BarChartDefinition> barChartDefinition = getBarChartItemListFromFile(env);
 			return ResponseEntity.ok(barChartDefinition);
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error :Bar Config File Not Found");
 		}
 	}
@@ -615,7 +616,7 @@ public class HelperService {
 			List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
 			return ResponseEntity.ok(lineCharts);
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error :Line Config File Not Found");
 		}
 	}
@@ -624,7 +625,7 @@ public class HelperService {
 			List<TabularItem> indicators = getTabularItemListFromFile(env);
 			return ResponseEntity.ok(indicators);
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error : Tabular Config File Not Found");
 		}
 	}
@@ -634,7 +635,7 @@ public class HelperService {
 			List<PieChartDefinition> pieChartIndicators = getPieChartItemDefinitionFromFile(env);
 			return ResponseEntity.ok(pieChartIndicators);
 		} catch (NullPointerException e){
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error :Pie Chart Config File Not Found");
 		}
 	}
@@ -644,7 +645,7 @@ public class HelperService {
 			List<FilterItem> filters = dashboardEnvToConfigMap.get(env).getFilterItems();
 			return ResponseEntity.ok(filters);
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error: Config File Not Found");
 		}
 	}
@@ -1407,10 +1408,9 @@ public class HelperService {
 			obj.setValue(keycloakId);
 			MethodOutcome outcome = FhirClientAuthenticatorService.getFhirClient().update().resource(resource).execute();
 		} catch (SecurityException | NoSuchMethodException | InvocationTargetException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 	}
 
@@ -1425,7 +1425,7 @@ public class HelperService {
 			return CreatedResponseUtil.getCreatedId(response);
 		} catch (WebApplicationException e) {
 			logger.error("Cannot create user " + userRep.getUsername() + " with groups " + userRep.getGroups() + "\n");
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return null;
 		}
 	}

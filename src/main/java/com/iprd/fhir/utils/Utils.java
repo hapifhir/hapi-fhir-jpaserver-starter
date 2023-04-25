@@ -3,6 +3,9 @@ package com.iprd.fhir.utils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.iprd.report.FhirPath;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +17,8 @@ import java.util.zip.GZIPOutputStream;
 
 public class Utils {
 	public static final int SHORT_ID_LENGTH = 12;
+
+	private static final Logger logger = LoggerFactory.getLogger(Utils.class);
 
 	public static String convertToTitleCaseSplitting(String text) {
 		if (text == null || text.isEmpty()) {
@@ -42,7 +47,7 @@ public class Utils {
 			}
 			digest = sb.toString();
 		} catch (NoSuchAlgorithmException ex) {
-			ex.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(ex));
 		}
 		return digest;
 	}
@@ -124,10 +129,10 @@ public class Utils {
 				buf.read(bFile, 0, bFile.length);
 				buf.close();
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				logger.warn(ExceptionUtils.getStackTrace(e));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 		return bFile;
 	}
@@ -236,7 +241,7 @@ public class Utils {
 			return hexString.toString();
 
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 		return "";
 	}
@@ -405,7 +410,7 @@ public class Utils {
 			hexString = fiveBitDataToBase32(bin);
 			return hexString.toUpperCase();
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 		return "";
 	}
@@ -469,7 +474,7 @@ public class Utils {
 			gzip.close();
 			return obj.toByteArray();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return null;
 		}
 	}

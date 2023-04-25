@@ -10,9 +10,12 @@ import ca.uhn.fhir.jpa.starter.service.*;
 import ca.uhn.fhir.parser.IParser;
 import com.iprd.fhir.utils.Validation;
 import com.iprd.report.OrgItem;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Organization;
 import org.keycloak.representations.idm.GroupRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +47,8 @@ public class UserAndGroupManagementController {
 	DashboardEnvironmentConfig dashboardEnvironmentConfig;
 
 	private Map<String, Map<ConfigDefinitionTypes, String>> envToFileMap;
+
+	private static final Logger logger = LoggerFactory.getLogger(UserAndGroupManagementController.class);
 
 	@PostConstruct
 	public void init() {
@@ -113,7 +118,7 @@ public class UserAndGroupManagementController {
 				ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(hashOfFormattedId, ApiAsyncTaskEntity.Status.PROCESSING.name(), null, null);
 				datasource.insert(apiAsyncTaskEntity);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.warn(ExceptionUtils.getStackTrace(e));
 			}
 
 			helperService.saveQueryResult(organizationId, startDate, endDate, filters, hashOfFormattedId,env);

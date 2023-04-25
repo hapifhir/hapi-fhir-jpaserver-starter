@@ -5,8 +5,13 @@ import ca.uhn.fhir.jpa.starter.model.JWTPayload;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Validation {
+
+	private static final Logger logger = LoggerFactory.getLogger(Validation.class);
 	
 	public static boolean validateClinicAndStateCsvLine(String[] csvLineContent) {
 		int csvDataSize = csvLineContent.length;
@@ -35,7 +40,7 @@ public class Validation {
 			JWTPayload jwtPayload = mapper.readValue(payload, JWTPayload.class);
 			return jwtPayload.getPractitionerRoleId();
 		} catch (JsonProcessingException | IndexOutOfBoundsException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 		return null;
 	}

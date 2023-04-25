@@ -7,11 +7,15 @@ import com.google.cloud.bigquery.*;
 
 import ca.uhn.fhir.jpa.starter.AppProperties;
 
+import com.iprd.fhir.utils.Operation;
 import com.iprd.fhir.utils.Utils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Organization;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
@@ -29,6 +33,8 @@ import java.util.stream.Collectors;
 public class BigQueryService {
 
 	private static final String KEYCLOAK_IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System/KeycloakId";
+
+	private static final Logger logger = LoggerFactory.getLogger(BigQueryService.class);
 	
 	@Autowired
 	AppProperties appProperties;
@@ -70,7 +76,7 @@ public class BigQueryService {
 			}
 			return timeAnalyticItems;
 		} catch (InterruptedException | IOException ex) {
-			ex.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(ex));
 			return null;
 		}
 	}
