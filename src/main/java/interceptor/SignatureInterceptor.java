@@ -12,6 +12,8 @@ import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -32,6 +34,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 public class SignatureInterceptor extends GenericFilterBean{
 
 	private final AppProperties appProperties;
+	private Map<String, byte[]> publicKeyCache = new HashMap<>(); // Local cache to store public keys
 
 	public SignatureInterceptor(AppProperties appProperties) {
 		this.appProperties = appProperties;
@@ -87,12 +90,22 @@ public class SignatureInterceptor extends GenericFilterBean{
 	}
 
 	public byte[] readPublicKeyFile(String keyId) throws IOException {
-		if(keyId.equals("App-client")){
-			return Files.readAllBytes(Paths.get(appProperties.getApp_public_key_file()));
-		} else if (keyId.equals("Dashboard")) {
-			return Files.readAllBytes(Paths.get(appProperties.getDashboard_public_key_file()));
+		if (publicKeyCache.containsKey(keyId)) {
+			// Return the cached public key if available
+			return publicKeyCache.get(keyId);
+		} else {
+			// Read the public key file and store it in cache
+			byte[] publicKey;
+			if (keyId.equals(FhirUtils.KeyId.App_Client.name())) {
+				publicKey = Files.readAllBytes(Paths.get(appProperties.getApp_public_key_file()));
+			} else if (keyId.equals(FhirUtils.KeyId.Dashboard.name())) {
+				publicKey = Files.readAllBytes(Paths.get(appProperties.getDashboard_public_key_file()));
+			} else {
+				return null; // Return null for unknown keyId
+			}
+			publicKeyCache.put(keyId, publicKey); // Store the public key in cache
+			return publicKey;
 		}
-		return null;
 	}
 
 	private Boolean getPublicKeyAndVerify(String signatureHeader, String token, String timeStampHeader, String keyId) throws Exception {
@@ -101,7 +114,7 @@ public class SignatureInterceptor extends GenericFilterBean{
 		long timeDifference = Math.abs(currentTimestamp - receivedTimeStamp);
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		//check if the timestamp is within 10 minutes of the current timestamp
-		if(timeDifference <= 600){
+		if(timeDifference <= appProperties.getAPI_REQUEST_MAX_TIME()){
 			String messageToVerify = practitionerRoleId.concat(timeStampHeader);
 			//get the decoded public key in bytes
 			byte[] publicKeyByte = Base64.getDecoder().decode(readPublicKeyFile(keyId));

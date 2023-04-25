@@ -13,6 +13,7 @@ import java.util.Set;
 import ca.uhn.fhir.jpa.starter.service.FhirClientAuthenticatorService;
 import kotlin.Triple;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.PractitionerRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -165,4 +166,8 @@ public class FhirUtils {
 	    return new Pair(missingFromNew,missingFromOldIdentifiers);
 	}
 
+	public enum KeyId{
+		App_Client,
+		Dashboard
+	}
 }
