@@ -7,9 +7,11 @@ public class DataResultJava {
 	private String summaryResult;
 	private List<Map<String,String>> dailyResult;
 
-	public DataResultJava(String summaryResult,List<Map<String,String>> dailyResult){
+	private String categoryId;
+	public DataResultJava(String categoryId,String summaryResult,List<Map<String,String>> dailyResult){
 		this.summaryResult = summaryResult;
 		this.dailyResult = dailyResult;
+		this.categoryId = categoryId;
 	}
 	public String getSummaryResult() {
 		return summaryResult;
@@ -27,5 +29,12 @@ public class DataResultJava {
 		this.dailyResult = dailyResult;
 	}
 
+	public String getCategoryId() {
+		return categoryId;
+	}
 
+	public void setCategoryId(String categoryId) {
+		this.categoryId = categoryId;
+	}
 }
+

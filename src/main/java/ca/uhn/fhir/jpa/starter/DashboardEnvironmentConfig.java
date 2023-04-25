@@ -6,29 +6,17 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import ca.uhn.fhir.jpa.starter.model.CategoryItem;
+import com.iprd.report.model.FilterItem;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
-import com.iprd.report.model.data.BarChartItemDataCollection;
-import com.iprd.report.model.data.BarComponentData;
-import com.iprd.report.model.data.LineChartItem;
-import com.iprd.report.model.data.LineChartItemCollection;
-import com.iprd.report.model.data.PieChartItem;
-import com.iprd.report.model.data.ScoreCardItem;
 import com.iprd.report.model.definition.BarChartDefinition;
-import com.iprd.report.model.definition.BarChartItemDefinition;
-import com.iprd.report.model.definition.BarComponent;
 import com.iprd.report.model.definition.IndicatorItem;
 import com.iprd.report.model.definition.LineChart;
-import com.iprd.report.model.definition.LineChartItemDefinition;
-import com.iprd.report.model.definition.PieChartDefinition;
 import com.iprd.report.model.definition.TabularItem;
-import com.iprd.report.model.FilterItem;
-import com.iprd.report.model.FilterOptions;
+import com.iprd.report.model.definition.PieChartDefinition;
+import com.iprd.report.model.definition.ANCDailySummaryConfig;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import com.iprd.report.model.definition.ANCDailySummaryConfig;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -113,11 +101,8 @@ public class DashboardEnvironmentConfig {
 							break;
 						}
 						case DAILY_SUMMARY_DEFINITIONS: {
-							envConfigContainer.setAncDailySummaryConfig(new Gson().fromJson(reader, ANCDailySummaryConfig.class));
-							break;
-						}
-						case CATEGORY_DEFINITIONS: {
-							envConfigContainer.setCategoryItem(new Gson().fromJson(reader, CategoryItem.class));
+							envConfigContainer.setAncDailySummaryConfig(new Gson().fromJson(reader, new TypeToken<List<ANCDailySummaryConfig>>(){
+							}.getType()));
 							break;
 						}
 					}

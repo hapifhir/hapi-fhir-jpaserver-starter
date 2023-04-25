@@ -1,30 +1,27 @@
 package ca.uhn.fhir.jpa.starter.service;
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
-import ca.uhn.fhir.jpa.starter.model.AnalyticComparison;
-import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
-import ca.uhn.fhir.jpa.starter.model.ReportType;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import com.iprd.fhir.utils.*;
-import com.iprd.report.*;
+import com.iprd.fhir.utils.FhirUtils;
+import com.iprd.fhir.utils.KeycloakTemplateHelper;
+import com.iprd.fhir.utils.FhirResourceTemplateHelper;
+import com.iprd.fhir.utils.Validation;
+import com.iprd.report.DataResult;
+import com.iprd.report.OrgItem;
+import com.iprd.report.FhirClientProvider;
+import com.iprd.report.ReportGeneratorFactory;
 import com.iprd.report.model.FilterItem;
 import com.iprd.report.model.FilterOptions;
-import com.iprd.report.model.data.ScoreCardItem;
-import com.iprd.report.model.definition.ANCDailySummaryConfig;
 import com.iprd.report.model.definition.IndicatorItem;
-
 import android.util.Pair;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -34,15 +31,18 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Clob;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Base64;
+import java.util.Arrays;
 import java.util.stream.Collectors;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-
 import org.apache.commons.io.IOUtils;
 import org.hibernate.engine.jdbc.ClobProxy;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
@@ -66,16 +66,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.*;
-
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.Reader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.io.BufferedReader;
+import java.io.UnsupportedEncodingException;
 import static org.hibernate.search.util.common.impl.CollectionHelper.asList;
-import static org.keycloak.util.JsonSerialization.mapper;
 
 
 @Import(AppProperties.class)
@@ -303,25 +306,24 @@ public class ChartService {
 		return groups;
 	}
 
-	public ResponseEntity<List<Map<String, String>>> getAncMetaDataByOrganizationId(String organizationId, String startDate, String endDate) {
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-		List<Map<String, String>> ancMetaData = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncMetaDataByOrganizationId(fhirClientProvider, new DateRange(startDate, endDate), organizationId);
-		return ResponseEntity.ok(ancMetaData);
-	}
+//	public ResponseEntity<List<Map<String, String>>> getAncMetaDataByOrganizationId(String organizationId, String startDate, String endDate) {
+//		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+//		List<Map<String, String>> ancMetaData = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncMetaDataByOrganizationId(fhirClientProvider, new DateRange(startDate, endDate), organizationId);
+//		return ResponseEntity.ok(ancMetaData);
+//	}
 
-	public ResponseEntity<?> getAncDailySummaryData(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters) {
-		try {
-			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-			List<String> fhirSearchList = getFhirSearchListByFilters(filters);
-			ANCDailySummaryConfig ancDailySummaryConfig = getANCDailySummaryConfigFromFile();
-			DataResult dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
-			return ResponseEntity.ok(dataResult);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return ResponseEntity.ok("Error : Config File Not Found");
-		}
-	}
-
+//	public ResponseEntity<?> getAncDailySummaryData(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters) {
+//		try {
+//			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+//			List<String> fhirSearchList = getFhirSearchListByFilters(filters);
+//			ANCDailySummaryConfig ancDailySummaryConfig = getANCDailySummaryConfigFromFile();
+//			DataResult dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
+//			return ResponseEntity.ok(dataResult);
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//			return ResponseEntity.ok("Error : Config File Not Found");
+//		}
+//	}
 	public void saveInAsyncTable(DataResult dataResult, String id) {
 
 		byte[] summaryResult = dataResult.getSummaryResult();
@@ -349,46 +351,6 @@ public class ChartService {
 		IOUtils.copy(reader, writer);
 		return writer.toString();
 	}
-
-
-	public ResponseEntity<?> getAsyncData(String uuid) throws SQLException, IOException {
-
-		ArrayList<ApiAsyncTaskEntity> asyncData = datasource.fetchStatus(uuid);
-		if (asyncData == null) return null;
-		ApiAsyncTaskEntity asyncRecord = asyncData.get(0);
-
-		if (asyncRecord.getSummaryResult() == null) return null;
-
-		String dailyResultInString = convertClobToString(asyncRecord.getDailyResult());
-		String summaryResultInString = convertClobToString(asyncRecord.getSummaryResult());
-		List<Map<String, String>> dailyResult= mapper.readValue(dailyResultInString, new TypeReference<List<Map<String, String>>>() {});
-		DataResultJava dataResult = new DataResultJava(summaryResultInString, dailyResult);
-		return  ResponseEntity.ok(dataResult);
-
-	}
-
-	public ResponseEntity<?> checkIfDataExistsInAsyncTable(String uuid) throws SQLException, IOException {
-		if (getAsyncData(uuid) == null) {
-			return ResponseEntity.ok("Searching in Progress");
-		} else return ResponseEntity.ok(getAsyncData(uuid));
-
-	}
-
-
-	@Async
-	public void saveQueryResult(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters, String id) {
-
-		try {
-			FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-			List<String> fhirSearchList = getFhirSearchListByFilters(filters);
-			ANCDailySummaryConfig ancDailySummaryConfig = getANCDailySummaryConfigFromFile();
-			DataResult dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
-			saveInAsyncTable(dataResult, id);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-
 
 	@Scheduled(cron = "0 0 23 * * *")
 	public void removeAsyncTableCache() {
@@ -589,10 +551,10 @@ public class ChartService {
 		}.getType());
 	}
 
-	ANCDailySummaryConfig getANCDailySummaryConfigFromFile() throws FileNotFoundException {
-		JsonReader reader = new JsonReader(new FileReader(appProperties.getDaily_and_summary_config_file()));
-		return new Gson().fromJson(reader, ANCDailySummaryConfig.class);
-	}
+//	ANCDailySummaryConfig getANCDailySummaryConfigFromFile() throws FileNotFoundException {
+//		JsonReader reader = new JsonReader(new FileReader(appProperties.getDaily_and_summary_config_file()));
+//		return new Gson().fromJson(reader, ANCDailySummaryConfig.class);
+//	}
 
 	public List<OrgItem> getOrganizationHierarchy(String organizationId) {
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
