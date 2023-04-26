@@ -3,7 +3,6 @@ package ca.uhn.fhir.jpa.starter.service;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.AsyncConfiguration;
-import ca.uhn.fhir.jpa.starter.ConfigDefinitionTypes;
 import ca.uhn.fhir.jpa.starter.DashboardConfigContainer;
 import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
 import ca.uhn.fhir.jpa.starter.model.AnalyticComparison;
@@ -17,10 +16,9 @@ import ca.uhn.fhir.rest.gclient.IQuery;
 import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
 import ca.uhn.fhir.jpa.starter.model.PatientIdentifierEntity;
 
+import ca.uhn.fhir.rest.gclient.TokenClientParam;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 import com.iprd.fhir.utils.*;
 import com.iprd.report.*;
 import com.iprd.report.model.FilterItem;
@@ -55,12 +53,7 @@ import java.sql.Clob;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -70,9 +63,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.hibernate.Session;
 import org.hibernate.engine.jdbc.ClobProxy;
-import org.hibernate.query.Query;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
@@ -204,7 +195,7 @@ public class HelperService {
 				if (Validation.validateClinicAndStateCsvLine(csvData)) {
 					if (!states.contains(csvData[0])) {
 						Organization state = FhirResourceTemplateHelper.state(csvData[0]);
-						stateId = createResource(state, Organization.class, Organization.NAME.matchesExactly().value(state.getName()));
+						stateId = createResource(state, Organization.class, Organization.NAME.matchesExactly().value(state.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "state"));
 						states.add(state.getName());
 						GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), stateId);
 						stateGroupId = createGroup(stateGroupRep);
@@ -213,7 +204,7 @@ public class HelperService {
 
 					if (!lgas.contains(csvData[1])) {
 						Organization lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0], stateId);
-						lgaId = createResource(lga, Organization.class, Organization.NAME.matchesExactly().value(lga.getName()));
+						lgaId = createResource(lga, Organization.class, Organization.NAME.matchesExactly().value(lga.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "lga"));
 						lgas.add(lga.getName());
 						GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lgaId);
 						lgaGroupId = createGroup(lgaGroupRep);
@@ -222,7 +213,7 @@ public class HelperService {
 
 					if (!wards.contains(csvData[2])) {
 						Organization ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2], lgaId);
-						wardId = createResource(ward, Organization.class, Organization.NAME.matchesExactly().value(ward.getName()));
+						wardId = createResource(ward, Organization.class, Organization.NAME.matchesExactly().value(ward.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "ward"));
 						wards.add(ward.getName());
 						GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, wardId);
 						wardGroupId = createGroup(wardGroupRep);
@@ -232,7 +223,7 @@ public class HelperService {
 					if (!clinics.contains(csvData[7])) {
 						Location clinicLocation = FhirResourceTemplateHelper.clinic(csvData[0], csvData[1], csvData[2], csvData[7]);
 						Organization clinicOrganization = FhirResourceTemplateHelper.clinic(csvData[7], csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2], wardId, csvData[10]);
-						facilityOrganizationId = createResource(clinicOrganization, Organization.class, Organization.NAME.matchesExactly().value(clinicOrganization.getName()));
+						facilityOrganizationId = createResource(clinicOrganization, Organization.class, Organization.NAME.matchesExactly().value(clinicOrganization.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "facility"));
 						facilityLocationId = createResource(clinicLocation, Location.class, Location.NAME.matchesExactly().value(clinicLocation.getName()));
 						clinics.add(clinicOrganization.getName());
 
