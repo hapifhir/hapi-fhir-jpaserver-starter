@@ -181,9 +181,9 @@ public class NodeStack {
     return parent;
   }
 
-  public void pathComment(String comment) {
-    literalPath = literalPath + "/*"+comment+"*/";
-    
+  public void qualifyPath(String qualifier) {
+    literalPath = literalPath + qualifier;
+
   }
 
   public boolean isResetPoint() {
