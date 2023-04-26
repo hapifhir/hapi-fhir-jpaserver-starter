@@ -209,6 +209,7 @@ export class FHIRServerStack extends Stack {
         threshold: 80,
         evaluationPeriods: 3,
         datapointsToAlarm: 2,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
       });
     alarmAction && fargateCPUAlarm.addAlarmAction(alarmAction);
     alarmAction && fargateCPUAlarm.addOkAction(alarmAction);
@@ -219,6 +220,7 @@ export class FHIRServerStack extends Stack {
         threshold: 70,
         evaluationPeriods: 3,
         datapointsToAlarm: 2,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
       });
     alarmAction && fargateMemoryAlarm.addAlarmAction(alarmAction);
     alarmAction && fargateMemoryAlarm.addOkAction(alarmAction);
@@ -277,6 +279,7 @@ export class FHIRServerStack extends Stack {
         evaluationPeriods: 1,
         comparisonOperator:
           cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
       }
     );
     alarmAction && memoryAlarm.addAlarmAction(alarmAction);
@@ -291,6 +294,7 @@ export class FHIRServerStack extends Stack {
         evaluationPeriods: 1,
         comparisonOperator:
           cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
       }
     );
     alarmAction && storageAlarm.addAlarmAction(alarmAction);
@@ -303,6 +307,7 @@ export class FHIRServerStack extends Stack {
       {
         threshold: 90, // percentage
         evaluationPeriods: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
       }
     );
     alarmAction && cpuAlarm.addAlarmAction(alarmAction);
@@ -315,6 +320,7 @@ export class FHIRServerStack extends Stack {
       {
         threshold: 20000, // IOPs per second
         evaluationPeriods: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
       }
     );
     alarmAction && readAlarm.addAlarmAction(alarmAction);
@@ -327,6 +333,7 @@ export class FHIRServerStack extends Stack {
       {
         threshold: 5000, // IOPs per second
         evaluationPeriods: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
       }
     );
     alarmAction && writeAlarm.addAlarmAction(alarmAction);
