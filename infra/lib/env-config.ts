@@ -4,7 +4,7 @@ export type EnvConfig = {
   environmentType: EnvType;
   region: string;
   vpcId: string;
-  zone: string;
+  zoneId: string; // Route53 ID of the private hosted zone for this region
   domain: string;
   subdomain: string;
   dbName: string;
