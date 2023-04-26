@@ -1,0 +1,159 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../report-generator/1.0.13/report-generator-1.0.13.module",
+    "group": "com.iprd.report",
+    "module": "report-generator",
+    "version": "1.0.13",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "jsLegacyApiElements-published",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.js.compiler": "legacy",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-js",
+          "version": {
+            "requires": "1.5.10"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.5.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "report-generator-jslegacy-1.0.13.jar",
+          "url": "report-generator-js-1.0.13.jar",
+          "size": 60149,
+          "sha512": "c7d7a95b340322f15941b4fc0f790ddff3ac70d93e27686b70faf39f1472a3a7974d2ce6277c3ad5628b774ac3191b9a8cd176999df10d44c363b2b5b1b35773",
+          "sha256": "f5285f51a42c400d2aad7e014bbfb581bd6807a1f78a61d2b3972c2cb8a07682",
+          "sha1": "e6c3633e917b6121019fd91ee67c200e8fd371c1",
+          "md5": "4fa8ef0d4a85f77f650a219cbb0513f8"
+        }
+      ]
+    },
+    {
+      "name": "jsLegacyRuntimeElements-published",
+      "attributes": {
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "legacy",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-js",
+          "version": {
+            "requires": "1.5.10"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.5.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "report-generator-jslegacy-1.0.13.jar",
+          "url": "report-generator-js-1.0.13.jar",
+          "size": 60149,
+          "sha512": "c7d7a95b340322f15941b4fc0f790ddff3ac70d93e27686b70faf39f1472a3a7974d2ce6277c3ad5628b774ac3191b9a8cd176999df10d44c363b2b5b1b35773",
+          "sha256": "f5285f51a42c400d2aad7e014bbfb581bd6807a1f78a61d2b3972c2cb8a07682",
+          "sha1": "e6c3633e917b6121019fd91ee67c200e8fd371c1",
+          "md5": "4fa8ef0d4a85f77f650a219cbb0513f8"
+        }
+      ]
+    },
+    {
+      "name": "jsIrApiElements-published",
+      "attributes": {
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-js",
+          "version": {
+            "requires": "1.5.10"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.5.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "report-generator-jsir-1.0.13.klib",
+          "url": "report-generator-js-1.0.13.klib",
+          "size": 49344,
+          "sha512": "fc54ded627daa1f881e34ddc3e04a2d02b6f07d8a6a40141f428bfd8889c1ace989e6dd4459d595d23895ee907edfdd35a451c51016227990dd1f707f8a122e0",
+          "sha256": "89dae57ff9c53dd1fc32653d8f36e75f5bde952535d3089ba65e4361c1de08f2",
+          "sha1": "f347d6cec0f005fd8b4c0a64da7cce2f0394cae1",
+          "md5": "ed9fd09601739fa2ceb037f4bcdf5e94"
+        }
+      ]
+    },
+    {
+      "name": "jsIrRuntimeElements-published",
+      "attributes": {
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.js.compiler": "ir",
+        "org.jetbrains.kotlin.platform.type": "js"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-js",
+          "version": {
+            "requires": "1.5.10"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.5.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "report-generator-jsir-1.0.13.klib",
+          "url": "report-generator-js-1.0.13.klib",
+          "size": 49344,
+          "sha512": "fc54ded627daa1f881e34ddc3e04a2d02b6f07d8a6a40141f428bfd8889c1ace989e6dd4459d595d23895ee907edfdd35a451c51016227990dd1f707f8a122e0",
+          "sha256": "89dae57ff9c53dd1fc32653d8f36e75f5bde952535d3089ba65e4361c1de08f2",
+          "sha1": "f347d6cec0f005fd8b4c0a64da7cce2f0394cae1",
+          "md5": "ed9fd09601739fa2ceb037f4bcdf5e94"
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 server:
    port: 8085
-
+#   address: testhost.dashboard
 spring:
    main:
       allow-circular-references: true
@@ -64,17 +64,18 @@ hapi:
 #      hibernate.search.backend.directory.type: local-filesystem
 #      hibernate.search.backend.directory.root: target/lucenefiles
 #      hibernate.search.backend.lucene_version: lucene_current
-      envs: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\envs
-      notification_datasource_config_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\notificationDataSourceConfig.xml
-      anc_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\anc_config.json
-      filters_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\filters_config.json
-      daily_and_summary_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\daily_and_summary_config.json
-      pie_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\pie_config.json
-      gcp_credential_file_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\gcpCredential.json
-      sql_screen_time_file_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\sql_screen_time.txt
-      line_chart_definitions_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\chart_definition.json
-      tabular_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\tabular_config.json
-      analytics_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\analytics_config.json
+      envs: C:\IPRD\anc-oyo\data\hapi\envs
+      notification_datasource_config_path: C:\IPRD\anc-oyo\data\hapi\notificationDataSourceConfig.xml
+      anc_config_file: C:\IPRD\anc-oyo\data\hapi\anc_config.json
+      filters_config_file: C:\IPRD\anc-oyo\data\hapi\filters_config.json
+      daily_and_summary_config_file: C:\IPRD\anc-oyo\data\hapi\daily_and_summary_config.json
+      pie_config_file: C:\IPRD\anc-oyo\data\hapi\pie_config.json
+      gcp_credential_file_path: C:\IPRD\anc-oyo\data\hapi\gcpCredential.json
+      sql_screen_time_file_path: C:\IPRD\anc-oyo\data\hapi\sql_screen_time.txt
+      line_chart_definitions_file: C:\IPRD\anc-oyo\data\hapi\chart_definition.json
+      tabular_config_file: C:\IPRD\anc-oyo\data\hapi\tabular_config.json
+      analytics_config_file: C:\IPRD\anc-oyo\data\hapi\analytics_config.json
+      new_daily_summary: C:\IPRD\anc-oyo\data\hapi\new_daily_summary.json
 
       executor_core_pool_size: 4
       executor_max_pool_size: 6
