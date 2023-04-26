@@ -9,4 +9,9 @@ export type EnvConfig = {
   subdomain: string;
   dbName: string;
   dbUsername: string;
+  slack?: {
+    workspaceId: string;
+    alertsChannelId: string;
+    snsTopicArn: string;
+  };
 };
