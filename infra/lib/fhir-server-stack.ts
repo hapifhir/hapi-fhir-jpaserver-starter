@@ -33,10 +33,11 @@ export class FHIRServerStack extends Stack {
     this.vpc = ec2.Vpc.fromLookup(this, "APIVpc", {
       vpcId: props.config.vpcId,
     });
-    this.zone = r53.HostedZone.fromLookup(this, "Zone", {
-      domainName: props.config.zone,
-      privateZone: true,
-    });
+    this.zone = r53.HostedZone.fromHostedZoneId(
+      this,
+      "FhirZone",
+      props.config.zoneId
+    );
 
     const slackNotification = setupSlackNotifSnsTopic(this, props.config);
 
