@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ca.uhn.fhir.jpa.starter.model.CategoryItem;
 import com.iprd.report.model.FilterItem;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
 import com.iprd.report.model.definition.BarChartDefinition;
@@ -103,6 +105,10 @@ public class DashboardEnvironmentConfig {
 						case DAILY_SUMMARY_DEFINITIONS: {
 							envConfigContainer.setAncDailySummaryConfig(new Gson().fromJson(reader, new TypeToken<List<ANCDailySummaryConfig>>(){
 							}.getType()));
+							break;
+						}
+						case CATEGORY_DEFINITIONS: {
+							envConfigContainer.setCategoryItem(new Gson().fromJson(reader, CategoryItem.class));
 							break;
 						}
 					}
