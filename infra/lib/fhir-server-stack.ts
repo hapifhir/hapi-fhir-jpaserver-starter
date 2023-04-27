@@ -1,8 +1,8 @@
 import { Aspects, CfnOutput, Duration, Stack, StackProps } from "aws-cdk-lib";
 import * as cloudwatch from "aws-cdk-lib/aws-cloudwatch";
+import { SnsAction } from "aws-cdk-lib/aws-cloudwatch-actions";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { InstanceType } from "aws-cdk-lib/aws-ec2";
-import * as ecr from "aws-cdk-lib/aws-ecr";
 import * as ecr_assets from "aws-cdk-lib/aws-ecr-assets";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as ecs_patterns from "aws-cdk-lib/aws-ecs-patterns";
@@ -11,7 +11,8 @@ import { Credentials } from "aws-cdk-lib/aws-rds";
 import * as r53 from "aws-cdk-lib/aws-route53";
 import * as r53_targets from "aws-cdk-lib/aws-route53-targets";
 import * as secret from "aws-cdk-lib/aws-secretsmanager";
-import { execSync } from "child_process";
+import * as sns from "aws-cdk-lib/aws-sns";
+import { ITopic } from "aws-cdk-lib/aws-sns";
 import { Construct } from "constructs";
 import { EnvConfig } from "./env-config";
 import { isProd, mbToBytes } from "./util";
@@ -32,20 +33,30 @@ export class FHIRServerStack extends Stack {
     this.vpc = ec2.Vpc.fromLookup(this, "APIVpc", {
       vpcId: props.config.vpcId,
     });
-    this.zone = r53.HostedZone.fromLookup(this, "Zone", {
-      domainName: props.config.zone,
-      privateZone: true,
+    this.zone = r53.HostedZone.fromHostedZoneAttributes(this, "FhirZone", {
+      zoneName: props.config.zone.name,
+      hostedZoneId: props.config.zone.id,
     });
+
+    const slackNotification = setupSlackNotifSnsTopic(this, props.config);
 
     //-------------------------------------------
     // Aurora Database
     //-------------------------------------------
-    const { dbCluster, dbCreds } = this.setupDB(props);
+    const { dbCluster, dbCreds } = this.setupDB(
+      props,
+      slackNotification?.alarmAction
+    );
 
     //-------------------------------------------
     // ECS + Fargate for FHIR Server
     //-------------------------------------------
-    const fargateService = this.setupFargateService(props, dbCluster, dbCreds);
+    const fargateService = this.setupFargateService(
+      props,
+      dbCluster,
+      dbCreds,
+      slackNotification?.alarmAction
+    );
 
     //-------------------------------------------
     // Output
@@ -64,7 +75,10 @@ export class FHIRServerStack extends Stack {
     });
   }
 
-  private setupDB(props: FHIRServerProps): {
+  private setupDB(
+    props: FHIRServerProps,
+    alarmAction?: SnsAction
+  ): {
     dbCluster: rds.IDatabaseCluster;
     dbCreds: { username: string; password: secret.Secret };
   } {
@@ -111,10 +125,9 @@ export class FHIRServerStack extends Stack {
       },
     });
 
-    // add performance alarms for monitoring prod environment
-    if (this.isProd(props)) {
-      this.addDBClusterPerformanceAlarms(dbCluster, dbClusterName);
-    }
+    // add performance alarms
+    this.addDBClusterPerformanceAlarms(dbCluster, dbClusterName, alarmAction);
+
     return {
       dbCluster,
       dbCreds: { username: dbUsername, password: dbPasswordSecret },
@@ -124,7 +137,8 @@ export class FHIRServerStack extends Stack {
   private setupFargateService(
     props: FHIRServerProps,
     dbCluster: rds.IDatabaseCluster,
-    dbCreds: { username: string; password: secret.Secret }
+    dbCreds: { username: string; password: secret.Secret },
+    alarmAction?: SnsAction
   ): ecs_patterns.NetworkLoadBalancedFargateService {
     // Create a new Amazon Elastic Container Service (ECS) cluster
     const cluster = new ecs.Cluster(this, "FHIRServerCluster", {
@@ -187,6 +201,29 @@ export class FHIRServerStack extends Stack {
       interval: Duration.seconds(10),
     });
 
+    // CloudWatch Alarms and Notifications
+    const fargateCPUAlarm = fargateService.service
+      .metricCpuUtilization()
+      .createAlarm(this, "FHIRCPUAlarm", {
+        threshold: 80,
+        evaluationPeriods: 3,
+        datapointsToAlarm: 2,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+      });
+    alarmAction && fargateCPUAlarm.addAlarmAction(alarmAction);
+    alarmAction && fargateCPUAlarm.addOkAction(alarmAction);
+
+    const fargateMemoryAlarm = fargateService.service
+      .metricMemoryUtilization()
+      .createAlarm(this, "FHIRMemoryAlarm", {
+        threshold: 70,
+        evaluationPeriods: 3,
+        datapointsToAlarm: 2,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+      });
+    alarmAction && fargateMemoryAlarm.addAlarmAction(alarmAction);
+    alarmAction && fargateMemoryAlarm.addOkAction(alarmAction);
+
     // Access grant for Aurora DB
     dbCreds.password.grantRead(fargateService.taskDefinition.taskRole);
     dbCluster.connections.allowDefaultPortFrom(fargateService.service);
@@ -229,44 +266,94 @@ export class FHIRServerStack extends Stack {
   // TODO REVIEW THESE THRESHOLDS
   private addDBClusterPerformanceAlarms(
     dbCluster: rds.DatabaseCluster,
-    dbClusterName: string
+    dbClusterName: string,
+    alarmAction?: SnsAction
   ) {
     const memoryMetric = dbCluster.metricFreeableMemory();
-    memoryMetric.createAlarm(this, `${dbClusterName}FreeableMemoryAlarm`, {
-      threshold: mbToBytes(150),
-      evaluationPeriods: 1,
-      comparisonOperator:
-        cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
-    });
+    const memoryAlarm = memoryMetric.createAlarm(
+      this,
+      `${dbClusterName}FreeableMemoryAlarm`,
+      {
+        threshold: mbToBytes(150),
+        evaluationPeriods: 1,
+        comparisonOperator:
+          cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+      }
+    );
+    alarmAction && memoryAlarm.addAlarmAction(alarmAction);
+    alarmAction && memoryAlarm.addOkAction(alarmAction);
 
     const storageMetric = dbCluster.metricFreeLocalStorage();
-    storageMetric.createAlarm(this, `${dbClusterName}FreeLocalStorageAlarm`, {
-      threshold: mbToBytes(250),
-      evaluationPeriods: 1,
-      comparisonOperator:
-        cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
-    });
+    const storageAlarm = storageMetric.createAlarm(
+      this,
+      `${dbClusterName}FreeLocalStorageAlarm`,
+      {
+        threshold: mbToBytes(250),
+        evaluationPeriods: 1,
+        comparisonOperator:
+          cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+      }
+    );
+    alarmAction && storageAlarm.addAlarmAction(alarmAction);
+    alarmAction && storageAlarm.addOkAction(alarmAction);
 
     const cpuMetric = dbCluster.metricCPUUtilization();
-    cpuMetric.createAlarm(this, `${dbClusterName}CPUUtilizationAlarm`, {
-      threshold: 90, // percentage
-      evaluationPeriods: 1,
-    });
+    const cpuAlarm = cpuMetric.createAlarm(
+      this,
+      `${dbClusterName}CPUUtilizationAlarm`,
+      {
+        threshold: 90, // percentage
+        evaluationPeriods: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+      }
+    );
+    alarmAction && cpuAlarm.addAlarmAction(alarmAction);
+    alarmAction && cpuAlarm.addOkAction(alarmAction);
 
     const readIOPsMetric = dbCluster.metricVolumeReadIOPs();
-    readIOPsMetric.createAlarm(this, `${dbClusterName}VolumeReadIOPsAlarm`, {
-      threshold: 20000, // IOPs per second
-      evaluationPeriods: 1,
-    });
+    const readAlarm = readIOPsMetric.createAlarm(
+      this,
+      `${dbClusterName}VolumeReadIOPsAlarm`,
+      {
+        threshold: 20000, // IOPs per second
+        evaluationPeriods: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+      }
+    );
+    alarmAction && readAlarm.addAlarmAction(alarmAction);
+    alarmAction && readAlarm.addOkAction(alarmAction);
 
     const writeIOPsMetric = dbCluster.metricVolumeWriteIOPs();
-    writeIOPsMetric.createAlarm(this, `${dbClusterName}VolumeWriteIOPsAlarm`, {
-      threshold: 5000, // IOPs per second
-      evaluationPeriods: 1,
-    });
+    const writeAlarm = writeIOPsMetric.createAlarm(
+      this,
+      `${dbClusterName}VolumeWriteIOPsAlarm`,
+      {
+        threshold: 5000, // IOPs per second
+        evaluationPeriods: 1,
+        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+      }
+    );
+    alarmAction && writeAlarm.addAlarmAction(alarmAction);
+    alarmAction && writeAlarm.addOkAction(alarmAction);
   }
 
   private isProd(props: FHIRServerProps): boolean {
     return isProd(props.config);
   }
+}
+
+function setupSlackNotifSnsTopic(
+  stack: Stack,
+  config: EnvConfig
+): { snsTopic: ITopic; alarmAction: SnsAction } | undefined {
+  if (!config.slack) return undefined;
+  const slackNotifSnsTopic = sns.Topic.fromTopicArn(
+    stack,
+    "SlackSnsTopic",
+    config.slack.snsTopicArn
+  );
+  const alarmAction = new SnsAction(slackNotifSnsTopic);
+  return { snsTopic: slackNotifSnsTopic, alarmAction };
 }
