@@ -2,13 +2,44 @@ package ca.uhn.fhir.jpa.starter.model;
 
 import javax.persistence.*;
 
-import com.iprd.fhir.utils.PatientIdentifierStatus;
-
 @Entity
-@Table(name = "PatientIdentifierEntity",indexes = {
-	@Index(columnList = "patientId,patientIdentifier,status ", name = "patient_id_identifier") })
+@Table(name = "patientIdentifierEntity", indexes = {@Index(columnList = "patientId,patientIdentifier,status", name = "patient_id_identifier")}, uniqueConstraints = @UniqueConstraint(columnNames = {"patientId", "patientIdentifier", "identifierType"}))
 public class PatientIdentifierEntity {
-	
+
+	public enum PatientIdentifierType {
+		OCL_ID,
+		PATIENT_CARD_NUM,
+		PHONE_NUM,
+	}
+
+	@Id
+	@GeneratedValue
+	private long id;
+
+	@Column(name = "patientId", nullable = false)
+	private String patientId;
+
+	@Column(name = "patientIdentifier", nullable = true)
+	private String patientIdentifier;
+
+	@Column(name = "identifierType", nullable = false)
+	private String identifierType;
+
+	@Column(name = "oclVersionId", nullable = true)
+	private String oclVersionId;
+
+	@Column(name = "oclGuid", nullable = true)
+	private String oclGuid;
+
+	@Column(name = "status", nullable = false)
+	private String status;
+
+	@Column(name = "createdTime", nullable = false)
+	private long cratedTime;
+
+	@Column(name = "updatedTime", nullable = false)
+	private long updatedTime;
+
 	public long getId() {
 		return id;
 	}
@@ -33,12 +64,12 @@ public class PatientIdentifierEntity {
 		this.patientIdentifier = patientIdentifier;
 	}
 
-	public String getPatientIdentifierExtraInfo() {
-		return patientIdentifierExtraInfo;
+	public String getIdentifierType() {
+		return identifierType;
 	}
 
-	public void setPatientIdentifierExtraInfo(String patientIdentifierExtraInfo) {
-		this.patientIdentifierExtraInfo = patientIdentifierExtraInfo;
+	public void setIdentifierType(String identifierType) {
+		this.identifierType = identifierType;
 	}
 
 	public String getStatus() {
@@ -49,57 +80,54 @@ public class PatientIdentifierEntity {
 		this.status = status;
 	}
 
-	public String getResourceType() {
-		return resourceType;
+	public String getOclVersionId() {
+		return oclVersionId;
 	}
 
-	public void setResourceType(String resourceType) {
-		this.resourceType = resourceType;
+	public void setCclVersionId(String oclVersionId) {
+		this.oclVersionId = oclVersionId;
 	}
 
-	public String getLastModified() {
-		return lastModified;
+	public String getOclGuid() {
+		return oclGuid;
 	}
 
-	public void setLastModified(String lastModified) {
-		this.lastModified = lastModified;
+	public void setOclGuid(String oclGuid) {
+		this.status = oclGuid;
 	}
 
-	@Id
-	@GeneratedValue
-	private long id;
-	
-	@Column(name = "patientId", nullable = false)
-	private String patientId;
+	public long getCratedTime() {
+		return cratedTime;
+	}
 
-	@Column(name = "patientIdentifier", nullable = true)
-	private String patientIdentifier;
+	public void setCratedTime(long cratedTime) {
+		this.cratedTime = cratedTime;
+	}
 
-	@Column(name = "patientIdentifierExtraInfo", nullable = true)
-	private String patientIdentifierExtraInfo;
+	public long getUpdatedTime() {
+		return updatedTime;
+	}
 
-	@Column(name = "status", nullable = false)
-	private String status;
+	public void setUpdatedTime(long updatedTime) {
+		this.updatedTime = updatedTime;
+	}
 
-	@Column(name = "resourceType", nullable = false)
-	private String resourceType;
+	public PatientIdentifierEntity() {
+	}
 
-	@Column(name = "lastModified", nullable = false)
-	private String lastModified;
-
-	public PatientIdentifierEntity(){}
-	
-	public PatientIdentifierEntity(String patientId, String patientIdentifier, String patientIdentifierExtraInfo, String status, String resourceType, String lastModified){
+	public PatientIdentifierEntity(String patientId, String patientIdentifier, String identifierType, String oclVersionId, String oclGuid, String status, long createdAt, long updatedAt) {
 		this.patientId = patientId;
 		this.patientIdentifier = patientIdentifier;
-		this.patientIdentifierExtraInfo = patientIdentifierExtraInfo;
+		this.identifierType = identifierType;
+		this.oclVersionId = oclVersionId;
+		this.oclGuid = oclGuid;
 		this.status = status;
-		this.resourceType = resourceType;
-		this.lastModified = lastModified;
+		this.cratedTime = createdAt;
+		this.updatedTime = updatedAt;
 	}
 
 	@Override
 	public String toString() {
-		return "PatientInfoResourceEntity[id=" + id + ",patientId=" + patientId + ",patientIdentifier=" + patientIdentifier + ",patientIdentifierExtraInfo=" + patientIdentifierExtraInfo + ",status=" + status + ",lastModified=" + lastModified + ",resourceType=" + resourceType + "]";
+		return "PatientInfoResourceEntity[id=" + id + ",patientId=" + patientId + ",patientIdentifier=" + patientIdentifier + ",identifierType=" + identifierType + ",oclVersionId=" + oclVersionId + ",oclGuid=" + oclGuid + ",status=" + status + ",createdAt=" + cratedTime + ",updatedAt=" + updatedTime + "]";
 	}
 }

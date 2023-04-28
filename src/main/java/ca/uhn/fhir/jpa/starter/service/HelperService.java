@@ -12,6 +12,7 @@ import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 
+import ca.uhn.fhir.rest.gclient.TokenClientParam;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -58,6 +59,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.engine.jdbc.ClobProxy;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -189,7 +191,7 @@ public class HelperService {
 				if (Validation.validateClinicAndStateCsvLine(csvData)) {
 					if (!states.contains(csvData[0])) {
 						Organization state = FhirResourceTemplateHelper.state(csvData[0]);
-						stateId = createResource(state, Organization.class, Organization.NAME.matchesExactly().value(state.getName()));
+						stateId = createResource(state, Organization.class, Organization.NAME.matchesExactly().value(state.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "state"));
 						states.add(state.getName());
 						GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), stateId);
 						stateGroupId = createGroup(stateGroupRep);
@@ -198,7 +200,7 @@ public class HelperService {
 
 					if (!lgas.contains(csvData[1])) {
 						Organization lga = FhirResourceTemplateHelper.lga(csvData[1], csvData[0], stateId);
-						lgaId = createResource(lga, Organization.class, Organization.NAME.matchesExactly().value(lga.getName()));
+						lgaId = createResource(lga, Organization.class, Organization.NAME.matchesExactly().value(lga.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "lga"));
 						lgas.add(lga.getName());
 						GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lgaId);
 						lgaGroupId = createGroup(lgaGroupRep);
@@ -207,7 +209,7 @@ public class HelperService {
 
 					if (!wards.contains(csvData[2])) {
 						Organization ward = FhirResourceTemplateHelper.ward(csvData[0], csvData[1], csvData[2], lgaId);
-						wardId = createResource(ward, Organization.class, Organization.NAME.matchesExactly().value(ward.getName()));
+						wardId = createResource(ward, Organization.class, Organization.NAME.matchesExactly().value(ward.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "ward"));
 						wards.add(ward.getName());
 						GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, wardId);
 						wardGroupId = createGroup(wardGroupRep);
@@ -217,7 +219,7 @@ public class HelperService {
 					if (!clinics.contains(csvData[7])) {
 						Location clinicLocation = FhirResourceTemplateHelper.clinic(csvData[0], csvData[1], csvData[2], csvData[7]);
 						Organization clinicOrganization = FhirResourceTemplateHelper.clinic(csvData[7], csvData[3], csvData[4], csvData[5], csvData[6], csvData[0], csvData[1], csvData[2], wardId, csvData[10]);
-						facilityOrganizationId = createResource(clinicOrganization, Organization.class, Organization.NAME.matchesExactly().value(clinicOrganization.getName()));
+						facilityOrganizationId = createResource(clinicOrganization, Organization.class, Organization.NAME.matchesExactly().value(clinicOrganization.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "facility"));
 						facilityLocationId = createResource(clinicLocation, Location.class, Location.NAME.matchesExactly().value(clinicLocation.getName()));
 						clinics.add(clinicOrganization.getName());
 
@@ -352,7 +354,7 @@ public class HelperService {
 		return new ResponseEntity<LinkedHashMap<String, Object>>(map, HttpStatus.OK);
 	}
 
-	public ResponseEntity<?> getTableData(String lastUpdated){
+	public ResponseEntity<?> getTableData(Long lastUpdated){
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<PatientIdentifierEntity> patientInfoResourceEntities = notificationDataSource.getPatientInfoResourceEntityDataBeyondLastUpdated(lastUpdated);
 		return new ResponseEntity<List<PatientIdentifierEntity>>(patientInfoResourceEntities,HttpStatus.OK);
@@ -393,7 +395,7 @@ public class HelperService {
 			asyncRecord.setSummaryResult(ClobProxy.generateProxy(base64SummaryResult));
 			datasource.update(asyncRecord);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 
 	}
@@ -572,7 +574,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			List<ScoreCardIndicatorItem> indicators = getIndicatorItemListFromFile(env);
 			return ResponseEntity.ok(indicators);
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error : ScoreCard Config File Not Found");
 		}
 	}
@@ -593,7 +595,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			List<BarChartDefinition> barChartDefinition = getBarChartItemListFromFile(env);
 			return ResponseEntity.ok(barChartDefinition);
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error :Bar Config File Not Found");
 		}
 	}
@@ -602,7 +604,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
 			return ResponseEntity.ok(lineCharts);
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error :Line Config File Not Found");
 		}
 	}
@@ -611,7 +613,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			List<TabularItem> indicators = getTabularItemListFromFile(env);
 			return ResponseEntity.ok(indicators);
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error : Tabular Config File Not Found");
 		}
 	}
@@ -621,7 +623,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			List<PieChartDefinition> pieChartIndicators = getPieChartItemDefinitionFromFile(env);
 			return ResponseEntity.ok(pieChartIndicators);
 		} catch (NullPointerException e){
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error :Pie Chart Config File Not Found");
 		}
 	}
@@ -631,7 +633,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			List<FilterItem> filters = dashboardEnvToConfigMap.get(env).getFilterItems();
 			return ResponseEntity.ok(filters);
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error: Config File Not Found");
 		}
 	}
@@ -1414,10 +1416,9 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			obj.setValue(keycloakId);
 			MethodOutcome outcome = FhirClientAuthenticatorService.getFhirClient().update().resource(resource).execute();
 		} catch (SecurityException | NoSuchMethodException | InvocationTargetException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 	}
 
@@ -1432,7 +1433,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			return CreatedResponseUtil.getCreatedId(response);
 		} catch (WebApplicationException e) {
 			logger.error("Cannot create user " + userRep.getUsername() + " with groups " + userRep.getGroups() + "\n");
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return null;
 		}
 	}

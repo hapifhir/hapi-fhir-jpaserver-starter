@@ -20,6 +20,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +31,8 @@ import org.springframework.context.annotation.Import;
 @Import(AppProperties.class)
 @Configuration
 public class DashboardEnvironmentConfig {
+
+	private static final Logger logger = LoggerFactory.getLogger(DashboardEnvironmentConfig.class);
 
 	@Autowired
 	AppProperties appProperties;
@@ -46,7 +51,7 @@ public class DashboardEnvironmentConfig {
 							ConfigDefinitionTypes configDefinitionTypes = ConfigDefinitionTypes.valueOf(FilenameUtils.removeExtension(file.getName()));
 							fileNameToPathMap.put(configDefinitionTypes, file.getAbsolutePath());
 						} catch (IllegalArgumentException exception) {
-							exception.printStackTrace();
+							logger.warn(ExceptionUtils.getStackTrace(exception));
 						}
 
 					}
@@ -113,7 +118,7 @@ public class DashboardEnvironmentConfig {
 						}
 					}
 				} catch (FileNotFoundException e) {
-					e.printStackTrace();
+					logger.warn(ExceptionUtils.getStackTrace(e));
 				}
 			});
 			dashboardEnvToConfigMap.put(env, envConfigContainer);

@@ -8,20 +8,20 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.PersistenceException;
+import java.util.Objects;
 
 import android.util.Base64;
 
 import ca.uhn.fhir.jpa.starter.model.*;
-import kotlin.Pair;
 
 import com.iprd.fhir.utils.FhirUtils;
 import com.iprd.fhir.utils.PatientIdentifierStatus;
 
+import kotlin.Triple;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.jena.ext.xerces.util.URI;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
 import org.slf4j.Logger;
@@ -69,7 +69,7 @@ public class ServerInterceptor {
 			if (!isEncounterMigrated(encounter)) {
 				try {
 					EncounterIdEntity encounterIdEntity = new EncounterIdEntity(encounterId);	
-					notificationDataSource.insert(encounterIdEntity);
+					notificationDataSource.persist(encounterIdEntity);
 					ComGenerator comGen = new ComGenerator(
 						"Encounter",
 						encounterId,
@@ -128,50 +128,10 @@ public class ServerInterceptor {
 		}
 		else if (theResource.fhirType().equals("QuestionnaireResponse")) {
 			processQuestionnaireResponse((QuestionnaireResponse) theResource);
+		} else if (theResource.fhirType().equals("Patient")) {
+			processPatientInsert(theResource);
 		}
-		else if(theResource.fhirType().equals("Patient")){
-			Patient patient = (Patient) theResource;
-			String patientId = patient.getIdElement().getIdPart();
-			String patientOclId = FhirUtils.getOclIdentifier(patient.getIdentifier());
-			String patientOclUrlLink = FhirUtils.getOclLink(patient.getIdentifier());
-			String patientTelecom = patient.getTelecomFirstRep().getValue();
-			String patientCardNumber = FhirUtils.getPatientCardNumber(patient.getIdentifier());
-			String currentDate = String.valueOf(System.currentTimeMillis());
-			List<PatientIdentifierEntity> entitiesToSave = new ArrayList<>();
-			List<PatientIdentifierEntity> existingPatientInDB = notificationDataSource.getExistingEntryWithPatientIdAndIdentifier(patientId, patientOclId);
-				if(existingPatientInDB.isEmpty()){
-					if(!FhirUtils.isOclPatient(patient.getIdentifier())) {
-						PatientIdentifierEntity patientInfoResourceEntityOCL = new PatientIdentifierEntity(
-							patientId,
-							patientOclId,
-							patientOclUrlLink,
-							(notificationDataSource.getPatientIdWithIdentifier(patientOclId).size() >= 1) ?  PatientIdentifierStatus.DUPLICATE.name():PatientIdentifierStatus.OK.name(),
-							theResource.fhirType(),
-							currentDate.toString()
-						);
-						PatientIdentifierEntity patientInfoResourceEntityCardNumber = new PatientIdentifierEntity(
-							patientId,
-							patientCardNumber,
-							"http://iprdgroup.com/identifiers/patient-card",
-							(notificationDataSource.getPatientIdWithIdentifier(patientCardNumber).size() >= 1) ?  PatientIdentifierStatus.DUPLICATE.name(): PatientIdentifierStatus.OK.name(),
-							theResource.fhirType(),
-							currentDate.toString()
-						);
-						PatientIdentifierEntity patientInfoResourceEntityTelecom = new PatientIdentifierEntity(
-							patientId,
-							patientTelecom,
-							"phone",
-							(notificationDataSource.getPatientIdWithIdentifier(patientTelecom).size() >= 1) ?  PatientIdentifierStatus.DUPLICATE.name(): PatientIdentifierStatus.OK.name(),
-							theResource.fhirType(),
-							currentDate.toString()
-						);
-						notificationDataSource.insert(patientInfoResourceEntityOCL);
-						notificationDataSource.insert(patientInfoResourceEntityCardNumber);
-						notificationDataSource.insert(patientInfoResourceEntityTelecom);
-					}
-				}	
-			}
-		}
+	}
 
 	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_UPDATED)
 	   public void update(IBaseResource theOldResource, IBaseResource theResource) throws IOException {
@@ -192,85 +152,7 @@ public class ServerInterceptor {
 			processQuestionnaireResponse((QuestionnaireResponse) theResource);
 		}
 		else if(theResource.fhirType().equals("Patient")){
-			Patient patient = (Patient) theResource;
-			String patientId = patient.getIdElement().getIdPart();
-			String patientOclId = FhirUtils.getOclIdentifier(patient.getIdentifier());
-			String patientOclUrlLink = FhirUtils.getOclLink(patient.getIdentifier());
-			String patientTelecom = patient.getTelecomFirstRep().getValue();
-			String patientCardNumber = FhirUtils.getPatientCardNumber(patient.getIdentifier());
-			String currentDate = String.valueOf(System.currentTimeMillis());
-			Pair<List<String>, List<Identifier>> missingIdentifierNewIdentifier = FhirUtils.getMissingIdentifierAndNewIdentifier(((Patient)theOldResource).getIdentifier(),patient.getIdentifier());
-			List<PatientIdentifierEntity> existingPatientWithOcl = notificationDataSource.getExistingEntryWithPatientIdAndIdentifier(patientId, patientOclId);
-			List<PatientIdentifierEntity> existingPatientWithANC = notificationDataSource.getExistingEntryWithPatientIdAndIdentifier(patientId, patientCardNumber);
-			if (existingPatientWithOcl.isEmpty() || existingPatientWithANC.isEmpty()){
-				// Handle Identifiers that are deleted
-				if(!missingIdentifierNewIdentifier.getFirst().isEmpty()) {
-					for(String identifierValue : missingIdentifierNewIdentifier.getFirst()) {
-						List<PatientIdentifierEntity> patientIdentifierEntities;
-						if(identifierValue.contains("ocl")){
-							patientIdentifierEntities = notificationDataSource.getPatientIdentifierEntity(FhirUtils.getOclIdFromString(identifierValue),patientId);
-						} else{
-							patientIdentifierEntities = notificationDataSource.getPatientIdentifierEntity(identifierValue,patientId);
-						}
-
-						if(patientIdentifierEntities.size() > 0) {
-							PatientIdentifierEntity patientEntity = patientIdentifierEntities.get(0);
-							patientEntity.setStatus(PatientIdentifierStatus.DELETE.name());
-							notificationDataSource.update(patientEntity);
-						}
-					}
-				}
-				// Handle Updated / New identifiers
-				if(!missingIdentifierNewIdentifier.getSecond().isEmpty()) {
-					for(Identifier identifier : missingIdentifierNewIdentifier.getSecond()) {
-						List<PatientIdentifierEntity> patientIdentifierEntitys =  notificationDataSource.getPatientIdentifierEntity(identifier.getValue(),patientId);
-						if(patientIdentifierEntitys.size()>0) {
-							PatientIdentifierEntity patientEntity =  patientIdentifierEntitys.get(0);
-							patientEntity.setStatus(PatientIdentifierStatus.DELETE.name());
-							notificationDataSource.update(patientEntity);
-						}else{
-							PatientIdentifierEntity patientInfoResourceEntityCardNumber = new PatientIdentifierEntity(
-								patientId,
-								identifier.getValue(),
-								identifier.getSystem(),
-								(notificationDataSource.getPatientIdWithIdentifier(patientCardNumber).size() >= 1) ?   PatientIdentifierStatus.DUPLICATE.name(): PatientIdentifierStatus.OK.name(),
-								theResource.fhirType(),
-								currentDate
-							);
-							notificationDataSource.insert(patientInfoResourceEntityCardNumber);
-						}
-					}
-				}
-				if(!FhirUtils.isOclPatient(patient.getIdentifier())) {
-					PatientIdentifierEntity patientInfoResourceEntityOCL = new PatientIdentifierEntity(
-						patientId,
-						patientOclId,
-						patientOclUrlLink,
-						(notificationDataSource.getPatientIdWithIdentifier(patientOclId).size() >= 1) ?  PatientIdentifierStatus.DUPLICATE.name(): PatientIdentifierStatus.OK.name(),
-						theResource.fhirType(),
-						currentDate
-					);
-					PatientIdentifierEntity patientInfoResourceEntityCardNumber = new PatientIdentifierEntity(
-						patientId,
-						patientCardNumber,
-						"http://iprdgroup.com/identifiers/patient-card",
-						(notificationDataSource.getPatientIdWithIdentifier(patientCardNumber).size() >= 1) ?   PatientIdentifierStatus.DUPLICATE.name(): PatientIdentifierStatus.OK.name(),
-						theResource.fhirType(),
-						currentDate
-					);
-					PatientIdentifierEntity patientInfoResourceEntityTelecom = new PatientIdentifierEntity(
-						patientId,
-						patientTelecom,
-						"phone",
-						(notificationDataSource.getPatientIdWithIdentifier(patientTelecom).size() >= 1) ?   PatientIdentifierStatus.DUPLICATE.name(): PatientIdentifierStatus.OK.name(),
-						theResource.fhirType(),
-						currentDate
-					);
-					notificationDataSource.insert(patientInfoResourceEntityOCL);
-					notificationDataSource.insert(patientInfoResourceEntityCardNumber);
-					notificationDataSource.insert(patientInfoResourceEntityTelecom);
-				}
-			}
+			processPatientUpdate(theOldResource, theResource);
 		}
 	}
 
@@ -315,6 +197,187 @@ public class ServerInterceptor {
 			}
 			else {
 				logger.warn("Image Not Proper");
+			}
+		}
+	}
+
+	private void processPatientInsert(IBaseResource theResource) {
+		Patient patient = (Patient) theResource;
+		String patientId = patient.getIdElement().getIdPart();
+		Triple<String, String, String> patientOclId = FhirUtils.getOclIdFromIdentifier(patient.getIdentifier());
+		String patientTelecom = patient.getTelecomFirstRep().getValue();
+		String patientCardNumber = FhirUtils.getPatientCardNumber(patient.getIdentifier());
+		Long currentEpochTime = System.currentTimeMillis();
+
+		if (FhirUtils.isOclPatient(patient.getIdentifier())) {
+			return;
+		}
+
+		if (patientOclId != null && patientOclId.getFirst() != null) {
+			PatientIdentifierEntity patientIdentifierEntityOcl = new PatientIdentifierEntity(
+				patientId,
+				patientOclId.getFirst(),
+				PatientIdentifierEntity.PatientIdentifierType.OCL_ID.name(),
+				patientOclId.getSecond(),
+				patientOclId.getThird(),
+				(notificationDataSource.getPatientIdWithIdentifier(patientId, patientOclId.getFirst()).size() >= 1) ? PatientIdentifierStatus.DUPLICATE.name() : PatientIdentifierStatus.OK.name(),
+				currentEpochTime,
+				currentEpochTime
+			);
+			notificationDataSource.persist(patientIdentifierEntityOcl);
+		}
+
+		if (patientCardNumber != null) {
+			PatientIdentifierEntity patientIdentifierEntityCardNumber = new PatientIdentifierEntity(
+				patientId,
+				patientCardNumber,
+				PatientIdentifierEntity.PatientIdentifierType.PATIENT_CARD_NUM.name(),
+				null,
+				null,
+				(notificationDataSource.getPatientIdWithIdentifier(patientId, patientCardNumber).size() >= 1) ? PatientIdentifierStatus.DUPLICATE.name() : PatientIdentifierStatus.OK.name(),
+				currentEpochTime,
+				currentEpochTime
+			);
+			notificationDataSource.persist(patientIdentifierEntityCardNumber);
+		}
+
+		if (patientTelecom != null) {
+			PatientIdentifierEntity patientIdentifierEntityPhoneNumber = new PatientIdentifierEntity(
+				patientId,
+				patientTelecom,
+				PatientIdentifierEntity.PatientIdentifierType.PHONE_NUM.name(),
+				null,
+				null,
+				(notificationDataSource.getPatientIdWithIdentifier(patientId, patientTelecom).size() >= 1) ? PatientIdentifierStatus.DUPLICATE.name() : PatientIdentifierStatus.OK.name(),
+				currentEpochTime,
+				currentEpochTime
+			);
+			notificationDataSource.persist(patientIdentifierEntityPhoneNumber);
+		}
+
+	}
+
+	private void processPatientUpdate(IBaseResource theOldResource, IBaseResource theResource) {
+		Patient oldPatient = (Patient) theOldResource;
+		Patient updatedPatient = (Patient) theResource;
+
+		String patientId = updatedPatient.getIdElement().getIdPart();
+
+		Triple<String, String, String> oldPatientOclId = FhirUtils.getOclIdFromIdentifier(oldPatient.getIdentifier());
+		Triple<String, String, String> updatedPatientOclId = FhirUtils.getOclIdFromIdentifier(updatedPatient.getIdentifier());
+
+		String oldPatientCardNumber = FhirUtils.getPatientCardNumber(oldPatient.getIdentifier());
+		String updatedPatientCardNumber = FhirUtils.getPatientCardNumber(updatedPatient.getIdentifier());
+
+		String oldTelecom = oldPatient.getTelecomFirstRep().getValue();
+		String updatedTelecom = updatedPatient.getTelecomFirstRep().getValue();
+
+		if (!Objects.equals(oldPatientOclId, updatedPatientOclId)) {
+			List<PatientIdentifierEntity> patientIdentifierEntityList = notificationDataSource.getPatientIdentifierEntityByPatientIdAndIdentifier(patientId, oldPatientOclId.getFirst());
+			PatientIdentifierEntity patientIdentifierEntity = (!patientIdentifierEntityList.isEmpty()) ? patientIdentifierEntityList.get(0) : null;
+
+			if (patientIdentifierEntity != null) {
+				patientIdentifierEntity.setStatus(PatientIdentifierStatus.DELETE.name());
+				patientIdentifierEntity.setUpdatedTime(System.currentTimeMillis());
+				notificationDataSource.update(patientIdentifierEntity);
+
+				if (PatientIdentifierStatus.OK.name().equals(patientIdentifierEntity.getStatus())) {
+					PatientIdentifierEntity entryWithDuplicateStatus = notificationDataSource.getPatientIdentifierEntityWithDuplicateStatus(patientId, oldPatientOclId.getFirst());
+
+					if (entryWithDuplicateStatus != null) {
+						entryWithDuplicateStatus.setStatus(PatientIdentifierStatus.OK.name());
+						entryWithDuplicateStatus.setUpdatedTime(System.currentTimeMillis());
+						notificationDataSource.update(entryWithDuplicateStatus);
+					}
+				}
+			}
+
+			if (updatedPatientOclId != null) {
+				long currentTime = System.currentTimeMillis();
+
+				PatientIdentifierEntity newPatientIdentifierEntity = new PatientIdentifierEntity(
+					patientId,
+					updatedPatientOclId.getFirst(),
+					PatientIdentifierEntity.PatientIdentifierType.OCL_ID.name(),
+					updatedPatientOclId.getSecond(),
+					updatedPatientOclId.getThird(),
+					PatientIdentifierStatus.OK.name(),
+					currentTime,
+					currentTime
+				);
+				notificationDataSource.persist(newPatientIdentifierEntity);
+			}
+		}
+
+		if (!Objects.equals(oldPatientCardNumber, updatedPatientCardNumber)) {
+			List<PatientIdentifierEntity> patientIdentifierEntityList = notificationDataSource.getPatientIdentifierEntityByPatientIdAndIdentifier(patientId, oldPatientCardNumber);
+			PatientIdentifierEntity patientIdentifierEntity = (!patientIdentifierEntityList.isEmpty()) ? patientIdentifierEntityList.get(0) : null;
+
+			if (patientIdentifierEntity != null) {
+				patientIdentifierEntity.setStatus(PatientIdentifierStatus.DELETE.name());
+				patientIdentifierEntity.setUpdatedTime(System.currentTimeMillis());
+				notificationDataSource.update(patientIdentifierEntity);
+
+				if (PatientIdentifierStatus.OK.name().equals(patientIdentifierEntity.getStatus())) {
+					PatientIdentifierEntity entryWithDuplicateStatus = notificationDataSource.getPatientIdentifierEntityWithDuplicateStatus(patientId, oldPatientCardNumber);
+					if (entryWithDuplicateStatus != null) {
+						entryWithDuplicateStatus.setStatus(PatientIdentifierStatus.OK.name());
+						entryWithDuplicateStatus.setUpdatedTime(System.currentTimeMillis());
+						notificationDataSource.update(entryWithDuplicateStatus);
+					}
+				}
+			}
+			if (updatedPatientCardNumber != null) {
+				long currentTime = System.currentTimeMillis();
+
+				PatientIdentifierEntity newPatientIdentifierEntity = new PatientIdentifierEntity(
+					patientId,
+					updatedPatientCardNumber,
+					PatientIdentifierEntity.PatientIdentifierType.PATIENT_CARD_NUM.name(),
+					null,
+					null,
+					PatientIdentifierStatus.OK.name(),
+					currentTime,
+					currentTime
+				);
+				notificationDataSource.persist(newPatientIdentifierEntity);
+			}
+		}
+
+		if (!Objects.equals(oldTelecom, updatedTelecom)) {
+			List<PatientIdentifierEntity> patientIdentifierEntityList = notificationDataSource.getPatientIdentifierEntityByPatientIdAndIdentifier(patientId, oldTelecom);
+			PatientIdentifierEntity patientIdentifierEntity = (!patientIdentifierEntityList.isEmpty()) ? patientIdentifierEntityList.get(0) : null;
+
+			if (patientIdentifierEntity != null) {
+				patientIdentifierEntity.setStatus(PatientIdentifierStatus.DELETE.name());
+				patientIdentifierEntity.setUpdatedTime(System.currentTimeMillis());
+				notificationDataSource.update(patientIdentifierEntity);
+
+				if (PatientIdentifierStatus.OK.name().equals(patientIdentifierEntity.getStatus())) {
+					PatientIdentifierEntity entryWithDuplicateStatus = notificationDataSource.getPatientIdentifierEntityWithDuplicateStatus(patientId, oldTelecom);
+
+					if (!patientIdentifierEntityList.isEmpty()) {
+						entryWithDuplicateStatus.setStatus(PatientIdentifierStatus.OK.name());
+						entryWithDuplicateStatus.setUpdatedTime(System.currentTimeMillis());
+						notificationDataSource.update(entryWithDuplicateStatus);
+					}
+				}
+			}
+
+			if (updatedTelecom != null) {
+				long currentTime = System.currentTimeMillis();
+
+				PatientIdentifierEntity newPatientIdentifierEntity = new PatientIdentifierEntity(
+					patientId,
+					updatedTelecom,
+					PatientIdentifierEntity.PatientIdentifierType.PHONE_NUM.name(),
+					null,
+					null,
+					PatientIdentifierStatus.OK.name(),
+					currentTime,
+					currentTime
+				);
+				notificationDataSource.persist(newPatientIdentifierEntity);
 			}
 		}
 	}
@@ -419,7 +482,7 @@ public class ServerInterceptor {
 			}
 			digest = stringBuilder.toString();
 		} catch (NoSuchAlgorithmException ex) {
-			ex.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(ex));
 		}
 		return digest;
 	}

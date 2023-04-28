@@ -1,11 +1,13 @@
 package ca.uhn.fhir.jpa.starter.service;
 
+import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
 import ca.uhn.fhir.jpa.starter.model.EncounterIdEntity;
 import ca.uhn.fhir.rest.client.exceptions.FhirClientConnectionException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 
 import com.iprd.fhir.utils.DateUtilityHelper;
 import com.iprd.fhir.utils.FhirUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 public class ResourceMapperService {
 //	private static final Logger logger = LoggerFactory.getLogger(ResourceMapperService.class);
 	private static final long DELAY = 10 * 60000;
+
+	private static final Logger logger = LoggerFactory.getLogger(ResourceMapperService.class);
 
 	/**
 	 * Maps the resources of temporary patient to actual patient when the patient not found on client and service is provided with the OCL-ID
@@ -238,10 +242,10 @@ public class ResourceMapperService {
 				notificationDataSource.delete(encounterIdEntity);
 
 			} catch (ResourceNotFoundException ex) {
-				ex.printStackTrace();
+				logger.warn(ExceptionUtils.getStackTrace(ex));
 			} catch (FhirClientConnectionException ex) {
 				// FhirClientConnectionException internally throws SocketTimeoutException: Read timeout
-				ex.printStackTrace();
+				logger.warn(ExceptionUtils.getStackTrace(ex));
 			}
 		}
 	}

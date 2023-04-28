@@ -64,6 +64,7 @@ public class KeycloakTemplateHelper {
 		CredentialRepresentation credential = new CredentialRepresentation();
 		credential.setType(CredentialRepresentation.PASSWORD);
 		credential.setValue(password);
+		credential.setTemporary(true);
 		user.setCredentials(Arrays.asList(credential));
 		user.setGroups(Arrays.asList(stateGroup, lgaGroup, wardGroup, facilityGroup));
 		user.setUsername(userName);
@@ -88,6 +89,7 @@ public class KeycloakTemplateHelper {
 		CredentialRepresentation credential = new CredentialRepresentation();
 		credential.setType(CredentialRepresentation.PASSWORD);
 		credential.setValue(password);
+		credential.setTemporary(true);
 		user.setCredentials(Arrays.asList(credential));
 		user.setGroups(Arrays.asList(organization));
 		user.setUsername(userName);

@@ -19,9 +19,12 @@ import ca.uhn.fhir.parser.IParser;
 import com.iprd.fhir.utils.Validation;
 import com.iprd.report.OrgItem;
 import com.iprd.report.model.definition.ANCDailySummaryConfig;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Organization;
 import org.keycloak.representations.idm.GroupRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -58,9 +61,11 @@ public class UserAndGroupManagementController {
 	QrService qrService;
 	@Autowired
 	DashboardEnvironmentConfig dashboardEnvironmentConfig;
-	
+
 	private Map<String, Map<ConfigDefinitionTypes, String>> envToFileMap;
-	
+
+	private static final Logger logger = LoggerFactory.getLogger(UserAndGroupManagementController.class);
+
 	@PostConstruct
 	public void init() {
 		envToFileMap = dashboardEnvironmentConfig.getEnvToFilePathMapping();
@@ -80,7 +85,7 @@ public class UserAndGroupManagementController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getTableData/{lastUpdated}")
-	public ResponseEntity<?> getTableData(@PathVariable String lastUpdated){
+	public ResponseEntity<?> getTableData(@PathVariable Long lastUpdated){
 		return helperService.getTableData(lastUpdated);
 	}
 
@@ -139,7 +144,7 @@ public class UserAndGroupManagementController {
 				ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(hashOfFormattedId, ApiAsyncTaskEntity.Status.PROCESSING.name(), null, null);
 				datasource.insert(apiAsyncTaskEntity);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.warn(ExceptionUtils.getStackTrace(e));
 			}
 				hashcodes.add(hashOfFormattedId);
 			if(categories.indexOf(category) == (categories.size()-1)) {
@@ -199,7 +204,7 @@ public class UserAndGroupManagementController {
 	public ResponseEntity<?> lineChartDefinition(@RequestParam("env") String env) {
 		return helperService.getLineChartDefinitions(env);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/tabularIndicator")
 	public ResponseEntity<?> tabularIndicators(@RequestParam("env") String env) {
 		return helperService.getTabularIndicators(env);
@@ -232,7 +237,7 @@ public class UserAndGroupManagementController {
 		filters.putAll(allFilters);
 		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type,filters,env);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/linechart")
 	public ResponseEntity<?> lineChart(
 		@RequestHeader(name = "Authorization") String token,
@@ -272,7 +277,7 @@ public class UserAndGroupManagementController {
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		
+
 		return helperService.getPieChartDataByPractitionerRoleId(practitionerRoleId, startDate, endDate,filters,env);
 	}
 
@@ -305,7 +310,7 @@ public class UserAndGroupManagementController {
 		helperService.refreshMapForOrgId(orgId);
 		return ResponseEntity.ok("Refresh done");
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/barChartData")
 	public ResponseEntity<?> getBarChartData(
 		@RequestHeader(name = "Authorization") String token,
@@ -343,12 +348,12 @@ public class UserAndGroupManagementController {
 			List<AnalyticItem> timeSpentAnalyticsItems = bigQueryService.timeSpentOnScreenAnalyticItems(organization);
 			if (timeSpentAnalyticsItems == null) {
 				return ResponseEntity.ok("Error: Unable to find file or fetch screen view information");
-			}	
+			}
 			analyticItems.addAll(timeSpentAnalyticsItems);
 		}catch(Exception e) {
-			
+
 		}
-		
+
 		List<AnalyticItem> maternalAnalyticsItems = helperService.getMaternalAnalytics(organization.getId(),env);
 		if (maternalAnalyticsItems == null) {
 			return ResponseEntity.ok("Error: Unable to find analytics file");
@@ -408,5 +413,4 @@ public class UserAndGroupManagementController {
 		helperService.cacheDashboardData(idsAndOrgIdToChildrenMapPair.first, from, to, env);
 		return ResponseEntity.ok("Caching in Progress");
 	}
-
 }
