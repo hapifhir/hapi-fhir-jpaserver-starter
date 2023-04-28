@@ -144,10 +144,11 @@ public class UserAndGroupManagementController {
 				hashcodes.add(hashOfFormattedId);
 			if(categories.indexOf(category) == (categories.size()-1)) {
 				helperService.saveQueryResult(organizationId, startDate, endDate, filters, hashcodes,env,ancDailySummaryConfig);
-				return ResponseEntity.status(400).build();
+				return ResponseEntity.status(202).build();
 						}
 			}
 		}
+		if (helperService.getAsyncData(categoryWithHashCodes).getBody() == "Searching in Progress") return ResponseEntity.status(202).build();
 		return ResponseEntity.ok(helperService.getAsyncData(categoryWithHashCodes));
 	}
 
