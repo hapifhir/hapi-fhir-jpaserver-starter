@@ -46,6 +46,7 @@ public class AppProperties {
 	private Integer max_page_size = Integer.MAX_VALUE;
 	private Integer defer_indexing_for_codesystems_of_size = 100;
 	private Integer keycloak_max_group_count = 20;
+	private Long api_request_max_time = 600L;
 	private Long retain_cached_searches_mins = 60L;
 	private Long reuse_cached_search_results_millis = 60000L;
 	private String envs = null;
@@ -63,6 +64,10 @@ public class AppProperties {
 	private String hapi_server_address = null;
 	private String anc_config_file = null;
 	private String pie_config_file = null;
+
+	private String pk_file = null;
+
+	private String dashboard_public_key_file = null;
 	private String line_chart_definitions_file = null;
    	private String tabular_config_file = null;
 	private String barChart_config_file = null;
@@ -108,6 +113,19 @@ public class AppProperties {
 	private Integer executor_max_pool_size = 3;
 	private Integer executor_queue_capacity = 100;
 	private String executor_thread_name_prefix = "AsyncThread-";
+	private String dev_user_role = "dev";
+	public void setDev_user_role(String dev_user_role){
+		this.dev_user_role = dev_user_role;
+	}
+
+	public String getDev_user_role(){ return dev_user_role;}
+	public void setApi_request_max_time(Long api_request_max_time){
+		this.api_request_max_time = api_request_max_time;
+	}
+
+	public Long getApi_request_max_time() {
+		return api_request_max_time;
+	}
 
 	public Integer getExecutor_core_pool_size() {
 		return executor_core_pool_size;
@@ -386,7 +404,17 @@ public class AppProperties {
 		return pie_config_file;
 	}
 	public void setPie_config_file(String pie_config_file) { this.pie_config_file = pie_config_file; }
+	public void setPk_file(String pk_file){
+		this.pk_file = pk_file;
+	}
+	public String getPk_file(){
+		return pk_file;
+	}
+	public String getDashboard_public_key_file(){
+		return dashboard_public_key_file;
+	}
 
+	public void setDashboard_public_key_file(String dashboard_public_key_file){ this.dashboard_public_key_file = dashboard_public_key_file; }
 	public String getTabular_config_file() {
 		return tabular_config_file;
 	}
