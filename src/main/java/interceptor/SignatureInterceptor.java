@@ -54,13 +54,14 @@ public class SignatureInterceptor extends GenericFilterBean{
 		//Get the Key I'd from the header
 		String keyId = httpServletRequest.getHeader("kid");
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
-
+		String dashboardKeyId = FhirUtils.KeyId.DASHBOARD.name();
 		if (practitionerRoleId != null) {
 			//Get practitioner role from the practitioner role id
 			String practitionerRole = FhirUtils.getPractitionerRoleFromId(practitionerRoleId);
 			assert practitionerRole != null;
 			//If admin then skip the signature process and allow for all the api calls (for dev user)
-			if(!practitionerRole.equals("dev")){
+			String devUserRole = appProperties.getDev_user_role();
+			if(!practitionerRole.equals(devUserRole)){
 				if (signatureHeader == null || signatureHeader.isEmpty()) {
 					httpServletResponse.setHeader("error-message", "Missing Signature header");
 					httpServletResponse.setStatus(400);
@@ -80,7 +81,7 @@ public class SignatureInterceptor extends GenericFilterBean{
 		}
 
 		// Add a check to avoid DELETE and PUT API calls when keyId is "Dashboard"
-		if ("Dashboard".equals(keyId) && (httpServletRequest.getMethod().equals("DELETE") || httpServletRequest.getMethod().equals("PUT") || httpServletRequest.getMethod().equals("POST"))) {
+		if (dashboardKeyId.equals(keyId) && (httpServletRequest.getMethod().equals("DELETE") || httpServletRequest.getMethod().equals("PUT") || httpServletRequest.getMethod().equals("POST"))) {
 			httpServletResponse.setHeader("error-message", "Invalid API call");
 			httpServletResponse.setStatus(403); // Forbidden status code
 			return;
@@ -90,17 +91,18 @@ public class SignatureInterceptor extends GenericFilterBean{
 	}
 
 	public byte[] readPublicKeyFile(String keyId) throws IOException {
+		FhirUtils.KeyId keyType = FhirUtils.KeyId.valueOf(keyId);
 		if (publicKeyCache.containsKey(keyId)) {
 		// Return the cached public key if available
 			return publicKeyCache.get(keyId);
 		} else {
 		// Read the public key file and store it in cache
 			byte[] publicKey;
-			switch (keyId) {
-				case "APPCLIENT":
-					publicKey = Files.readAllBytes(Paths.get(appProperties.getApp_public_key_file()));
+			switch (keyType) {
+				case APPCLIENT:
+					publicKey = Files.readAllBytes(Paths.get(appProperties.getPk_file()));
 					break;
-				case "DASHBOARD":
+				case DASHBOARD:
 					publicKey = Files.readAllBytes(Paths.get(appProperties.getDashboard_public_key_file()));
 					break;
 				default:

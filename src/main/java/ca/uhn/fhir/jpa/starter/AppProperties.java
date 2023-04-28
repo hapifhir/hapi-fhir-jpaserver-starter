@@ -65,7 +65,7 @@ public class AppProperties {
 	private String anc_config_file = null;
 	private String pie_config_file = null;
 
-	private String app_public_key_file = null;
+	private String pk_file = null;
 
 	private String dashboard_public_key_file = null;
 	private String line_chart_definitions_file = null;
@@ -113,7 +113,12 @@ public class AppProperties {
 	private Integer executor_max_pool_size = 3;
 	private Integer executor_queue_capacity = 100;
 	private String executor_thread_name_prefix = "AsyncThread-";
+	private String dev_user_role = "dev";
+	public void setDev_user_role(String dev_user_role){
+		this.dev_user_role = dev_user_role;
+	}
 
+	public String getDev_user_role(){ return dev_user_role;}
 	public void setApi_request_max_time(Long api_request_max_time){
 		this.api_request_max_time = api_request_max_time;
 	}
@@ -399,15 +404,12 @@ public class AppProperties {
 		return pie_config_file;
 	}
 	public void setPie_config_file(String pie_config_file) { this.pie_config_file = pie_config_file; }
-
-	public String getApp_public_key_file(){
-		return app_public_key_file;
+	public void setPk_file(String pk_file){
+		this.pk_file = pk_file;
 	}
-
-	public void setApp_public_key_file(String app_public_key_file){
-		this.app_public_key_file = app_public_key_file;
+	public String getPk_file(){
+		return pk_file;
 	}
-
 	public String getDashboard_public_key_file(){
 		return dashboard_public_key_file;
 	}
