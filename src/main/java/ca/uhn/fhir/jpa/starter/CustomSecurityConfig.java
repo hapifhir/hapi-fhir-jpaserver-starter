@@ -134,16 +134,7 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers("/*")
                 .and()
                 .ignoring()
-                .antMatchers("/fhir/metadata")
-			  .and()
-			  .ignoring()
-			  .antMatchers("/fhir/PractitionerRole/**")
-		  		.and()
-			 .ignoring()
-			 .antMatchers("/fhir/swagger-ui/**");
-//			  .and()
-//			  .ignoring()
-//			  .antMatchers("/iprd/user/**");
+                .antMatchers("/fhir/metadata");
     }
 
     @Bean
