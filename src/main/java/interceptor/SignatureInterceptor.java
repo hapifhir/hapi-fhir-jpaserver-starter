@@ -75,7 +75,10 @@ public class SignatureInterceptor extends GenericFilterBean{
 						return;
 					}
 				} catch (Exception e) {
+					httpServletResponse.setHeader("error-message", "Issue in Key");
+					httpServletResponse.setStatus(401);
 					e.printStackTrace();
+					return;
 				}
 			}
 		}
@@ -100,10 +103,10 @@ public class SignatureInterceptor extends GenericFilterBean{
 			byte[] publicKey;
 			switch (keyType) {
 				case APPCLIENT:
-					publicKey = Files.readAllBytes(Paths.get(appProperties.getPk_file()));
+					publicKey = Base64.getDecoder().decode(new String(Files.readAllBytes(Paths.get(appProperties.getPk_file()))));
 					break;
 				case DASHBOARD:
-					publicKey = Files.readAllBytes(Paths.get(appProperties.getDashboard_public_key_file()));
+					publicKey = Base64.getDecoder().decode(new String(Files.readAllBytes(Paths.get(appProperties.getDashboard_public_key_file()))));
 					break;
 				default:
 					return null; // Return null for unknown keyId
@@ -119,22 +122,28 @@ public class SignatureInterceptor extends GenericFilterBean{
 		long timeDifference = Math.abs(currentTimestamp - receivedTimeStamp);
 		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
 		//check if the timestamp is within 10 minutes of the current timestamp
-		if(timeDifference <= appProperties.getApi_request_max_time()){
-			String messageToVerify = practitionerRoleId.concat(timeStampHeader);
-			//get the decoded public key in bytes
-			byte[] publicKeyByte = Base64.getDecoder().decode(readPublicKeyFile(keyId));
-			//get the decoded signature key in bytes
-			byte[] decodedSignature = Base64.getDecoder().decode(signatureHeader);
-			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKeyByte);
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-			PublicKey publicKey = keyFactory.generatePublic(keySpec);
-			Signature signature = Signature.getInstance("SHA256withRSA");
-			//init public key to verify the signature
-			signature.initVerify(publicKey);
-			//update the signature with the message
-			signature.update(messageToVerify.getBytes());
-			return signature.verify(decodedSignature);
-		} else{
+		try {
+			if(timeDifference <= appProperties.getApi_request_max_time()){
+				String messageToVerify = practitionerRoleId.concat(timeStampHeader);
+				//get the decoded public key in bytes
+				byte[] publicKeyByte = readPublicKeyFile(keyId);
+				//get the decoded signature key in bytes
+				String urlDecoded = java.net.URLDecoder.decode(signatureHeader,StandardCharsets.UTF_8.name());
+				byte[] decodedSignature = Base64.getDecoder().decode(urlDecoded.getBytes(StandardCharsets.UTF_8.name()));
+				X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKeyByte);
+				KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+				PublicKey publicKey = keyFactory.generatePublic(keySpec);
+				Signature signature = Signature.getInstance("SHA256withRSA");
+				//init public key to verify the signature
+				signature.initVerify(publicKey);
+				//update the signature with the message
+				signature.update(messageToVerify.getBytes());
+				Boolean verified = signature.verify(decodedSignature);
+				return verified;
+			} else{
+				return false;
+			}	
+		}catch(Exception e) {
 			return false;
 		}
 	}

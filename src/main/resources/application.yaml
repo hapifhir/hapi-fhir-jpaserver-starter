@@ -75,7 +75,8 @@ hapi:
       line_chart_definitions_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\chart_definition.json
       tabular_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\tabular_config.json
       analytics_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\analytics_config.json
-
+      pk_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\android.txt
+      dashboard_public_key_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\android.txt
       executor_core_pool_size: 4
       executor_max_pool_size: 6
       executor_queue_capacity: 50000
