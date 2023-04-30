@@ -3,10 +3,6 @@ package com.iprd.fhir.utils;
 import java.util.*;
 import java.lang.String;
 
-import ca.uhn.fhir.jpa.starter.service.HelperService;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.*;
 
 import com.iprd.report.OrgType;
@@ -236,11 +232,12 @@ public class FhirResourceTemplateHelper {
 			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
 			practitioner.setBirthDate(dateOfBirth);
 		}catch(ParseException exception) {
-			logger.warn(ExceptionUtils.getStackTrace(exception));
+			logger.warn(exception.getLocalizedMessage());
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;
 	}
+
 	public static Practitioner user(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String facilityUID, String type){
 		Practitioner practitioner = new Practitioner();
 		List<Identifier> identifiers = new ArrayList<>();
@@ -275,7 +272,7 @@ public class FhirResourceTemplateHelper {
 			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
 			practitioner.setBirthDate(dateOfBirth);
 		}catch(ParseException exception) {
-			logger.warn(ExceptionUtils.getStackTrace(exception));
+			logger.warn(exception.getLocalizedMessage());
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;

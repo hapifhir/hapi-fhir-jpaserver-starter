@@ -13,6 +13,7 @@ import java.util.Set;
 import ca.uhn.fhir.jpa.starter.service.FhirClientAuthenticatorService;
 import kotlin.Triple;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.PractitionerRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,6 +128,16 @@ public class FhirUtils {
 		return null;
 	}
 
+	public static String getPractitionerRoleFromId(String practitionerRoleId){
+		Bundle bundle = FhirClientAuthenticatorService.getFhirClient().search().forResource(PractitionerRole.class).where(PractitionerRole.RES_ID.exactly().identifier(practitionerRoleId)).returnBundle(Bundle.class).execute();
+		if (!bundle.hasEntry()) {
+			return null;
+		}
+		PractitionerRole practitionerRole = (PractitionerRole) bundle.getEntry().get(0).getResource();
+		String role = practitionerRole.getCodeFirstRep().getCodingFirstRep().getCode();
+		return role;
+	}
+
 	public static Pair<List<String>,List<Identifier>> getMissingIdentifierAndNewIdentifier(List<Identifier> identifierOldList, List<Identifier> identifierNewList) {
 	    List<String> missingFromNew = new ArrayList<String>();
 		 List<Identifier> missingFromOldIdentifiers = new ArrayList<Identifier>();
@@ -155,4 +166,8 @@ public class FhirUtils {
 	    return new Pair(missingFromNew,missingFromOldIdentifiers);
 	}
 
+	public enum KeyId{
+		APPCLIENT,
+		DASHBOARD
+	}
 }
