@@ -1,6 +1,6 @@
 server:
    port: 8085
-#   address: testhost.dashboard
+
 spring:
    main:
       allow-circular-references: true
@@ -64,24 +64,23 @@ hapi:
 #      hibernate.search.backend.directory.type: local-filesystem
 #      hibernate.search.backend.directory.root: target/lucenefiles
 #      hibernate.search.backend.lucene_version: lucene_current
-      envs: C:\IPRD\anc-oyo\data\hapi\envs
-      notification_datasource_config_path: C:\IPRD\anc-oyo\data\hapi\notificationDataSourceConfig.xml
-      anc_config_file: C:\IPRD\anc-oyo\data\hapi\anc_config.json
-      filters_config_file: C:\IPRD\anc-oyo\data\hapi\filters_config.json
-      daily_and_summary_config_file: C:\IPRD\anc-oyo\data\hapi\daily_and_summary_config.json
-      pie_config_file: C:\IPRD\anc-oyo\data\hapi\pie_config.json
-      gcp_credential_file_path: C:\IPRD\anc-oyo\data\hapi\gcpCredential.json
-      sql_screen_time_file_path: C:\IPRD\anc-oyo\data\hapi\sql_screen_time.txt
-      line_chart_definitions_file: C:\IPRD\anc-oyo\data\hapi\chart_definition.json
-      tabular_config_file: C:\IPRD\anc-oyo\data\hapi\tabular_config.json
-      analytics_config_file: C:\IPRD\anc-oyo\data\hapi\analytics_config.json
-      new_daily_summary: C:\IPRD\anc-oyo\data\hapi\new_daily_summary.json
+      envs: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\envs
+      notification_datasource_config_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\notificationDataSourceConfig.xml
+      anc_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\anc_config.json
+      filters_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\filters_config.json
+      daily_and_summary_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\daily_and_summary_config.json
+      pie_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\pie_config.json
+      gcp_credential_file_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\gcpCredential.json
+      sql_screen_time_file_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\sql_screen_time.txt
+      line_chart_definitions_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\chart_definition.json
+      tabular_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\tabular_config.json
+      analytics_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\analytics_config.json
 
       executor_core_pool_size: 4
       executor_max_pool_size: 6
       executor_queue_capacity: 50000
       executor_thread_name_prefix: AsynchThread-
-      keycloak_server_address: http://localhost:8081/auth
+      keycloak_server_address: http://testhost.dashboard:8081/auth
       keycloak_realm: master
       keycloak_client_realm: fhir-hapi
 ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
@@ -93,7 +92,7 @@ hapi:
       keycloak_password: 12345
       fhir_user: kjois@iprdgroup.com
       fhir_password: 12345
-      hapi_server_address: http://localhost:8085/fhir
+      hapi_server_address: http://testhost.dashboard:8085/fhir
       advanced_lucene_indexing: true
       fhirpath_interceptor_enabled: true
       mdm_enabled: false
@@ -160,7 +159,7 @@ hapi:
 #      - https://hapi.fhir.org/baseR4
          home:
             name: Local Tester
-            server_address: http://localhost:8085/fhir
+            server_address: http://testhost.dashboard:8085/fhir
 #      allow_references_across_partitions: false
 #      partitioning_include_in_search_hashes: false
 # Search coordinator thread pool sizes
