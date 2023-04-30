@@ -80,7 +80,7 @@ hapi:
       executor_max_pool_size: 6
       executor_queue_capacity: 50000
       executor_thread_name_prefix: AsynchThread-
-      keycloak_server_address: http://testhost.dashboard:8081/auth
+      keycloak_server_address: http://localhost:8081/auth
       keycloak_realm: master
       keycloak_client_realm: fhir-hapi
 ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
@@ -92,7 +92,7 @@ hapi:
       keycloak_password: 12345
       fhir_user: kjois@iprdgroup.com
       fhir_password: 12345
-      hapi_server_address: http://testhost.dashboard:8085/fhir
+      hapi_server_address: http://localhost:8085/fhir
       advanced_lucene_indexing: true
       fhirpath_interceptor_enabled: true
       mdm_enabled: false
@@ -159,7 +159,7 @@ hapi:
 #      - https://hapi.fhir.org/baseR4
          home:
             name: Local Tester
-            server_address: http://testhost.dashboard:8085/fhir
+            server_address: http://localhost:8085/fhir
 #      allow_references_across_partitions: false
 #      partitioning_include_in_search_hashes: false
 # Search coordinator thread pool sizes
