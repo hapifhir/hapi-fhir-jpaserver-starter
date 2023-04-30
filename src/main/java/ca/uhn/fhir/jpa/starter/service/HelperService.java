@@ -224,7 +224,7 @@ public class HelperService {
 			if (!lgas.contains(lgaName)) {
 				Organization lga = FhirResourceTemplateHelper.lga(lgaName, stateName, stateId);
 				lgas.add(lga.getName());
-				GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lgaId);
+				GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lga.getIdElement().getIdPart());
 				lgaGroupId = createKeycloakGroup(lgaGroupRep);
 				lgaId = updateResource(lgaGroupId, lga, Organization.class, Organization.NAME.matchesExactly().value(lga.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "lga"));
 			}
@@ -232,7 +232,7 @@ public class HelperService {
 			if (!wards.contains(wardName)) {
 				Organization ward = FhirResourceTemplateHelper.ward(stateName, lgaName, wardName, lgaId);
 				wards.add(ward.getName());
-				GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, wardId);
+				GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, ward.getIdElement().getIdPart());
 				wardGroupId = createKeycloakGroup(wardGroupRep);
 				wardId = updateResource(wardGroupId, ward, Organization.class, Organization.NAME.matchesExactly().value(ward.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "ward"));
 			}
@@ -245,7 +245,7 @@ public class HelperService {
 				GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(
 					clinicOrganization.getName(),
 					wardGroupId,
-					clinicLocation.getIdElement().getIdPart(),
+					clinicOrganization.getIdElement().getIdPart(),
 					clinicLocation.getIdElement().getIdPart(),
 					type,
 					ownership,
