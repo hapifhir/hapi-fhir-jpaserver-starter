@@ -14,21 +14,15 @@ public class Validation {
 	private static final Logger logger = LoggerFactory.getLogger(Validation.class);
 	
 	public static boolean validateClinicAndStateCsvLine(String[] csvLineContent) {
-		int csvDataSize = csvLineContent.length;
-		if(csvDataSize == 9) 
-		{
-			System.out.println("CSV Validation Success");
-		}
-		return true;
+		return csvLineContent.length == 11;
 	}
 	
 	public static boolean validationHcwCsvLine(String[] hcwCsvData) {
-		int csvDataSize = hcwCsvData.length;
-		if(csvDataSize == 16)
-		{
-			System.out.println("HCW CSV Validate success");
-		}
-		return true;
+		return hcwCsvData.length == 17;
+	}
+
+	public static boolean validationDashboardUserCsvLine(String[] hcwCsvData) {
+		return hcwCsvData.length == 13;
 	}
 	
 	public static String getPractitionerRoleIdByToken(String token) {
