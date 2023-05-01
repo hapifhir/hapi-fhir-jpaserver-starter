@@ -41,8 +41,11 @@ public class NotificationService {
 			try {
 				Patient patient = FhirClientAuthenticatorService.getFhirClient().read().resource(Patient.class).withId(patientId).execute();
 				Triple<String, String, String> oclDetails = FhirUtils.getOclIdFromIdentifier(patient.getIdentifier());
-				String mobile = patient.getTelecom().get(0).getValue();
+				String mobile = null;
 
+				if (!patient.getTelecom().isEmpty()) {
+					mobile = patient.getTelecom().get(0).getValue();
+				}
 				if (oclDetails == null || mobile == null) {
 					throw new IllegalStateException("Either oclId or mobile number is missing from the patient");
 				}
