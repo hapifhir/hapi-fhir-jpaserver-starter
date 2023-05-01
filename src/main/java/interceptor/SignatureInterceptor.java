@@ -32,6 +32,7 @@ import org.springframework.web.filter.GenericFilterBean;
 import com.iprd.fhir.utils.Validation;
 
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.model.JWTPayload;
 
 @Component
 public class SignatureInterceptor extends GenericFilterBean{
@@ -48,6 +49,11 @@ public class SignatureInterceptor extends GenericFilterBean{
 		throws IOException, ServletException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+		if(httpServletRequest.getRequestURI().contains("/iprd/user/"))
+		{
+			chain.doFilter(request, response);
+			return;
+		} 
 		//Get the signature from the header
 		String signatureHeader = httpServletRequest.getHeader("Signature");
 		//Get the token from the header
@@ -56,20 +62,22 @@ public class SignatureInterceptor extends GenericFilterBean{
 		String timeStampHeader = httpServletRequest.getHeader("Timestamp");
 		//Get the Key I'd from the header
 		String keyId = httpServletRequest.getHeader("kid");
-		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
+		JWTPayload tokenPayload= Validation.getJWTToken(token);
+		if(tokenPayload == null) {
+			httpServletResponse.setHeader("error-message", "Token parse failure");
+			httpServletResponse.setStatus(401);
+			return;
+		}
+		String practitionerRoleId = tokenPayload.getPractitionerRoleId();
 		String dashboardKeyId = FhirUtils.KeyId.DASHBOARD.name();
 		if (practitionerRoleId != null) {
 			//Get user role from the JWT token
-			 List<String> userRole =  Validation.getJWTToken(token).getClientRoles();
+			 List<String> userRole =  tokenPayload.getClientRoles();
 			//If admin then skip the signature process and allow for all the api calls (for dev user)
 			String devUserRole = appProperties.getDev_user_role();
 			//For backward compatibility of no role and not logged in. Will allow user to login to app to get a new token
 			String contextPath = httpServletRequest.getRequestURI();
-			if(userRole==null && httpServletRequest.getRequestURI().contains("/iprd/user/"))
-			{
-				chain.doFilter(request, response);
-				return;
-			}else if(userRole==null) {
+			if(userRole==null) {
 				//This is odd, unless mapper is not set
 				httpServletResponse.setHeader("error-message", "User role is null");
 				httpServletResponse.setStatus(401);
