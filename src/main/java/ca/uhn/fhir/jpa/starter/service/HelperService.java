@@ -478,6 +478,9 @@ public class HelperService {
 				invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName + "," + email);
 				continue;
 			}
+			if (!practitionerId.equals(practitioner.getIdElement().getIdPart())) {
+				practitionerRole.setId(new IdType("Practitioner", practitionerId));
+			}
 			practitionerRoleId = updateResource(
 				keycloakUserId,
 				practitionerRole,
