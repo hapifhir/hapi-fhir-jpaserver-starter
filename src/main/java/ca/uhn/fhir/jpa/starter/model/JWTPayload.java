@@ -3,12 +3,13 @@ package ca.uhn.fhir.jpa.starter.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+@JsonIgnoreProperties("aud")
 public class JWTPayload {
 	private float exp;
 	private float iat;
 	private String jti;
 	private String iss;
-	private String aud;
 	private String sub;
 	private String typ;
 	private String azp;
@@ -66,14 +67,6 @@ public class JWTPayload {
 
 	public void setIss(String iss) {
 		this.iss = iss;
-	}
-
-	public String getAud() {
-		return aud;
-	}
-
-	public void setAud(String aud) {
-		this.aud = aud;
 	}
 
 	public String getSub() {
