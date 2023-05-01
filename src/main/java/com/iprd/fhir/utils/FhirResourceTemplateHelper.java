@@ -3,6 +3,7 @@ package com.iprd.fhir.utils;
 import java.util.*;
 import java.lang.String;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.*;
 
 import com.iprd.report.OrgType;
@@ -232,7 +233,7 @@ public class FhirResourceTemplateHelper {
 			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
 			practitioner.setBirthDate(dateOfBirth);
 		}catch(ParseException exception) {
-			logger.warn(ExceptionUtils.getStackTrace(e));
+			logger.warn(ExceptionUtils.getStackTrace(exception));
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;
@@ -272,7 +273,7 @@ public class FhirResourceTemplateHelper {
 			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
 			practitioner.setBirthDate(dateOfBirth);
 		}catch(ParseException exception) {
-			logger.warn(ExceptionUtils.getStackTrace(e));
+			logger.warn(ExceptionUtils.getStackTrace(exception));
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;

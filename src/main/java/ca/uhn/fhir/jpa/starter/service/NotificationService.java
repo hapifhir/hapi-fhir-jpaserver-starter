@@ -70,7 +70,7 @@ public class NotificationService {
 					}
 				}
 			} catch (ResourceNotFoundException | IllegalStateException ex) {
-				logger.warn(ExceptionUtils.getStackTrace(e));
+				logger.warn(ExceptionUtils.getStackTrace(ex));
 				logger.warn("Deleting the record from the database!");
 				datasource.delete(record);
 			}
