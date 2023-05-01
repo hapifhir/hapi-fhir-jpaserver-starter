@@ -375,7 +375,7 @@ public class HelperService {
 						invalidUsers.add("Resource creation failed for user: " + s);
 						continue;
 					}
-					practitionerRoleId = updateResource(keycloakUserId, practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
+					practitionerRoleId = updateResource(keycloakUserId, practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId("Practitioner/"+practitionerId));
 					if (practitionerRoleId == null) {
 						invalidUsers.add("Resource creation failed for user: " + s);
 					}
@@ -479,13 +479,15 @@ public class HelperService {
 				continue;
 			}
 			if (!practitionerId.equals(practitioner.getIdElement().getIdPart())) {
+				// If the practitioner already exists we need to change the reference.
+				// Because in while creating PractitionerRole old previous practitioner id used as reference.
 				practitionerRole.setId(new IdType("Practitioner", practitionerId));
 			}
 			practitionerRoleId = updateResource(
 				keycloakUserId,
 				practitionerRole,
 				PractitionerRole.class,
-				PractitionerRole.PRACTITIONER.hasId(practitionerId)
+				PractitionerRole.PRACTITIONER.hasId("Practitioner/"+practitionerId)
 			);
 			if (practitionerRoleId == null) {
 				invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName + "," + email);
@@ -1565,7 +1567,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 				List<Identifier> identifierList = (List<Identifier>) getIdentifier.invoke(existingResource);
 				for (Identifier identifier : identifierList) {
 					if (identifier.getSystem().equals(IDENTIFIER_SYSTEM + "/KeycloakId") && identifier.getValue().equals(keycloakId)) {
-						return resource.getIdElement().getIdPart();
+						return existingResource.getIdElement().getIdPart();
 					}
 				}
 			}
@@ -1589,7 +1591,9 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		//if not empty, return id
 
 		for (UserRepresentation user: users) {
-			return user.getId();
+			if (Objects.equals(user.getUsername(), userRep.getUsername())) {
+				return user.getId();
+			}
 		}
 		try {
 			Response response = realmResource.users().create(userRep);
