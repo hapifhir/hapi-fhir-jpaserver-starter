@@ -2,13 +2,15 @@ package ca.uhn.fhir.jpa.starter;
 
 import java.util.List;
 
+import ca.uhn.fhir.jpa.starter.model.CategoryItem;
+import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
 import com.iprd.report.model.FilterItem;
-import com.iprd.report.model.definition.ANCDailySummaryConfig;
-import com.iprd.report.model.definition.BarChartDefinition;
-import com.iprd.report.model.definition.IndicatorItem;
 import com.iprd.report.model.definition.LineChart;
-import com.iprd.report.model.definition.PieChartDefinition;
+import com.iprd.report.model.definition.IndicatorItem;
 import com.iprd.report.model.definition.TabularItem;
+import com.iprd.report.model.definition.BarChartDefinition;
+import com.iprd.report.model.definition.PieChartDefinition;
+import com.iprd.report.model.definition.ANCDailySummaryConfig;
 
 
 public class DashboardConfigContainer {
@@ -42,22 +44,31 @@ public class DashboardConfigContainer {
 	public void setTabularItems(List<TabularItem> tabularItems) {
 		this.tabularItems = tabularItems;
 	}
-	public List<IndicatorItem> getScoreCardIndicatorItems() {
+	public List<ScoreCardIndicatorItem> getScoreCardIndicatorItems() {
 		return scoreCardIndicatorItems;
 	}
-	public void setScoreCardIndicatorItems(List<IndicatorItem> scoreCardIndicatorItems) {
+	public void setScoreCardIndicatorItems(List<ScoreCardIndicatorItem> scoreCardIndicatorItems) {
 		this.scoreCardIndicatorItems = scoreCardIndicatorItems;
 	}
+
+	public CategoryItem getCategoryItem() {
+		return categoryItem;
+	}
+
+	public void setCategoryItem(CategoryItem categoryItem) {
+		this.categoryItem = categoryItem;
+	}
+
 	public List<IndicatorItem> getAnalyticsIndicatorItems() {
 		return analyticsIndicatorItems;
 	}
 	public void setAnalyticsIndicatorItems(List<IndicatorItem> analyticsIndicatorItems) {
 		this.analyticsIndicatorItems = analyticsIndicatorItems;
 	}
-	public ANCDailySummaryConfig getAncDailySummaryConfig() {
+	public List<ANCDailySummaryConfig> getAncDailySummaryConfig() {
 		return ancDailySummaryConfig;
 	}
-	public void setAncDailySummaryConfig(ANCDailySummaryConfig ancDailySummaryConfig) {
+	public void setAncDailySummaryConfig(List<ANCDailySummaryConfig> ancDailySummaryConfig) {
 		this.ancDailySummaryConfig = ancDailySummaryConfig;
 	}
 	private List<FilterItem> filterItems;
@@ -65,7 +76,8 @@ public class DashboardConfigContainer {
 	private List<PieChartDefinition> pieChartDefinitions;
 	private List<LineChart> lineCharts;
 	private List<TabularItem> tabularItems;
-	private List<IndicatorItem> scoreCardIndicatorItems;
+	private List<ScoreCardIndicatorItem> scoreCardIndicatorItems;
 	private List<IndicatorItem> analyticsIndicatorItems;
-	private ANCDailySummaryConfig ancDailySummaryConfig;
+	private List<ANCDailySummaryConfig> ancDailySummaryConfig;
+	private CategoryItem categoryItem;
 }

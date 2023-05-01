@@ -5,11 +5,20 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.ConfigDefinitionTypes;
 import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
-import ca.uhn.fhir.jpa.starter.model.*;
-import ca.uhn.fhir.jpa.starter.service.*;
+import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
+import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
+import ca.uhn.fhir.jpa.starter.model.ReportType;
+import ca.uhn.fhir.jpa.starter.model.OCLQrResponse;
+import ca.uhn.fhir.jpa.starter.model.OCLQrRequest;
+import ca.uhn.fhir.jpa.starter.service.NotificationDataSource;
+import ca.uhn.fhir.jpa.starter.service.HelperService;
+import ca.uhn.fhir.jpa.starter.service.NotificationService;
+import ca.uhn.fhir.jpa.starter.service.BigQueryService;
+import ca.uhn.fhir.jpa.starter.service.QrService;
 import ca.uhn.fhir.parser.IParser;
 import com.iprd.fhir.utils.Validation;
 import com.iprd.report.OrgItem;
+import com.iprd.report.model.definition.ANCDailySummaryConfig;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Organization;
@@ -17,17 +26,24 @@ import org.keycloak.representations.idm.GroupRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
-
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
 import javax.annotation.PostConstruct;
-
 import java.time.LocalDateTime;
 
 @CrossOrigin(origins = {"http://localhost:3000/", "http://testhost.dashboard:3000/", "https://oclink.io/", "https://opencampaignlink.org/"}, maxAge = 3600, allowCredentials = "true")
@@ -83,15 +99,15 @@ public class UserAndGroupManagementController {
 		return helperService.getGroupsByUser(userId);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/getAncMetaDataByOrganizationId")
-	public ResponseEntity<List<Map<String, String>>> getAncMetaDataByOrganizationId(@RequestParam("organizationId") String organizationId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
-		return helperService.getAncMetaDataByOrganizationId(organizationId, startDate, endDate);
-	}
+//	@RequestMapping(method = RequestMethod.GET, value = "/getAncMetaDataByOrganizationId")
+//	public ResponseEntity<List<Map<String, String>>> getAncMetaDataByOrganizationId(@RequestParam("organizationId") String organizationId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
+//		return helperService.getAncMetaDataByOrganizationId(organizationId, startDate, endDate);
+//	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/getAncDailySummaryData")
-	public ResponseEntity<?> getAncDailySummaryData(@RequestParam("env") String env,@RequestParam("organizationId") String organizationId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
-		return helperService.getAncDailySummaryData(organizationId, startDate, endDate, new LinkedHashMap<>(),env);
-	}
+//	@RequestMapping(method = RequestMethod.GET, value = "/getAncDailySummaryData")
+//	public ResponseEntity<?> getAncDailySummaryData(@RequestParam("env") String env,@RequestParam("organizationId") String organizationId, @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate) {
+//		return helperService.getAncDailySummaryData(organizationId, startDate, endDate, new LinkedHashMap<>(),env);
+//	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/details")
 	public ResponseEntity<?> getDetails(
@@ -110,31 +126,36 @@ public class UserAndGroupManagementController {
 
 		LocalDateTime dateTimeNow = LocalDateTime.now();
 		String[] extractedFromDateTimeNow = dateTimeNow.toString().split(":");
-		String hashOfFormattedId = organizationId + startDate + endDate + extractedFromDateTimeNow[0];
-		ArrayList<ApiAsyncTaskEntity> fetchAsyncData = datasource.fetchStatus(hashOfFormattedId);
+		List<String> categories = new ArrayList<>(Collections.emptyList());
+		List<String> hashcodes = new ArrayList<>(Collections.emptyList());
+		Map<String,String> categoryWithHashCodes = new HashMap<>();
+		List<ANCDailySummaryConfig> ancDailySummaryConfig = helperService.getANCDailySummaryConfigFromFile(env);
 
-		if (fetchAsyncData == null || fetchAsyncData.isEmpty()) {
+		for (ANCDailySummaryConfig singleCategory : ancDailySummaryConfig) {
+			categories.add(singleCategory.getCategoryId());
+		}
+		String hashOfFormattedId = "";
+		for (String category : categories) {
+			 hashOfFormattedId = organizationId + startDate + endDate + category + extractedFromDateTimeNow[0];
+			categoryWithHashCodes.put(category,hashOfFormattedId);
+			ArrayList<ApiAsyncTaskEntity> fetchAsyncData = datasource.fetchStatus(hashOfFormattedId);
+			if (fetchAsyncData == null || fetchAsyncData.isEmpty()) {
 			try {
 				ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(hashOfFormattedId, ApiAsyncTaskEntity.Status.PROCESSING.name(), null, null);
 				datasource.insert(apiAsyncTaskEntity);
 			} catch (Exception e) {
 				logger.warn(ExceptionUtils.getStackTrace(e));
 			}
-
-			helperService.saveQueryResult(organizationId, startDate, endDate, filters, hashOfFormattedId,env);
-			return ResponseEntity.status(400).build();
-//			return (ResponseEntity<?>) ResponseEntity.status(400);
+				hashcodes.add(hashOfFormattedId);
+			if(categories.indexOf(category) == (categories.size()-1)) {
+				helperService.saveQueryResult(organizationId, startDate, endDate, filters, hashcodes,env,ancDailySummaryConfig);
+				return ResponseEntity.status(202).build();
+						}
+			}
 		}
-		return ResponseEntity.ok(helperService.checkIfDataExistsInAsyncTable(hashOfFormattedId));
-
+		if (helperService.getAsyncData(categoryWithHashCodes).getBody() == "Searching in Progress") return ResponseEntity.status(202).build();
+		return ResponseEntity.ok(helperService.getAsyncData(categoryWithHashCodes));
 	}
-
-
-	@RequestMapping(method = RequestMethod.GET, value = "/details/{uuid}")
-	public ResponseEntity<?> getDataResult(@PathVariable String uuid) throws SQLException, IOException {
-		return ResponseEntity.ok(helperService.checkIfDataExistsInAsyncTable(uuid));
-	}
-
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getEncountersBelowLocation")
 	public ResponseEntity<String> getEncountersBelowLocation(@RequestParam("locationId") String locationId) {
@@ -167,6 +188,11 @@ public class UserAndGroupManagementController {
 	@RequestMapping(method = RequestMethod.GET, value = "/indicator")
 	public ResponseEntity<?> indicator(@RequestParam("env") String env) {
 		return helperService.getIndicators(env);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/categories")
+	public ResponseEntity<?> categories(@RequestParam("env") String env) {
+		return helperService.getCategories(env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/pieChartDefinition")

@@ -5,17 +5,13 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.AsyncConfiguration;
 import ca.uhn.fhir.jpa.starter.DashboardConfigContainer;
 import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
-import ca.uhn.fhir.jpa.starter.model.AnalyticComparison;
-import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
-import ca.uhn.fhir.jpa.starter.model.ReportType;
+import ca.uhn.fhir.jpa.starter.model.*;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
-import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
-import ca.uhn.fhir.jpa.starter.model.PatientIdentifierEntity;
-
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
+
 import ca.uhn.fhir.rest.gclient.TokenClientParam;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
@@ -511,19 +507,19 @@ public class HelperService {
 		return groups;
 	}
 
-	public ResponseEntity<List<Map<String, String>>> getAncMetaDataByOrganizationId(String organizationId, String startDate, String endDate) {
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-		List<Map<String, String>> ancMetaData = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncMetaDataByOrganizationId(fhirClientProvider, new DateRange(startDate, endDate), organizationId);
-		return ResponseEntity.ok(ancMetaData);
-	}
+//	public ResponseEntity<List<Map<String, String>>> getAncMetaDataByOrganizationId(String organizationId, String startDate, String endDate) {
+//		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+//		List<Map<String, String>> ancMetaData = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncMetaDataByOrganizationId(fhirClientProvider, new DateRange(startDate, endDate), organizationId);
+//		return ResponseEntity.ok(ancMetaData);
+//	}
 
-	public ResponseEntity<?> getAncDailySummaryData(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters,String env) {
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-		List<String> fhirSearchList = getFhirSearchListByFilters(filters,env);
-		ANCDailySummaryConfig ancDailySummaryConfig = getANCDailySummaryConfigFromFile(env);
-		DataResult dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
-		return ResponseEntity.ok(dataResult);
-	}
+//	public ResponseEntity<?> getAncDailySummaryData(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters,String env) {
+//		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+//		List<String> fhirSearchList = getFhirSearchListByFilters(filters,env);
+//		ANCDailySummaryConfig ancDailySummaryConfig = getANCDailySummaryConfigFromFile(env);
+//		DataResult dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
+//		return ResponseEntity.ok(dataResult);
+//	}
 
 	public void saveInAsyncTable(DataResult dataResult, String id) {
 
@@ -553,40 +549,30 @@ public class HelperService {
 		return writer.toString();
 	}
 
-
-	public ResponseEntity<?> getAsyncData(String uuid) throws SQLException, IOException {
-
-		ArrayList<ApiAsyncTaskEntity> asyncData = datasource.fetchStatus(uuid);
-		if (asyncData == null) return null;
+public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) throws SQLException, IOException {
+	List<DataResultJava> dataResult = new ArrayList<>();
+	for(Map.Entry<String,String> item : categoryWithHashCodes.entrySet()) {
+		ArrayList<ApiAsyncTaskEntity> asyncData = datasource.fetchStatus(item.getValue());
+		if (asyncData == null) return ResponseEntity.ok("Searching in Progress");
 		ApiAsyncTaskEntity asyncRecord = asyncData.get(0);
-
-		if (asyncRecord.getSummaryResult() == null) return null;
-
+		if (asyncRecord.getSummaryResult() == null) return ResponseEntity.ok("Searching in Progress");
 		String dailyResultInString = convertClobToString(asyncRecord.getDailyResult());
 		String summaryResultInString = convertClobToString(asyncRecord.getSummaryResult());
 		List<Map<String, String>> dailyResult= mapper.readValue(dailyResultInString, new TypeReference<List<Map<String, String>>>() {});
-		DataResultJava dataResult = new DataResultJava(summaryResultInString, dailyResult);
-		return  ResponseEntity.ok(dataResult);
-
+		dataResult.add(new DataResultJava(item.getKey(),summaryResultInString, dailyResult));
 	}
-
-	public ResponseEntity<?> checkIfDataExistsInAsyncTable(String uuid) throws SQLException, IOException {
-		if (getAsyncData(uuid) == null) {
-			return ResponseEntity.ok("Searching in Progress");
-		} else return ResponseEntity.ok(getAsyncData(uuid));
-
-	}
-
+	return  ResponseEntity.ok(dataResult);
+}
 
 	@Async("asyncTaskExecutor")
-	public void saveQueryResult(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters, String id,String env) {
+	public void saveQueryResult(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters, List<String> hashcodes,String env, List<ANCDailySummaryConfig> ancDailySummaryConfig) throws FileNotFoundException {
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
 		List<String> fhirSearchList = getFhirSearchListByFilters(filters,env);
-		ANCDailySummaryConfig ancDailySummaryConfig = getANCDailySummaryConfigFromFile(env);
-		DataResult dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
-		saveInAsyncTable(dataResult, id);
+		List<DataResult> dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
+		for(String hashcode : hashcodes){
+			saveInAsyncTable(dataResult.get(hashcodes.indexOf(hashcode)), hashcode);
+		}
 	}
-
 
 	//@Scheduled(fixedDelay = 300000)
 	@Scheduled(cron = "0 0 23 * * *")
@@ -726,13 +712,24 @@ public class HelperService {
 
 	public ResponseEntity<?> getIndicators(String env) {
 		try {
-			List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
+			List<ScoreCardIndicatorItem> indicators = getIndicatorItemListFromFile(env);
 			return ResponseEntity.ok(indicators);
 		} catch (NullPointerException e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error : ScoreCard Config File Not Found");
 		}
 	}
+
+	public ResponseEntity<?> getCategories(String env) {
+		try {
+			CategoryItem categoryItem = getCategoriesFromFile(env);
+			return ResponseEntity.ok(categoryItem);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return ResponseEntity.ok("Error : Category Config File Not Found");
+		}
+	}
+
 
 	public ResponseEntity<?> getBarChartDefinition(String env) {
 		try {
@@ -965,96 +962,110 @@ public class HelperService {
 		return ResponseEntity.ok(scoreCardItems);
 	}
 
-	public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String,String> filters,String env) {
+	public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters, String env) {
 		notificationDataSource = NotificationDataSource.getInstance();
-		List<ScoreCardItem> scoreCardItems = new ArrayList<>();
-		List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
+		List<ScoreCardResponseItem> scoreCardResponseItems = new ArrayList<>();
+		List<ScoreCardIndicatorItem> scoreCardIndicatorItemsList = getIndicatorItemListFromFile(env);
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
 		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 
 		Date start = Date.valueOf(startDate);
 		Date end = Date.valueOf(endDate);
-		List<String> fhirSearchList = getFhirSearchListByFilters(filters,env);
-		performCachingIfNotPresent(indicators, idsAndOrgIdToChildrenMapPair.first, start, end,fhirSearchList);
-		switch (type) {
-			case summary: {
-				LinkedHashMap<String, List<String>> mapOfIdToChildren = idsAndOrgIdToChildrenMapPair.second;
-				mapOfIdToChildren.forEach((id, children) -> {
-					children.add(id);
-					for (IndicatorItem indicator : indicators) {
-						String key = indicator.getFhirPath()+String.join(",", fhirSearchList);
-						Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
+		List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
+
+		List<IndicatorItem> indicators = new ArrayList<>();
+		scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
+
+		performCachingIfNotPresent(indicators, idsAndOrgIdToChildrenMapPair.first, start, end, fhirSearchList);
+
+		scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> {
+			ScoreCardResponseItem scoreCardResponseItem = new ScoreCardResponseItem();
+			scoreCardResponseItem.setCategoryId(scoreCardIndicatorItem.getCategoryId());
+			List<ScoreCardItem> scoreCardItems = new ArrayList<>();
+			switch (type) {
+				case summary: {
+					LinkedHashMap<String, List<String>> mapOfIdToChildren = idsAndOrgIdToChildrenMapPair.second;
+					mapOfIdToChildren.forEach((id, children) -> {
+						children.add(id);
+						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
+							Double cacheValueSum = notificationDataSource
+								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), children);
-						scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(),
-							startDate, endDate));
-					}
-				});
-				break;
-			}
-			case quarterly: {
-				List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-				List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates(start, end);
-				for (Pair<Date, Date> pair : quarterDatePairList) {
-					for (IndicatorItem indicator : indicators) {
-						String key = indicator.getFhirPath()+String.join(",", fhirSearchList);
-						Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
-									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
-					}
+							scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(),
+								startDate, endDate));
+						}
+					});
+					break;
 				}
-				break;
-			}
-			case weekly: {
-				List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-				List<Pair<Date, Date>> weeklyDatePairList = DateUtilityHelper.getWeeklyDates(start, end);
-				for (Pair<Date, Date> pair : weeklyDatePairList) {
-					for (IndicatorItem indicator : indicators) {
-						String key = indicator.getFhirPath()+String.join(",", fhirSearchList);
-						Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+				case quarterly: {
+					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates(start, end);
+					for (Pair<Date, Date> pair : quarterDatePairList) {
+						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
+							Double cacheValueSum = notificationDataSource
+								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+						}
 					}
+					break;
 				}
-				break;
-			}
-			case monthly: {
-				List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-				List<Pair<Date, Date>> monthlyDatePairList = DateUtilityHelper.getMonthlyDates(start, end);
-				for (Pair<Date, Date> pair : monthlyDatePairList) {
-					for (IndicatorItem indicator : indicators) {
-						String key = indicator.getFhirPath()+String.join(",", fhirSearchList);
-						Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+				case weekly: {
+					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+					List<Pair<Date, Date>> weeklyDatePairList = DateUtilityHelper.getWeeklyDates(start, end);
+					for (Pair<Date, Date> pair : weeklyDatePairList) {
+						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
+							Double cacheValueSum = notificationDataSource
+								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+						}
 					}
+					break;
 				}
-				break;
-			}
-			case daily: {
-				List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-				List<Pair<Date, Date>> dailyDatePairList = DateUtilityHelper.getDailyDates(start, end);
-				for (Pair<Date, Date> pair : dailyDatePairList) {
-					for (IndicatorItem indicator : indicators) {
-						String key = indicator.getFhirPath()+String.join(",", fhirSearchList);
-						Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+				case monthly: {
+					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+					List<Pair<Date, Date>> monthlyDatePairList = DateUtilityHelper.getMonthlyDates(start, end);
+					for (Pair<Date, Date> pair : monthlyDatePairList) {
+						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
+							Double cacheValueSum = notificationDataSource
+								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-						scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-							cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+						}
 					}
+					break;
 				}
-				break;
+				case daily: {
+					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+					List<Pair<Date, Date>> dailyDatePairList = DateUtilityHelper.getDailyDates(start, end);
+					for (Pair<Date, Date> pair : dailyDatePairList) {
+						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
+							Double cacheValueSum = notificationDataSource
+								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
+							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
+								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
+						}
+					}
+					break;
+				}
 			}
-		}
-		return ResponseEntity.ok(scoreCardItems);
+
+			scoreCardResponseItem.setScoreCardItemList(scoreCardItems);
+			scoreCardResponseItems.add(scoreCardResponseItem);
+		});
+
+		return ResponseEntity.ok(scoreCardResponseItems);
 	}
 
 
@@ -1303,7 +1314,9 @@ public class HelperService {
 	}
 
 	public void cacheDashboardData(List<String> facilities, String start, String end, String env) {
-		List<IndicatorItem> indicators = getIndicatorItemListFromFile(env);
+		List<ScoreCardIndicatorItem> scoreCardIndicatorItemsList = getIndicatorItemListFromFile(env);
+		List<IndicatorItem> indicators = new ArrayList<>();
+		scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
 		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
 		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
@@ -1408,8 +1421,12 @@ public class HelperService {
 		return dashboardEnvToConfigMap.get(env).getFilterItems();
 	}
 
-	List<IndicatorItem> getIndicatorItemListFromFile(String env) throws NullPointerException{
+	List<ScoreCardIndicatorItem> getIndicatorItemListFromFile(String env) throws NullPointerException{
 		return dashboardEnvToConfigMap.get(env).getScoreCardIndicatorItems();
+	}
+
+	CategoryItem getCategoriesFromFile(String env) throws NullPointerException{
+		return dashboardEnvToConfigMap.get(env).getCategoryItem();
 	}
 
 	List<BarChartDefinition> getBarChartItemListFromFile(String env) throws NullPointerException{
@@ -1432,7 +1449,7 @@ public class HelperService {
 		return dashboardEnvToConfigMap.get(env).getAnalyticsIndicatorItems();
 	}
 
-	ANCDailySummaryConfig getANCDailySummaryConfigFromFile(String env) throws NullPointerException{
+	public List<ANCDailySummaryConfig> getANCDailySummaryConfigFromFile(String env) throws NullPointerException{
 		return dashboardEnvToConfigMap.get(env).getAncDailySummaryConfig();
 	}
 	

@@ -1,0 +1,10 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Apr 20 19:59:25 IST 2023
+file\://root/.m2/repository/.error=
+file\://root/.m2/repository/.lastUpdated=1682000965880
+https\://oss.sonatype.org/content/repositories/snapshots/.error=
+https\://oss.sonatype.org/content/repositories/snapshots/.lastUpdated=1682000965392
+https\://repo.maven.apache.org/.error=
+https\://repo.maven.apache.org/.lastUpdated=1682000965870
+https\://repo.maven.apache.org/maven2/.error=
+https\://repo.maven.apache.org/maven2/.lastUpdated=1682000965094
