@@ -13,6 +13,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
@@ -53,17 +54,28 @@ public class SignatureInterceptor extends GenericFilterBean{
 		String timeStampHeader = httpServletRequest.getHeader("Timestamp");
 		//Get the Key I'd from the header
 		String keyId = httpServletRequest.getHeader("kid");
-		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		String dashboardKeyId = FhirUtils.KeyId.DASHBOARD.name();
 		if (practitionerRoleId != null) {
-			//Get practitioner role from the practitioner role id
-			String practitionerRole = FhirUtils.getPractitionerRoleFromId(practitionerRoleId);
-			assert practitionerRole != null;
+			//Get user role from the JWT token
+			 List<String> userRole =  Validation.getJWTToken(token).getClientRoles();
 			//If admin then skip the signature process and allow for all the api calls (for dev user)
 			String devUserRole = appProperties.getDev_user_role();
-			if(!practitionerRole.equals(devUserRole)){
+			//For backward compatibility of no role and not logged in. Will allow user to login to app to get a new token
+			String contextPath = httpServletRequest.getRequestURI();
+			if(userRole==null && httpServletRequest.getRequestURI().contains("/iprd/user/"))
+			{
+				chain.doFilter(request, response);
+				return;
+			}else if(userRole==null) {
+				//This is odd, unless mapper is not set
+				httpServletResponse.setHeader("error-message", "User role is null");
+				httpServletResponse.setStatus(401);
+				return;
+			}
+			if(!userRole.contains(devUserRole)){
 				if (signatureHeader == null || signatureHeader.isEmpty()) {
-					httpServletResponse.setHeader("error-message", "Missing Signature header");
+					httpServletResponse.setHeader("error-message", "Missing Signature header");	
 					httpServletResponse.setStatus(400);
 					return;
 				}
@@ -77,7 +89,7 @@ public class SignatureInterceptor extends GenericFilterBean{
 				} catch (Exception e) {
 					httpServletResponse.setHeader("error-message", "Issue in Key");
 					httpServletResponse.setStatus(401);
-					e.printStackTrace();
+					logger.warn(ExceptionUtils.getStackTrace(e));
 					return;
 				}
 			}
@@ -120,7 +132,7 @@ public class SignatureInterceptor extends GenericFilterBean{
 		long currentTimestamp = Instant.now().getEpochSecond();
 		long receivedTimeStamp = Long.parseLong(timeStampHeader);
 		long timeDifference = Math.abs(currentTimestamp - receivedTimeStamp);
-		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		//check if the timestamp is within 10 minutes of the current timestamp
 		try {
 			if(timeDifference <= appProperties.getApi_request_max_time()){

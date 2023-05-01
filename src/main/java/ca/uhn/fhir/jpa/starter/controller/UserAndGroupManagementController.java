@@ -172,7 +172,7 @@ public class UserAndGroupManagementController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/organizations")
 	public ResponseEntity<?> organizations(@RequestHeader(name = "Authorization") String token) {
-		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
@@ -229,7 +229,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("type");
 		allFilters.remove("lga");
 		allFilters.remove("env");
-		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
@@ -252,7 +252,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("type");
 		allFilters.remove("lga");
 		allFilters.remove("env");
-		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
@@ -274,7 +274,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("type");
 		allFilters.remove("lga");
 		allFilters.remove("env");
-		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
 
@@ -294,7 +294,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("lga");
 		allFilters.remove("env");
 		allFilters.remove("type");
-		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
@@ -324,7 +324,7 @@ public class UserAndGroupManagementController {
 		allFilters.remove("type");
 		allFilters.remove("lga");
 		allFilters.remove("env");
-		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
@@ -335,7 +335,7 @@ public class UserAndGroupManagementController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/analytics")
 	public ResponseEntity<?> analytics(@RequestHeader(name = "Authorization") String token,@RequestParam("env") String env) {
-		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
@@ -399,7 +399,7 @@ public class UserAndGroupManagementController {
 		@RequestParam("to") String to,
 		@RequestParam(value = "organizationId", required = false) String organizationId,
 		@RequestParam("env") String env) {
-		String practitionerRoleId = Validation.getPractitionerRoleIdByToken(token);
+		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}

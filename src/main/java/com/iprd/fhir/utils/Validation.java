@@ -25,14 +25,14 @@ public class Validation {
 		return hcwCsvData.length == 13;
 	}
 	
-	public static String getPractitionerRoleIdByToken(String token) {
+	public static JWTPayload getJWTToken(String token) {
 		try {
 			String[] chunks = token.split("\\.");
 			String payload = new String(Base64.decode(chunks[1], Base64.DEFAULT));
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES , false);
 			JWTPayload jwtPayload = mapper.readValue(payload, JWTPayload.class);
-			return jwtPayload.getPractitionerRoleId();
+			return jwtPayload;
 		} catch (JsonProcessingException | IndexOutOfBoundsException e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
 		}

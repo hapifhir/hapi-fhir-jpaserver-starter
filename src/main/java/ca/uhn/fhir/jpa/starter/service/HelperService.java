@@ -678,7 +678,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			CategoryItem categoryItem = getCategoriesFromFile(env);
 			return ResponseEntity.ok(categoryItem);
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error : Category Config File Not Found");
 		}
 	}
@@ -1536,7 +1536,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			Response response = realmResource.users().create(userRep);
 			return CreatedResponseUtil.getCreatedId(response);
 		} catch (WebApplicationException e) {
-			logger.warn(e.getLocalizedMessage());
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return null;
 		}
 	}

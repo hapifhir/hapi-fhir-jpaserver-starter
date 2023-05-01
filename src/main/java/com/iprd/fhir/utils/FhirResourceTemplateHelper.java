@@ -232,7 +232,7 @@ public class FhirResourceTemplateHelper {
 			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
 			practitioner.setBirthDate(dateOfBirth);
 		}catch(ParseException exception) {
-			logger.warn(exception.getLocalizedMessage());
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;
@@ -272,7 +272,7 @@ public class FhirResourceTemplateHelper {
 			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
 			practitioner.setBirthDate(dateOfBirth);
 		}catch(ParseException exception) {
-			logger.warn(exception.getLocalizedMessage());
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;

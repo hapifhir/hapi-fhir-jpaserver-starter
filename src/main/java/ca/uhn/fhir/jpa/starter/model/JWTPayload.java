@@ -26,7 +26,16 @@ public class JWTPayload {
 	private String given_name;
 	private String family_name;
 	private String email;
+	private List<String> clientRoles = new ArrayList<>();;
 
+	public  List<String> getClientRoles() {
+		return clientRoles;
+	}
+
+	public void setClientRole( List<String> clientRoles) {
+		this.clientRoles = clientRoles;
+	}
+	
 	public float getExp() {
 		return exp;
 	}
