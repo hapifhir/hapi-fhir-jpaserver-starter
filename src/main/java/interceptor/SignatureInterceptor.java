@@ -92,7 +92,7 @@ public class SignatureInterceptor extends GenericFilterBean{
 				try {
 					boolean isVerified = getPublicKeyAndVerify(signatureHeader, token, timeStampHeader, keyId);
 					if (!isVerified) {
-						httpServletResponse.setHeader("error-message", "Invalid Signature");
+						httpServletResponse.setHeader("error-message", "Invalid Signature "+signatureHeader);
 						httpServletResponse.setStatus(401);
 						return;
 					}
@@ -161,11 +161,16 @@ public class SignatureInterceptor extends GenericFilterBean{
 				//update the signature with the message
 				signature.update(messageToVerify.getBytes());
 				Boolean verified = signature.verify(decodedSignature);
+				if(!verified) {
+					logger.warn(signatureHeader +" "+ token+" "+timeStampHeader+" "+keyId);
+				}
 				return verified;
 			} else{
+				logger.warn(signatureHeader +" "+ token+" "+timeStampHeader+" "+keyId);
 				return false;
 			}	
 		}catch(Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
 			return false;
 		}
 	}
