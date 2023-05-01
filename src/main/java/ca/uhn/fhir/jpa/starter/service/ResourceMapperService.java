@@ -243,6 +243,8 @@ public class ResourceMapperService {
 
 			} catch (ResourceNotFoundException ex) {
 				logger.warn(ExceptionUtils.getStackTrace(ex));
+				logger.warn("Deleted the entity since the encounter not found in the server.");
+				notificationDataSource.delete(encounterIdEntity);
 			} catch (FhirClientConnectionException ex) {
 				// FhirClientConnectionException internally throws SocketTimeoutException: Read timeout
 				logger.warn(ExceptionUtils.getStackTrace(ex));

@@ -214,7 +214,15 @@ public class HelperService {
 				states.add(state.getName());
 				GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), state.getIdElement().getIdPart());
 				stateGroupId = createKeycloakGroup(stateGroupRep);
+				if (stateGroupId == null) {
+					invalidClinics.add("Group creation failed for state: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+					continue;
+				}
 				stateId = updateResource(stateGroupId, state, Organization.class, Organization.NAME.matchesExactly().value(state.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "state"));
+				if (stateId == null) {
+					invalidClinics.add("Resource creation failed for state: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+					continue;
+				}
 			}
 
 			if (!lgas.contains(lgaName)) {
@@ -222,7 +230,15 @@ public class HelperService {
 				lgas.add(lga.getName());
 				GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lga.getIdElement().getIdPart());
 				lgaGroupId = createKeycloakGroup(lgaGroupRep);
+				if (lgaGroupId == null) {
+					invalidClinics.add("Group creation failed for LGA: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+					continue;
+				}
 				lgaId = updateResource(lgaGroupId, lga, Organization.class, Organization.NAME.matchesExactly().value(lga.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "lga"));
+				if (lgaId == null) {
+					invalidClinics.add("Resource creation failed for LGA: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+					continue;
+				}
 			}
 
 			if (!wards.contains(wardName)) {
@@ -230,7 +246,15 @@ public class HelperService {
 				wards.add(ward.getName());
 				GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, ward.getIdElement().getIdPart());
 				wardGroupId = createKeycloakGroup(wardGroupRep);
+				if (wardGroupId == null) {
+					invalidClinics.add("Group creation failed for Ward: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+					continue;
+				}
 				wardId = updateResource(wardGroupId, ward, Organization.class, Organization.NAME.matchesExactly().value(ward.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "ward"));
+				if (wardId == null) {
+					invalidClinics.add("Resource creation failed for Ward: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+					continue;
+				}
 			}
 
 			if (!clinics.contains(facilityName)) {
@@ -250,8 +274,15 @@ public class HelperService {
 					argusoftIdentifier
 				);
 				facilityGroupId = createKeycloakGroup(facilityGroupRep);
+				if (facilityGroupId == null) {
+					invalidClinics.add("Group creation failed for facility: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+					continue;
+				}
 				facilityOrganizationId = updateResource(facilityGroupId, clinicOrganization, Organization.class, Organization.NAME.matchesExactly().value(clinicOrganization.getName()), new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", "facility"));
 				facilityLocationId = updateResource(facilityGroupId, clinicLocation, Location.class, Location.NAME.matchesExactly().value(clinicLocation.getName()));
+				if (facilityOrganizationId == null || facilityLocationId == null) {
+					invalidClinics.add("Resource creation failed for Facility: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+				}
 			}
 		}
 		map.put("count", iteration);
@@ -301,13 +332,14 @@ public class HelperService {
 
 			organizationId = getOrganizationIdByFacilityUID(facilityUID);
 
+			String s = firstName + "," + lastName + "," + state + "," + lga + "," + ward + "," + facilityUID;
 			if (facilityUID.isEmpty()) {
-				map.put("FacilityUid is empty", firstName + " " + lastName + "," + state + "," + lga + "," + ward + "," + facilityUID);
+				map.put("FacilityUid is empty", s);
 				continue;
 			}
 
 			if (!Validation.validationHcwCsvLine(hcwData)) {
-				map.put("CSV length validation failed", firstName + " " + lastName + "," + state + "," + lga + "," + ward + "," + facilityUID);
+				map.put("CSV length validation failed", s);
 				continue;
 			}
 			if (!(practitioners.contains(firstName) && practitioners.contains(lastName) && practitioners.contains(phoneNumber + countryCode))) {
@@ -328,7 +360,7 @@ public class HelperService {
 				RoleRepresentation KeycloakRoleRepresentation = KeycloakTemplateHelper.role(role);
 				createRoleIfNotExists(KeycloakRoleRepresentation);
 				if (keycloakUserId == null) {
-					map.put("User not created", firstName + " " + lastName + "," + state + "," + lga + "," + ward + "," + facilityUID);
+					map.put("User not created", s);
 				} else {
 					assignRole(keycloakUserId, KeycloakRoleRepresentation.getName());
 					practitionerId = updateResource(
@@ -339,7 +371,14 @@ public class HelperService {
 						Practitioner.FAMILY.matches().value(practitioner.getName().get(0).getFamily()),
 						Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(), Arrays.asList(hcwData[4] + hcwData[3]))
 					);
+					if (practitionerId == null) {
+						invalidUsers.add("Resource creation failed for user: " + s);
+						continue;
+					}
 					practitionerRoleId = updateResource(keycloakUserId, practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
+					if (practitionerRoleId == null) {
+						invalidUsers.add("Resource creation failed for user: " + s);
+					}
 				}
 			}
 		}
@@ -365,6 +404,12 @@ public class HelperService {
 			}
 
 			String hcwData[] = singleLine.split(",");
+
+			if (!Validation.validationDashboardUserCsvLine(hcwData)) {
+				invalidUsers.add("CSV length validation failed: " + hcwData[0] + " " + hcwData[1]);
+				continue;
+			}
+
 			String firstName = hcwData[0];
 			String lastName = hcwData[1];
 			String email = hcwData[2];
@@ -387,11 +432,6 @@ public class HelperService {
 			organizationId = getOrganizationIdByOrganizationNameAndType(organizationName, type);
 			if (organizationId == null) {
 				invalidUsers.add("Organization not found: " + firstName + " " + lastName + "," + organizationName);
-				continue;
-			}
-
-			if (!Validation.validationDashboardUserCsvLine(hcwData)) {
-				invalidUsers.add("CSV length validation failed: " + firstName + " " + lastName + "," + organizationName);
 				continue;
 			}
 
@@ -422,23 +462,30 @@ public class HelperService {
 				type.toLowerCase()
 			);
 			String keycloakUserId = createKeycloakUser(user);
-			if (keycloakUserId != null) {
-				updateResource(
-					keycloakUserId,
-					practitioner,
-					Practitioner.class,
-					Practitioner.GIVEN.matchesExactly().value(practitioner.getName().get(0).getGivenAsSingleString()),
-					Practitioner.FAMILY.matchesExactly().value(practitioner.getName().get(0).getFamily()),
-					Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(), Arrays.asList(countryCode + phoneNumber))
-				);
-				updateResource(
-					keycloakUserId,
-					practitionerRole,
-					PractitionerRole.class,
-					PractitionerRole.PRACTITIONER.hasId(practitioner.getIdElement().getIdPart())
-				);
-			} else {
-				invalidUsers.add("Failed to create user: " + firstName + " " + lastName + "," + userName + "," + email );
+			if (keycloakUserId == null) {
+				invalidUsers.add("Failed to create user: " + firstName + " " + lastName + "," + userName + "," + email);
+				continue;
+			}
+			practitionerId = updateResource(
+				keycloakUserId,
+				practitioner,
+				Practitioner.class,
+				Practitioner.GIVEN.matchesExactly().value(practitioner.getName().get(0).getGivenAsSingleString()),
+				Practitioner.FAMILY.matchesExactly().value(practitioner.getName().get(0).getFamily()),
+				Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(), Arrays.asList(countryCode + phoneNumber))
+			);
+			if (practitionerId == null) {
+				invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName + "," + email);
+				continue;
+			}
+			practitionerRoleId = updateResource(
+				keycloakUserId,
+				practitionerRole,
+				PractitionerRole.class,
+				PractitionerRole.PRACTITIONER.hasId(practitioner.getIdElement().getIdPart())
+			);
+			if (practitionerRoleId == null) {
+				invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName + "," + email);
 			}
 		}
 		if (invalidUsers.size() > 0) {
@@ -1481,8 +1528,13 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 				return group.getId();
 			}
 		}
-		Response response = realmResource.groups().add(groupRep);
-		return CreatedResponseUtil.getCreatedId(response);
+		try {
+			Response response = realmResource.groups().add(groupRep);
+			return CreatedResponseUtil.getCreatedId(response);
+		} catch (WebApplicationException ex) {
+			logger.warn(ex.getLocalizedMessage());
+			return null;
+		}
 	}
 
 //	private IBaseResource createResource(Resource resource, Class<? extends IBaseResource> theClass, ICriterion<?>... theCriterion) {
@@ -1521,7 +1573,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		} catch (IllegalAccessException e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
-		return "";
+		return null;
 	}
 
 	private String createKeycloakUser(UserRepresentation userRep) {
