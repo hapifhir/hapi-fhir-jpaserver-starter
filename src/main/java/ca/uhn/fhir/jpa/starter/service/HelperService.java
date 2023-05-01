@@ -367,9 +367,9 @@ public class HelperService {
 						keycloakUserId,
 						practitioner,
 						Practitioner.class,
-						Practitioner.GIVEN.matches().value(practitioner.getName().get(0).getGivenAsSingleString()),
-						Practitioner.FAMILY.matches().value(practitioner.getName().get(0).getFamily()),
-						Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(), Arrays.asList(hcwData[4] + hcwData[3]))
+						Practitioner.GIVEN.matchesExactly().value(practitioner.getName().get(0).getGivenAsSingleString()),
+						Practitioner.FAMILY.matchesExactly().value(practitioner.getName().get(0).getFamily()),
+						Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(), Arrays.asList(countryCode + phoneNumber))
 					);
 					if (practitionerId == null) {
 						invalidUsers.add("Resource creation failed for user: " + s);
@@ -482,7 +482,7 @@ public class HelperService {
 				keycloakUserId,
 				practitionerRole,
 				PractitionerRole.class,
-				PractitionerRole.PRACTITIONER.hasId(practitioner.getIdElement().getIdPart())
+				PractitionerRole.PRACTITIONER.hasId(practitionerId)
 			);
 			if (practitionerRoleId == null) {
 				invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName + "," + email);
