@@ -1555,11 +1555,15 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		for (int i = 1; i < theCriterion.length; i++)
 			query = query.and(theCriterion[i]);
 		try {
-			Method getIdentifier = resource.getClass().getMethod("getIdentifier");
-			List<Identifier> identifierList = (List<Identifier>) getIdentifier.invoke(resource);
-			for (Identifier identifier : identifierList) {
-				if (identifier.getSystem().equals(IDENTIFIER_SYSTEM + "/KeycloakId") && identifier.getValue().equals(keycloakId)) {
-					return resource.getIdElement().getIdPart();
+			Bundle bundle = query.returnBundle(Bundle.class).execute();
+			if (bundle.hasEntry() && bundle.getEntry().size() > 0) {
+				Resource existingResource = bundle.getEntry().get(0).getResource();
+				Method getIdentifier = resource.getClass().getMethod("getIdentifier");
+				List<Identifier> identifierList = (List<Identifier>) getIdentifier.invoke(existingResource);
+				for (Identifier identifier : identifierList) {
+					if (identifier.getSystem().equals(IDENTIFIER_SYSTEM + "/KeycloakId") && identifier.getValue().equals(keycloakId)) {
+						return resource.getIdElement().getIdPart();
+					}
 				}
 			}
 			Method addIdentifier = resource.getClass().getMethod("addIdentifier");
