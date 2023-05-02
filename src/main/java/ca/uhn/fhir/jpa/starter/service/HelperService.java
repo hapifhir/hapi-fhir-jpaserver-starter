@@ -355,13 +355,13 @@ public class HelperService {
 				practitioners.add(practitioner.getTelecom().get(0).getValue());
 				PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(role, qualification, practitioner.getIdElement().getIdPart(), organizationId);
 //				practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
-				UserRepresentation user = KeycloakTemplateHelper.user(firstName, lastName, email, keycloakUserName, initialPassword, phoneNumber, countryCode, practitionerId, practitionerRoleId, role, state, lga, ward, facilityUID, argusoftIdentifier);
+				UserRepresentation user = KeycloakTemplateHelper.user(firstName, lastName, email, keycloakUserName, initialPassword, phoneNumber, countryCode, practitioner.getIdElement().getIdPart(), practitionerRole.getIdElement().getIdPart(), role, state, lga, ward, facilityUID, argusoftIdentifier);
 				String keycloakUserId = createKeycloakUser(user);
-				RoleRepresentation KeycloakRoleRepresentation = KeycloakTemplateHelper.role(role);
-				createRoleIfNotExists(KeycloakRoleRepresentation);
 				if (keycloakUserId == null) {
 					map.put("User not created", s);
 				} else {
+					RoleRepresentation KeycloakRoleRepresentation = KeycloakTemplateHelper.role(role);
+					createRoleIfNotExists(KeycloakRoleRepresentation);
 					assignRole(keycloakUserId, KeycloakRoleRepresentation.getName());
 					practitionerId = updateResource(
 						keycloakUserId,
