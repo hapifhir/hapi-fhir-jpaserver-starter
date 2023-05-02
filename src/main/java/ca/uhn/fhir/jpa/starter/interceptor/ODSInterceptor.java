@@ -8,6 +8,7 @@ import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -205,18 +206,39 @@ public class ODSInterceptor extends InterceptorAdapter {
                 }
             }
 
+
+            if (theRequestDetails.getId() != null) {
+                logger.info("resource ID : " + theRequestDetails.getId() );
+                String identifierValue = theRequestDetails.getId().getIdPart();
+                if (identifierValue!=null && !isAlphaNumeric(identifierValue)) {
+                    logger.error("Error thrown as identifier value is: `" + identifierValue + "`" );
+                    throw new InvalidRequestException("Identifier Value Parameter Validation Error", buildOperationOutcome(IssueType.CODEINVALID, "INVALID_IDENTIFIER_VALUE", "Invalid identifier value", "Supplied identifier must be just alphanumeric characters."));
+                }
+            }
+
             // If identifier is specified, make sure the system is valid
             String identifier = getRequestParameter(theRequestDetails, "identifier");
             logger.debug("identifier supplied: " + identifier );
             if (identifier!=null && identifier.contains("|") ) {
                 String[] parts = identifier.split(Pattern.quote("|"));
-                //logger.debug("identifier system: " + parts[0] );
-                //logger.debug("identifier value: " + parts[1] );
                 String identifierSystem = parts[0];
-                //String identifierValue = parts[1];
+                String identifierValue = parts[1];
                 if (identifierSystem!=null && !identifierSystem.equals("https://fhir.nhs.uk/Id/ods-organization-code")) {
-                    logger.debug("Error thrown as identifier system is: `" + identifierSystem + "`" );
+                    logger.error("Error thrown as identifier system is: `" + identifierSystem + "`" );
                     throw new InvalidRequestException("Identifier System Parameter Validation Error", buildOperationOutcome(IssueType.CODEINVALID, "INVALID_IDENTIFIER_SYSTEM", "Invalid identifier system", "Invalid ods-org-role parameter. Should be https://fhir.nhs.uk/Id/ods-organization-code."));
+                }
+
+                // Check it's only alphanumeric
+                if (identifierValue!=null && !isAlphaNumeric(identifierValue)) {
+                    logger.error("Error thrown as identifier value is: `" + identifierValue + "`" );
+                    throw new InvalidRequestException("Identifier Value Parameter Validation Error", buildOperationOutcome(IssueType.CODEINVALID, "INVALID_IDENTIFIER_VALUE", "Invalid identifier value", "Supplied identifier must be just alphanumeric characters."));
+                }
+
+            } else {
+                // Check it's only alphanumeric
+                if (identifier!=null && !isAlphaNumeric(identifier)) {
+                    logger.error("Error thrown as identifier value is: `" + identifier + "`" );
+                    throw new InvalidRequestException("Identifier Value Parameter Validation Error", buildOperationOutcome(IssueType.CODEINVALID, "INVALID_IDENTIFIER_VALUE", "Invalid identifier value", "Supplied identifier must be just alphanumeric characters."));
                 }
             }
 
@@ -242,11 +264,52 @@ public class ODSInterceptor extends InterceptorAdapter {
                     throw new InvalidRequestException("Last Updated Parameter Validation Error", buildOperationOutcome(IssueType.CODEINVALID, "INVALID_CODE_VALUE", "Invalid code value", "Invalid FHIR ods-org-role parameter"));
                 }
             }
+
+
+            // If any parameter starts with a special character and it's NOT _count, _limit, _total, or _format
+            String[] allowedParameters = new String[] { "_id", "_lastUpdated", "_summary", "_count", "_limit", "_total", "_format", "_sort" };
+            if (theRequestDetails.getParameters()!=null) {
+                for (Map.Entry<String,String[]> entry : theRequestDetails.getParameters().entrySet()) {
+                    String key = entry.getKey();
+                    char firstChar = key.charAt(0);
+
+                    boolean firstCharValid = isValidFirstCharacterForAParameter(firstChar);
+                    boolean parameterInValidArray = Arrays.stream(allowedParameters).anyMatch(key::equals);
+
+                    logger.info("First character of parameter '" + key + "'' is '" + String.valueOf(firstChar) + "'");
+                    if (isValidFirstCharacterForAParameter(firstChar)) {
+                        logger.info("First character of parameter '" + key + "'' is valid");
+                    } else {
+                        logger.info("First character of parameter '" + key + "'' is invalid");
+                    }
+                    if (parameterInValidArray) {
+                        logger.info("Parameter '" + key + "' is in the valid list");
+                    } else {
+                        logger.info("Parameter '" + key + "' is not in the valid list");
+                    }
+
+                    if (!firstCharValid || (String.valueOf(firstChar).equals("_") && !Arrays.stream(allowedParameters).anyMatch(key::equals))) {
+                        logger.info("Invalid parameter detected: " + key);
+                        throw new InvalidRequestException("Invalid", buildOperationOutcome(IssueType.INVALID, "INVALID_PARAMETER", "Invalid parameter", "Unknown argument found - " + key));
+                    }
+                }
+            }
+            
         }
         
         return true;
         
 	}
+
+    public boolean isValidFirstCharacterForAParameter(char s){
+        String pattern= "[A-Z]|[a-z]|_";
+        return String.valueOf(s).matches(pattern);
+    }
+
+    public boolean isAlphaNumeric(String s){
+        String pattern= "^[a-zA-Z0-9]*$";
+        return s.matches(pattern);
+    }
 
     private String getRequestParameter(RequestDetails theRequestDetails, String parameterName) {
         if (theRequestDetails!=null && theRequestDetails.getParameters()!=null && theRequestDetails.getParameters().containsKey(parameterName)) {
