@@ -156,8 +156,7 @@ public class FhirServerConfigCommon {
     }
     //Parallel Batch GET execution settings
 	  daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
-	  daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());
-
+	  daoConfig.setBundleBatchMaxPoolSize(appProperties.getBundle_batch_pool_max_size());
 
     return daoConfig;
   }
