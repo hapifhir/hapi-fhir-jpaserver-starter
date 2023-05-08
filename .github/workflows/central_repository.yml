@@ -38,7 +38,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Publish to Apache Maven Central
-        run: mvn deploy -P release --file matchbox-engine/pom.xml
+        run: mvn deploy -P release --file pom.xml --projects :matchbox,:matchbox-engine
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
