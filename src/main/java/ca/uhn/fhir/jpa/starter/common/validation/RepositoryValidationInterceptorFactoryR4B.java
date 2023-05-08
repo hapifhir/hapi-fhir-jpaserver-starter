@@ -48,6 +48,10 @@ public class RepositoryValidationInterceptorFactoryR4B implements IRepositoryVal
 	public RepositoryValidatingInterceptor buildUsingStoredStructureDefinitions() {
 
 		IBundleProvider results = structureDefinitionResourceProvider.search(new SearchParameterMap().add(StructureDefinition.SP_KIND, new TokenParam("resource")));
+		if (results.size()==null){
+			return new RepositoryValidatingInterceptor();
+		}
+
 		Map<String, List<StructureDefinition>> structureDefintions = results.getResources(0, results.size())
 			.stream()
 			.map(StructureDefinition.class::cast)
