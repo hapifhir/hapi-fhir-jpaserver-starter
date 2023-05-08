@@ -1,3 +1,9 @@
+2023/05/08 Release 3.2.2
+
+- docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.2.2
+- dependency upgrade (core 5.6.971, HAPI 6.4.4, Spring 5.3.27, Spring Boot 2.7.11)
+- replaced IgLoaderFromClassPath with #loadPackage()
+
 2023/04/05 Release 3.2.1
 
 - docker pull \
