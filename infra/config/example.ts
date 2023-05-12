@@ -5,7 +5,10 @@ export const config: EnvConfig = {
   environmentType: EnvType.production,
   region: "us-east-1",
   vpcId: "my_vpcId",
-  zone: "metriport.com",
+  zone: {
+    id: "xxxx",
+    name: "xxx.metriport.com",
+  },
   domain: "metriport.com",
   subdomain: "fhir",
   dbName: "my_db",
