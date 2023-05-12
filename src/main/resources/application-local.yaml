@@ -6,6 +6,10 @@ management:
       exposure:
         include: "health,prometheus"
 
+# https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.server
+server:
+  port: 8888 # not being picked up by Jetty embedded - gotta add `-Djetty.port=8888` for Jetty
+
 spring:
   main:
     allow-circular-references: true
@@ -22,7 +26,7 @@ spring:
 
     # database connection pool size
     hikari:
-      maximum-pool-size: 10
+      maximum-pool-size: 5
   jpa:
     properties:
       hibernate.format_sql: false
@@ -76,7 +80,7 @@ hapi:
   fhir:
 
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
-    openapi_enabled: false
+    openapi_enabled: true
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
     ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
@@ -109,10 +113,10 @@ hapi:
     # Allowed Bundle Types for persistence (defaults are: COLLECTION,DOCUMENT,MESSAGE)
     ##################################################
     #    allowed_bundle_types: COLLECTION,DOCUMENT,MESSAGE,TRANSACTION,TRANSACTIONRESPONSE,BATCH,BATCHRESPONSE,HISTORY,SEARCHSET
-    #    allow_cascading_deletes: true
+    allow_cascading_deletes: true
     #    allow_contains_searches: true
     allow_external_references: true
-    #    allow_multiple_delete: true
+    allow_multiple_delete: true
     #    allow_override_default_search_params: true
     #    auto_create_placeholder_reference_targets: false
     #    cr_enabled: true
@@ -120,7 +124,7 @@ hapi:
     #    default_encoding: JSON
     #    default_pretty_print: true
     #    default_page_size: 20
-    #    delete_expunge_enabled: true
+    delete_expunge_enabled: true
     #    enable_repository_validating_interceptor: true
     #    enable_index_missing_fields: false
     #    enable_index_of_type: true
@@ -135,7 +139,7 @@ hapi:
     #    enforce_referential_integrity_on_delete: false
     #    enforce_referential_integrity_on_write: false
     #    etag_support_enabled: true
-    #    expunge_enabled: true
+    expunge_enabled: true
     #    client_id_strategy: ALPHANUMERIC
     #    fhirpath_interceptor_enabled: false
     #    filter_search_enabled: true
@@ -145,9 +149,9 @@ hapi:
     #    local_base_urls:
     #      - https://hapi.fhir.org/baseR4
     mdm_enabled: false
-    #    partitioning:
-    #      allow_references_across_partitions: false
-    #      partitioning_include_in_search_hashes: false
+    partitioning:
+      allow_references_across_partitions: false
+      partitioning_include_in_search_hashes: false
     cors:
       allow_Credentials: true
       # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
