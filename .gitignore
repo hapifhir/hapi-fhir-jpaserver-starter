@@ -1,6 +1,7 @@
 *.orig
 target/
 *.iml
+postgres_data/
 
 # Compiled class file
 *.class
