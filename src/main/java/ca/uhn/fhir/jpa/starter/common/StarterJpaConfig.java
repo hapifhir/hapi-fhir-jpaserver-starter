@@ -222,10 +222,8 @@ public class StarterJpaConfig {
 		if (appProperties.getImplementationGuides() != null) {
 			Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
 			for (Map.Entry<String, AppProperties.ImplementationGuide> guide : guides.entrySet()) {
-				PackageInstallationSpec packageInstallationSpec = new PackageInstallationSpec()
-						.setPackageUrl(guide.getValue().getUrl()).setName(guide.getValue().getName())
-						.setVersion(guide.getValue().getVersion())
-						.setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL);
+				PackageInstallationSpec packageInstallationSpec = new PackageInstallationSpec().setPackageUrl(guide.getValue().getUrl()).setName(guide.getValue().getName()).setVersion(guide.getValue().getVersion()).setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL);
+				packageInstallationSpec.setReloadExisting(appProperties.getReload_existing_implementationguides());
 				if (appProperties.getInstall_transitive_ig_dependencies()) {
 					packageInstallationSpec.setFetchDependencies(true);
 					packageInstallationSpec.setDependencyExcludes(ImmutableList.of("hl7.fhir.r2.core",
