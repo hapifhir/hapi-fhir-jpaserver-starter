@@ -1,3 +1,8 @@
+2023/05/15 Release 3.2.3
+
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.2.2`
+- fix validation engine caching mechanism
+
 2023/05/08 Release 3.2.2
 
 - docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.2.2
