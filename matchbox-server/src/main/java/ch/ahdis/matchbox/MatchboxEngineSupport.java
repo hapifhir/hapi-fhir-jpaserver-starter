@@ -325,7 +325,7 @@ public class MatchboxEngineSupport {
 					cliContextCp.setIg(ig); // set the ig in the cliContext that hashCode will be set
 					if (this.sessionCache.fetchSessionValidatorEngine(""+cliContextCp.hashCode()) == null ) {
 						MatchboxEngine created = this.createMatchboxEngine(engine, ig, cliContextCp);
-						sessionCache.cacheSessionForEver(""+cliContext.hashCode(), created);
+						sessionCache.cacheSessionForEver(""+cliContextCp.hashCode(), created);
 						log.info("cached validate engine forever" +(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContextCp.hashCode());
 					}
 				}
