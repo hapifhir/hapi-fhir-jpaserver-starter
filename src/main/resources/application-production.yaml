@@ -26,11 +26,12 @@ spring:
 
     # database connection pool size
     hikari:
-      maximum-pool-size: 10
+      maximum-pool-size: 200
   jpa:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
+
       #Hibernate dialect is automatically detected except Postgres and H2.
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
@@ -42,6 +43,7 @@ spring:
   #      hibernate.cache.use_second_level_cache: false
   #      hibernate.cache.use_structured_entries: false
   #      hibernate.cache.use_minimal_puts: false
+
   ###    These settings will enable fulltext search with lucene or elastic
       hibernate.search.enabled: true
   ### lucene parameters
@@ -57,7 +59,7 @@ hapi:
   fhir:
 
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
-    openapi_enabled: false
+    openapi_enabled: true
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
     ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
@@ -110,7 +112,7 @@ hapi:
     ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
     advanced_lucene_indexing: false
     bulk_export_enabled: false
-    bulk_import_enabled: false
+    bulk_import_enabled: true
     #    enforce_referential_integrity_on_delete: false
     # This is an experimental feature, and does not fully support _total and other FHIR features.
     #    enforce_referential_integrity_on_delete: false
@@ -180,7 +182,7 @@ hapi:
     #    validation:
     #      requests_enabled: true
     #      responses_enabled: true
-    #    binary_storage_enabled: true
+    binary_storage_enabled: true
     inline_resource_storage_below_size: 4000
 #    bulk_export_enabled: true
 #    subscription:
