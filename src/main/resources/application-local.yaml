@@ -26,7 +26,7 @@ spring:
 
     # database connection pool size
     hikari:
-      maximum-pool-size: 5
+      maximum-pool-size: 50
   jpa:
     properties:
       hibernate.format_sql: false
@@ -133,7 +133,7 @@ hapi:
     ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
     advanced_lucene_indexing: false
     bulk_export_enabled: false
-    bulk_import_enabled: false
+    bulk_import_enabled: true
     #    enforce_referential_integrity_on_delete: false
     # This is an experimental feature, and does not fully support _total and other FHIR features.
     #    enforce_referential_integrity_on_delete: false
@@ -203,7 +203,7 @@ hapi:
     #    validation:
     #      requests_enabled: true
     #      responses_enabled: true
-    #    binary_storage_enabled: true
+    binary_storage_enabled: true
     inline_resource_storage_below_size: 4000
 #    bulk_export_enabled: true
 #    subscription:
