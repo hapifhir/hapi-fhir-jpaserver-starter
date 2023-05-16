@@ -26,11 +26,12 @@ spring:
 
     # database connection pool size
     hikari:
-      maximum-pool-size: 5
+      maximum-pool-size: 100
   jpa:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
+
       #Hibernate dialect is automatically detected except Postgres and H2.
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
@@ -42,6 +43,7 @@ spring:
   #      hibernate.cache.use_second_level_cache: false
   #      hibernate.cache.use_structured_entries: false
   #      hibernate.cache.use_minimal_puts: false
+
   ###    These settings will enable fulltext search with lucene or elastic
       hibernate.search.enabled: true
   ### lucene parameters
@@ -73,6 +75,8 @@ hapi:
     server_address: https://api.staging.metriport.com/oauth/fhir
     #    defer_indexing_for_codesystems_of_size: 101
     #    install_transitive_ig_dependencies: true
+    ### tells the server whether to attempt to load IG resources that are already present
+    #    reload_existing_implementationGuides : false
     #    implementationguides:
     ###    example from registry (packages.fhir.org)
     #      swiss:
@@ -110,7 +114,7 @@ hapi:
     ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
     advanced_lucene_indexing: false
     bulk_export_enabled: false
-    bulk_import_enabled: false
+    bulk_import_enabled: true
     #    enforce_referential_integrity_on_delete: false
     # This is an experimental feature, and does not fully support _total and other FHIR features.
     #    enforce_referential_integrity_on_delete: false
@@ -180,7 +184,7 @@ hapi:
     #    validation:
     #      requests_enabled: true
     #      responses_enabled: true
-    #    binary_storage_enabled: true
+    binary_storage_enabled: true
     inline_resource_storage_below_size: 4000
 #    bulk_export_enabled: true
 #    subscription:
@@ -198,7 +202,7 @@ hapi:
 #        quitWait:
 #    lastn_enabled: true
 #    store_resource_in_lucene_index_enabled: true
-###  This is configuration for normalized quantity serach level default is 0
+###  This is configuration for normalized quantity search level default is 0
 ###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
 ###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
 ###   2: NORMALIZED_QUANTITY_SEARCH_SUPPORTED
