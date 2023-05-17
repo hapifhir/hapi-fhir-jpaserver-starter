@@ -112,8 +112,8 @@ export class FHIRServerStack extends Stack {
       storageEncrypted: true,
     });
 
-    const minDBCap = this.isProd(props) ? 2 : 1;
-    const maxDBCap = this.isProd(props) ? 8 : 2;
+    const minDBCap = this.isProd(props) ? 4 : 1;
+    const maxDBCap = this.isProd(props) ? 32 : 4;
     Aspects.of(dbCluster).add({
       visit(node) {
         if (node instanceof rds.CfnDBCluster) {
@@ -164,7 +164,7 @@ export class FHIRServerStack extends Stack {
         cluster: cluster,
         cpu: this.isProd(props) ? 2048 : 1024,
         memoryLimitMiB: this.isProd(props) ? 4096 : 2048,
-        desiredCount: this.isProd(props) ? 1 : 1, // TODO review once we go live
+        desiredCount: this.isProd(props) ? 3 : 1, // TODO review once we go live
         taskImageOptions: {
           image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
           containerPort: 8080,
