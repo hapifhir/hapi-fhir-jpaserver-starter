@@ -7,6 +7,7 @@ import ca.uhn.fhir.jpa.starter.DashboardConfigContainer;
 import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
 import ca.uhn.fhir.jpa.starter.model.*;
 import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import ca.uhn.fhir.rest.gclient.ICriterion;
@@ -82,7 +83,7 @@ import java.util.stream.Stream;
 
 import static org.hibernate.search.util.common.impl.CollectionHelper.asList;
 import static org.keycloak.util.JsonSerialization.mapper;
-
+import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
 
 @Import(AppProperties.class)
 @Service
@@ -104,7 +105,7 @@ public class HelperService {
 	Keycloak instance;
 	TokenManager tokenManager;
 	BearerTokenAuthInterceptor authInterceptor;
-	
+
 	Map <String,DashboardConfigContainer> dashboardEnvToConfigMap = new HashMap<>();
 
 	private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
@@ -116,6 +117,10 @@ public class HelperService {
 	private static final long AUTH_INITIAL_DELAY = 25 * 60000L;
 	private static final long AUTH_FIXED_DELAY = 50 * 60000L;
 	private static final long DELAY = 2 * 60000;
+
+	FhirContext fhirContext = FhirContext.forR4();
+	String serverUrl = "http://testhost.dashboard:8085/fhir";
+	IGenericClient client = fhirContext.newRestfulGenericClient(serverUrl);
 
 	NotificationDataSource notificationDataSource;
 	LinkedHashMap<String,Pair<List<String>, LinkedHashMap<String, List<String>>>> mapOfIdsAndOrgIdToChildrenMapPair;
@@ -763,7 +768,33 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			return ResponseEntity.ok("Error :Pie Chart Config File Not Found");
 		}
 	}
-	
+
+	public ResponseEntity<?> getPatientCount(List<OrgItem> orgItemsList) {
+		List<String> orgItems = new ArrayList<>();
+		orgItems = loopThroughOrgItems(orgItemsList,orgItems);
+		int patientCount = 0;
+		for (String orgId : orgItems) {
+			patientCount += client.search()
+				.byUrl("Patient?_has:Encounter:patient:service-provider=" + orgId + "&_count=0")
+				.returnBundle(Bundle.class)
+				.execute()
+				.getTotal();
+		}
+	return ResponseEntity.ok(patientCount);
+	}
+
+	public List<String> loopThroughOrgItems(List<OrgItem> orgItemList, List<String> orgItems) {
+		for (OrgItem orgItem : orgItemList) {
+			// Perform operations with orgItem
+			orgItems.add(orgItem.getId());
+			// Recursively loop through the children if present
+			if (!orgItem.getChildren().isEmpty()) {
+				loopThroughOrgItems(orgItem.getChildren(),orgItems);
+			}
+		}
+		return orgItems;
+	}
+
 	public ResponseEntity<?> getFilters(String env) {
 		try {
 			List<FilterItem> filters = dashboardEnvToConfigMap.get(env).getFilterItems();
