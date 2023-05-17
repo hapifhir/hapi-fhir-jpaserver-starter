@@ -67,7 +67,6 @@ public class ExampleServerR5IT {
 
   @Test
   public void testWebsocketSubscription() throws Exception {
-
 	  String endpoint = "ws://localhost:" + port + "/websocket";
     /*
      * Create topic
@@ -83,8 +82,17 @@ public class ExampleServerR5IT {
 
 	 ourClient.create().resource(topic).execute();
 
-	  waitForSize(1, () -> ourClient.search().forResource(SubscriptionTopic.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size());
-
+	  waitForSize(1, () -> ourClient
+		  .search()
+		  .forResource(SubscriptionTopic.class)
+		  .where(Subscription.STATUS.exactly().code("active"))
+		  .cacheControl(
+			  new CacheControlDirective()
+				  .setNoCache(true))
+		  .returnBundle(Bundle.class)
+		  .execute()
+		  .getEntry()
+		  .size());
 
 	  /*
      * Create subscription
@@ -104,7 +112,17 @@ public class ExampleServerR5IT {
     IIdType mySubscriptionId = methodOutcome.getId();
 
     // Wait for the subscription to be activated
-    waitForSize(1, () -> ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size());
+    waitForSize(1, () -> ourClient
+		 .search()
+		 .forResource(Subscription.class)
+		 .where(Subscription.STATUS.exactly().code("active"))
+		 .cacheControl(
+			 new CacheControlDirective()
+				 .setNoCache(true))
+		 .returnBundle(Bundle.class)
+		 .execute()
+		 .getEntry()
+		 .size());
 
     /*
      * Attach websocket
@@ -115,8 +133,8 @@ public class ExampleServerR5IT {
 
     myWebSocketClient.start();
 
-	  URI echoUri = new URI(endpoint);
-    ClientUpgradeRequest request = new ClientUpgradeRequest();
+	 URI echoUri = new URI(endpoint);
+	 ClientUpgradeRequest request = new ClientUpgradeRequest();
     ourLog.info("Connecting to : {}", echoUri);
     Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
     Session session = connection.get(2, TimeUnit.SECONDS);
