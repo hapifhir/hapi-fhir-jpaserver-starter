@@ -220,25 +220,23 @@ public class FhirServerConfigCommon {
   }
 
   @Bean
-  public IEmailSender emailSender(AppProperties appProperties, Optional<SubscriptionDeliveryHandlerFactory> subscriptionDeliveryHandlerFactory) {
-    if (appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null) {
-		 MailConfig mailConfig = new MailConfig();
+  public IEmailSender emailSender(AppProperties appProperties) {
+	  if (appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null) {
+		  MailConfig mailConfig = new MailConfig();
 
-      AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
-      mailConfig.setSmtpHostname(email.getHost());
-      mailConfig.setSmtpPort(email.getPort());
-      mailConfig.setSmtpUsername(email.getUsername());
-      mailConfig.setSmtpPassword(email.getPassword());
-      mailConfig.setSmtpUseStartTLS(email.getStartTlsEnable());
+		  AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
+		  mailConfig.setSmtpHostname(email.getHost());
+		  mailConfig.setSmtpPort(email.getPort());
+		  mailConfig.setSmtpUsername(email.getUsername());
+		  mailConfig.setSmtpPassword(email.getPassword());
+		  mailConfig.setSmtpUseStartTLS(email.getStartTlsEnable());
 
-		 IMailSvc mailSvc = new MailSvc(mailConfig);
-		 IEmailSender emailSender = new EmailSenderImpl(mailSvc);
+		  IMailSvc mailSvc = new MailSvc(mailConfig);
+		  IEmailSender emailSender = new EmailSenderImpl(mailSvc);
 
-		subscriptionDeliveryHandlerFactory.ifPresent(theSubscriptionDeliveryHandlerFactory -> theSubscriptionDeliveryHandlerFactory.setEmailSender(emailSender));
+		  return emailSender;
+	  }
 
-      return emailSender;
-    }
-
-    return null;
+	  return null;
   }
 }
