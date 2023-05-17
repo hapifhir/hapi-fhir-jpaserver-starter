@@ -117,7 +117,10 @@ public class Utils {
 		String combinedString = fhirPath+"_"+lineId.toString()+"_"+chartId.toString();
 		return  md5Bytes(combinedString.getBytes(StandardCharsets.UTF_8));
 	}
-
+	public static String getMd5KeyForLineCacheMd5WithCategory(String fhirPath, Integer lineId, Integer chartId, String categoryId) {
+		String combinedString = fhirPath+"_"+lineId.toString()+"_"+chartId.toString()+"_"+categoryId;
+		return  md5Bytes(combinedString.getBytes(StandardCharsets.UTF_8));
+	}
 	public static byte[] getBytesFromFile(String filePath)  {
 		byte[] bFile = null;
 		try {
