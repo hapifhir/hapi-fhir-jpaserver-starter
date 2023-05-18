@@ -112,7 +112,7 @@ export class FHIRServerStack extends Stack {
       storageEncrypted: true,
     });
 
-    const minDBCap = this.isProd(props) ? 4 : 1;
+    const minDBCap = this.isProd(props) ? 4 : 0.5;
     const maxDBCap = this.isProd(props) ? 32 : 4;
     Aspects.of(dbCluster).add({
       visit(node) {
@@ -143,6 +143,7 @@ export class FHIRServerStack extends Stack {
     // Create a new Amazon Elastic Container Service (ECS) cluster
     const cluster = new ecs.Cluster(this, "FHIRServerCluster", {
       vpc: this.vpc,
+      containerInsights: true,
     });
 
     const dockerImage = new ecr_assets.DockerImageAsset(this, "FHIRImage", {
