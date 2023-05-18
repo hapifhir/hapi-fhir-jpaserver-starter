@@ -801,7 +801,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 				Double cacheValueSum = notificationDataSource
 					.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
 						Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-				pieChartItems.add(new PieChartItem(pieChartItem.getId(), organizationId, pieChartItem.getName(), String.valueOf(cacheValueSum), pieChartItem.getChartId(), pieChartItem.getColorHex()));
+				pieChartItems.add(new PieChartItem(pieChartItem.getId(), organizationId, pieChartItem.getHeader(), pieChartItem.getName(), String.valueOf(cacheValueSum), pieChartItem.getChartId(), pieChartItem.getColorHex()));
 			}
 			pieChartItemDataCollection.add(new PieChartItemDataCollection(pieChartDefinition.getCategoryId(), pieChartItems));
 		}
