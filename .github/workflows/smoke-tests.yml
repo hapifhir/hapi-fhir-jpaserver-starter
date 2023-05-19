@@ -35,6 +35,6 @@ jobs:
         mvn jetty:run & export JPA_PROCESS=$!
         sleep 60
     - name: Execute smoke tests
-      run: docker run --rm -i -t -v $PWD:/workdir jetbrains/intellij-http-client -D src/test/smoketest/plain_server.http --env-file src/test/smoketest/http-client.env.json --env default
+      run: docker run --rm -v $PWD:/workdir jetbrains/intellij-http-client -D src/test/smoketest/plain_server.http --env-file src/test/smoketest/http-client.env.json --env default
 
     
