@@ -83,7 +83,6 @@ import java.util.stream.Stream;
 import static org.hibernate.search.util.common.impl.CollectionHelper.asList;
 import static org.keycloak.util.JsonSerialization.mapper;
 
-
 @Import(AppProperties.class)
 @Service
 public class HelperService {
@@ -104,7 +103,7 @@ public class HelperService {
 	Keycloak instance;
 	TokenManager tokenManager;
 	BearerTokenAuthInterceptor authInterceptor;
-	
+
 	Map <String,DashboardConfigContainer> dashboardEnvToConfigMap = new HashMap<>();
 
 	private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
@@ -763,7 +762,22 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			return ResponseEntity.ok("Error :Pie Chart Config File Not Found");
 		}
 	}
-	
+
+	public AnalyticItem getPatientCount(String practitionerRoleId) {
+		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+		int patientCount = 0;
+
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
+		for (String orgId : idsAndOrgIdToChildrenMapPair.first) {
+			patientCount += FhirClientAuthenticatorService.getFhirClient().search()
+				.byUrl("Patient?_has:Encounter:patient:service-provider=" + orgId + "&_count=0")
+				.returnBundle(Bundle.class)
+				.execute()
+				.getTotal();
+		}
+		return new AnalyticItem("Total number of Patients",String.valueOf(patientCount),null);
+	}
+
 	public ResponseEntity<?> getFilters(String env) {
 		try {
 			List<FilterItem> filters = dashboardEnvToConfigMap.get(env).getFilterItems();

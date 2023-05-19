@@ -359,6 +359,7 @@ public class UserAndGroupManagementController {
 			return ResponseEntity.ok("Error: Unable to find analytics file");
 		}
 		analyticItems.addAll(maternalAnalyticsItems);
+		analyticItems.add(helperService.getPatientCount(practitionerRoleId));
 		return ResponseEntity.ok(analyticItems);
 	}
 
