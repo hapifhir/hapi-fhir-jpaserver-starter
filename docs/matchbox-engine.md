@@ -35,11 +35,24 @@ matchbox-engine creates the java library, matchbox-engine-cli adds all dependenc
 
 matchbox-engine is only based on org.hl7.fhir.core libraries (HAPI FHIR - HL7 FHIR Core Artifacts), the dependency to hapi-fhir is not necessary for the library. The library is derived from the [HL7 Java FHIR Validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator) and [FHIR Mapping Language](https://www.hl7.org/fhir/mapping-language.html) implementation. During the development of the mapping a few missing functionalities in the Mapping Language have been discovered and have been also contributed back to the org.hl7.fhir.core project ([Pull requests](https://github.com/hapifhir/org.hl7.fhir.core/pulls?q=is%3Apr+is%3Aclosed+author%3Aoliveregger+)). Note however that there are some classes patched in matchbox-engine because of peculiarities in the parsing/mapping of CDA and package handling ([patched files](https://github.com/ahdis/matchbox/tree/main/matchbox-engine/src/main/java/org/hl7/fhir)). These patched files are [updated](https://github.com/ahdis/matchbox/blob/main/updatehapi.sh) and changes applied during each new release of org.hl7.fhir.core and tests are run to verify the correctness of the defined mappings. The library requires JDK11 which is also the minimum requirement for HAPI FHIR - HL7 FHIR Core Artifacts.
 
+### Integrate matchbox-engine with Maven
+
+You can add the matchbox-engine dependency in your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>health.matchbox</groupId>
+    <artifactId>matchbox-engine</artifactId>
+    <version>3.2.3</version>
+</dependency>
+```
+
 ## API and Javadoc
 
 The source code is documented with [Javadoc](https://ahdis.github.io/matchbox/apidocs/). Test cases illustrate the main functionality for transformation with the [FHIR Mapping Language](https://github.com/ahdis/matchbox/blob/main/matchbox-engine/src/test/java/ch/ahdis/matchbox/engine/tests/FhirMappingLanguageTests.java) and for [CDA to FHIR transformation](https://github.com/ahdis/matchbox/blob/main/matchbox-engine/src/test/java/ch/ahdis/matchbox/engine/tests/CdaToFhirTransformTests.java).
 
-For valdiation or transformation you need to instantiate a matchbox-engine. This matchbox-engine can be configured with specific a version of an implmenentation guide and it's dependencies. You can instantiate multiple engines with different ig's.
+For validation or transformation, you need to instantiate a matchbox-engine. This matchbox-engine can be configured
+with a specific version of an implementation guide and its dependencies. You can instantiate multiple engines with different ig's.
 
 ### Validation
 
@@ -92,7 +105,7 @@ For the transformation the canonical Url of the StructureMaps has to be used.
 
 To support CDA to FHIR mapping (or vice versa) a specific CDAEngine is available, which is configured with [CDA Logical Model](https://ahdis.github.io/matchbox/cda-logical-model/index.html). To do CDA to FHIR transformations you need to write the mapping logic and provide them as StructureMap resources. E.g. for the Swiss medication project the following maps have been developed: [http://fhir.ch/ig/cda-fhir-maps/index.html](http://fhir.ch/ig/cda-fhir-maps/index.html)
 
-You can the load the engine with those maps:
+You can then load the engine with those maps:
 
 ```java
 engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngine();
