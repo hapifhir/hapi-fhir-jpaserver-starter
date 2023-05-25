@@ -35,6 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Clob;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -572,6 +573,14 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 	@Scheduled(cron = "0 0 23 * * *")
 	public void removeAsyncTableCache() {
 		datasource.clearAsyncTable();
+		List<String> orgIdsForCaching = appProperties.getOrganization_ids_for_caching();
+		List<String> envsForCaching = appProperties.getEnvs_for_caching();
+		for(String orgId : orgIdsForCaching) {
+			for (String envs : envsForCaching) {
+				Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(orgId);
+				cacheDashboardData(idsAndOrgIdToChildrenMapPair.first, String.valueOf(LocalDate.now().minusDays(31)), String.valueOf(LocalDate.now().minusDays(1)), envs);
+			}
+		}
 	}
 
 	public Bundle getEncountersBelowLocation(String locationId) {

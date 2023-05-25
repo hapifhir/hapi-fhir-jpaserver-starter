@@ -114,6 +114,11 @@ public class AppProperties {
 	private Integer executor_queue_capacity = 100;
 	private String executor_thread_name_prefix = "AsyncThread-";
 	private String dev_user_role = "dev";
+
+	private List<String> organization_ids_for_caching = null;
+
+	private List<String> envs_for_caching = null;
+
 	public void setDev_user_role(String dev_user_role){
 		this.dev_user_role = dev_user_role;
 	}
@@ -127,6 +132,21 @@ public class AppProperties {
 		return api_request_max_time;
 	}
 
+	public List<String> getOrganization_ids_for_caching() {
+		return organization_ids_for_caching;
+	}
+
+	public List<String> getEnvs_for_caching() {
+		return envs_for_caching;
+	}
+
+	public void setEnvs_for_caching(List<String> envs_for_caching) {
+		this.envs_for_caching = envs_for_caching;
+	}
+
+	public void setOrganization_ids_for_caching(List<String> organization_ids_for_caching) {
+		this.organization_ids_for_caching = organization_ids_for_caching;
+	}
 	public Integer getExecutor_core_pool_size() {
 		return executor_core_pool_size;
 	}

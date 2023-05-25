@@ -77,6 +77,12 @@ hapi:
       analytics_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\analytics_config.json
       pk_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\android.txt
       dashboard_public_key_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\android.txt
+      organization_ids_for_caching:
+        - "c91ee7cd-f994-4771-8863-3713e6e52e98"
+        - "b759ff8c-e659-4adf-adc3-8bdc17733b14"
+      envs_for_caching:
+        - "impact-health-v1"
+        - "impact-health-v2"
       dev_user_role: dev
       executor_core_pool_size: 4
       executor_max_pool_size: 6
