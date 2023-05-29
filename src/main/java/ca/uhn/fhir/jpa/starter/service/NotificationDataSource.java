@@ -317,6 +317,42 @@ public class NotificationDataSource {
 		return (Double) resultList.get(0);
 	}
 
+	public Double getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgId(Date from, Date to, String indicator,
+																							 List<String> orgIds) {
+		Session session = sf.openSession();
+		Query query = session.createQuery(
+			"SELECT AVG(value) FROM CacheEntity WHERE value <> 0 AND date BETWEEN :param1 AND :param2 AND indicator=:param3 AND org_id IN (:param4)");
+		query.setParameter("param1", from);
+		query.setParameter("param2", to);
+		query.setParameter("param3", indicator);
+		query.setParameterList("param4", orgIds);
+		List resultList = query.getResultList();
+		session.close();
+		if (resultList.isEmpty() || resultList.get(0) == null) {
+			return 0.0;
+		}
+
+		return (Double) resultList.get(0);
+	}
+
+	public Double getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgId(Date from, Date to, String indicator,
+																												 List<String> orgIds) {
+		Session session = sf.openSession();
+		Query query = session.createQuery(
+			"SELECT AVG(value) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2 AND indicator=:param3 AND org_id IN (:param4)");
+		query.setParameter("param1", from);
+		query.setParameter("param2", to);
+		query.setParameter("param3", indicator);
+		query.setParameterList("param4", orgIds);
+		List resultList = query.getResultList();
+		session.close();
+		if (resultList.isEmpty() || resultList.get(0) == null) {
+			return 0.0;
+		}
+
+		return (Double) resultList.get(0);
+	}
+
 	public List<Double> getCacheValueSumByDateRangeIndicatorsAndMultipleOrgIds(Date from, Date to,
 			List<String> indicators, List<String> orgIds) {
 		Session session = sf.openSession();
@@ -338,6 +374,22 @@ public class NotificationDataSource {
 		Session session = sf.openSession();
 		Query query = session.createQuery(
 				"SELECT SUM(value) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2 AND indicator=:param3 AND org_id=:param4");
+		query.setParameter("param1", from);
+		query.setParameter("param2", to);
+		query.setParameter("param3", indicator);
+		query.setParameter("param4", orgId);
+		List resultList = query.getResultList();
+		session.close();
+		if (resultList.isEmpty() || resultList.get(0) == null) {
+			return 0.0;
+		}
+		return (Double) resultList.get(0);
+	}
+
+	public Double getCacheValueAverageByDateRangeIndicatorAndOrgId(Date from, Date to, String indicator, String orgId) {
+		Session session = sf.openSession();
+		Query query = session.createQuery(
+			"SELECT AVG(value) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2 AND indicator=:param3 AND org_id=:param4");
 		query.setParameter("param1", from);
 		query.setParameter("param2", to);
 		query.setParameter("param3", indicator);

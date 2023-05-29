@@ -820,9 +820,8 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		for (PieChartDefinition pieChartDefinition : pieChartDefinitions) {
 			List<PieChartItem> pieChartItems = new ArrayList<>();
 			for (PieChartCategoryDefinition pieChartItem : pieChartDefinition.getItem()) {
-				String key = pieChartItem.getFhirPath() + String.join(",", fhirSearchList) + pieChartDefinition.getCategoryId();
-				Double cacheValueSum = notificationDataSource
-					.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
+				String key = pieChartItem.getFhirPath().getExpression() + String.join(",", fhirSearchList) + pieChartDefinition.getCategoryId();
+				Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(pieChartItem.getFhirPath().getTransformServer(), start, end,
 						Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
 				pieChartItems.add(new PieChartItem(pieChartItem.getId(), organizationId, pieChartItem.getHeader(), pieChartItem.getName(), String.valueOf(cacheValueSum), pieChartItem.getChartId(), pieChartItem.getColorHex()));
 			}
@@ -843,13 +842,11 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 
 		performCachingIfNotPresent(analyticsItemListFromFile, idsAndOrgIdToChildrenMapPair.first, prevWeek.first, currentWeek.second, new ArrayList<String>());
 		for (IndicatorItem indicator : analyticsItemListFromFile) {
-			Double currentWeekCacheValueSum = notificationDataSource
-				.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(currentWeek.first, currentWeek.second,
-						Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), idsAndOrgIdToChildrenMapPair.first);
+			Double currentWeekCacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(), currentWeek.first, currentWeek.second,
+				Utils.md5Bytes(indicator.getFhirPath().getExpression().getBytes(StandardCharsets.UTF_8)), idsAndOrgIdToChildrenMapPair.first);
 
-			Double prevWeekCacheValueSum = notificationDataSource
-				.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(prevWeek.first, prevWeek.second,
-						Utils.md5Bytes(indicator.getFhirPath().getBytes(StandardCharsets.UTF_8)), idsAndOrgIdToChildrenMapPair.first);
+			Double prevWeekCacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(), prevWeek.first, prevWeek.second,
+						Utils.md5Bytes(indicator.getFhirPath().getExpression().getBytes(StandardCharsets.UTF_8)), idsAndOrgIdToChildrenMapPair.first);
 
 			AnalyticComparison comparisonValue = (currentWeekCacheValueSum > prevWeekCacheValueSum) ? AnalyticComparison.POSITIVE_UP : AnalyticComparison.NEGATIVE_DOWN;
 
@@ -861,7 +858,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 	private void performCachingForTabularData(List<TabularItem> indicators, List<String> facilityIds, Date startDate, Date endDate,List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
 		notificationDataSource = NotificationDataSource.getInstance();
-		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.md5Bytes((indicatorItem.getFhirPath()+filterString).getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
+		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.md5Bytes((indicatorItem.getFhirPath().getExpression()+filterString).getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
 
 		List<Date> dates = new ArrayList<>();
 		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
@@ -913,7 +910,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		List<String> currentIndicatorMd5List = pieChartDefinitions.stream().flatMap(pieChartDefinitionCategory -> {
 			if (pieChartDefinitionCategory != null) {
 				return pieChartDefinitionCategory.getItem().stream().map(pieChartDefinitionItem ->
-					Utils.md5Bytes((pieChartDefinitionItem.getFhirPath() + filterString + pieChartDefinitionCategory.getCategoryId()).getBytes(StandardCharsets.UTF_8))
+					Utils.md5Bytes((pieChartDefinitionItem.getFhirPath().getExpression() + filterString + pieChartDefinitionCategory.getCategoryId()).getBytes(StandardCharsets.UTF_8))
 				);
 			} else {
 				return Stream.empty();
@@ -978,12 +975,24 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		performCachingForTabularData(tabularItemList, idsAndOrgIdToChildrenMapPair.first, start, end,fhirSearchList);
 		for (String orgId : idsAndOrgIdToChildrenMapPair.first) {
 			for (TabularItem indicator : tabularItemList) {
-				String key = indicator.getFhirPath()+String.join(",", fhirSearchList);
-				Double cacheValueSum = notificationDataSource
-					.getCacheValueSumByDateRangeIndicatorAndOrgId(start, end,
+				String key = indicator.getFhirPath().getExpression() +String.join(",", fhirSearchList);
+				Double cacheValue = 0.0;
+				if(indicator.getFhirPath().getTransformServer() == null) {
+					cacheValue = notificationDataSource
+						.getCacheValueSumByDateRangeIndicatorAndOrgId(start, end,
 							Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), orgId);
+				} else {
+					try {
+						cacheValue = (Double) notificationDataSource
+							.getClass()
+							.getMethod(indicator.getFhirPath().getTransformServer(), Date.class, Date.class, String.class, String.class)
+							.invoke(notificationDataSource, start, end, Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), orgId);
+					} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+						logger.warn(ExceptionUtils.getStackTrace(e));
+					}
+				}
 				scoreCardItems.add(new ScoreCardItem(orgId, indicator.getId(),
-					cacheValueSum.toString(), startDate, endDate));
+					cacheValue.toString(), startDate, endDate));
 			}
 		}			
 		return ResponseEntity.ok(scoreCardItems);
@@ -1016,9 +1025,8 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 					mapOfIdToChildren.forEach((id, children) -> {
 						children.add(id);
 						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
-							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
-							Double cacheValueSum = notificationDataSource
-								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
+							String key = indicator.getFhirPath().getExpression() + String.join(",", fhirSearchList);
+							Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(), start, end,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), children);
 							scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(),
 								startDate, endDate));
@@ -1031,9 +1039,8 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates(start, end);
 					for (Pair<Date, Date> pair : quarterDatePairList) {
 						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
-							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
-							Double cacheValueSum = notificationDataSource
-								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+							String key = indicator.getFhirPath().getExpression() + String.join(",", fhirSearchList);
+							Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(), pair.first, pair.second,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
 							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
@@ -1046,9 +1053,8 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 					List<Pair<Date, Date>> weeklyDatePairList = DateUtilityHelper.getWeeklyDates(start, end);
 					for (Pair<Date, Date> pair : weeklyDatePairList) {
 						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
-							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
-							Double cacheValueSum = notificationDataSource
-								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+							String key = indicator.getFhirPath().getExpression() + String.join(",", fhirSearchList);
+							Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(), pair.first, pair.second,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
 							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
@@ -1061,9 +1067,8 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 					List<Pair<Date, Date>> monthlyDatePairList = DateUtilityHelper.getMonthlyDates(start, end);
 					for (Pair<Date, Date> pair : monthlyDatePairList) {
 						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
-							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
-							Double cacheValueSum = notificationDataSource
-								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+							String key = indicator.getFhirPath().getExpression() + String.join(",", fhirSearchList);
+							Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(),pair.first, pair.second,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
 							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
@@ -1076,9 +1081,8 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 					List<Pair<Date, Date>> dailyDatePairList = DateUtilityHelper.getDailyDates(start, end);
 					for (Pair<Date, Date> pair : dailyDatePairList) {
 						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
-							String key = indicator.getFhirPath() + String.join(",", fhirSearchList);
-							Double cacheValueSum = notificationDataSource
-								.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(pair.first, pair.second,
+							String key = indicator.getFhirPath().getExpression() + String.join(",", fhirSearchList);
+							Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(), pair.first, pair.second,
 									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
 							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
 								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
@@ -1113,10 +1117,9 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 		for(BarChartItemDefinition barChartItem : barChart.getBarChartItemDefinitions() ) {
 			ArrayList<BarComponentData> barComponents = new ArrayList<BarComponentData>();
 			for(BarComponent barComponent: barChartItem.getBarComponentList()) {
-				String key = barComponent.getFhirPath()+String.join(",",fhirSearchList);
+				String key = barComponent.getFhirPath().getExpression() + String.join(",",fhirSearchList);
 				String md5 = Utils.getMd5KeyForLineCacheMd5WithCategory(key, barComponent.getBarChartItemId(), barChartItem.getChartId(),barChart.getCategoryId());
-				Double cacheValueSum = notificationDataSource
-					.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end,
+				Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(barComponent.getFhirPath().getTransformServer(), start, end,
 						md5, facilityIds);
 				barComponents.add(new BarComponentData(barComponent.getId(), barComponent.getBarChartItemId(),
 					cacheValueSum.toString()));
@@ -1130,7 +1133,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 	private void performCachingIfNotPresent(List<IndicatorItem> indicators, List<String> facilityIds, Date startDate, Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
 		logger.warn("**** "+filterString);
-		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.md5Bytes((indicatorItem.getFhirPath()+filterString).getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
+		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.md5Bytes((indicatorItem.getFhirPath().getExpression() +filterString).getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
 
 		List<Date> dates = new ArrayList<>();
 		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
@@ -1184,7 +1187,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 		List<String> currentIndicatorMD5List = barCharts.stream().flatMap(barChart ->
 			barChart.getBarChartItemDefinitions().stream().flatMap(barItemDefinition ->
 				barItemDefinition.getBarComponentList().stream().map( barComponent ->
-					Utils.getMd5KeyForLineCacheMd5WithCategory(barComponent.getFhirPath()+filterString, barComponent.getBarChartItemId(), barItemDefinition.getChartId(),barChart.getCategoryId())
+					Utils.getMd5KeyForLineCacheMd5WithCategory(barComponent.getFhirPath().getExpression() +filterString, barComponent.getBarChartItemId(), barItemDefinition.getChartId(),barChart.getCategoryId())
 				)
 			)
 		).collect(Collectors.toList());
@@ -1274,11 +1277,10 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 			ArrayList<LineChartItem> lineChartItems = new ArrayList<LineChartItem>();
 			for (Pair<Date, Date> weekDayPair : datePairList) {
 				for(LineChartItemDefinition lineChartDefinition : lineChart.getLineChartItemDefinitions()) {
-					String key =lineChartDefinition.getFhirPath()+String.join(",",fhirSearchList);
-					Double cacheValueSum = notificationDataSource
-							.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(weekDayPair.first, weekDayPair.second,
-								Utils.getMd5KeyForLineCacheMd5WithCategory(key,lineChartDefinition.getId(),lineChart.getId(),lineChart.getCategoryId()), facilityIds);
-					lineChartItems.add(new LineChartItem(lineChartDefinition.getId(),String.valueOf(cacheValueSum), weekDayPair.first.toString(), weekDayPair.second.toString()));
+					String key =lineChartDefinition.getFhirPath().getExpression() +String.join(",",fhirSearchList);
+					Double cacheValue = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(lineChartDefinition.getFhirPath().getTransformServer(),weekDayPair.first, weekDayPair.second,
+						Utils.getMd5KeyForLineCacheMd5WithCategory(key, lineChartDefinition.getId(), lineChart.getId(), lineChart.getCategoryId()), facilityIds);
+					lineChartItems.add(new LineChartItem(lineChartDefinition.getId(),String.valueOf(cacheValue), weekDayPair.first.toString(), weekDayPair.second.toString()));
 				}
 			}
 			lineChartItemCollections.add(new LineChartItemCollection(lineChart.getId(),lineChart.getCategoryId(), lineChartItems));
@@ -1286,11 +1288,29 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 		return ResponseEntity.ok(lineChartItemCollections);
 	}
 
+	private Double getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(String transform, Date start, Date end, String indicator, List<String> orgIds) {
+		notificationDataSource = NotificationDataSource.getInstance();
+		if (transform == null) {
+			return notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end, indicator, orgIds);
+		}
+		else {
+			try {
+				return (Double) notificationDataSource
+					.getClass()
+					.getMethod(transform, Date.class, Date.class, String.class, List.class)
+					.invoke(notificationDataSource, start, end, indicator, orgIds);
+			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+				logger.warn(ExceptionUtils.getStackTrace(e));
+				return 0.0;
+			}
+		}
+	}
+
 	private void performCachingForLineChartIfNotPresent(List<LineChart> lineCharts, List<String> facilityIds, Date startDate, Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
 		List<String> currentIndicatorMD5List = lineCharts.stream().flatMap(lineChart ->
 				lineChart.getLineChartItemDefinitions().stream().map(lineDefinition->
-						Utils.getMd5KeyForLineCacheMd5WithCategory(lineDefinition.getFhirPath()+filterString, lineDefinition.getId(), lineChart.getId(),lineChart.getCategoryId())
+						Utils.getMd5KeyForLineCacheMd5WithCategory(lineDefinition.getFhirPath().getExpression() +filterString, lineDefinition.getId(), lineChart.getId(),lineChart.getCategoryId())
 					)
 				).collect(Collectors.toList());
 
