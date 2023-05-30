@@ -571,8 +571,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 
 	//@Scheduled(fixedDelay = 300000)
 	@Scheduled(cron = "0 0 23 * * *")
-	public void removeAsyncTableCache() {
-		datasource.clearAsyncTable();
+	public void refreshSyncForCurrentMonth() {
 		List<String> orgIdsForCaching = appProperties.getOrganization_ids_for_caching();
 		List<String> envsForCaching = appProperties.getEnvs_for_caching();
 		for(String orgId : orgIdsForCaching) {
@@ -1361,8 +1360,10 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 
 	public void cacheDashboardData(List<String> facilities, String start, String end, String env) {
 		List<ScoreCardIndicatorItem> scoreCardIndicatorItemsList = getIndicatorItemListFromFile(env);
+		List<IndicatorItem> analyticsItemListFromFile = getAnalyticsItemListFromFile(env);
 		List<IndicatorItem> indicators = new ArrayList<>();
 		scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
+		indicators.addAll(analyticsItemListFromFile);
 		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
 		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
