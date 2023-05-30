@@ -58,6 +58,8 @@ hapi:
     openapi_enabled: true
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
+    ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
+    ### Flag is false by default, can be passed as command line argument to override.
     cr_enabled: "${CR_ENABLED: false}"
     ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
     ### to determine the FHIR server address
