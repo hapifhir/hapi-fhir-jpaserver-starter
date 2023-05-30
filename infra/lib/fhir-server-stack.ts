@@ -5,6 +5,7 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { InstanceType } from "aws-cdk-lib/aws-ec2";
 import * as ecr_assets from "aws-cdk-lib/aws-ecr-assets";
 import * as ecs from "aws-cdk-lib/aws-ecs";
+import { FargateService } from "aws-cdk-lib/aws-ecs";
 import * as ecs_patterns from "aws-cdk-lib/aws-ecs-patterns";
 import * as rds from "aws-cdk-lib/aws-rds";
 import { Credentials } from "aws-cdk-lib/aws-rds";
@@ -29,6 +30,8 @@ export function settings() {
     taskCountMax: prod ? 10 : 5,
     minDBCap: prod ? 4 : 1,
     maxDBCap: prod ? 32 : 8,
+    // The load balancer idle timeout, in seconds. Can be between 1 and 4000 seconds
+    maxExecutionTimeout: Duration.minutes(15),
   };
 }
 
@@ -78,7 +81,7 @@ export class FHIRServerStack extends Stack {
     //-------------------------------------------
     new CfnOutput(this, "FargateServiceARN", {
       description: "Fargate Service ARN",
-      value: fargateService.service.serviceArn,
+      value: fargateService.serviceArn,
     });
     new CfnOutput(this, "DBClusterID", {
       description: "DB Cluster ID",
@@ -154,8 +157,14 @@ export class FHIRServerStack extends Stack {
     dbCluster: rds.IDatabaseCluster,
     dbCreds: { username: string; password: secret.Secret },
     alarmAction?: SnsAction
-  ): ecs_patterns.NetworkLoadBalancedFargateService {
-    const { taskCountMin, taskCountMax, cpu, memoryLimitMiB } = settings();
+  ): FargateService {
+    const {
+      taskCountMin,
+      taskCountMax,
+      cpu,
+      memoryLimitMiB,
+      maxExecutionTimeout,
+    } = settings();
 
     // Create a new Amazon Elastic Container Service (ECS) cluster
     const cluster = new ecs.Cluster(this, "FHIRServerCluster", {
@@ -175,35 +184,37 @@ export class FHIRServerStack extends Stack {
     const dbUrl = `jdbc:postgresql://${dbAddress}:${dbPort}/${dbName}`;
 
     // Run some servers on fargate containers
-    const fargateService = new ecs_patterns.NetworkLoadBalancedFargateService(
-      this,
-      "FHIRServerFargateService",
-      {
-        cluster: cluster,
-        cpu,
-        memoryLimitMiB,
-        desiredCount: taskCountMin,
-        taskImageOptions: {
-          image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
-          containerPort: 8080,
-          containerName: "FHIR-Server",
-          secrets: {
-            DB_PASSWORD: ecs.Secret.fromSecretsManager(dbCreds.password),
+    const fargateService =
+      new ecs_patterns.ApplicationLoadBalancedFargateService(
+        this,
+        "FHIRServerFargateService",
+        {
+          cluster: cluster,
+          cpu,
+          memoryLimitMiB,
+          desiredCount: taskCountMin,
+          taskImageOptions: {
+            image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
+            containerPort: 8080,
+            containerName: "FHIR-Server",
+            secrets: {
+              DB_PASSWORD: ecs.Secret.fromSecretsManager(dbCreds.password),
+            },
+            environment: {
+              SPRING_PROFILES_ACTIVE: props.config.environmentType,
+              DB_URL: dbUrl,
+              DB_USERNAME: dbCreds.username,
+            },
           },
-          environment: {
-            SPRING_PROFILES_ACTIVE: props.config.environmentType,
-            DB_URL: dbUrl,
-            DB_USERNAME: dbCreds.username,
+          healthCheckGracePeriod: Duration.seconds(60),
+          publicLoadBalancer: false,
+          idleTimeout: maxExecutionTimeout,
+          runtimePlatform: {
+            cpuArchitecture: ecs.CpuArchitecture.ARM64,
+            operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
           },
-        },
-        healthCheckGracePeriod: Duration.seconds(60),
-        publicLoadBalancer: false,
-        runtimePlatform: {
-          cpuArchitecture: ecs.CpuArchitecture.ARM64,
-          operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
-        },
-      }
-    );
+        }
+      );
 
     // This speeds up deployments so the tasks are swapped quicker.
     // See for details: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html#deregistration-delay
@@ -278,7 +289,7 @@ export class FHIRServerStack extends Stack {
       ),
     });
 
-    return fargateService;
+    return fargateService.service;
   }
 
   // TODO REVIEW THESE THRESHOLDS
