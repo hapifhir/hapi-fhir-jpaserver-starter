@@ -24,6 +24,8 @@
         <java.version>11</java.version>
         <logback-classic.version>1.2.11</logback-classic.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
+        <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
+        <jackson.version>2.14.1</jackson.version>
     </properties>
 
     <prerequisites>
@@ -64,6 +66,18 @@
         <dependency>
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
+        </dependency>
+        
+        <!-- Required for Json Logging -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- Needed for Email subscriptions -->
