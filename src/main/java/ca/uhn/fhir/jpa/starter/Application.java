@@ -27,6 +27,8 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
 @ServletComponentScan(basePackageClasses = {RestfulServer.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class, ThymeleafAutoConfiguration.class})
@@ -68,6 +70,25 @@ public class Application extends SpringBootServletInitializer {
     servletRegistrationBean.setLoadOnStartup(1);
 
     return servletRegistrationBean;
+  }
+
+  @Bean
+  public ServletRegistrationBean overlayRegistrationBean() {
+
+    AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
+   //  annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
+
+    DispatcherServlet dispatcherServlet = new DispatcherServlet(
+      annotationConfigWebApplicationContext);
+    dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
+   //  dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
+
+    ServletRegistrationBean registrationBean = new ServletRegistrationBean();
+    registrationBean.setServlet(dispatcherServlet);
+   //  registrationBean.addUrlMappings("/*");
+    registrationBean.setLoadOnStartup(1);
+    return registrationBean;
+
   }
 
   @Bean
