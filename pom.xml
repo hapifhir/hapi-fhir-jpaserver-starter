@@ -436,12 +436,12 @@
                         </manifestEntries>
                     </archive>
                     <attachClasses>true</attachClasses>
-                    <overlays>
+                    <!-- <overlays>
                         <overlay>
                             <groupId>ca.uhn.hapi.fhir</groupId>
                             <artifactId>hapi-fhir-testpage-overlay</artifactId>
                         </overlay>
-                    </overlays>
+                    </overlays> -->
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>

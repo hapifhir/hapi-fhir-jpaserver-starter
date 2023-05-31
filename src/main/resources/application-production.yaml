@@ -167,18 +167,17 @@ hapi:
     #    max_page_size: 200
     #    retain_cached_searches_mins: 60
     #    reuse_cached_search_results_millis: 60000
-    # CONSIDER REMOVING THIS - NEED TO REPLACE BY A SUCCESSFUL HTTP ON / for healthcheck
-    tester:
-      home:
-        name: Local Tester
-        server_address: 'http://localhost:8080/fhir'
-        refuse_to_fetch_third_party_urls: false
-        fhir_version: R4
-      global:
-        name: Global Tester
-        server_address: "http://hapi.fhir.org/baseR4"
-        refuse_to_fetch_third_party_urls: false
-        fhir_version: R4
+    # tester:
+    #   home:
+    #     name: Local Tester
+    #     server_address: 'http://localhost:8080/fhir'
+    #     refuse_to_fetch_third_party_urls: false
+    #     fhir_version: R4
+    #   global:
+    #     name: Global Tester
+    #     server_address: "http://hapi.fhir.org/baseR4"
+    #     refuse_to_fetch_third_party_urls: false
+    #     fhir_version: R4
     #    validation:
     #      requests_enabled: true
     #      responses_enabled: true
@@ -200,7 +199,7 @@ hapi:
 #        quitWait:
 #    lastn_enabled: true
 #    store_resource_in_lucene_index_enabled: true
-###  This is configuration for normalized quantity serach level default is 0
+###  This is configuration for normalized quantity search level default is 0
 ###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
 ###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
 ###   2: NORMALIZED_QUANTITY_SEARCH_SUPPORTED
