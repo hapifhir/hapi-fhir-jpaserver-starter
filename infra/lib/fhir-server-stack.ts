@@ -32,6 +32,7 @@ export function settings() {
     maxDBCap: prod ? 32 : 8,
     // The load balancer idle timeout, in seconds. Can be between 1 and 4000 seconds
     maxExecutionTimeout: Duration.minutes(15),
+    listenToPort: 8080,
   };
 }
 
@@ -164,6 +165,7 @@ export class FHIRServerStack extends Stack {
       cpu,
       memoryLimitMiB,
       maxExecutionTimeout,
+      listenToPort,
     } = settings();
 
     // Create a new Amazon Elastic Container Service (ECS) cluster
@@ -195,7 +197,7 @@ export class FHIRServerStack extends Stack {
           desiredCount: taskCountMin,
           taskImageOptions: {
             image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
-            containerPort: 8080,
+            containerPort: listenToPort,
             containerName: "FHIR-Server",
             secrets: {
               DB_PASSWORD: ecs.Secret.fromSecretsManager(dbCreds.password),
@@ -209,6 +211,7 @@ export class FHIRServerStack extends Stack {
           healthCheckGracePeriod: Duration.seconds(60),
           publicLoadBalancer: false,
           idleTimeout: maxExecutionTimeout,
+          listenerPort: listenToPort,
           runtimePlatform: {
             cpuArchitecture: ecs.CpuArchitecture.ARM64,
             operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
