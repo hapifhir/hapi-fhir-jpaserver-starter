@@ -3,13 +3,17 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
-import ca.uhn.fhir.jpa.starter.common.FhirTesterConfig;
 import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
 import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
 import ca.uhn.fhir.rest.server.RestfulServer;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -72,20 +76,36 @@ public class Application extends SpringBootServletInitializer {
   public ServletRegistrationBean overlayRegistrationBean() {
 
     AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
-	 // CONSIDER REMOVING THIS - NEED TO REPLACE BY A SUCCESSFUL HTTP ON / for healthcheck
-    annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
+   //  annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
 
     DispatcherServlet dispatcherServlet = new DispatcherServlet(
       annotationConfigWebApplicationContext);
     dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
-	 // CONSIDER REMOVING THIS - NEED TO REPLACE BY A SUCCESSFUL HTTP ON / for healthcheck
-    dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
+   //  dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
 
     ServletRegistrationBean registrationBean = new ServletRegistrationBean();
     registrationBean.setServlet(dispatcherServlet);
-    registrationBean.addUrlMappings("/*");
+   //  registrationBean.addUrlMappings("/*");
     registrationBean.setLoadOnStartup(1);
     return registrationBean;
 
   }
+
+  @Bean
+  ServletRegistrationBean healthCheckServletRegistration () {
+		ServletRegistrationBean srb = new ServletRegistrationBean();
+		srb.setServlet(new HealthCheck());
+		srb.addUrlMappings("/*");
+		srb.setLoadOnStartup(1);
+		return srb;
+  }
+}
+
+class HealthCheck extends HttpServlet {
+   public void init() throws ServletException {}
+   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+      response.setContentType("application/json");
+      response.getWriter().println("{ \"status\": \"OK\" }");
+   }
+   public void destroy() {}
 }
