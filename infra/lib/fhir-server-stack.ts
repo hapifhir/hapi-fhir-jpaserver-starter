@@ -7,6 +7,7 @@ import * as ecr_assets from "aws-cdk-lib/aws-ecr-assets";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import { FargateService } from "aws-cdk-lib/aws-ecs";
 import * as ecs_patterns from "aws-cdk-lib/aws-ecs-patterns";
+import { Protocol } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as rds from "aws-cdk-lib/aws-rds";
 import { Credentials } from "aws-cdk-lib/aws-rds";
 import * as r53 from "aws-cdk-lib/aws-route53";
@@ -208,10 +209,9 @@ export class FHIRServerStack extends Stack {
               DB_USERNAME: dbCreds.username,
             },
           },
-          healthCheckGracePeriod: Duration.seconds(60),
+          healthCheckGracePeriod: Duration.seconds(120),
           publicLoadBalancer: false,
           idleTimeout: maxExecutionTimeout,
-          listenerPort: listenToPort,
           runtimePlatform: {
             cpuArchitecture: ecs.CpuArchitecture.ARM64,
             operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
@@ -230,7 +230,10 @@ export class FHIRServerStack extends Stack {
     // See for details: https://docs.aws.amazon.com/elasticloadbalancing/latest/network/target-group-health-checks.html
     fargateService.targetGroup.configureHealthCheck({
       healthyThresholdCount: 2,
-      interval: Duration.seconds(10),
+      interval: Duration.seconds(30),
+      path: "/",
+      port: `${listenToPort}`,
+      protocol: Protocol.HTTP,
     });
 
     // CloudWatch Alarms and Notifications
