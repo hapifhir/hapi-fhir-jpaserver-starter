@@ -354,7 +354,7 @@ public class UserAndGroupManagementController {
 
 		}
 
-		List<AnalyticItem> maternalAnalyticsItems = helperService.getMaternalAnalytics(organization.getId(),env);
+		List<AnalyticItem> maternalAnalyticsItems = helperService.getMaternalAnalytics(organization.getIdElement().getIdPart(),env);
 		if (maternalAnalyticsItems == null) {
 			return ResponseEntity.ok("Error: Unable to find analytics file");
 		}
