@@ -7,6 +7,7 @@ import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 
 import com.iprd.fhir.utils.DateUtilityHelper;
 import com.iprd.fhir.utils.FhirUtils;
+import kotlin.Triple;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.*;
 import org.slf4j.Logger;
@@ -39,7 +40,20 @@ public class ResourceMapperService {
 			// per patient loop.
 			Patient tempPatient = (Patient) entry.getResource();
 			String tempPatientId = tempPatient.getIdElement().getIdPart();
-			String oclId = tempPatient.getIdentifier().get(0).getValue();
+
+			// OclId, Version, guid
+			Triple<String, String, String> oclIdentifier = FhirUtils.getOclIdFromIdentifier(tempPatient.getIdentifier());
+			String oclId;
+			/**
+			 * If the temporary patient created using ocl id previously it will contain 12-digit ocl Id.
+			 * Recent patient will have complete ocl url
+			 * If patient contains only 12-digit ocl-id then ocl identifier will be null
+			 * */
+			if (oclIdentifier == null) {
+				oclId = getOclIdFromIdentifier(tempPatient.getIdentifier());
+			} else {
+				oclId = oclIdentifier.getFirst();
+			}
 			//Searching for actual patient with OCL-ID
 			String actualPatientId = getActualPatientId(oclId);
 			Reference patientReference = new Reference("Patient/"+actualPatientId);
@@ -187,7 +201,7 @@ public class ResourceMapperService {
 	/**
 	 *  Updates partOf reference in the encounter if multiple encounters created for a patient on same day.
 	*/
-	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
+//	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
 	public void mapEncounters() {
 		NotificationDataSource notificationDataSource = NotificationDataSource.getInstance();
 		List<EncounterIdEntity> encounterIdEntityList = notificationDataSource.fetchAllFromEncounterIdEntity();
@@ -278,5 +292,14 @@ public class ResourceMapperService {
 			}
 		}
 		return true;
+	}
+
+	private String getOclIdFromIdentifier(List<Identifier> identifierList) {
+		for (Identifier identifier: identifierList) {
+			if (identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/ocl")) {
+				return identifier.getValue();
+			}
+		}
+		return null;
 	}
 }

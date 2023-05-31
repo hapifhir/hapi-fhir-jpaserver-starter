@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -261,6 +262,14 @@ public class ServerInterceptor {
 		Patient oldPatient = (Patient) theOldResource;
 		Patient updatedPatient = (Patient) theResource;
 
+		if (FhirUtils.isOclPatient(oldPatient.getIdentifier()) && !FhirUtils.isOclPatient(updatedPatient.getIdentifier())) {
+			// If the use updates the temporary patient from the mobile, the identifier will be removed. So adding it back
+			Identifier oclPatientIdentifier = new Identifier().setSystem("http://iprdgroup.com/identifiers/patientWithOcl").setValue("patient_with_ocl");
+			updatedPatient.addIdentifier(oclPatientIdentifier);
+			// Returning form this block because for temporary patient no need to keep track of duplicate identifier.
+			return;
+		}
+
 		String patientId = updatedPatient.getIdElement().getIdPart();
 
 		Triple<String, String, String> oldPatientOclId = FhirUtils.getOclIdFromIdentifier(oldPatient.getIdentifier());
@@ -273,7 +282,8 @@ public class ServerInterceptor {
 		String updatedTelecom = updatedPatient.getTelecomFirstRep().getValue();
 
 		if (!Objects.equals(oldPatientOclId, updatedPatientOclId)) {
-			List<PatientIdentifierEntity> patientIdentifierEntityList = notificationDataSource.getPatientIdentifierEntityByPatientIdAndIdentifier(patientId, oldPatientOclId.getFirst());
+			List<PatientIdentifierEntity> patientIdentifierEntityList = (oldPatientOclId == null) ? new ArrayList() : notificationDataSource.getPatientIdentifierEntityByPatientIdAndIdentifier(patientId, oldPatientOclId.getFirst());
+//			List<PatientIdentifierEntity> patientIdentifierEntityList = notificationDataSource.getPatientIdentifierEntityByPatientIdAndIdentifier(patientId, oldPatientOclId.getFirst());
 			PatientIdentifierEntity patientIdentifierEntity = (!patientIdentifierEntityList.isEmpty()) ? patientIdentifierEntityList.get(0) : null;
 
 			if (patientIdentifierEntity != null) {
