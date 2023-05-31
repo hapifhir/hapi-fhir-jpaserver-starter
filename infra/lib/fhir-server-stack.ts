@@ -5,6 +5,7 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { InstanceType } from "aws-cdk-lib/aws-ec2";
 import * as ecr_assets from "aws-cdk-lib/aws-ecr-assets";
 import * as ecs from "aws-cdk-lib/aws-ecs";
+import { FargateService } from "aws-cdk-lib/aws-ecs";
 import * as ecs_patterns from "aws-cdk-lib/aws-ecs-patterns";
 import * as rds from "aws-cdk-lib/aws-rds";
 import { Credentials } from "aws-cdk-lib/aws-rds";
@@ -15,7 +16,24 @@ import * as sns from "aws-cdk-lib/aws-sns";
 import { ITopic } from "aws-cdk-lib/aws-sns";
 import { Construct } from "constructs";
 import { EnvConfig } from "./env-config";
+import { getConfig } from "./shared/config";
+import { vCPU } from "./shared/fargate";
 import { isProd, mbToBytes } from "./util";
+
+export function settings() {
+  const config = getConfig();
+  const prod = isProd(config);
+  return {
+    cpu: prod ? 2 * vCPU : 1 * vCPU,
+    memoryLimitMiB: prod ? 4096 : 2048,
+    taskCountMin: prod ? 2 : 1,
+    taskCountMax: prod ? 10 : 5,
+    minDBCap: prod ? 4 : 1,
+    maxDBCap: prod ? 32 : 8,
+    // The load balancer idle timeout, in seconds. Can be between 1 and 4000 seconds
+    maxExecutionTimeout: Duration.minutes(15),
+  };
+}
 
 interface FHIRServerProps extends StackProps {
   config: EnvConfig;
@@ -63,7 +81,7 @@ export class FHIRServerStack extends Stack {
     //-------------------------------------------
     new CfnOutput(this, "FargateServiceARN", {
       description: "Fargate Service ARN",
-      value: fargateService.service.serviceArn,
+      value: fargateService.serviceArn,
     });
     new CfnOutput(this, "DBClusterID", {
       description: "DB Cluster ID",
@@ -82,6 +100,8 @@ export class FHIRServerStack extends Stack {
     dbCluster: rds.IDatabaseCluster;
     dbCreds: { username: string; password: secret.Secret };
   } {
+    const { minDBCap, maxDBCap } = settings();
+
     // create database credentials
     const dbClusterName = "fhir-server";
     const dbName = props.config.dbName;
@@ -112,8 +132,6 @@ export class FHIRServerStack extends Stack {
       storageEncrypted: true,
     });
 
-    const minDBCap = this.isProd(props) ? 4 : 0.5;
-    const maxDBCap = this.isProd(props) ? 32 : 4;
     Aspects.of(dbCluster).add({
       visit(node) {
         if (node instanceof rds.CfnDBCluster) {
@@ -139,7 +157,15 @@ export class FHIRServerStack extends Stack {
     dbCluster: rds.IDatabaseCluster,
     dbCreds: { username: string; password: secret.Secret },
     alarmAction?: SnsAction
-  ): ecs_patterns.NetworkLoadBalancedFargateService {
+  ): FargateService {
+    const {
+      taskCountMin,
+      taskCountMax,
+      cpu,
+      memoryLimitMiB,
+      maxExecutionTimeout,
+    } = settings();
+
     // Create a new Amazon Elastic Container Service (ECS) cluster
     const cluster = new ecs.Cluster(this, "FHIRServerCluster", {
       vpc: this.vpc,
@@ -158,35 +184,37 @@ export class FHIRServerStack extends Stack {
     const dbUrl = `jdbc:postgresql://${dbAddress}:${dbPort}/${dbName}`;
 
     // Run some servers on fargate containers
-    const fargateService = new ecs_patterns.NetworkLoadBalancedFargateService(
-      this,
-      "FHIRServerFargateService",
-      {
-        cluster: cluster,
-        cpu: this.isProd(props) ? 2048 : 1024,
-        memoryLimitMiB: this.isProd(props) ? 4096 : 2048,
-        desiredCount: this.isProd(props) ? 3 : 1, // TODO review once we go live
-        taskImageOptions: {
-          image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
-          containerPort: 8080,
-          containerName: "FHIR-Server",
-          secrets: {
-            DB_PASSWORD: ecs.Secret.fromSecretsManager(dbCreds.password),
+    const fargateService =
+      new ecs_patterns.ApplicationLoadBalancedFargateService(
+        this,
+        "FHIRServerFargateService",
+        {
+          cluster: cluster,
+          cpu,
+          memoryLimitMiB,
+          desiredCount: taskCountMin,
+          taskImageOptions: {
+            image: ecs.ContainerImage.fromDockerImageAsset(dockerImage),
+            containerPort: 8080,
+            containerName: "FHIR-Server",
+            secrets: {
+              DB_PASSWORD: ecs.Secret.fromSecretsManager(dbCreds.password),
+            },
+            environment: {
+              SPRING_PROFILES_ACTIVE: props.config.environmentType,
+              DB_URL: dbUrl,
+              DB_USERNAME: dbCreds.username,
+            },
           },
-          environment: {
-            SPRING_PROFILES_ACTIVE: props.config.environmentType,
-            DB_URL: dbUrl,
-            DB_USERNAME: dbCreds.username,
+          healthCheckGracePeriod: Duration.seconds(60),
+          publicLoadBalancer: false,
+          idleTimeout: maxExecutionTimeout,
+          runtimePlatform: {
+            cpuArchitecture: ecs.CpuArchitecture.ARM64,
+            operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
           },
-        },
-        healthCheckGracePeriod: Duration.seconds(60),
-        publicLoadBalancer: false,
-        runtimePlatform: {
-          cpuArchitecture: ecs.CpuArchitecture.ARM64,
-          operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
-        },
-      }
-    );
+        }
+      );
 
     // This speeds up deployments so the tasks are swapped quicker.
     // See for details: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html#deregistration-delay
@@ -231,8 +259,8 @@ export class FHIRServerStack extends Stack {
 
     // hookup autoscaling based on 90% thresholds
     const scaling = fargateService.service.autoScaleTaskCount({
-      minCapacity: this.isProd(props) ? 2 : 1,
-      maxCapacity: this.isProd(props) ? 10 : 2,
+      minCapacity: taskCountMin,
+      maxCapacity: taskCountMax,
     });
     scaling.scaleOnCpuUtilization("autoscale_cpu", {
       targetUtilizationPercent: 90,
@@ -261,7 +289,7 @@ export class FHIRServerStack extends Stack {
       ),
     });
 
-    return fargateService;
+    return fargateService.service;
   }
 
   // TODO REVIEW THESE THRESHOLDS

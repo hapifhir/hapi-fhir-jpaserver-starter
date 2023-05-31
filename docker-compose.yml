@@ -13,7 +13,7 @@ services:
       DB_URL: "jdbc:postgresql://fhir-postgres:5432/db"
     restart: on-failure
     ports:
-      - "8888:8080"
+      - "8888:8888"
   fhir-postgres:
     image: postgres:14.4-alpine
     container_name: fhir-postgres
