@@ -283,7 +283,6 @@ public class ServerInterceptor {
 
 		if (!Objects.equals(oldPatientOclId, updatedPatientOclId)) {
 			List<PatientIdentifierEntity> patientIdentifierEntityList = (oldPatientOclId == null) ? new ArrayList() : notificationDataSource.getPatientIdentifierEntityByPatientIdAndIdentifier(patientId, oldPatientOclId.getFirst());
-//			List<PatientIdentifierEntity> patientIdentifierEntityList = notificationDataSource.getPatientIdentifierEntityByPatientIdAndIdentifier(patientId, oldPatientOclId.getFirst());
 			PatientIdentifierEntity patientIdentifierEntity = (!patientIdentifierEntityList.isEmpty()) ? patientIdentifierEntityList.get(0) : null;
 
 			if (patientIdentifierEntity != null) {
