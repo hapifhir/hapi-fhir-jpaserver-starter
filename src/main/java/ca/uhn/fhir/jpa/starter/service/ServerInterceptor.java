@@ -91,9 +91,12 @@ public class ServerInterceptor {
 			Appointment appointment = (Appointment) theResource;
 			String appointmentId = appointment.getIdElement().getIdPart();
 			String patientId = appointment.getParticipant().get(0).getActor().getReferenceElement().getIdPart();
+			Timestamp appointmentScheduledDateTime = DateUtilityHelper.utilDateToTimestamp(appointment.getStart());
 
 			Date currentDate = DateUtilityHelper.getCurrentSqlDate();
-			Timestamp appointmentScheduledDateTime = DateUtilityHelper.utilDateToTimestamp(appointment.getStart());
+			Date previousDate = DateUtilityHelper.getPreviousDay(appointmentScheduledDateTime);
+			Date appointmentDate = DateUtilityHelper.timeStampToDate(appointmentScheduledDateTime);
+			
 			String messageStatus = ComGenerator.MessageStatus.PENDING.name();
 
 			ComGenerator comGen = new ComGenerator(
@@ -108,7 +111,7 @@ public class ServerInterceptor {
 			ComGenerator firstReminder = new ComGenerator(
 					"Appointment",
 					appointmentId,
-					DateUtilityHelper.getPreviousDay(appointmentScheduledDateTime),
+					previousDate,
 					messageStatus,
 					patientId,
 					appointmentScheduledDateTime
@@ -117,15 +120,19 @@ public class ServerInterceptor {
 			ComGenerator secondReminder = new ComGenerator(
 					"Appointment",
 					appointmentId,
-					DateUtilityHelper.timeStampToDate(appointmentScheduledDateTime),
+					appointmentDate,
 					messageStatus,
 					patientId,
 					appointmentScheduledDateTime
 				);
 
 			notificationDataSource.insert(comGen);
-			notificationDataSource.insert(firstReminder);
-			notificationDataSource.insert(secondReminder);
+			if(currentDate!=previousDate) {
+				notificationDataSource.insert(firstReminder);	
+			}
+			if(currentDate!=appointmentDate) {
+				notificationDataSource.insert(secondReminder);	
+			}
 		}
 		else if (theResource.fhirType().equals("QuestionnaireResponse")) {
 			processQuestionnaireResponse((QuestionnaireResponse) theResource);
@@ -135,7 +142,7 @@ public class ServerInterceptor {
 	}
 
 	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_UPDATED)
-	   public void update(IBaseResource theOldResource, IBaseResource theResource) throws IOException {
+	public void update(IBaseResource theOldResource, IBaseResource theResource) throws IOException {
 		notificationDataSource = NotificationDataSource.getInstance();
 		if(theResource.fhirType().equals("Media")) {
 			processMedia((Media) theResource);
@@ -187,7 +194,7 @@ public class ServerInterceptor {
 			if (md5Hash == null) {
 				return;
 			}
-			File image = new File(imagePath+"//"+md5Hash+".jpeg");
+			File image = new File(imagePath,md5Hash+".jpeg");
 			FileUtils.writeByteArrayToFile(image, base64);
 			String imagePath = image.getAbsolutePath();
 			long imageSize = Files.size(Paths.get(imagePath));
