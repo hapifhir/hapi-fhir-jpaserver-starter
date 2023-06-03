@@ -11,6 +11,10 @@ jobs:
   release:
     runs-on: ubuntu-22.04
     steps:
+      - name: Add workspace as safe directory
+        run: |
+          git config --global --add safe.directory /__w/hapi-fhir-jpaserver-starter/hapi-fhir-jpaserver-starter
+
       - name: Checkout
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:

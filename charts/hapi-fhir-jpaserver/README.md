@@ -15,7 +15,7 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | postgresql | 12.5.6 |
+| oci://registry-1.docker.io/bitnamicharts | postgresql | 12.5.6 |
 
 ## Values
 
