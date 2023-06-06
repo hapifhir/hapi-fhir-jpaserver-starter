@@ -267,7 +267,7 @@ public class ODSInterceptor extends InterceptorAdapter {
 
 
             // If any parameter starts with a special character and it's NOT _count, _limit, _total, or _format
-            String[] allowedParameters = new String[] { "_id", "_lastUpdated", "_summary", "_count", "_limit", "_total", "_format", "_sort" };
+            String[] allowedParameters = new String[] { "_id", "_lastUpdated", "_summary", "_count", "_limit", "_total", "_format", "_sort", "_getpages", "_getpagesoffset", "_pretty", "_bundletype" };
             if (theRequestDetails.getParameters()!=null) {
                 for (Map.Entry<String,String[]> entry : theRequestDetails.getParameters().entrySet()) {
                     String key = entry.getKey();
