@@ -9,6 +9,7 @@ spring:
   main:
     allow-circular-references: true
     #allow-bean-definition-overriding: true
+    banner-mode: "log"
   batch.job.enabled: false
   flyway:
     enabled: false
