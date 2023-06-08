@@ -69,6 +69,8 @@ public class AppProperties {
   private String authorization_token_write_perm= "";
   private String authorization_token_read_perm= "";
   private Boolean ods_interceptor_enabled = false;
+  private Boolean database_paging_provider_enabled = true;
+  private Boolean always_use_offset_searches = false;
 
   private Validation validation = new Validation();
   private Map<String, Tester> tester = null;
@@ -602,6 +604,23 @@ public class AppProperties {
 
   public void setOds_interceptor_enabled(Boolean ods_interceptor_enabled) {
     this.ods_interceptor_enabled = ods_interceptor_enabled;
+  }
+
+  public Boolean getDatabase_paging_provider_enabled() {
+    return database_paging_provider_enabled;
+  }
+
+  public void setDatabase_paging_provider_enabled(Boolean database_paging_provider_enabled) {
+    this.database_paging_provider_enabled = database_paging_provider_enabled;
+  }
+
+
+  public Boolean getAlways_use_offset_searches() {
+    return always_use_offset_searches;
+  }
+
+  public void setAlways_use_offset_searches(Boolean always_use_offset_searches) {
+    this.always_use_offset_searches = always_use_offset_searches;
   }
 
 

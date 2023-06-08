@@ -29,6 +29,7 @@ import ca.uhn.fhir.jpa.dao.search.IHSearchSortHelper;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
 import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
+import ca.uhn.fhir.jpa.interceptor.ForceOffsetSearchModeInterceptor;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
@@ -298,7 +299,22 @@ public class StarterJpaConfig {
 		 * but makes the server much more scalable.
 		 */
 
-		fhirServer.setPagingProvider(databaseBackedPagingProvider);
+		if (appProperties.getDatabase_paging_provider_enabled()) {
+			ourLog.info("Using DatabaseBackedPagingProvider");
+			fhirServer.setPagingProvider(databaseBackedPagingProvider);
+		} else {
+			ourLog.info("Using FifoMemoryPagingProvider");
+			FifoMemoryPagingProvider memoryPagingProvider = new FifoMemoryPagingProvider(appProperties.getDefault_page_size());
+			fhirServer.setPagingProvider(memoryPagingProvider);
+		}
+		
+
+		// If want to use offsets all the time
+		if (appProperties.getAlways_use_offset_searches()) {
+			ourLog.info("Forcing use of offset searches");
+			fhirServer.registerInterceptor(new ForceOffsetSearchModeInterceptor());
+		}
+		
 
 		/*
 		 * This interceptor formats the output using nice colourful

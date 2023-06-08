@@ -30,6 +30,7 @@ import org.hl7.fhir.dstu3.model.OperationOutcome;
 import org.hl7.fhir.dstu3.model.OperationOutcome.IssueSeverity;
 import org.hl7.fhir.dstu3.model.OperationOutcome.IssueType;
 import org.hl7.fhir.dstu3.utils.formats.Turtle.StringType;
+import org.hl7.fhir.dstu3.model.UriType;
 
 import ca.uhn.fhir.interceptor.api.Hook;
 import ca.uhn.fhir.interceptor.api.Interceptor;
@@ -72,82 +73,153 @@ public class ODSInterceptor extends InterceptorAdapter {
 
                 String selfLink = "";
                 String nextLink = "";
+                //URL parsedUrl = null;
+                URL parsedNextLink = null;
+                URL parsedSelfLink = null;
                 if (bundle.hasLink()) {
                     for(var link : bundle.getLink()) {
+
                         if (link.getRelation().equals("self")) {
                             selfLink = link.getUrl();
+                            
+                            try {
+                                parsedSelfLink = new URL(selfLink);
+                            } catch (MalformedURLException e) {
+                                logger.error("Error trying to parse self URL " + selfLink +  ": " + e.getMessage() + " " + e.getStackTrace().toString());
+                            }
                             logger.debug("Existing selfLink is " + selfLink);
                             continue;
                         }
                         if (link.getRelation().equals("next")) {
                             nextLink = link.getUrl();
+                            try {
+                                parsedNextLink = new URL(nextLink);
+                            } catch (MalformedURLException e) {
+                                logger.error("Error trying to parse next URL " + nextLink +  ": " + e.getMessage() + " " + e.getStackTrace().toString());
+                            }
+
                             logger.debug("Existing nextLink is " + nextLink);
                             continue;
                         }
                     }
                 }
 
-                // Next Link will look something like this https://hapi-server-stu3.ods-stu3.poc.dc4h.link/STU3?_getpages=8dce47ef-b99b-44b6-96a4-c5d74eb0c3b8&_getpagesoffset=20&_count=20&_pretty=true&_bundletype=searchset
+                // Next Link will look something like this if in Database Mode https://hapi-server-stu3.ods-stu3.poc.dc4h.link/STU3?_getpages=8dce47ef-b99b-44b6-96a4-c5d74eb0c3b8&_getpagesoffset=20&_count=20&_pretty=true&_bundletype=searchset
+                // Next Link will look something like this if in Offser Mode   https://hapi-server-stu3.ods-stu3.perf.dc4h.link/STU3/Organization?_count=20&_offset=20&_total=accurate&name=LEEDS
+                
                 // If on the last page, the self link will contain _getpages
                 // Split the URL into parameters
+
                 Map<String, String> parameters = null;
+
                 URL parsedUrl = null;
-                try {
+                // If the "next" link contains the variable _getpages then we know it's using the DatabaseBackedCacheProvider, else it's in forced offset mode
+                if ((parsedNextLink!=null && parsedNextLink.getQuery().contains("_getpages")) || (parsedSelfLink!=null && parsedSelfLink.getQuery().contains("_getpages"))) {
 
-                    if (nextLink!=null && !nextLink.equals("") && nextLink.contains("_getpages")) {
-                        parsedUrl = new URL(nextLink);
-                    } else if (selfLink!=null && !selfLink.equals("") && selfLink.contains("_getpages")) {
-                        parsedUrl = new URL(selfLink);
-                    } 
-                    if (parsedUrl!=null) {
-                        parameters = splitQuery(parsedUrl);
-                    }
+                    logger.debug("DatabaseBacked mode being used so adding first/last links ");
                     
-                } catch (UnsupportedEncodingException e) {
-                    logger.error("UnsupportedEncodingException trying to parse the `next` link from the Bundle: " + nextLink , e);
-                } catch (MalformedURLException e) {
-                    logger.error("MalformedURLException trying to parse the `next` link from the Bundle: " + nextLink , e);
-                }
+                    String resultsKey = "";
+                    try {
+                        if (parsedNextLink!=null && parsedNextLink.getQuery().contains("_getpages")) {
+                            parameters = splitQuery(parsedNextLink);
+                            resultsKey = parameters.get("_getpages");
+                            parsedUrl = parsedNextLink;
+                        } else if (parsedSelfLink!=null && parsedSelfLink.getQuery().contains("_getpages")) {
+                            parameters = splitQuery(parsedSelfLink);
+                            resultsKey = parameters.get("_getpages");
+                            parsedUrl = parsedSelfLink;
+                        }
+                    } catch (UnsupportedEncodingException e) {
+                        logger.error("Error trying to parse next/self URLs: " + e.getMessage() + " " + e.getStackTrace().toString());
+                    }
+                     
+                    if (parameters!=null) {
 
-                if (parameters!=null) {
-
-                    String resultsKey = parameters.get("_getpages");
-                    logger.debug("`resultsKey` is " + resultsKey);
-                    String countString = parameters.get("_count");
-                    logger.debug("`_count` is '" + countString + "`");
-                    if (!countString.equals("")) {
-
-                        int count = Integer.parseInt(countString);
-                        //int getpagesoffset = Integer.getInteger(parameters.get("_getpagesoffset"));
-                        String pretty = parameters.get("_pretty");
-                        String bundletype = parameters.get("_bundletype");
+                        String countString = parameters.get("_count");
+                        logger.debug("`_count` is '" + countString + "`");
+                        
+                        if (!countString.equals("")) {
     
-                        int firstPagesOffset = 0;
+                            int count = Integer.parseInt(countString);
+                            //int getpagesoffset = Integer.getInteger(parameters.get("_getpagesoffset"));
+                            String pretty = parameters.get("_pretty");
+                            String bundletype = parameters.get("_bundletype");
+        
+                            int firstPagesOffset = 0;
+        
+                            // Work out the "first" page
+                            String firstLink = String.format("%s://%s%s?_getpages=%s&_getpagesoffset=%s&_count=%s&_pretty=%s&_bundletype=%s", parsedUrl.getProtocol(), parsedUrl.getAuthority(), parsedUrl.getPath(), resultsKey, firstPagesOffset, count, pretty, bundletype);
+                            logger.debug("firstLink  " + firstLink);
+                            int lastPageOffset = (((int)Math.floor(total / count)) * count);
+        
+                            String lastLink = String.format("%s://%s%s?_getpages=%s&_getpagesoffset=%s&_count=%s&_pretty=%s&_bundletype=%s", parsedUrl.getProtocol(), parsedUrl.getAuthority(), parsedUrl.getPath(), resultsKey, lastPageOffset, count, pretty, bundletype);
+                            logger.debug("lastLink  " + lastLink);
+        
+                            List<BundleLinkComponent> newLinkList = new ArrayList<BundleLinkComponent>();
+                            newLinkList.add(0, new BundleLinkComponent(new org.hl7.fhir.dstu3.model.StringType("self"), new org.hl7.fhir.dstu3.model.UriType(selfLink)));
+                            newLinkList.add(1, new BundleLinkComponent(new org.hl7.fhir.dstu3.model.StringType("first"), new org.hl7.fhir.dstu3.model.UriType(firstLink)));
+                            newLinkList.add(2, new BundleLinkComponent(new org.hl7.fhir.dstu3.model.StringType("last"), new org.hl7.fhir.dstu3.model.UriType(lastLink)));
+                            newLinkList.add(3, new BundleLinkComponent(new org.hl7.fhir.dstu3.model.StringType("next"), new org.hl7.fhir.dstu3.model.UriType(nextLink)));
+        
+                            bundle.setLink(newLinkList);
+                        } else {
+                            logger.debug("`count` was empty");
+                        }
+                        
     
-                        // Work out the "first" page
-                        String firstLink = String.format("%s://%s%s?_getpages=%s&_getpagesoffset=%s&_count=%s&_pretty=%s&_bundletype=%s", parsedUrl.getProtocol(), parsedUrl.getAuthority(), parsedUrl.getPath(), resultsKey, firstPagesOffset, count, pretty, bundletype);
-                        logger.debug("firstLink  " + firstLink);
-                        int lastPageOffset = (((int)Math.floor(total / count)) * count);
-    
-                        String lastLink = String.format("%s://%s%s?_getpages=%s&_getpagesoffset=%s&_count=%s&_pretty=%s&_bundletype=%s", parsedUrl.getProtocol(), parsedUrl.getAuthority(), parsedUrl.getPath(), resultsKey, lastPageOffset, count, pretty, bundletype);
-                        logger.debug("lastLink  " + lastLink);
-    
-                        List<BundleLinkComponent> newLinkList = new ArrayList<BundleLinkComponent>();
-                        newLinkList.add(0, new BundleLinkComponent(new org.hl7.fhir.dstu3.model.StringType("self"), new org.hl7.fhir.dstu3.model.UriType(selfLink)));
-                        newLinkList.add(1, new BundleLinkComponent(new org.hl7.fhir.dstu3.model.StringType("first"), new org.hl7.fhir.dstu3.model.UriType(firstLink)));
-                        newLinkList.add(2, new BundleLinkComponent(new org.hl7.fhir.dstu3.model.StringType("last"), new org.hl7.fhir.dstu3.model.UriType(lastLink)));
-                        newLinkList.add(3, new BundleLinkComponent(new org.hl7.fhir.dstu3.model.StringType("next"), new org.hl7.fhir.dstu3.model.UriType(nextLink)));
-    
-                        bundle.setLink(newLinkList);
                     } else {
-                        logger.debug("`count` was empty");
+                        logger.debug("No parameters were able to be passed from  " + nextLink);
                     }
-                    
+                } else if ((parsedNextLink!=null && parsedNextLink.getQuery().contains("_offset")) || (parsedSelfLink!=null && parsedSelfLink.getQuery().contains("_offset"))) {
 
-                } else {
-                    logger.debug("No parameters were able to be pased from  " + nextLink);
+                    logger.debug("Forced Offset mode being used so adding first/last links ");
+
+                    if (parsedNextLink!=null && parsedNextLink.getQuery().contains("_offset")) {
+                        try {
+                            parameters = splitQuery(parsedNextLink);
+                            parsedUrl = parsedNextLink;
+                        } catch (UnsupportedEncodingException e) {
+                            logger.error("Error trying to parse next URL: " + e.getMessage() + " " + e.getStackTrace().toString());
+                        }
+                    } else if (parsedSelfLink!=null && parsedSelfLink.getQuery().contains("_offset")) {
+                        try {
+                            parameters = splitQuery(parsedSelfLink);
+                            parsedUrl = parsedSelfLink;
+                        } catch (UnsupportedEncodingException e) {
+                            logger.error("Error trying to parse next URL: " + e.getMessage() + " " + e.getStackTrace().toString());
+                        }
+                    }
+                    if (parameters!=null) {
+
+                        String offsetString = parameters.get("_offset");
+                        logger.debug("`_offset` is " + offsetString);
+
+                        String countString = parameters.get("_count");
+                        logger.debug("`_count` is '" + countString + "`");
+
+                        if (!countString.equals("")) {
+    
+                            int count = Integer.parseInt(countString);
+
+                            // Build a "first" link which is exactly the same as "next" but with no offset
+                            String firstLink = parsedUrl.toString().replaceAll("_offset=\\d+", "_offset=0");
+                            logger.debug("firstLink  " + firstLink);
+                            bundle.getLink().add(new BundleLinkComponent(new org.hl7.fhir.dstu3.model.StringType("first"), new UriType(firstLink)));
+
+                            // Build a "first" link which is exactly the same as "next" but with an offset 
+                            int lastPageOffset = (((int)Math.floor(total / count)) * count);
+                            String lastLink = parsedUrl.toString().replaceAll("_offset=\\d+", "_offset=" + Integer.toString(lastPageOffset));
+                            logger.debug("lastLink  " + lastLink);
+                            bundle.getLink().add(new BundleLinkComponent(new org.hl7.fhir.dstu3.model.StringType("last"), new UriType(lastLink)));
+
+                        }
+
+                    } else {
+                        logger.debug("No parameters were able to be passed from Next link " + nextLink + " or Self link " + selfLink);
+                    }
+
                 }
-                
+
                 var newEntryList = new ArrayList<org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent>();
                 if (bundle.hasEntry()) {
                     for (var entry : bundle.getEntry()) {
