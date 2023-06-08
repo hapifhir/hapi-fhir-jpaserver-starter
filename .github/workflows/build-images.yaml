@@ -19,7 +19,7 @@ jobs:
     name: Build
     runs-on: ubuntu-20.04
     steps:
-      - name: Container meta for default (distroless) image
+      - name: Container meta for default (distroless)image
         id: docker_meta
         uses: docker/metadata-action@v3
         with:
