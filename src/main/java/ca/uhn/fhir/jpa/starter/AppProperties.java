@@ -76,6 +76,8 @@ public class AppProperties {
 
 	private String staticLocation = null;
 
+	private String staticLocationPrefix = "/static";
+
   private Boolean lastn_enabled = false;
   private boolean store_resource_in_lucene_index_enabled = false;
   private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
@@ -89,7 +91,16 @@ public class AppProperties {
   
   private final List<String> custom_interceptor_classes = new ArrayList<>();
 
-  public List<String> getCustomInterceptorClasses() {
+	public String getStaticLocationPrefix() {
+		return staticLocationPrefix;
+	}
+
+	public void setStaticLocationPrefix(String staticLocationPrefix) {
+		this.staticLocationPrefix = staticLocationPrefix;
+	}
+
+
+	public List<String> getCustomInterceptorClasses() {
     return custom_interceptor_classes;
   }
 

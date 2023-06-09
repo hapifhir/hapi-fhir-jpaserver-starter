@@ -64,7 +64,8 @@ hapi:
     ### forces the use of the https:// protocol for the returned server address.
     ### alternatively, it may be set using the X-Forwarded-Proto header.
     #   use_apache_address_strategy_https: false
-    ### enables the server to host content like HTML, css, etc. under the url pattern of /static/**
+    ### enables the server to host content like HTML, css, etc. under the url pattern of eg. /static/**
+    # staticLocationPrefix: /static
     ### the deepest folder level will be used. E.g. - if you put file:/foo/bar/bazz as value then the files are resolved under /static/bazz/**
     #staticLocation: file:/foo/bar/bazz
     ### enable to set the Server URL
