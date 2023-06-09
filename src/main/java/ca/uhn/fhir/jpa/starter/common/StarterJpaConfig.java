@@ -9,6 +9,7 @@ import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
+import ca.uhn.fhir.cr.config.CrProviderLoader;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.jpa.api.IDaoRegistry;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
@@ -113,6 +114,9 @@ public class StarterJpaConfig {
 
 	@Autowired
 	private ConfigurableEnvironment configurableEnvironment;
+
+	@Autowired(required=false)
+	private CrProviderLoader crProviderLoader;
 
 	/**
 	 * Customize the default/max page sizes for search results. You can set these however
