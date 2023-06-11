@@ -86,21 +86,22 @@ public class ExampleServerDstu3IT implements IServerSupport {
 
   // Currently fails with:
   // ca.uhn.fhir.rest.server.exceptions.InternalErrorException: HTTP 500 : Failed to call access method: java.lang.IllegalArgumentException: Could not load library source for libraries referenced in Measure/Measure/measure-EXM104-FHIR3-8.1.000/_history/1.
-  //@Test
+  @Test
   public void testCQLEvaluateMeasureEXM104() throws IOException {
     String measureId = "measure-EXM104-FHIR3-8.1.000";
 
-    int numFilesLoaded = loadDataFromDirectory("dstu3/EXM104/EXM104_FHIR3-8.1.000-files");
+    int numFilesLoaded = loadDataFromDirectory("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json");
     //assertEquals(numFilesLoaded, 3);
     ourLog.info("{} files imported successfully!", numFilesLoaded);
-    //loadBundle("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json", ourCtx, ourClient);
+   // loadBundle("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json", ourCtx, ourClient);
 
     // http://localhost:8080/fhir/Measure/measure-EXM104-FHIR3-8.1.000/$evaluate-measure?periodStart=2019-01-01&periodEnd=2019-12-31
     Parameters inParams = new Parameters();
 //    inParams.addParameter().setName("measure").setValue(new StringType("Measure/measure-EXM104-8.2.000"));
-//    inParams.addParameter().setName("patient").setValue(new StringType("Patient/numer-EXM104-FHIR3"));
-//    inParams.addParameter().setName("periodStart").setValue(new StringType("2019-01-01"));
-//    inParams.addParameter().setName("periodEnd").setValue(new StringType("2019-12-31"));
+    inParams.addParameter().setName("patient").setValue(new StringType("Patient/numer-EXM104-FHIR3"));
+    inParams.addParameter().setName("periodStart").setValue(new StringType("2019-01-01"));
+    inParams.addParameter().setName("periodEnd").setValue(new StringType("2019-12-31"));
+	  inParams.addParameter().setName("reportType").setValue(new StringType("individual"));
 
     Parameters outParams = ourClient
       .operation()

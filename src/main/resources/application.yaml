@@ -60,7 +60,7 @@ hapi:
     fhir_version: R4
     ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
     ### Flag is false by default, can be passed as command line argument to override.
-    cr_enabled: "${CR_ENABLED: false}"
+    cr_enabled: true
     ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
     ### to determine the FHIR server address
     #   use_apache_address_strategy: false
@@ -125,10 +125,9 @@ hapi:
     #    filter_search_enabled: true
     #    graphql_enabled: true
     narrative_enabled: false
-    #    mdm_enabled: true
+    mdm_enabled: false
     #    local_base_urls:
     #      - https://hapi.fhir.org/baseR4
-    mdm_enabled: false
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false

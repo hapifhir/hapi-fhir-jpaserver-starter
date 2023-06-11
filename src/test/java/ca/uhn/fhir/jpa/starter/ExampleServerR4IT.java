@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
@@ -9,6 +10,9 @@ import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
+import org.hl7.fhir.r4.model.MeasureReport;
+import org.hl7.fhir.r4.model.Parameters;
+import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Observation;
@@ -19,16 +23,21 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
 import static java.lang.Thread.sleep;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties = {
 		"spring.datasource.url=jdbc:h2:mem:dbr4",
@@ -36,16 +45,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 		"hapi.fhir.fhir_version=r4",
 		"hapi.fhir.subscription.websocket_enabled=true",
 		"hapi.fhir.mdm_enabled=true",
+		"hapi.fhir.cr_enabled=true",
 		"hapi.fhir.implementationguides.dk-core.name=hl7.fhir.dk.core",
 		"hapi.fhir.implementationguides.dk-core.version=1.1.0",
 		// Override is currently required when using MDM as the construction of the MDM
 		// beans are ambiguous as they are constructed multiple places. This is evident
 		// when running in a spring boot environment
 		"spring.main.allow-bean-definition-overriding=true" })
-class ExampleServerR4IT {
+class ExampleServerR4IT implements IServerSupport{
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
 	private IGenericClient ourClient;
 	private FhirContext ourCtx;
+
+	private ApplicationContext ctx;
 
 	@LocalServerPort
 	private int port;
@@ -85,7 +97,43 @@ class ExampleServerR4IT {
 			return null;
 		}
 	}
+	@Test
+	public void testCQLEvaluateMeasureEXM130() throws IOException {
+		String measureId = "ColorectalCancerScreeningsFHIR";
+		String measureUrl = "http://ecqi.healthit.gov/ecqms/Measure/ColorectalCancerScreeningsFHIR";
 
+		loadBundle("r4/EXM130/EXM130-7.3.000-bundle.json", ourCtx, ourClient);
+
+
+		Parameters inParams = new Parameters();
+		inParams.addParameter().setName("periodStart").setValue(new StringType("2019-01-01"));
+		inParams.addParameter().setName("periodEnd").setValue(new StringType("2019-12-31"));
+		inParams.addParameter().setName("reportType").setValue(new StringType("summary"));
+
+		Parameters outParams = ourClient
+			.operation()
+			.onInstance(new IdDt("Measure", measureId))
+			.named("$evaluate-measure")
+			.withParameters(inParams)
+			.cacheControl(new CacheControlDirective().setNoCache(true))
+			.withAdditionalHeader("Content-Type", "application/json")
+			.useHttpGet()
+			.execute();
+
+		List<Parameters.ParametersParameterComponent> response = outParams.getParameter();
+		assertFalse(response.isEmpty());
+		Parameters.ParametersParameterComponent component = response.get(0);
+		assertTrue(component.getResource() instanceof MeasureReport);
+		MeasureReport report = (MeasureReport) component.getResource();
+		assertEquals(measureUrl, report.getMeasure());
+	}
+
+	private org.hl7.fhir.r4.model.Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
+		String json = stringFromResource(theLocation);
+		org.hl7.fhir.r4.model.Bundle bundle = (org.hl7.fhir.r4.model.Bundle) theCtx.newJsonParser().parseResource(json);
+		org.hl7.fhir.r4.model.Bundle result = theClient.transaction().withBundle(bundle).execute();
+		return result;
+	}
 	@Test
 	public void testBatchPutWithIdenticalTags() {
 		String batchPuts = "{\n" +
@@ -208,7 +256,6 @@ class ExampleServerR4IT {
 		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
 		String ourServerBase = "http://localhost:" + port + "/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-
 		await().atMost(2, TimeUnit.MINUTES).until(() -> {
 			sleep(1000); // execute below function every 1 second
 			return activeSubscriptionCount() == 2; // 2 subscription based on mdm-rules.json
