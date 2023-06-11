@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
   {
      "hapi.fhir.fhir_version=dstu2",
      "spring.datasource.url=jdbc:h2:mem:dbr2",
+	  "hapi.fhir.cr_enabled=false",
   })
 public class ExampleServerDstu2IT {
 

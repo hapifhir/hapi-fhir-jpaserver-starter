@@ -44,6 +44,7 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
 	 "hapi.fhir.store_resource_in_lucene_index_enabled=true",
 	 "hapi.fhir.advanced_lucene_indexing=true",
     "elasticsearch.enabled=true",
+	  "hapi.fhir.cr_enabled=false",
     // Because the port is set randomly, we will set the rest_url using the Initializer.
     // "elasticsearch.rest_url='http://localhost:9200'",
     "elasticsearch.username=SomeUsername",

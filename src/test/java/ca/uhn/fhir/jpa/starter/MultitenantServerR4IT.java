@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     "spring.datasource.url=jdbc:h2:mem:dbr4-mt",
     "hapi.fhir.fhir_version=r4",
     "hapi.fhir.subscription.websocket_enabled=true",
+	  "hapi.fhir.cr_enabled=false",
     "hapi.fhir.partitioning.partitioning_include_in_search_hashes=false",
 
   })

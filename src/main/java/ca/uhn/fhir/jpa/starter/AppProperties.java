@@ -21,7 +21,7 @@ import java.util.Objects;
 @EnableConfigurationProperties
 public class AppProperties {
 
-  private Boolean cr_enabled = true;
+  private Boolean cr_enabled = false;
   private Boolean ips_enabled = false;
   private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;

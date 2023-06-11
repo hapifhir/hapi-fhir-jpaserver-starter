@@ -9,6 +9,7 @@ import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
+import ca.uhn.fhir.cr.config.CrProperties;
 import ca.uhn.fhir.cr.r4.measure.CareGapsOperationProvider;
 import ca.uhn.fhir.cr.r4.measure.SubmitDataProvider;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
@@ -63,7 +64,10 @@ import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import org.cqframework.cql.cql2elm.model.Model;
+import org.hl7.cql.model.ModelIdentifier;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
+import org.opencds.cqf.cql.evaluator.CqlOptions;
 import org.opencds.cqf.cql.evaluator.library.EvaluationSettings;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +80,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.web.cors.CorsConfiguration;
-
+import ca.uhn.fhir.cr.common.IRepositoryFactory;
+import ca.uhn.fhir.cr.repo.HapiFhirRepository;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -240,6 +245,27 @@ public class StarterJpaConfig {
 		return factory.buildUsingStoredStructureDefinitions();
 	}
 
+	@Bean
+	IRepositoryFactory repositoryFactory(DaoRegistry theDaoRegistry) {
+		return rd -> new HapiFhirRepository(theDaoRegistry, rd, (RestfulServer) rd.getServer());
+	}
+	@Bean
+	EvaluationSettings evaluationSettings(CqlOptions theCqlOptions, Map<ModelIdentifier, Model> theGlobalModelCache, Map<org.cqframework.cql.elm.execution.VersionedIdentifier, org.cqframework.cql.elm.execution.Library> theGlobalLibraryCache) {
+		var evaluationSettings = new EvaluationSettings();
+		evaluationSettings.setCqlOptions(theCqlOptions);
+		evaluationSettings.setModelCache(theGlobalModelCache);
+		evaluationSettings.setLibraryCache(theGlobalLibraryCache);
+
+		return evaluationSettings;
+	}
+	@Bean
+	public CqlOptions cqlOptions(CrProperties theCrProperties) {
+		return theCrProperties.getCqlProperties().getCqlOptions();
+	}
+	@Bean
+	public CrProperties crProperties() {
+		return new CrProperties();
+	}
 	@Bean
 	public LoggingInterceptor loggingInterceptor(AppProperties appProperties) {
 
@@ -531,7 +557,7 @@ public class StarterJpaConfig {
 						,theR4QuestionnaireOperationsProvider.get());
 					break;
 				default:
-					throw new ConfigurationException("CR not supported for FHIR version " + fhirSystemDao.getContext().getVersion().getVersion());
+					break;
 			}
 		}
 
