@@ -222,8 +222,8 @@ public class StarterJpaConfig {
 		return r -> new org.opencds.cqf.cql.evaluator.questionnaire.r4.QuestionnaireProcessor(r);
 	}
 	@Bean
-	ca.uhn.fhir.cr.r4.IQuestionnaireProcessorFactory myDstu3QuestionnaireProcessorFactory() {
-		return r -> new org.opencds.cqf.cql.evaluator.questionnaire.r4.QuestionnaireProcessor(r);
+	ca.uhn.fhir.cr.dstu3.IQuestionnaireProcessorFactory myDstu3QuestionnaireProcessorFactory() {
+		return r -> new org.opencds.cqf.cql.evaluator.questionnaire.dstu3.QuestionnaireProcessor(r);
 	}
 	@Bean
 	ca.uhn.fhir.cr.r4.IPlanDefinitionProcessorFactory myR4PlanDefinitionProcessorFactory(EvaluationSettings theEvaluationSettings) {
