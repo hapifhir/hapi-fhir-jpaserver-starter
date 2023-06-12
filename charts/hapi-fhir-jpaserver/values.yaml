@@ -3,22 +3,27 @@ replicaCount: 1
 
 image:
   # -- registry where the HAPI FHIR server image is hosted
-  registry: docker.io
+  #registry: docker.io
+  registry: gravitate-registry.cr.de-fra.ionos.com
   # -- the path inside the repository
-  repository: hapiproject/hapi
-  # -- the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image.
-  tag: "v6.2.2@sha256:9c4e8af94d81ac0049dbb589e4cd855bf78c9c13be6f6844e814c63d63545b44"
+  #repository: hapiproject/hapi
+  repository: hapi-fhir-ips
+  # -- defaults to `Chart.appVersion`. As of v5.7.0, this is the `distroless` flavor
+  #tag: "0.0.7"
+  #tag: "v6.5-tracking"
+  #tag: v6.4.0
+  tag: v6.6.0
   # -- image pullPolicy to use
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 # -- image pull secrets to use when pulling the image
 imagePullSecrets: []
 
 # -- override the chart name
-nameOverride: ""
+nameOverride: "fhir-server-ips"
 
 # -- override the chart fullname
-fullnameOverride: ""
+fullnameOverride: "fhir-server-ips"
 
 # -- annotations applied to the server deployment
 deploymentAnnotations: {}
@@ -132,39 +137,39 @@ postgresql:
         type: RuntimeDefault
 
 readinessProbe:
-  failureThreshold: 5
-  initialDelaySeconds: 30
+  failureThreshold: 10
+  initialDelaySeconds: 300
   periodSeconds: 20
   successThreshold: 1
-  timeoutSeconds: 20
+  timeoutSeconds: 200
 
 startupProbe:
   failureThreshold: 10
-  initialDelaySeconds: 30
+  initialDelaySeconds: 600
   periodSeconds: 30
   successThreshold: 1
-  timeoutSeconds: 30
+  timeoutSeconds: 300
 
 livenessProbe:
-  failureThreshold: 5
-  initialDelaySeconds: 30
+  failureThreshold: 10
+  initialDelaySeconds: 300
   periodSeconds: 20
   successThreshold: 1
-  timeoutSeconds: 30
+  timeoutSeconds: 300
 
 externalDatabase:
   # -- external database host used with `postgresql.enabled=false`
-  host: localhost
+  host: hapi-fhir-jpaserver-ips-postgresql
   # -- database port number
   port: 5432
   # -- username for the external database
-  user: fhir
+  user: postgres
   # -- database password
   password: ""
   # -- name of an existing secret resource containing the DB password in the `existingSecretKey` key
-  existingSecret: ""
+  existingSecret: "hapi-fhir-jpaserver-ips-postgresql"
   # -- name of the key inside the `existingSecret`
-  existingSecretKey: "postgresql-password"
+  existingSecretKey: "postgres-password"
   # -- database name
   database: fhir
 
@@ -188,7 +193,7 @@ metrics:
     # -- if enabled, creates a ServiceMonitor instance for Prometheus Operator-based monitoring
     enabled: false
     # -- additional labels to apply to the ServiceMonitor object, e.g. `release: prometheus`
-    additionalLabels: {}
+    additionalLabels: {release: prometheus}
     # namespace: monitoring
     # interval: 30s
     # scrapeTimeout: 10s
