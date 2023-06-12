@@ -1,9 +1,9 @@
 name: Deploy - Sandbox
 
 on:
-  push: # a commit to the specified branches, if any
-    branches:
-      - develop
+  # push: # a commit to the specified branches, if any
+  #   branches:
+  #     - master
   workflow_dispatch: # manually executed by a user
 
 jobs:
