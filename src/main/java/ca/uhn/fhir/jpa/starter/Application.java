@@ -5,6 +5,8 @@ import ca.uhn.fhir.cr.config.CrR4Config;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import ca.uhn.fhir.jpa.starter.common.FhirTesterConfig;
+import ca.uhn.fhir.jpa.starter.cr.CrProviderConfig;
+import ca.uhn.fhir.jpa.starter.cr.StarterCrDstu3Config;
 import ca.uhn.fhir.jpa.starter.cr.StarterCrR4Config;
 import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
@@ -37,7 +39,10 @@ import org.springframework.web.servlet.DispatcherServlet;
 	WebsocketDispatcherConfig.class,
 	MdmConfig.class,
 	JpaBatch2Config.class,
-	Batch2JobsConfig.class
+	Batch2JobsConfig.class,
+	StarterCrR4Config.class,
+	StarterCrDstu3Config.class,
+	CrProviderConfig.class
 })
 public class Application extends SpringBootServletInitializer {
 

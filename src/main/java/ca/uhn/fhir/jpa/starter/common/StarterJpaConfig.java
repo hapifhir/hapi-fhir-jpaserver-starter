@@ -9,9 +9,6 @@ import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
-import ca.uhn.fhir.cr.config.CrProperties;
-import ca.uhn.fhir.cr.r4.measure.CareGapsOperationProvider;
-import ca.uhn.fhir.cr.r4.measure.SubmitDataProvider;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.jpa.api.IDaoRegistry;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
@@ -45,6 +42,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
+import ca.uhn.fhir.jpa.starter.cr.CrOperationLoader;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
@@ -64,10 +62,7 @@ import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import org.cqframework.cql.cql2elm.model.Model;
-import org.hl7.cql.model.ModelIdentifier;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
-import org.opencds.cqf.cql.evaluator.CqlOptions;
 import org.opencds.cqf.cql.evaluator.library.EvaluationSettings;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,8 +75,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.web.cors.CorsConfiguration;
-import ca.uhn.fhir.cr.common.IRepositoryFactory;
-import ca.uhn.fhir.cr.repo.HapiFhirRepository;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -176,6 +169,12 @@ public class StarterJpaConfig {
 	}
 
 	@Bean
+	@ConditionalOnProperty(prefix = "hapi.fhir", name = ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR, havingValue = "true")
+	public RepositoryValidatingInterceptor repositoryValidatingInterceptor(
+			IRepositoryValidationInterceptorFactory factory) {
+		return factory.buildUsingStoredStructureDefinitions();
+	}
+	@Bean
 	public ca.uhn.fhir.cr.r4.questionnaire.QuestionnaireOperationsProvider myR4QuestionnaireOperationsProvider() {
 		return new ca.uhn.fhir.cr.r4.questionnaire.QuestionnaireOperationsProvider();
 	}
@@ -217,16 +216,16 @@ public class StarterJpaConfig {
 
 	@Bean
 	ca.uhn.fhir.cr.dstu3.IActivityDefinitionProcessorFactory myDstu3ActivityDefinitionProcessorFactory(
-			EvaluationSettings theEvaluationSettings) {
+		EvaluationSettings theEvaluationSettings) {
 		return r -> new org.opencds.cqf.cql.evaluator.activitydefinition.dstu3.ActivityDefinitionProcessor(r,
-				theEvaluationSettings);
+			theEvaluationSettings);
 	}
 
 	@Bean
 	ca.uhn.fhir.cr.r4.IActivityDefinitionProcessorFactory myR4ActivityDefinitionProcessorFactory(
-			EvaluationSettings theEvaluationSettings) {
+		EvaluationSettings theEvaluationSettings) {
 		return r -> new org.opencds.cqf.cql.evaluator.activitydefinition.r4.ActivityDefinitionProcessor(r,
-				theEvaluationSettings);
+			theEvaluationSettings);
 	}
 
 	@Bean
@@ -251,50 +250,16 @@ public class StarterJpaConfig {
 
 	@Bean
 	ca.uhn.fhir.cr.r4.IPlanDefinitionProcessorFactory myR4PlanDefinitionProcessorFactory(
-			EvaluationSettings theEvaluationSettings) {
+		EvaluationSettings theEvaluationSettings) {
 		return r -> new org.opencds.cqf.cql.evaluator.plandefinition.r4.PlanDefinitionProcessor(r, theEvaluationSettings);
 	}
 
 	@Bean
 	ca.uhn.fhir.cr.dstu3.IPlanDefinitionProcessorFactory myDstu3PlanDefinitionProcessorFactory(
-			EvaluationSettings theEvaluationSettings) {
+		EvaluationSettings theEvaluationSettings) {
 		return r -> new org.opencds.cqf.cql.evaluator.plandefinition.dstu3.PlanDefinitionProcessor(r,
-				theEvaluationSettings);
+			theEvaluationSettings);
 	}
-
-	@Bean
-	@ConditionalOnProperty(prefix = "hapi.fhir", name = ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR, havingValue = "true")
-	public RepositoryValidatingInterceptor repositoryValidatingInterceptor(
-			IRepositoryValidationInterceptorFactory factory) {
-		return factory.buildUsingStoredStructureDefinitions();
-	}
-
-	@Bean
-	IRepositoryFactory repositoryFactory(DaoRegistry theDaoRegistry) {
-		return rd -> new HapiFhirRepository(theDaoRegistry, rd, (RestfulServer) rd.getServer());
-	}
-
-	@Bean
-	EvaluationSettings evaluationSettings(CqlOptions theCqlOptions, Map<ModelIdentifier, Model> theGlobalModelCache,
-			Map<org.cqframework.cql.elm.execution.VersionedIdentifier, org.cqframework.cql.elm.execution.Library> theGlobalLibraryCache) {
-		var evaluationSettings = new EvaluationSettings();
-		evaluationSettings.setCqlOptions(theCqlOptions);
-		evaluationSettings.setModelCache(theGlobalModelCache);
-		evaluationSettings.setLibraryCache(theGlobalLibraryCache);
-
-		return evaluationSettings;
-	}
-
-	@Bean
-	public CqlOptions cqlOptions(CrProperties theCrProperties) {
-		return theCrProperties.getCqlProperties().getCqlOptions();
-	}
-
-	@Bean
-	public CrProperties crProperties() {
-		return new CrProperties();
-	}
-
 	@Bean
 	public LoggingInterceptor loggingInterceptor(AppProperties appProperties) {
 
@@ -387,18 +352,7 @@ public class StarterJpaConfig {
 			IPackageInstallerSvc packageInstallerSvc, ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
 			ApplicationContext appContext,
 			Optional<IpsOperationProvider> theIpsOperationProvider,
-			Optional<ca.uhn.fhir.cr.r4.measure.MeasureOperationsProvider> theR4MeasureOperationProvider,
-			Optional<ca.uhn.fhir.cr.dstu3.measure.MeasureOperationsProvider> theDstu3MeasureOperationProvider,
-			Optional<ca.uhn.fhir.cr.dstu3.activitydefinition.ActivityDefinitionOperationsProvider> theDstu3ActivityDefinitionProvider,
-			Optional<ca.uhn.fhir.cr.r4.activitydefinition.ActivityDefinitionOperationsProvider> theR4ActivityDefinitionProvider,
-			Optional<ca.uhn.fhir.cr.r4.plandefinition.PlanDefinitionOperationsProvider> theR4PlanDefinitionOperationProvider,
-			Optional<ca.uhn.fhir.cr.dstu3.plandefinition.PlanDefinitionOperationsProvider> theDstu3PlanDefinitionOperationProvider,
-			Optional<CareGapsOperationProvider> theR4CareGapsOperationProvider,
-			Optional<SubmitDataProvider> theR4SubmitDataProvider,
-			Optional<ca.uhn.fhir.cr.r4.questionnaireresponse.QuestionnaireResponseOperationsProvider> theR4QuestionnaireResponseOperationProvider,
-			Optional<ca.uhn.fhir.cr.dstu3.questionnaireresponse.QuestionnaireResponseOperationsProvider> theDstu3QuestionnaireResponseOperationProvider,
-			Optional<ca.uhn.fhir.cr.r4.questionnaire.QuestionnaireOperationsProvider> theR4QuestionnaireOperationsProvider,
-			Optional<ca.uhn.fhir.cr.dstu3.questionnaire.QuestionnaireOperationsProvider> theDstu3QuestionnaireOperationsProvider) {
+												  Optional<CrOperationLoader> theCrProviderLoader){
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
 
 		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
@@ -418,8 +372,9 @@ public class StarterJpaConfig {
 
 		if (appProperties.getMdm_enabled()) {
 			mdmProviderProvider.get().loadProvider();
-			// theCrProviderLoader.get().loadProvider();
-
+		}
+		if (appProperties.getCr_enabled()){
+			theCrProviderLoader.get().loadProvider();
 		}
 
 		fhirServer.registerProviders(resourceProviderFactory.createProviders());
@@ -583,6 +538,7 @@ public class StarterJpaConfig {
 		if (!theIpsOperationProvider.isEmpty()) {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
 		}
+
 
 		return fhirServer;
 	}
