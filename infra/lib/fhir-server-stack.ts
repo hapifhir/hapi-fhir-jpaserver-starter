@@ -352,7 +352,7 @@ export class FHIRServerStack extends Stack {
       this,
       `${dbClusterName}VolumeReadIOPsAlarm`,
       {
-        threshold: 20000, // IOPs per second
+        threshold: 60_000, // IOPs per second
         evaluationPeriods: 1,
         treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
       }
@@ -365,17 +365,13 @@ export class FHIRServerStack extends Stack {
       this,
       `${dbClusterName}VolumeWriteIOPsAlarm`,
       {
-        threshold: 5000, // IOPs per second
+        threshold: 40_000, // IOPs per second
         evaluationPeriods: 1,
         treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
       }
     );
     alarmAction && writeAlarm.addAlarmAction(alarmAction);
     alarmAction && writeAlarm.addOkAction(alarmAction);
-  }
-
-  private isProd(props: FHIRServerProps): boolean {
-    return isProd(props.config);
   }
 }
 
