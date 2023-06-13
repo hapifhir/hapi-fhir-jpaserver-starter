@@ -63,7 +63,6 @@ import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
-import org.opencds.cqf.cql.evaluator.library.EvaluationSettings;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -174,92 +173,7 @@ public class StarterJpaConfig {
 			IRepositoryValidationInterceptorFactory factory) {
 		return factory.buildUsingStoredStructureDefinitions();
 	}
-	@Bean
-	public ca.uhn.fhir.cr.r4.questionnaire.QuestionnaireOperationsProvider myR4QuestionnaireOperationsProvider() {
-		return new ca.uhn.fhir.cr.r4.questionnaire.QuestionnaireOperationsProvider();
-	}
 
-	@Bean
-	public ca.uhn.fhir.cr.dstu3.questionnaire.QuestionnaireOperationsProvider myDsu3QuestionnaireOperationsProvider() {
-		return new ca.uhn.fhir.cr.dstu3.questionnaire.QuestionnaireOperationsProvider();
-	}
-
-	@Bean
-	public ca.uhn.fhir.cr.r4.plandefinition.PlanDefinitionOperationsProvider r4PlanDefinitionOperationsProvider() {
-		return new ca.uhn.fhir.cr.r4.plandefinition.PlanDefinitionOperationsProvider();
-	}
-
-	@Bean
-	public ca.uhn.fhir.cr.dstu3.plandefinition.PlanDefinitionOperationsProvider myDstu3PlanDefinitionOperationsProvider() {
-		return new ca.uhn.fhir.cr.dstu3.plandefinition.PlanDefinitionOperationsProvider();
-	}
-
-	@Bean
-	public ca.uhn.fhir.cr.dstu3.questionnaireresponse.QuestionnaireResponseOperationsProvider myDstu3QuestionnaireResponseOperationsProvider() {
-		return new ca.uhn.fhir.cr.dstu3.questionnaireresponse.QuestionnaireResponseOperationsProvider();
-	}
-
-	@Bean
-	public ca.uhn.fhir.cr.r4.questionnaireresponse.QuestionnaireResponseOperationsProvider myR4QuestionnaireResponseOperationsProvider() {
-		return new ca.uhn.fhir.cr.r4.questionnaireresponse.QuestionnaireResponseOperationsProvider();
-	}
-
-	@Bean
-	public ca.uhn.fhir.cr.dstu3.activitydefinition.ActivityDefinitionOperationsProvider myDstu3ActivityDefinitionOperationsProvider() {
-		return new ca.uhn.fhir.cr.dstu3.activitydefinition.ActivityDefinitionOperationsProvider();
-	}
-
-	@Bean
-	public ca.uhn.fhir.cr.r4.activitydefinition.ActivityDefinitionOperationsProvider myR4ActivityDefinitionOperationsProvider() {
-		return new ca.uhn.fhir.cr.r4.activitydefinition.ActivityDefinitionOperationsProvider();
-	}
-
-	@Bean
-	ca.uhn.fhir.cr.dstu3.IActivityDefinitionProcessorFactory myDstu3ActivityDefinitionProcessorFactory(
-		EvaluationSettings theEvaluationSettings) {
-		return r -> new org.opencds.cqf.cql.evaluator.activitydefinition.dstu3.ActivityDefinitionProcessor(r,
-			theEvaluationSettings);
-	}
-
-	@Bean
-	ca.uhn.fhir.cr.r4.IActivityDefinitionProcessorFactory myR4ActivityDefinitionProcessorFactory(
-		EvaluationSettings theEvaluationSettings) {
-		return r -> new org.opencds.cqf.cql.evaluator.activitydefinition.r4.ActivityDefinitionProcessor(r,
-			theEvaluationSettings);
-	}
-
-	@Bean
-	ca.uhn.fhir.cr.dstu3.IQuestionnaireResponseProcessorFactory myDstu3QuestionnaireResponseProcessorFactory() {
-		return r -> new org.opencds.cqf.cql.evaluator.questionnaireresponse.dstu3.QuestionnaireResponseProcessor(r);
-	}
-
-	@Bean
-	ca.uhn.fhir.cr.r4.IQuestionnaireResponseProcessorFactory myR4QuestionnaireResponseProcessorFactory() {
-		return r -> new org.opencds.cqf.cql.evaluator.questionnaireresponse.r4.QuestionnaireResponseProcessor(r);
-	}
-
-	@Bean
-	ca.uhn.fhir.cr.r4.IQuestionnaireProcessorFactory myR4QuestionnaireProcessorFactory() {
-		return r -> new org.opencds.cqf.cql.evaluator.questionnaire.r4.QuestionnaireProcessor(r);
-	}
-
-	@Bean
-	ca.uhn.fhir.cr.dstu3.IQuestionnaireProcessorFactory myDstu3QuestionnaireProcessorFactory() {
-		return r -> new org.opencds.cqf.cql.evaluator.questionnaire.dstu3.QuestionnaireProcessor(r);
-	}
-
-	@Bean
-	ca.uhn.fhir.cr.r4.IPlanDefinitionProcessorFactory myR4PlanDefinitionProcessorFactory(
-		EvaluationSettings theEvaluationSettings) {
-		return r -> new org.opencds.cqf.cql.evaluator.plandefinition.r4.PlanDefinitionProcessor(r, theEvaluationSettings);
-	}
-
-	@Bean
-	ca.uhn.fhir.cr.dstu3.IPlanDefinitionProcessorFactory myDstu3PlanDefinitionProcessorFactory(
-		EvaluationSettings theEvaluationSettings) {
-		return r -> new org.opencds.cqf.cql.evaluator.plandefinition.dstu3.PlanDefinitionProcessor(r,
-			theEvaluationSettings);
-	}
 	@Bean
 	public LoggingInterceptor loggingInterceptor(AppProperties appProperties) {
 
