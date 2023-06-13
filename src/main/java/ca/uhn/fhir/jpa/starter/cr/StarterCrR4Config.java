@@ -83,9 +83,4 @@ public class StarterCrR4Config {
 		EvaluationSettings theEvaluationSettings) {
 		return r -> new PlanDefinitionProcessor(r, theEvaluationSettings);
 	}
-
-	@Bean
-	IRepositoryFactory repositoryFactory(DaoRegistry theDaoRegistry) {
-		return rd -> new HapiFhirRepository(theDaoRegistry, rd, (RestfulServer) rd.getServer());
-	}
 }
