@@ -26,21 +26,19 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import java.util.Map;
-
 @Configuration
 @Conditional({OnR4Condition.class, CrConfigCondition.class})
 @Import({CrR4Config.class})
 public class StarterCrR4Config {
 	@Bean
-	CrOperationFactory crOperationFactory() {
-		return new CrOperationFactory();
+	CrOperationProviderFactory crOperationFactory() {
+		return new CrOperationProviderFactory();
 	}
 
 	@Bean
-	CrOperationLoader crOperationLoader(FhirContext theFhirContext, ResourceProviderFactory theResourceProviderFactory,
-													CrOperationFactory theCrlProviderFactory) {
-		return new CrOperationLoader(theFhirContext, theResourceProviderFactory, theCrlProviderFactory);
+	CrOperationProviderLoader crOperationLoader(FhirContext theFhirContext, ResourceProviderFactory theResourceProviderFactory,
+															  CrOperationProviderFactory theCrlProviderFactory) {
+		return new CrOperationProviderLoader(theFhirContext, theResourceProviderFactory, theCrlProviderFactory);
 	}
 	@Bean
 	public QuestionnaireOperationsProvider myR4QuestionnaireOperationsProvider() {

@@ -31,14 +31,14 @@ import org.springframework.context.annotation.Import;
 @Import({CrDstu3Config.class})
 public class StarterCrDstu3Config {
 	@Bean
-	CrOperationFactory crOperationFactory() {
-		return new CrOperationFactory();
+	CrOperationProviderFactory crOperationFactory() {
+		return new CrOperationProviderFactory();
 	}
 
 	@Bean
-	CrOperationLoader crOperationLoader(FhirContext theFhirContext, ResourceProviderFactory theResourceProviderFactory,
-													CrOperationFactory theCrlProviderFactory) {
-		return new CrOperationLoader(theFhirContext, theResourceProviderFactory, theCrlProviderFactory);
+	CrOperationProviderLoader crOperationLoader(FhirContext theFhirContext, ResourceProviderFactory theResourceProviderFactory,
+															  CrOperationProviderFactory theCrlProviderFactory) {
+		return new CrOperationProviderLoader(theFhirContext, theResourceProviderFactory, theCrlProviderFactory);
 	}
 	@Bean
 	public QuestionnaireOperationsProvider myR4QuestionnaireOperationsProvider() {

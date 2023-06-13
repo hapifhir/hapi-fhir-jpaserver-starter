@@ -12,8 +12,10 @@ import ca.uhn.fhir.cr.dstu3.measure.MeasureOperationsProvider;
 import ca.uhn.fhir.cr.dstu3.plandefinition.PlanDefinitionOperationsProvider;
 import ca.uhn.fhir.cr.dstu3.questionnaire.QuestionnaireOperationsProvider;
 import ca.uhn.fhir.cr.dstu3.questionnaireresponse.QuestionnaireResponseOperationsProvider;
+import org.springframework.stereotype.Service;
 
-public class CrOperationFactory {
+@Service
+public class CrOperationProviderFactory {
 	@Autowired
 	private FhirContext myFhirContext;
 

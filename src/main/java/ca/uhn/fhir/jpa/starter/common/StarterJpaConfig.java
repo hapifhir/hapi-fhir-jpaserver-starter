@@ -42,7 +42,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
-import ca.uhn.fhir.jpa.starter.cr.CrOperationLoader;
+import ca.uhn.fhir.jpa.starter.cr.CrOperationProviderLoader;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
@@ -266,7 +266,7 @@ public class StarterJpaConfig {
 			IPackageInstallerSvc packageInstallerSvc, ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
 			ApplicationContext appContext,
 			Optional<IpsOperationProvider> theIpsOperationProvider,
-												  Optional<CrOperationLoader> theCrProviderLoader){
+												  Optional<CrOperationProviderLoader> theCrProviderLoader){
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
 
 		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();

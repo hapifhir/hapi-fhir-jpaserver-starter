@@ -9,14 +9,14 @@ import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 
-public class CrOperationLoader {
-	private static final Logger myLogger = LoggerFactory.getLogger(CrOperationLoader.class);
+public class CrOperationProviderLoader {
+	private static final Logger myLogger = LoggerFactory.getLogger(CrOperationProviderLoader.class);
 	private final FhirContext myFhirContext;
 	private final ResourceProviderFactory myResourceProviderFactory;
-	private final CrOperationFactory myCrProviderFactory;
+	private final CrOperationProviderFactory myCrProviderFactory;
 
-	public CrOperationLoader(FhirContext theFhirContext, ResourceProviderFactory theResourceProviderFactory,
-									 CrOperationFactory theCrProviderFactory) {
+	public CrOperationProviderLoader(FhirContext theFhirContext, ResourceProviderFactory theResourceProviderFactory,
+												CrOperationProviderFactory theCrProviderFactory) {
 		myFhirContext = theFhirContext;
 		myResourceProviderFactory = theResourceProviderFactory;
 		myCrProviderFactory = theCrProviderFactory;
