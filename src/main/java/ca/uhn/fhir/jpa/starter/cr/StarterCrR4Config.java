@@ -27,19 +27,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Conditional({OnR4Condition.class, CrConfigCondition.class})
-@Import({CrR4Config.class})
+@Conditional({ OnR4Condition.class, CrConfigCondition.class })
+@Import({ CrR4Config.class })
 public class StarterCrR4Config {
 	@Bean
-	CrOperationProviderFactory crOperationFactory() {
+	public CrOperationProviderFactory crOperationProviderFactory() {
 		return new CrOperationProviderFactory();
 	}
 
 	@Bean
-	CrOperationProviderLoader crOperationLoader(FhirContext theFhirContext, ResourceProviderFactory theResourceProviderFactory,
-															  CrOperationProviderFactory theCrlProviderFactory) {
+	public CrOperationProviderLoader crOperationProviderLoader(FhirContext theFhirContext,
+			ResourceProviderFactory theResourceProviderFactory,
+			CrOperationProviderFactory theCrlProviderFactory) {
 		return new CrOperationProviderLoader(theFhirContext, theResourceProviderFactory, theCrlProviderFactory);
 	}
+
 	@Bean
 	public QuestionnaireOperationsProvider myR4QuestionnaireOperationsProvider() {
 		return new QuestionnaireOperationsProvider();
@@ -60,12 +62,11 @@ public class StarterCrR4Config {
 		return new ActivityDefinitionOperationsProvider();
 	}
 
-
 	@Bean
 	IActivityDefinitionProcessorFactory myR4ActivityDefinitionProcessorFactory(
-		EvaluationSettings theEvaluationSettings) {
+			EvaluationSettings theEvaluationSettings) {
 		return r -> new ActivityDefinitionProcessor(r,
-			theEvaluationSettings);
+				theEvaluationSettings);
 	}
 
 	@Bean
@@ -80,7 +81,7 @@ public class StarterCrR4Config {
 
 	@Bean
 	IPlanDefinitionProcessorFactory myR4PlanDefinitionProcessorFactory(
-		EvaluationSettings theEvaluationSettings) {
+			EvaluationSettings theEvaluationSettings) {
 		return r -> new PlanDefinitionProcessor(r, theEvaluationSettings);
 	}
 }

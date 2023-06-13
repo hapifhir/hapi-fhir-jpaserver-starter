@@ -16,13 +16,13 @@ public class CrOperationProviderLoader {
 	private final CrOperationProviderFactory myCrProviderFactory;
 
 	public CrOperationProviderLoader(FhirContext theFhirContext, ResourceProviderFactory theResourceProviderFactory,
-												CrOperationProviderFactory theCrProviderFactory) {
+			CrOperationProviderFactory theCrProviderFactory) {
 		myFhirContext = theFhirContext;
 		myResourceProviderFactory = theResourceProviderFactory;
 		myCrProviderFactory = theCrProviderFactory;
+		loadProvider();
 	}
 
-	@EventListener(ContextRefreshedEvent.class)
 	public void loadProvider() {
 		switch (myFhirContext.getVersion().getVersion()) {
 			case DSTU3:
@@ -45,8 +45,7 @@ public class CrOperationProviderLoader {
 				break;
 			default:
 				throw new ConfigurationException("Clinical Reasoning not supported for FHIR version "
-					+ myFhirContext.getVersion().getVersion());
+						+ myFhirContext.getVersion().getVersion());
 		}
 	}
 }
-

@@ -42,7 +42,6 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
-import ca.uhn.fhir.jpa.starter.cr.CrOperationProviderLoader;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
@@ -265,8 +264,7 @@ public class StarterJpaConfig {
 			Optional<RepositoryValidatingInterceptor> repositoryValidatingInterceptor,
 			IPackageInstallerSvc packageInstallerSvc, ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
 			ApplicationContext appContext,
-			Optional<IpsOperationProvider> theIpsOperationProvider,
-												  Optional<CrOperationProviderLoader> theCrProviderLoader){
+			Optional<IpsOperationProvider> theIpsOperationProvider) {
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
 
 		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
@@ -286,9 +284,6 @@ public class StarterJpaConfig {
 
 		if (appProperties.getMdm_enabled()) {
 			mdmProviderProvider.get().loadProvider();
-		}
-		if (appProperties.getCr_enabled()){
-			theCrProviderLoader.get().loadProvider();
 		}
 
 		fhirServer.registerProviders(resourceProviderFactory.createProviders());
@@ -452,7 +447,6 @@ public class StarterJpaConfig {
 		if (!theIpsOperationProvider.isEmpty()) {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
 		}
-
 
 		return fhirServer;
 	}
