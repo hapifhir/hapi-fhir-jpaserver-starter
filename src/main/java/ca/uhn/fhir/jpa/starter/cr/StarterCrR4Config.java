@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
+import ca.uhn.fhir.IHapiBootOrder;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.cr.common.IRepositoryFactory;
 import ca.uhn.fhir.cr.config.CrR4Config;
@@ -30,6 +31,13 @@ import org.springframework.context.annotation.Import;
 @Conditional({ OnR4Condition.class, CrConfigCondition.class })
 @Import({ CrR4Config.class })
 public class StarterCrR4Config {
+
+	@Bean
+	public PostInitProviderRegisterer postInitProviderRegisterer(RestfulServer theRestfulServer,
+			ResourceProviderFactory theResourceProviderFactory) {
+		return new PostInitProviderRegisterer(theRestfulServer, theResourceProviderFactory);
+	}
+
 	@Bean
 	public CrOperationProviderFactory crOperationProviderFactory() {
 		return new CrOperationProviderFactory();
@@ -38,8 +46,10 @@ public class StarterCrR4Config {
 	@Bean
 	public CrOperationProviderLoader crOperationProviderLoader(FhirContext theFhirContext,
 			ResourceProviderFactory theResourceProviderFactory,
-			CrOperationProviderFactory theCrlProviderFactory) {
-		return new CrOperationProviderLoader(theFhirContext, theResourceProviderFactory, theCrlProviderFactory);
+			CrOperationProviderFactory theCrOperationProviderFactory,
+			PostInitProviderRegisterer thePostInitProviderRegister) {
+		return new CrOperationProviderLoader(theFhirContext, theResourceProviderFactory, theCrOperationProviderFactory,
+				thePostInitProviderRegister);
 	}
 
 	@Bean

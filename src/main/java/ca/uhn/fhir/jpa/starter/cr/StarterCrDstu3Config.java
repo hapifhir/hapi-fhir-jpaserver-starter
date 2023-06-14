@@ -30,6 +30,13 @@ import org.springframework.context.annotation.Import;
 @Conditional({ OnDSTU3Condition.class, CrConfigCondition.class })
 @Import({ CrDstu3Config.class })
 public class StarterCrDstu3Config {
+
+	@Bean
+	public PostInitProviderRegisterer postInitProviderRegisterer(RestfulServer theRestfulServer,
+			ResourceProviderFactory theResourceProviderFactory) {
+		return new PostInitProviderRegisterer(theRestfulServer, theResourceProviderFactory);
+	}
+
 	@Bean
 	public CrOperationProviderFactory crOperationProviderFactory() {
 		return new CrOperationProviderFactory();
@@ -38,8 +45,10 @@ public class StarterCrDstu3Config {
 	@Bean
 	public CrOperationProviderLoader crOperationProviderLoader(FhirContext theFhirContext,
 			ResourceProviderFactory theResourceProviderFactory,
-			CrOperationProviderFactory theCrlProviderFactory) {
-		return new CrOperationProviderLoader(theFhirContext, theResourceProviderFactory, theCrlProviderFactory);
+			CrOperationProviderFactory theCrOperationProviderFactory,
+			PostInitProviderRegisterer thePostInitProviderRegister) {
+		return new CrOperationProviderLoader(theFhirContext, theResourceProviderFactory, theCrOperationProviderFactory,
+				thePostInitProviderRegister);
 	}
 
 	@Bean

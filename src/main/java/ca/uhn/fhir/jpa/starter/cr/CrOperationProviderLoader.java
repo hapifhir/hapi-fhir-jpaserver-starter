@@ -15,11 +15,14 @@ public class CrOperationProviderLoader {
 	private final ResourceProviderFactory myResourceProviderFactory;
 	private final CrOperationProviderFactory myCrProviderFactory;
 
+	private final PostInitProviderRegisterer myPostInitProviderRegister;
+
 	public CrOperationProviderLoader(FhirContext theFhirContext, ResourceProviderFactory theResourceProviderFactory,
-			CrOperationProviderFactory theCrProviderFactory) {
+			CrOperationProviderFactory theCrProviderFactory, PostInitProviderRegisterer thePostInitProviderRegister) {
 		myFhirContext = theFhirContext;
 		myResourceProviderFactory = theResourceProviderFactory;
 		myCrProviderFactory = theCrProviderFactory;
+		myPostInitProviderRegister = thePostInitProviderRegister;
 		loadProvider();
 	}
 
