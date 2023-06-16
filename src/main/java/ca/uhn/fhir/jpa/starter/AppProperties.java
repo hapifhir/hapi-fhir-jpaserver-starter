@@ -427,7 +427,7 @@ public class AppProperties {
 			getCqlCompilerSignatureLevel(),
 			getCqlCompilerCompatibilityLevel()
 		);
-	public CqlTranslatorOptions getCqlTranslator() {
+	public CqlTranslatorOptions getCqlTranslatorOptions() {
 		return this.cqlTranslatorOptions;
 	}
 
@@ -446,7 +446,7 @@ public class AppProperties {
 		CqlOptions cqlOptions = new CqlOptions();
 		cqlOptions.setUseEmbeddedLibraries(this.cql_use_embedded_libraries);
 		cqlOptions.setCqlEngineOptions(this.getCqlEngineOptions());
-		cqlOptions.setCqlTranslatorOptions(this.getCqlTranslator());
+		cqlOptions.setCqlTranslatorOptions(this.getCqlTranslatorOptions());
 		return cqlOptions;
 	}
 

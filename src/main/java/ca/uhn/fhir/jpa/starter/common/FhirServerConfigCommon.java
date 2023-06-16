@@ -17,6 +17,7 @@ import ca.uhn.fhir.rest.server.mail.MailSvc;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 
 import com.google.common.base.Strings;
+import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.boot.env.YamlPropertySourceLoader;
@@ -255,4 +256,6 @@ public class FhirServerConfigCommon {
 
 		return null;
 	}
+
+
 }

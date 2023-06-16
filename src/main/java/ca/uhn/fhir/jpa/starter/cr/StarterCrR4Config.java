@@ -2,7 +2,8 @@ package ca.uhn.fhir.jpa.starter.cr;
 
 import ca.uhn.fhir.IHapiBootOrder;
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.cr.common.IRepositoryFactory;
+import ca.uhn.fhir.context.FhirVersionEnum;
+
 import ca.uhn.fhir.cr.config.CrR4Config;
 import ca.uhn.fhir.cr.r4.IActivityDefinitionProcessorFactory;
 import ca.uhn.fhir.cr.r4.IPlanDefinitionProcessorFactory;
@@ -12,26 +13,26 @@ import ca.uhn.fhir.cr.r4.activitydefinition.ActivityDefinitionOperationsProvider
 import ca.uhn.fhir.cr.r4.plandefinition.PlanDefinitionOperationsProvider;
 import ca.uhn.fhir.cr.r4.questionnaire.QuestionnaireOperationsProvider;
 import ca.uhn.fhir.cr.r4.questionnaireresponse.QuestionnaireResponseOperationsProvider;
-import ca.uhn.fhir.cr.repo.HapiFhirRepository;
-import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
+import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
+import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
+import org.opencds.cqf.cql.evaluator.CqlOptions;
 import org.opencds.cqf.cql.evaluator.activitydefinition.r4.ActivityDefinitionProcessor;
 import org.opencds.cqf.cql.evaluator.library.EvaluationSettings;
 import org.opencds.cqf.cql.evaluator.plandefinition.r4.PlanDefinitionProcessor;
 import org.opencds.cqf.cql.evaluator.questionnaire.r4.QuestionnaireProcessor;
 import org.opencds.cqf.cql.evaluator.questionnaireresponse.r4.QuestionnaireResponseProcessor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.*;
 
 @Configuration
 @Conditional({ OnR4Condition.class, CrConfigCondition.class })
 @Import({ CrR4Config.class })
 public class StarterCrR4Config {
-
+	private static final Logger ourLogger = LoggerFactory.getLogger(StarterCrR4Config.class);
 	@Bean
 	public PostInitProviderRegisterer postInitProviderRegisterer(RestfulServer theRestfulServer,
 			ResourceProviderFactory theResourceProviderFactory) {
@@ -94,4 +95,27 @@ public class StarterCrR4Config {
 			EvaluationSettings theEvaluationSettings) {
 		return r -> new PlanDefinitionProcessor(r, theEvaluationSettings);
 	}
+
+	@Primary
+	@Bean
+	public CqlOptions cqlOptions(AppProperties theAppProperties) {
+		return theAppProperties.getCqlOptions();
+	}
+
+	@Primary
+	@Bean
+	public CqlTranslatorOptions cqlTranslatorOptions(FhirContext theFhirContext, AppProperties theAppProperties) {
+		CqlTranslatorOptions options = theAppProperties.getCqlTranslatorOptions();
+
+		if (theFhirContext.getVersion().getVersion().isOlderThan(FhirVersionEnum.R4)
+			&& (options.getCompatibilityLevel().equals("1.5") || options.getCompatibilityLevel().equals("1.4"))) {
+			ourLogger.warn("{} {} {}",
+				"This server is configured to use CQL version > 1.4 and FHIR version <= DSTU3.",
+				"Most available CQL content for DSTU3 and below is for CQL versions 1.3.",
+				"If your CQL content causes translation errors, try setting the CQL compatibility level to 1.3");
+		}
+
+		return options;
+	}
+
 }
