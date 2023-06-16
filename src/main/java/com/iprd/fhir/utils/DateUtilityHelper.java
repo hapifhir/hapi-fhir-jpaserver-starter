@@ -1,5 +1,6 @@
 package com.iprd.fhir.utils;
-import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
+
+import android.util.Pair;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -10,10 +11,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Pair;
-
 public class DateUtilityHelper {
-	
+
 	public static Date getCurrentSqlDate() {
 		return new Date(System.currentTimeMillis());
 	}
@@ -21,29 +20,29 @@ public class DateUtilityHelper {
 	public static java.sql.Date utilDateToSqlDate(java.util.Date date) {
 		return new java.sql.Date(date.getTime());
 	}
-	
+
 	public static Timestamp utilDateToTimestamp(java.util.Date date) {
 		return new Timestamp(date.getTime());
 	}
-	
+
 	public static Date timeStampToDate(Timestamp timestamp) {
 		return Date.valueOf(timestamp.toLocalDateTime().toLocalDate());
 	}
-	
+
 	public static Date epochToSqlDate(Long epoch) {
 		return new Date(epoch);
 	}
-	
+
 	public static Date getPreviousDay(Timestamp timestamp) {
 		LocalDate previousDay = timestamp.toLocalDateTime().minusDays(1).toLocalDate();
 		return Date.valueOf(previousDay);
 	}
-	
+
 	public static Date getPreviousDateByDays(Date date, long days) {
 		LocalDate previousDate = date.toLocalDate().minusDays(days);
 		return Date.valueOf(previousDate);
 	}
-	
+
 	public static String sqlTimestampToFormattedDateString(Timestamp timestamp) {
 		return DateTimeFormatter.ISO_INSTANT.format(timestamp.toInstant()).split("T")[0];
 	}
@@ -53,21 +52,37 @@ public class DateUtilityHelper {
 		return simpleDateFormat.format(date);
 	}
 
-	public static List<Pair<Date, Date>> getQuarterlyDates(Date start,Date end) {
-		LocalDate localDate = start.toLocalDate();
-		Date firstQuarterStart = Date.valueOf(localDate.getYear()+"-01-01");
-		Date firstQuarterEnd = Date.valueOf(localDate.getYear()+"-03-31");
-		Date secondQuarterStart = Date.valueOf(localDate.getYear()+"-04-01");
-		Date secondQuarterEnd = Date.valueOf(localDate.getYear()+"-06-30");
-		Date thirdQuarterStart = Date.valueOf(localDate.getYear()+"-04-01");
-		Date thirdQuarterEnd = Date.valueOf(localDate.getYear()+"-09-30");
-		Date fourthQuarterStart = Date.valueOf(localDate.getYear()+"-10-01");
-		Date fourthQuarterEnd = Date.valueOf(localDate.getYear()+"-12-31");
+	public static List<Pair<Date, Date>> getQuarterlyDates(Date start, Date end) {
+		LocalDate startLocalDate = start.toLocalDate();
+		LocalDate endLocalDate = end.toLocalDate();
+
 		List<Pair<Date, Date>> quarterDatePairs = new ArrayList<>();
-		quarterDatePairs.add( new Pair<>(firstQuarterStart, firstQuarterEnd));
-		quarterDatePairs.add( new Pair<>(secondQuarterStart, secondQuarterEnd));
-		quarterDatePairs.add( new Pair<>(thirdQuarterStart, thirdQuarterEnd));
-		quarterDatePairs.add( new Pair<>(fourthQuarterStart, fourthQuarterEnd));
+
+		int startYear = startLocalDate.getYear();
+		int endYear = endLocalDate.getYear();
+
+		for (int year = startYear; year <= endYear; year++) {
+			Date[] quarterStarts = {
+				Date.valueOf(year + "-01-01"),
+				Date.valueOf(year + "-04-01"),
+				Date.valueOf(year + "-07-01"),
+				Date.valueOf(year + "-10-01")
+			};
+			Date[] quarterEnds = {
+				Date.valueOf(year + "-03-31"),
+				Date.valueOf(year + "-06-30"),
+				Date.valueOf(year + "-09-30"),
+				Date.valueOf(year + "-12-31")
+			};
+
+			int startQuarter = (year == startYear) ? (startLocalDate.getMonthValue() - 1) / 3 : 0;
+			int endQuarter = (year == endYear) ? (endLocalDate.getMonthValue() - 1) / 3 : 3;
+
+			for (int quarter = startQuarter; quarter <= endQuarter; quarter++) {
+				quarterDatePairs.add(new Pair<>(quarterStarts[quarter], quarterEnds[quarter]));
+			}
+		}
+
 		return quarterDatePairs;
 	}
 
@@ -85,38 +100,38 @@ public class DateUtilityHelper {
 		}
 		return monthDatePairs;
 	}
-	
+
 	public static List<Pair<Date, Date>> getWeeklyDates(Date start, Date end) {
-		  LocalDate startDate = start.toLocalDate();
-		  LocalDate endDate = end.toLocalDate();
+		LocalDate startDate = start.toLocalDate();
+		LocalDate endDate = end.toLocalDate();
 
-		  Long weekNumber = ChronoUnit.WEEKS.between(startDate, endDate);
+		Long weekNumber = ChronoUnit.WEEKS.between(startDate, endDate);
 
-		  List<Pair<Date, Date>> weekDatePairs = new ArrayList<>();
+		List<Pair<Date, Date>> weekDatePairs = new ArrayList<>();
 
-		  for (int i = 0; i < weekNumber; i++) {
-		    LocalDate endOfWeek = startDate.plusDays(6);
-		    weekDatePairs.add(new Pair<Date,Date>(Date.valueOf(startDate),Date.valueOf(endOfWeek)));
-		    startDate = endOfWeek.plusDays(1);
-		  }
-		  return weekDatePairs;
+		for (int i = 0; i <= weekNumber; i++) {
+			LocalDate endOfWeek = startDate.plusDays(6);
+			weekDatePairs.add(new Pair<Date,Date>(Date.valueOf(startDate),Date.valueOf(endOfWeek)));
+			startDate = endOfWeek.plusDays(1);
 		}
-	
+		return weekDatePairs;
+	}
+
 	public static List<Pair<Date, Date>> getDailyDates(Date start, Date end) {
-		  LocalDate startDate = start.toLocalDate();
-		  LocalDate endDate = end.toLocalDate();
+		LocalDate startDate = start.toLocalDate();
+		LocalDate endDate = end.toLocalDate();
 
-		  Long dayNumber = ChronoUnit.DAYS.between(startDate, endDate);
+		Long dayNumber = ChronoUnit.DAYS.between(startDate, endDate);
 
-		  List<Pair<Date, Date>> dailyDatePairs = new ArrayList<>();
+		List<Pair<Date, Date>> dailyDatePairs = new ArrayList<>();
 
-		  for (int i = 0; i < dayNumber; i++) {
-		    LocalDate endOfDay = startDate;
-		    dailyDatePairs.add(new Pair<Date,Date>(Date.valueOf(startDate),Date.valueOf(endOfDay)));
-		    startDate = startDate.plusDays(1);
-		  }
-		  return dailyDatePairs;
+		for (int i = 0; i <= dayNumber; i++) {
+			LocalDate endOfDay = startDate;
+			dailyDatePairs.add(new Pair<Date,Date>(Date.valueOf(startDate),Date.valueOf(endOfDay)));
+			startDate = startDate.plusDays(1);
 		}
+		return dailyDatePairs;
+	}
 
 	public static Pair<Date, Date> getCurrentWeekDates() {
 		LocalDate current = getCurrentSqlDate().toLocalDate();
