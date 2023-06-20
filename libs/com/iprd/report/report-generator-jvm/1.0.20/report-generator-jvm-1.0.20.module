@@ -1,0 +1,159 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../report-generator/1.0.20/report-generator-1.0.20.module",
+    "group": "com.iprd.report",
+    "module": "report-generator",
+    "version": "1.0.20",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.itextpdf",
+          "module": "itext7-core",
+          "version": {
+            "requires": "7.2.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.5.10"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.5.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "report-generator-jvm-1.0.20.jar",
+          "url": "report-generator-jvm-1.0.20.jar",
+          "size": 278576,
+          "sha512": "6604df11f5d8d3d1c227d3d8a3efbc00d3708b84df5d2c8a7da776241c180056bcd6c9ba873100bdf6398010bbeec9b61c42b0bcd0e5bf7bec82ce60bd30ba89",
+          "sha256": "aeff87814dcf90a166b82f9c5426789083e4e21cc6ed1210556d89c256ab464a",
+          "sha1": "e91a34135ed919a943ac154c0809da37be98c121",
+          "md5": "c3daa27ba57bccacc197d72b566522ba"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.itextpdf",
+          "module": "itext7-core",
+          "version": {
+            "requires": "7.2.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.5.10"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-common",
+          "version": {
+            "requires": "1.5.10"
+          }
+        },
+        {
+          "group": "com.fasterxml.jackson.module",
+          "module": "jackson-module-kotlin",
+          "version": {
+            "requires": "2.9.8"
+          }
+        },
+        {
+          "group": "ca.uhn.hapi.fhir",
+          "module": "hapi-fhir-structures-r4",
+          "version": {
+            "requires": "5.7.0"
+          }
+        },
+        {
+          "group": "ca.uhn.hapi.fhir",
+          "module": "hapi-fhir-validation",
+          "version": {
+            "requires": "5.7.0"
+          }
+        },
+        {
+          "group": "com.google.truth",
+          "module": "truth",
+          "version": {
+            "requires": "1.0.1"
+          }
+        },
+        {
+          "group": "ca.uhn.hapi.fhir",
+          "module": "hapi-fhir-client",
+          "version": {
+            "requires": "5.7.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.6.0"
+          }
+        },
+        {
+          "group": "org.json",
+          "module": "json",
+          "version": {
+            "requires": "20200518"
+          }
+        },
+        {
+          "group": "net.objecthunter",
+          "module": "exp4j",
+          "version": {
+            "requires": "0.4.8"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "report-generator-jvm-1.0.20.jar",
+          "url": "report-generator-jvm-1.0.20.jar",
+          "size": 278576,
+          "sha512": "6604df11f5d8d3d1c227d3d8a3efbc00d3708b84df5d2c8a7da776241c180056bcd6c9ba873100bdf6398010bbeec9b61c42b0bcd0e5bf7bec82ce60bd30ba89",
+          "sha256": "aeff87814dcf90a166b82f9c5426789083e4e21cc6ed1210556d89c256ab464a",
+          "sha1": "e91a34135ed919a943ac154c0809da37be98c121",
+          "md5": "c3daa27ba57bccacc197d72b566522ba"
+        }
+      ]
+    }
+  ]
+}
