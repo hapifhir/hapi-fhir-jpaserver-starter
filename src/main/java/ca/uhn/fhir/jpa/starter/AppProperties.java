@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.api.config.DaoConfig.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
@@ -10,174 +11,77 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
 @EnableConfigurationProperties
 public class AppProperties {
 
-	private Boolean cql_enabled = false;
-	private Boolean openapi_enabled = false;
-	private Boolean mdm_enabled = false;
-	private boolean advanced_lucene_indexing = false;
-	private Boolean allow_cascading_deletes = false;
-	private Boolean allow_contains_searches = true;
-	private Boolean allow_external_references = false;
-	private Boolean allow_multiple_delete = false;
-	private Boolean allow_override_default_search_params = true;
-	private Boolean auto_create_placeholder_reference_targets = false;
-	private Boolean delete_expunge_enabled = false;
-	private Boolean enable_index_missing_fields = false;
-	private Boolean enable_index_contained_resource = false;
-	private Boolean enable_repository_validating_interceptor = false;
-	private Boolean enforce_referential_integrity_on_delete = true;
-	private Boolean enforce_referential_integrity_on_write = true;
-	private Boolean etag_support_enabled = true;
-	private Boolean expunge_enabled = true;
-	private Boolean fhirpath_interceptor_enabled = false;
-	private Boolean filter_search_enabled = true;
-	private Boolean graphql_enabled = false;
-	private Boolean binary_storage_enabled = false;
-	private Boolean bulk_export_enabled = false;
-	private Boolean default_pretty_print = true;
-	private Integer default_page_size = 20;
-	private Integer max_binary_size = null;
-	private Integer max_page_size = Integer.MAX_VALUE;
-	private Integer defer_indexing_for_codesystems_of_size = 100;
-	private Integer keycloak_max_group_count = 20;
-	private Long api_request_max_time = 600L;
-	private Long retain_cached_searches_mins = 60L;
-	private Long reuse_cached_search_results_millis = 60000L;
-	private String envs = null;
-	private String server_address = null;
-	private String keycloak_server_address = null;
-	private String keycloak_realm = "master";
-	private String keycloak_client_realm = "fhir-hapi";
-	private String keycloak_client_Id = "fhir-hapi-realm";
-	private String keycloak_username = "managegroup";
-	private String keycloak_password = "12345";
-	private String fhir_user = "nitin_sabale";
-	private String fhir_password = "xyz";
-	private String fhir_hapi_client_id = "fhir-hapi-server";
-	private String fhir_hapi_client_secret = "xyz";
-	private String hapi_server_address = null;
-	private String anc_config_file = null;
-	private String pie_config_file = null;
+  private Boolean cql_enabled = false;
+  private Boolean openapi_enabled = false;
+  private Boolean mdm_enabled = false;
+  private boolean advanced_lucene_indexing = false;
+  private boolean enable_index_of_type = false;
+  private Boolean allow_cascading_deletes = false;
+  private Boolean allow_contains_searches = true;
+  private Boolean allow_external_references = false;
+  private Boolean allow_multiple_delete = false;
+  private Boolean allow_override_default_search_params = true;
+  private Boolean auto_create_placeholder_reference_targets = false;
+  private Boolean dao_scheduling_enabled = true;
+  private Boolean delete_expunge_enabled = false;
+  private Boolean enable_index_missing_fields = false;
+  private Boolean enable_index_contained_resource = false;
+  private Boolean enable_repository_validating_interceptor = false;
+  private Boolean enforce_referential_integrity_on_delete = true;
+  private Boolean enforce_referential_integrity_on_write = true;
+  private Boolean etag_support_enabled = true;
+  private Boolean expunge_enabled = true;
+  private Boolean fhirpath_interceptor_enabled = false;
+  private Boolean filter_search_enabled = true;
+  private Boolean graphql_enabled = false;
+  private Boolean binary_storage_enabled = false;
+  private Integer inline_resource_storage_below_size = 0;
+  private Boolean bulk_export_enabled = false;
+  private Boolean bulk_import_enabled = false;
+  private Boolean default_pretty_print = true;
+  private Integer default_page_size = 20;
+  private Integer max_binary_size = null;
+  private Integer max_page_size = Integer.MAX_VALUE;
+  private Integer defer_indexing_for_codesystems_of_size = 100;
+  private Long retain_cached_searches_mins = 60L;
+  private Long reuse_cached_search_results_millis = 60000L;
+  private String server_address = null;
+  private EncodingEnum default_encoding = EncodingEnum.JSON;
+  private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
+  private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
+  private List<String> supported_resource_types = new ArrayList<>();
+  private List<Bundle.BundleType> allowed_bundle_types = null;
+  private Boolean narrative_enabled = true;
 
-	private String pk_file = null;
+  private Validation validation = new Validation();
+  private Map<String, Tester> tester = null;
+  private Logger logger = new Logger();
+  private Subscription subscription = new Subscription();
+  private Cors cors = null;
+  private Partitioning partitioning = null;
+  private Boolean install_transitive_ig_dependencies = true;
+  private Map<String, ImplementationGuide> implementationGuides = null;
 
-	private String dashboard_public_key_file = null;
-	private String line_chart_definitions_file = null;
-   	private String tabular_config_file = null;
-	private String barChart_config_file = null;
-	private String analytics_config_file = null;
-	private String country_org_id = null;
-	private String filters_config_file = null;
-	private String daily_and_summary_config_file = null;
-	private EncodingEnum default_encoding = EncodingEnum.JSON;
-	private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
-	private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
-	private List<String> supported_resource_types = new ArrayList<>();
-	private List<Bundle.BundleType> allowed_bundle_types = null;
-	private Boolean narrative_enabled = true;
+  private Boolean lastn_enabled = false;
+  private boolean store_resource_in_lucene_index_enabled = false;
+  private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
 
-	private Validation validation = new Validation();
-	private Map<String, Tester> tester = null;
-	private Logger logger = new Logger();
-	private Subscription subscription = new Subscription();
-	private Cors cors = null;
-	private Partitioning partitioning = null;
-	private Boolean install_transitive_ig_dependencies = true;
-	private Map<String, ImplementationGuide> implementationGuides = null;
+  private Boolean use_apache_address_strategy = false;
+  private Boolean use_apache_address_strategy_https = false;
 
-	private Boolean lastn_enabled = false;
-	private boolean store_resource_in_lucene_index_enabled = false;
-	private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
-
-	private Integer search_coord_core_pool_size = 20;
-	private Integer search_coord_max_pool_size = 100;
-	private Integer search_coord_queue_capacity = 200;
-	private Boolean use_apache_address_strategy = false;
-	private Boolean use_apache_address_strategy_https = false;
-
-	private Integer bundle_batch_pool_size = 20;
-	private Integer bundle_batch_pool_max_size = 100;
-	private List<String> local_base_urls = new ArrayList<>();
-	private String image_path = null;
-	private String notification_datasource_config_path = null;
-	private String gcp_credential_file_path = null;
-	private String sql_screen_time_file_path = null;
-
-	private Integer executor_core_pool_size = 3;
-	private Integer executor_max_pool_size = 3;
-	private Integer executor_queue_capacity = 100;
-	private String executor_thread_name_prefix = "AsyncThread-";
-	private String dev_user_role = "dev";
-
-	private List<String> organization_ids_for_caching = null;
-
-	private List<String> envs_for_caching = null;
-
-	public void setDev_user_role(String dev_user_role){
-		this.dev_user_role = dev_user_role;
-	}
-
-	public String getDev_user_role(){ return dev_user_role;}
-	public void setApi_request_max_time(Long api_request_max_time){
-		this.api_request_max_time = api_request_max_time;
-	}
-
-	public Long getApi_request_max_time() {
-		return api_request_max_time;
-	}
-
-	public List<String> getOrganization_ids_for_caching() {
-		return organization_ids_for_caching;
-	}
-
-	public List<String> getEnvs_for_caching() {
-		return envs_for_caching;
-	}
-
-	public void setEnvs_for_caching(List<String> envs_for_caching) {
-		this.envs_for_caching = envs_for_caching;
-	}
-
-	public void setOrganization_ids_for_caching(List<String> organization_ids_for_caching) {
-		this.organization_ids_for_caching = organization_ids_for_caching;
-	}
-	public Integer getExecutor_core_pool_size() {
-		return executor_core_pool_size;
-	}
-
-	public void setExecutor_core_pool_size(Integer executor_core_pool_size) {
-		this.executor_core_pool_size = executor_core_pool_size;
-	}
-
-	public Integer getExecutor_max_pool_size() {
-		return executor_max_pool_size;
-	}
-
-	public void setExecutor_max_pool_size(Integer executor_max_pool_size) {
-		this.executor_max_pool_size = executor_max_pool_size;
-	}
-
-	public Integer getExecutor_queue_capacity() {
-		return executor_queue_capacity;
-	}
-
-	public void setExecutor_queue_capacity(Integer executor_queue_capacity) {
-		this.executor_queue_capacity = executor_queue_capacity;
-	}
-
-	public String getExecutor_thread_name_prefix() {
-		return executor_thread_name_prefix;
-	}
-
-	public void setExecutor_thread_name_prefix(String executor_thread_name_prefix) {
-		this.executor_thread_name_prefix = executor_thread_name_prefix;
-	}
+  private Integer bundle_batch_pool_size = 20;
+  private Integer bundle_batch_pool_max_size = 100;
+  private final List<String> local_base_urls = new ArrayList<>();
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
@@ -188,347 +92,133 @@ public class AppProperties {
 	}
 
 	public Boolean getUse_apache_address_strategy() {
-		return use_apache_address_strategy;
-	}
-
-	public void setUse_apache_address_strategy(Boolean use_apache_address_strategy) {
-		this.use_apache_address_strategy = use_apache_address_strategy;
-	}
-
-	public Boolean getUse_apache_address_strategy_https() {
-		return use_apache_address_strategy_https;
-	}
-
-	public void setUse_apache_address_strategy_https(Boolean use_apache_address_strategy_https) {
-		this.use_apache_address_strategy_https = use_apache_address_strategy_https;
-	}
-
-	public Integer getDefer_indexing_for_codesystems_of_size() {
-		return defer_indexing_for_codesystems_of_size;
-	}
-
-	public void setDefer_indexing_for_codesystems_of_size(Integer defer_indexing_for_codesystems_of_size) {
-		this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
-	}
-
-	public Integer getKeycloak_max_group_count() {
-		return keycloak_max_group_count;
-	}
-
-	public Map<String, ImplementationGuide> getImplementationGuides() {
-		return implementationGuides;
-	}
-
-	public void setImplementationGuides(Map<String, ImplementationGuide> implementationGuides) {
-		this.implementationGuides = implementationGuides;
-	}
-
-	public Partitioning getPartitioning() {
-		return partitioning;
-	}
-
-	public void setPartitioning(Partitioning partitioning) {
-		this.partitioning = partitioning;
-	}
-
-	public Boolean getCql_enabled() {
-		return cql_enabled;
-	}
-
-	public void setCql_enabled(Boolean cql_enabled) {
-		this.cql_enabled = cql_enabled;
-	}
-
-	public Boolean getMdm_enabled() {
-		return mdm_enabled;
-	}
-
-	public void setMdm_enabled(Boolean mdm_enabled) {
-		this.mdm_enabled = mdm_enabled;
-	}
-
-	public Cors getCors() {
-		return cors;
-	}
-
-	public void setCors(Cors cors) {
-		this.cors = cors;
-	}
-
-	public List<Bundle.BundleType> getAllowed_bundle_types() {
-		return allowed_bundle_types;
-	}
-
-	public void setAllowed_bundle_types(List<Bundle.BundleType> allowed_bundle_types) {
-		this.allowed_bundle_types = allowed_bundle_types;
-	}
-
-	public String getEnvs() {
-		return envs;
-	}
-
-	public void setEnvs(String envs) {
-		this.envs = envs;
-	}
-
-	public String getServer_address() {
-		return server_address;
-	}
-
-	public void setServer_address(String server_address) {
-		this.server_address = server_address;
-	}
-
-	public String getKeycloak_Server_address() {
-		return keycloak_server_address;
-	}
-
-	public void setKeycloak_Server_address(String keycloak_server_address) {
-		this.keycloak_server_address = keycloak_server_address;
-	}
-
-	public String getKeycloak_Realm() {
-		return keycloak_realm;
-	}
-
-	public void setKeycloak_Realm(String keycloak_realm) {
-		this.keycloak_realm = keycloak_realm;
-	}
-
-	public String getKeycloak_Client_Realm() {
-		return keycloak_client_realm;
-	}
-
-	public void setKeycloak_Client_Realm(String keycloak_client_realm) {
-		this.keycloak_client_realm = keycloak_client_realm;
-	}
-
-	public String getKeycloak_Client_Id() {
-		return keycloak_client_Id;
-	}
-
-	public void setKeycloak_Client_Id(String keycloak_client_Id) {
-		this.keycloak_client_Id = keycloak_client_Id;
-	}
-
-	public String getKeycloak_Username() {
-		return keycloak_username;
-	}
-
-	public void setKeycloak_Username(String keycloak_username) {
-		this.keycloak_username = keycloak_username;
-	}
-
-	public String getKeycloak_Password() {
-		return keycloak_password;
-	}
-
-	public void setKeycloak_Password(String keycloak_password) {
-		this.keycloak_password = keycloak_password;
-	}
-
-	public String getFhir_user() {
-		return fhir_user;
-	}
-
-	public void setFhir_user(String fhir_user) {
-		this.fhir_user = fhir_user;
-	}
-
-	public String getFhir_password() {
-		return fhir_password;
-	}
-
-	public void setFhir_password(String fhir_password) {
-		this.fhir_password = fhir_password;
-	}
-
-	public String getFhir_hapi_client_id() {
-		return fhir_hapi_client_id;
-	}
-
-	public void setFhir_hapi_client_id(String fhir_hapi_client_id) {
-		this.fhir_hapi_client_id = fhir_hapi_client_id;
-	}
-
-	public String getFhir_hapi_client_secret() {
-		return fhir_hapi_client_secret;
-	}
-
-	public void setFhir_hapi_client_secret(String fhir_hapi_client_secret) {
-		this.fhir_hapi_client_secret = fhir_hapi_client_secret;
-	}
-
-	public String getHapi_Server_address() {
-		return hapi_server_address;
-	}
-
-	public String getImage_path() {
-		return image_path;
-	}
-
-	public void setImage_path(String image_path) {
-		this.image_path = image_path;
-	}
-
-	public String getNotification_datasource_config_path() {
-		return notification_datasource_config_path;
-	}
-
-	public void setNotification_datasource_config_path(String notification_datasource_config_path) {
-		this.notification_datasource_config_path = notification_datasource_config_path;
-	}
-	
-	public String getGcp_credential_file_path() {
-		return this.gcp_credential_file_path;
-	}
-	
-	public void setGcp_credential_file_path(String gcp_credential_file_path) {
-		this.gcp_credential_file_path = gcp_credential_file_path; 
-	}
-
-	public String getSql_screen_time_file_path() {
-		return sql_screen_time_file_path;
-	}
-
-	public void setSql_screen_time_file_path(String sql_screen_time_file_path) {
-		this.sql_screen_time_file_path = sql_screen_time_file_path;
-	}
-
-	public void setHapi_Server_address(String hapi_server_address) {
-		this.hapi_server_address = hapi_server_address;
-	}
-	
-	
-	public String getLine_chart_definitions_file() {
-		return line_chart_definitions_file;
-	}
-
-	public void setLine_chart_definitions_file(String line_chart_definitions_file) {
-		this.line_chart_definitions_file = line_chart_definitions_file;
-	}
-
-	
-	public String getAnc_config_file() {
-		return anc_config_file;
-	}
-
-	public void setAnc_config_file(String anc_config_file) {
-		this.anc_config_file = anc_config_file;
-	}
-	public String getBarChart_config_file() {
-		return barChart_config_file;
-	}
-
-	public String getPie_config_file(){
-		return pie_config_file;
-	}
-	public void setPie_config_file(String pie_config_file) { this.pie_config_file = pie_config_file; }
-	public void setPk_file(String pk_file){
-		this.pk_file = pk_file;
-	}
-	public String getPk_file(){
-		return pk_file;
-	}
-	public String getDashboard_public_key_file(){
-		return dashboard_public_key_file;
-	}
-
-	public void setDashboard_public_key_file(String dashboard_public_key_file){ this.dashboard_public_key_file = dashboard_public_key_file; }
-	public String getTabular_config_file() {
-		return tabular_config_file;
-	}
-
-	public void setTabular_config_file(String tabular_config_file) {
-		this.tabular_config_file = tabular_config_file;
-	}
-
-	public void setBarChart_config_file(String barChart_config_file) {
-		this.barChart_config_file = barChart_config_file;
-	}
-	public String getAnalytics_config_file() {
-		return analytics_config_file;
-	}
-
-	public void setAnalytics_config_file(String analytics_config_file) {
-		this.analytics_config_file = analytics_config_file;
-	}
-
-	public String getFilters_config_file() {
-		return filters_config_file;
-	}
-
-	public void setFilters_config_file(String filters_config_file) {
-		this.filters_config_file = filters_config_file;
-	}
-
-	public String getDaily_and_summary_config_file() {
-		return daily_and_summary_config_file;
-	}
-
-	public void setDaily_and_summary_config_file(String daily_and_summary_config_file) {
-		this.daily_and_summary_config_file = daily_and_summary_config_file;
-	}
-
-	public String getCountry_org_id() {
-		return country_org_id;
-	}
-
-	public void setCountry_org_id(String country_org_id) {
-		this.country_org_id = country_org_id;
-	}
-
-	public Subscription getSubscription() {
-		return subscription;
-	}
-
-	public Boolean getDefault_pretty_print() {
-		return default_pretty_print;
-	}
-
-	public void setDefault_pretty_print(Boolean default_pretty_print) {
-		this.default_pretty_print = default_pretty_print;
-	}
-
-	public void setSubscription(Subscription subscription) {
-		this.subscription = subscription;
-	}
-
-	public Validation getValidation() {
-		return validation;
-	}
-
-	public void setValidation(Validation validation) {
-		this.validation = validation;
-	}
-
-	public List<String> getSupported_resource_types() {
-		return supported_resource_types;
-	}
-
-	public void setSupported_resource_types(List<String> supported_resource_types) {
-		this.supported_resource_types = supported_resource_types;
-	}
-
-	public List<String> getSupported_resource_types(List<String> supported_resource_types) {
-		return this.supported_resource_types;
-	}
+    return use_apache_address_strategy;
+  }
+
+  public void setUse_apache_address_strategy(Boolean use_apache_address_strategy) {
+    this.use_apache_address_strategy = use_apache_address_strategy;
+  }
+
+    public Boolean getUse_apache_address_strategy_https() {
+    return use_apache_address_strategy_https;
+  }
+
+  public void setUse_apache_address_strategy_https(Boolean use_apache_address_strategy_https) {
+    this.use_apache_address_strategy_https = use_apache_address_strategy_https;
+  }
+
+  public Integer getDefer_indexing_for_codesystems_of_size() {
+    return defer_indexing_for_codesystems_of_size;
+  }
+
+  public void setDefer_indexing_for_codesystems_of_size(Integer defer_indexing_for_codesystems_of_size) {
+    this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
+  }
+
+  public Map<String, ImplementationGuide> getImplementationGuides() {
+    return implementationGuides;
+  }
+
+  public void setImplementationGuides(Map<String, ImplementationGuide> implementationGuides) {
+    this.implementationGuides = implementationGuides;
+  }
+
+  public Partitioning getPartitioning() {
+    return partitioning;
+  }
+
+  public void setPartitioning(Partitioning partitioning) {
+    this.partitioning = partitioning;
+  }
+
+  public Boolean getCql_enabled() {
+    return cql_enabled;
+  }
+
+  public void setCql_enabled(Boolean cql_enabled) {
+    this.cql_enabled = cql_enabled;
+  }
+
+  public Boolean getMdm_enabled() {
+    return mdm_enabled;
+  }
+
+  public void setMdm_enabled(Boolean mdm_enabled) {
+    this.mdm_enabled = mdm_enabled;
+  }
+
+  public Cors getCors() {
+    return cors;
+  }
+
+  public void setCors(Cors cors) {
+    this.cors = cors;
+  }
+
+  public List<Bundle.BundleType> getAllowed_bundle_types() {
+    return allowed_bundle_types;
+  }
+
+  public void setAllowed_bundle_types(List<Bundle.BundleType> allowed_bundle_types) {
+    this.allowed_bundle_types = allowed_bundle_types;
+  }
+
+  public String getServer_address() {
+    return server_address;
+  }
+
+  public void setServer_address(String server_address) {
+    this.server_address = server_address;
+  }
+
+  public Subscription getSubscription() {
+    return subscription;
+  }
+
+  public Boolean getDefault_pretty_print() {
+    return default_pretty_print;
+  }
+
+  public void setDefault_pretty_print(Boolean default_pretty_print) {
+    this.default_pretty_print = default_pretty_print;
+  }
+
+  public void setSubscription(Subscription subscription) {
+    this.subscription = subscription;
+  }
+
+  public Validation getValidation() {
+    return validation;
+  }
+
+  public void setValidation(Validation validation) {
+    this.validation = validation;
+  }
+
+  public List<String> getSupported_resource_types() {
+    return supported_resource_types;
+  }
+
+  public void setSupported_resource_types(List<String> supported_resource_types) {
+    this.supported_resource_types = supported_resource_types;
+  }
 
 	public Logger getLogger() {
-		return logger;
-	}
+    return logger;
+  }
 
-	public void setLogger(Logger logger) {
-		this.logger = logger;
-	}
+  public void setLogger(Logger logger) {
+    this.logger = logger;
+  }
 
-	public ClientIdStrategyEnum getClient_id_strategy() {
-		return client_id_strategy;
-	}
+  public ClientIdStrategyEnum getClient_id_strategy() {
+    return client_id_strategy;
+  }
 
-	public void setClient_id_strategy(ClientIdStrategyEnum client_id_strategy) {
-		this.client_id_strategy = client_id_strategy;
-	}
+  public void setClient_id_strategy(
+    ClientIdStrategyEnum client_id_strategy) {
+    this.client_id_strategy = client_id_strategy;
+  }
 
 	public boolean getAdvanced_lucene_indexing() {
 		return this.advanced_lucene_indexing;
@@ -539,76 +229,86 @@ public class AppProperties {
 	}
 
 	public Boolean getAllow_cascading_deletes() {
-		return allow_cascading_deletes;
-	}
+    return allow_cascading_deletes;
+  }
 
-	public void setAllow_cascading_deletes(Boolean allow_cascading_deletes) {
-		this.allow_cascading_deletes = allow_cascading_deletes;
-	}
+  public void setAllow_cascading_deletes(Boolean allow_cascading_deletes) {
+    this.allow_cascading_deletes = allow_cascading_deletes;
+  }
 
-	public Boolean getAllow_contains_searches() {
-		return allow_contains_searches;
-	}
+  public Boolean getAllow_contains_searches() {
+    return allow_contains_searches;
+  }
 
-	public void setAllow_contains_searches(Boolean allow_contains_searches) {
-		this.allow_contains_searches = allow_contains_searches;
-	}
+  public void setAllow_contains_searches(Boolean allow_contains_searches) {
+    this.allow_contains_searches = allow_contains_searches;
+  }
 
-	public Boolean getAllow_external_references() {
-		return allow_external_references;
-	}
+  public Boolean getAllow_external_references() {
+    return allow_external_references;
+  }
 
-	public void setAllow_external_references(Boolean allow_external_references) {
-		this.allow_external_references = allow_external_references;
-	}
+  public void setAllow_external_references(Boolean allow_external_references) {
+    this.allow_external_references = allow_external_references;
+  }
 
-	public Boolean getAllow_multiple_delete() {
-		return allow_multiple_delete;
-	}
+  public Boolean getAllow_multiple_delete() {
+    return allow_multiple_delete;
+  }
 
-	public void setAllow_multiple_delete(Boolean allow_multiple_delete) {
-		this.allow_multiple_delete = allow_multiple_delete;
-	}
+  public void setAllow_multiple_delete(Boolean allow_multiple_delete) {
+    this.allow_multiple_delete = allow_multiple_delete;
+  }
 
-	public Boolean getAllow_override_default_search_params() {
-		return allow_override_default_search_params;
-	}
+  public Boolean getAllow_override_default_search_params() {
+    return allow_override_default_search_params;
+  }
 
-	public void setAllow_override_default_search_params(Boolean allow_override_default_search_params) {
-		this.allow_override_default_search_params = allow_override_default_search_params;
-	}
+  public void setAllow_override_default_search_params(
+    Boolean allow_override_default_search_params) {
+    this.allow_override_default_search_params = allow_override_default_search_params;
+  }
 
-	public Boolean getAuto_create_placeholder_reference_targets() {
-		return auto_create_placeholder_reference_targets;
-	}
+  public Boolean getAuto_create_placeholder_reference_targets() {
+    return auto_create_placeholder_reference_targets;
+  }
 
-	public void setAuto_create_placeholder_reference_targets(Boolean auto_create_placeholder_reference_targets) {
-		this.auto_create_placeholder_reference_targets = auto_create_placeholder_reference_targets;
-	}
+  public void setAuto_create_placeholder_reference_targets(
+    Boolean auto_create_placeholder_reference_targets) {
+    this.auto_create_placeholder_reference_targets = auto_create_placeholder_reference_targets;
+  }
 
-	public Integer getDefault_page_size() {
-		return default_page_size;
-	}
+  public Integer getDefault_page_size() {
+    return default_page_size;
+  }
 
-	public void setDefault_page_size(Integer default_page_size) {
-		this.default_page_size = default_page_size;
-	}
+  public void setDefault_page_size(Integer default_page_size) {
+    this.default_page_size = default_page_size;
+  }
 
-	public Boolean getDelete_expunge_enabled() {
-		return delete_expunge_enabled;
-	}
+  public Boolean getDao_scheduling_enabled() {
+    return dao_scheduling_enabled;
+  }
 
-	public void setDelete_expunge_enabled(Boolean delete_expunge_enabled) {
-		this.delete_expunge_enabled = delete_expunge_enabled;
-	}
+  public void setDao_scheduling_enabled(Boolean dao_scheduling_enabled) {
+    this.dao_scheduling_enabled = dao_scheduling_enabled;
+  }
 
-	public Boolean getEnable_index_missing_fields() {
-		return enable_index_missing_fields;
-	}
+  public Boolean getDelete_expunge_enabled() {
+    return delete_expunge_enabled;
+  }
 
-	public void setEnable_index_missing_fields(Boolean enable_index_missing_fields) {
-		this.enable_index_missing_fields = enable_index_missing_fields;
-	}
+  public void setDelete_expunge_enabled(Boolean delete_expunge_enabled) {
+    this.delete_expunge_enabled = delete_expunge_enabled;
+  }
+
+  public Boolean getEnable_index_missing_fields() {
+    return enable_index_missing_fields;
+  }
+
+  public void setEnable_index_missing_fields(Boolean enable_index_missing_fields) {
+    this.enable_index_missing_fields = enable_index_missing_fields;
+  }
 
 	public Boolean getEnable_index_contained_resource() {
 		return enable_index_contained_resource;
@@ -627,152 +327,172 @@ public class AppProperties {
 	}
 
 	public Boolean getEnforce_referential_integrity_on_delete() {
-		return enforce_referential_integrity_on_delete;
+    return enforce_referential_integrity_on_delete;
+  }
+
+  public void setEnforce_referential_integrity_on_delete(
+    Boolean enforce_referential_integrity_on_delete) {
+    this.enforce_referential_integrity_on_delete = enforce_referential_integrity_on_delete;
+  }
+
+  public Boolean getEnforce_referential_integrity_on_write() {
+    return enforce_referential_integrity_on_write;
+  }
+
+  public void setEnforce_referential_integrity_on_write(
+    Boolean enforce_referential_integrity_on_write) {
+    this.enforce_referential_integrity_on_write = enforce_referential_integrity_on_write;
+  }
+
+  public Boolean getEtag_support_enabled() {
+    return etag_support_enabled;
+  }
+
+  public void setEtag_support_enabled(Boolean etag_support_enabled) {
+    this.etag_support_enabled = etag_support_enabled;
+  }
+
+  public Boolean getExpunge_enabled() {
+    return expunge_enabled;
+  }
+
+  public void setExpunge_enabled(Boolean expunge_enabled) {
+    this.expunge_enabled = expunge_enabled;
+  }
+
+  public Boolean getFhirpath_interceptor_enabled() {
+    return fhirpath_interceptor_enabled;
+  }
+
+  public void setFhirpath_interceptor_enabled(Boolean fhirpath_interceptor_enabled) {
+    this.fhirpath_interceptor_enabled = fhirpath_interceptor_enabled;
+  }
+
+  public Boolean getFilter_search_enabled() {
+    return filter_search_enabled;
+  }
+
+  public void setFilter_search_enabled(Boolean filter_search_enabled) {
+    this.filter_search_enabled = filter_search_enabled;
+  }
+
+  public Boolean getGraphql_enabled() {
+    return graphql_enabled;
+  }
+
+  public void setGraphql_enabled(Boolean graphql_enabled) {
+    this.graphql_enabled = graphql_enabled;
+  }
+
+  public Boolean getBinary_storage_enabled() {
+    return binary_storage_enabled;
+  }
+
+  public void setBinary_storage_enabled(Boolean binary_storage_enabled) {
+    this.binary_storage_enabled = binary_storage_enabled;
+  }
+
+	public Integer getInline_resource_storage_below_size() {
+		return inline_resource_storage_below_size;
 	}
 
-	public void setEnforce_referential_integrity_on_delete(Boolean enforce_referential_integrity_on_delete) {
-		this.enforce_referential_integrity_on_delete = enforce_referential_integrity_on_delete;
-	}
-
-	public Boolean getEnforce_referential_integrity_on_write() {
-		return enforce_referential_integrity_on_write;
-	}
-
-	public void setEnforce_referential_integrity_on_write(Boolean enforce_referential_integrity_on_write) {
-		this.enforce_referential_integrity_on_write = enforce_referential_integrity_on_write;
-	}
-
-	public Boolean getEtag_support_enabled() {
-		return etag_support_enabled;
-	}
-
-	public void setEtag_support_enabled(Boolean etag_support_enabled) {
-		this.etag_support_enabled = etag_support_enabled;
-	}
-
-	public Boolean getExpunge_enabled() {
-		return expunge_enabled;
-	}
-
-	public void setExpunge_enabled(Boolean expunge_enabled) {
-		this.expunge_enabled = expunge_enabled;
-	}
-
-	public Boolean getFhirpath_interceptor_enabled() {
-		return fhirpath_interceptor_enabled;
-	}
-
-	public void setFhirpath_interceptor_enabled(Boolean fhirpath_interceptor_enabled) {
-		this.fhirpath_interceptor_enabled = fhirpath_interceptor_enabled;
-	}
-
-	public Boolean getFilter_search_enabled() {
-		return filter_search_enabled;
-	}
-
-	public void setFilter_search_enabled(Boolean filter_search_enabled) {
-		this.filter_search_enabled = filter_search_enabled;
-	}
-
-	public Boolean getGraphql_enabled() {
-		return graphql_enabled;
-	}
-
-	public void setGraphql_enabled(Boolean graphql_enabled) {
-		this.graphql_enabled = graphql_enabled;
-	}
-
-	public Boolean getBinary_storage_enabled() {
-		return binary_storage_enabled;
-	}
-
-	public void setBinary_storage_enabled(Boolean binary_storage_enabled) {
-		this.binary_storage_enabled = binary_storage_enabled;
+	public void setInline_resource_storage_below_size(Integer inline_resource_storage_below_size) {
+		this.inline_resource_storage_below_size = inline_resource_storage_below_size;
 	}
 
 	public Boolean getBulk_export_enabled() {
-		return bulk_export_enabled;
-	}
+    return bulk_export_enabled;
+  }
 
-	public void setBulk_export_enabled(Boolean bulk_export_enabled) {
-		this.bulk_export_enabled = bulk_export_enabled;
-	}
+  public void setBulk_export_enabled(Boolean bulk_export_enabled) {
+    this.bulk_export_enabled = bulk_export_enabled;
+  }
 
-	public EncodingEnum getDefault_encoding() {
-		return default_encoding;
-	}
+  public Boolean getBulk_import_enabled() {
+    return bulk_import_enabled;
+  }
 
-	public void setDefault_encoding(EncodingEnum default_encoding) {
-		this.default_encoding = default_encoding;
-	}
+  public void setBulk_import_enabled(Boolean bulk_import_enabled) {
+    this.bulk_import_enabled = bulk_import_enabled;
+  }
 
-	public FhirVersionEnum getFhir_version() {
-		return fhir_version;
-	}
+  public EncodingEnum getDefault_encoding() {
+    return default_encoding;
+  }
 
-	public void setFhir_version(FhirVersionEnum fhir_version) {
-		this.fhir_version = fhir_version;
-	}
+  public void setDefault_encoding(EncodingEnum default_encoding) {
+    this.default_encoding = default_encoding;
+  }
 
-	public Integer getMax_binary_size() {
-		return max_binary_size;
-	}
+  public FhirVersionEnum getFhir_version() {
+    return fhir_version;
+  }
 
-	public void setMax_binary_size(Integer max_binary_size) {
-		this.max_binary_size = max_binary_size;
-	}
+  public void setFhir_version(FhirVersionEnum fhir_version) {
+    this.fhir_version = fhir_version;
+  }
 
-	public Integer getMax_page_size() {
-		return max_page_size;
-	}
+  public Integer getMax_binary_size() {
+    return max_binary_size;
+  }
 
-	public void setMax_page_size(Integer max_page_size) {
-		this.max_page_size = max_page_size;
-	}
+  public void setMax_binary_size(Integer max_binary_size) {
+    this.max_binary_size = max_binary_size;
+  }
 
-	public Long getRetain_cached_searches_mins() {
-		return retain_cached_searches_mins;
-	}
+  public Integer getMax_page_size() {
+    return max_page_size;
+  }
 
-	public void setRetain_cached_searches_mins(Long retain_cached_searches_mins) {
-		this.retain_cached_searches_mins = retain_cached_searches_mins;
-	}
+  public void setMax_page_size(Integer max_page_size) {
+    this.max_page_size = max_page_size;
+  }
 
-	public Long getReuse_cached_search_results_millis() {
-		return reuse_cached_search_results_millis;
-	}
+  public Long getRetain_cached_searches_mins() {
+    return retain_cached_searches_mins;
+  }
 
-	public void setReuse_cached_search_results_millis(Long reuse_cached_search_results_millis) {
-		if (Objects.equals(reuse_cached_search_results_millis, 0L)) {
-			this.reuse_cached_search_results_millis = null;
-		} else {
-			this.reuse_cached_search_results_millis = reuse_cached_search_results_millis;
-		}
-	}
+  public void setRetain_cached_searches_mins(Long retain_cached_searches_mins) {
+    this.retain_cached_searches_mins = retain_cached_searches_mins;
+  }
 
-	public Map<String, Tester> getTester() {
-		return tester;
-	}
+  public Long getReuse_cached_search_results_millis() {
+    return reuse_cached_search_results_millis;
+  }
 
-	public void setTester(Map<String, Tester> tester) {
-		this.tester = tester;
-	}
+  public void setReuse_cached_search_results_millis(Long reuse_cached_search_results_millis) {
+    if (Objects.equals(reuse_cached_search_results_millis, 0L)) {
+      this.reuse_cached_search_results_millis = null;
+    } else {
+      this.reuse_cached_search_results_millis = reuse_cached_search_results_millis;
+    }
+  }
 
-	public Boolean getNarrative_enabled() {
-		return narrative_enabled;
-	}
+  public Map<String, Tester> getTester() {
+    return tester;
+  }
 
-	public void setNarrative_enabled(Boolean narrative_enabled) {
-		this.narrative_enabled = narrative_enabled;
-	}
+  public void setTester(Map<String, Tester> tester) {
+    this.tester = tester;
+  }
 
-	public Boolean getLastn_enabled() {
-		return lastn_enabled;
-	}
+  public Boolean getNarrative_enabled()
+  {
+    return narrative_enabled;
+  }
 
-	public void setLastn_enabled(Boolean lastn_enabled) {
-		this.lastn_enabled = lastn_enabled;
-	}
+  public void setNarrative_enabled(Boolean narrative_enabled)
+  {
+    this.narrative_enabled = narrative_enabled;
+  }
+
+  public Boolean getLastn_enabled() {
+    return lastn_enabled;
+  }
+
+  public void setLastn_enabled(Boolean lastn_enabled) {
+    this.lastn_enabled = lastn_enabled;
+  }
 
 	public boolean getStore_resource_in_lucene_index_enabled() {
 		return store_resource_in_lucene_index_enabled;
@@ -783,36 +503,12 @@ public class AppProperties {
 	}
 
 	public NormalizedQuantitySearchLevel getNormalized_quantity_search_level() {
-		return this.normalized_quantity_search_level;
-	}
+	return this.normalized_quantity_search_level;
+  }
 
-	public void setNormalized_quantity_search_level(NormalizedQuantitySearchLevel normalized_quantity_search_level) {
-		this.normalized_quantity_search_level = normalized_quantity_search_level;
-	}
-
-	public Integer getSearch_coord_core_pool_size() {
-		return search_coord_core_pool_size;
-	}
-
-	public void setSearch_coord_core_pool_size(Integer search_coord_core_pool_size) {
-		this.search_coord_core_pool_size = search_coord_core_pool_size;
-	}
-
-	public Integer getSearch_coord_max_pool_size() {
-		return search_coord_max_pool_size;
-	}
-
-	public void setSearch_coord_max_pool_size(Integer search_coord_max_pool_size) {
-		this.search_coord_max_pool_size = search_coord_max_pool_size;
-	}
-
-	public Integer getSearch_coord_queue_capacity() {
-		return search_coord_queue_capacity;
-	}
-
-	public void setSearch_coord_queue_capacity(Integer search_coord_queue_capacity) {
-		this.search_coord_queue_capacity = search_coord_queue_capacity;
-	}
+  public void setNormalized_quantity_search_level(NormalizedQuantitySearchLevel normalized_quantity_search_level) {
+	this.normalized_quantity_search_level = normalized_quantity_search_level;
+  }
 
 	public boolean getInstall_transitive_ig_dependencies() {
 		return install_transitive_ig_dependencies;
@@ -843,293 +539,304 @@ public class AppProperties {
 	}
 
 	public static class Cors {
-		private Boolean allow_Credentials = true;
-		private List<String> allowed_origin = ImmutableList.of("*");
+    private Boolean allow_Credentials = true;
+    private List<String> allowed_origin = ImmutableList.of("*");
 
-		public List<String> getAllowed_origin() {
-			return allowed_origin;
-		}
+    public List<String> getAllowed_origin() {
+      return allowed_origin;
+    }
 
-		public void setAllowed_origin(List<String> allowed_origin) {
-			this.allowed_origin = allowed_origin;
-		}
+    public void setAllowed_origin(List<String> allowed_origin) {
+      this.allowed_origin = allowed_origin;
+    }
 
-		public Boolean getAllow_Credentials() {
-			return allow_Credentials;
-		}
+    public Boolean getAllow_Credentials() {
+      return allow_Credentials;
+    }
 
-		public void setAllow_Credentials(Boolean allow_Credentials) {
-			this.allow_Credentials = allow_Credentials;
-		}
+    public void setAllow_Credentials(Boolean allow_Credentials) {
+      this.allow_Credentials = allow_Credentials;
+    }
 
-	}
 
-	public static class Logger {
+  }
 
-		private String name = "fhirtest.access";
-		private String error_format = "ERROR - ${requestVerb} ${requestUrl}";
-		private String format = "Path[${servletPath}] Source[${requestHeader.x-forwarded-for}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}]";
-		private Boolean log_exceptions = true;
+  public static class Logger {
 
-		public String getName() {
-			return name;
-		}
+    private String name = "fhirtest.access";
+    private String error_format = "ERROR - ${requestVerb} ${requestUrl}";
+    private String format = "Path[${servletPath}] Source[${requestHeader.x-forwarded-for}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}]";
+    private Boolean log_exceptions = true;
 
-		public void setName(String name) {
-			this.name = name;
-		}
+    public String getName() {
+      return name;
+    }
 
-		public String getError_format() {
-			return error_format;
-		}
+    public void setName(String name) {
+      this.name = name;
+    }
 
-		public void setError_format(String error_format) {
-			this.error_format = error_format;
-		}
+    public String getError_format() {
+      return error_format;
+    }
 
-		public String getFormat() {
-			return format;
-		}
+    public void setError_format(String error_format) {
+      this.error_format = error_format;
+    }
 
-		public void setFormat(String format) {
-			this.format = format;
-		}
+    public String getFormat() {
+      return format;
+    }
 
-		public Boolean getLog_exceptions() {
-			return log_exceptions;
-		}
+    public void setFormat(String format) {
+      this.format = format;
+    }
 
-		public void setLog_exceptions(Boolean log_exceptions) {
-			this.log_exceptions = log_exceptions;
-		}
-	}
+    public Boolean getLog_exceptions() {
+      return log_exceptions;
+    }
 
-	public static class Tester {
+    public void setLog_exceptions(Boolean log_exceptions) {
+      this.log_exceptions = log_exceptions;
+    }
+  }
 
-		private String name;
-		private String server_address;
-		private Boolean refuse_to_fetch_third_party_urls = true;
-		private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
 
-		public FhirVersionEnum getFhir_version() {
-			return fhir_version;
-		}
+  public static class Tester {
 
-		public void setFhir_version(FhirVersionEnum fhir_version) {
-			this.fhir_version = fhir_version;
-		}
+    private String name;
+    private String server_address;
+    private Boolean refuse_to_fetch_third_party_urls = true;
+    private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
 
-		public String getName() {
-			return name;
-		}
+    public FhirVersionEnum getFhir_version() {
+      return fhir_version;
+    }
 
-		public void setName(String name) {
-			this.name = name;
-		}
+    public void setFhir_version(FhirVersionEnum fhir_version) {
+      this.fhir_version = fhir_version;
+    }
 
-		public String getServer_address() {
-			return server_address;
-		}
+    public String getName() {
+      return name;
+    }
 
-		public void setServer_address(String server_address) {
-			this.server_address = server_address;
-		}
+    public void setName(String name) {
+      this.name = name;
+    }
 
-		public Boolean getRefuse_to_fetch_third_party_urls() {
-			return refuse_to_fetch_third_party_urls;
-		}
+    public String getServer_address() {
+      return server_address;
+    }
 
-		public void setRefuse_to_fetch_third_party_urls(Boolean refuse_to_fetch_third_party_urls) {
-			this.refuse_to_fetch_third_party_urls = refuse_to_fetch_third_party_urls;
-		}
-	}
+    public void setServer_address(String server_address) {
+      this.server_address = server_address;
+    }
 
-	public static class ImplementationGuide {
-		private String url;
-		private String name;
-		private String version;
+    public Boolean getRefuse_to_fetch_third_party_urls() {
+      return refuse_to_fetch_third_party_urls;
+    }
 
-		public String getUrl() {
-			return url;
-		}
+    public void setRefuse_to_fetch_third_party_urls(Boolean refuse_to_fetch_third_party_urls) {
+      this.refuse_to_fetch_third_party_urls = refuse_to_fetch_third_party_urls;
+    }
+  }
+
+  public static class ImplementationGuide
+  {
+    private String url;
+    private String name;
+    private String version;
 
-		public void setUrl(String url) {
-			this.url = url;
-		}
+    public String getUrl() {
+      return url;
+    }
 
-		public String getName() {
-			return name;
-		}
+    public void setUrl(String url) {
+      this.url = url;
+    }
 
-		public void setName(String name) {
-			this.name = name;
-		}
+    public String getName() {
+      return name;
+    }
 
-		public String getVersion() {
-			return version;
-		}
+    public void setName(String name) {
+      this.name = name;
+    }
 
-		public void setVersion(String version) {
-			this.version = version;
-		}
-	}
+    public String getVersion() {
+      return version;
+    }
 
-	public static class Validation {
+    public void setVersion(String version) {
+      this.version = version;
+    }
+  }
 
-		private Boolean requests_enabled = false;
-		private Boolean responses_enabled = false;
+  public static class Validation {
 
-		public Boolean getRequests_enabled() {
-			return requests_enabled;
-		}
+    private Boolean requests_enabled = false;
+    private Boolean responses_enabled = false;
 
-		public void setRequests_enabled(Boolean requests_enabled) {
-			this.requests_enabled = requests_enabled;
-		}
+    public Boolean getRequests_enabled() {
+      return requests_enabled;
+    }
 
-		public Boolean getResponses_enabled() {
-			return responses_enabled;
-		}
+    public void setRequests_enabled(Boolean requests_enabled) {
+      this.requests_enabled = requests_enabled;
+    }
 
-		public void setResponses_enabled(Boolean responses_enabled) {
-			this.responses_enabled = responses_enabled;
-		}
-	}
+    public Boolean getResponses_enabled() {
+      return responses_enabled;
+    }
 
-	public static class Partitioning {
+    public void setResponses_enabled(Boolean responses_enabled) {
+      this.responses_enabled = responses_enabled;
+    }
+  }
 
-		private Boolean partitioning_include_in_search_hashes = false;
-		private Boolean allow_references_across_partitions = false;
+  public static class Partitioning {
 
-		public Boolean getPartitioning_include_in_search_hashes() {
-			return partitioning_include_in_search_hashes;
-		}
+    private Boolean partitioning_include_in_search_hashes = false;
+    private Boolean allow_references_across_partitions = false;
 
-		public void setPartitioning_include_in_search_hashes(Boolean partitioning_include_in_search_hashes) {
-			this.partitioning_include_in_search_hashes = partitioning_include_in_search_hashes;
-		}
+    public Boolean getPartitioning_include_in_search_hashes() {
+      return partitioning_include_in_search_hashes;
+    }
 
-		public Boolean getAllow_references_across_partitions() {
-			return allow_references_across_partitions;
-		}
+    public void setPartitioning_include_in_search_hashes(Boolean partitioning_include_in_search_hashes) {
+      this.partitioning_include_in_search_hashes = partitioning_include_in_search_hashes;
+    }
+    public Boolean getAllow_references_across_partitions() {
+      return allow_references_across_partitions;
+    }
 
-		public void setAllow_references_across_partitions(Boolean allow_references_across_partitions) {
-			this.allow_references_across_partitions = allow_references_across_partitions;
-		}
-	}
+    public void setAllow_references_across_partitions(Boolean allow_references_across_partitions) {
+      this.allow_references_across_partitions = allow_references_across_partitions;
+    }
+  }
 
-	public static class Subscription {
+  public static class Subscription {
 
-		public Boolean getResthook_enabled() {
-			return resthook_enabled;
-		}
+    public Boolean getResthook_enabled() {
+      return resthook_enabled;
+    }
 
-		public void setResthook_enabled(Boolean resthook_enabled) {
-			this.resthook_enabled = resthook_enabled;
-		}
-
-		public Boolean getWebsocket_enabled() {
-			return websocket_enabled;
-		}
-
-		public void setWebsocket_enabled(Boolean websocket_enabled) {
-			this.websocket_enabled = websocket_enabled;
-		}
-
-		private Boolean resthook_enabled = false;
-		private Boolean websocket_enabled = false;
-		private Email email = null;
-
-		public Email getEmail() {
-			return email;
-		}
-
-		public void setEmail(Email email) {
-			this.email = email;
-		}
-
-		public static class Email {
-			public String getFrom() {
-				return from;
-			}
-
-			public void setFrom(String from) {
-				this.from = from;
-			}
-
-			public String getHost() {
-				return host;
-			}
-
-			public void setHost(String host) {
-				this.host = host;
-			}
-
-			public Integer getPort() {
-				return port;
-			}
-
-			public void setPort(Integer port) {
-				this.port = port;
-			}
-
-			public String getUsername() {
-				return username;
-			}
-
-			public void setUsername(String username) {
-				this.username = username;
-			}
-
-			public String getPassword() {
-				return password;
-			}
-
-			public void setPassword(String password) {
-				this.password = password;
-			}
-
-			public Boolean getAuth() {
-				return auth;
-			}
-
-			public void setAuth(Boolean auth) {
-				this.auth = auth;
-			}
-
-			public Boolean getStartTlsEnable() {
-				return startTlsEnable;
-			}
-
-			public void setStartTlsEnable(Boolean startTlsEnable) {
-				this.startTlsEnable = startTlsEnable;
-			}
-
-			public Boolean getStartTlsRequired() {
-				return startTlsRequired;
-			}
-
-			public void setStartTlsRequired(Boolean startTlsRequired) {
-				this.startTlsRequired = startTlsRequired;
-			}
-
-			public Boolean getQuitWait() {
-				return quitWait;
-			}
-
-			public void setQuitWait(Boolean quitWait) {
-				this.quitWait = quitWait;
-			}
-
-			private String from;
-			private String host;
-			private Integer port = 25;
-			private String username;
-			private String password;
-			private Boolean auth = false;
-			private Boolean startTlsEnable = false;
-			private Boolean startTlsRequired = false;
-			private Boolean quitWait = false;
-		}
-	}
+    public void setResthook_enabled(Boolean resthook_enabled) {
+      this.resthook_enabled = resthook_enabled;
+    }
+
+    public Boolean getWebsocket_enabled() {
+      return websocket_enabled;
+    }
+
+    public void setWebsocket_enabled(Boolean websocket_enabled) {
+      this.websocket_enabled = websocket_enabled;
+    }
+
+    private Boolean resthook_enabled = false;
+    private Boolean websocket_enabled = false;
+    private Email email = null;
+
+    public Email getEmail() {
+      return email;
+    }
+
+    public void setEmail(Email email) {
+      this.email = email;
+    }
+
+
+    public static class Email {
+      public String getFrom() {
+        return from;
+      }
+
+      public void setFrom(String from) {
+        this.from = from;
+      }
+
+      public String getHost() {
+        return host;
+      }
+
+      public void setHost(String host) {
+        this.host = host;
+      }
+
+      public Integer getPort() {
+        return port;
+      }
+
+      public void setPort(Integer port) {
+        this.port = port;
+      }
+
+      public String getUsername() {
+        return username;
+      }
+
+      public void setUsername(String username) {
+        this.username = username;
+      }
+
+      public String getPassword() {
+        return password;
+      }
+
+      public void setPassword(String password) {
+        this.password = password;
+      }
+
+      public Boolean getAuth() {
+        return auth;
+      }
+
+      public void setAuth(Boolean auth) {
+        this.auth = auth;
+      }
+
+      public Boolean getStartTlsEnable() {
+        return startTlsEnable;
+      }
+
+      public void setStartTlsEnable(Boolean startTlsEnable) {
+        this.startTlsEnable = startTlsEnable;
+      }
+
+      public Boolean getStartTlsRequired() {
+        return startTlsRequired;
+      }
+
+      public void setStartTlsRequired(Boolean startTlsRequired) {
+        this.startTlsRequired = startTlsRequired;
+      }
+
+      public Boolean getQuitWait() {
+        return quitWait;
+      }
+
+      public void setQuitWait(Boolean quitWait) {
+        this.quitWait = quitWait;
+      }
+
+      private String from;
+      private String host;
+      private Integer port = 25;
+      private String username;
+      private String password;
+      private Boolean auth = false;
+      private Boolean startTlsEnable = false;
+      private Boolean startTlsRequired = false;
+      private Boolean quitWait = false;
+    }
+  }
+
+  public boolean getEnable_index_of_type() {
+    return enable_index_of_type;
+  }
+
+  public void setEnable_index_of_type(boolean enable_index_of_type) {
+    this.enable_index_of_type = enable_index_of_type;
+  }
 }
