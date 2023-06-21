@@ -9,7 +9,6 @@ import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMod
 import ca.uhn.fhir.jpa.model.entity.StorageSettings;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.util.JpaHibernatePropertiesProvider;
-import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.EmailSenderImpl;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
 import ca.uhn.fhir.rest.server.mail.IMailSvc;
@@ -27,7 +26,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -84,7 +82,7 @@ public class FhirServerConfigCommon {
   public JpaStorageSettings jpaStorageSettings(AppProperties appProperties) {
     JpaStorageSettings jpaStorageSettings = new JpaStorageSettings();
 
-    jpaStorageSettings.setIndexMissingFields(appProperties.getEnable_index_missing_fields() ? JpaStorageSettings.IndexEnabledEnum.ENABLED : JpaStorageSettings.IndexEnabledEnum.DISABLED);
+    jpaStorageSettings.setIndexMissingFields(appProperties.getEnable_index_missing_fields() ? StorageSettings.IndexEnabledEnum.ENABLED : StorageSettings.IndexEnabledEnum.DISABLED);
     jpaStorageSettings.setAutoCreatePlaceholderReferenceTargets(appProperties.getAuto_create_placeholder_reference_targets());
     jpaStorageSettings.setEnforceReferentialIntegrityOnWrite(appProperties.getEnforce_referential_integrity_on_write());
     jpaStorageSettings.setEnforceReferentialIntegrityOnDelete(appProperties.getEnforce_referential_integrity_on_delete());
