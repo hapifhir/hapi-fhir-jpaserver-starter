@@ -70,6 +70,9 @@ import ch.ahdis.matchbox.engine.MatchboxEngine;
  */
 public class MatchboxService {
 
+  public static final String CURRENT_DEFAULT_VERSION = "4.0";
+  public static final String CURRENT_DEFAULT_FULL_VERSION = "4.0.1";
+
   private final SessionCache sessionCache;
 
   public MatchboxService() {
@@ -114,7 +117,7 @@ public class MatchboxService {
   public VersionSourceInformation scanForVersions(CliContext cliContext) throws Exception {
     VersionSourceInformation versions = new VersionSourceInformation();
     IgLoader igLoader = new IgLoader(
-      new FilesystemPackageCacheManager(true, ToolsVersion.TOOLS_VERSION),
+      new FilesystemPackageCacheManager(FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER),
       new SimpleWorkerContext.SimpleWorkerContextBuilder().fromNothing(),
       null);
     for (String src : cliContext.getIgs()) {
@@ -457,8 +460,8 @@ public class MatchboxService {
       }
     }
     if (versions.isEmpty()) {
-      System.out.println("  No Version Info found: Using Default version '" + VersionUtilities.CURRENT_DEFAULT_VERSION + "'");
-      return VersionUtilities.CURRENT_DEFAULT_FULL_VERSION;
+      System.out.println("  No Version Info found: Using Default version '" + CURRENT_DEFAULT_VERSION + "'");
+      return CURRENT_DEFAULT_FULL_VERSION;
     }
     if (versions.size() == 1) {
       System.out.println("-> use version " + versions.version());

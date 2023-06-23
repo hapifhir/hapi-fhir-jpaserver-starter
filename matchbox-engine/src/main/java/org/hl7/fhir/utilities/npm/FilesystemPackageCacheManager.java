@@ -36,6 +36,8 @@ import org.hl7.fhir.utilities.json.model.JsonArray;
 import org.hl7.fhir.utilities.json.model.JsonElement;
 import org.hl7.fhir.utilities.json.model.JsonObject;
 import org.hl7.fhir.utilities.json.parser.JsonParser;
+import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager.FilesystemPackageCacheMode;
+import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager.IPackageProvider;
 import org.hl7.fhir.utilities.npm.NpmPackage.NpmPackageFolder;
 import org.hl7.fhir.utilities.npm.PackageList.PackageListEntry;
 import org.slf4j.Logger;
@@ -87,7 +89,11 @@ import org.slf4j.LoggerFactory;
 public class FilesystemPackageCacheManager extends BasePackageCacheManager implements IPackageCacheManager {
 
 
-	// matchbox-engine
+	public enum FilesystemPackageCacheMode {
+		USER, SYSTEM, TESTING
+
+	}
+
 	// When running in testing mode, some packages are provided from the test case repository rather than by the normal means
 	// the PackageProvider is responsible for this. if no package provider is defined, or it declines to handle the package,
 	// then the normal means will be used
@@ -111,31 +117,32 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 	private JsonArray buildInfo;
 	private boolean suppressErrors;
 
-	/**
-	 * Constructor
-	 */
-	@Deprecated
-	public FilesystemPackageCacheManager(boolean userMode, int toolsVersion) throws IOException {
-		myPackageServers.addAll(PackageServer.publicServers());
-
-		if (userMode)
-			cacheFolder = Utilities.path(System.getProperty("user.home"), ".fhir", "packages");
-		else
-			cacheFolder = Utilities.path("var", "lib", ".fhir", "packages");
-		if (!(new File(cacheFolder).exists()))
-			Utilities.createDirectory(cacheFolder);
-		if (!(new File(Utilities.path(cacheFolder, "packages.ini")).exists()))
-			TextFile.stringToFile("[cache]\r\nversion=" + CACHE_VERSION + "\r\n\r\n[urls]\r\n\r\n[local]\r\n\r\n", Utilities.path(cacheFolder, "packages.ini"), false);
-		createIniFile();
-	}
 
 	public FilesystemPackageCacheManager(boolean userMode) throws IOException {
+		init(userMode ? FilesystemPackageCacheMode.USER : FilesystemPackageCacheMode.SYSTEM);
+	}
+
+	public FilesystemPackageCacheManager(FilesystemPackageCacheMode mode) throws IOException {
+		init(mode);
+	}
+
+	public void init(FilesystemPackageCacheMode mode) throws IOException {
 		myPackageServers.addAll(PackageServer.publicServers());
 
-		if (userMode)
-			cacheFolder = Utilities.path(System.getProperty("user.home"), ".fhir", "packages");
-		else
-			cacheFolder = Utilities.path("var", "lib", ".fhir", "packages");
+		switch (mode) {
+			case SYSTEM:
+				cacheFolder = Utilities.path("var", "lib", ".fhir", "packages");
+				break;
+			case USER:
+				cacheFolder = Utilities.path(System.getProperty("user.home"), ".fhir", "packages");
+				break;
+			case TESTING:
+				cacheFolder = Utilities.path("[tmp]", ".fhir", "packages");
+				break;
+			default:
+				break;
+		}
+
 		if (!(new File(cacheFolder).exists()))
 			Utilities.createDirectory(cacheFolder);
 		if (!(new File(Utilities.path(cacheFolder, "packages.ini")).exists()))
@@ -270,12 +277,36 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 				try {
 					return pc.getLatestVersion(id);
 				} catch (IOException e) {
-					ourLog.info("Failed to determine latest version of package {} from server: {}", id, nextPackageServer);
+					ourLog.info("Failed to determine latest version of package {} from server: {}", id, nextPackageServer.toString());
 				}
 			}
 		}
+		try {
+			return fetchVersionTheOldWay(id);
+		} catch (Exception e) {
+			ourLog.info("Failed to determine latest version of package {} from server: {}", id, "build.fhir.org");
+		}
+		// still here? use the latest version we previously found or at least, is in the cache
 
-		return fetchVersionTheOldWay(id);
+		String version = getLatestVersionFromCache(id);
+		if (version != null) {
+			return version;
+		}
+		throw new FHIRException("Unable to find the last version for package "+id+": no local copy, and no network access");
+	}
+
+	public String getLatestVersionFromCache(String id) throws IOException {
+		for (String f : reverseSorted(new File(cacheFolder).list())) {
+			File cf = new File(Utilities.path(cacheFolder, f));
+			if (cf.isDirectory()) {
+				if (f.startsWith(id + "#")) {
+					String ver = f.substring(f.indexOf("#")+1);
+					ourLog.info("Latest version of package {} found locally is {} - using that", id, ver);
+					return ver;
+				}
+			}
+		}
+		return null;
 	}
 
 	private NpmPackage loadPackageFromFile(String id, String folder) throws IOException {
@@ -413,8 +444,9 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 				throw new IOException("Attempt to import a mis-identified package. Expected " + id + ", got " + npm.name());
 			}
 		}
-		if (version == null)
+		if (version == null) {
 			version = npm.version();
+		}
 
 		String v = version;
 		return new CacheLock(id + "#" + version).doWithLock(() -> {
@@ -703,20 +735,26 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 				return null; // nup, we need a new copy
 			}
 		} catch (Exception e) {
+			log("Unable to check package currency: "+id+": "+id);
 		}
 		return p;
 	}
 
-	private boolean checkBuildLoaded() {
-		if (buildLoaded)
-			return true;
-		try {
-			loadFromBuildServer();
-		} catch (Exception e) {
-			log("Error connecting to build server - running without build (" + e.getMessage() + ")");
-			e.printStackTrace();
+	private void checkBuildLoaded() {
+		if (!buildLoaded) {
+			try {
+				loadFromBuildServer();
+			} catch (Exception e) {
+				try {
+					// we always pause a second and try again - the most common reason to be here is that the file was being changed on the server
+					Thread.sleep(1000);
+					loadFromBuildServer();
+				} catch (Exception e2) {
+					log("Error connecting to build server - running without build (" + e2.getMessage() + ")");
+					//        e.printStackTrace();
+				}
+			}
 		}
-		return false;
 	}
 
 	private void loadFromBuildServer() throws IOException {
@@ -744,7 +782,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 				ciList.put(bld.getPackageId(), "https://build.fhir.org/ig/" + bld.getRepo());
 			}
 		}
-		buildLoaded = true; // whether it succeeds or not
+		buildLoaded = true;
 	}
 
 	private String getRepo(String path) {
@@ -1017,15 +1055,13 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 		this.suppressErrors = suppressErrors;
 	}
 
-  public static IPackageProvider getPackageProvider() {
-    	// matchbox-engine
+	public static IPackageProvider getPackageProvider() {
 		return packageProvider;
-  }
+	}
 
-  public static void setPackageProvider(IPackageProvider packageProvider) {
-	  // matchbox-engine
-    FilesystemPackageCacheManager.packageProvider = packageProvider;
-  }
+	public static void setPackageProvider(IPackageProvider packageProvider) {
+		FilesystemPackageCacheManager.packageProvider = packageProvider;
+	}
 
-  
+
 }
