@@ -14,6 +14,13 @@ services:
       spring.datasource.password: admin
       spring.datasource.driverClassName: org.postgresql.Driver
       spring.jpa.properties.hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      OAUTH_ENABLED: true
+      OAUTH_ISSUER: https://auth-internal.elimuinformatics.com/auth/realms/product
+      OAUTH_JWKS_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/certs
+      OAUTH_AUTHORIZATION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/auth
+      OAUTH_TOKEN_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/token
+      OAUTH_INTROSPECTION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/token/introspect
+      OAUTH_REVOCATION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/revoke
   hapi-fhir-postgres:
     image: postgres:13-alpine
     container_name: hapi-fhir-postgres

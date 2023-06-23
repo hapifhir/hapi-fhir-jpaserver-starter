@@ -66,6 +66,7 @@ public class AppProperties {
 
   private Validation validation = new Validation();
   private Map<String, Tester> tester = null;
+  private Oauth oauth = new Oauth();
   private Logger logger = new Logger();
   private Subscription subscription = new Subscription();
   private Cors cors = null;
@@ -86,7 +87,7 @@ public class AppProperties {
   private Integer bundle_batch_pool_size = 20;
   private Integer bundle_batch_pool_max_size = 100;
   private final List<String> local_base_urls = new ArrayList<>();
-  
+
   private final List<String> custom_interceptor_classes = new ArrayList<>();
 
   public List<String> getCustomInterceptorClasses() {
@@ -101,9 +102,6 @@ public class AppProperties {
 	public void setStaticLocation(String staticLocation) {
 		this.staticLocation = staticLocation;
 	}
-
-
-  private Oauth oauth = new Oauth();
 
 
 	public Boolean getOpenapi_enabled() {
@@ -611,11 +609,17 @@ public class AppProperties {
 
   public static class Oauth {
     private Boolean enabled = false;
+    private String issuer;
+    private String jwks_url;
+    private String authorization_url;
+    private String grant_types_supported;
     private String token_url;
     private String manage_url;
     private String client_id;
     private String user_role;
     private String admin_role;
+    private String introspection_url;
+    private String revocation_url;
 
     public Boolean getEnabled() {
       return enabled;
@@ -623,6 +627,38 @@ public class AppProperties {
 
     public void setEnabled(Boolean enabled) {
       this.enabled = enabled;
+    }
+
+    public String getIssuer() {
+      return issuer;
+    }
+
+    public void setIssuer(String issuer) {
+      this.issuer = issuer;
+    }
+
+    public String getJwks_url() {
+      return jwks_url;
+    }
+
+    public void setJwks_url(String jwks_url) {
+      this.jwks_url = jwks_url;
+    }
+
+    public String getAuthorization_url() {
+      return authorization_url;
+    }
+
+    public void setAuthorization_url(String authorization_url) {
+      this.authorization_url = authorization_url;
+    }
+
+    public String getGrant_types_supported() {
+      return grant_types_supported;
+    }
+
+    public void setGrant_types_supported(String grant_types_supported) {
+      this.grant_types_supported = grant_types_supported;
     }
 
     public String getToken_url() {
@@ -648,7 +684,7 @@ public class AppProperties {
     public void setClient_id(String client_id) {
       this.client_id = client_id;
     }
-    
+
     public String getUser_role() {
       return user_role;
     }
@@ -658,11 +694,27 @@ public class AppProperties {
     }
 
     public String getAdmin_role() {
-      return manage_url;
+      return admin_role;
     }
 
     public void setAdmin_role(String admin_role) {
       this.admin_role = admin_role;
+    }
+
+    public String getIntrospection_url() {
+      return introspection_url;
+    }
+
+    public void setIntrospection_url(String introspection_url) {
+      this.introspection_url = introspection_url;
+    }
+
+    public String getRevocation_url() {
+      return revocation_url;
+    }
+
+    public void setRevocation_url(String revocation_url) {
+      this.revocation_url = revocation_url;
     }
   }
 

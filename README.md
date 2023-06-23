@@ -288,7 +288,6 @@ You can use a custom property file that utilizes environment variables for many 
 -e datasource.password=<datasource_password> \
 -e datasource.url=<jdbc_url> \
 -e datasource.username=<datasource_password> \
--e enable_web=<true/false> \
 -e fhir_version=<DSTU2/DSTU3/R4> \
 -e hapi.fhir.server_address=<server_address>/fhir/ \
 -e hibernate.dialect=<hibernate_dialect> \

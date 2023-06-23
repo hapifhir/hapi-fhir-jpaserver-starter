@@ -152,6 +152,17 @@ hapi:
     #    bundle_batch_pool_size: 10
     #    bundle_batch_pool_max_size: 50
 
+    oauth:
+      enabled: ${OAUTH_ENABLED:false}
+      issuer: ${OAUTH_ISSUER}
+      jwks_url: ${OAUTH_JWKS_URL}
+      authorization_url: ${OAUTH_AUTHORIZATION_URL}
+      grant_types_supported: ${OAUTH_GRANT_TYPES_SUPPORTED:authorization_code}
+      token_url: ${OAUTH_TOKEN_URL}
+      introspection_url: ${OAUTH_INTROSPECTION_URL}
+      revocation_url: ${OAUTH_REVOCATION_URL}
+      manage_url: ${OAUTH_MANAGE_URL}
+
     #    logger:
     #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
     #      format: >-

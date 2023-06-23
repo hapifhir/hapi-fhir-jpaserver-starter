@@ -4,6 +4,7 @@ import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import ca.uhn.fhir.jpa.starter.common.FhirTesterConfig;
+import ca.uhn.fhir.jpa.starter.controller.WellknownEndpointController;
 import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
@@ -82,10 +83,29 @@ public class Application extends SpringBootServletInitializer {
     dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
 
     ServletRegistrationBean registrationBean = new ServletRegistrationBean();
+    registrationBean.setName("tester");
     registrationBean.setServlet(dispatcherServlet);
     registrationBean.addUrlMappings("/*");
     registrationBean.setLoadOnStartup(1);
     return registrationBean;
+  }
 
+  @Bean
+  public ServletRegistrationBean smartConfigurationRegistrationBean() {
+
+    AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
+    annotationConfigWebApplicationContext.register(WellknownEndpointController.class);
+
+    DispatcherServlet dispatcherServlet = new DispatcherServlet(
+      annotationConfigWebApplicationContext);
+    dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
+    dispatcherServlet.setContextConfigLocation(WellknownEndpointController.class.getName());
+
+    ServletRegistrationBean registrationBean = new ServletRegistrationBean();
+    registrationBean.setName("well-known");
+    registrationBean.setServlet(dispatcherServlet);
+    registrationBean.addUrlMappings("/fhir/.well-known/*");
+    registrationBean.setLoadOnStartup(1);
+    return registrationBean;
   }
 }
