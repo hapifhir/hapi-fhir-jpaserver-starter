@@ -38,7 +38,7 @@ public class PackageCacheInitializer {
   }
 
   public void pkg(String id, String version, String tgz, String desc) throws IOException, FHIRException {
-    pcm = new FilesystemPackageCacheManager(true, ToolsVersion.TOOLS_VERSION);
+    pcm = new FilesystemPackageCacheManager(FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER);
     if (tgz != null) {
       InputStream inputStream = null;
       if (Utilities.isURL(tgz)) {

@@ -396,7 +396,7 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 			}
 		}
 		MethodOutcome outcome = new MethodOutcome();
-		outcome.setStatusCode(400);
+		outcome.setResponseStatusCode(400);
 		outcome.setCreated(false);
 		OperationOutcome operationOutcome = new OperationOutcome();
 		operationOutcome.addIssue().setDiagnostics("machbox engine not found for url " + url + " and fhir version " + cliContext.getFhirVersion());
@@ -461,7 +461,7 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 			}
 		}
 		MethodOutcome outcome = new MethodOutcome();
-		outcome.setStatusCode(400);
+		outcome.setResponseStatusCode(400);
 		outcome.setCreated(false);
 		OperationOutcome operationOutcome = new OperationOutcome();
 		operationOutcome.addIssue().setDiagnostics("machbox engine not found for url " + url + " and fhir version " + cliContext.getFhirVersion());

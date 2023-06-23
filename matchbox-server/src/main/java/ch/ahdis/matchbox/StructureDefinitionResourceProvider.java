@@ -42,7 +42,7 @@ public class StructureDefinitionResourceProvider extends
 				} catch (FHIRException | IOException e) {
 					ourLog.error("Error creating snapshot for StructureDefinition " + theResource.getUrl(), e);
 					MethodOutcome outcome = new MethodOutcome();
-					outcome.setStatusCode(400);
+					outcome.setResponseStatusCode(400);
 					outcome.setCreated(false);
 					OperationOutcome operationOutcome = new OperationOutcome();
 					operationOutcome.addIssue().setDiagnostics(e.getMessage());
