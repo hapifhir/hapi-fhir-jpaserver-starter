@@ -48,8 +48,8 @@ hapi:
         url: classpath:/hl7.terminology#5.0.0.tgz
       cda:
         name: ch.fhir.ig.cda-fhir-maps
-        version: 0.4.0-cibuild
-        url: https://build.fhir.org/ig/hl7ch/cda-fhir-maps/package.tgz
+        version: 0.3.0
+        url: https://fhir.ch/ig/cda-fhir-maps/package.tgz
       chemd:
         name: ch.fhir.ig.ch-emed
         version: 3.0.0
