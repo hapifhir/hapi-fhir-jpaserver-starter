@@ -1,7 +1,7 @@
-FROM maven:3.8-openjdk-17-slim as build-hapi
+FROM docker.io/library/maven:3.9.2-eclipse-temurin-17 as build-hapi
 WORKDIR /tmp/hapi-fhir-jpaserver-starter
 
-ARG OPENTELEMETRY_JAVA_AGENT_VERSION=1.17.0
+ARG OPENTELEMETRY_JAVA_AGENT_VERSION=1.26.0
 RUN curl -LSsO https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${OPENTELEMETRY_JAVA_AGENT_VERSION}/opentelemetry-javaagent.jar
 
 COPY pom.xml .
@@ -46,4 +46,4 @@ WORKDIR /app
 COPY --chown=nonroot:nonroot --from=build-distroless /app /app
 COPY --chown=nonroot:nonroot --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/opentelemetry-javaagent.jar /app
 
-ENTRYPOINT ["java", "--class-path", "/app/main.war", "-Dloader.path=main.war!/WEB-INF/classes/,main.war!/WEB-INF/,/app/extra-classes", "org.springframework.boot.loader.PropertiesLauncher", "app/main.war"]
+ENTRYPOINT ["java", "--class-path", "/app/main.war", "-Dloader.path=main.war!/WEB-INF/classes/,main.war!/WEB-INF/,/app/extra-classes", "org.springframework.boot.loader.PropertiesLauncher"]
