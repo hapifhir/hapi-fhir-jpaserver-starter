@@ -2,7 +2,8 @@ target/classes/
 target/failsafe-reports/
 target/generated-*
 target/maven-*
-target/ROOT
+target/replicationRoot
+target/applicationRoot
 target/test-classes/
 target/war
 target/duplicate-finder-result.xml
