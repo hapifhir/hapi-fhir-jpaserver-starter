@@ -167,7 +167,7 @@ hapi:
     #    max_binary_size: 104857600
     #    max_page_size: 200
     #    retain_cached_searches_mins: 60
-    #    reuse_cached_search_results_millis: 60000
+    reuse_cached_search_results_millis: 0
     # tester:
     #   home:
     #     name: Local Tester
