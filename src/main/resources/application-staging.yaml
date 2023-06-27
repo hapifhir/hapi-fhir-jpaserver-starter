@@ -115,10 +115,9 @@ hapi:
     advanced_lucene_indexing: false
     bulk_export_enabled: false
     bulk_import_enabled: true
-    #    enforce_referential_integrity_on_delete: false
     # This is an experimental feature, and does not fully support _total and other FHIR features.
-    #    enforce_referential_integrity_on_delete: false
-    #    enforce_referential_integrity_on_write: false
+    enforce_referential_integrity_on_delete: false
+    enforce_referential_integrity_on_write: false
     #    etag_support_enabled: true
     expunge_enabled: true
     #    client_id_strategy: ALPHANUMERIC
