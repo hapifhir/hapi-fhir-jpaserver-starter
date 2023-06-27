@@ -24,6 +24,7 @@
         <java.version>11</java.version>
         <logback-classic.version>1.2.11</logback-classic.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
+        <project.jetty.version>11.0.15</project.jetty.version>
     </properties>
 
     <prerequisites>
@@ -47,21 +48,22 @@
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-jetty-api</artifactId>
-            <version>${jetty_version}</version>
+            <version>${project.jetty.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-jetty-client</artifactId>
-            <version>${jetty_version}</version>
+            <version>${project.jetty.version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <version>42.2.5</version>
         </dependency>
-        <dependency>
-          <groupId>com.microsoft.sqlserver</groupId>
-          <artifactId>mssql-jdbc</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--          <groupId>com.microsoft.sqlserver</groupId>-->
+<!--          <artifactId>mssql-jdbc</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
@@ -678,6 +680,17 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>ca.uhn.fhir.jpa.starter.Application</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
