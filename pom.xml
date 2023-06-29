@@ -25,6 +25,7 @@
         <logback-classic.version>1.2.11</logback-classic.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
         <project.jetty.version>11.0.15</project.jetty.version>
+        <start-class>ca.uhn.fhir.jpa.starter.Application</start-class>
     </properties>
 
     <prerequisites>
@@ -436,6 +437,7 @@
                         </goals>
                         <configuration>
                             <mainClass>ca.uhn.fhir.jpa.starter.Application</mainClass>
+                            <layout>JAR</layout>
                         </configuration>
                     </execution>
                 </executions>
@@ -651,7 +653,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.13</version>
+                        <version>2.15.1</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>
@@ -680,17 +682,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>ca.uhn.fhir.jpa.starter.Application</mainClass>
-                                </manifest>
-                            </archive>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
