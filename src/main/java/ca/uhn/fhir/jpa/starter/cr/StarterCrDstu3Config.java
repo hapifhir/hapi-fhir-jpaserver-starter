@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter.cr;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.cr.config.CrDstu3Config;
+import ca.uhn.fhir.cr.config.CrProperties;
 import ca.uhn.fhir.cr.dstu3.IActivityDefinitionProcessorFactory;
 import ca.uhn.fhir.cr.dstu3.IPlanDefinitionProcessorFactory;
 import ca.uhn.fhir.cr.dstu3.IQuestionnaireProcessorFactory;
@@ -99,6 +100,11 @@ public class StarterCrDstu3Config {
 		return theAppProperties.getCqlOptions();
 	}
 
+	@Primary
+	@Bean
+	public CrProperties.MeasureProperties measureProperties(AppProperties theAppProperties) {
+		return theAppProperties.getMeasureProperties();
+	}
 	@Primary
 	@Bean
 	public CqlTranslatorOptions cqlTranslatorOptions(FhirContext theFhirContext, AppProperties theAppProperties) {

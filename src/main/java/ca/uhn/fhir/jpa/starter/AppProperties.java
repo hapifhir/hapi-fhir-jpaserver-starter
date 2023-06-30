@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import ca.uhn.fhir.cr.config.CrProperties;
 import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
@@ -28,58 +29,36 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 @Configuration
 @EnableConfigurationProperties
 public class AppProperties {
-
+	//cql settings
 	private CqlEngineOptions cqlEngineOptions = CqlEngineOptions.defaultOptions();
 	private Boolean cql_use_embedded_libraries = true;
 	private Boolean cql_runtime_debug_logging_enabled = false;
 	private Boolean cql_runtime_enable_validation = false;
 	private Boolean cql_runtime_enable_expression_caching = false;
 	private Boolean cql_compiler_validate_units = true;
-
 	private Boolean cql_compiler_verify_only = false;
-
 	private String cql_compiler_compatibility_level = "1.5";
-
 	private CqlCompilerException.ErrorSeverity cql_compiler_error_level = CqlCompilerException.ErrorSeverity.Info;
-
 	private LibraryBuilder.SignatureLevel cql_compiler_signature_level = LibraryBuilder.SignatureLevel.All;
-
 	private Boolean cql_compiler_analyze_data_requirements = false;
-
 	private Boolean cql_compiler_collapse_data_requirements = false;
-
 	private CqlTranslator.Format cql_compiler_translator_format = CqlTranslator.Format.JSON;
-
 	private Boolean cql_compiler_enable_date_range_optimization = false;
-
 	private Boolean cql_compiler_enable_annotations = false;
-
 	private Boolean cql_compiler_enable_locators = false;
-
 	private Boolean cql_compiler_enable_results_type = false;
-
 	private Boolean cql_compiler_enable_detailed_errors = false;
-
 	private Boolean cql_compiler_disable_list_traversal = false;
-
 	private Boolean cql_compiler_disable_list_demotion = false;
-
 	private Boolean cql_compiler_disable_list_promotion = false;
-
 	private Boolean cql_compiler_enable_interval_demotion = false;
-
 	private Boolean cql_compiler_enable_interval_promotion = false;
-
 	private Boolean cql_compiler_disable_method_invocation = false;
-
 	private Boolean cql_compiler_require_from_keyword = false;
-
 	private Boolean cql_compiler_disable_default_model_info_load = false;
-
-	// private CqlEngineOptions cqlEngineOptions =
-	// CqlEngineOptions.defaultOptions();
-	// private CqlTranslatorOptions cqlTranslatorOptions =
-	// CqlTranslatorOptions.defaultOptions();
+	// Care-gaps Settings
+	private String caregaps_reporter = "default";
+	private String caregaps_section_author = "default";
 	private Boolean cr_enabled = false;
 	private Boolean ips_enabled = false;
 	private Boolean openapi_enabled = false;
@@ -122,7 +101,6 @@ public class AppProperties {
 	private List<String> supported_resource_types = new ArrayList<>();
 	private List<Bundle.BundleType> allowed_bundle_types = null;
 	private Boolean narrative_enabled = true;
-
 	private Validation validation = new Validation();
 	private Map<String, Tester> tester = new HashMap<>();
 	private Logger logger = new Logger();
@@ -132,7 +110,6 @@ public class AppProperties {
 	private Boolean install_transitive_ig_dependencies = true;
 	private Boolean reload_existing_implementationguides = false;
 	private Map<String, ImplementationGuide> implementationGuides = null;
-
 	private String staticLocation = null;
 
 	private Boolean lastn_enabled = false;
@@ -460,7 +437,27 @@ public class AppProperties {
 	public void setCr_enabled(Boolean cr_enabled) {
 		this.cr_enabled = cr_enabled;
 	}
+	public String getCareGapsReporter() {
+		return caregaps_reporter;
+	}
+	public String getCareGapsSectionAuthor() {
+		return caregaps_section_author;
+	}
 
+	public void setCareGapsSectionAuthor(String theCareGapsSectionAuthor) {this.caregaps_section_author = theCareGapsSectionAuthor;}
+	public void setCareGapsReporter(String theCareGapsReporter) {
+		this.caregaps_reporter = theCareGapsReporter;
+	}
+	public CrProperties.MeasureProperties getMeasureProperties(){
+		var measureProperties = new CrProperties.MeasureProperties();
+		var measureReportConfiguration = new CrProperties.MeasureProperties.MeasureReportConfiguration();
+		measureReportConfiguration.setCareGapsReporter(this.getCareGapsReporter());
+		measureReportConfiguration.setCareGapsCompositionSectionAuthor(this.getCareGapsSectionAuthor());
+
+		measureProperties.setMeasureReportConfiguration(measureReportConfiguration);
+
+		return measureProperties;
+	}
 	public Boolean getIps_enabled() {
 		return ips_enabled;
 	}

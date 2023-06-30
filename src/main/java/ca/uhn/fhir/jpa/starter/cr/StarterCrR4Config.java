@@ -4,19 +4,24 @@ import ca.uhn.fhir.IHapiBootOrder;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 
+import ca.uhn.fhir.cr.config.CrProperties;
 import ca.uhn.fhir.cr.config.CrR4Config;
 import ca.uhn.fhir.cr.r4.IActivityDefinitionProcessorFactory;
 import ca.uhn.fhir.cr.r4.IPlanDefinitionProcessorFactory;
 import ca.uhn.fhir.cr.r4.IQuestionnaireProcessorFactory;
 import ca.uhn.fhir.cr.r4.IQuestionnaireResponseProcessorFactory;
 import ca.uhn.fhir.cr.r4.activitydefinition.ActivityDefinitionOperationsProvider;
+import ca.uhn.fhir.cr.r4.measure.CareGapsOperationProvider;
+import ca.uhn.fhir.cr.r4.measure.CareGapsService;
 import ca.uhn.fhir.cr.r4.plandefinition.PlanDefinitionOperationsProvider;
 import ca.uhn.fhir.cr.r4.questionnaire.QuestionnaireOperationsProvider;
 import ca.uhn.fhir.cr.r4.questionnaireresponse.QuestionnaireResponseOperationsProvider;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
+import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.opencds.cqf.cql.evaluator.CqlOptions;
 import org.opencds.cqf.cql.evaluator.activitydefinition.r4.ActivityDefinitionProcessor;
@@ -27,6 +32,8 @@ import org.opencds.cqf.cql.evaluator.questionnaireresponse.r4.QuestionnaireRespo
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.*;
+
+import java.util.function.Function;
 
 @Configuration
 @Conditional({ OnR4Condition.class, CrConfigCondition.class })
@@ -100,6 +107,29 @@ public class StarterCrR4Config {
 	@Bean
 	public CqlOptions cqlOptions(AppProperties theAppProperties) {
 		return theAppProperties.getCqlOptions();
+	}
+
+	@Primary
+	@Bean
+	public CrProperties.MeasureProperties measureProperties(AppProperties theAppProperties) {
+		return theAppProperties.getMeasureProperties();
+	}
+
+	@Primary
+	@Bean
+	CareGapsOperationProvider careGapsOperationProvider(Function<RequestDetails, CareGapsService> r4CareGapsServiceFactory, AppProperties theAppProperties) {
+		if(StringUtils.isBlank(theAppProperties.getCareGapsReporter()) || StringUtils.isBlank(theAppProperties.getCareGapsSectionAuthor())){
+			throw new RuntimeException("Configuration failed to register reporter or author properties for running care gaps functionality");
+		}
+		Function<RequestDetails, CareGapsService> careGapsServiceFunction = r4CareGapsServiceFactory.andThen(careGapsService -> {
+			var measureReportConfiguration = new CrProperties.MeasureProperties.MeasureReportConfiguration();
+			measureReportConfiguration.setCareGapsReporter(theAppProperties.getCareGapsReporter());
+			measureReportConfiguration.setCareGapsCompositionSectionAuthor(theAppProperties.getCareGapsSectionAuthor());
+			careGapsService.getCrProperties().getMeasureProperties().setMeasureReportConfiguration(measureReportConfiguration);
+			return careGapsService;
+		});
+		CareGapsOperationProvider careGapsOperationProvider = new CareGapsOperationProvider(careGapsServiceFunction);
+		return careGapsOperationProvider;
 	}
 
 	@Primary

@@ -10,21 +10,20 @@ import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
-import org.hl7.fhir.r4.model.MeasureReport;
-import org.hl7.fhir.r4.model.Parameters;
-import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Observation;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Subscription;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 
 import java.io.IOException;
 import java.net.URI;
@@ -39,15 +38,21 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties = {
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+	classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class},
+	properties = {
 		"spring.datasource.url=jdbc:h2:mem:dbr4",
 		"hapi.fhir.enable_repository_validating_interceptor=true",
 		"hapi.fhir.fhir_version=r4",
 		"hapi.fhir.subscription.websocket_enabled=true",
 		"hapi.fhir.mdm_enabled=true",
 		"hapi.fhir.cr_enabled=true",
+		"hapi.fhir.caregaps_section_author=Organization/alphora-author",
+		"hapi.fhir.caregaps_reporter=Organization/alphora",
 		"hapi.fhir.implementationguides.dk-core.name=hl7.fhir.dk.core",
 		"hapi.fhir.implementationguides.dk-core.version=1.1.0",
+		"hapi.fhir.auto_create_placeholder_reference_targets=true",
 		// Override is currently required when using MDM as the construction of the MDM
 		// beans are ambiguous as they are constructed multiple places. This is evident
 		// when running in a spring boot environment
@@ -57,6 +62,8 @@ class ExampleServerR4IT implements IServerSupport{
 	private IGenericClient ourClient;
 	private FhirContext ourCtx;
 	private ApplicationContext ctx;
+
+	@Autowired private AppProperties appProperties;
 
 	@LocalServerPort
 	private int port;
@@ -132,6 +139,16 @@ class ExampleServerR4IT implements IServerSupport{
 		org.hl7.fhir.r4.model.Bundle bundle = (org.hl7.fhir.r4.model.Bundle) theCtx.newJsonParser().parseResource(json);
 		org.hl7.fhir.r4.model.Bundle result = theClient.transaction().withBundle(bundle).execute();
 		return result;
+	}
+
+	private IBaseResource loadRec(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
+		String json = stringFromResource(theLocation);
+		List<IBaseResource> resList = new ArrayList<>();
+		IBaseResource resource = (IBaseResource) theCtx.newJsonParser().parseResource(json);
+		resList.add(resource);
+		var result = theClient.transaction().withResources(resList).execute();
+			//.withResources(resource).execute();
+		return result.get(0);
 	}
 	@Test
 	public void testBatchPutWithIdenticalTags() {
@@ -239,6 +256,42 @@ class ExampleServerR4IT implements IServerSupport{
 		 * Clean up
 		 */
 		ourClient.delete().resourceById(mySubscriptionId).execute();
+	}
+
+	@Test
+	void testCareGaps() throws IOException {
+
+		var reporter = appProperties.getCareGapsReporter();
+		var author = appProperties.getCareGapsSectionAuthor();
+
+		assertTrue(reporter.equals("Organization/alphora"));
+		assertTrue(author.equals("Organization/alphora-author"));
+
+		 String periodStartValid = "2019-01-01";
+		 String periodEndValid = "2019-12-31";
+		 String subjectPatientValid = "Patient/numer-EXM125";
+		 String statusValid = "open-gap";
+		 String measureIdValid = "BreastCancerScreeningFHIR";
+
+		loadBundle("r4/CareGaps/authreporter-bundle.json", ourCtx, ourClient);
+		loadBundle("r4/CareGaps/BreastCancerScreeningFHIR-bundle.json", ourCtx, ourClient);
+
+		Parameters params = new Parameters();
+		params.addParameter().setName("periodStart").setValue(new DateType(periodStartValid));
+		params.addParameter().setName("subject").setValue(new DateType(periodEndValid));
+		params.addParameter().setName("status").setValue(new StringType(subjectPatientValid));
+		params.addParameter().setName("measureId").setValue(new StringType(statusValid));
+		params.addParameter().setName("").setValue(new StringType(measureIdValid));
+
+
+		assertDoesNotThrow(() -> {
+			ourClient.operation()
+				.onType(Measure.class)
+				.named("$care-gaps")
+				.withParameters(params)
+				.returnResourceType(Parameters.class)
+				.execute();
+		});
 	}
 
 	private int activeSubscriptionCount() {
