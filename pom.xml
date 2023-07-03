@@ -26,6 +26,7 @@
         <slf4j-api.version>1.7.25</slf4j-api.version>
         <project.jetty.version>11.0.15</project.jetty.version>
         <start-class>ca.uhn.fhir.jpa.starter.Application</start-class>
+        <shortPath>C:\Program Files\Java\jdk-17\bin\java</shortPath>
     </properties>
 
     <prerequisites>
