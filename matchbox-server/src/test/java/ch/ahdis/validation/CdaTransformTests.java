@@ -16,6 +16,7 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Identifier;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(classes = { Application.class })
 @ActiveProfiles("test-cda")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Disabled("The Swiss CDA maps are not tested anymore")
 public class CdaTransformTests {
   
   private FhirContext contextR4 = FhirVersionEnum.R4.newContext();

@@ -57,7 +57,7 @@ matchbox:
   fhir:
     context:
       txServer: n/a
-      igsPreloaded: ch.fhir.ig.cda-fhir-maps#0.4.0-cibuild, ch.fhir.ig.ch-emed#3.0.0
+      igsPreloaded: ch.fhir.ig.cda-fhir-maps#0.3.0, ch.fhir.ig.ch-emed#3.0.0
 ```
 
 | Parameter            | Card  | Description                                                                                                                                                                                                                                                                                                                                                                                      |

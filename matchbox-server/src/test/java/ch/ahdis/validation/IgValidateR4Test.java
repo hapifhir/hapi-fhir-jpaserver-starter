@@ -128,10 +128,15 @@ public class IgValidateR4Test {
 		OperationOutcome outcome = doValidate(name, resource);
 		int fails = getValidationFailures(outcome);
 		if (fails > 0) {
-			FhirContext contextR4 = FhirVersionEnum.R4.newContext();
 			log.error("failing " + name);
-			log.debug(contextR4.newJsonParser().encodeResourceToString(resource));
-			log.debug(contextR4.newJsonParser().encodeResourceToString(outcome));
+			for (final var issue : outcome.getIssue()) {
+				log.debug(String.format("  [%s][%s] %s",
+												issue.getSeverity().name(),
+												issue.getCode().name(),
+												issue.getDiagnostics()));
+			}
+			//log.debug(contextR4.newJsonParser().encodeResourceToString(resource));
+			//log.debug(contextR4.newJsonParser().encodeResourceToString(outcome));
 		}
 		assertEquals(0, fails);
 	}

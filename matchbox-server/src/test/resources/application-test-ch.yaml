@@ -145,7 +145,7 @@ hapi:
         url: classpath:/hl7.terminology#5.0.0.tgz
       ch-emed:
         name: ch.fhir.ig.ch-emed
-        version: 3.0.0
+        version: 4.0.0-ballot
         url: https://fhir.ch/ig/ch-emed/package.tgz
 matchbox:
   fhir:
