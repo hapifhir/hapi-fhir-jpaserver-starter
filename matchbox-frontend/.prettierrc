@@ -1,0 +1,7 @@
+{
+  "printWidth": 120,
+  "vueIndentScriptAndStyle": true,
+  "bracketSameLine": true,
+  "singleQuote": true,
+  "trailingComma": "es5"
+}

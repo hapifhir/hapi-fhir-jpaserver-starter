@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,7 +27,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 const modulesToExport = [
   CommonModule,
   BrowserModule,
-  BrowserAnimationsModule,
   FormsModule,
   ReactiveFormsModule,
   TranslateModule,
