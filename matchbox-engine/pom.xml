@@ -58,6 +58,17 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>logging-interceptor</artifactId>
+            <version>${okhttp_version}</version>
+        </dependency>
+
         <!-- dependencies for test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

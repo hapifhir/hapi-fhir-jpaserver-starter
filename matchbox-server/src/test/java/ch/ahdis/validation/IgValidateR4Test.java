@@ -87,7 +87,7 @@ public class IgValidateR4Test {
 				}
 			}
 		}
-		Thread.sleep(30000); // give the server some time to start up
+		Thread.sleep(40000); // give the server some time to start up
 		FhirContext contextR4 = FhirVersionEnum.R4.newContext();
 		this.validationClient = new ValidationClient(contextR4, TARGET_SERVER);
 		this.validationClient.capabilities();

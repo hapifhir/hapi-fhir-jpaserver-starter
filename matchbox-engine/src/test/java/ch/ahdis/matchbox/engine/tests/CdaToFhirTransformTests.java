@@ -62,6 +62,7 @@ class CdaToFhirTransformTests {
 			try {
 				engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngine();
 				engine.loadPackage(getClass().getResourceAsStream("/cda-fhir-maps-300.tgz"));
+				engine.loadPackage(getClass().getResourceAsStream("/ch-emed.tgz"));
 			} catch (FHIRException | IOException | URISyntaxException e) {
 				e.printStackTrace();
 			}
@@ -151,6 +152,16 @@ class CdaToFhirTransformTests {
 		.getResourceAsStream("/cda-it.xml");
 		org.hl7.fhir.r4.model.OperationOutcome outcome = getEngine().validate(in,
 				FhirFormat.XML, "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument");
+		assertTrue(outcome != null);
+		assertEquals(0, errors(outcome));
+	}
+
+	@Test
+	void TestValidateChEmed() throws FHIRException, IOException, EOperationOutcome {
+		InputStream in = CdaToFhirTransformTests.class
+		.getResourceAsStream("/Bundle-1-1-MedicationTreatmentPlan.json");
+		org.hl7.fhir.r4.model.OperationOutcome outcome = getEngine().validate(in,
+				FhirFormat.JSON, "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationtreatmentplan");
 		assertTrue(outcome != null);
 		assertEquals(0, errors(outcome));
 	}
