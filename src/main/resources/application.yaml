@@ -17,7 +17,7 @@ spring:
     url: 'jdbc:postgresql://localhost:5432/hapi'
     #url: jdbc:h2:mem:test_mem
     username: admin
-    password: admin
+    password: new_password
     driverClassName: org.postgresql.Driver
     max-active: 15
 
