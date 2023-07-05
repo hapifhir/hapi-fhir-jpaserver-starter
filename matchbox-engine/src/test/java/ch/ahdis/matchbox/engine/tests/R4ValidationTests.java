@@ -91,6 +91,21 @@ class R4ValidationTests {
 	}
 
 	/**
+	 * Test the validation of a UCUM code.
+	 */
+	@Test
+	void testValueSetWithUcumCodes() throws Exception {
+		final String observationRaw = this.loadSample("observation.xml");
+
+		final String validObservation = observationRaw.replace("{{UNIT}}", "min");
+		this.expectValid(validObservation, Manager.FhirFormat.XML, "http://hl7.org/fhir/StructureDefinition/Observation");
+
+		//final String invalidObservation = observationRaw.replace("{{UNIT}}", "non-existent-code");
+		//final var errors = this.expectInvalid(invalidObservation, Manager.FhirFormat.XML, "http://hl7.org/fhir/StructureDefinition/Observation");
+		//assertEquals(1, errors.size());
+	}
+
+	/**
 	 * Todo: test the validation of a code from a value set defined with 'concept is-a' filter from SNOMED CT.
 	 */
 

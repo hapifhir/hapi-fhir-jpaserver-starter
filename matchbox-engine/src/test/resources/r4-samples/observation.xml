@@ -1,0 +1,15 @@
+<Observation xmlns="http://hl7.org/fhir">
+    <status value="final"/>
+    <code>
+        <coding>
+            <system value="http://loinc.org"/>
+            <code value="15074-8"/>
+            <display value="Glucose [Moles/volume] in Blood"/>
+        </coding>
+    </code>
+    <effectiveTiming>
+        <repeat>
+            <periodUnit value="{{UNIT}}"/>
+        </repeat>
+    </effectiveTiming>
+</Observation>
