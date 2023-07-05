@@ -1,0 +1,3 @@
+<Measure xmlns="http://hl7.org/fhir">
+    <status value="{{STATUS}}"/>
+</Measure>

@@ -1,0 +1,8 @@
+<CarePlan xmlns="http://hl7.org/fhir">
+    <status value="active"/>
+    <intent value="{{INTENT}}"/>
+    <subject>
+        <reference value="Patient/example"/>
+        <display value="Peter James Chalmers"/>
+    </subject>
+</CarePlan>
