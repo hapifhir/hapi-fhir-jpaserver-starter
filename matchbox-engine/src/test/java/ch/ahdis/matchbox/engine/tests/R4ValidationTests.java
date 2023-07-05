@@ -1,11 +1,11 @@
 package ch.ahdis.matchbox.engine.tests;
 
 import ch.ahdis.matchbox.engine.MatchboxEngine;
-import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Quentin Ligier
  **/
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class R4ValidationTests {
 	private final MatchboxEngine engine;
 	private final String careplanRaw;
@@ -67,6 +68,26 @@ class R4ValidationTests {
 		assertEquals(1, errors.size());
 		assertEquals(OperationOutcome.IssueType.CODEINVALID, errors.get(0).getCode());
 		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') is not in the value set 'PublicationStatus'"));
+	}
+
+	/**
+	 * Test the validation of a code from a value set that expands urn:ietf:bcp:13.
+	 *
+	 * http://hl7.org/fhir/R4/binary.html
+	 * http://hl7.org/fhir/R4/valueset-mimetypes.html
+	 */
+	@Test
+	void testValueSetWithIetfBcp13Expansion() throws Exception {
+		final String binaryRaw = this.loadSample("binary.xml");
+
+		final String validBinary = binaryRaw.replace("{{CONTENTTYPE}}", "application/pdf");
+		this.expectValid(validBinary, Manager.FhirFormat.XML, "http://hl7.org/fhir/StructureDefinition/Binary");
+
+		final String invalidBinary = binaryRaw.replace("{{CONTENTTYPE}}", "non-existent-code");
+		final var errors = this.expectInvalid(invalidBinary, Manager.FhirFormat.XML, "http://hl7.org/fhir/StructureDefinition/Binary");
+		assertEquals(1, errors.size());
+		assertEquals(OperationOutcome.IssueType.CODEINVALID, errors.get(0).getCode());
+		assertTrue(errors.get(0).getDetails().getText().startsWith("The"));
 	}
 
 	/**
