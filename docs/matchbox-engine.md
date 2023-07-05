@@ -13,7 +13,7 @@ default fhir package configuration:
 - cda-core-2.0#2.1.0-cibuild.tgz(\*patched)
 - hl7.fhir.r4.core.tgz
 - hl7.fhir.xver-extensions#0.0.11.tgz
-- hl7.terminology#5.0.0.tgz
+- hl7.terminology#5.1.0.tgz
 
 ## Library based on matchbox and hapi-fhir / org.hl7.fhir.core
 
@@ -62,7 +62,7 @@ Validaton is currently supported for FHIR R4. You can get an instance of matchbo
 engine = new MatchboxEngineBuilder().getEngineR4();
 ```
 
-This engine is configured with the core libraries for FHIR Release 4 (hl7.fhir.r4.core.tgz, hl7.fhir.xver-extensions#0.0.11.tgz, hl7.terminology#5.0.0.tgz). You can then invoke the validation with
+This engine is configured with the core libraries for FHIR Release 4 (hl7.fhir.r4.core.tgz, hl7.fhir.xver-extensions#0.0.11.tgz, hl7.terminology#5.1.0.tgz). You can then invoke the validation with
 
 ```java
 InputStream in = CdaToFhirTransformTests.class.getResourceAsStream("/pat.json");

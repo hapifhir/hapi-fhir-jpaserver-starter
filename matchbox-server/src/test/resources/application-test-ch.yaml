@@ -142,7 +142,7 @@ hapi:
       fhir_terminology:
         name: hl7.terminology
         version: 5.0.0
-        url: classpath:/hl7.terminology#5.0.0.tgz
+        url: classpath:/hl7.terminology#5.1.0.tgz
       ch-emed:
         name: ch.fhir.ig.ch-emed
         version: 4.0.0-ballot

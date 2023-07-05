@@ -27,7 +27,7 @@ The oeration returns an array of OperationOutcome with severity defined as fatal
 The first entry will contain the information in what configuraiton the validation was perfomed, e.g:
 
 ```bash
-Validation for profile http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient|3.0.0 (2018-10-15T00:00:00+10:00) with packages: hl7.fhir.xver-extensions#0.0.13, hl7.fhir.r4.core#4.0.1, hl7.terminology#5.0.0, ihe.formatcode.fhir#1.1.0, ch.fhir.ig.ch-epr-term#2.0.8, ch.fhir.ig.ch-core#3.0.0 No Issues detected. Total: 4430ms powered by matchbox-engine 3.1.0, hapi-fhir 6.2.5 and org.hl7.fhir.core 5.6.92 validation parameters Parameters {doNative=false, hintAboutNonMustSupport=false, recursive=false, doDebug=false, assumeValidRestReferences=false, canDoNative=false, noExtensibleBindingMessages=false, noUnicodeBiDiControlChars=false, noInvariants=false, wantInvariantsInMessages=false, txServer='http://tx.fhir.org', lang='null', snomedCT='900000000000207008', targetVer='null', ig=ch.fhir.ig.ch-core#3.0.0, questionnaireMode=CHECK, level=HINTS, mode=VALIDATION, securityChecks=false, crumbTrails=false, forPublication=false, jurisdiction=urn:iso:std:iso:3166#US, allowExampleUrls=false, locale='English', locations={}}
+Validation for profile http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient|3.0.0 (2018-10-15T00:00:00+10:00) with packages: hl7.fhir.xver-extensions#0.0.13, hl7.fhir.r4.core#4.0.1, hl7.terminology#5.1.0, ihe.formatcode.fhir#1.1.0, ch.fhir.ig.ch-epr-term#2.0.8, ch.fhir.ig.ch-core#3.0.0 No Issues detected. Total: 4430ms powered by matchbox-engine 3.1.0, hapi-fhir 6.2.5 and org.hl7.fhir.core 5.6.92 validation parameters Parameters {doNative=false, hintAboutNonMustSupport=false, recursive=false, doDebug=false, assumeValidRestReferences=false, canDoNative=false, noExtensibleBindingMessages=false, noUnicodeBiDiControlChars=false, noInvariants=false, wantInvariantsInMessages=false, txServer='http://tx.fhir.org', lang='null', snomedCT='900000000000207008', targetVer='null', ig=ch.fhir.ig.ch-core#3.0.0, questionnaireMode=CHECK, level=HINTS, mode=VALIDATION, securityChecks=false, crumbTrails=false, forPublication=false, jurisdiction=urn:iso:std:iso:3166#US, allowExampleUrls=false, locale='English', locations={}}
 ```
 
 ### configuration parameters
@@ -44,8 +44,8 @@ hapi:
         url: classpath:/hl7.fhir.r4.core.tgz
       fhir_terminology:
         name: hl7.terminology
-        version: 5.0.0
-        url: classpath:/hl7.terminology#5.0.0.tgz
+        version: 5.1.0
+        url: classpath:/hl7.terminology#5.1.0.tgz
       cda:
         name: ch.fhir.ig.cda-fhir-maps
         version: 0.3.0
