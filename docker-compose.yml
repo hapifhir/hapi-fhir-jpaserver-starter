@@ -8,19 +8,29 @@ services:
       - "8080:8080"
     environment:
       fhir_version: 'R4'
-      hapi.fhir.server_address: 'http://localhost:8080/baseR4'
       spring.datasource.url: 'jdbc:postgresql://hapi-fhir-postgres:5432/hapi'
       spring.datasource.username: admin
       spring.datasource.password: admin
       spring.datasource.driverClassName: org.postgresql.Driver
       spring.jpa.properties.hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      spring.config.location: classpath:/application-custom.yaml
+      reuse_cached_search_results_millis: 0
+      subscription.resthook.enabled: true
+      subscription.websocket.enabled: true
+      BASIC_AUTH_ENABLED: false
+      BASIC_AUTH_USERNAME: "admin"
+      BASIC_AUTH_PASSWORD: "admin"
       OAUTH_ENABLED: true
+      OAUTH_CLIENT_ID: fhir4-api
+      OAUTH_USER_ROLE: fhir4-user
+      OAUTH_ADMIN_ROLE: fhir4-admin
       OAUTH_ISSUER: https://auth-internal.elimuinformatics.com/auth/realms/product
       OAUTH_JWKS_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/certs
       OAUTH_AUTHORIZATION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/auth
       OAUTH_TOKEN_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/token
       OAUTH_INTROSPECTION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/token/introspect
       OAUTH_REVOCATION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/revoke
+      OAUTH_MANAGE_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/account
   hapi-fhir-postgres:
     image: postgres:13-alpine
     container_name: hapi-fhir-postgres

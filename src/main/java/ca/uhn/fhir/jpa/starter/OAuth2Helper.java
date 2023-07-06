@@ -34,6 +34,12 @@ import ca.uhn.fhir.rest.api.server.RequestDetails;
 
 public class OAuth2Helper {
 	private static final Logger logger = LoggerFactory.getLogger(OAuth2Helper.class);
+	private static final String AUTHORIZATION_PREFIX = "BEARER ";
+
+	public static String getToken(RequestDetails theRequest) {
+		String auth = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
+		return auth.substring(AUTHORIZATION_PREFIX.length());
+	}
 
 	protected String getJwtKeyId(String token) {
 		String tokenHeader = token.split("\\.")[0];
@@ -75,10 +81,10 @@ public class OAuth2Helper {
 		return verifier;
 	}
 
-	protected PublicKey getJwtPublicKey(String kid, String oauthUrl) {
+	protected PublicKey getJwtPublicKey(String kid, String jwksUrl) {
 		PublicKey publicKey = null;
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> exchange = restTemplate.exchange(oauthUrl + "/certs", HttpMethod.GET, null,
+		ResponseEntity<String> exchange = restTemplate.exchange(jwksUrl, HttpMethod.GET, null,
 				String.class);
 
 		String response = exchange.getBody();
@@ -103,6 +109,7 @@ public class OAuth2Helper {
 				KeyFactory kf = KeyFactory.getInstance("RSA");
 				return kf.generatePublic(new RSAPublicKeySpec(modulus, publicExponent));
 			} catch (Exception e) {
+				logger.error("Unexpected error generating OAuth2 public key", e);
 				throw new RuntimeException(e);
 			}
 		} catch (JWTVerificationException e) {
@@ -113,7 +120,7 @@ public class OAuth2Helper {
 
 		return publicKey;
 	}
-	
+
 	protected Boolean hasClientRole(DecodedJWT jwt, String clientId, String userRole) {
 		Claim claim = jwt.getClaim("resource_access");
 		HashMap<String, HashMap<String, ArrayList<String>>> resources = claim.as(HashMap.class);
@@ -144,9 +151,9 @@ public class OAuth2Helper {
 		List<RuntimeSearchParam> compartmentList = data.getSearchParamsForCompartmentName("Patient");
 		return !compartmentList.isEmpty();
 	}
-	
+
   public boolean isOAuthHeaderPresent(RequestDetails theRequest) {
     String token = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
-    return (!ObjectUtils.isEmpty(token) && token.toUpperCase().contains(CustomAuthorizationInterceptor.getTokenPrefix()));
+    return (!ObjectUtils.isEmpty(token) && token.toUpperCase().startsWith(AUTHORIZATION_PREFIX));
   }
 }

@@ -411,15 +411,19 @@ public class StarterJpaConfig {
 			fhirServer.setTenantIdentificationStrategy(new UrlBaseTenantIdentificationStrategy());
 			fhirServer.registerProviders(partitionManagementProvider);
 		}
-		
+
 		// Support for OAuth2, Basic, and API_KEY authentication
 		if (appProperties.getOauth().getEnabled()) {
 			fhirServer.registerInterceptor(new CapabilityStatementCustomizer(appProperties));
 			fhirServer.registerInterceptor(new CustomSearchNarrowingInterceptor());
 			fhirServer.registerInterceptor(new ConsentInterceptor(new CustomConsentService(daoRegistry)));
-			fhirServer.registerInterceptor(new CustomAuthorizationInterceptor());
 		}
-	
+		if (appProperties.getBasic_auth().getEnabled()
+				|| appProperties.getOauth().getEnabled()
+				|| appProperties.getApikey().getEnabled()) {
+			fhirServer.registerInterceptor(new CustomAuthorizationInterceptor(appProperties));
+		}
+
 		repositoryValidatingInterceptor.ifPresent(fhirServer::registerInterceptor);
 
 		// register custom interceptors

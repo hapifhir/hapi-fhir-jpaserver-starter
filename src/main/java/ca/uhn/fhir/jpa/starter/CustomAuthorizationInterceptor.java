@@ -7,7 +7,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.hl7.fhir.r4.model.IdType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -25,22 +24,16 @@ import ca.uhn.fhir.rest.server.interceptor.auth.RuleBuilder;
 @Interceptor
 public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(CustomAuthorizationInterceptor.class);
-	private static final String OAUTH_URL = System.getenv("OAUTH_URL");
-	private static final String OAUTH_ENABLED = System.getenv("OAUTH_ENABLED");
-	private static final String APIKEY_ENABLED = System.getenv("APIKEY_ENABLED");
+	private AppProperties config;
 	private static final String APIKEY_HEADER = "x-api-key";
-	private static final String APIKEY = System.getenv("APIKEY");
-	private static final String OAUTH_TOKEN_PREFIX = "BEARER ";
-	private static final String OAUTH_USER_ROLE = System.getenv("OAUTH_USER_ROLE");
-	private static final String OAUTH_CLIENT_ID = System.getenv("OAUTH_CLIENT_ID");
-	private static final String OAUTH_ADMIN_ROLE = System.getenv("OAUTH_ADMIN_ROLE");
-	private static final String BASIC_AUTH_ENABLED = System.getenv("BASIC_AUTH_ENABLED");
-	private static final String BASIC_AUTH_USERNAME = System.getenv("BASIC_AUTH_USERNAME");
-	private static final String BASIC_AUTH_PASS = System.getenv("BASIC_AUTH_PASS");
-	private static final String BASIC_AUTH_TOKEN_PREFIX = "BASIC ";
 	private static PublicKey publicKey = null;
 	private static OAuth2Helper oAuth2Helper = new OAuth2Helper();
 	private static BasicAuthHelper basicAuthHelper = new BasicAuthHelper();
+
+	public CustomAuthorizationInterceptor(AppProperties config) {
+		super();
+		this.config = config;
+	}
 
 	@Override
 	public List<IAuthRule> buildRuleList(RequestDetails theRequest) {
@@ -56,16 +49,16 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			}
 
 			if (isOAuthEnabled() && oAuth2Helper.isOAuthHeaderPresent(theRequest)) {
-				logger.info("Auhorizing via OAuth");
+				logger.info("Authorizing via OAuth");
 				return authorizeOAuth(theRequest);
 			}
 
 			if (isApiKeyEnabled() && isApiKeyHeaderPresent(theRequest)) {
-				logger.info("Auhorizing via X-API-KEY");
+				logger.info("Authorizing via X-API-KEY");
 				return authorizeApiKey(theRequest);
 			}
 			if (isBasicAuthEnabled() && isBasicAuthHeaderPresent(theRequest)) {
-				logger.info("Auhorizing via basic auth");
+				logger.info("Authorizing via basic auth");
 				return authorizeBasicAuth(theRequest);
 			}
 		} catch (Exception e) {
@@ -86,35 +79,25 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 	}
 
 	private List<IAuthRule> authorizeOAuth(RequestDetails theRequest) throws Exception {
-		String token = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
-		if (ObjectUtils.isEmpty(token)) {
-			logger.warn("Authorization failure - missing authorization header");
-			return denyAll();
-		}
-
-		if (!token.toUpperCase().startsWith(OAUTH_TOKEN_PREFIX)) {
-			logger.warn("Authorization failure - invalid authorization header");
-			return denyAll();
-		}
-
-		token = token.substring(OAUTH_TOKEN_PREFIX.length());
-
+		String token = OAuth2Helper.getToken(theRequest);
 		try {
 			DecodedJWT jwt = JWT.decode(token);
 			String kid = oAuth2Helper.getJwtKeyId(token);
-			publicKey = ObjectUtils.isEmpty(publicKey) ? oAuth2Helper.getJwtPublicKey(kid, OAUTH_URL) : publicKey;
+			if (ObjectUtils.isEmpty(publicKey)) {
+				publicKey = oAuth2Helper.getJwtPublicKey(kid, config.getOauth().getJwks_url());
+			}
 			JWTVerifier verifier = oAuth2Helper.getJWTVerifier(jwt, publicKey);
-			jwt = verifier.verify(token);		  
+			jwt = verifier.verify(token);
 			if (theRequest.getRequestType().equals(RequestTypeEnum.DELETE)) {
-			  if (oAuth2Helper.hasClientRole(jwt, OAUTH_CLIENT_ID, OAUTH_ADMIN_ROLE)) {
+			  if (oAuth2Helper.hasClientRole(jwt, getOAuthClientId(), getOAuthAdminRole())) {
 			    return allowAll();
 			  }
-			} else if (oAuth2Helper.hasClientRole(jwt, OAUTH_CLIENT_ID, OAUTH_USER_ROLE)) {
-			  String patientId = getPatientFromToken(theRequest);
+			} else if (oAuth2Helper.hasClientRole(jwt, getOAuthClientId(), getOAuthUserRole())) {
+			  String patientId = getPatientFromToken(jwt);
 			  return ObjectUtils.isEmpty(patientId) ? allowAll() : allowForClaimResourceId(theRequest,patientId);
 			}
 		} catch (TokenExpiredException e) {
-			logger.warn("Authorization failure - token has expired");
+			logger.warn("Authentication failure - token has expired");
 		} catch (Exception e) {
 			logger.warn("Unexpected exception verifying token: {}", e.getMessage());
 		}
@@ -122,7 +105,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 		logger.warn("Authentication failure");
 		return denyAll();
 	}
-	
+
 	private List<IAuthRule> allowForClaimResourceId(RequestDetails theRequestDetails,String patientId) {
 		if (oAuth2Helper.canBeInPatientCompartment(theRequestDetails.getResourceName())) {
 			return new RuleBuilder()
@@ -136,43 +119,53 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 		return allowAll();
 	}
 
-	private String getPatientFromToken(RequestDetails theRequestDetails) {
-		String token = theRequestDetails.getHeader("Authorization");
-		if (token != null) {
-			token = token.substring(CustomAuthorizationInterceptor.getTokenPrefix().length());
-			DecodedJWT jwt = JWT.decode(token);
-			String patRefId = oAuth2Helper.getPatientReferenceFromToken(jwt, "patient");
-			return patRefId;
-		}
-		return null;
+	private String getPatientFromToken(DecodedJWT jwt) {
+		return oAuth2Helper.getPatientReferenceFromToken(jwt, "patient");
 	}
 
-	private Boolean isOAuthEnabled() {
-		return ((OAUTH_ENABLED != null) && Boolean.parseBoolean(OAUTH_ENABLED));
-	}
-	
-	private Boolean isBasicAuthEnabled() {
-		if ((BASIC_AUTH_ENABLED != null) && Boolean.parseBoolean(BASIC_AUTH_ENABLED)) {
-			if (ObjectUtils.isEmpty(BASIC_AUTH_USERNAME) || ObjectUtils.isEmpty(BASIC_AUTH_PASS)) {
-				logger.warn("Using basic auth without setting username and password");
-			}
-			return true;
-		}
-		return false;
-	}
-	
-	private Boolean isBasicAuthHeaderPresent(RequestDetails theRequest) {
-		String token = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
-		return (!ObjectUtils.isEmpty(token) && token.toUpperCase().contains(BASIC_AUTH_TOKEN_PREFIX));
-	}
-	
-	private Boolean isApiKeyEnabled() {
-		return ((APIKEY_ENABLED != null) && Boolean.parseBoolean(APIKEY_ENABLED));
+	private boolean isOAuthEnabled() {
+		return config.getOauth().getEnabled();
 	}
 
-	private Boolean isApiKeyHeaderPresent(RequestDetails theRequest) {
+	private String getOAuthClientId() {
+		return config.getOauth().getClient_id();
+	}
+
+	private String getOAuthUserRole() {
+		return config.getOauth().getUser_role();
+	}
+
+	private String getOAuthAdminRole() {
+		return config.getOauth().getAdmin_role();
+	}
+
+	private boolean isBasicAuthEnabled() {
+		return config.getBasic_auth().getEnabled();
+	}
+
+	private String getBasicAuthUsername() {
+		return config.getBasic_auth().getUsername();
+	}
+
+	private String getBasicAuthPassword() {
+		return config.getBasic_auth().getPassword();
+	}
+
+	private boolean isBasicAuthHeaderPresent(RequestDetails theRequest) {
+		return BasicAuthHelper.isBasicAuthHeaderPresent(theRequest);
+	}
+
+	private boolean isApiKeyEnabled() {
+		return config.getApikey().getEnabled();
+	}
+
+	private boolean isApiKeyHeaderPresent(RequestDetails theRequest) {
 		String apiKey = theRequest.getHeader(APIKEY_HEADER);
 		return (!ObjectUtils.isEmpty(apiKey));
+	}
+
+	private String getApiKey() {
+		return config.getApikey().getKey();
 	}
 
 	private List<IAuthRule> authorizeApiKey(RequestDetails theRequest) {
@@ -182,29 +175,22 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 			return denyAll();
 		}
 
-		if (apiKey.equals(APIKEY)) {
+		if (apiKey.equals(getApiKey())) {
 			return allowAll();
 		}
 
 		logger.info("Authorization failure - invalid X-API-KEY header");
 		return denyAll();
 	}
-	
+
 	private List<IAuthRule> authorizeBasicAuth(RequestDetails theRequest) {
-		String basicAuthToken = theRequest.getHeader(HttpHeaders.AUTHORIZATION);
-		if (ObjectUtils.isEmpty(basicAuthToken)) {
-			logger.info("Authorization failure - missing authorization header");
-			return denyAll();
-		}
-		basicAuthToken = basicAuthToken.substring(BASIC_AUTH_TOKEN_PREFIX.length());
-		if (basicAuthHelper.isValid(BASIC_AUTH_USERNAME, BASIC_AUTH_PASS, basicAuthToken)) {
+		String username = getBasicAuthUsername();
+		String password = getBasicAuthPassword();
+		String credentials = BasicAuthHelper.getCredentials(theRequest);
+		if (basicAuthHelper.isValid(username, password, credentials)) {
 			return allowAll();
 		}
 		logger.info("Authorization failure - invalid credentials");
 		return denyAll();
-	}
-
-	public static String getTokenPrefix() {
-		return OAUTH_TOKEN_PREFIX;
 	}
 }

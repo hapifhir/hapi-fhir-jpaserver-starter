@@ -76,6 +76,7 @@ public class FhirServerConfigCommon {
         ourLog.info("Indexed on contained resource enabled");
     }
 
+    ourLog.info("Server configured to {} Basic authentication", appProperties.getBasic_auth().getEnabled() ? "enable" : "disable");
     ourLog.info("Server configured to {} OAuth2 authentication", appProperties.getOauth().getEnabled() ? "enable" : "disable");
   }
 

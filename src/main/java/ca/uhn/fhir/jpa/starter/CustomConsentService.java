@@ -135,8 +135,7 @@ public class CustomConsentService implements IConsentService {
   }
 
   private String getPatientFromToken(RequestDetails theRequestDetails) {
-    String token = theRequestDetails.getHeader("Authorization");
-    token = token.substring(CustomAuthorizationInterceptor.getTokenPrefix().length());
+    String token = OAuth2Helper.getToken(theRequestDetails);
     DecodedJWT jwt = JWT.decode(token);
     String patRefId = oAuth2Helper.getPatientReferenceFromToken(jwt, OAUTH_CLAIM_NAME);
     return patRefId;

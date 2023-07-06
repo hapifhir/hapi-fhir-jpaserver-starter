@@ -134,6 +134,9 @@ hapi:
 
     oauth:
       enabled: ${OAUTH_ENABLED:false}
+      client_id: ${OAUTH_CLIENT_ID}
+      user_role: ${OAUTH_USER_ROLE}
+      admin_role: ${OAUTH_ADMIN_ROLE}
       issuer: ${OAUTH_ISSUER}
       jwks_url: ${OAUTH_JWKS_URL}
       authorization_url: ${OAUTH_AUTHORIZATION_URL}
@@ -142,6 +145,11 @@ hapi:
       introspection_url: ${OAUTH_INTROSPECTION_URL}
       revocation_url: ${OAUTH_REVOCATION_URL}
       manage_url: ${OAUTH_MANAGE_URL}
+
+    basic_auth:
+      enabled: ${BASIC_AUTH_ENABLED:false}
+      username: ${BASIC_AUTH_USERNAME}
+      password: ${BASIC_AUTH_PASSWORD}
 
 #    logger:
     #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
