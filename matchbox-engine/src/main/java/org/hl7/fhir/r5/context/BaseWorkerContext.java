@@ -1071,6 +1071,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 		List<OperationOutcomeIssueComponent> issues = new ArrayList<>();
 
 		String localError = null;
+		String localWarning = null; // MATCHBOX Backported from 7166d55
 		if (options.isUseClient()) {
 			// ok, first we try to validate locally
 			try {
@@ -1083,7 +1084,12 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 					return res;
 				}
 			} catch (VSCheckerException e) {
-				localError = e.getMessage();
+				// MATCHBOX Backported from 7166d55
+				if (e.isWarning()) {
+					localWarning = e.getMessage();
+				} else {
+					localError = e.getMessage();
+				}
 				if (e.getIssues() != null) {
 					issues.addAll(e.getIssues());
 				}
@@ -1096,8 +1102,17 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 		if (localError != null && txClient == null) {
 			return new ValidationResult(IssueSeverity.ERROR, localError, TerminologyServiceErrorClass.UNKNOWN, issues);
 		}
+		// MATCHBOX Backported from 7166d55
+		if (localWarning != null && txClient == null) {
+			return new ValidationResult(IssueSeverity.WARNING,formatMessage(I18nConstants.UNABLE_TO_VALIDATE_CODE_WITHOUT_USING_SERVER, localWarning), TerminologyServiceErrorClass.BLOCKED_BY_OPTIONS, issues);
+		}
 		if (!options.isUseServer()) {
-			return new ValidationResult(IssueSeverity.WARNING,formatMessage(I18nConstants.UNABLE_TO_VALIDATE_CODE_WITHOUT_USING_SERVER, localError), TerminologyServiceErrorClass.BLOCKED_BY_OPTIONS, issues);
+			// MATCHBOX Backported from 7166d55
+			if (localWarning != null) {
+				return new ValidationResult(IssueSeverity.WARNING,formatMessage(I18nConstants.UNABLE_TO_VALIDATE_CODE_WITHOUT_USING_SERVER, localWarning), TerminologyServiceErrorClass.BLOCKED_BY_OPTIONS, issues);
+			} else {
+				return new ValidationResult(IssueSeverity.WARNING,formatMessage(I18nConstants.UNABLE_TO_VALIDATE_CODE_WITHOUT_USING_SERVER, localError), TerminologyServiceErrorClass.BLOCKED_BY_OPTIONS, issues);
+			}
 		}
 		String codeKey = getCodeKey(code);
 		if (unsupportedCodeSystems.contains(codeKey)) {
