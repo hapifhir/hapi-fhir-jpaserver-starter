@@ -82,6 +82,7 @@ public class CdaMappingEngine extends MatchboxEngine {
 			engine.setVersion("4.0.1");
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.1.0.tgz"));
+			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/cda-core-2.0#2.1.0-cibuild.tgz"));
 			engine.getContext().setCanRunWithoutTerminology(true);
 			engine.getContext().setNoTerminologyServer(true);

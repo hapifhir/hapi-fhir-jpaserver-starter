@@ -14,6 +14,7 @@ default fhir package configuration:
 - hl7.fhir.r4.core.tgz
 - hl7.fhir.xver-extensions#0.0.11.tgz
 - hl7.terminology#5.1.0.tgz
+- hl7.fhir.uv.extensions.r4#1.0.0.tgz
 
 ## Library based on matchbox and hapi-fhir / org.hl7.fhir.core
 

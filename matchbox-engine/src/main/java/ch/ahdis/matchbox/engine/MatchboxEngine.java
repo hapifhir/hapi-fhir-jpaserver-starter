@@ -109,6 +109,7 @@ public class MatchboxEngine extends ValidationEngine {
 			engine.setVersion("4.0.1");
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.1.0.tgz"));
+			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
 			engine.getContext().setCanRunWithoutTerminology(true);
 			engine.getContext().setNoTerminologyServer(true);
 			engine.getContext().setPackageTracker(engine);

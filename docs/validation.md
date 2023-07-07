@@ -46,6 +46,10 @@ hapi:
         name: hl7.terminology
         version: 5.1.0
         url: classpath:/hl7.terminology#5.1.0.tgz
+      fhir_extensions:
+        name: hl7.fhir.uv.extensions.r4
+        version: 1.0.0
+        url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
       cda:
         name: ch.fhir.ig.cda-fhir-maps
         version: 0.3.0
