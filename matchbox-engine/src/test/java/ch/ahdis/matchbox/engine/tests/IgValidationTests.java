@@ -66,11 +66,11 @@ public class IgValidationTests {
 			log.info(c.getKey().name() + " " + c.getValue());
 		}
 
-		for (final var error : errors) {
+		for (final var issue : outcome.getIssue()) {
 			log.error(String.format("[%s][%s] %s",
-											error.getSeverity().name(),
-											error.getCode().name(),
-											error.getDetails().getText()));
+											issue.getSeverity().name(),
+											issue.getCode().name(),
+											issue.getDetails().getText()));
 		}
 		assertTrue(errors.isEmpty());
 	}
