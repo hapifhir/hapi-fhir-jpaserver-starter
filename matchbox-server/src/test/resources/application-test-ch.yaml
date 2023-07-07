@@ -151,7 +151,40 @@ hapi:
         name: ch.fhir.ig.ch-emed
         version: 4.0.0-ballot
         url: https://fhir.ch/ig/ch-emed/package.tgz
+#      ch-vacd:
+#        name: ch.fhir.ig.ch-vacd
+#        version: 4.0.0-ballot
+#        url: https://fhir.ch/ig/ch-vacd/package.tgz
+#      ch-allergyintolerance:
+#        name: ch.fhir.ig.ch-allergyintolerance
+#        version: 2.0.0-ballot
+#        url: https://fhir.ch/ig/ch-allergyintolerance/package.tgz
+#      ch-orf:
+#        name: ch.fhir.ig.ch-orf
+#        version: 2.0.0-ballot
+#        url: https://fhir.ch/ig/ch-orf/package.tgz
+#      ch-lab-order:
+#        name: ch.fhir.ig.ch-lab-order
+#        version: 2.0.0-ballot
+#        url: https://fhir.ch/ig/ch-lab-order/package.tgz
+#      ch-etoc:
+#        name: ch.fhir.ig.ch-etoc
+#        version: 2.0.0-ballot
+#        url: https://fhir.ch/ig/ch-etoc/package.tgz
+#      ch-epr-mhealth:
+#        name: ch.fhir.ig.ch-epr-mhealth
+#        version: 3.0.0-ballot
+#        url: https://fhir.ch/ig/ch-epr-mhealth/package.tgz
+#      ch-epr-ppqm:
+#        name: ch.fhir.ig.ch-epr-ppqm
+#        version: 2.0.0-ballot
+#        url: https://fhir.ch/ig/ch-epr-ppqm/package.tgz
+#      ch-atc:
+#        name: ch.fhir.ig.ch-atc
+#        version: 3.2.0-ballot
+#        url: https://fhir.ch/ig/ch-atc/package.tgz
 matchbox:
   fhir:
     context:
+      #txServer: http://tx.fhir.org
       txServer: n/a

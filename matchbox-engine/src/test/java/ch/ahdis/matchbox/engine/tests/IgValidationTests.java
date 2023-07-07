@@ -3,6 +3,7 @@ package ch.ahdis.matchbox.engine.tests;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.Resource;
+import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.npm.NpmPackage;
@@ -149,6 +150,11 @@ public class IgValidationTests {
 	 * Initialize a R4 matchbox engine with no terminology server.
 	 */
 	private MatchboxEngine getEngine() throws IOException, URISyntaxException {
-		return new MatchboxEngine.MatchboxEngineBuilder().getEngineR4();
+		 final var newEngine = new MatchboxEngine.MatchboxEngineBuilder()
+			.getEngineR4();
+//		newEngine.setTerminologyServer("http://tx.fhir.org", null, FhirPublication.R4);
+//		newEngine.getContext().setCanRunWithoutTerminology(false);
+//		newEngine.getContext().setNoTerminologyServer(false);
+		return newEngine;
 	}
 }

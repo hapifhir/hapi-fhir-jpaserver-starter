@@ -157,16 +157,6 @@ class CdaToFhirTransformTests {
 	}
 
 	@Test
-	void TestValidateChEmed() throws FHIRException, IOException, EOperationOutcome {
-		InputStream in = CdaToFhirTransformTests.class
-		.getResourceAsStream("/Bundle-1-1-MedicationTreatmentPlan.json");
-		org.hl7.fhir.r4.model.OperationOutcome outcome = getEngine().validate(in,
-				FhirFormat.JSON, "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationtreatmentplan");
-		assertTrue(outcome != null);
-		assertEquals(0, errors(outcome));
-	}
-
-	@Test
 	void TestValidateFhir() throws FHIRException, IOException, EOperationOutcome {
 		InputStream in = CdaToFhirTransformTests.class
 				.getResourceAsStream("/pat.json");

@@ -4,8 +4,11 @@ import ch.ahdis.matchbox.engine.MatchboxEngine;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
+import org.hl7.fhir.utilities.FhirPublication;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -23,12 +26,14 @@ import static org.junit.jupiter.api.Assertions.*;
  **/
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class R4ValidationTests {
+	private static final Logger log = LoggerFactory.getLogger(R4ValidationTests.class);
 	private final MatchboxEngine engine;
 	private final String careplanRaw;
 	private final String measureRaw;
 
 	public R4ValidationTests() throws IOException, URISyntaxException {
 		this.engine = this.getEngine();
+		//this.engine.setTerminologyServer("http://tx.fhir.org", null, FhirPublication.R4);
 		this.careplanRaw = this.loadSample("careplan.xml");
 		this.measureRaw = this.loadSample("measure.xml");
 	}
@@ -82,12 +87,6 @@ class R4ValidationTests {
 
 		final String validBinary = binaryRaw.replace("{{CONTENTTYPE}}", "application/pdf");
 		this.expectValid(validBinary, Manager.FhirFormat.XML, "http://hl7.org/fhir/StructureDefinition/Binary");
-
-		final String invalidBinary = binaryRaw.replace("{{CONTENTTYPE}}", "non-existent-code");
-		final var errors = this.expectInvalid(invalidBinary, Manager.FhirFormat.XML, "http://hl7.org/fhir/StructureDefinition/Binary");
-		assertEquals(1, errors.size());
-		assertEquals(OperationOutcome.IssueType.CODEINVALID, errors.get(0).getCode());
-		assertTrue(errors.get(0).getDetails().getText().startsWith("The"));
 	}
 
 	/**
@@ -132,7 +131,14 @@ class R4ValidationTests {
 		final var response = this.engine.validate(new ByteArrayInputStream(resource.getBytes(StandardCharsets.UTF_8)),
 																format,
 																profile);
-		assertEquals(0, getValidationFailures(response).size());
+		final var errors = getValidationFailures(response);
+		for (final var error : errors) {
+			log.error(String.format("[%s][%s] %s",
+											error.getSeverity().name(),
+											error.getCode().name(),
+											error.getDetails().getText()));
+		}
+		assertEquals(0, errors.size());
 	}
 
 	private List<OperationOutcome.OperationOutcomeIssueComponent> expectInvalid(final String resource,

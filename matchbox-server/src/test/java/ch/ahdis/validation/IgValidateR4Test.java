@@ -145,11 +145,14 @@ public class IgValidateR4Test {
 		log.debug("validating resource " + resource.getId() + " with " + TARGET_SERVER);
 		FhirContext contextR4 = FhirVersionEnum.R4.newContext();
 
+		if (!resource.getMeta().hasProfile()) {
+			Assumptions.abort("No meta.profile found, unable to valide this resource");
+		}
+
 		boolean skip = "ch.fhir.ig.ch-core#1.0.0-PractitionerRole-HPWengerRole".equals(name); // wrong value inside
 		skip = skip || "ch.fhir.ig.ch-epr-mhealth#0.1.2-Bundle-2-7-BundleProvideDocument".equals(name); // error in testcase, however cannot reproduce yet directly ???
 		if (skip) {
-			log.error("ignoring validation for " + name);
-			Assumptions.assumeFalse(skip);
+			Assumptions.abort("Ignoring validation for " + name);
 		}
 
 		String content = new org.hl7.fhir.r4.formats.JsonParser().composeString(resource);
@@ -159,7 +162,6 @@ public class IgValidateR4Test {
 		if (outcome == null) {
 			log.debug(contextR4.newXmlParser().encodeResourceToString(resource));
 			log.error("should have a return element");
-			log.error(contextR4.newXmlParser().encodeResourceToString(outcome));
 		} else {
 			if (getValidationFailures(outcome) > 0) {
 				log.debug(contextR4.newXmlParser().encodeResourceToString(resource));

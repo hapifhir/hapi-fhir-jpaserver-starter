@@ -50,6 +50,7 @@ import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
+import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.utilities.json.model.JsonObject;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
@@ -134,7 +135,6 @@ public class MatchboxEngine extends ValidationEngine {
 			engine.getContext().setPackageTracker(engine);
 			return engine;
 		}
-
 	}
 
 	/**
@@ -364,8 +364,11 @@ public class MatchboxEngine extends ValidationEngine {
 						+ (sd.getDateElement() != null ? "(" + sd.getDateElement().asStringValue() + ")" : ""));
 			}
 		}
-		List<ValidationMessage> messages = new ArrayList<ValidationMessage>();
+		List<ValidationMessage> messages = new ArrayList<>();
+//		this.getContext().getTxCache().clear();
 		InstanceValidator validator = getValidator(format);
+		//validator.getBaseOptions().setCheckValueSetOnly();
+		//validator.getBaseOptions().setNoServer(true);
 		validator.validate(null, messages, stream, format, asSdList(profiles));
 		return messages;
 	}
