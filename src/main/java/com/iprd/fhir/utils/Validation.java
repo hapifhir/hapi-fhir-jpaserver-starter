@@ -33,8 +33,8 @@ public class Validation {
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES , false);
 			JWTPayload jwtPayload = mapper.readValue(payload, JWTPayload.class);
 			return jwtPayload;
-		} catch (JsonProcessingException | IndexOutOfBoundsException e) {
-			logger.warn(ExceptionUtils.getStackTrace(e));
+		} catch (JsonProcessingException | IndexOutOfBoundsException | NullPointerException e) {
+//			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 		return null;
 	}

@@ -86,20 +86,10 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         http.cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/")
-                .permitAll()
-                .antMatchers("/home")
-                .permitAll()
-                .antMatchers(GET,"/fhir/Composition")
-                .permitAll()
-                .antMatchers(GET,"/fhir/Parameters")
-                .permitAll()
-                .antMatchers(GET,"/fhir/Binary")
-                .permitAll()
+                .antMatchers("/**")
+                .authenticated()
                 .mvcMatchers("/logout.do")
                 .permitAll()
-                .antMatchers("/fhir/**","/iprd/**")
-                .authenticated()
                 .and()
                 .csrf()
                 .ignoringAntMatchers("/fhir/**", "/iprd/**")
@@ -108,34 +98,6 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("logout.do", "GET"));
     }
 
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        /* @formatter:off */
-        web.ignoring()
-                .mvcMatchers("/js/**")
-                .and()
-                .ignoring()
-                .mvcMatchers("/css/**")
-                .and()
-                .ignoring()
-                .mvcMatchers("/images/**")
-                .and()
-                .ignoring()
-                .mvcMatchers("/html/**")
-                .and()
-                .ignoring()
-                .antMatchers(HttpMethod.OPTIONS, "/**")
-                .and()
-                .ignoring()
-                .antMatchers("/home")
-                .and()
-                .ignoring()
-                .antMatchers("/*")
-                .and()
-                .ignoring()
-                .antMatchers("/fhir/metadata");
-    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
