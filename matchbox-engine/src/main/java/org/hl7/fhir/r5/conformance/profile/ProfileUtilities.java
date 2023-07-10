@@ -517,10 +517,8 @@ public class ProfileUtilities extends TranslatingUtilities {
 	 * @param derived - the differential to apply to the base
 	 * @param url - where the base has relative urls for profile references, these need to be converted to absolutes by prepending this URL (e.g. the canonical URL)
 	 * @param webUrl - where the base has relative urls in markdown, these need to be converted to absolutes by prepending this URL (this is not the same as the canonical URL)
-	 * @return
 	 * @throws FHIRException
 	 * @throws DefinitionException
-	 * @throws Exception
 	 */
 	public void generateSnapshot(StructureDefinition base, StructureDefinition derived, String url, String webUrl, String profileName) throws DefinitionException, FHIRException {
 		if (base == null) {
