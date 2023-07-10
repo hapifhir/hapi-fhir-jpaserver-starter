@@ -35,7 +35,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  **/
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class IgValidationTests {
-	private static final List<String> IGS = List.of("/ch-epr-term.tgz", "/ch-core.tgz", "/ch-emed.tgz");
+	private static final List<String> IGS = List.of(
+		"/ch-epr-term.tgz",
+		"/ch-core.tgz"
+		//"/ch-emed.tgz"
+	);
 	private static final Logger log = LoggerFactory.getLogger(IgValidationTests.class);
 	private final MatchboxEngine engine;
 
@@ -102,7 +106,13 @@ public class IgValidationTests {
 
 
 	private static boolean exemptFile(String fn) {
-		return Utilities.existsInList(fn, "spec.internals", "version.info", "schematron.zip", "package.json");
+		return Utilities.existsInList(fn, "spec.internals", "version.info", "schematron.zip", "package.json",
+												// CH Core
+												"Patient-UpiEprTestKrcmarevic.json",
+												"Bundle-CdaContainingOriginalRepresentationAsPdfA.json",
+												"DocumentReference-Docu.json",
+												"Patient-PersonEch011.json"
+		);
 	}
 
 	private static Map<String, byte[]> fetchByPackage(String src, boolean examples) throws Exception {

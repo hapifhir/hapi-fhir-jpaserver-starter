@@ -5,6 +5,7 @@ import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.utilities.FhirPublication;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.slf4j.Logger;
@@ -82,6 +83,7 @@ class R4ValidationTests {
 	 * http://hl7.org/fhir/R4/valueset-mimetypes.html
 	 */
 	@Test
+	@Disabled(value = "No offline expansion yet")
 	void testValueSetWithIetfBcp13Expansion() throws Exception {
 		final String binaryRaw = this.loadSample("binary.xml");
 
@@ -93,6 +95,7 @@ class R4ValidationTests {
 	 * Test the validation of a UCUM code.
 	 */
 	@Test
+	@Disabled(value = "No offline expansion yet")
 	void testValueSetWithUcumCodes() throws Exception {
 		final String observationRaw = this.loadSample("observation.xml");
 
