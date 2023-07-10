@@ -1,0 +1,24 @@
+FROM maven:3.8-openjdk-17-slim as build-hapi
+WORKDIR /tmp/hapi-fhir-jpaserver-starter
+
+COPY pom.xml .
+COPY server.xml .
+ADD libs /root/.m2/repository/
+
+COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
+RUN mvn  -T 12 install -DskipTests -Djdk.lang.Process.launchMechanism=vfork -Dmaven.artifact.threads=30
+
+FROM build-hapi AS build-distroless
+RUN mvn package spring-boot:repackage -PmainApplication
+RUN mkdir /app && cp /tmp/hapi-fhir-jpaserver-starter/target/mainApplicationRoot.war /app/main.war
+
+########### distroless brings focus on security and runs on plain spring boot - this is the default image
+FROM gcr.io/distroless/java17:nonroot as default
+COPY --chown=nonroot:nonroot --from=build-distroless /app /app
+COPY --chown=65532:65532 images /app/images
+# 65532 is the nonroot user's uid
+# used here instead of the name to allow Kubernetes to easily detect that the container
+# is running as a non-root (uid != 0) user.
+USER 65532:65532
+WORKDIR /app
+CMD ["/app/main.war"]
