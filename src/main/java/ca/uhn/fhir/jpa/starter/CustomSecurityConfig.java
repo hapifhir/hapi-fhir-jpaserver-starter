@@ -3,6 +3,8 @@ package ca.uhn.fhir.jpa.starter;
 
 import java.util.Arrays;
 
+import javax.ws.rs.HEAD;
+
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.keycloak.adapters.KeycloakConfigResolver;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
@@ -35,12 +37,13 @@ import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpMethod.OPTIONS;
 
 //@ConditionalOnProperty(prefix = "keycloak", name = "enabled", havingValue = "true", matchIfMissing = true)
 @KeycloakConfiguration
 public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 	private static final String CORS_ALLOWED_HEADERS =
-            "origin,content-type,accept,x-requested-with,Authorization,Access-Control-Allow-Credentials";
+            "origin,content-type,accept,x-requested-with,Authorization,Access-Control-Allow-Credentials,kid";
 
     private String opensrpAllowedSources = "http://testhost.dashboard:3000/,http://localhost:3000/,https://oclink.io/,https://opencampaignlink.org/";
 
@@ -104,7 +107,7 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(opensrpAllowedSources.split(",")));
         configuration.setAllowedMethods(
-                Arrays.asList(GET.name(), POST.name(), PUT.name(), DELETE.name()));
+                Arrays.asList(GET.name(), POST.name(), PUT.name(), DELETE.name(),OPTIONS.name()));
         configuration.setAllowedHeaders(Arrays.asList(CORS_ALLOWED_HEADERS.split(",")));
         configuration.setMaxAge(corsMaxAge);
         configuration.setAllowCredentials(true);
