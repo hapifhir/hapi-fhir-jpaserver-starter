@@ -647,7 +647,8 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <!-- Prevent gpg from using pinentry  -->
+                            <!-- Prevent gpg from using pinentry in CI release.
+                                 To release manually, remove these arguments. -->
                             <gpgArguments>
                                 <arg>--pinentry-mode</arg>
                                 <arg>loopback</arg>
