@@ -525,7 +525,7 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin>
+ <plugin>
                         <groupId>com.google.code.maven-replacer-plugin</groupId>
                         <artifactId>replacer</artifactId>
                         <version>1.5.2</version>
@@ -568,22 +568,6 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- The following is not required for the application to build, but allows you to test it by issuing "mvn package jetty:run -Dspring.batch.job.enabled=false" from the command line. -->
-                    <!--
-                    <plugin>
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>jetty-maven-plugin</artifactId>
-                        <version>${jetty_version}</version>
-                        <configuration>
-                            <webApp>
-                                <contextPath>/hapi-fhir-jpaserver</contextPath>
-                                <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
-                            </webApp>
-                        </configuration>
-                    </plugin>
-                    -->
-
-                    <!-- Tell Maven which Java source version you want to use -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
@@ -592,6 +576,10 @@
                             <release>8</release>
                             <source>9</source>
                             <target>9</target>
+                            <excludes>
+                            	<exclude>ca/uhn/fhir/jpa/starter/service/NotificationService.java</exclude>
+                        	    <exclude>ca/uhn/fhir/jpa/starter/service/ResourceMapperService.java</exclude>
+                            </excludes>
                         </configuration>
                     </plugin>
 

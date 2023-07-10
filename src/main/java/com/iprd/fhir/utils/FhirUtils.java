@@ -17,7 +17,6 @@ import org.hl7.fhir.r4.model.PractitionerRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.uhn.fhir.jpa.starter.service.ServerInterceptor;
 import kotlin.Pair;
 
 import org.apache.jena.ext.xerces.util.URI.MalformedURIException;
@@ -25,7 +24,7 @@ import org.hl7.fhir.r4.model.Identifier;
 
 public class FhirUtils {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ServerInterceptor.class);
+	private static final Logger logger = LoggerFactory.getLogger(FhirUtils.class);
 
 	public static Boolean isOclPatient(List<Identifier> identifiers) {
 		for (Identifier identifier : identifiers) {

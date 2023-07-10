@@ -24,7 +24,7 @@ import javax.persistence.PersistenceException;
 
 public class NotificationDataSource {
 
-	private static final Logger logger = LoggerFactory.getLogger(ResourceMapperService.class);
+	private static final Logger logger = LoggerFactory.getLogger(NotificationDataSource.class);
 
 	Configuration conf;
 	SessionFactory sf;

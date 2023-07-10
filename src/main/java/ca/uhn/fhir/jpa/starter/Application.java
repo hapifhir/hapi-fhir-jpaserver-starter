@@ -20,10 +20,6 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @ServletComponentScan(basePackageClasses = { JpaRestfulServer.class })
 @SpringBootApplication(exclude = { ElasticsearchRestClientAutoConfiguration.class })
@@ -51,8 +47,8 @@ public class Application extends SpringBootServletInitializer {
 
 	@Bean
 	@Conditional(OnEitherVersion.class)
-	public ServletRegistrationBean hapiServletRegistration() {
-		ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
+	public ServletRegistrationBean<JpaRestfulServer> hapiServletRegistration() {
+		ServletRegistrationBean<JpaRestfulServer> servletRegistrationBean = new ServletRegistrationBean<JpaRestfulServer>();
 		JpaRestfulServer jpaRestfulServer = new JpaRestfulServer();
 		beanFactory.autowireBean(jpaRestfulServer);
 		servletRegistrationBean.setServlet(jpaRestfulServer);

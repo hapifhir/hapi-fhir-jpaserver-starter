@@ -12,7 +12,6 @@ import ca.uhn.fhir.jpa.starter.model.OCLQrResponse;
 import ca.uhn.fhir.jpa.starter.model.OCLQrRequest;
 import ca.uhn.fhir.jpa.starter.service.NotificationDataSource;
 import ca.uhn.fhir.jpa.starter.service.HelperService;
-import ca.uhn.fhir.jpa.starter.service.NotificationService;
 import ca.uhn.fhir.jpa.starter.service.BigQueryService;
 import ca.uhn.fhir.jpa.starter.service.QrService;
 import ca.uhn.fhir.parser.IParser;
@@ -53,8 +52,6 @@ public class UserAndGroupManagementController {
 	NotificationDataSource datasource = NotificationDataSource.getInstance();
 	@Autowired
 	HelperService helperService;
-	@Autowired
-	NotificationService notificationService;
 	@Autowired
 	BigQueryService bigQueryService;
 	@Autowired
