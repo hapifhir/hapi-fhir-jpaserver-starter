@@ -1,6 +1,14 @@
+2023/07/10 Release 3.3.0
+
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.3.0`
+- Updated to Core 6.0.1 and hapi-fhir 6.6.0
+- Updated to hl7#terminology 5.1.0
+- Loaded hl7.fhir.uv.extensions.r4 1.0.0
+- Improved testing
+
 2023/05/15 Release 3.2.3
 
-- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.2.2`
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.2.3`
 - fix validation engine caching mechanism
 
 2023/05/08 Release 3.2.2
