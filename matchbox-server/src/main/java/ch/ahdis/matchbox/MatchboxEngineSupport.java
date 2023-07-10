@@ -308,7 +308,7 @@ public class MatchboxEngineSupport {
 			engine.setIgLoader(igLoader);
 			try {
 				if (cliContext.getFhirVersion().equals("4.0.1")) {
-					engine.loadPackage("hl7.terminology", "5.0.0");
+					engine.loadPackage("hl7.terminology", "5.1.0");
 					engine.loadPackage("hl7.fhir.r4.core", "4.0.1");
 				}
 				cliContext.setIg(this.getIgPackage(cliContext));
