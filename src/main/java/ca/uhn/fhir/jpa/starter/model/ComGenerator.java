@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -16,7 +17,7 @@ import java.sql.Timestamp;
 
 
 @Entity
-@Table(name = "com_generator")
+@Table(name = "com_generator", uniqueConstraints = @UniqueConstraint(columnNames = {"patient_id", "resource_id", "resource_type", "scheduled_date"}))
 public class ComGenerator {
 	
 	public enum MessageStatus {
