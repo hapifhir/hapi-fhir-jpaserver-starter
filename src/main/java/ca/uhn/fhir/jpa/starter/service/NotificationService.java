@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
+import ca.uhn.fhir.rest.server.exceptions.ResourceGoneException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import kotlin.Triple;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -72,7 +73,7 @@ public class NotificationService {
 						sendSmsAndUpdateStatus(patientDetailsMessage, mobile, record);
 					}
 				}
-			} catch (ResourceNotFoundException | IllegalStateException ex) {
+			} catch (ResourceNotFoundException | IllegalStateException | ResourceGoneException ex) {
 				logger.warn(ExceptionUtils.getStackTrace(ex));
 				logger.warn("Deleting the record from the database!");
 				datasource.delete(record);

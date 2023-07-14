@@ -82,7 +82,7 @@ public class ServerInterceptor {
 					notificationDataSource.persist(comGen);
 	
 				}catch(Exception e) {
-					
+					logger.warn(ExceptionUtils.getStackTrace(e));
 				}
 			}
 		}

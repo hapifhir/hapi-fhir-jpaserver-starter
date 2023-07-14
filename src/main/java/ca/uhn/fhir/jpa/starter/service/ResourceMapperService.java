@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter.service;
 
 import ca.uhn.fhir.jpa.starter.model.EncounterIdEntity;
 import ca.uhn.fhir.rest.client.exceptions.FhirClientConnectionException;
+import ca.uhn.fhir.rest.server.exceptions.ResourceGoneException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 
 import com.iprd.fhir.utils.DateUtilityHelper;
@@ -254,7 +255,7 @@ public class ResourceMapperService {
 
 				notificationDataSource.delete(encounterIdEntity);
 
-			} catch (ResourceNotFoundException ex) {
+			} catch (ResourceNotFoundException | ResourceGoneException ex) {
 				logger.warn(ExceptionUtils.getStackTrace(ex));
 				logger.warn("Deleted the entity since the encounter not found in the server.");
 				notificationDataSource.delete(encounterIdEntity);
