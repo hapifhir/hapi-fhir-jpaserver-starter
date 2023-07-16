@@ -1,6 +1,6 @@
 # HAPI FHIR JPA Server Starter Helm Chart
 
-![Version: 0.12.0](https://img.shields.io/badge/Version-0.12.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.6.0](https://img.shields.io/badge/AppVersion-6.6.0-informational?style=flat-square)
+![Version: 0.13.0](https://img.shields.io/badge/Version-0.13.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.6.0](https://img.shields.io/badge/AppVersion-6.6.0-informational?style=flat-square)
 
 This helm chart will help you install the HAPI FHIR JPA Server in a Kubernetes environment.
 
@@ -30,6 +30,7 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | externalDatabase.password | string | `""` | database password |
 | externalDatabase.port | int | `5432` | database port number |
 | externalDatabase.user | string | `"fhir"` | username for the external database |
+| extraConfig | string | `""` | additional Spring Boot application config. Mounted as a file and automatically loaded by the application. |
 | extraEnv | list | `[]` | extra environment variables to set on the server container |
 | fullnameOverride | string | `""` | override the chart fullname |
 | image.pullPolicy | string | `"IfNotPresent"` | image pullPolicy to use |
@@ -43,11 +44,6 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | ingress.hosts[0].pathType | string | `"ImplementationSpecific"` |  |
 | ingress.hosts[0].paths[0] | string | `"/"` |  |
 | ingress.tls | list | `[]` | ingress TLS config |
-| livenessProbe.failureThreshold | int | `5` |  |
-| livenessProbe.initialDelaySeconds | int | `30` |  |
-| livenessProbe.periodSeconds | int | `20` |  |
-| livenessProbe.successThreshold | int | `1` |  |
-| livenessProbe.timeoutSeconds | int | `30` |  |
 | metrics.service.port | int | `8081` |  |
 | metrics.serviceMonitor.additionalLabels | object | `{}` | additional labels to apply to the ServiceMonitor object, e.g. `release: prometheus` |
 | metrics.serviceMonitor.enabled | bool | `false` | if enabled, creates a ServiceMonitor instance for Prometheus Operator-based monitoring |
@@ -65,11 +61,6 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | postgresql.primary.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | postgresql.primary.containerSecurityContext.runAsNonRoot | bool | `true` |  |
 | postgresql.primary.containerSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
-| readinessProbe.failureThreshold | int | `5` |  |
-| readinessProbe.initialDelaySeconds | int | `30` |  |
-| readinessProbe.periodSeconds | int | `20` |  |
-| readinessProbe.successThreshold | int | `1` |  |
-| readinessProbe.timeoutSeconds | int | `20` |  |
 | replicaCount | int | `1` | number of replicas to deploy |
 | resources | object | `{}` | configure the FHIR server's resource requests and limits |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
@@ -82,18 +73,14 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | service.port | int | `8080` | port where the server will be exposed at |
 | service.type | string | `"ClusterIP"` | service type |
-| startupProbe.failureThreshold | int | `10` |  |
-| startupProbe.initialDelaySeconds | int | `30` |  |
-| startupProbe.periodSeconds | int | `30` |  |
-| startupProbe.successThreshold | int | `1` |  |
-| startupProbe.timeoutSeconds | int | `30` |  |
+| tests.resources | object | `{}` | configure the test pods resource requests and limits |
 | tolerations | list | `[]` | pod tolerations |
 | topologySpreadConstraints | list | `[]` | pod topology spread configuration see: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#api |
 
 ## Development
 
 To update the Helm chart when a new version of the `hapiproject/hapi` image is released, [values.yaml](values.yaml) `image.tag` and the [Chart.yaml](Chart.yaml)'s
-`version` and optionally the `appVersion` field on major releases need to be updated. Afterwards, re-generate the [README.md](README.md)
+`version` and optionally the `appVersion` field need to be updated. Afterwards, re-generate the [README.md](README.md)
 by running:
 
 ```sh
