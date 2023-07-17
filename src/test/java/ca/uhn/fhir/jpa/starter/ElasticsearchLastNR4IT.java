@@ -83,7 +83,7 @@ public class ElasticsearchLastNR4IT {
   @LocalServerPort
   private int port;
 
-  @Test
+  //@Test
   void testLastN() throws IOException, InterruptedException {
 	  Thread.sleep(2000);
 

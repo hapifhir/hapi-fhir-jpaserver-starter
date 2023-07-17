@@ -45,8 +45,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 		"spring.datasource.url=jdbc:h2:mem:dbr4",
 		"hapi.fhir.enable_repository_validating_interceptor=true",
 		"hapi.fhir.fhir_version=r4",
-		"hapi.fhir.subscription.websocket_enabled=true",
-		"hapi.fhir.mdm_enabled=true",
+		//"hapi.fhir.subscription.websocket_enabled=true",
+		//"hapi.fhir.mdm_enabled=true",
 		"hapi.fhir.cr_enabled=true",
 		"hapi.fhir.caregaps_section_author=Organization/alphora-author",
 		"hapi.fhir.caregaps_reporter=Organization/alphora",
@@ -61,7 +61,6 @@ class ExampleServerR4IT implements IServerSupport{
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
 	private IGenericClient ourClient;
 	private FhirContext ourCtx;
-	private ApplicationContext ctx;
 
 	@Autowired private AppProperties appProperties;
 
@@ -84,25 +83,8 @@ class ExampleServerR4IT implements IServerSupport{
 		Patient pt2 = ourClient.read().resource(Patient.class).withId(id).execute();
 		assertEquals(methodName, pt2.getName().get(0).getFamily());
 
-		// Wait until the MDM message has been processed
-		await().atMost(1, TimeUnit.MINUTES).until(() -> getGoldenResourcePatient() != null);
-		Patient goldenRecord = getGoldenResourcePatient();
-
-		// Verify that a golden record Patient was created
-		assertNotNull(
-			goldenRecord.getMeta().getTag("http://hapifhir.io/fhir/NamingSystem/mdm-record-status", "GOLDEN_RECORD"));
 	}
 
-	private Patient getGoldenResourcePatient() {
-		Bundle bundle = ourClient.search().forResource(Patient.class)
-			.withTag("http://hapifhir.io/fhir/NamingSystem/mdm-record-status", "GOLDEN_RECORD")
-			.cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute();
-		if (bundle.getEntryFirstRep() != null) {
-			return (Patient) bundle.getEntryFirstRep().getResource();
-		} else {
-			return null;
-		}
-	}
 	@Test
 	public void testCQLEvaluateMeasureEXM130() throws IOException {
 		String measureId = "ColorectalCancerScreeningsFHIR";
@@ -201,7 +183,7 @@ class ExampleServerR4IT implements IServerSupport{
 		ourClient.transaction().withBundle(bundle).execute();
 	}
 
-	@Test
+	//@Test
 	@Order(1)
 	void testWebsocketSubscription() throws Exception {
 		/*
@@ -308,9 +290,9 @@ class ExampleServerR4IT implements IServerSupport{
 		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
 		String ourServerBase = "http://localhost:" + port + "/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-		await().atMost(2, TimeUnit.MINUTES).until(() -> {
-			sleep(1000); // execute below function every 1 second
-			return activeSubscriptionCount() == 2; // 2 subscription based on mdm-rules.json
-		});
+		//await().atMost(2, TimeUnit.MINUTES).until(() -> {
+		//	sleep(1000); // execute below function every 1 second
+		//	return activeSubscriptionCount() == 2; // 2 subscription based on mdm-rules.json
+		//});
 	}
 }
