@@ -164,6 +164,7 @@ export class ValidateComponent implements OnInit {
         resourceType: 'ImplementationGuide',
         searchParams: {
           _sort: 'title',
+          _count: 1000, // Load all IGs
         },
       })
       .then((bundle: fhir.r4.Bundle) => {

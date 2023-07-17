@@ -35,6 +35,7 @@ export class IgsComponent implements OnInit {
 
   query = {
     _sort: 'title',
+    _count: this.pageSize,
   };
 
   constructor(
