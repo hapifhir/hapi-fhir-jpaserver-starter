@@ -52,6 +52,7 @@ import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
 import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.utilities.json.model.JsonObject;
+import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.xhtml.NodeType;
@@ -90,9 +91,49 @@ public class MatchboxEngine extends ValidationEngine {
 	public static class MatchboxEngineBuilder extends ValidationEngineBuilder {
 
 		/**
+		 * The terminology server to use. {@code null} means no server will be used.
+		 */
+		private String txServer = null;
+
+		/**
+		 * The filesystem package cache mode.
+		 */
+		private FilesystemPackageCacheManager.FilesystemPackageCacheMode packageCacheMode = FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER;
+
+		/**
+		 * The FHIR version to use.
+		 */
+		private final FhirPublication fhirVersion = FhirPublication.R4;
+
+		/**
 		 * Creates an empty builder instance
 		 */
 		public MatchboxEngineBuilder() {
+		}
+
+		/**
+		 * Sets the terminology server. Use {@code null} to disable the use of a terminology server.
+		 *
+		 * @param txServer The URL of the terminology server or {@code null}.
+		 */
+		public void setTxServer(final String txServer) {
+			this.txServer = txServer;
+		}
+
+		/**
+		 * Sets the mode of the filesystem package cache manager. It controls where the package will be stored on the
+		 * filesystem:
+		 * <ul>
+		 *    <li>{@code USER}: {USER HOME}/.fhir/packages</li>
+		 *    <li>{@code SYSTEM}: /var/lib/.fhir/packages</li>
+		 *    <li>{@code TESTING}: {TMP}/.fhir/packages</li>
+		 * </ul>
+		 *
+		 * @see FilesystemPackageCacheManager#init(FilesystemPackageCacheManager.FilesystemPackageCacheMode) for details.
+		 * @param packageCacheMode The mode of the filesystem package cache manager.
+		 */
+		public void setPackageCacheMode(final FilesystemPackageCacheManager.FilesystemPackageCacheMode packageCacheMode) {
+			this.packageCacheMode = packageCacheMode;
 		}
 
 		/**
@@ -107,13 +148,20 @@ public class MatchboxEngine extends ValidationEngine {
 			log.info("Initializing Matchbox Engine (FHIR R4 with terminology provided in classpath)");
 			log.info(VersionUtil.getPoweredBy());
 			MatchboxEngine engine = new MatchboxEngine(super.fromNothing());
-			engine.setVersion("4.0.1");
+			engine.setVersion(this.fhirVersion.toCode());
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.1.0.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
-			engine.getContext().setCanRunWithoutTerminology(true);
-			engine.getContext().setNoTerminologyServer(true);
+			if (this.txServer == null) {
+				engine.getContext().setCanRunWithoutTerminology(true);
+				engine.getContext().setNoTerminologyServer(true);
+			} else {
+				engine.getContext().setCanRunWithoutTerminology(false);
+				engine.getContext().setNoTerminologyServer(false);
+				engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
+			}
 			engine.getContext().setPackageTracker(engine);
+			engine.setPcm(new FilesystemPackageCacheManager(this.packageCacheMode));
 			return engine;
 		}
 
@@ -129,10 +177,17 @@ public class MatchboxEngine extends ValidationEngine {
 			log.info("Initializing Matchbox Engine");
 			log.info(VersionUtil.getPoweredBy());
 			MatchboxEngine engine = new MatchboxEngine(super.fromNothing());
-			engine.setVersion("4.0.1");
-			engine.getContext().setCanRunWithoutTerminology(true);
-			engine.getContext().setNoTerminologyServer(true);
+			engine.setVersion(this.fhirVersion.toCode());
+			if (this.txServer == null) {
+				engine.getContext().setCanRunWithoutTerminology(true);
+				engine.getContext().setNoTerminologyServer(true);
+			} else {
+				engine.getContext().setCanRunWithoutTerminology(false);
+				engine.getContext().setNoTerminologyServer(false);
+				engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
+			}
 			engine.getContext().setPackageTracker(engine);
+			engine.setPcm(new FilesystemPackageCacheManager(this.packageCacheMode));
 			return engine;
 		}
 	}
