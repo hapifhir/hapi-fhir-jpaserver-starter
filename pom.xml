@@ -68,7 +68,6 @@
         <jaxb_runtime_version>3.0.0</jaxb_runtime_version>
         <jena_version>4.2.0</jena_version>
         <jersey_version>3.0.3</jersey_version>
-        <jetty_version>10.0.13</jetty_version>
         <jsr305_version>3.0.2</jsr305_version>
         <junit_version>5.9.1</junit_version>
         <flexmark_version>0.50.40</flexmark_version>
@@ -251,42 +250,6 @@
             </dependency>
             <!-- The following dependencies are only needed for automated unit tests, you do not neccesarily need them to run the example. -->
             <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-servlets</artifactId>
-                <scope>test</scope>
-                <version>${jetty_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-servlet</artifactId>
-                <scope>test</scope>
-                <version>${jetty_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-server</artifactId>
-                <scope>test</scope>
-                <version>${jetty_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-util</artifactId>
-                <scope>test</scope>
-                <version>${jetty_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-webapp</artifactId>
-                <scope>test</scope>
-                <version>${jetty_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-jetty-server</artifactId>
-                <scope>test</scope>
-                <version>${jetty_version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>testcontainers</artifactId>
                 <scope>test</scope>
@@ -334,16 +297,6 @@
                 <artifactId>junit-jupiter-params</artifactId>
                 <version>${junit_version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-jetty-api</artifactId>
-                <version>${jetty_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty.websocket</groupId>
-                <artifactId>websocket-jetty-client</artifactId>
-                <version>${jetty_version}</version>
             </dependency>
             <dependency>
                 <groupId>mysql</groupId>
@@ -398,11 +351,6 @@
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring_boot_version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-jetty</artifactId>
-                <version>${spring_boot_version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -421,8 +369,6 @@
         <!-- Tells Maven to name the generated WAR file as ROOT.war -->
         <finalName>matchbox-engine</finalName>
         <plugins>
-            <!-- The following is not required for the application to build, but allows you to test it by issuing "mvn package jetty:run -Dspring.batch.job.enabled=false" from the command line. -->
-            <!-- <plugin><groupId>org.eclipse.jetty</groupId><artifactId>jetty-maven-plugin</artifactId><version>${jetty_version}</version><configuration><webApp><contextPath>/hapi-fhir-jpaserver</contextPath><allowDuplicateFragmentNames>true</allowDuplicateFragmentNames></webApp></configuration></plugin> -->
             <!-- Tell Maven which Java source version you want to use -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -472,8 +418,6 @@
                 <configuration>
                     <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
                     <checkTestClasspath>false</checkTestClasspath>
-                    <!-- <printEqualFiles>false</printEqualFiles><failBuildInCaseOfDifferentContentConflict>true</failBuildInCaseOfDifferentContentConflict><failBuildInCaseOfEqualContentConflict>true</failBuildInCaseOfEqualContentConflict><failBuildInCaseOfConflict>true</failBuildInCaseOfConflict><checkCompileClasspath>true</checkCompileClasspath><checkRuntimeClasspath>false</checkRuntimeClasspath><skip>false</skip><quiet>false</quiet><preferLocal>true</preferLocal><useResultFile>true</useResultFile><resultFileMinClasspathCount>2</resultFileMinClasspathCount><resultFile>${project.build.directory}/duplicate-finder-result.xml</resultFile> -->
-                    <!-- <ignoredDependencies><dependency><groupId>javax.el</groupId><artifactId>javax.el-api</artifactId></dependency><dependency><groupId>javax.mail</groupId><artifactId>javax.mail-api</artifactId></dependency><dependency><groupId>javax.activation</groupId><artifactId>javax.activation-api</artifactId></dependency><dependency><groupId>com.helger</groupId><artifactId>ph-schematron</artifactId></dependency><dependency><groupId>commons-logging</groupId><artifactId>commons-logging</artifactId></dependency><dependency><groupId>org.jscience</groupId><artifactId>jscience</artifactId></dependency><dependency><groupId>org.springframework</groupId><artifactId>spring-jcl</artifactId></dependency><dependency><groupId>org.springframework</groupId><artifactId>spring-jcl</artifactId></dependency><dependency><groupId>com.google.code.findbugs</groupId><artifactId>annotations</artifactId></dependency><dependency><groupId>org.apache.derby</groupId><artifactId>derbyclient</artifactId></dependency><dependency><groupId>org.apache.derby</groupId><artifactId>derbynet</artifactId></dependency><dependency><groupId>org.apache.derby</groupId><artifactId>derbyclient</artifactId></dependency><dependency><groupId>org.checkerframework</groupId><artifactId>checker-compat-qual</artifactId></dependency></ignoredDependencies> -->
                     <ignoredResourcePatterns>
                         <ignoredResourcePattern>.*\.txt$</ignoredResourcePattern>
                         <ignoredResourcePattern>.*\.html$</ignoredResourcePattern>
@@ -601,9 +545,6 @@
     </build>
 
     <profiles>
-        <!-- Package the war for your preference. Use the boot profile if you prefer a single jar/war that can be started with and embedded application server. Default is jetty as it is assumed that the main users of this project already have an app server. Different
-                profiles are needed as packing it for spring boot, makes the resulting war undeployable due to a class shading issue between tomcat and jetty. (the error is 'java.util.ServiceConfigurationError: org.apache.juli.logging.Log: org.eclipse.jetty.apache.jsp.JuliLog
-                not a subtype') -->
         <!-- example of how to start the server using spring boot -->
         <!-- mvn clean package spring-boot:repackage -Pboot && java -jar target/hapi-fhir-jpaserver.war -->
         <profile>

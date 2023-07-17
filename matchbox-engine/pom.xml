@@ -90,10 +90,6 @@
     <build>
         <finalName>matchbox-engine</finalName>
         <plugins>
-            <!-- The following is not required for the application to build, but allows you to test it by issuing "mvn package jetty:run -Dspring.batch.job.enabled=false" from the command line. -->
-            <!-- <plugin> <groupId>org.eclipse.jetty</groupId> <artifactId>jetty-maven-plugin</artifactId> <version>${jetty_version}</version> <configuration> <webApp> <contextPath>/hapi-fhir-jpaserver</contextPath> <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
-                      </webApp> </configuration> </plugin> -->
-
             <!-- Tell Maven which Java source version you want to use -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -156,15 +152,6 @@
                 <configuration>
                     <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
                     <checkTestClasspath>false</checkTestClasspath>
-                    <!-- <printEqualFiles>false</printEqualFiles> <failBuildInCaseOfDifferentContentConflict>true</failBuildInCaseOfDifferentContentConflict> <failBuildInCaseOfEqualContentConflict>true</failBuildInCaseOfEqualContentConflict> <failBuildInCaseOfConflict>true</failBuildInCaseOfConflict>
-                                  <checkCompileClasspath>true</checkCompileClasspath> <checkRuntimeClasspath>false</checkRuntimeClasspath> <skip>false</skip> <quiet>false</quiet> <preferLocal>true</preferLocal> <useResultFile>true</useResultFile> <resultFileMinClasspathCount>2</resultFileMinClasspathCount>
-                                  <resultFile>${project.build.directory}/duplicate-finder-result.xml</resultFile> -->
-                    <!-- <ignoredDependencies> <dependency> <groupId>javax.el</groupId> <artifactId>javax.el-api</artifactId> </dependency> <dependency> <groupId>javax.mail</groupId> <artifactId>javax.mail-api</artifactId> </dependency> <dependency> <groupId>javax.activation</groupId>
-                                  <artifactId>javax.activation-api</artifactId> </dependency> <dependency> <groupId>com.helger</groupId> <artifactId>ph-schematron</artifactId> </dependency> <dependency> <groupId>commons-logging</groupId> <artifactId>commons-logging</artifactId> </dependency>
-                                  <dependency> <groupId>org.jscience</groupId> <artifactId>jscience</artifactId> </dependency> <dependency> <groupId>org.springframework</groupId> <artifactId>spring-jcl</artifactId> </dependency> <dependency> <groupId>org.springframework</groupId> <artifactId>spring-jcl</artifactId>
-                                  </dependency> <dependency> <groupId>com.google.code.findbugs</groupId> <artifactId>annotations</artifactId> </dependency> <dependency> <groupId>org.apache.derby</groupId> <artifactId>derbyclient</artifactId> </dependency> <dependency> <groupId>org.apache.derby</groupId>
-                                  <artifactId>derbynet</artifactId> </dependency> <dependency> <groupId>org.apache.derby</groupId> <artifactId>derbyclient</artifactId> </dependency> <dependency> <groupId>org.checkerframework</groupId> <artifactId>checker-compat-qual</artifactId> </dependency>
-                                  </ignoredDependencies> -->
                     <ignoredResourcePatterns>
                         <ignoredResourcePattern>.*\.txt$</ignoredResourcePattern>
                         <ignoredResourcePattern>.*\.html$</ignoredResourcePattern>
