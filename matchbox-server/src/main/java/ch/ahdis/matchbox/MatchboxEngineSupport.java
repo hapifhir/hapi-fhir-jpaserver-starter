@@ -291,10 +291,13 @@ public class MatchboxEngineSupport {
 				engine = new MatchboxEngineBuilder().getEngine();
 			} catch (FHIRException e) {
 				log.error("error generating matchbox engine", e);
+				return null;
 			} catch (IOException e) {
 				log.error("error generating matchbox engine", e);
+				return null;
 			} catch (URISyntaxException e) {
 				log.error("error generating matchbox engine", e);
+				return null;
 			}
 			IgLoader igLoader = null;
 			try {
