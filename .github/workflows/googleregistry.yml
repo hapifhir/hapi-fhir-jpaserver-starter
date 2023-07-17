@@ -33,7 +33,7 @@ jobs:
           distribution: "adopt"
           cache: "maven"
 
-      - run: mvn --batch-mode --update-snapshots verify -DskipTests
+      - run: mvn --batch-mode --update-snapshots package -DskipTests -P release
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
