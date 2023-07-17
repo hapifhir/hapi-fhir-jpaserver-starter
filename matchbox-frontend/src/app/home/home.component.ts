@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
 import { FhirConfigService } from '../fhirConfig.service';
 import Client from 'fhir-kit-client';
 import { Router } from '@angular/router';
-import { MatTabChangeEvent } from '@angular/material/tabs/tab-group';
 import packageJson from '../../../package.json';
 
 @Component({
