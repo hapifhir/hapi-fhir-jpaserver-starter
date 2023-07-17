@@ -132,9 +132,6 @@ public class ServerInterceptor {
 			if(currentDate!=appointmentDate) {
 				notificationDataSource.insert(secondReminder);	
 			}
-		}
-		else if (theResource.fhirType().equals("QuestionnaireResponse")) {
-			processQuestionnaireResponse((QuestionnaireResponse) theResource);
 		} else if (theResource.fhirType().equals("Patient")) {
 			processPatientInsert(theResource);
 		}
@@ -154,9 +151,6 @@ public class ServerInterceptor {
 				// Using persist to add entry only if it is not exists
 				notificationDataSource.persist(encounterIdEntity);
 			}
-		}
-		else if (theResource.fhirType().equals("QuestionnaireResponse")) {
-			processQuestionnaireResponse((QuestionnaireResponse) theResource);
 		}
 		else if(theResource.fhirType().equals("Patient")){
 			processPatientUpdate(theOldResource, theResource);
@@ -393,186 +387,6 @@ public class ServerInterceptor {
 					currentTime
 				);
 				notificationDataSource.persist(newPatientIdentifierEntity);
-			}
-		}
-	}
-
-	private void processQuestionnaireResponse(QuestionnaireResponse questionnaireResponse) throws IOException {
-		if(questionnaireResponse == null) return ;
-		if(questionnaireResponse.getQuestionnaire() == null) return ;
-		if (questionnaireResponse.getQuestionnaire().equals("Questionnaire/labour")) {
-			byte[] bitmapdata = null;
-
-			for (QuestionnaireResponse.QuestionnaireResponseItemComponent item : questionnaireResponse.getItem()) {
-				if (item.getLinkId().equals("8.0")) {
-					for (QuestionnaireResponse.QuestionnaireResponseItemComponent groupItem : item.getItem()) {
-						if (groupItem.getLinkId().equals("8.2")) {
-							for (QuestionnaireResponse.QuestionnaireResponseItemComponent answerItem : groupItem.getItem()) {
-								if (answerItem.getLinkId().equals("8.2.1")) {
-									List<QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent> answers = answerItem.getAnswer();
-									if (answers != null && !answers.isEmpty()) {
-										QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent answer = answers.get(0);
-										if (answer.getValueAttachment() != null && answer.getValueAttachment().getData() != null) {
-											bitmapdata = answer.getValueAttachment().getData();
-											break;
-										}
-									}
-								}
-							}
-							break;
-						}
-					}
-					break;
-				}
-			}
-
-			if (bitmapdata == null) {
-				return;
-			}
-
-			byte[] base64 = bitmapdata;
-			String md5Hash = md5Bytes(base64);
-
-			if (md5Hash == null) {
-				return;
-			}
-
-			File image = new File(imagePath+"//"+md5Hash+".jpeg");
-			FileUtils.writeByteArrayToFile(image, base64);
-			String imagePath = image.getAbsolutePath();
-			long imageSize = Files.size(Paths.get(imagePath));
-			long byteSize = base64.length;
-			if(imageSize == byteSize) {
-				for (QuestionnaireResponse.QuestionnaireResponseItemComponent item : questionnaireResponse.getItem()) {
-					if (item.getLinkId().equals("8.0")) {
-						for (QuestionnaireResponse.QuestionnaireResponseItemComponent groupItem : item.getItem()) {
-							if (groupItem.getLinkId().equals("8.2")) {
-								for (QuestionnaireResponse.QuestionnaireResponseItemComponent answerItem : groupItem.getItem()) {
-									if (answerItem.getLinkId().equals("8.2.1")) {
-										List<QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent> answers = answerItem.getAnswer();
-										if (answers != null && !answers.isEmpty()) {
-											QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent answer = answers.get(0);
-											Attachment valueAttachment = answer.getValueAttachment();
-											if (valueAttachment != null) {
-												valueAttachment.setData(null);
-												valueAttachment.setUrl(imagePath);
-											} else {
-												valueAttachment = new Attachment();
-												valueAttachment.setData(null);
-												valueAttachment.setUrl(imagePath);
-												answer.setValue(valueAttachment);
-											}
-										} else {
-											QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent answer = new QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent();
-											Attachment valueAttachment = new Attachment();
-											valueAttachment.setData(null);
-											valueAttachment.setUrl(imagePath);
-											answer.setValue(valueAttachment);
-											answerItem.addAnswer(answer);
-										}
-									}
-								}
-								break;
-							}
-						}
-						break;
-					}
-				}
-			}
-			else {
-				logger.warn("Image Not Proper");
-			}
-		}
-
-		if(questionnaireResponse.getQuestionnaire().equals("Questionnaire/childBirth-registration")){
-			byte[] bitmapdata = null;
-			for(QuestionnaireResponse.QuestionnaireResponseItemComponent item : questionnaireResponse.getItem()){
-				if(item.getLinkId().equals("birth-certificate-details")){
-					for(QuestionnaireResponse.QuestionnaireResponseItemComponent parentGroupItem : item.getItem()){
-						if(parentGroupItem.getLinkId().equals("15.0")){
-							for(QuestionnaireResponse.QuestionnaireResponseItemComponent childGroupItem : parentGroupItem.getItem()){
-								if(childGroupItem.getLinkId().equals("15.1")){
-									for (QuestionnaireResponse.QuestionnaireResponseItemComponent answerItem : childGroupItem.getItem()){
-										if(answerItem.getLinkId().equals("15.1.1")){
-											List<QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent> answers = answerItem.getAnswer();
-											if (answers != null && !answers.isEmpty()) {
-												QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent answer = answers.get(0);
-												if (answer.getValueAttachment() != null && answer.getValueAttachment().getData() != null) {
-													bitmapdata = answer.getValueAttachment().getData();
-													break;
-												}
-											}
-										}
-									}
-									break;
-								}
-							}
-							break;
-						}
-					}
-					break;
-				}
-			}
-			if (bitmapdata == null) {
-				return;
-			}
-			byte[] base64 = bitmapdata;
-			String md5Hash = md5Bytes(base64);
-
-			if (md5Hash == null) {
-				return;
-			}
-
-			File image = new File(imagePath+"//"+md5Hash+".jpeg");
-			FileUtils.writeByteArrayToFile(image, base64);
-			String imagePath = image.getAbsolutePath();
-			long imageSize = Files.size(Paths.get(imagePath));
-			long byteSize = base64.length;
-
-			if(imageSize == byteSize){
-				for(QuestionnaireResponse.QuestionnaireResponseItemComponent item : questionnaireResponse.getItem()){
-					if(item.getLinkId().equals("birth-certificate-details")){
-						for(QuestionnaireResponse.QuestionnaireResponseItemComponent parentGroupItem : item.getItem()){
-							if(parentGroupItem.getLinkId().equals("15.0")){
-								for(QuestionnaireResponse.QuestionnaireResponseItemComponent childGroupItem : parentGroupItem.getItem()){
-									if(childGroupItem.getLinkId().equals("15.1")){
-										for (QuestionnaireResponse.QuestionnaireResponseItemComponent answerItem : childGroupItem.getItem()){
-											if(answerItem.getLinkId().equals("15.1.1")){
-												List<QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent> answers = answerItem.getAnswer();
-												if (answers != null && !answers.isEmpty()) {
-													QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent answer = answers.get(0);
-													Attachment valueAttachment = answer.getValueAttachment();
-													if (valueAttachment != null) {
-														valueAttachment.setData(null);
-														valueAttachment.setUrl(imagePath);
-													} else {
-														valueAttachment = new Attachment();
-														valueAttachment.setData(null);
-														valueAttachment.setUrl(imagePath);
-														answer.setValue(valueAttachment);
-													}
-												} else {
-													QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent answer = new QuestionnaireResponse.QuestionnaireResponseItemAnswerComponent();
-													Attachment valueAttachment = new Attachment();
-													valueAttachment.setData(null);
-													valueAttachment.setUrl(imagePath);
-													answer.setValue(valueAttachment);
-													answerItem.addAnswer(answer);
-												}
-											}
-										}
-										break;
-									}
-								}
-								break;
-							}
-						}
-						break;
-					}
-				}
-			}
-			else {
-				logger.warn("Image Not Proper");
 			}
 		}
 	}
