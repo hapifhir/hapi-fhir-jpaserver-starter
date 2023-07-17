@@ -24,7 +24,7 @@ spring:
 
     # database connection pool size
     hikari:
-      maximum-pool-size: 10
+      maximum-pool-size: 25
   jpa:
     properties:
       hibernate.format_sql: false
