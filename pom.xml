@@ -24,9 +24,6 @@
         <java.version>11</java.version>
         <logback-classic.version>1.2.11</logback-classic.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
-        <project.jetty.version>11.0.15</project.jetty.version>
-        <start-class>ca.uhn.fhir.jpa.starter.Application</start-class>
-        <shortPath>C:\Program Files\Java\jdk-17\bin\java</shortPath>
     </properties>
 
     <prerequisites>
@@ -50,22 +47,21 @@
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-jetty-api</artifactId>
-            <version>${project.jetty.version}</version>
+            <version>${jetty_version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-jetty-client</artifactId>
-            <version>${project.jetty.version}</version>
+            <version>${jetty_version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.5</version>
         </dependency>
-<!--        <dependency>-->
-<!--          <groupId>com.microsoft.sqlserver</groupId>-->
-<!--          <artifactId>mssql-jdbc</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+          <groupId>com.microsoft.sqlserver</groupId>
+          <artifactId>mssql-jdbc</artifactId>
+        </dependency>
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
@@ -391,25 +387,6 @@
             <version>${logback-classic.version}</version>
         </dependency>
 
-        <!-- This dependency holds all the code extensions that OpenSRP will build on top of Hapi-Fhir-->
-        <dependency>
-            <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
-            <artifactId>location</artifactId>
-            <version>0.0.8-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
-            <artifactId>practitioner</artifactId>
-            <version>0.0.12-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
-            <artifactId>configuration</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -438,7 +415,6 @@
                         </goals>
                         <configuration>
                             <mainClass>ca.uhn.fhir.jpa.starter.Application</mainClass>
-                            <layout>JAR</layout>
                         </configuration>
                     </execution>
                 </executions>
@@ -654,7 +630,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>2.15.1</version>
+                        <version>1.6.13</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>

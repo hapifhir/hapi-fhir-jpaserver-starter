@@ -1,8 +1,14 @@
 version: "3"
 services:
+  hapi-fhir-jpaserver-start:
+    build: .
+    container_name: hapi-fhir-jpaserver-start
+    restart: on-failure
+    ports:
+      - "8080:8080"
   hapi-fhir-postgres:
     image: postgres:13-alpine
-    container_name: postgres-hapi-fhir
+    container_name: hapi-fhir-postgres
     restart: always
     environment:
       POSTGRES_DB: "hapi"
