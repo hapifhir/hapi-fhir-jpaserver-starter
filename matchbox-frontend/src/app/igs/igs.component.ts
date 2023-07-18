@@ -38,19 +38,10 @@ export class IgsComponent implements OnInit {
     _count: this.pageSize,
   };
 
-  constructor(
-    private data: FhirConfigService,
-    private fhirPathService: FhirPathService
-  ) {
+  constructor(private data: FhirConfigService, private fhirPathService: FhirPathService) {
     this.client = data.getFhirClient();
-    this.addPackageId = new FormControl('', [
-      Validators.required,
-      Validators.minLength(1),
-    ]);
-    this.addVersion = new FormControl('current', [
-      Validators.required,
-      Validators.minLength(1),
-    ]);
+    this.addPackageId = new FormControl('', [Validators.required, Validators.minLength(1)]);
+    this.addVersion = new FormControl('current', [Validators.required, Validators.minLength(1)]);
     this.addUrl = new FormControl('url');
     this.search();
   }
@@ -165,13 +156,12 @@ export class IgsComponent implements OnInit {
         },
       })
       .then((response) => {
-        this.errMsg = 'Created Implementation Guide' + this.addPackageId.value;
+        this.errMsg = 'Created Implementation Guide ' + this.addPackageId.value;
         this.operationOutcome = response as fhir.r4.OperationOutcome;
         this.search();
       })
       .catch((error) => {
-        this.errMsg =
-          'Error creating Implementation Guide ' + this.addPackageId.value;
+        this.errMsg = 'Error creating Implementation Guide ' + this.addPackageId.value;
         this.operationOutcome = error.response.data;
         this.update = false;
       });
@@ -218,14 +208,12 @@ export class IgsComponent implements OnInit {
         },
       })
       .then((response) => {
-        this.errMsg =
-          'Updated Implementation Guide ' + this.selection.packageId;
+        this.errMsg = 'Updated Implementation Guide ' + this.selection.packageId;
         this.operationOutcome = response as fhir.r4.OperationOutcome;
         this.search();
       })
       .catch((error) => {
-        this.errMsg =
-          'Error updating Implementation Guide ' + this.selection.packageId;
+        this.errMsg = 'Error updating Implementation Guide ' + this.selection.packageId;
         this.operationOutcome = error.response.data;
         this.update = false;
       });
@@ -247,14 +235,12 @@ export class IgsComponent implements OnInit {
         },
       })
       .then((response) => {
-        this.errMsg =
-          'Deleted Implementation Guide Resource ' + this.selection.packageId;
+        this.errMsg = 'Deleted Implementation Guide Resource ' + this.selection.packageId;
         this.operationOutcome = response as fhir.r4.OperationOutcome;
         this.search();
       })
       .catch((error) => {
-        this.errMsg =
-          'Error deleting Implementation Guide ' + this.selection.packageId;
+        this.errMsg = 'Error deleting Implementation Guide ' + this.selection.packageId;
         this.operationOutcome = error.response.data;
         this.update = false;
       });
