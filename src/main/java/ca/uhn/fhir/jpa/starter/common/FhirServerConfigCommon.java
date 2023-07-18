@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.util.HashSet;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +46,7 @@ public class FhirServerConfigCommon {
     ourLog.info("Server configured to " + (appProperties.getExpunge_enabled() ? "enable" : "disable") + " expunges");
     ourLog.info("Server configured to " + (appProperties.getAllow_override_default_search_params() ? "allow" : "deny") + " overriding default search params");
     ourLog.info("Server configured to " + (appProperties.getAuto_create_placeholder_reference_targets() ? "allow" : "disable") + " auto-creating placeholder references");
+    ourLog.info("Server configured to auto-version references at paths {}", appProperties.getAuto_version_reference_at_paths());
 
     if (appProperties.getSubscription().getEmail() != null) {
       AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
@@ -84,6 +84,7 @@ public class FhirServerConfigCommon {
 
     jpaStorageSettings.setIndexMissingFields(appProperties.getEnable_index_missing_fields() ? StorageSettings.IndexEnabledEnum.ENABLED : StorageSettings.IndexEnabledEnum.DISABLED);
     jpaStorageSettings.setAutoCreatePlaceholderReferenceTargets(appProperties.getAuto_create_placeholder_reference_targets());
+    jpaStorageSettings.setAutoVersionReferenceAtPaths(appProperties.getAuto_version_reference_at_paths());
     jpaStorageSettings.setEnforceReferentialIntegrityOnWrite(appProperties.getEnforce_referential_integrity_on_write());
     jpaStorageSettings.setEnforceReferentialIntegrityOnDelete(appProperties.getEnforce_referential_integrity_on_delete());
     jpaStorageSettings.setAllowContainsSearches(appProperties.getAllow_contains_searches());
@@ -125,9 +126,9 @@ public class FhirServerConfigCommon {
 
     jpaStorageSettings.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
 	 jpaStorageSettings.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
-	 jpaStorageSettings.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
+	 jpaStorageSettings.setTreatBaseUrlsAsLocal(appProperties.getLocal_base_urls());
 
-	      if (appProperties.getLastn_enabled()) {
+	 if (appProperties.getLastn_enabled()) {
       jpaStorageSettings.setLastNEnabled(true);
     }
 

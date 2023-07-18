@@ -99,6 +99,8 @@ hapi:
     #    allow_multiple_delete: true
     #    allow_override_default_search_params: true
     #    auto_create_placeholder_reference_targets: false
+    ### tells the server to automatically append the current version of the target resource to references at these paths
+    #    auto_version_reference_at_paths: Device.patient, Device.location, Device.parent, DeviceMetric.parent, DeviceMetric.source, Observation.device, Observation.subject
     #    cr_enabled: true
     #    ips_enabled: false
     #    default_encoding: JSON
