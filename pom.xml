@@ -14,7 +14,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-            <version>6.6.0</version>
+        <version>6.6.0</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -59,8 +59,8 @@
             <artifactId>postgresql</artifactId>
         </dependency>
         <dependency>
-          <groupId>com.microsoft.sqlserver</groupId>
-          <artifactId>mssql-jdbc</artifactId>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
@@ -293,6 +293,24 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- This dependency holds all the code extensions that OpenSRP will build on top of Hapi-Fhir-->
+        <dependency>
+            <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
+            <artifactId>location</artifactId>
+            <version>0.0.8-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
+            <artifactId>practitioner</artifactId>
+            <version>0.0.12-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
+            <artifactId>configuration</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
         <!--
         For some reason JavaDoc crashed during site generation unless we have this dependency
