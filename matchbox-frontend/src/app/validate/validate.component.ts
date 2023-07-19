@@ -4,7 +4,7 @@ import FhirClient from 'fhir-kit-client';
 import { UntypedFormControl } from '@angular/forms';
 import pako from 'pako';
 import untar from 'js-untar';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { IDroppedBlob } from '../upload/upload.component';
 
 interface ITarEntry {

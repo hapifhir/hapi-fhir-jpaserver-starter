@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FhirConfigService } from '../fhirConfig.service';
-import { PageEvent } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import FhirClient from 'fhir-kit-client';
 import debug from 'debug';

@@ -76,9 +76,8 @@ export function createTranslateLoader(http: HttpClient) {
     HttpClientModule,
     HighlightModule,
     RouterModule.forRoot(routes, {
-      useHash: true,
-      relativeLinkResolution: 'legacy',
-    }),
+    useHash: true
+}),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
