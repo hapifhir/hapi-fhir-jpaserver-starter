@@ -35,7 +35,6 @@ import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
-import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.OperationOutcome;
@@ -43,14 +42,12 @@ import org.hl7.fhir.r4.model.OperationOutcome.IssueSeverity;
 import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
-import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
@@ -78,6 +75,9 @@ public class ValidationProvider {
 	@Autowired
 	protected CliContext cliContext;
 
+	@Autowired
+	private FhirContext myContext;
+
 //	@Operation(name = "$canonical", manualRequest = true, idempotent = true, returnParameters = {
 //			@OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
 //	public IBaseResource canonical(HttpServletRequest theRequest) {
@@ -101,13 +101,6 @@ public class ValidationProvider {
 	@Operation(name = "$validate", manualRequest = true, idempotent = true, returnParameters = {
 		@OperationParam(name = "return", type = IBase.class, min = 1, max = 1)})
 	public IBaseResource validate(final HttpServletRequest theRequest) {
-
-		// FIXME, we need to do this version independent
-		// we should be able to extract the version from the 
-		// a) the request int version is set in the request
-		// b) ig parameter is specified which is fixed to a FHIR Version
-		// c) profile parameter is specified and we can resolve it to a FHIR version
-		final FhirContext myFhirCtx = FhirContext.forR4Cached();
 
 		log.info("$validate");
 		final ArrayList<SingleValidationMessage> addedValidationMessages = new ArrayList<>();
@@ -176,7 +169,7 @@ public class ValidationProvider {
 			m.setLocationCol(0);
 			m.setLocationLine(0);
 			addedValidationMessages.add(m);
-			return new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages).toOperationOutcome();
+			return new ValidationResultWithExtensions(this.myContext, addedValidationMessages).toOperationOutcome();
 		} else {
 			log.info(contentString);
 		}
@@ -232,7 +225,7 @@ public class ValidationProvider {
 				// theCtx.addValidationMessage(hapiMessage);
 				hapiMessages.add(hapiMessage);
 			}
-			return new ValidationResult(FhirContext.forR4Cached(), hapiMessages);
+			return new ValidationResult(this.myContext, hapiMessages);
 		} catch (final Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -277,8 +270,6 @@ public class ValidationProvider {
 															final CliContext cli) {
 		sw.endCurrentTask();
 
-		FhirContext myFhirCtx = FhirContext.forR4Cached();
-
 		log.info("Validation time: " + sw);
 
 		String packages = "with packages: ";
@@ -307,11 +298,11 @@ public class ValidationProvider {
 
 		addedValidationMessages.addAll(result.getMessages());
 
-		IBaseResource operationOutcome = new ValidationResultWithExtensions(myFhirCtx, addedValidationMessages)
+		IBaseResource operationOutcome = new ValidationResultWithExtensions(this.myContext, addedValidationMessages)
 			.toOperationOutcome();
 		operationOutcome.setId(id);
 
-		log.info(myFhirCtx.newXmlParser().encodeResourceToString(operationOutcome));
+		log.info(this.myContext.newXmlParser().encodeResourceToString(operationOutcome));
 
 		return operationOutcome;
 	}
@@ -325,7 +316,7 @@ public class ValidationProvider {
 		m.setLocationLine(0);
 		final ArrayList<SingleValidationMessage> newValidationMessages = new ArrayList<>(1);
 		newValidationMessages.add(m);
-		return (new ValidationResult(FhirContext.forR4Cached(), newValidationMessages)).toOperationOutcome();
+		return (new ValidationResult(this.myContext, newValidationMessages)).toOperationOutcome();
 	}
 
 }
