@@ -34,6 +34,7 @@ $md-mcgpalette0: (
 
 $my-primary: mat.define-palette($md-mcgpalette0, 500, 50, 300);
 $my-accent: mat.define-palette($md-mcgpalette0, A400);
+$my-warn: mat.define-palette(mat.$red-palette);
 
 @function my-mat-light-theme-foreground($color) {
   @return (
@@ -54,7 +55,15 @@ $my-accent: mat.define-palette($md-mcgpalette0, A400);
 }
 
 $theme: map-merge(
-  mat.define-light-theme($my-primary, $my-accent),
+  mat.define-light-theme((
+    color: (
+      primary: $my-primary,
+      accent: $my-accent,
+      warn: $my-warn
+    ),
+    typography: mat.define-typography-config(),
+    density: 0,
+  )),
   (
     foreground: my-mat-light-theme-foreground(darken(#113549, 5%)),
   )
