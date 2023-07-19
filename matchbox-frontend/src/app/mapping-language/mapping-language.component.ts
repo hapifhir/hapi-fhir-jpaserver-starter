@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FhirConfigService } from '../fhirConfig.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import FhirClient from 'fhir-kit-client';
 import debug from 'debug';
@@ -11,8 +11,8 @@ import debug from 'debug';
   styleUrls: ['./mapping-language.component.scss'],
 })
 export class MappingLanguageComponent implements OnInit {
-  public source: FormControl;
-  public map: FormControl;
+  public source: UntypedFormControl;
+  public map: UntypedFormControl;
   public structureMap: any;
   public transformed: any;
 
@@ -25,8 +25,8 @@ export class MappingLanguageComponent implements OnInit {
 
   constructor(private cd: ChangeDetectorRef, private data: FhirConfigService) {
     this.client = data.getFhirClient();
-    this.source = new FormControl();
-    this.map = new FormControl();
+    this.source = new UntypedFormControl();
+    this.map = new UntypedFormControl();
     this.structureMap = null;
     this.map.valueChanges
       .pipe(debounceTime(1000), distinctUntilChanged())

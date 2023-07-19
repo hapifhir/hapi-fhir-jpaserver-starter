@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FhirConfigService } from '../fhirConfig.service';
 import FhirClient from 'fhir-kit-client';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import pako from 'pako';
 import untar from 'js-untar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -35,11 +35,11 @@ class ValidationParameter {
   valueBoolean: boolean;
   valueString;
   String;
-  formControl: FormControl;
+  formControl: UntypedFormControl;
 
   constructor(param: fhir.r4.OperationDefinitionParameter) {
     this.param = param;
-    this.formControl = new FormControl();
+    this.formControl = new UntypedFormControl();
   }
 
   isValueSet(): boolean {

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FhirPathService } from '../fhirpath.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
@@ -9,7 +9,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   styleUrls: ['./fhir-path.component.scss'],
 })
 export class FhirPathComponent implements OnInit {
-  public fhirPathExpression: FormControl;
+  public fhirPathExpression: UntypedFormControl;
   public fhirPathResult: any;
   public resource: any;
 
@@ -17,7 +17,7 @@ export class FhirPathComponent implements OnInit {
     private fhirPathService: FhirPathService,
     private cd: ChangeDetectorRef
   ) {
-    this.fhirPathExpression = new FormControl();
+    this.fhirPathExpression = new UntypedFormControl();
     this.fhirPathExpression.valueChanges
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((term) => {

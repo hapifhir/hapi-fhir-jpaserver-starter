@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FhirConfigService } from '../fhirConfig.service';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import FhirClient from 'fhir-kit-client';
 import debug from 'debug';
 import { FhirPathService } from '../fhirpath.service';
@@ -13,9 +13,9 @@ import { FhirPathService } from '../fhirpath.service';
   styleUrls: ['./igs.component.scss'],
 })
 export class IgsComponent implements OnInit {
-  public addPackageId: FormControl;
-  public addVersion: FormControl;
-  public addUrl: FormControl;
+  public addPackageId: UntypedFormControl;
+  public addVersion: UntypedFormControl;
+  public addUrl: UntypedFormControl;
   public selection: fhir.r4.ImplementationGuide;
 
   length = 100;
@@ -40,9 +40,9 @@ export class IgsComponent implements OnInit {
 
   constructor(private data: FhirConfigService, private fhirPathService: FhirPathService) {
     this.client = data.getFhirClient();
-    this.addPackageId = new FormControl('', [Validators.required, Validators.minLength(1)]);
-    this.addVersion = new FormControl('current', [Validators.required, Validators.minLength(1)]);
-    this.addUrl = new FormControl('url');
+    this.addPackageId = new UntypedFormControl('', [Validators.required, Validators.minLength(1)]);
+    this.addVersion = new UntypedFormControl('current', [Validators.required, Validators.minLength(1)]);
+    this.addUrl = new UntypedFormControl('url');
     this.search();
   }
 

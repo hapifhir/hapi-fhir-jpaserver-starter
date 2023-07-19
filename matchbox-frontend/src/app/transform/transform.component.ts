@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FhirConfigService } from '../fhirConfig.service';
 import FhirClient from 'fhir-kit-client';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { IDroppedBlob } from '../upload/upload.component';
 
@@ -21,7 +21,7 @@ export class TransformComponent implements OnInit {
   source: string;
   mimeType: string;
 
-  selectedMap: FormControl;
+  selectedMap: UntypedFormControl;
 
   query = {
     _summary: 'true',
@@ -44,7 +44,7 @@ export class TransformComponent implements OnInit {
         return response;
       });
 
-    this.selectedMap = new FormControl();
+    this.selectedMap = new UntypedFormControl();
     this.selectedMap.valueChanges
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((term) => {
