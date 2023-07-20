@@ -41,7 +41,8 @@
     -->
     <Connector port="${server.port}" protocol="HTTP/1.1"
                connectionTimeout="20000"
-               redirectPort="8443" 
+               redirectPort="8443"
+               relaxedQueryChars="^{}[]|&quot;"
                maxThreads="${server.tomcat.max-threads}"
                minSpareThreads="${server.tomcat.min-spare-threads}" /> 
 
