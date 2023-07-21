@@ -1,22 +1,22 @@
 package com.iprd.fhir.utils;
 
-import java.util.*;
-import java.lang.String;
-
+import com.iprd.report.OrgType;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.*;
-
-import com.iprd.report.OrgType;
-
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Location.LocationMode;
 import org.hl7.fhir.r4.model.Location.LocationStatus;
 import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
+import org.hl7.fhir.r4.model.Location.LocationPositionComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 public class FhirResourceTemplateHelper {
 	private static String CODE_JDN = "jdn";
@@ -35,6 +35,31 @@ public class FhirResourceTemplateHelper {
 
 	private static final Logger logger = LoggerFactory.getLogger(FhirResourceTemplateHelper.class);
 	
+	public static Organization country(String name)
+	{
+		Organization country = new Organization();
+		Meta meta = new Meta();
+		Coding coding = new Coding();
+		coding.setSystem(SYSTEM_ORG_TYPE);
+		coding.setCode("country");
+		coding.setDisplay("COUNTRY");
+		meta.addTag(coding);
+		country.setMeta(meta);
+		List<CodeableConcept> codeableConcepts = new ArrayList<>();
+		CodeableConcept countryPhysicalType = new CodeableConcept();
+		Coding physicalTypeCoding = new Coding();
+		physicalTypeCoding
+		.setCode(CODE_GOVT)
+		.setDisplay(DISPLAY_GOVERNMENT)
+		.setSystem(SYSTEM_ORGANIZATION_PHYSICAL_TYPE);
+		countryPhysicalType.addCoding(physicalTypeCoding);
+		countryPhysicalType.setText(DISPLAY_GOVERNMENT);
+		codeableConcepts.add(countryPhysicalType);
+		country.setType(codeableConcepts);
+		country.setName(name);
+		country.setId(new IdType("Organization", generateUUID()));
+		return country;
+	}
 	public static Organization state(String name)
 	{
 		Organization state = new Organization();
@@ -113,7 +138,7 @@ public class FhirResourceTemplateHelper {
 		return ward;
 	}
 	
-	public static Location clinic(String state, String district, String city, String clinic) {
+	public static Location clinic(String state, String district, String city, String clinic,String longitude, String latitude, String pluscode, String organizationReference) {
 		Location facility = new Location();
 		Address facilityAddress = new Address();
 		CodeableConcept facilityPhysicalType = new CodeableConcept();
@@ -132,6 +157,18 @@ public class FhirResourceTemplateHelper {
 		facility.setStatus(LocationStatus.ACTIVE);
 		facility.setMode(LocationMode.INSTANCE);
 		facility.setPhysicalType(facilityPhysicalType);
+		LocationPositionComponent position = new LocationPositionComponent();
+		position.setLongitude(Double.parseDouble(longitude));
+		position.setLatitude(Double.parseDouble(latitude));
+		facility.setPosition(position);
+		Extension pluscodeExtension = new Extension();
+		pluscodeExtension.setUrl("http://iprdgroup.org/fhir/Extention/location-plus-code");
+		StringType pluscodeValue = new StringType(pluscode);
+		pluscodeExtension.setValue(pluscodeValue);
+		facility.addExtension(pluscodeExtension);
+		Reference organizationRef = new Reference();
+		organizationRef.setReference("Organization/"+organizationReference);
+		facility.setManagingOrganization(organizationRef);
 		return facility;
 	}
 	

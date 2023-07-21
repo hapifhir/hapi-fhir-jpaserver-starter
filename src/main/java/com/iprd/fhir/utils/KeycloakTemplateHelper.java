@@ -1,22 +1,27 @@
 package com.iprd.fhir.utils;
 
-import java.lang.String;
-import java.util.Arrays;
-import java.util.List;
-
-import org.jetbrains.annotations.NotNull;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
+import java.util.Arrays;
+
 public class KeycloakTemplateHelper {
 	
+	private static String COUNTRY = "country";
 	private static String STATE = "state";
 	private static String LGA = "lga";
 	private static String WARD = "ward";
 	private static String FACILITY = "facility";
 	
+	public static GroupRepresentation countryGroup(String name, String fhirResourceId) {
+		GroupRepresentation stateGroupRep = new GroupRepresentation();
+		stateGroupRep.setName(name);
+		stateGroupRep.singleAttribute("type", COUNTRY);
+		stateGroupRep.singleAttribute("organization_id", fhirResourceId);
+		return stateGroupRep;
+	}
 	public static GroupRepresentation stateGroup(String name, String fhirResourceId) {
 		GroupRepresentation stateGroupRep = new GroupRepresentation();
 		stateGroupRep.setName(name);
