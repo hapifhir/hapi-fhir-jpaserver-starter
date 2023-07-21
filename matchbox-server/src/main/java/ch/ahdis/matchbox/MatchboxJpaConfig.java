@@ -9,6 +9,9 @@ import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 
 import ca.uhn.fhir.jpa.dao.tx.IHapiTransactionService;
+import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR4;
+import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR5;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -49,7 +52,6 @@ import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
-import ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.common.StarterJpaConfig;
@@ -62,7 +64,6 @@ import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
-import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProvider;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.interceptor.ImplementationGuidePackageInterceptor;
 import ch.ahdis.matchbox.interceptor.MappingLanguageInterceptor;
@@ -103,9 +104,6 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	private ISchedulerService mySvc;
 
 	@Autowired
-	private ImplementationGuideResourceProvider implementationGuideResourceProvider;
-
-	@Autowired
 	private ValidationProvider validationProvider;
 	
 	@Autowired
@@ -126,9 +124,14 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Autowired
 	protected StructureMapTransformProvider structureMapTransformProvider;
 
-
 	@Autowired
-    private ApplicationContext context;
+	private ApplicationContext context;
+
+	@Autowired(required = false)
+	private ImplementationGuideProviderR4 implementationGuideResourceProviderR4;
+
+	@Autowired(required = false)
+	private ImplementationGuideProviderR5 implementationGuideResourceProviderR5;
 
 
 	// removed GraphQlProvider
@@ -155,24 +158,42 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		fhirServer.registerInterceptor(new MappingLanguageInterceptor(matchboxEngineSupport));
 		fhirServer.registerInterceptor(new ImplementationGuidePackageInterceptor(myPackageCacheManager, myFhirContext));
 		fhirServer.registerInterceptor(new MatchboxValidationInterceptor(this.myFhirContext,structureDefinitionProvider));
-		fhirServer.registerProviders(implementationGuideResourceProvider, validationProvider, questionnaireProvider, questionnaireResponseProvider,
+		fhirServer.registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider,
 				assembleProvider, conceptMapProvider, codeSystemProvider, valueSetProvider, structureDefinitionProvider, structureMapTransformProvider);
-		
-		if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages().booleanValue()
-				&& appProperties.getImplementationGuides() != null) {
-			((ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProvider) implementationGuideResourceProvider)
-					.loadAll(true);
-			if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages().booleanValue()) {
-				int exitCode = SpringApplication.exit(context, ()->0);
-				System.exit(exitCode);
-			}
-		}
-		
-		fhirServer.setServerConformanceProvider(new MatchboxCapabilityStatementProvider(fhirServer, structureDefinitionProvider, getCliContext()));
-		
+
+
 		ScheduledJobDefinition jobDefinition = new ScheduledJobDefinition();
 		jobDefinition.setId(this.getClass().getName());
-		jobDefinition.setJobClass(ImplementationGuideProvider.class);
+
+		switch (this.myFhirContext.getVersion().getVersion()) {
+			case R4 -> {
+				fhirServer.registerProviders(this.implementationGuideResourceProviderR4);
+				jobDefinition.setJobClass(ImplementationGuideProviderR4.class);
+
+				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
+					&& appProperties.getImplementationGuides() != null) {
+					this.implementationGuideResourceProviderR4.loadAll(true);
+					int exitCode = SpringApplication.exit(this.context, ()->0);
+					System.exit(exitCode);
+				}
+			}
+			case R5 -> {
+				fhirServer.registerProviders(this.implementationGuideResourceProviderR5);
+				jobDefinition.setJobClass(ImplementationGuideProviderR5.class);
+
+				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
+					&& appProperties.getImplementationGuides() != null) {
+					this.implementationGuideResourceProviderR5.loadAll(true);
+					int exitCode = SpringApplication.exit(this.context, ()->0);
+					System.exit(exitCode);
+				}
+			}
+			default -> throw new NotImplementedException("MatchboxJpaConfig: this FHIR version has no supported " +
+																      "implementationGuideResourceProvider");
+		}
+
+		fhirServer.setServerConformanceProvider(new MatchboxCapabilityStatementProvider(fhirServer, structureDefinitionProvider, getCliContext()));
+
 		mySvc.scheduleLocalJob(DateUtils.MILLIS_PER_MINUTE, jobDefinition);
 
 		return fhirServer;

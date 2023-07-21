@@ -63,14 +63,14 @@ import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
 /**
- * $load and $load-all Operation for ImplementationGuide Resource
+ * $load and $load-all Operation for ImplementationGuide Resource (R4)
  *
  */
 @DisallowConcurrentExecution
-public class ImplementationGuideProvider extends ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider
+public class ImplementationGuideProviderR4 extends ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider
 		implements Job, ApplicationContextAware {
 
-	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ImplementationGuideProvider.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ImplementationGuideProviderR4.class);
 
 	@Autowired
 	protected MatchboxEngineSupport matchboxEngineSupport;

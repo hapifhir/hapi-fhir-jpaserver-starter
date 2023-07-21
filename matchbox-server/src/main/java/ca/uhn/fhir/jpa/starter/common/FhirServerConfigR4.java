@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter.common;
 
+import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR4;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -8,10 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 
-import ca.uhn.fhir.batch2.jobs.reindex.ReindexAppCtx;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
-import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.config.r4.JpaR4Config;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
@@ -85,12 +84,11 @@ public class FhirServerConfigR4 {
 
   @Bean(name = "myImplementationGuideRpR4")
   @Primary
-  public ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider rpImplementationGuideR4() {
-    ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider retVal;
-    retVal = new ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProvider();
-    retVal.setContext(fhirContext);
-//    retVal.setDao(daoImplementationGuideR4());
-    return retVal;
+  public ImplementationGuideProviderR4 rpImplementationGuideR4() {
+	  ImplementationGuideProviderR4 retVal = new ImplementationGuideProviderR4();
+	  retVal.setContext(fhirContext);
+//     retVal.setDao(daoImplementationGuideR4());
+     return retVal;
   }
   
   @Bean(name = "myQuestionnaireRpR4")

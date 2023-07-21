@@ -13,15 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
-import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
-import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import ca.uhn.fhir.jpa.starter.common.FhirServerConfigR4;
 import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
-import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
-import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
-import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
-import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ch.ahdis.matchbox.MatchboxJpaConfig;
 
