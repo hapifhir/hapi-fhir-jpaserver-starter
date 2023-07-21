@@ -66,6 +66,9 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -73,6 +76,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.web.cors.CorsConfiguration;
+import org.apache.catalina.connector.Connector;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -90,6 +94,27 @@ import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInt
 public class StarterJpaConfig {
 
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(StarterJpaConfig.class);
+
+	private static class EmbeddedTomcatCustomizer
+		implements WebServerFactoryCustomizer<TomcatServletWebServerFactory> {
+		@Override
+		public void customize(TomcatServletWebServerFactory factory) {
+			factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
+				@Override
+				public void customize(Connector connector) {
+					connector.setAttribute("relaxedPathChars", "<>[\\]^`{|}");
+					connector.setAttribute("relaxedQueryChars", "<>[\\]^`{|}");
+				}
+			});
+			}
+	}
+
+    @Bean
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory>
+        containerCustomizer(){
+               return new EmbeddedTomcatCustomizer();
+    }
+
 
 	@Bean
 	public IFulltextSearchSvc fullTextSearchSvc() {
