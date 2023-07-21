@@ -235,8 +235,15 @@ public class HelperService {
 				iteration++;
 				continue;
 			}
-			iteration++;
 			String[] csvData = singleLine.split(",");
+			iteration++;
+
+			if (!Validation.validateClinicAndStateCsvLine(csvData)) {
+				logger.warn("CSV validation failed");
+				invalidClinics.add("Row length validation failed: " + singleLine);
+				continue;
+			}
+
 			//State(0), LGA(1), Ward(2), FacilityUID(3), FacilityCode(4), CountryCode(5), PhoneNumber(6), FacilityName(7), FacilityLevel(8), Ownership(9), Argusoft Identifier(10), Longitude(11), Latitude(12), Pluscode(13), Country(14)
 			String stateName = csvData[0];
 			String lgaName = csvData[1];
@@ -256,12 +263,6 @@ public class HelperService {
 
 			if (facilityUID.isEmpty()) {
 				invalidClinics.add("Invalid facilityUID: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
-				continue;
-			}
-
-			if (!Validation.validateClinicAndStateCsvLine(csvData)) {
-				logger.warn("CSV validation failed");
-				invalidClinics.add("Row length validation failed: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
 				continue;
 			}
 
@@ -1756,8 +1757,10 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 			switch (counter){
 				case 0:
 					if(resourceClass.equals(Organization.class)){
-						organizationResource.addAlias(organizationResource.getName());
-						organizationResource.setName(facilityName);
+						if(!organizationResource.getName().equals(facilityName)) {
+							organizationResource.addAlias(organizationResource.getName());
+							organizationResource.setName(facilityName);
+						}
 						List<Address> addresses = new ArrayList<>();
 						Address address = new Address();
 						address.setState(stateName);
@@ -1776,16 +1779,18 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 						address.setCity(wardName);
 						locationResource.setAddress(address);
 						LocationPositionComponent oldPosition = locationResource.getPosition();
-						LocationPositionComponent position = new LocationPositionComponent();
-						position.setLongitude(Double.parseDouble(longitude));
-						position.setLatitude(Double.parseDouble(latitude));
-						if(!(oldPosition.getLatitudeElement().equals(position.getLatitudeElement()) && oldPosition.getLongitudeElement().equals(position.getLongitudeElement()))) {
-							locationResource.setPosition(position);
-							Extension pluscodeExtension = new Extension();
-							pluscodeExtension.setUrl("http://iprdgroup.org/fhir/Extention/location-plus-code");
-							StringType pluscodeValue = new StringType(pluscode);
-							pluscodeExtension.setValue(pluscodeValue);
-							locationResource.addExtension(pluscodeExtension);
+						if (!latitude.equals("null") && !longitude.equals("null")){
+							LocationPositionComponent position = new LocationPositionComponent();
+							position.setLongitude(Double.parseDouble(longitude));
+							position.setLatitude(Double.parseDouble(latitude));
+							if(!(oldPosition.getLatitudeElement().equals(position.getLatitudeElement()) && !oldPosition.getLongitudeElement().equals(position.getLongitudeElement()))) {
+								locationResource.setPosition(position);
+								Extension pluscodeExtension = new Extension();
+								pluscodeExtension.setUrl("http://iprdgroup.org/fhir/Extention/location-plus-code");
+								StringType pluscodeValue = new StringType(pluscode);
+								pluscodeExtension.setValue(pluscodeValue);
+								locationResource.addExtension(pluscodeExtension);
+							}
 						}
 					}
 					break;

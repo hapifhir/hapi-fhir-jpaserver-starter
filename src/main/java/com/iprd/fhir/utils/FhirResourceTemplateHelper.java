@@ -7,7 +7,6 @@ import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Location.LocationMode;
 import org.hl7.fhir.r4.model.Location.LocationStatus;
 import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
-import org.hl7.fhir.r4.model.Location.LocationPositionComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -157,15 +156,17 @@ public class FhirResourceTemplateHelper {
 		facility.setStatus(LocationStatus.ACTIVE);
 		facility.setMode(LocationMode.INSTANCE);
 		facility.setPhysicalType(facilityPhysicalType);
-		LocationPositionComponent position = new LocationPositionComponent();
-		position.setLongitude(Double.parseDouble(longitude));
-		position.setLatitude(Double.parseDouble(latitude));
-		facility.setPosition(position);
-		Extension pluscodeExtension = new Extension();
-		pluscodeExtension.setUrl("http://iprdgroup.org/fhir/Extention/location-plus-code");
-		StringType pluscodeValue = new StringType(pluscode);
-		pluscodeExtension.setValue(pluscodeValue);
-		facility.addExtension(pluscodeExtension);
+		if (!latitude.equals("null") && !longitude.equals("null")){
+			Location.LocationPositionComponent position = new Location.LocationPositionComponent();
+			position.setLongitude(Double.parseDouble(longitude));
+			position.setLatitude(Double.parseDouble(latitude));
+			facility.setPosition(position);
+			Extension pluscodeExtension = new Extension();
+			pluscodeExtension.setUrl("http://iprdgroup.org/fhir/Extention/location-plus-code");
+			StringType pluscodeValue = new StringType(pluscode);
+			pluscodeExtension.setValue(pluscodeValue);
+			facility.addExtension(pluscodeExtension);
+		}
 		Reference organizationRef = new Reference();
 		organizationRef.setReference("Organization/"+organizationReference);
 		facility.setManagingOrganization(organizationRef);
