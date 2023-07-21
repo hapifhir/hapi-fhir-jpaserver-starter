@@ -63,38 +63,17 @@ spec:
             - name: http-metrics
               containerPort: 8081
               protocol: TCP
-          startupProbe:
-            httpGet:
-              path: /readyz
-              port: http
           {{- with .Values.startupProbe }}
-            initialDelaySeconds: {{ .initialDelaySeconds }}
-            periodSeconds: {{ .periodSeconds }}
-            timeoutSeconds: {{ .timeoutSeconds }}
-            successThreshold: {{ .successThreshold }}
-            failureThreshold: {{ .failureThreshold }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
           {{- end }}
-          readinessProbe:
-            httpGet:
-              path: /readyz
-              port: http
-          {{- with .Values.readinessProbe }}
-            initialDelaySeconds: {{ .initialDelaySeconds }}
-            periodSeconds: {{ .periodSeconds }}
-            timeoutSeconds: {{ .timeoutSeconds }}
-            successThreshold: {{ .successThreshold }}
-            failureThreshold: {{ .failureThreshold }}
-          {{- end }}
-          livenessProbe:
-            httpGet:
-              path: /livez
-              port: http
           {{- with .Values.livenessProbe }}
-            initialDelaySeconds: {{ .initialDelaySeconds }}
-            periodSeconds: {{ .periodSeconds }}
-            timeoutSeconds: {{ .timeoutSeconds }}
-            successThreshold: {{ .successThreshold }}
-            failureThreshold: {{ .failureThreshold }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -118,6 +97,10 @@ spec:
               value: "true"
             - name: MANAGEMENT_SERVER_PORT
               value: "8081"
+            {{- if .Values.extraConfig }}
+            - name: SPRING_CONFIG_IMPORT
+              value: "/app/config/application-extra.yaml"
+            {{- end }}
             {{- if .Values.extraEnv }}
             {{ toYaml .Values.extraEnv | nindent 12 }}
             {{- end }}
@@ -126,6 +109,12 @@ spec:
               name: tmp-volume
             - mountPath: /app/target
               name: lucenefiles-volume
+          {{- if .Values.extraConfig }}
+            - name: application-extra-config
+              mountPath: /app/config/application-extra.yaml
+              readOnly: true
+              subPath: application-extra.yaml
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -147,3 +136,8 @@ spec:
           emptyDir: {}
         - name: lucenefiles-volume
           emptyDir: {}
+      {{- if .Values.extraConfig }}
+        - name: application-extra-config
+          configMap:
+            name: {{ include "hapi-fhir-jpaserver.fullname" . }}-application-config
+      {{- end }}
