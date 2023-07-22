@@ -102,7 +102,6 @@ public class StarterJpaConfig {
 			factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
 				@Override
 				public void customize(Connector connector) {
-					connector.setAttribute("relaxedPathChars", "<>[\\]^`{|}");
 					connector.setAttribute("relaxedQueryChars", "<>[\\]^`{|}");
 				}
 			});
