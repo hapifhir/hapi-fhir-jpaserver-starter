@@ -14,6 +14,7 @@ import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -54,6 +55,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = {Application.class})
 @ActiveProfiles("test-ch")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Disabled("Integration tests will be moved in another repository")
 public class IgValidateR4Test {
 
 	private static final String TARGET_SERVER = "http://localhost:8082/matchboxv3/fhir";
