@@ -48,8 +48,10 @@ jobs:
 
       # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
       # If this step fails, then you should remove it and run the build manually (see below)
-      - name: Autobuild code
-        uses: github/codeql-action/autobuild@v2
+      #- name: Autobuild code
+      #  uses: github/codeql-action/autobuild@v2
+      - name: Build Java code
+        run: mvn compile
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
