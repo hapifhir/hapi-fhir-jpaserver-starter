@@ -1,3 +1,14 @@
+2023/07/27 Release 3.3.1
+
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.3.1`
+- Updated to HAPI FHIR 6.6.2
+- GUI: updated to Angular 16
+- Fix hl7#terminology version in MatchboxEngineSupport
+- GUI: all IGs are now showing, fixes #119
+- GUI: remove the backend URL field, fixes #84
+- Improve the MatchboxEngineBuilder, fixes #113
+- Prepare for R4B/R5 support
+
 2023/07/10 Release 3.3.0
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.3.0`
