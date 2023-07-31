@@ -130,44 +130,9 @@
             <artifactId>h2</artifactId>
         </dependency>
 
-        <!-- The following dependencies are only needed for automated unit tests, you do not neccesarily need them to run the example. -->
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-client</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hl7.fhir.testcases</groupId>
-            <artifactId>fhir-test-cases</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-test-utilities</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.awaitility</groupId>
-            <artifactId>awaitility</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -183,28 +148,6 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-
-        <!-- dependencies for test -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -212,24 +155,6 @@
         <finalName>matchbox</finalName>
 
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                            <goal>build-info</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>ca.uhn.fhir.jpa.starter.Application</mainClass>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <fork>false</fork>
-                </configuration>
-            </plugin>
 
             <!-- Tell Maven which Java source version you want to use -->
             <plugin>
@@ -251,31 +176,8 @@
                         </manifestEntries>
                     </archive>
                     <attachClasses>true</attachClasses>
-                    <overlays>
-                        <overlay>
-                            <groupId>ca.uhn.hapi.fhir</groupId>
-                            <artifactId>hapi-fhir-testpage-overlay</artifactId>
-                        </overlay>
-                    </overlays>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
-            </plugin>
-
-            <!-- This is to run the integration tests -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
@@ -332,10 +234,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -368,6 +267,28 @@
                     <artifactId>spring-boot-starter-web</artifactId>
                 </dependency>
             </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                    <goal>build-info</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>ca.uhn.fhir.jpa.starter.Application</mainClass>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <fork>false</fork>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>

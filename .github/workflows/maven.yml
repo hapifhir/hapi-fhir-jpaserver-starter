@@ -1,5 +1,5 @@
 # This workflow will build and test a Java project with Maven
-name: Maven test
+name: Unit tests
 
 on:
   pull_request:

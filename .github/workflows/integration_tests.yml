@@ -1,0 +1,36 @@
+name: Integration tests
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout matchbox
+        uses: actions/checkout@v3
+
+      - name: Checkout integration tests
+        uses: actions/checkout@v3
+        with:
+          repository: ahdis/matchbox-int-tests
+
+      - name: Setup Java 20
+        uses: actions/setup-java@v3
+        # https://github.com/actions/setup-java#usage
+        with:
+          java-version: "20"
+          distribution: "adopt"
+          cache: "maven"
+
+      - name: Install matchbox locally
+        run: mvn --batch-mode --no-transfer-progress --update-snapshots -DskipTests -P !boot install
+
+      - name: Extract matchbox version
+        run: echo "matchbox_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "GITHUB_ENV"
+
+      - name: Run the tests
+        timeout-minutes: 30 # We need a timeout here
+        # TODO: update matchbox' version
+        run: mvn --batch-mode --no-transfer-progress --update-snapshots -Dmatchbox.version=${{ env.matchbox_version }} verify

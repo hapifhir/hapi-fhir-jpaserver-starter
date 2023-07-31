@@ -42,7 +42,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import ca.uhn.fhir.context.FhirContext;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.MatchboxEngine.MatchboxEngineBuilder;
 
@@ -50,7 +49,7 @@ class FhirMappingLanguageTests {
 
 	static private MatchboxEngine engine;
 
-	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CdaToFhirTransformTests.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FhirMappingLanguageTests.class);
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -62,7 +61,7 @@ class FhirMappingLanguageTests {
 	}
 
 	public String getFileAsStringFromResources(String file) throws IOException {
-		InputStream in = FhirMappingLanguageTests.class.getResourceAsStream(file);
+		InputStream in = FhirMappingLanguageTests.class.getResourceAsStream("/mapping-language" + file);
 		return IOUtils.toString(in, StandardCharsets.UTF_8);
 	}
 
