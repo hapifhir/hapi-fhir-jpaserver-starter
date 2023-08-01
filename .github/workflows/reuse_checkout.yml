@@ -1,0 +1,13 @@
+# Those are reusable workflows, they don't trigger on their own
+# https://docs.github.com/en/actions/using-workflows/reusing-workflows
+on:
+  workflow_call:
+
+jobs:
+  checkout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout matchbox
+        uses: actions/checkout@v3
+        with:
+          path: matchbox

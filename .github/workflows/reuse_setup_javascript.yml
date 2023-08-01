@@ -1,0 +1,16 @@
+# Those are reusable workflows, they don't trigger on their own
+# https://docs.github.com/en/actions/using-workflows/reusing-workflows
+on:
+  workflow_call:
+
+jobs:
+  setup_javascript:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          # https://github.com/actions/setup-node
+          node-version: 18
+          cache: "npm"
+          cache-dependency-path: matchbox-frontend/package-lock.json

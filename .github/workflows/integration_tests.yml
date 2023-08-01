@@ -9,13 +9,11 @@ on:
 
 
 jobs:
-  build:
+  integration_test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout matchbox
-        uses: actions/checkout@v3
-        with:
-          path: matchbox
+      - uses: ./.github/workflows/reuse_checkout.yml@main
+      - uses: ./.github/workflows/reuse_setup_java.yml@main
 
       - name: Checkout integration tests
         uses: actions/checkout@v3
@@ -23,23 +21,20 @@ jobs:
           path: matchbox-int-tests
           repository: ahdis/matchbox-int-tests
 
-      - name: Setup Java 20
-        uses: actions/setup-java@v3
-        # https://github.com/actions/setup-java#usage
-        with:
-          java-version: "20"
-          distribution: "adopt"
-          cache: "maven"
-
       - name: Install matchbox locally
         run: mvn --batch-mode --no-transfer-progress --update-snapshots -DskipTests -P !boot install
         working-directory: matchbox
 
       - name: Extract matchbox version
-        run: echo "MATCHBOX_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "GITHUB_ENV"
-        working-directory: matchbox-int-tests
+        run: echo "MATCHBOX_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_ENV"
+        working-directory: matchbox
+
+      - name: Show matchbox version
+        run: |
+          echo "Version '$MATCHBOX_VERSION'"
+          echo "Version '${{ env.MATCHBOX_VERSION }}'"
 
       - name: Run the tests
         timeout-minutes: 45 # We need a long timeout here
-        run: mvn --batch-mode --no-transfer-progress --update-snapshots -Dmatchbox.version=${{ env.MATCHBOX_VERSION }} verify
+        run: mvn --batch-mode --no-transfer-progress --update-snapshots -Dmatchbox.version="${{ env.MATCHBOX_VERSION }}" test
         working-directory: matchbox-int-tests
