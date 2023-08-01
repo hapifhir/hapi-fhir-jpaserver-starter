@@ -19,8 +19,8 @@ jobs:
     environment: production
 
     permissions:
-      contents: "read"
-      id-token: "write"
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout
@@ -29,9 +29,9 @@ jobs:
       - name: Build Java
         uses: actions/setup-java@v3
         with:
-          java-version: "17"
-          distribution: "adopt"
-          cache: "maven"
+          java-version: 20
+          distribution: adopt
+          cache: maven
 
       - run: mvn --batch-mode --update-snapshots package -DskipTests -P release
 

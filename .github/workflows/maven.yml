@@ -12,13 +12,13 @@ jobs:
       - name: Checkout the project
         uses: actions/checkout@v3
 
-      - name: Setup Java 17
+      - name: Setup Java
         uses: actions/setup-java@v3
         # https://github.com/actions/setup-java#usage
         with:
-          java-version: "17"
-          distribution: "adopt"
-          cache: "maven"
+          java-version: 20
+          distribution: adopt
+          cache: maven
 
       - name: Run the tests in Maven
         timeout-minutes: 15

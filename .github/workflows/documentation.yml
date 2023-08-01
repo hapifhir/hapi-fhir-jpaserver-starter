@@ -27,13 +27,13 @@ jobs:
         run: mkdocs gh-deploy --force
         # https://www.mkdocs.org/user-guide/deploying-your-docs/#github-pages
 
-      - name: Setup Java 17
+      - name: Setup Java
         uses: actions/setup-java@v3
         # https://github.com/actions/setup-java#usage
         with:
-          java-version: "17"
-          distribution: "adopt"
-          cache: "maven"
+          java-version: 20
+          distribution: adopt
+          cache: maven
 
       - name: Build Javadoc
         run: mvn --batch-mode --no-transfer-progress javadoc:aggregate -f pom.xml

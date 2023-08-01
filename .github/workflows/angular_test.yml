@@ -19,8 +19,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           # https://github.com/actions/setup-node
-          node-version: 16
-          cache: "npm"
+          node-version: 18
+          cache: npm
           cache-dependency-path: matchbox-frontend/package-lock.json
 
       - name: Install dependencies
