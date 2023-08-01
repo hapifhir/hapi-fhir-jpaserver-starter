@@ -73,6 +73,11 @@ public class UserAndGroupManagementController {
 
 	IParser iParser = FhirContext.forCached(FhirVersionEnum.R4).newJsonParser();
 
+	@RequestMapping(method = RequestMethod.POST, value = "/dashboardUserBulkImport")
+	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadDashboardUsers(@RequestParam("file") MultipartFile file) throws Exception {
+		return helperService.createDashboardUsers(file);
+	}
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/organizationBulkImport")
 	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadClinicsAndStates(@RequestParam("file") MultipartFile file) throws IOException {
 		return helperService.createGroups(file);
@@ -109,6 +114,7 @@ public class UserAndGroupManagementController {
 		List<OrgItem> orgItemsList = helperService.getOrganizationHierarchy(organizationId);
 		return ResponseEntity.ok(orgItemsList);
 	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/refreshMapToOrgId")
 	public ResponseEntity<?> refreshMapToOrgId(
 		@RequestHeader(name = "Authorization") String token,
@@ -117,6 +123,7 @@ public class UserAndGroupManagementController {
 		helperService.refreshMapForOrgId(orgId);
 		return ResponseEntity.ok("Refresh done");
 	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/oclQr")
 	public ResponseEntity<OCLQrResponse> oclQr(@RequestParam(name = "baseUrl", defaultValue = "") String baseUrl,
 															 @RequestParam(name = "campaignGuid", defaultValue = "") String campaignGuid,

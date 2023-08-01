@@ -49,11 +49,6 @@ public class DashboardController {
 	}
 
 
-	@RequestMapping(method = RequestMethod.POST, value = "/dashboardUserBulkImport")
-	public ResponseEntity<LinkedHashMap<String, Object>> bulkUploadDashboardUsers(@RequestParam("file") MultipartFile file) throws Exception {
-		return helperService.createDashboardUsers(file);
-	}
-
 		@RequestMapping(method = RequestMethod.GET, value = "/details")
 	public ResponseEntity<?> getDetails(
 		@RequestParam("env") String env,
@@ -106,6 +101,7 @@ public class DashboardController {
 	public ResponseEntity<?> getTableData(@PathVariable Long lastUpdated){
 		return helperService.getTableData(lastUpdated);
 	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/organizations")
 	public ResponseEntity<?> organizations(@RequestHeader(name = "Authorization") String token) {
 		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
