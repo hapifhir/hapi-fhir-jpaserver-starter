@@ -21,4 +21,6 @@ COPY --chown=65532:65532 images /app/images
 # is running as a non-root (uid != 0) user.
 USER 65532:65532
 WORKDIR /app
+COPY HealthCheck.java .
 CMD ["/app/main.war"]
+HEALTHCHECK --interval=100s --timeout=5s --retries=2 CMD ["java", "HealthCheck.java", "||", "exit", "1"]
