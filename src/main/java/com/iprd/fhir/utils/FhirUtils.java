@@ -9,15 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 import ca.uhn.fhir.jpa.starter.service.FhirClientAuthenticatorService;
-import kotlin.Triple;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.PractitionerRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import kotlin.Pair;
+import autovalue.shaded.kotlin.Pair;
+import autovalue.shaded.kotlin.Triple;
 
 import org.apache.jena.ext.xerces.util.URI.MalformedURIException;
 import org.hl7.fhir.r4.model.Identifier;

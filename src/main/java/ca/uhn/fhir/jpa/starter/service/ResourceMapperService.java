@@ -7,7 +7,9 @@ import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 
 import com.iprd.fhir.utils.DateUtilityHelper;
 import com.iprd.fhir.utils.FhirUtils;
-import kotlin.Triple;
+
+import autovalue.shaded.kotlin.Triple;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.*;
 import org.slf4j.Logger;

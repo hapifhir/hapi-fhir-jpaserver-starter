@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FhirResourceTemplateHelperTest {
 	@Test
 	public void testState() {
-		Organization state = FhirResourceTemplateHelper.state("oyo");
+		Organization state = FhirResourceTemplateHelper.state("oyo","nigeria","1234");
 		assertEquals(state.getName(), "oyo");
 		assertEquals(state.getType().get(0).getText(), "Government");
 		assertEquals(state.getAddress().get(0).getState(), "oyo");

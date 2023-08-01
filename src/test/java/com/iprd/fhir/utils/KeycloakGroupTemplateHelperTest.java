@@ -16,7 +16,7 @@ public class KeycloakGroupTemplateHelperTest {
 
 	@Test
 	public void testStateGroup() {
-		GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup("Oyo","12345");
+		GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup("Oyo","nigeria","123");
 		Map<String, List<String>> attributes = stateGroupRep.getAttributes();
 		assertEquals(stateGroupRep.getName(), "Oyo");
 		assertEquals(attributes.get("type").get(0), "state");
@@ -60,7 +60,7 @@ public class KeycloakGroupTemplateHelperTest {
 	
 	@Test
 	public void userTest() {
-		UserRepresentation userRep = KeycloakTemplateHelper.user("temp", "nurse", "temp@test.org", "temp", "1234", "+91", "8150038173","48482551-e023-4515-82e8-241fa1c91ffc","5f613809-01cb-41d6-a041-10efb88e9167", "hcw", "stateGroup", "lgaGroup", "wardGroup", "clinicGroup", "95007");
+		UserRepresentation userRep = KeycloakTemplateHelper.user("temp", "nurse", "temp@test.org", "temp", "1234", "+91", "8150038173","48482551-e023-4515-82e8-241fa1c91ffc","5f613809-01cb-41d6-a041-10efb88e9167", "hcw", "stateGroup", "lgaGroup", "wardGroup", "clinicGroup", "95007", "sw");
 		Map<String, List<String>> attributes = userRep.getAttributes();
 		List<String> groups = userRep.getGroups();
 		assertEquals(userRep.getFirstName(), "temp");

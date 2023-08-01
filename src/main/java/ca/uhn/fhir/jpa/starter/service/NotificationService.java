@@ -6,7 +6,6 @@ import java.util.List;
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceGoneException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import kotlin.Triple;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.Patient;
 import org.slf4j.Logger;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.iprd.fhir.utils.DateUtilityHelper;
 import com.iprd.fhir.utils.FhirUtils;
 
+import autovalue.shaded.kotlin.Triple;
 import ca.uhn.fhir.jpa.starter.model.ComGenerator;
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 import okhttp3.OkHttpClient;

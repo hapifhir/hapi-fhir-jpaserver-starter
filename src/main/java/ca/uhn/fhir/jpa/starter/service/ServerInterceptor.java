@@ -13,13 +13,12 @@ import java.util.List;
 import java.util.Objects;
 
 import android.util.Base64;
-
+import autovalue.shaded.kotlin.Triple;
 import ca.uhn.fhir.jpa.starter.model.*;
 
 import com.iprd.fhir.utils.FhirUtils;
 import com.iprd.fhir.utils.PatientIdentifierStatus;
 
-import kotlin.Triple;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
