@@ -724,6 +724,307 @@
 
         <!-- Use the boot profile for development and debugging options when using your IDE -->
         <profile>
+            <id>replication</id>
+            <build>
+
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-dependency-plugin</artifactId>
+                            <version>3.2.0</version>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+
+                <!-- Tells Maven to name the generated WAR file as replicationRoot.war -->
+                <finalName>replicationRoot</finalName>
+
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>ca.uhn.fhir.jpa.starter.Application</mainClass>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+ <plugin>
+                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                        <artifactId>replacer</artifactId>
+                        <version>1.5.2</version>
+                        <executions>
+                            <execution>
+                                <id>comment-out-code</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                                <configuration>
+                                    <file>src/main/java/ca/uhn/fhir/jpa/starter/service/ServerInterceptor.java</file>
+                                    <replacements>
+                                        <replacement>
+                                        <token>@Hook\\(Pointcut\\.STORAGE_PRESTORAGE_RESOURCE_CREATED\\)</token>
+                                        <value>//@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_CREATED)</value>
+                                        </replacement>
+                                        <replacement>
+                                        <token>@Hook\\(Pointcut\\.STORAGE_PRESTORAGE_RESOURCE_UPDATED\\)</token>
+                                        <value>//@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_UPDATED)</value>
+                                        </replacement>
+                                        <replacement>
+                                        <token>@Hook\\(Pointcut\\.STORAGE_PRESTORAGE_RESOURCE_DELETED\\)</token>
+                                        <value>//@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_DELETED)</value>
+                                        </replacement>
+                                        <replacement>
+                                        <token>@Scheduled\\(fixedDelay = DELAY, initialDelay = DELAY\\)</token>
+                                        <value>//@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)</value>
+                                        </replacement>
+                                        <replacement>
+                                        <token>@Scheduled\\(fixedDelay = DELETE_WORK_DELAY, initialDelay = DELAY\\)</token>
+                                        <value>//@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_UPDATED)</value>
+                                        </replacement>
+                                        <replacement>
+                                        <token>@Scheduled\\(cron = "0 0 23 \\* \\* \\*"\\)</token>
+                                        <value>//@Scheduled(cron = "0 0 23 * * *")</value>
+                                        </replacement>
+                                    </replacements>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.8.1</version>
+                        <configuration>
+                            <release>8</release>
+                            <source>9</source>
+                            <target>9</target>
+                            <excludes>
+                            	<exclude>ca/uhn/fhir/jpa/starter/service/NotificationService.java</exclude>
+                        	    <exclude>ca/uhn/fhir/jpa/starter/service/ResourceMapperService.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+
+                    <!-- The configuration here tells the WAR plugin to include the FHIR Tester overlay. You can omit it if you are not using that feature. -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <webResources> 
+                            <resource> 
+                                <directory>${project.build.directory}</directory> 
+                                <targetPath>WEB-INF</targetPath> <!-- introduced in plugin v 2.1 -->
+                                <includes> 
+                                <include>ehcache.xml</include> 
+                                </includes> 
+                            </resource> 
+                            </webResources> 	
+                            <archive>
+                                <manifestEntries>
+                                    <Build-Time>${maven.build.timestamp}</Build-Time>
+                                </manifestEntries>
+                            </archive>
+                            <attachClasses>true</attachClasses>
+                            <overlays>
+                                <overlay>
+                                    <groupId>ca.uhn.hapi.fhir</groupId>
+                                    <artifactId>hapi-fhir-testpage-overlay</artifactId>
+                                </overlay>
+                            </overlays>
+                            <failOnMissingWebXml>false</failOnMissingWebXml>
+                        </configuration>
+                    </plugin>
+
+                    <!-- This is to run the integration tests -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.basepom.maven</groupId>
+                        <artifactId>duplicate-finder-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <inherited>true</inherited>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
+                            <checkTestClasspath>false</checkTestClasspath>
+
+                            <ignoredResourcePatterns>
+                                <ignoredResourcePattern>.*\.txt$</ignoredResourcePattern>
+                                <ignoredResourcePattern>.*\.html$</ignoredResourcePattern>
+                                <ignoredResourcePattern>config/favicon.ico</ignoredResourcePattern>
+                            </ignoredResourcePatterns>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        
+        </profile>
+
+        <profile>
+            <id>mainApplication</id>
+            <build>
+
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-dependency-plugin</artifactId>
+                            <version>3.1.0</version>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+
+                <!-- Tells Maven to name the generated WAR file as mainApplicationRoot.war -->
+                <finalName>mainApplicationRoot</finalName>
+
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>ca.uhn.fhir.jpa.starter.Application</mainClass>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- The following is not required for the application to build, but allows you to test it by issuing "mvn package jetty:run -Dspring.batch.job.enabled=false" from the command line. -->
+                    <!--
+                    <plugin>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-maven-plugin</artifactId>
+                        <version>${jetty_version}</version>
+                        <configuration>
+                            <webApp>
+                                <contextPath>/hapi-fhir-jpaserver</contextPath>
+                                <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
+                            </webApp>
+                        </configuration>
+                    </plugin>
+                    -->
+
+                    <!-- Tell Maven which Java source version you want to use -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <configuration>
+                            <release>8</release>
+                            <source>9</source>
+                            <target>9</target>
+                        </configuration>
+                    </plugin>
+
+                    <!-- The configuration here tells the WAR plugin to include the FHIR Tester overlay. You can omit it if you are not using that feature. -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <webResources> 
+                            <resource> 
+                                <directory>${project.build.directory}</directory> 
+                                <targetPath>WEB-INF</targetPath> <!-- introduced in plugin v 2.1 -->
+                                <includes> 
+                                <include>ehcache.xml</include> 
+                                </includes> 
+                            </resource> 
+                            </webResources> 	
+                            <archive>
+                                <manifestEntries>
+                                    <Build-Time>${maven.build.timestamp}</Build-Time>
+                                </manifestEntries>
+                            </archive>
+                            <attachClasses>true</attachClasses>
+                            <overlays>
+                                <overlay>
+                                    <groupId>ca.uhn.hapi.fhir</groupId>
+                                    <artifactId>hapi-fhir-testpage-overlay</artifactId>
+                                </overlay>
+                            </overlays>
+                            <failOnMissingWebXml>false</failOnMissingWebXml>
+                        </configuration>
+                    </plugin>
+
+                    <!-- This is to run the integration tests -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.basepom.maven</groupId>
+                        <artifactId>duplicate-finder-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <inherited>true</inherited>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
+                            <checkTestClasspath>false</checkTestClasspath>
+
+                            <ignoredResourcePatterns>
+                                <ignoredResourcePattern>.*\.txt$</ignoredResourcePattern>
+                                <ignoredResourcePattern>.*\.html$</ignoredResourcePattern>
+                                <ignoredResourcePattern>config/favicon.ico</ignoredResourcePattern>
+                            </ignoredResourcePatterns>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        
+        </profile>
+        <profile>
             <id>boot</id>
             <dependencies>
                 <dependency>
