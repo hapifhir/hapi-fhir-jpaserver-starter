@@ -49,7 +49,10 @@ public class SignatureInterceptor extends GenericFilterBean{
 		throws IOException, ServletException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-		if(httpServletRequest.getRequestURI().contains("/iprd/user/"))
+		if(
+			httpServletRequest.getRequestURI().contains("/iprd/user/") ||
+			httpServletRequest.getRequestURI().contains("/actuator/health")
+			)
 		{
 			chain.doFilter(request, response);
 			return;

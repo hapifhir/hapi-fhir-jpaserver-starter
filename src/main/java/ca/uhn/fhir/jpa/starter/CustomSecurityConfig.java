@@ -82,6 +82,8 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/**")
                 .authenticated()
+                .antMatchers("/actuator/health")
+                .permitAll()
                 .mvcMatchers("/logout.do")
                 .permitAll()
                 .and()

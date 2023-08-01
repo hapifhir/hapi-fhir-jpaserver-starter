@@ -3,14 +3,38 @@ services:
   hapi-fhir-jpaserver-start:
     build: .
     container_name: hapi-fhir-jpaserver-start
+    volumes:
+      - ./data/hapi:/data/hapi
+      - ./submodules/hapi-fhir-jpaserver-starter/images:/app/images
     restart: on-failure
     ports:
-      - "8080:8080"
+      - "8085:8080"
+    labels:
+      - "autoheal=true"
+    environment:
+      SPRING_CONFIG_LOCATION: '/data/hapi/application.yaml'
+    depends_on:
+      hapi-fhir-mysql:
+        condition: service_started
+
+  smart-keycloak: 
+    image: alvearie/smart-keycloak:0.3.0
+    container_name: smart-keycloak
+    restart: on-failure
+    volumes:
+      - keycloak_db:/opt/jboss/keycloak/standalone/data/
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: psswd
+      KEYCLOAK_FRONTEND_URL: http://localhost:8081/auth
+    ports:
+      - "8081:8080" 
+      - "8443:8443"    
+
   hapi-fhir-mysql:
-    image: mysql:latest
+    image: mysql:8.0.29-oracle
     container_name: hapi-fhir-mysql
-    #https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html
-    command: --lower_case_table_names=1
+    command: --lower_case_table_names=1 --default-authentication-plugin=mysql_native_password  
     restart: always
     environment:
       MYSQL_DATABASE: 'hapi'
@@ -19,5 +43,40 @@ services:
       MYSQL_ROOT_PASSWORD: 'admin'
     volumes:
       - hapi-fhir-mysql:/var/lib/mysql
+    ports:
+       - "3306:3306"
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8082:8080
+  
+  reverse-proxy:
+    image: nginx:1.23-alpine-perl
+    volumes:
+      - ./data/nginx/conf.d:/etc/nginx/conf.d
+      - ./data/nginx/html:/var/www/html
+      - ./data/nginx/includes:/etc/nginx/includes
+      - ./data/nginx/ssl/certs:/etc/ssl/certs/
+      - ./submodules/hapi-fhir-jpaserver-starter/images:/usr/share/nginx/html/storage/images
+    ports:
+      - 80:80
+    depends_on:
+      hapi-fhir-jpaserver-start:
+        condition: service_started
+  
+  autoheal:
+    image: willfarrell/autoheal:1.2.0
+    tty: true
+    restart: always
+    environment:
+      - AUTOHEAL_INTERVAL=60
+      - AUTOHEAL_START_PERIOD=300
+      - AUTOHEAL_DEFAULT_STOP_TIMEOUT=10
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
 volumes:
-  hapi-fhir-mysql:
+  hapi-fhir-mysql:  
+  keycloak_db:
