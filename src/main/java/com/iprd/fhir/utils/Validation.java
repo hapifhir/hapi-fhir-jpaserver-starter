@@ -14,11 +14,11 @@ public class Validation {
 	private static final Logger logger = LoggerFactory.getLogger(Validation.class);
 	
 	public static boolean validateClinicAndStateCsvLine(String[] csvLineContent) {
-		return csvLineContent.length == 11;
+		return csvLineContent.length == 15;
 	}
 	
 	public static boolean validationHcwCsvLine(String[] hcwCsvData) {
-		return hcwCsvData.length == 17;
+		return hcwCsvData.length == 18;
 	}
 
 	public static boolean validationDashboardUserCsvLine(String[] hcwCsvData) {
