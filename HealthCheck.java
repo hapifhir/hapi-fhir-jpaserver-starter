@@ -8,12 +8,11 @@ public class HealthCheck {
     var client = HttpClient.newHttpClient();
     var request = HttpRequest.newBuilder()
         .uri(URI.create("http://localhost:8080/actuator/health"))
-        .header("accept", "application/json")
         .build();
     var response = client.send(request, BodyHandlers.ofString());
     System.out.println(response.body());
     if (response.statusCode() != 200 ) {
-      throw new RuntimeException("Healthcheck failed");
+      throw new RuntimeException("Healthcheck failed "+response.body());
     }
   }
 }
