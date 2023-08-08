@@ -9,7 +9,7 @@ COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
 RUN mvn  -T 12 clean install -DskipTests -Djdk.lang.Process.launchMechanism=vfork -Dmaven.artifact.threads=30
 
 # FROM build-hapi AS build-distroless
-# RUN mvn package spring-boot:repackage -PmainApplication
+RUN mvn package spring-boot:repackage -PmainApplication
 # RUN mkdir /app && cp /tmp/hapi-fhir-jpaserver-starter/target/mainApplicationRoot.war /app/main.war
 
 ########### bitnami tomcat version is suitable for debugging and comes with a shell
