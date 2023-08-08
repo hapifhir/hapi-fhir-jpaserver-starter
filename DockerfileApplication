@@ -6,11 +6,11 @@ COPY server.xml .
 ADD libs /root/.m2/repository/
 
 COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
-RUN mvn  -T 12 install -DskipTests -Djdk.lang.Process.launchMechanism=vfork -Dmaven.artifact.threads=30
+RUN mvn  -T 12 clean install -DskipTests -Djdk.lang.Process.launchMechanism=vfork -Dmaven.artifact.threads=30
 
-FROM build-hapi AS build-distroless
-RUN mvn package spring-boot:repackage -PmainApplication
-RUN mkdir /app && cp /tmp/hapi-fhir-jpaserver-starter/target/mainApplicationRoot.war /app/main.war
+# FROM build-hapi AS build-distroless
+# RUN mvn package spring-boot:repackage -PmainApplication
+# RUN mkdir /app && cp /tmp/hapi-fhir-jpaserver-starter/target/mainApplicationRoot.war /app/main.war
 
 ########### bitnami tomcat version is suitable for debugging and comes with a shell
 ########### it can be built using eg. `docker build --target tomcat .`
@@ -26,7 +26,7 @@ USER 1001
 
 COPY --chown=1001:1001 catalina.properties /opt/bitnami/tomcat/conf/catalina.properties
 COPY --chown=1001:1001 server.xml /opt/bitnami/tomcat/conf/server.xml
-COPY --from=build-hapi --chown=1001:1001 /tmp/hapi-fhir-jpaserver-starter/target/mainApplicationRoot.war /opt/bitnami/tomcat/webapps_default/mainApplicationRoot.war
+COPY --from=build-hapi --chown=1001:1001 /tmp/hapi-fhir-jpaserver-starter/target/mainApplicationRoot.war /opt/bitnami/tomcat/webapps_default/ROOT.war
 
 ENV ALLOW_EMPTY_PASSWORD=yes
 # ########### distroless brings focus on security and runs on plain spring boot - this is the default image
@@ -39,5 +39,5 @@ ENV ALLOW_EMPTY_PASSWORD=yes
 USER 65532:65532
 WORKDIR /app
 COPY HealthCheck.java .
-CMD ["/app/main.war"]
+CMD ["/opt/bitnami/tomcat/webapps_default/ROOT.war"]
 HEALTHCHECK --interval=100s --timeout=5s --retries=2 CMD ["java", "HealthCheck.java", "||", "exit", "1"]
