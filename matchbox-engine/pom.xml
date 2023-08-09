@@ -38,6 +38,20 @@
             <artifactId>org.hl7.fhir.utilities</artifactId>
         </dependency>
 
+        <!-- Manual upgrade of Jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+
         <!-- This dependency is used for the "FHIR Tester" web app overlay <dependency> <groupId>ca.uhn.hapi.fhir</groupId> <artifactId>hapi-fhir-testpage-overlay</artifactId> <version>${hapi.fhir.version}</version> <type>war</type> <scope>provided</scope> </dependency>
                 <dependency> <groupId>ca.uhn.hapi.fhir</groupId> <artifactId>hapi-fhir-testpage-overlay</artifactId> <version>${hapi.fhir.version}</version> <classifier>classes</classifier> </dependency> -->
 

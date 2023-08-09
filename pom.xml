@@ -80,8 +80,7 @@
         <hibernate_validator_version>6.1.5.Final</hibernate_validator_version>
         <httpcore_version>4.4.13</httpcore_version>
         <httpclient_version>4.5.13</httpclient_version>
-        <jackson_version>2.14.1</jackson_version>
-        <jackson_databind_version>2.14.1</jackson_databind_version>
+        <jackson_version>2.15.2</jackson_version>
         <maven_assembly_plugin_version>3.3.0</maven_assembly_plugin_version>
         <maven_license_plugin_version>1.8</maven_license_plugin_version>
         <maven_surefire_version>3.0.0</maven_surefire_version>
@@ -223,6 +222,22 @@
                 <artifactId>hapi-fhir-test-utilities</artifactId>
                 <version>${hapi.fhir.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson_version}</version>
             </dependency>
             <!-- This dependency is used for the "FHIR Tester" web app overlay <dependency><groupId>ca.uhn.hapi.fhir</groupId><artifactId>hapi-fhir-testpage-overlay</artifactId><version>${hapi.fhir.version}</version><type>war</type><scope>provided</scope></dependency><dependency><groupId>ca.uhn.hapi.fhir</groupId><artifactId>hapi-fhir-testpage-overlay</artifactId><version>${hapi.fhir.version}</version><classifier>classes</classifier></dependency> -->
             <dependency>
