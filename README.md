@@ -140,8 +140,8 @@ mvn -Dtest=CapabilityStatementTests test
 2. Merge the pull request if all tests have succeeded.
 3. Wait for the [Angular workflow](https://github.com/ahdis/matchbox/blob/main/.github/workflows/angular_build.yml)
    to complete. Since the package.json was modified, the Angular project is rebuilt.
-4. Create a [release](https://github.com/ahdis/matchbox/releases) with the changelog (e.g. "matchbox v3.3.2") and a
-   [tag](https://github.com/ahdis/matchbox/tags) (e.g. `v.3.3.2`) in GitHub.
+4. Create a [release](https://github.com/ahdis/matchbox/releases) with the changelog (e.g. "matchbox v3.3.3") and a
+   [tag](https://github.com/ahdis/matchbox/tags) (e.g. `v.3.3.3`) in GitHub.
 5. It will trigger two workflows:
    1. The [Docker workflow](https://github.com/ahdis/matchbox/blob/main/.github/workflows/googleregistry.yml), that
       builds a Docker container around `matchbox-server` and publishes it to the Google Artifact registry.

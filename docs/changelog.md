@@ -1,3 +1,8 @@
+2023/08/09 Release 3.3.3
+
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.3.3`
+- Upgraded Jackson to allow parsing longer JSON documents
+
 2023/08/09 Release 3.3.2
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.3.2`
