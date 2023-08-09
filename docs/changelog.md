@@ -1,3 +1,7 @@
+2023/?/? Release ?
+
+- Increased the max heap to 2.5 giga to allow loading more IGs
+
 2023/07/27 Release 3.3.1
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.3.1`
