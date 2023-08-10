@@ -3,20 +3,28 @@ package ca.uhn.fhir.jpa.starter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.search.lastn.ElasticsearchRestClientFactory;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
+import ca.uhn.fhir.jpa.test.config.TestElasticsearchContainerHelper;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import javax.annotation.PreDestroy;
+
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.PutIndexTemplateRequest;
+import org.elasticsearch.common.settings.Settings;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DateTimeType;
@@ -38,8 +46,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @ExtendWith(SpringExtension.class)
+@Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties =
   {
     "spring.datasource.url=jdbc:h2:mem:dbr4",
@@ -70,29 +81,28 @@ public class ElasticsearchLastNR4IT {
 
   private static final String ELASTIC_VERSION = "7.16.3";
   private static final String ELASTIC_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:" + ELASTIC_VERSION;
-  private static ElasticsearchContainer embeddedElastic;
+
+   @Container
+	public static ElasticsearchContainer embeddedElastic = TestElasticsearchContainerHelper.getEmbeddedElasticSearch();
 
   @Autowired
   private ElasticsearchSvcImpl myElasticsearchSvc;
 
   @BeforeAll
   public static void beforeClass() throws IOException {
-	  embeddedElastic = new ElasticsearchContainer(ELASTIC_IMAGE).withStartupTimeout(Duration.of(300, ChronoUnit.SECONDS));
-	  embeddedElastic.start();
+	  //Given
+	  RestHighLevelClient elasticsearchHighLevelRestClient = ElasticsearchRestClientFactory.createElasticsearchHighLevelRestClient(
+		  "http", embeddedElastic.getHost() + ":" + embeddedElastic.getMappedPort(9200), "", "");
 
-	  URL url = new URL("http://" + embeddedElastic.getHost()  + ":9200/_settings");
-	  HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
-	  httpCon.setDoOutput(true);
-	  httpCon.setRequestMethod("PUT");
-	  OutputStreamWriter out = new OutputStreamWriter(
-		  httpCon.getOutputStream());
-	  out.write("{\n" +
-		  "  \"index.max_result_window\": 50000\n" +
-		  "}");
-	  out.close();
-	  httpCon.getInputStream();
+	  PutIndexTemplateRequest putIndexTemplateRequest = new PutIndexTemplateRequest("hapi_fhir_template");
+	  putIndexTemplateRequest.patterns(List.of("*"));
+	  Settings settings = Settings.builder().put("index.max_result_window", 50000).build();
+	  putIndexTemplateRequest.settings(settings);
+	  elasticsearchHighLevelRestClient.indices().putTemplate(putIndexTemplateRequest, RequestOptions.DEFAULT);
+
+
   }
-  
+
   @PreDestroy
   public void stop() {
     embeddedElastic.stop();
@@ -134,7 +144,7 @@ public class ElasticsearchLastNR4IT {
   }
 
   @BeforeEach
-  void beforeEach() {
+  void beforeEach() throws IOException {
 
     ourCtx = FhirContext.forR4();
     ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
@@ -142,6 +152,7 @@ public class ElasticsearchLastNR4IT {
     String ourServerBase = "http://localhost:" + port + "/fhir/";
     ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
     ourClient.registerInterceptor(new LoggingInterceptor(true));
+
   }
 
   static class Initializer
