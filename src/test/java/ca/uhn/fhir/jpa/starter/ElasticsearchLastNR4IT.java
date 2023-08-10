@@ -8,6 +8,10 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -43,6 +47,9 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
     "hapi.fhir.lastn_enabled=true",
 	 "hapi.fhir.store_resource_in_lucene_index_enabled=true",
 	 "hapi.fhir.advanced_lucene_indexing=true",
+	  "hapi.fhir.subscription.websocket_enabled=false",
+	  "hapi.fhir.subscription.resthook_enabled=false",
+	  "hapi.fhir.subscription.email_enabled=false",
     "elasticsearch.enabled=true",
     // Because the port is set randomly, we will set the rest_url using the Initializer.
     // "elasticsearch.rest_url='http://localhost:9200'",
@@ -69,9 +76,21 @@ public class ElasticsearchLastNR4IT {
   private ElasticsearchSvcImpl myElasticsearchSvc;
 
   @BeforeAll
-  public static void beforeClass() {
+  public static void beforeClass() throws IOException {
 	  embeddedElastic = new ElasticsearchContainer(ELASTIC_IMAGE).withStartupTimeout(Duration.of(300, ChronoUnit.SECONDS));
 	  embeddedElastic.start();
+
+	  URL url = new URL("http://" + embeddedElastic.getHost()  + ":9200/_settings");
+	  HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+	  httpCon.setDoOutput(true);
+	  httpCon.setRequestMethod("PUT");
+	  OutputStreamWriter out = new OutputStreamWriter(
+		  httpCon.getOutputStream());
+	  out.write("{\n" +
+		  "  \"index.max_result_window\": 50000\n" +
+		  "}");
+	  out.close();
+	  httpCon.getInputStream();
   }
   
   @PreDestroy
