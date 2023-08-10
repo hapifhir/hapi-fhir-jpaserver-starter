@@ -84,6 +84,10 @@ public class ElasticsearchLastNR4IT {
 	  RestHighLevelClient elasticsearchHighLevelRestClient = ElasticsearchRestClientFactory.createElasticsearchHighLevelRestClient(
 		  "http", embeddedElastic.getHost() + ":" + embeddedElastic.getMappedPort(9200), "", "");
 
+	  /* As of 2023-08-10, HAPI FHIR sets SubscriptionConstants.MAX_SUBSCRIPTION_RESULTS to 50000
+	  		which is in excess of elastic's default max_result_window. If MAX_SUBSCRIPTION_RESULTS is changed
+	  		to a value <= 10000, the following will no longer be necessary. - dotasek
+	  */
 	  PutIndexTemplateRequest putIndexTemplateRequest = new PutIndexTemplateRequest("hapi_fhir_template");
 	  putIndexTemplateRequest.patterns(List.of("*"));
 	  Settings settings = Settings.builder().put("index.max_result_window", 50000).build();
