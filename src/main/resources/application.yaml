@@ -166,10 +166,9 @@ hapi:
       revocation_url: ${OAUTH_REVOCATION_URL}
       manage_url: ${OAUTH_MANAGE_URL}
 
-    basic_auth:
-      enabled: ${BASIC_AUTH_ENABLED:false}
-      username: ${BASIC_AUTH_USERNAME}
-      password: ${BASIC_AUTH_PASSWORD}
+    apikey:
+      enabled: ${APIKEY_ENABLED:false}
+      key: ${APIKEY}
 
     #    logger:
     #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'

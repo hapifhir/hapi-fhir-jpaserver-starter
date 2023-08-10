@@ -40,13 +40,13 @@ import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.IStaleSearchDeletingSvc;
 import ca.uhn.fhir.jpa.search.StaleSearchDeletingSvcImpl;
 import ca.uhn.fhir.jpa.starter.AppProperties;
-import ca.uhn.fhir.jpa.starter.CustomAuthorizationInterceptor;
-import ca.uhn.fhir.jpa.starter.CustomConsentService;
-import ca.uhn.fhir.jpa.starter.CustomSearchNarrowingInterceptor;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.starter.interceptor.CapabilityStatementCustomizer;
+import ca.uhn.fhir.jpa.starter.interceptor.CustomAuthorizationInterceptor;
+import ca.uhn.fhir.jpa.starter.interceptor.CustomConsentService;
+import ca.uhn.fhir.jpa.starter.interceptor.CustomSearchNarrowingInterceptor;
 import ca.uhn.fhir.jpa.starter.ips.IpsConfigCondition;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
@@ -412,14 +412,17 @@ public class StarterJpaConfig {
 			fhirServer.registerProviders(partitionManagementProvider);
 		}
 
-		// Support for OAuth2, Basic, and API_KEY authentication
+		// Support for OAuth2 and API_KEY authentication
 		if (appProperties.getOauth().getEnabled()) {
 			fhirServer.registerInterceptor(new CapabilityStatementCustomizer(appProperties));
-			fhirServer.registerInterceptor(new CustomSearchNarrowingInterceptor());
-			fhirServer.registerInterceptor(new ConsentInterceptor(new CustomConsentService(daoRegistry)));
+			fhirServer.registerInterceptor(new CustomSearchNarrowingInterceptor(appProperties));
+			FhirVersionEnum fhirVersion = fhirServer.getFhirContext().getVersion().getVersion();
+			if (fhirVersion != FhirVersionEnum.R5) {
+				// Utilize the consent interceptor to simulate a patient compartment for the Task resource
+				fhirServer.registerInterceptor(new ConsentInterceptor(new CustomConsentService(daoRegistry, appProperties)));
+			}
 		}
-		if (appProperties.getBasic_auth().getEnabled()
-				|| appProperties.getOauth().getEnabled()
+		if (appProperties.getOauth().getEnabled()
 				|| appProperties.getApikey().getEnabled()) {
 			fhirServer.registerInterceptor(new CustomAuthorizationInterceptor(appProperties));
 		}

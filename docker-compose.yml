@@ -17,9 +17,8 @@ services:
       reuse_cached_search_results_millis: 0
       subscription.resthook.enabled: true
       subscription.websocket.enabled: true
-      BASIC_AUTH_ENABLED: false
-      BASIC_AUTH_USERNAME: "admin"
-      BASIC_AUTH_PASSWORD: "admin"
+      APIKEY_ENABLED: false
+      APIKEY: abc123
       OAUTH_ENABLED: true
       OAUTH_CLIENT_ID: fhir4-api
       OAUTH_USER_ROLE: fhir4-user

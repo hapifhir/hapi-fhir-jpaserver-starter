@@ -66,7 +66,6 @@ public class AppProperties {
 
   private Validation validation = new Validation();
   private Map<String, Tester> tester = null;
-  private Basic_auth basic_auth = new Basic_auth();
   private Apikey apikey = new Apikey();
   private Oauth oauth = new Oauth();
   private Logger logger = new Logger();
@@ -233,14 +232,6 @@ public class AppProperties {
 
   public void setSupported_resource_types(List<String> supported_resource_types) {
     this.supported_resource_types = supported_resource_types;
-  }
-
-  public Basic_auth getBasic_auth() {
-    return basic_auth;
-  }
-
-  public void setBasic_auth(Basic_auth basic_auth) {
-    this.basic_auth = basic_auth;
   }
 
   public Apikey getApikey() {
@@ -623,36 +614,6 @@ public class AppProperties {
     }
 
 
-  }
-
-  public static class Basic_auth {
-    private Boolean enabled = false;
-    private String username;
-    private String password;
-
-    public Boolean getEnabled() {
-      return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-      this.enabled = enabled;
-    }
-
-    public String getUsername() {
-      return username;
-    }
-
-    public void setUsername(String username) {
-      this.username = username;
-    }
-
-    public String getPassword() {
-      return password;
-    }
-
-    public void setPassword(String password) {
-      this.password = password;
-    }
   }
 
   public static class Apikey {
