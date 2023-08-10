@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 /**
