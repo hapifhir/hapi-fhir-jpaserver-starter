@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import javax.servlet.http.HttpServletRequest;
 
 public class AuthenticationService {
+	//Set API Key and Value
 	private static final String AUTH_TOKEN_HEADER_NAME = "X-API-KEY";
 	private static final String AUTH_TOKEN = "DiabetesCompass";
 
