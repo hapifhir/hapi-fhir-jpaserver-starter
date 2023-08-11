@@ -14,6 +14,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,8 @@ import java.util.stream.Collectors;
 public class ResourceMapperService {
 //	private static final Logger logger = LoggerFactory.getLogger(ResourceMapperService.class);
 	private static final long DELAY = 10 * 60000;
-
+	@Autowired
+	FhirClientAuthenticatorService fhirClientAuthenticatorService;
 	private static final Logger logger = LoggerFactory.getLogger(ResourceMapperService.class);
 
 	/**
@@ -34,9 +36,10 @@ public class ResourceMapperService {
 	 */
 	@Scheduled(fixedDelay = DELAY, initialDelay = DELAY)
 	public void mapResourcesToPatient() {
+		FhirUtils fhirUtils = new FhirUtils();
 		//Searching for patient created with OCL-ID
 		Bundle tempPatientBundle = new Bundle();
-		FhirUtils.getBundleBySearchUrl(tempPatientBundle, FhirClientAuthenticatorService.serverBase + "/Patient?identifier=patient_with_ocl");
+		fhirUtils.getBundleBySearchUrl(tempPatientBundle, FhirClientAuthenticatorService.serverBase + "/Patient?identifier=patient_with_ocl");
 
 		for (Bundle.BundleEntryComponent entry : tempPatientBundle.getEntry()) {
 			// per patient loop.
@@ -64,7 +67,7 @@ public class ResourceMapperService {
 			}
 
 			Bundle questionnaireResponseBundle =
-				FhirClientAuthenticatorService.getFhirClient()
+					fhirClientAuthenticatorService.getFhirClient()
 					.search()
 					.forResource(QuestionnaireResponse.class)
 					.where(QuestionnaireResponse.PATIENT.hasId(tempPatientId))
@@ -74,13 +77,13 @@ public class ResourceMapperService {
 				for (Bundle.BundleEntryComponent entryComponent: questionnaireResponseBundle.getEntry()) {
 					QuestionnaireResponse questionnaireResponse = (QuestionnaireResponse) entryComponent.getResource();
 					questionnaireResponse.setSubject(patientReference);
-					FhirClientAuthenticatorService.getFhirClient()
+					fhirClientAuthenticatorService.getFhirClient()
 						.update().resource(questionnaireResponse).execute();
 				}
 			}
 
 			Bundle encounterBundle =
-				FhirClientAuthenticatorService.getFhirClient()
+					fhirClientAuthenticatorService.getFhirClient()
 					.search()
 					.forResource(Encounter.class)
 					.where(Encounter.SUBJECT.hasId(tempPatientId))
@@ -90,12 +93,12 @@ public class ResourceMapperService {
 				for (Bundle.BundleEntryComponent entryComponent: encounterBundle.getEntry()) {
 					Encounter encounter = (Encounter) entryComponent.getResource();
 					encounter.setSubject(patientReference);
-					FhirClientAuthenticatorService.getFhirClient().update().resource(encounter).execute();
+					fhirClientAuthenticatorService.getFhirClient().update().resource(encounter).execute();
 				}
 			}
 
 			Bundle procedureBundle =
-				FhirClientAuthenticatorService.getFhirClient()
+					fhirClientAuthenticatorService.getFhirClient()
 					.search()
 					.forResource(Procedure.class)
 					.where(Procedure.SUBJECT.hasId(tempPatientId))
@@ -105,12 +108,12 @@ public class ResourceMapperService {
 				for (Bundle.BundleEntryComponent entryComponent: procedureBundle.getEntry()) {
 					Procedure procedure = (Procedure) entryComponent.getResource();
 					procedure.setSubject(patientReference);
-					FhirClientAuthenticatorService.getFhirClient().update().resource(procedure).execute();
+					fhirClientAuthenticatorService.getFhirClient().update().resource(procedure).execute();
 				}
 			}
 
 			Bundle observationBundle =
-				FhirClientAuthenticatorService.getFhirClient()
+					fhirClientAuthenticatorService.getFhirClient()
 					.search()
 					.forResource(Observation.class)
 					.where(Observation.SUBJECT.hasId(tempPatientId))
@@ -120,12 +123,12 @@ public class ResourceMapperService {
 				for (Bundle.BundleEntryComponent entryComponent: observationBundle.getEntry()) {
 					Observation observation = (Observation) entryComponent.getResource();
 					observation.setSubject(patientReference);
-					FhirClientAuthenticatorService.getFhirClient().update().resource(observation).execute();
+					fhirClientAuthenticatorService.getFhirClient().update().resource(observation).execute();
 				}
 			}
 
 			Bundle conditionBundle =
-				FhirClientAuthenticatorService.getFhirClient()
+					fhirClientAuthenticatorService.getFhirClient()
 					.search()
 					.forResource(Condition.class)
 					.where(Observation.SUBJECT.hasId(tempPatientId))
@@ -135,11 +138,11 @@ public class ResourceMapperService {
 				for (Bundle.BundleEntryComponent entryComponent: conditionBundle.getEntry()) {
 					Condition condition = (Condition) entryComponent.getResource();
 					condition.setSubject(patientReference);
-					FhirClientAuthenticatorService.getFhirClient().update().resource(condition).execute();
+					fhirClientAuthenticatorService.getFhirClient().update().resource(condition).execute();
 				}
 			}
 
-			Bundle immunizationBundle = FhirClientAuthenticatorService.getFhirClient()
+			Bundle immunizationBundle = fhirClientAuthenticatorService.getFhirClient()
 				.search()
 				.forResource(Immunization.class)
 				.where(Immunization.PATIENT.hasId(tempPatientId))
@@ -149,11 +152,11 @@ public class ResourceMapperService {
 				for (Bundle.BundleEntryComponent entryComponent: immunizationBundle.getEntry()) {
 					Immunization immunization = (Immunization) entryComponent.getResource();
 					immunization.setPatient(patientReference);
-					FhirClientAuthenticatorService.getFhirClient().update().resource(immunization).execute();
+					fhirClientAuthenticatorService.getFhirClient().update().resource(immunization).execute();
 				}
 			}
 
-			Bundle appointmentBundle = FhirClientAuthenticatorService.getFhirClient()
+			Bundle appointmentBundle = fhirClientAuthenticatorService.getFhirClient()
 				.search()
 				.forResource(Appointment.class)
 				.where(Appointment.PATIENT.hasId(tempPatientId))
@@ -163,12 +166,12 @@ public class ResourceMapperService {
 				for (Bundle.BundleEntryComponent entryComponent: appointmentBundle.getEntry()) {
 					Appointment appointment = (Appointment) entryComponent.getResource();
 					appointment.getParticipant().get(0).getActor().setReference("Patient/"+actualPatientId);
-					FhirClientAuthenticatorService.getFhirClient().update().resource(appointment).execute();
+					fhirClientAuthenticatorService.getFhirClient().update().resource(appointment).execute();
 				}
 			}
 
 			Bundle documentReferenceBundle =
-				FhirClientAuthenticatorService.getFhirClient()
+					fhirClientAuthenticatorService.getFhirClient()
 					.search()
 					.forResource(DocumentReference.class)
 					.where(DocumentReference.SUBJECT.hasId(tempPatientId))
@@ -178,12 +181,12 @@ public class ResourceMapperService {
 				for (Bundle.BundleEntryComponent entryComponent: documentReferenceBundle.getEntry()) {
 					DocumentReference documentReference = (DocumentReference) entryComponent.getResource();
 					documentReference.setSubject(patientReference);
-					FhirClientAuthenticatorService.getFhirClient().update().resource(documentReference).execute();
+					fhirClientAuthenticatorService.getFhirClient().update().resource(documentReference).execute();
 				}
 			}
 
 			Bundle mediaBundle =
-				FhirClientAuthenticatorService.getFhirClient()
+					fhirClientAuthenticatorService.getFhirClient()
 					.search()
 					.forResource(Media.class)
 					.where(Media.SUBJECT.hasId(tempPatientId))
@@ -193,7 +196,7 @@ public class ResourceMapperService {
 				for (Bundle.BundleEntryComponent entryComponent: mediaBundle.getEntry()) {
 					Media media = (Media) entryComponent.getResource();
 					media.setSubject(patientReference);
-					FhirClientAuthenticatorService.getFhirClient()
+					fhirClientAuthenticatorService.getFhirClient()
 						.update().resource(media).execute();
 				}
 			}
@@ -212,12 +215,12 @@ public class ResourceMapperService {
 		}
 		for (EncounterIdEntity encounterIdEntity : encounterIdEntityList) {
 			try {
-				Encounter encounterCreated = FhirClientAuthenticatorService.getFhirClient()
+				Encounter encounterCreated = fhirClientAuthenticatorService.getFhirClient()
 					.read()
 					.resource(Encounter.class)
 					.withId(encounterIdEntity.getEncounterId())
 					.execute();
-				Bundle encounterBundle = FhirClientAuthenticatorService.getFhirClient()
+				Bundle encounterBundle = fhirClientAuthenticatorService.getFhirClient()
 					.search()
 					.forResource(Encounter.class)
 					.where(
@@ -242,7 +245,7 @@ public class ResourceMapperService {
 				Reference parentEncounterReference = new Reference("Encounter/" + parentEncounterId);
 				if (parentEncounter.getPartOf().getReference() != null) {
 					parentEncounter.setPartOf(null);
-					FhirClientAuthenticatorService.getFhirClient().update().resource(parentEncounter).execute();
+					fhirClientAuthenticatorService.getFhirClient().update().resource(parentEncounter).execute();
 				}
 				for (int i = 1; i < encountersOfPatient.size(); i++) {
 					Encounter encounter = encountersOfPatient.get(i);
@@ -251,7 +254,7 @@ public class ResourceMapperService {
 							.equals(encounter.getPartOf().getReferenceElement().getIdPart())
 					) {
 						encounter.setPartOf(parentEncounterReference);
-						FhirClientAuthenticatorService.getFhirClient().update().resource(encounter).execute();
+						fhirClientAuthenticatorService.getFhirClient().update().resource(encounter).execute();
 					}
 				}
 
@@ -269,11 +272,12 @@ public class ResourceMapperService {
 	}
 
 	private String getActualPatientId(String oclId) {
+		FhirUtils fhirUtils = new FhirUtils();
 		Bundle patientBundle = new Bundle();
 		String queryPath = "/Patient?";
 		queryPath += "identifierPartial:contains=" + oclId + "&";
 		queryPath += "identifier:not=patient_with_ocl";
-		FhirUtils.getBundleBySearchUrl(patientBundle, FhirClientAuthenticatorService.serverBase + queryPath);
+		fhirUtils.getBundleBySearchUrl(patientBundle, FhirClientAuthenticatorService.serverBase + queryPath);
 		if (patientBundle.hasEntry() && patientBundle.getEntry().size() > 0) {
 			Patient patient = (Patient) patientBundle.getEntry().get(0).getResource();
 			return patient.getIdElement().getIdPart();

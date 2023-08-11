@@ -39,6 +39,8 @@ public class CachingService {
 
 	@Autowired
 	DashboardEnvironmentConfig dashboardEnvironmentConfig;
+	@Autowired
+	FhirClientAuthenticatorService fhirClientAuthenticatorService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(CachingService.class);
 	private static final int MAX_RETRY = 6;
@@ -332,7 +334,7 @@ public class CachingService {
 		for (IndicatorItem item : indicators) {
 			mapOfIdToMd5.put(item.getId(),Utils.md5Bytes((item.getFhirPath().getExpression()+filterString).getBytes(StandardCharsets.UTF_8)));
 		}
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 		List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList()).get(date.toLocalDate().toString());
 		if(data!=null) {
 			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
@@ -388,7 +390,7 @@ public class CachingService {
 			}
 
 		}
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 		List<BarChartItemDataCollection> barChartItemCollections = ReportGeneratorFactory.INSTANCE.reportGenerator().getBarChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), barCharts, Collections.emptyList()).get(date.toLocalDate().toString());
 		if(barChartItemCollections!=null) {
 			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
@@ -442,7 +444,7 @@ public class CachingService {
 		for (TabularItem item : indicators) {
 			mapOfIdToMd5.put(item.getId(),Utils.md5Bytes((item.getFhirPath().getExpression()+filterString).getBytes(StandardCharsets.UTF_8)));
 		}
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 		List<ScoreCardItem> scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getTabularData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList()).get(date.toLocalDate().toString());
 		if(scoreCardItems!=null) {
 			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
@@ -496,7 +498,7 @@ public class CachingService {
 			}
 		}
 
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 		List<PieChartItemDataCollection> pieChartItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getPieChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), pieChartDefinitions, Collections.emptyList()).get(date.toLocalDate().toString());
 		if(pieChartItems!=null) {
 			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
@@ -551,7 +553,7 @@ public class CachingService {
 			}
 		}
 		
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 		List<LineChartItemCollection> lineChartItemCollections = ReportGeneratorFactory.INSTANCE.reportGenerator().getLineChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), lineCharts, Collections.emptyList()).get(date.toLocalDate().toString());
 		if(lineChartItemCollections!=null) {
 			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();

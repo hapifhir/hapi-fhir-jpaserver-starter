@@ -88,12 +88,8 @@ public class HelperService {
 	DashboardEnvironmentConfig dashboardEnvironmentConfig;
 	@Autowired
 	AsyncConfiguration asyncConf;
-	
-	FhirContext ctx;
-	Keycloak instance;
-	TokenManager tokenManager;
-	BearerTokenAuthInterceptor authInterceptor;
-
+	@Autowired
+	FhirClientAuthenticatorService fhirClientAuthenticatorService;
 	Map <String,DashboardConfigContainer> dashboardEnvToConfigMap = new HashMap<>();
 
 	private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
@@ -128,7 +124,7 @@ public class HelperService {
 	}
 	
 	private List<OrgItem> fetchOrgHierarchy(String orgId) {
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 
 		if(!mapOfOrgHierarchy.containsKey(orgId))
 		{
@@ -139,12 +135,12 @@ public class HelperService {
 	
 	public void refreshMapForOrgId(String orgId) {
 		mapOfIdsAndOrgIdToChildrenMapPair.put(orgId, getFacilityIdsAndOrgIdToChildrenMapPair(orgId));
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 		mapOfOrgHierarchy.put(orgId, ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, orgId));
 	}
 
 	private String getKeycloakGroupId(String groupName) {
-		RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 		try {
 			List<GroupRepresentation> groups = realmResource.groups().groups(groupName, 0, Integer.MAX_VALUE, false);
 			if (groups.size() == 0){
@@ -178,7 +174,7 @@ public class HelperService {
 		String pluscode = updatedDetails[13];
 		String country = updatedDetails[14];
 
-		RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 		try {
 			GroupResource groupResource = realmResource.groups().group(groupId);
 			GroupRepresentation group = groupResource.toRepresentation();
@@ -568,7 +564,7 @@ public class HelperService {
 	}
 
 	public List<GroupRepresentation> getGroupsByUser(String userId) {
-		RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 		List<GroupRepresentation> groups = realmResource.users().get(userId).groups(0, appProperties.getKeycloak_max_group_count(), false);
 		return groups;
 	}
@@ -632,7 +628,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 
 	@Async("asyncTaskExecutor")
 	public void saveQueryResult(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters, List<String> hashcodes,String env, List<ANCDailySummaryConfig> ancDailySummaryConfig) throws FileNotFoundException {
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 		List<String> fhirSearchList = getFhirSearchListByFilters(filters,env);
 		List<DataResult> dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
 		for(String hashcode : hashcodes){
@@ -667,7 +663,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			});
 		}
 		Bundle batchBundle = generateBatchBundle("/Encounter?location=" + String.join(",", locationIdsList));
-		Bundle responseBundle = FhirClientAuthenticatorService.getFhirClient().transaction().withBundle(batchBundle).prettyPrint().encodedJson().execute();
+		Bundle responseBundle = fhirClientAuthenticatorService.getFhirClient().transaction().withBundle(batchBundle).prettyPrint().encodedJson().execute();
 		return responseBundle;
 	}
 
@@ -758,7 +754,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 	}
 
 	public void getOrganizationsPartOf(List<String> idsList, String url) {
-		Bundle searchBundle = FhirClientAuthenticatorService.getFhirClient().search()
+		Bundle searchBundle = fhirClientAuthenticatorService.getFhirClient().search()
 			.byUrl(url)
 			.returnBundle(Bundle.class)
 			.execute();
@@ -848,7 +844,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 
 		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 		for (String orgId : idsAndOrgIdToChildrenMapPair.first) {
-			patientCount += FhirClientAuthenticatorService.getFhirClient().search()
+			patientCount += fhirClientAuthenticatorService.getFhirClient().search()
 				.byUrl("Patient?_has:Encounter:patient:service-provider=" + orgId + "&_count=0")
 				.returnBundle(Bundle.class)
 				.execute()
@@ -1485,7 +1481,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 
 	public void cacheDashboardData(String orgId, Date startDate, Date endDate, List<IndicatorItem> indicators, List<BarChartDefinition> barCharts, List<TabularItem> tabularItems, List<LineChart> lineCharts, List<PieChartDefinition> pieChartDefinitions,int count,HashMap <String,Pair<Long,Long>> orgToTiming ) {
 		notificationDataSource = NotificationDataSource.getInstance();
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 		DashboardModel dashboard = ReportGeneratorFactory.INSTANCE.reportGenerator().getOverallDataToCache(
 			fhirClientProvider,
 			orgId,
@@ -1576,7 +1572,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 	}
 
 	public String getOrganizationIdByPractitionerRoleId(String practitionerRoleId) {
-		Bundle bundle = FhirClientAuthenticatorService.getFhirClient().search().forResource(PractitionerRole.class).where(PractitionerRole.RES_ID.exactly().identifier(practitionerRoleId)).returnBundle(Bundle.class).execute();
+		Bundle bundle = fhirClientAuthenticatorService.getFhirClient().search().forResource(PractitionerRole.class).where(PractitionerRole.RES_ID.exactly().identifier(practitionerRoleId)).returnBundle(Bundle.class).execute();
 		if (!bundle.hasEntry()) {
 			return null;
 		}
@@ -1587,7 +1583,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 	public Organization getOrganizationResourceByPractitionerRoleId(String practitionerRoleId) {
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 		if (organizationId == null) return null;
-		Bundle bundle = FhirClientAuthenticatorService.getFhirClient().search().forResource(Organization.class).where(Organization.RES_ID.exactly().identifier(organizationId)).returnBundle(Bundle.class).execute();
+		Bundle bundle = fhirClientAuthenticatorService.getFhirClient().search().forResource(Organization.class).where(Organization.RES_ID.exactly().identifier(organizationId)).returnBundle(Bundle.class).execute();
 		if (!bundle.hasEntry()) {
 			return null;
 		}
@@ -1595,10 +1591,11 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 	}
 
 	public String getOrganizationIdByFacilityUID(String facilityUID) {
+		FhirUtils fhirUtils = new FhirUtils();
 		Bundle organizationBundle = new Bundle();
 		String queryPath = "/Organization?";
 		queryPath += "identifier=" + facilityUID + "";
-		FhirUtils.getBundleBySearchUrl(organizationBundle, queryPath);
+		fhirUtils.getBundleBySearchUrl(organizationBundle, queryPath);
 		if (organizationBundle.hasEntry() && organizationBundle.getEntry().size() > 0) {
 			Organization organization = (Organization) organizationBundle.getEntry().get(0).getResource();
 			return organization.getIdElement().getIdPart();
@@ -1608,7 +1605,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 
 	public String getOrganizationIdByOrganizationNameAndType(String name, String type) {
 
-		Bundle organizationBundle = FhirClientAuthenticatorService.getFhirClient()
+		Bundle organizationBundle = fhirClientAuthenticatorService.getFhirClient()
 			.search()
 			.forResource(Organization.class)
 			.where(Organization.NAME.matchesExactly().value(name))
@@ -1638,7 +1635,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 	}
 
 	private String createKeycloakGroup(GroupRepresentation groupRep) {
-		RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 		List<GroupRepresentation> groups = realmResource.groups().groups(groupRep.getName(), 0, Integer.MAX_VALUE, false);
 //
 		for (GroupRepresentation group : groups) {
@@ -1673,7 +1670,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 //	}
 
 	private <R extends IBaseResource> String createResource(String keycloakId, IBaseResource resource, Class<R> resourceClass, ICriterion<?>... theCriterion) {
-		IQuery<IBaseBundle> query = FhirClientAuthenticatorService.getFhirClient().search().forResource(resourceClass).where(theCriterion[0]);
+		IQuery<IBaseBundle> query = fhirClientAuthenticatorService.getFhirClient().search().forResource(resourceClass).where(theCriterion[0]);
 		for (int i = 1; i < theCriterion.length; i++)
 			query = query.and(theCriterion[i]);
 		try {
@@ -1692,7 +1689,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 			Identifier obj = (Identifier) addIdentifier.invoke(resource);
 			obj.setSystem(IDENTIFIER_SYSTEM + "/KeycloakId");
 			obj.setValue(keycloakId);
-			MethodOutcome outcome = FhirClientAuthenticatorService.getFhirClient().update().resource(resource).execute();
+			MethodOutcome outcome = fhirClientAuthenticatorService.getFhirClient().update().resource(resource).execute();
 			return outcome.getId().getIdPart();
 		} catch (SecurityException | NoSuchMethodException | InvocationTargetException e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
@@ -1704,7 +1701,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 
 	private <R extends IBaseResource> String createResource(String keycloakId, IBaseResource resource, Class<R> resourceClass) {
 
-		RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 		R existingResource = null;
 		GroupResource groupResource = null;
 		GroupRepresentation group = null;
@@ -1713,12 +1710,12 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 				groupResource = realmResource.groups().group(keycloakId);
 				group = groupResource.toRepresentation();
 				String orgId = group.getAttributes().get("organization_id").get(0);
-				existingResource = FhirClientAuthenticatorService.getFhirClient().read().resource(resourceClass).withId(orgId).execute();
+				existingResource = fhirClientAuthenticatorService.getFhirClient().read().resource(resourceClass).withId(orgId).execute();
 			} else if (resourceClass.equals(Location.class)) {
 				groupResource = realmResource.groups().group(keycloakId);
 				group = groupResource.toRepresentation();
 				String locId = group.getAttributes().get("location_id").get(0);
-				existingResource = FhirClientAuthenticatorService.getFhirClient().read().resource(resourceClass).withId(locId).execute();
+				existingResource = fhirClientAuthenticatorService.getFhirClient().read().resource(resourceClass).withId(locId).execute();
 			}
 		} catch (ResourceNotFoundException e) {
 			logger.warn("RESOURCE NOT FOUND");
@@ -1729,7 +1726,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 			Identifier obj = (Identifier) addIdentifier.invoke(resource);
 			obj.setSystem(IDENTIFIER_SYSTEM + "/KeycloakId");
 			obj.setValue(keycloakId);
-			MethodOutcome outcome = FhirClientAuthenticatorService.getFhirClient().update().resource(resource).execute();
+			MethodOutcome outcome = fhirClientAuthenticatorService.getFhirClient().update().resource(resource).execute();
 			if (outcome.getCreated() || outcome.getOperationOutcome() == null) {
 				return outcome.getId().getIdPart();
 			} else {
@@ -1757,8 +1754,8 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 		String latitude = updatedDetails[12];
 		String pluscode = updatedDetails[13];
 		String countryName = updatedDetails[14];
-		Organization organizationResource = resourceClass.equals(Organization.class) ? FhirClientAuthenticatorService.getFhirClient().read().resource(Organization.class).withId(resourceId).execute() : null;
-		Location locationResource = resourceClass.equals(Location.class) ? FhirClientAuthenticatorService.getFhirClient().read().resource(Location.class).withId(resourceId).execute() : null;
+		Organization organizationResource = resourceClass.equals(Organization.class) ? fhirClientAuthenticatorService.getFhirClient().read().resource(Organization.class).withId(resourceId).execute() : null;
+		Location locationResource = resourceClass.equals(Location.class) ? fhirClientAuthenticatorService.getFhirClient().read().resource(Location.class).withId(resourceId).execute() : null;
 		try {
 			switch (counter){
 				case 0:
@@ -1833,6 +1830,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 								pluscodeExtension.setValue(pluscodeValue);
 								locationResource.addExtension(pluscodeExtension);
 							}
+							
 						}catch (NumberFormatException e){
 							logger.warn("The provided updated latitude or longitude value is non-numeric");
 						}
@@ -1875,9 +1873,9 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 					}
 			}
 			if(null == organizationResource){
-				FhirClientAuthenticatorService.getFhirClient().update().resource(locationResource).execute();
+				fhirClientAuthenticatorService.getFhirClient().update().resource(locationResource).execute();
 			}else{
-				FhirClientAuthenticatorService.getFhirClient().update().resource(organizationResource).execute();
+				fhirClientAuthenticatorService.getFhirClient().update().resource(organizationResource).execute();
 			}
 		} catch (SecurityException  e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
@@ -1885,7 +1883,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 	}
 
 	private String createKeycloakUser(UserRepresentation userRep) {
-		RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 		List<UserRepresentation> users = realmResource.users().search(userRep.getUsername(), 0, Integer.MAX_VALUE);
 		//if not empty, return id
 
@@ -1907,7 +1905,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 	}
 
 	private void createRoleIfNotExists(RoleRepresentation roleRepresentation) {
-		RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 		String clientId = realmResource.clients().findByClientId(appProperties.getFhir_hapi_client_id()).get(0).getId();
 		if (roleWithNameExists(clientId, roleRepresentation.getName())) {
 			return;
@@ -1920,7 +1918,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 	}
 
 	public Boolean roleWithNameExists(String clientId, String roleName) {
-		RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 		for (RoleRepresentation roleRepresentation : realmResource.clients().get(clientId).roles().list()) {
 			if (roleRepresentation.getName().equals(roleName)) {
 				return true;
@@ -1932,7 +1930,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 
 	private void assignRole(String userId, String roleName) {
 		try {
-			RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+			RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 			String clientId = realmResource.clients().findByClientId(appProperties.getFhir_hapi_client_id()).get(0).getId();
 			RoleRepresentation saveRoleRepresentation = realmResource.clients().get(clientId).roles().get(roleName).toRepresentation();
 			realmResource.users().get(userId).roles().clientLevel(clientId).add(asList(saveRoleRepresentation));

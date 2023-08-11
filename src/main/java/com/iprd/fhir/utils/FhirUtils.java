@@ -14,6 +14,7 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.PractitionerRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import autovalue.shaded.kotlin.Pair;
 import autovalue.shaded.kotlin.Triple;
@@ -24,7 +25,8 @@ import org.hl7.fhir.r4.model.Identifier;
 public class FhirUtils {
 	
 	private static final Logger logger = LoggerFactory.getLogger(FhirUtils.class);
-
+	@Autowired
+	FhirClientAuthenticatorService fhirClientAuthenticatorService;
 	public static Boolean isOclPatient(List<Identifier> identifiers) {
 		for (Identifier identifier : identifiers) {
 			if (identifier.hasSystem() && identifier.getSystem().equals("http://iprdgroup.com/identifiers/patientWithOcl")) {
@@ -97,8 +99,8 @@ public class FhirUtils {
 		return map;
 	}
 
-	public static void getBundleBySearchUrl(Bundle bundle, String url) {
-		Bundle searchBundle = FhirClientAuthenticatorService.getFhirClient().search()
+	public void getBundleBySearchUrl(Bundle bundle, String url) {
+		Bundle searchBundle = fhirClientAuthenticatorService.getFhirClient().search()
 			.byUrl(url)
 			.returnBundle(Bundle.class)
 			.execute();
@@ -126,8 +128,8 @@ public class FhirUtils {
 		return null;
 	}
 
-	public static String getPractitionerRoleFromId(String practitionerRoleId){
-		Bundle bundle = FhirClientAuthenticatorService.getFhirClient().search().forResource(PractitionerRole.class).where(PractitionerRole.RES_ID.exactly().identifier(practitionerRoleId)).returnBundle(Bundle.class).execute();
+	public String getPractitionerRoleFromId(String practitionerRoleId){
+		Bundle bundle = fhirClientAuthenticatorService.getFhirClient().search().forResource(PractitionerRole.class).where(PractitionerRole.RES_ID.exactly().identifier(practitionerRoleId)).returnBundle(Bundle.class).execute();
 		if (!bundle.hasEntry()) {
 			return null;
 		}

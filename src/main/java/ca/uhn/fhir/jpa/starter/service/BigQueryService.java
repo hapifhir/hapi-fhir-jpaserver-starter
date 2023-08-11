@@ -6,6 +6,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.bigquery.*;
 
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.AsyncConfiguration;
 
 import com.iprd.fhir.utils.Operation;
 import com.iprd.fhir.utils.Utils;
@@ -38,6 +39,8 @@ public class BigQueryService {
 	
 	@Autowired
 	AppProperties appProperties;
+	@Autowired
+	FhirClientAuthenticatorService fhirClientAuthenticatorService;
 
 	public List<AnalyticItem> timeSpentOnScreenAnalyticItems(Organization organization) {
 		List<AnalyticItem> timeAnalyticItems = new ArrayList<>();
@@ -45,7 +48,7 @@ public class BigQueryService {
 		if(keycloakIdentifier == null) {
 			return null;
 		}
-		RealmResource realmResource = FhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 		List<UserRepresentation> members = realmResource.groups().group(keycloakIdentifier.getValue()).members();
 		List<String> usernames = members.stream().map(userRepresentation -> "'"+userRepresentation.getFirstName() + " " + userRepresentation.getLastName()+"'").collect(Collectors.toList());
 		String users = String.join(", ", usernames);

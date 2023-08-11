@@ -10,6 +10,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.Patient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,8 @@ import okhttp3.Request;
 @Service
 public class NotificationService {
 	
+	@Autowired
+	FhirClientAuthenticatorService fhirClientAuthenticatorService;
 	private static final long DELAY = 3 * 60000;
 	private static final long DELETE_WORK_DELAY = 24 * 3600000;
 
@@ -40,7 +43,7 @@ public class NotificationService {
 			String patientId = record.getPatientId();
 
 			try {
-				Patient patient = FhirClientAuthenticatorService.getFhirClient().read().resource(Patient.class).withId(patientId).execute();
+				Patient patient = fhirClientAuthenticatorService.getFhirClient().read().resource(Patient.class).withId(patientId).execute();
 				Triple<String, String, String> oclDetails = FhirUtils.getOclIdFromIdentifier(patient.getIdentifier());
 				String mobile = null;
 
