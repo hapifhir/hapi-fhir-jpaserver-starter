@@ -42,7 +42,7 @@ public class FhirClientAuthenticatorService {
 		  ctx.getRestfulClientFactory().setSocketTimeout(900 * 1000);
 		  ctx.getRestfulClientFactory().setConnectionRequestTimeout(900 * 1000);
 		  serverBase = appProperties.getHapi_Server_address();
-		  ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
+//		  ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
 		    keycloak = KeycloakBuilder
 		       .builder()
 		       .serverUrl(appProperties.getKeycloak_Server_address())
@@ -51,7 +51,7 @@ public class FhirClientAuthenticatorService {
 		       .clientId(appProperties.getKeycloak_Client_Id())
 		       .username (appProperties.getKeycloak_Username())
 		       .password(appProperties.getKeycloak_Password())
-		       .resteasyClient(client)
+//		       .resteasyClient(client)
 		       .build();
 		  instance = Keycloak.
 		      getInstance(
@@ -66,7 +66,7 @@ public class FhirClientAuthenticatorService {
 		  registerClientAuthInterceptor();
 		}
 
-	@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
+//	@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
 	private void registerClientAuthInterceptor() {
 	  String accessToken = tokenManager.getAccessTokenString();
 	  authInterceptor = new BearerTokenAuthInterceptor(accessToken); // the reason this is below is to unregister interceptors to avoid memory leak. Null pointer is caught in try catch. 
