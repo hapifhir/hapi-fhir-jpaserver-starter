@@ -76,7 +76,6 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
         http.addFilterBefore(new SignatureInterceptor(appProperties), KeycloakAuthenticationProcessingFilter.class);
-        logger.info("Inside configure method");
         http.cors()
                 .and()
                 .authorizeRequests()
@@ -92,6 +91,7 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("logout.do", "GET"));
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
 
