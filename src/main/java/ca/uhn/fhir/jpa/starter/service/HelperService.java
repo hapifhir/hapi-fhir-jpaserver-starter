@@ -1595,7 +1595,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 		Bundle organizationBundle = new Bundle();
 		String queryPath = "/Organization?";
 		queryPath += "identifier=" + facilityUID + "";
-		fhirUtils.getBundleBySearchUrl(organizationBundle, queryPath);
+		fhirUtils.getBundleBySearchUrl(organizationBundle, queryPath,fhirClientAuthenticatorService.getFhirClient());
 		if (organizationBundle.hasEntry() && organizationBundle.getEntry().size() > 0) {
 			Organization organization = (Organization) organizationBundle.getEntry().get(0).getResource();
 			return organization.getIdElement().getIdPart();

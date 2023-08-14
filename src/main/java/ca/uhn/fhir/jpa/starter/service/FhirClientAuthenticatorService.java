@@ -66,7 +66,7 @@ public class FhirClientAuthenticatorService {
 		  registerClientAuthInterceptor();
 		}
 
-//	@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
+	@Scheduled(fixedDelay = AUTH_FIXED_DELAY, initialDelay = AUTH_INITIAL_DELAY)
 	private void registerClientAuthInterceptor() {
 	  String accessToken = tokenManager.getAccessTokenString();
 	  authInterceptor = new BearerTokenAuthInterceptor(accessToken); // the reason this is below is to unregister interceptors to avoid memory leak. Null pointer is caught in try catch. 

@@ -39,7 +39,7 @@ public class ResourceMapperService {
 		FhirUtils fhirUtils = new FhirUtils();
 		//Searching for patient created with OCL-ID
 		Bundle tempPatientBundle = new Bundle();
-		fhirUtils.getBundleBySearchUrl(tempPatientBundle, FhirClientAuthenticatorService.serverBase + "/Patient?identifier=patient_with_ocl");
+		fhirUtils.getBundleBySearchUrl(tempPatientBundle, FhirClientAuthenticatorService.serverBase + "/Patient?identifier=patient_with_ocl",fhirClientAuthenticatorService.getFhirClient());
 
 		for (Bundle.BundleEntryComponent entry : tempPatientBundle.getEntry()) {
 			// per patient loop.
@@ -277,7 +277,7 @@ public class ResourceMapperService {
 		String queryPath = "/Patient?";
 		queryPath += "identifierPartial:contains=" + oclId + "&";
 		queryPath += "identifier:not=patient_with_ocl";
-		fhirUtils.getBundleBySearchUrl(patientBundle, FhirClientAuthenticatorService.serverBase + queryPath);
+		fhirUtils.getBundleBySearchUrl(patientBundle, FhirClientAuthenticatorService.serverBase + queryPath,fhirClientAuthenticatorService.getFhirClient());
 		if (patientBundle.hasEntry() && patientBundle.getEntry().size() > 0) {
 			Patient patient = (Patient) patientBundle.getEntry().get(0).getResource();
 			return patient.getIdElement().getIdPart();
