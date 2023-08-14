@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.iprd.fhir.utils.FhirUtils;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -35,7 +36,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.model.JWTPayload;
 
 @Component
-public class SignatureInterceptor extends GenericFilterBean{
+public class SignatureInterceptor extends FilterSecurityInterceptor{
 
 	private final AppProperties appProperties;
 	private Map<String, byte[]> publicKeyCache = new HashMap<>(); // Local cache to store public keys
