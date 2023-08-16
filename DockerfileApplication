@@ -39,5 +39,5 @@ COPY --chown=65532:65532 images /app/images
 USER 1001:1001
 WORKDIR /app
 COPY HealthCheck.java .
-CMD ["/opt/bitnami/tomcat/webapps_default/ROOT.war"]
+CMD ["/app/main.war"]
 HEALTHCHECK --interval=100s --timeout=5s --retries=2 CMD ["java", "HealthCheck.java", "||", "exit", "1"]
