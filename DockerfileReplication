@@ -6,7 +6,7 @@ COPY server.xml .
 ADD libs /root/.m2/repository/
 
 COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
-RUN mvn  -T 12 install -DskipTests -Djdk.lang.Process.launchMechanism=vfork -Dmaven.artifact.threads=30
+RUN mvn  -T 12 clean install -DskipTests -Djdk.lang.Process.launchMechanism=vfork -Dmaven.artifact.threads=30
 
 FROM build-hapi AS build-distroless
 RUN mvn package spring-boot:repackage -Preplication
