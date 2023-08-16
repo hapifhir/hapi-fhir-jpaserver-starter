@@ -99,6 +99,7 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
        }
 
 
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

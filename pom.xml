@@ -488,7 +488,17 @@
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-logging-logback</artifactId>
             <version>0.129.4-alpha</version>
-	</dependency>
+	    </dependency>
+        <dependency>
+            <groupId>me.desair.tus</groupId>
+            <artifactId>tus-java-server</artifactId>
+            <version>1.0.0-2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

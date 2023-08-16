@@ -2,10 +2,7 @@ package ca.uhn.fhir.jpa.starter.service;
 
 import android.util.Pair;
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.starter.AppProperties;
-import ca.uhn.fhir.jpa.starter.AsyncConfiguration;
-import ca.uhn.fhir.jpa.starter.DashboardConfigContainer;
-import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
+import ca.uhn.fhir.jpa.starter.*;
 import ca.uhn.fhir.jpa.starter.model.*;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
@@ -22,6 +19,28 @@ import com.iprd.report.model.FilterItem;
 import com.iprd.report.model.FilterOptions;
 import com.iprd.report.model.data.*;
 import com.iprd.report.model.definition.*;
+import android.util.Pair;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.sql.Clob;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import com.iprd.report.model.definition.BarComponent;
+import com.iprd.report.model.definition.LineChart;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.engine.jdbc.ClobProxy;
@@ -1927,7 +1946,6 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 		return false;
 
 	}
-
 	private void assignRole(String userId, String roleName) {
 		try {
 			RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
