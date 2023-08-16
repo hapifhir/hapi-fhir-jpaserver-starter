@@ -90,7 +90,7 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         .permitAll()
         .and()
         .csrf()
-        .ignoringAntMatchers("/fhir/**", "/iprd/**")
+        .ignoringAntMatchers("/fhir/**", "/iprd/**","/api/**")
         .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
