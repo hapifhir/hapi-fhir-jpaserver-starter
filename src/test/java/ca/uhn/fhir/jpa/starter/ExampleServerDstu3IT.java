@@ -49,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
   })
 
 
-public class ExampleServerDstu3IT implements IServerSupport {
+class ExampleServerDstu3IT implements IServerSupport {
 
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
   private IGenericClient ourClient;
@@ -71,8 +71,8 @@ public class ExampleServerDstu3IT implements IServerSupport {
     ourClient.registerInterceptor(new LoggingInterceptor(true));
   }
 
-    @Test
-  public void testCreateAndRead() {
+  @Test
+  void testCreateAndRead() {
 
     String methodName = "testCreateResourceConditional";
 
@@ -154,7 +154,7 @@ public class ExampleServerDstu3IT implements IServerSupport {
   }
 
   @Test
-  public void testWebsocketSubscription() throws Exception {
+  void testWebsocketSubscription() throws Exception {
     /*
      * Create subscription
      */

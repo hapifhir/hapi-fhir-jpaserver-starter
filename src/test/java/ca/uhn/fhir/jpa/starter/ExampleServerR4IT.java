@@ -87,7 +87,7 @@ class ExampleServerR4IT {
 	}
 
 	@Test
-	public void testBatchPutWithIdenticalTags() {
+	void testBatchPutWithIdenticalTags() {
 		String batchPuts = "{\n" +
 			"\t\"resourceType\": \"Bundle\",\n" +
 			"\t\"id\": \"patients\",\n" +

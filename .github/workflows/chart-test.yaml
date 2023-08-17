@@ -9,8 +9,8 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-20.04
-    container: quay.io/helmpack/chart-testing:v3.4.0
+    runs-on: ubuntu-22.04
+    container: quay.io/helmpack/chart-testing:v3.8.0@sha256:f058c660a28d99a9394ae081d98921efe068079531f247c86b8054e3c9d407aa
     steps:
       - name: Install helm-docs
         working-directory: /tmp
@@ -22,11 +22,14 @@ jobs:
           chmod +x /usr/local/bin/helm-docs && \
           helm-docs --version
 
+      - name: Add workspace as safe directory
+        run: |
+          git config --global --add safe.directory /__w/hapi-fhir-jpaserver-starter/hapi-fhir-jpaserver-starter
+
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
           fetch-depth: 0
-
       - name: Check if documentation is up-to-date
         run: helm-docs && git diff --exit-code HEAD
 
@@ -34,20 +37,20 @@ jobs:
         run: ct lint --config .github/ct/config.yaml
 
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        k8s-version: [1.22.9, 1.23.6, 1.24.1]
+        k8s-version: [1.25.9, 1.26.4, 1.27.2]
     needs:
       - lint
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
           fetch-depth: 0
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.2.1
+        uses: helm/chart-testing-action@e8788873172cb653a90ca2e819d79d65a66d4e76 # v2.4.0
 
       - name: Run chart-testing (list-changed)
         id: list-changed
@@ -58,13 +61,12 @@ jobs:
           fi
 
       - name: Create k8s Kind Cluster
-        uses: helm/kind-action@v1.2.0
-        if: steps.list-changed.outputs.changed == 'true'
+        uses: helm/kind-action@fa81e57adff234b2908110485695db0f181f3c67 # v1.7.0
+        if: ${{ steps.list-changed.outputs.changed == 'true' }}
         with:
-          version: v0.14.0
           cluster_name: kind-cluster-k8s-${{ matrix.k8s-version }}
           node_image: kindest/node:v${{ matrix.k8s-version }}
 
       - name: Run chart-testing (install)
         run: ct install --config .github/ct/config.yaml
-        if: steps.list-changed.outputs.changed == 'true'
+        if: ${{ steps.list-changed.outputs.changed == 'true' }}

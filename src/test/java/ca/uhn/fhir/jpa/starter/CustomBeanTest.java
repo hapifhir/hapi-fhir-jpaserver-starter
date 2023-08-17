@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 		// "hapi.fhir.enable_repository_validating_interceptor=true",
 		"hapi.fhir.fhir_version=r4"
 })
-public class CustomBeanTest {
+class CustomBeanTest {
 
 	@Autowired
 	some.custom.pkg1.CustomBean customBean1;
