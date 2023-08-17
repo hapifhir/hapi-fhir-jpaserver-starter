@@ -4,6 +4,7 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
+import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import com.google.common.collect.ImmutableList;
 import org.hl7.fhir.r4.model.Bundle;
@@ -72,7 +73,7 @@ public class AppProperties {
   private Partitioning partitioning = null;
   private Boolean install_transitive_ig_dependencies = true;
   private Boolean reload_existing_implementationguides = false;
-  private Map<String, ImplementationGuide> implementationGuides = null;
+  private Map<String, PackageInstallationSpec> implementationGuides = null;
 
 	private String staticLocation = null;
 
@@ -135,11 +136,11 @@ public class AppProperties {
     this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
   }
 
-  public Map<String, ImplementationGuide> getImplementationGuides() {
+  public Map<String, PackageInstallationSpec> getImplementationGuides() {
     return implementationGuides;
   }
 
-  public void setImplementationGuides(Map<String, ImplementationGuide> implementationGuides) {
+  public void setImplementationGuides(Map<String, PackageInstallationSpec> implementationGuides) {
     this.implementationGuides = implementationGuides;
   }
 
@@ -679,36 +680,6 @@ public class AppProperties {
     }
   }
 
-  public static class ImplementationGuide
-  {
-    private String url;
-    private String name;
-    private String version;
-
-    public String getUrl() {
-      return url;
-    }
-
-    public void setUrl(String url) {
-      this.url = url;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
-    }
-
-    public String getVersion() {
-      return version;
-    }
-
-    public void setVersion(String version) {
-      this.version = version;
-    }
-  }
 
   public static class Validation {
 
