@@ -64,6 +64,7 @@ hapi:
     #      swiss:
     #        name: swiss.mednet.fhir
     #        version: 0.8.0
+    #        reloadExisting : false
     #      example not from registry
     #      ips_1_0_0:
     #        packageUrl: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz

@@ -199,7 +199,10 @@ public class StarterJpaConfig {
 				PackageInstallationSpec packageInstallationSpec = guidesEntry.getValue();
 				if (appProperties.getInstall_transitive_ig_dependencies()) {
 
-					packageInstallationSpec.setDependencyExcludes(List.of("hl7.fhir.r2.core", "hl7.fhir.r3.core", "hl7.fhir.r4.core", "hl7.fhir.r5.core"));
+					packageInstallationSpec.addDependencyExclude("hl7.fhir.r2.core")
+							.addDependencyExclude("hl7.fhir.r3.core")
+							.addDependencyExclude("hl7.fhir.r4.core")
+							.addDependencyExclude("hl7.fhir.r5.core");
 				}
 				packageInstallerSvc.install(packageInstallationSpec);
 			}
