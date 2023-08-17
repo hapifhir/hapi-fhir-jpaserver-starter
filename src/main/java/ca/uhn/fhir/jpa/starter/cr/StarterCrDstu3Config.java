@@ -1,6 +1,6 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
-import ca.uhn.fhir.cr.config.CrDstu3Config;
+import ca.uhn.fhir.cr.config.dstu3.CrDstu3Config;
 import ca.uhn.fhir.jpa.starter.annotations.OnDSTU3Condition;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
