@@ -56,6 +56,7 @@ public class AppProperties {
   private Integer defer_indexing_for_codesystems_of_size = 100;
   private Long retain_cached_searches_mins = 60L;
   private Long reuse_cached_search_results_millis = 60000L;
+  private String server_path = "/fhir";
   private String server_address = null;
   private EncodingEnum default_encoding = EncodingEnum.JSON;
   private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
@@ -68,6 +69,7 @@ public class AppProperties {
   private Map<String, Tester> tester = null;
   private Apikey apikey = new Apikey();
   private Oauth oauth = new Oauth();
+  private Smart smart = new Smart();
   private Logger logger = new Logger();
   private Subscription subscription = new Subscription();
   private Cors cors = null;
@@ -194,6 +196,14 @@ public class AppProperties {
     this.allowed_bundle_types = allowed_bundle_types;
   }
 
+  public String getServer_path() {
+    return server_path;
+  }
+
+  public void setServer_path(String server_path) {
+    this.server_path = server_path;
+  }
+
   public String getServer_address() {
     return server_address;
   }
@@ -248,6 +258,14 @@ public class AppProperties {
 
   public void setOauth(Oauth oauth) {
     this.oauth = oauth;
+  }
+
+  public Smart getSmart() {
+    return smart;
+  }
+
+  public void setSmart(Smart smart) {
+    this.smart = smart;
   }
 
 	public Logger getLogger() {
@@ -639,17 +657,12 @@ public class AppProperties {
 
   public static class Oauth {
     private Boolean enabled = false;
-    private String issuer;
     private String jwks_url;
-    private String authorization_url;
-    private String grant_types_supported;
     private String token_url;
     private String manage_url;
     private String client_id;
     private String user_role;
     private String admin_role;
-    private String introspection_url;
-    private String revocation_url;
 
     public Boolean getEnabled() {
       return enabled;
@@ -658,6 +671,65 @@ public class AppProperties {
     public void setEnabled(Boolean enabled) {
       this.enabled = enabled;
     }
+
+    public String getJwks_url() {
+      return jwks_url;
+    }
+
+    public void setJwks_url(String jwks_url) {
+      this.jwks_url = jwks_url;
+    }
+
+    public String getToken_url() {
+      return token_url;
+    }
+
+    public void setToken_url(String token_url) {
+      this.token_url = token_url;
+    }
+
+    public String getManage_url() {
+      return manage_url;
+    }
+
+    public void setManage_url(String manage_url) {
+      this.manage_url = manage_url;
+    }
+
+    public String getClient_id() {
+      return client_id;
+    }
+
+    public void setClient_id(String client_id) {
+      this.client_id = client_id;
+    }
+
+    public String getUser_role() {
+      return user_role;
+    }
+
+    public void setUser_role(String user_role) {
+      this.user_role = user_role;
+    }
+
+    public String getAdmin_role() {
+      return admin_role;
+    }
+
+    public void setAdmin_role(String admin_role) {
+      this.admin_role = admin_role;
+    }
+  }
+
+  public static class Smart {
+    private String issuer;
+    private String jwks_url;
+    private String authorization_url;
+    private String grant_types_supported;
+    private String token_url;
+    private String manage_url;
+    private String introspection_url;
+    private String revocation_url;
 
     public String getIssuer() {
       return issuer;
@@ -705,30 +777,6 @@ public class AppProperties {
 
     public void setManage_url(String manage_url) {
       this.manage_url = manage_url;
-    }
-
-    public String getClient_id() {
-      return client_id;
-    }
-
-    public void setClient_id(String client_id) {
-      this.client_id = client_id;
-    }
-
-    public String getUser_role() {
-      return user_role;
-    }
-
-    public void setUser_role(String user_role) {
-      this.user_role = user_role;
-    }
-
-    public String getAdmin_role() {
-      return admin_role;
-    }
-
-    public void setAdmin_role(String admin_role) {
-      this.admin_role = admin_role;
     }
 
     public String getIntrospection_url() {

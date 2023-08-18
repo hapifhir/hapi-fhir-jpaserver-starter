@@ -24,9 +24,10 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
+
+import com.google.common.base.Strings;
 
 @ServletComponentScan(basePackageClasses = {RestfulServer.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class, ThymeleafAutoConfiguration.class})
@@ -58,14 +59,17 @@ public class Application extends SpringBootServletInitializer {
   @Autowired
   AutowireCapableBeanFactory beanFactory;
 
+  @Autowired
+  AppProperties appProperties;
+
   @Bean
   @Conditional(OnEitherVersion.class)
   public ServletRegistrationBean hapiServletRegistration(RestfulServer restfulServer) {
-    String urlMapping = ObjectUtils.isEmpty(System.getenv("url_pattern")) ? "/fhir/*" : System.getenv("url_pattern");
+    String serverPath = appProperties.getServer_path();
     ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
     beanFactory.autowireBean(restfulServer);
     servletRegistrationBean.setServlet(restfulServer);
-    servletRegistrationBean.addUrlMappings(urlMapping);
+    servletRegistrationBean.addUrlMappings(serverPath + "/*");
     servletRegistrationBean.setLoadOnStartup(1);
 
     return servletRegistrationBean;
@@ -101,10 +105,11 @@ public class Application extends SpringBootServletInitializer {
     dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
     dispatcherServlet.setContextConfigLocation(WellknownEndpointController.class.getName());
 
+    String serverPath = appProperties.getServer_path();
     ServletRegistrationBean registrationBean = new ServletRegistrationBean();
     registrationBean.setName("well-known");
     registrationBean.setServlet(dispatcherServlet);
-    registrationBean.addUrlMappings("/fhir/.well-known/*");
+    registrationBean.addUrlMappings(serverPath + "/.well-known/*");
     registrationBean.setLoadOnStartup(1);
     return registrationBean;
   }

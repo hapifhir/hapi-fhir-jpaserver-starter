@@ -23,13 +23,16 @@ services:
       OAUTH_CLIENT_ID: fhir4-api
       OAUTH_USER_ROLE: fhir4-user
       OAUTH_ADMIN_ROLE: fhir4-admin
-      OAUTH_ISSUER: https://auth-internal.elimuinformatics.com/auth/realms/product
       OAUTH_JWKS_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/certs
-      OAUTH_AUTHORIZATION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/auth
       OAUTH_TOKEN_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/token
-      OAUTH_INTROSPECTION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/token/introspect
-      OAUTH_REVOCATION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/revoke
       OAUTH_MANAGE_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/account
+      SMART_ISSUER: https://auth-internal.elimuinformatics.com/auth/realms/product
+      SMART_JWKS_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/certs
+      SMART_AUTHORIZATION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/auth
+      SMART_TOKEN_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/token
+      SMART_INTROSPECTION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/token/introspect
+      SMART_REVOCATION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/revoke
+      SMART_MANAGE_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/account
   hapi-fhir-postgres:
     image: postgres:13-alpine
     container_name: hapi-fhir-postgres

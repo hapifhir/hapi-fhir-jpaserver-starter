@@ -282,23 +282,8 @@ You can use a custom property file that utilizes environment variables for many 
 
 ```bash
 ./build-docker-image.sh && docker run -p 8080:8080 \
--e APIKEY=<apikey> \
--e APIKEY_ENABLED=<true/false> \
--e datasource.driver=<datasource_driver> \
--e datasource.password=<datasource_password> \
--e datasource.url=<jdbc_url> \
--e datasource.username=<datasource_password> \
--e fhir_version=<DSTU2/DSTU3/R4> \
--e hapi.fhir.server_address=<server_address>/fhir/ \
--e hibernate.dialect=<hibernate_dialect> \
--e OAUTH_ENABLED=<true/false> \
--e OAUTH_URL=<oauth_server_url> \
--e reuse_cached_search_results_millis=<milliseconds_value_to_reuse_cached_search_results> \
--e spring.config.location='<classpath:/application-custom.yaml>' \
--e subscription.resthook.enabled=<true/false> \
--e subscription.websocket.enabled=<true/false> \
--e url_pattern=</fhir/*> \
-hapi-fhir/hapi-fhir-jpaserver-starter:latest
+  -e spring.config.location='<classpath:/application-custom.yaml>' \
+  hapi-fhir/hapi-fhir-jpaserver-starter:latest
 ```
 
 ## Configurations

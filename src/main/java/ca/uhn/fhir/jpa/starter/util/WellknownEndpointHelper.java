@@ -29,15 +29,15 @@ public class WellknownEndpointHelper {
    */
   public static String getWellKnownJson(AppProperties appProperties) {
     return new JSONObject()
-      .put(ISSUER_KEY, appProperties.getOauth().getIssuer())
-      .put(JWKS_ENDPOINT_KEY, appProperties.getOauth().getJwks_url())
-      .put(AUTHORIZATION_ENDPOINT_KEY, appProperties.getOauth().getAuthorization_url())
-      .put(GRANT_TYPES_SUPPORTED_KEY, appProperties.getOauth().getGrant_types_supported())
-      .put(TOKEN_ENDPOINT_KEY, appProperties.getOauth().getToken_url())
+      .put(ISSUER_KEY, appProperties.getSmart().getIssuer())
+      .put(JWKS_ENDPOINT_KEY, appProperties.getSmart().getJwks_url())
+      .put(AUTHORIZATION_ENDPOINT_KEY, appProperties.getSmart().getAuthorization_url())
+      .put(GRANT_TYPES_SUPPORTED_KEY, appProperties.getSmart().getGrant_types_supported())
+      .put(TOKEN_ENDPOINT_KEY, appProperties.getSmart().getToken_url())
       .put(SCOPES_SUPPORTED_KEY, getScopesSupported())
       .put(RESPONSE_TYPES_SUPPORTED_KEY, getResponseTypesSupported())
-      .putOpt(INTROSPECTION_ENDPOINT_KEY, appProperties.getOauth().getIntrospection_url())
-      .putOpt(REVOCATION_ENDPOINT_KEY, appProperties.getOauth().getRevocation_url())
+      .putOpt(INTROSPECTION_ENDPOINT_KEY, appProperties.getSmart().getIntrospection_url())
+      .putOpt(REVOCATION_ENDPOINT_KEY, appProperties.getSmart().getRevocation_url())
       .put(CAPABILITIES_KEY, getCapabilities())
       .put(CODE_CHALLENGE_METHODS_SUPPORTED_KEY, getCodeChallengeMethodsSupported())
       .toString(2);
