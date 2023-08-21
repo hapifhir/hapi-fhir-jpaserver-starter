@@ -76,12 +76,12 @@ hapi:
     #    install_transitive_ig_dependencies: true
     ### tells the server whether to attempt to load IG resources that are already present
     #    reload_existing_implementationGuides : false
-    implementationguides:
+    #implementationguides:
     ###    example from registry (packages.fhir.org)
-      swiss:
-        name: swiss.mednet.fhir
-        version: 0.8.0
-        reloadExisting : false
+    #  swiss:
+    #    name: swiss.mednet.fhir
+    #    version: 0.8.0
+    #    reloadExisting : false
     #      example not from registry
     #      ips_1_0_0:
     #        packageUrl: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
