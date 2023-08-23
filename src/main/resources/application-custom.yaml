@@ -24,7 +24,7 @@ spring:
 
     # database connection pool size
     hikari:
-      maximum-pool-size: 10
+      maximum-pool-size: 25
   jpa:
     properties:
       hibernate.format_sql: false
@@ -62,6 +62,7 @@ hapi:
     ### alternatively, it may be set using the X-Forwarded-Proto header.
     #   use_apache_address_strategy_https: false
     ### enable to set the Server URL
+    #    server_path: /baseR4
     #    server_address: http://hapi.fhir.org/baseR4
     #    defer_indexing_for_codesystems_of_size: 101
     #    install_transitive_ig_dependencies: true
@@ -133,11 +134,29 @@ hapi:
 #    bundle_batch_pool_max_size: 50
 
     oauth:
-      enabled: ${OAUTH_ENABLED}
+      enabled: ${OAUTH_ENABLED:false}
+      client_id: ${OAUTH_CLIENT_ID}
+      user_role: ${OAUTH_USER_ROLE}
+      admin_role: ${OAUTH_ADMIN_ROLE}
+      jwks_url: ${OAUTH_JWKS_URL}
       token_url: ${OAUTH_TOKEN_URL}
       manage_url: ${OAUTH_MANAGE_URL}
 
-#    logger:
+    apikey:
+      enabled: ${APIKEY_ENABLED:false}
+      key: ${APIKEY}
+
+    smart:
+      issuer: ${SMART_ISSUER}
+      jwks_url: ${SMART_JWKS_URL}
+      authorization_url: ${SMART_AUTHORIZATION_URL}
+      grant_types_supported: ${SMART_GRANT_TYPES_SUPPORTED:authorization_code}
+      token_url: ${SMART_TOKEN_URL}
+      introspection_url: ${SMART_INTROSPECTION_URL}
+      revocation_url: ${SMART_REVOCATION_URL}
+      manage_url: ${SMART_MANAGE_URL}
+
+    #    logger:
     #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
     #      format: >-
     #        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
@@ -153,7 +172,7 @@ hapi:
     tester:
       home:
         name: Local Tester
-        server_address: ${server_address}
+        server_address: 'http://localhost:8080/fhir'
         refuse_to_fetch_third_party_urls: false
         fhir_version: ${fhir_version}
       global:

@@ -68,6 +68,7 @@ hapi:
     ### the deepest folder level will be used. E.g. - if you put file:/foo/bar/bazz as value then the files are resolved under /static/bazz/**
     #staticLocation: file:/foo/bar/bazz
     ### enable to set the Server URL
+    #    server_path: /baseR4
     #    server_address: http://hapi.fhir.org/baseR4
     #    defer_indexing_for_codesystems_of_size: 101
     #    install_transitive_ig_dependencies: true
@@ -151,6 +152,29 @@ hapi:
     # Threadpool size for BATCH'ed GETs in a bundle.
     #    bundle_batch_pool_size: 10
     #    bundle_batch_pool_max_size: 50
+
+    oauth:
+      enabled: ${OAUTH_ENABLED:false}
+      client_id: ${OAUTH_CLIENT_ID}
+      user_role: ${OAUTH_USER_ROLE}
+      admin_role: ${OAUTH_ADMIN_ROLE}
+      jwks_url: ${OAUTH_JWKS_URL}
+      token_url: ${OAUTH_TOKEN_URL}
+      manage_url: ${OAUTH_MANAGE_URL}
+
+    apikey:
+      enabled: ${APIKEY_ENABLED:false}
+      key: ${APIKEY}
+
+    smart:
+      issuer: ${SMART_ISSUER}
+      jwks_url: ${SMART_JWKS_URL}
+      authorization_url: ${SMART_AUTHORIZATION_URL}
+      grant_types_supported: ${SMART_GRANT_TYPES_SUPPORTED:authorization_code}
+      token_url: ${SMART_TOKEN_URL}
+      introspection_url: ${SMART_INTROSPECTION_URL}
+      revocation_url: ${SMART_REVOCATION_URL}
+      manage_url: ${SMART_MANAGE_URL}
 
     #    logger:
     #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
