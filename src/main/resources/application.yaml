@@ -8,19 +8,6 @@ spring:
       enabled: false
       check-location: false
       baselineOnMigrate: true
-   datasource:
-      url: jdbc:mysql://localhost:3306/hapi
-#url: jdbc:h2:mem:test_mem
-      username: admin
-      password: admin
-      driverClassName: com.mysql.cj.jdbc.Driver
-      hikari:    
-         minimum-pool-size: 2
-         maximum-pool-size: 40
-         connection-timeout: 3000000
-         # idle-timeout: 60000
-         max-lifetime: 6000000
-         keepalive-time: 120000
    cache:
       jcache:
          config: classpath:ehcache.xml
@@ -33,27 +20,44 @@ spring:
       properties:
          hibernate.format_sql: true
          hibernate.ddl-auto: none
-         hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+         hibernate.naming.physical-strategy : org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
          hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+         hibernate.connection.driver_class: com.mysql.cj.jdbc.Driver
+         hibernate.connection.provider_class: org.hibernate.hikaricp.internal.HikariCPConnectionProvider
+         hibernate.connection.url: 'jdbc:mysql://localhost:3306/hapi'
          hibernate.dialect.storage_engine: innodb
          hibernate.jdbc.batch_size: 20
+         hibernate.connection.username: admin
+         hibernate.connection.password: admin
+         hibernate.hikari.minimumIdle: 5
+         hibernate.hikari.maximumPoolSize: 10
+         hibernate.hikari.dataSource.cachePrepStmts: true
+         hibernate.hikari.dataSource.prepStmtCacheSize: 250
+         hibernate.hikari.dataSource.prepStmtCacheSqlLimit: 2048
+         hibernate.hikari.dataSource.useServerPrepStmts: true
+         hibernate.hikari.dataSource.useLocalSessionState: true
+         hibernate.hikari.dataSource.rewriteBatchedStatements: true
+         hibernate.hikari.dataSource.cacheResultSetMetadata: true
+         hibernate.hikari.dataSource.cacheServerConfiguration: true
+         hibernate.hikari.dataSource.elideSetAutoCommits: true
+         hibernate.hikari.dataSource.maintainTimeStats: false
          hibernate.javax.cache.missing_cache_strategy: create
-#If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
          hibernate.cache.use_query_cache: true
-         hibernate.cache.use_second_level_cache: true
-         hibernate.cache.region: org.hibernate.cache.ehcache.EhCacheRegionFactory
+         hibernate.cache.use_second_level_cache: true   
          
 #      hibernate.hbm2ddl.auto: update
    batch:
 #      hibernate.jdbc.batch_size: 20
       job:
          enabled: false
-   logging:
-      level:
-         org:
-            hibernate:
-               type: trace
-
+logging:
+   level:
+      org:
+         hibernate:
+            type: DEBUG
+      com:
+         zaxxer:
+            hikari: DEBUG 
 tus-server:
    file-directory: Images
    context-path: /api/upload
