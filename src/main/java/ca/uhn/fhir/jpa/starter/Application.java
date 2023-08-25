@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
+import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import ca.uhn.fhir.jpa.starter.common.FhirTesterConfig;
 import ca.uhn.fhir.jpa.starter.controller.WellknownEndpointController;
@@ -11,6 +12,7 @@ import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
 import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
 import ca.uhn.fhir.rest.server.RestfulServer;
+import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +20,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -25,6 +28,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import com.google.common.base.Strings;
@@ -61,6 +66,9 @@ public class Application extends SpringBootServletInitializer {
 
   @Autowired
   AppProperties appProperties;
+
+  @Autowired(required = false)
+  CorsInterceptor corsInterceptor;
 
   @Bean
   @Conditional(OnEitherVersion.class)
@@ -112,5 +120,16 @@ public class Application extends SpringBootServletInitializer {
     registrationBean.addUrlMappings(serverPath + "/.well-known/*");
     registrationBean.setLoadOnStartup(1);
     return registrationBean;
+  }
+
+  @Bean
+  @Conditional(OnCorsPresent.class)
+  public FilterRegistrationBean smartConfigurationCorsFilterBean() {
+    String serverPath = appProperties.getServer_path();
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration(serverPath + "/.well-known/*", corsInterceptor.getConfig());
+    FilterRegistrationBean filterBean = new FilterRegistrationBean(new CorsFilter(source));
+    filterBean.setOrder(0);
+    return filterBean;
   }
 }
