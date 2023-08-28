@@ -1,3 +1,9 @@
+Next release
+
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v?`
+- Updated to HAPI FHIR 6.8.0 and Core 6.0.22
+- Added support for custom paths with the filesystem package cache manager
+
 2023/08/09 Release 3.3.3
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.3.3`
