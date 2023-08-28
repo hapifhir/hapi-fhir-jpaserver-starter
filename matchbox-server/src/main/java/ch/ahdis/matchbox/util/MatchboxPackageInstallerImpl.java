@@ -262,7 +262,12 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 	private void addFolder(String type, NpmPackageFolder folder, List<IBaseResource> resources) {
 		if (folder == null)
 			return;
-		List<String> filesForType = folder.getTypes().get(type);
+		List<String> filesForType;
+		try {
+			filesForType = folder.getTypes().get(type);
+		} catch (final IOException exception) {
+			throw new InternalErrorException(exception);
+		}
 		if (filesForType == null)
 			return;
 		for (String file : filesForType) {

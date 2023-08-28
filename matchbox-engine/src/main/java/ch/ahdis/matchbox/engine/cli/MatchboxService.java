@@ -41,6 +41,7 @@ import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
 import org.hl7.fhir.validation.ValidationRecord;
+import org.hl7.fhir.validation.ValidatorUtils;
 import org.hl7.fhir.validation.cli.model.CliContext;
 import org.hl7.fhir.validation.cli.model.FileInfo;
 import org.hl7.fhir.validation.cli.model.ValidationOutcome;
@@ -130,7 +131,9 @@ public class MatchboxService {
   public void validateSources(CliContext cliContext, ValidationEngine validator) throws Exception {
     long start = System.currentTimeMillis();
     List<ValidationRecord> records = new ArrayList<>();
-    Resource r = validator.validate(cliContext.getSources(), cliContext.getProfiles(), records);
+	  List<ValidatorUtils.SourceFile> refs = new ArrayList<>();
+    Resource r = validator.validate(cliContext.getSources(), cliContext.getProfiles(), refs, records, null, true, 0,
+												true);
     MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
     System.out.println("Done. " + validator.getContext().clock().report()+". Memory = "+Utilities.describeSize(mbean.getHeapMemoryUsage().getUsed()+mbean.getNonHeapMemoryUsage().getUsed()));
     System.out.println();

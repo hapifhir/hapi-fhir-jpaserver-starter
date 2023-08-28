@@ -75,7 +75,7 @@ public class MatchboxCli {
     TimeTracker.Session tts = tt.start("Loading");
     
     System.out.println(VersionUtil.getPoweredBy());
-    Display.displaySystemInfo();
+    Display.displaySystemInfo(System.out);
 
     if (Params.hasParam(args, Params.PROXY)) {
       assert Params.getParam(args, Params.PROXY) != null : "PROXY arg passed in was NULL";
@@ -122,12 +122,12 @@ public class MatchboxCli {
     FileFormat.checkCharsetAndWarnIfNotUTF8(System.out);
 
     if (shouldDisplayHelpToUser(args)) {
-      Display.displayHelpDetails();
+      Display.displayHelpDetails(System.out, "help/help.txt");
     } else if (Params.hasParam(args, Params.TEST)) {
       parseTestParamsAndExecute(args);
     }
     else {
-      Display.printCliArgumentsAndInfo(args);
+      Display.printCliParamsAndInfo(args);
       doValidation(tt, tts, cliContext);
     }
   }

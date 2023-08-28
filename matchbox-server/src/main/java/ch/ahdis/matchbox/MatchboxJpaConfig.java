@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 
 import ca.uhn.fhir.jpa.dao.tx.IHapiTransactionService;
+import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR4;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR5;
 import org.apache.commons.lang3.NotImplementedException;
@@ -216,7 +217,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 
 		return new IJobCoordinator() {
 
-			public Batch2JobStartResponse startInstance(JobInstanceStartRequest theStartRequest) throws InvalidRequestException {
+			public Batch2JobStartResponse startInstance(RequestDetails theRequestDetails, JobInstanceStartRequest theStartRequest) throws InvalidRequestException {
 				// start a job instance
 				return null;
 			}

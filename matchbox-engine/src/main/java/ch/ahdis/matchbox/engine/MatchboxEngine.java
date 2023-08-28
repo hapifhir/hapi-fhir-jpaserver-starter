@@ -644,7 +644,8 @@ public class MatchboxEngine extends ValidationEngine {
 		Element e = Manager.parseSingle(this.getContext(), new ByteArrayInputStream(input.getBytes("UTF-8")),
 				(inputJson ? FhirFormat.JSON : FhirFormat.XML));
 		ExpressionNode exp = fpe.parse(expression);
-		return fpe.evaluateToString(new ValidatorHostContext(this.getContext(), e), e, e, e, exp);
+		return fpe.evaluateToString(e, expression);
+		//return fpe.evaluateToString(new ValidatorHostContext(this.getContext(), e), e, e, e, exp);
 	}
 
 	/**
