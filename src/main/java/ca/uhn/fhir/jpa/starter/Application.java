@@ -13,6 +13,18 @@ import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
 import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
+
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -27,6 +39,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -128,8 +141,27 @@ public class Application extends SpringBootServletInitializer {
     String serverPath = appProperties.getServer_path();
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration(serverPath + "/.well-known/*", corsInterceptor.getConfig());
-    FilterRegistrationBean filterBean = new FilterRegistrationBean(new CorsFilter(source));
+    FilterRegistrationBean filterBean = new FilterRegistrationBean();
+    filterBean.setFilter(new SmartConfigurationFilter());
     filterBean.setOrder(0);
     return filterBean;
+  }
+
+  @Component
+  @Conditional(OnCorsPresent.class)
+  public class SmartConfigurationFilter implements Filter {
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+      HttpServletRequest request = (HttpServletRequest)req;
+      HttpServletResponse response = (HttpServletResponse)res;
+      corsInterceptor.incomingRequestPreProcessed(request, response);
+      chain.doFilter(req, res);
+    }
+
+    @Override
+    public void destroy() {}
+
+    @Override
+    public void init(FilterConfig arg0) throws ServletException {}
   }
 }
