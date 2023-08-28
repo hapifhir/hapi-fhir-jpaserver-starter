@@ -101,6 +101,11 @@ public class MatchboxEngine extends ValidationEngine {
 		private FilesystemPackageCacheManager.FilesystemPackageCacheMode packageCacheMode = FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER;
 
 		/**
+		 * The filesystem package cache path if FilesystemPackageCacheMode.CUSTOM, or {@code null}.
+		 */
+		private String packageCachePath = null;
+
+		/**
 		 * The FHIR version to use.
 		 */
 		private final FhirPublication fhirVersion = FhirPublication.R4;
@@ -129,11 +134,21 @@ public class MatchboxEngine extends ValidationEngine {
 		 *    <li>{@code TESTING}: {TMP}/.fhir/packages</li>
 		 * </ul>
 		 *
+		 *
 		 * @see FilesystemPackageCacheManager#init(FilesystemPackageCacheManager.FilesystemPackageCacheMode) for details.
 		 * @param packageCacheMode The mode of the filesystem package cache manager.
 		 */
 		public void setPackageCacheMode(final FilesystemPackageCacheManager.FilesystemPackageCacheMode packageCacheMode) {
 			this.packageCacheMode = packageCacheMode;
+		}
+
+		/**
+		 * Sets the custom path of the package cache.
+		 * @param packageCachePath The package cache path.
+		 */
+		public void setPackageCachePath(final String packageCachePath) {
+			this.packageCacheMode = FilesystemPackageCacheManager.FilesystemPackageCacheMode.CUSTOM;
+			this.packageCachePath = packageCachePath;
 		}
 
 		/**
@@ -161,7 +176,7 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
 			}
 			engine.getContext().setPackageTracker(engine);
-			engine.setPcm(new FilesystemPackageCacheManager(this.packageCacheMode));
+			engine.setPcm(this.getFilesystemPackageCacheManager());
 			return engine;
 		}
 
@@ -187,8 +202,16 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
 			}
 			engine.getContext().setPackageTracker(engine);
-			engine.setPcm(new FilesystemPackageCacheManager(this.packageCacheMode));
+			engine.setPcm(this.getFilesystemPackageCacheManager());
 			return engine;
+		}
+
+		private FilesystemPackageCacheManager getFilesystemPackageCacheManager() throws IOException {
+			if (this.packageCacheMode == FilesystemPackageCacheManager.FilesystemPackageCacheMode.CUSTOM) {
+				return new FilesystemPackageCacheManager(this.packageCachePath);
+			} else {
+				return new FilesystemPackageCacheManager(this.packageCacheMode);
+			}
 		}
 	}
 
