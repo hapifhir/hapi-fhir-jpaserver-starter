@@ -1,5 +1,3 @@
-package ca.uhn.fhir.jpa.packages.loader;
-
 /*-
  * #%L
  * HAPI FHIR JPA Server
@@ -19,6 +17,7 @@ package ca.uhn.fhir.jpa.packages.loader;
  * limitations under the License.
  * #L%
  */
+package ca.uhn.fhir.jpa.packages.loader;
 
 import ca.uhn.fhir.i18n.Msg;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
@@ -33,7 +32,6 @@ import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +42,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import javax.annotation.Nullable;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -58,8 +57,7 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 				theSpec.getName(),
 				theSpec.getVersion(),
 				theSpec.getPackageUrl(),
-				new ByteArrayInputStream(contents)
-			);
+				new ByteArrayInputStream(contents));
 		}
 
 		return fetchPackageFromServerInternal(theSpec.getName(), theSpec.getVersion());
@@ -73,29 +71,22 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 	 * 			as fetched from the server
 	 * @throws IOException
 	 */
-	public NpmPackageData fetchPackageFromPackageSpec(
-		String thePackageId,
-		String thePackageVersion
-	) throws FHIRException, IOException {
+	public NpmPackageData fetchPackageFromPackageSpec(String thePackageId, String thePackageVersion)
+		throws FHIRException, IOException {
 		return fetchPackageFromServerInternal(thePackageId, thePackageVersion);
 	}
 
-	private NpmPackageData fetchPackageFromServerInternal(
-		String thePackageId,
-		String thePackageVersion
-	) throws IOException {
+	private NpmPackageData fetchPackageFromServerInternal(String thePackageId, String thePackageVersion)
+		throws IOException {
 		BasePackageCacheManager.InputStreamWithSrc pkg = this.loadFromPackageServer(thePackageId, thePackageVersion);
 
 		if (pkg == null) {
-			throw new ResourceNotFoundException(Msg.code(1301) + "Unable to locate package " + thePackageId + "#" + thePackageVersion);
+			throw new ResourceNotFoundException(
+				Msg.code(1301) + "Unable to locate package " + thePackageId + "#" + thePackageVersion);
 		}
 
 		NpmPackageData npmPackage = createNpmPackageDataFromData(
-			thePackageId,
-			thePackageVersion == null ? pkg.version : thePackageVersion,
-			pkg.url,
-			pkg.stream
-		);
+			thePackageId, thePackageVersion == null ? pkg.version : thePackageVersion, pkg.url, pkg.stream);
 
 		return npmPackage;
 	}
@@ -112,11 +103,8 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 	 * @throws IOException
 	 */
 	public NpmPackageData createNpmPackageDataFromData(
-		String thePackageId,
-		String thePackageVersionId,
-		String theSourceDesc,
-		InputStream thePackageTgzInputStream
-	) throws IOException {
+		String thePackageId, String thePackageVersionId, String theSourceDesc, InputStream thePackageTgzInputStream)
+		throws IOException {
 		Validate.notBlank(thePackageId, "thePackageId must not be null");
 		Validate.notBlank(thePackageVersionId, "thePackageVersionId must not be null");
 		Validate.notNull(thePackageTgzInputStream, "thePackageTgzInputStream must not be null");
@@ -128,31 +116,22 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 		NpmPackage npmPackage = NpmPackage.fromPackage(new ByteArrayInputStream(bytes));
 
 		return new NpmPackageData(
-			thePackageId,
-			thePackageVersionId,
-			theSourceDesc,
-			bytes,
-			npmPackage,
-			thePackageTgzInputStream
-		);
+			thePackageId, thePackageVersionId, theSourceDesc, bytes, npmPackage, thePackageTgzInputStream);
 	}
 
 	@Override
 	public NpmPackage loadPackageFromCacheOnly(String theS, @Nullable String theS1) {
-		throw new UnsupportedOperationException(
-			Msg.code(2215)
-				+ "Cannot load from cache. "
-				+ "Caching not supported in PackageLoaderSvc. Use JpaPackageCache instead."
-		);
+		throw new UnsupportedOperationException(Msg.code(2215)
+																 + "Cannot load from cache. "
+																 + "Caching not supported in PackageLoaderSvc. Use JpaPackageCache instead.");
 	}
 
 	@Override
-	public NpmPackage addPackageToCache(String theS, String theS1, InputStream theInputStream, String theS2) throws IOException {
-		throw new UnsupportedOperationException(
-			Msg.code(2216)
-				+ "Cannot add to cache. "
-				+ "Caching not supported in PackageLoaderSvc. Use JpaPackageCache instead."
-		);
+	public NpmPackage addPackageToCache(String theS, String theS1, InputStream theInputStream, String theS2)
+		throws IOException {
+		throw new UnsupportedOperationException(Msg.code(2216)
+																 + "Cannot add to cache. "
+																 + "Caching not supported in PackageLoaderSvc. Use JpaPackageCache instead.");
 	}
 
 	@Override
@@ -163,24 +142,23 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 		 * on their own provides no value if nothing is cached/loaded onto hard disk somewhere
 		 *
 		 */
-		throw new UnsupportedOperationException(
-			Msg.code(2217)
-				+ "No packages are cached; "
-				+ " this service only loads from the server directly. "
-				+ "Call fetchPackageFromServer to fetch the npm package from the server. "
-				+ "Or use JpaPackageCache for a cache implementation."
-		);
+		throw new UnsupportedOperationException(Msg.code(2217)
+																 + "No packages are cached; "
+																 + " this service only loads from the server directly. "
+																 + "Call fetchPackageFromServer to fetch the npm package from the server. "
+																 + "Or use JpaPackageCache for a cache implementation.");
 	}
 
 	public byte[] loadPackageUrlContents(String thePackageUrl) {
 		if (thePackageUrl.startsWith("classpath:")) {
-			return ClasspathUtil.loadResourceAsByteArray(thePackageUrl.substring("classpath:" .length()));
+			return ClasspathUtil.loadResourceAsByteArray(thePackageUrl.substring("classpath:".length()));
 		} else if (thePackageUrl.startsWith("file:")) {
 			try {
 				byte[] bytes = Files.readAllBytes(Paths.get(new URI(thePackageUrl)));
 				return bytes;
 			} catch (IOException | URISyntaxException e) {
-				throw new InternalErrorException(Msg.code(2031) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
+				throw new InternalErrorException(
+					Msg.code(2031) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
 			}
 		} else {
 			// matchbox: https://github.com/ahdis/matchbox/issues/75
