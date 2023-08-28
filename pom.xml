@@ -39,10 +39,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
-        <fhir.core.version>6.0.1</fhir.core.version>
-        <hapi.fhir.version>6.6.2</hapi.fhir.version>
+        <fhir.core.version>6.0.22</fhir.core.version>
+        <hapi.fhir.version>6.8.0</hapi.fhir.version>
 
-        <log4j_to_slf4j_version>2.17.1</log4j_to_slf4j_version>
         <!-- Dependency Versions -->
         <activation_api_version>1.2.0</activation_api_version>
         <apache_karaf_version>4.2.5</apache_karaf_version>
@@ -60,22 +59,22 @@
         <error_prone_core_version>2.10.0</error_prone_core_version>
         <mockito_version>4.8.1</mockito_version>
         <nullaway_version>0.7.9</nullaway_version>
-        <guava_version>31.0.1-jre</guava_version>
+        <guava_version>32.1.1-jre</guava_version>
         <gson_version>2.8.9</gson_version>
         <jaxb_bundle_version>2.2.11_1</jaxb_bundle_version>
         <jaxb_api_version>2.3.1</jaxb_api_version>
         <jaxb_core_version>2.3.0.1</jaxb_core_version>
         <jaxb_runtime_version>3.0.0</jaxb_runtime_version>
-        <jena_version>4.2.0</jena_version>
+        <jena_version>4.8.0</jena_version>
         <jersey_version>3.0.3</jersey_version>
         <jsr305_version>3.0.2</jsr305_version>
         <junit_version>5.9.1</junit_version>
         <flexmark_version>0.50.40</flexmark_version>
         <flyway_version>9.4.0</flyway_version>
-        <hibernate_version>5.6.12.Final</hibernate_version>
+        <hibernate_version>5.6.15.Final</hibernate_version>
         <hibernate_search_version>6.1.6.Final</hibernate_search_version>
         <!-- Update lucene version when you update hibernate-search version -->
-        <lucene_version>8.11.0</lucene_version>
+        <lucene_version>8.11.1</lucene_version>
         <hamcrest_version>2.2</hamcrest_version>
         <hibernate_validator_version>6.1.5.Final</hibernate_validator_version>
         <httpcore_version>4.4.13</httpcore_version>
@@ -94,8 +93,8 @@
         <servicemix_saxon_version>9.8.0-15</servicemix_saxon_version>
         <servicemix_xmlresolver_version>1.2_5</servicemix_xmlresolver_version>
         <swagger_version>2.1.12</swagger_version>
-        <slf4j_version>1.7.33</slf4j_version>
-        <log4j_to_slf4j_version>2.17.1</log4j_to_slf4j_version>
+        <slf4j_version>2.0.3</slf4j_version>
+        <log4j_to_slf4j_version>2.19.0</log4j_to_slf4j_version>
         <spring_version>5.3.27</spring_version>
         <spring_data_version>2.6.1</spring_data_version>
         <spring_batch_version>4.3.3</spring_batch_version>
