@@ -11,17 +11,17 @@
     </div>
 
     <script>
-        const logoImageUrl = "static/sample-logo.jpg"; // Change this to the path of your logo image
-        const defaultLogoImageUrl = "img/sample-logo.jpg"; // Change this to the path of your default logo image
+        const customlogoImageUrl = "static/logo.jpg"; // Custom logo
+        const defaultLogoImageUrl = "img/sample-logo.jpg"; // Default logo
         const logoImageElement = document.getElementById("logo");
 
         // Check if the logo image is available
         const logoImg = new Image();
-        logoImg.src = logoImageUrl;
+        logoImg.src = customlogoImageUrl;
 
         logoImg.onload = function() {
             // Logo image is available
-            logoImageElement.src = logoImageUrl;
+            logoImageElement.src = customlogoImageUrl;
         };
 
         logoImg.onerror = function() {
