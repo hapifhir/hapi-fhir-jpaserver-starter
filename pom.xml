@@ -20,10 +20,10 @@
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
 
     <groupId>org.smartregister</groupId>
-    <version>6.1.5-SNAPSHOT</version>
+    <version>6.1.6-SNAPSHOT</version>
     
     <properties>
-        <hapi.fhir.version>6.1.0</hapi.fhir.version>
+        <hapi.fhir.version>6.1.1</hapi.fhir.version>
         <spring_boot_version>2.5.6</spring_boot_version>
         <java.version>11</java.version>
     </properties>
@@ -159,7 +159,7 @@
         <dependency>
             <groupId>org.smartregister.hapi-fhir-opensrp-extensions</groupId>
             <artifactId>location</artifactId>
-            <version>0.0.8-SNAPSHOT</version>
+            <version>0.0.9-SNAPSHOT</version>
         </dependency>
 
         <dependency>
