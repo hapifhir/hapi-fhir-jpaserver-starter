@@ -14,8 +14,8 @@ spring:
     check-location: false
     baselineOnMigrate: true
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
-    #url: jdbc:h2:mem:test_mem
+    #url: 'jdbc:h2:file:./target/database/h2'
+    url: jdbc:h2:mem:test_mem
     username: sa
     password: null
     driverClassName: org.h2.Driver
@@ -68,9 +68,9 @@ hapi:
     ### alternatively, it may be set using the X-Forwarded-Proto header.
     #   use_apache_address_strategy_https: false
     ### enables the server to host content like HTML, css, etc. under the url pattern of eg. /static/**
-    # staticLocationPrefix: /static
+    staticLocationPrefix: /static
     ### the deepest folder level will be used. E.g. - if you put file:/foo/bar/bazz as value then the files are resolved under /static/bazz/**
-    #staticLocation: file:/foo/bar/bazz
+    staticLocation: /Users/jkiddo/work/hapi-fhir-jpaserver-starter/foo/
     ### enable to set the Server URL
     #    server_address: http://hapi.fhir.org/baseR4
     #    defer_indexing_for_codesystems_of_size: 101
