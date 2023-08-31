@@ -42,6 +42,15 @@
         </repository>
     </repositories>
 
+    <dependencyManagement>
+       <dependencies>
+           <dependency>
+               <groupId>org.glassfish.jaxb</groupId>
+               <artifactId>jaxb-runtime</artifactId>
+               <version>2.3.8</version>
+           </dependency>
+       </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -62,17 +71,7 @@
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
         </dependency>
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>2.3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-ri</artifactId>
-            <version>2.3.5</version>
-            <type>pom</type>
-        </dependency>
+
         <!-- Needed for Email subscriptions -->
         <dependency>
             <groupId>org.simplejavamail</groupId>
@@ -214,11 +213,6 @@
         <!-- webjars -->
         <dependency>
             <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>5.1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
             <artifactId>Eonasdan-bootstrap-datetimepicker</artifactId>
         </dependency>
         <dependency>
@@ -252,6 +246,12 @@
             <artifactId>hapi-fhir-jpaserver-test-utilities</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -319,7 +319,7 @@
         <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
-            <version>4.1.0</version>
+            <version>4.2.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -339,14 +339,14 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
-            <version>1.9.4</version>
+            <version>1.11.3</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>1.9.4</version>
+            <version>1.11.3</version>
         </dependency>
 
         <dependency>
@@ -402,7 +402,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.6.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.1.2</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -430,7 +435,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.11.0</version>
                 <configuration>
                     <release>11</release>
                 </configuration>
@@ -581,7 +586,7 @@
          -->
 
         <!-- example of how to start the server using spring boot-->
-        <!-- mvn clean package spring-boot:repackage -Pboot && java -jar target/hapi-fhir-jpaserver.war -->
+        <!-- mvn clean package spring-boot:repackage -Pboot && java -jar target/ROOT.war -->
 
         <!-- Use the boot profile for development and debugging options when using your IDE -->
         <profile>
