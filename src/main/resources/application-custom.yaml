@@ -168,7 +168,7 @@ hapi:
     max_binary_size: 104857600
     max_page_size: 200
     retain_cached_searches_mins: 60
-    reuse_cached_search_results_millis: ${reuse_cached_search_results_millis}
+    reuse_cached_search_results_millis: 0
     tester:
       home:
         name: Local Tester
@@ -186,8 +186,8 @@ hapi:
     binary_storage_enabled: true
     bulk_export_enabled: true
     subscription:
-      resthook_enabled: ${subscription.resthook.enabled}
-      websocket_enabled: ${subscription.websocket.enabled}
+      resthook_enabled: true
+      websocket_enabled: true
 #      email:
 #        from: some@test.com
 #        host: google.com
