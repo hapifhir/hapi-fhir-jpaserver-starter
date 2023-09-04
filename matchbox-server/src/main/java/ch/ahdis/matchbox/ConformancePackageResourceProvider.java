@@ -346,62 +346,72 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 
 		CliContext cliContext = new CliContext(this.cliContext);
 		cliContext.setFhirVersion(getFhirVersion(theResource));
+		if (cliContext.getOnlyOneEngine()) {
 
-		if (classR4.isInstance(theResource)) {
-			R4 r = classR4.cast(theResource);
-			url = r.getUrl();
-		}
-		if (classR4B.isInstance(theResource)) {
-			R4B r = classR4B.cast(theResource);
-			url = r.getUrl();
-		}
-		if (classR5.isInstance(theResource)) {
-			R5 r = classR5.cast(theResource);
-			url = r.getUrl();
-		}
-	
-		if (url != null) {
-			MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(url, cliContext, true, false);
-			if (matchboxEngine == null) {
-				matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", cliContext, true, false);
+			if (classR4.isInstance(theResource)) {
+				R4 r = classR4.cast(theResource);
+				url = r.getUrl();
 			}
-			if (matchboxEngine != null) {
-				Resource existing = matchboxEngine.getCanonicalResource(url);
-				if (existing != null) {
-					theResource.setId(existing.getId());
-					matchboxEngine.dropResource(resourceType, existing.getId());
-				} else {
-					if (theResource.getIdElement().isEmpty()) {
-						theResource.setId(url.substring(url.lastIndexOf("/") + 1));
-					}  else {
-						theResource.setId(theResource.getIdElement().getIdPart());
+			if (classR4B.isInstance(theResource)) {
+				R4B r = classR4B.cast(theResource);
+				url = r.getUrl();
+			}
+			if (classR5.isInstance(theResource)) {
+				R5 r = classR5.cast(theResource);
+				url = r.getUrl();
+			}
+		
+			if (url != null) {
+				MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(url, cliContext, true, false);
+				if (matchboxEngine == null) {
+					matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", cliContext, true, false);
+				}
+				if (matchboxEngine != null) {
+					Resource existing = matchboxEngine.getCanonicalResource(url);
+					if (existing != null) {
+						theResource.setId(existing.getId());
+						matchboxEngine.dropResource(resourceType, existing.getId());
+					} else {
+						if (theResource.getIdElement().isEmpty()) {
+							theResource.setId(url.substring(url.lastIndexOf("/") + 1));
+						}  else {
+							theResource.setId(theResource.getIdElement().getIdPart());
+						}
 					}
+					if (classR4.isInstance(theResource)) {
+						R4 r4 = classR4.cast(theResource);
+						matchboxEngine.addCanonicalResource(r4);
+					}
+					if (classR4B.isInstance(theResource)) {
+						R4B r4b = classR4B.cast(theResource);
+						matchboxEngine.addCanonicalResource(r4b);
+					}
+					if (classR5.isInstance(theResource)) {
+						R5 r5 = classR5.cast(theResource);
+						matchboxEngine.addCanonicalResource(r5);
+					}
+					MethodOutcome methodOutcome = new MethodOutcome();
+					methodOutcome.setCreated(true);
+					methodOutcome.setResource(theResource);
+					return methodOutcome;
 				}
-				if (classR4.isInstance(theResource)) {
-					R4 r4 = classR4.cast(theResource);
-					matchboxEngine.addCanonicalResource(r4);
-				}
-				if (classR4B.isInstance(theResource)) {
-					R4B r4b = classR4B.cast(theResource);
-					matchboxEngine.addCanonicalResource(r4b);
-				}
-				if (classR5.isInstance(theResource)) {
-					R5 r5 = classR5.cast(theResource);
-					matchboxEngine.addCanonicalResource(r5);
-				}
-				MethodOutcome methodOutcome = new MethodOutcome();
-				methodOutcome.setCreated(true);
-				methodOutcome.setResource(theResource);
-				return methodOutcome;
 			}
+			MethodOutcome outcome = new MethodOutcome();
+			outcome.setResponseStatusCode(400);
+			outcome.setCreated(false);
+			OperationOutcome operationOutcome = new OperationOutcome();
+			operationOutcome.addIssue().setDiagnostics("machbox engine not found for url " + url + " and fhir version " + cliContext.getFhirVersion());
+			outcome.setOperationOutcome(operationOutcome);
+			return outcome;
+		} else {
+			MethodOutcome outcome = new MethodOutcome();
+			outcome.setResponseStatusCode(400);
+			outcome.setCreated(false);
+			OperationOutcome operationOutcome = new OperationOutcome();
+			operationOutcome.addIssue().setDiagnostics("Creating conformance resources is only allowd in development mode, set matchbox.fhir.context.onlyOneEngine=true in application.yaml");
+			outcome.setOperationOutcome(operationOutcome);
+			return outcome;
 		}
-		MethodOutcome outcome = new MethodOutcome();
-		outcome.setResponseStatusCode(400);
-		outcome.setCreated(false);
-		OperationOutcome operationOutcome = new OperationOutcome();
-		operationOutcome.addIssue().setDiagnostics("machbox engine not found for url " + url + " and fhir version " + cliContext.getFhirVersion());
-		outcome.setOperationOutcome(operationOutcome);
-		return outcome;
 	}
 
 	@Update
@@ -411,63 +421,71 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 		String url = null;
 		CliContext cliContext = new CliContext(this.cliContext);
 		cliContext.setFhirVersion(getFhirVersion(theResource));
-
-		if (classR4.isInstance(theResource)) {
-			R4 r = classR4.cast(theResource);
-			url = r.getUrl();
-		}
-		if (classR4B.isInstance(theResource)) {
-			R4B r = classR4B.cast(theResource);
-			url = r.getUrl();
-		}
-		if (classR5.isInstance(theResource)) {
-			R5 r = classR5.cast(theResource);
-			url = r.getUrl();
-		}
-
-		if (url!=null) {
-			MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(url, cliContext, true, false);
-			if (matchboxEngine == null) {
-				matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", cliContext, true, false);
+		if (cliContext.getOnlyOneEngine()) {
+			if (classR4.isInstance(theResource)) {
+				R4 r = classR4.cast(theResource);
+				url = r.getUrl();
 			}
-			if (matchboxEngine != null) {
-				Resource existing = matchboxEngine.getCanonicalResource(url);
-				if (existing != null) {
-					theResource.setId(existing.getId());
-					matchboxEngine.dropResource(resourceType, existing.getId());
-				} else {
-					if (theResource.getIdElement().isEmpty()) {
-						theResource.setId(url.substring(url.lastIndexOf("/") + 1));
-					}  else {
-						theResource.setId(theResource.getIdElement().getIdPart());
+			if (classR4B.isInstance(theResource)) {
+				R4B r = classR4B.cast(theResource);
+				url = r.getUrl();
+			}
+			if (classR5.isInstance(theResource)) {
+				R5 r = classR5.cast(theResource);
+				url = r.getUrl();
+			}
+
+			if (url!=null) {
+				MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(url, cliContext, true, false);
+				if (matchboxEngine == null) {
+					matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", cliContext, true, false);
+				}
+				if (matchboxEngine != null) {
+					Resource existing = matchboxEngine.getCanonicalResource(url);
+					if (existing != null) {
+						theResource.setId(existing.getId());
+						matchboxEngine.dropResource(resourceType, existing.getId());
+					} else {
+						if (theResource.getIdElement().isEmpty()) {
+							theResource.setId(url.substring(url.lastIndexOf("/") + 1));
+						}  else {
+							theResource.setId(theResource.getIdElement().getIdPart());
+						}
 					}
+					if (classR4.isInstance(theResource)) {
+						R4 r4 = classR4.cast(theResource);
+						matchboxEngine.addCanonicalResource(r4);
+					}
+					if (classR4B.isInstance(theResource)) {
+						R4B r4b = classR4B.cast(theResource);
+						matchboxEngine.addCanonicalResource(r4b);
+					}
+					if (classR5.isInstance(theResource)) {
+						R5 r5 = classR5.cast(theResource);
+						matchboxEngine.addCanonicalResource(r5);
+					}
+					MethodOutcome methodOutcome = new MethodOutcome();
+					methodOutcome.setCreated(false);
+					methodOutcome.setResource(theResource);
+					return methodOutcome;
 				}
-				if (classR4.isInstance(theResource)) {
-					R4 r4 = classR4.cast(theResource);
-					matchboxEngine.addCanonicalResource(r4);
-				}
-				if (classR4B.isInstance(theResource)) {
-					R4B r4b = classR4B.cast(theResource);
-					matchboxEngine.addCanonicalResource(r4b);
-				}
-				if (classR5.isInstance(theResource)) {
-					R5 r5 = classR5.cast(theResource);
-					matchboxEngine.addCanonicalResource(r5);
-				}
-				MethodOutcome methodOutcome = new MethodOutcome();
-				methodOutcome.setCreated(false);
-				methodOutcome.setResource(theResource);
-				return methodOutcome;
 			}
+			MethodOutcome outcome = new MethodOutcome();
+			outcome.setResponseStatusCode(400);
+			outcome.setCreated(false);
+			OperationOutcome operationOutcome = new OperationOutcome();
+			operationOutcome.addIssue().setDiagnostics("machbox engine not found for url " + url + " and fhir version " + cliContext.getFhirVersion());
+			outcome.setOperationOutcome(operationOutcome);
+			return outcome;
+		} else {
+			MethodOutcome outcome = new MethodOutcome();
+			outcome.setResponseStatusCode(400);
+			outcome.setCreated(false);
+			OperationOutcome operationOutcome = new OperationOutcome();
+			operationOutcome.addIssue().setDiagnostics("Updating conformance resources is only allowd in development mode, set matchbox.fhir.context.onlyOneEngine=true in application.yaml");
+			outcome.setOperationOutcome(operationOutcome);
+			return outcome;
 		}
-		MethodOutcome outcome = new MethodOutcome();
-		outcome.setResponseStatusCode(400);
-		outcome.setCreated(false);
-		OperationOutcome operationOutcome = new OperationOutcome();
-		operationOutcome.addIssue().setDiagnostics("machbox engine not found for url " + url + " and fhir version " + cliContext.getFhirVersion());
-		outcome.setOperationOutcome(operationOutcome);
-		return outcome;
-
 	}
 
 	@Override

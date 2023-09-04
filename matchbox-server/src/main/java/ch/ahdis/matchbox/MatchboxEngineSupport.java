@@ -6,7 +6,6 @@ import java.util.Locale;
 
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.MetadataResource;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
 import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.validation.IgLoader;
@@ -255,8 +254,7 @@ public class MatchboxEngineSupport {
 			ig = "hl7.fhir.r4b.core#4.3.0";
 		}
 		if (cliContext.getFhirVersion().startsWith("5.0")) {
-			// FIXME
-			ig = "hl7.fhir.core#5.0.0-snapshot3";
+			ig = "hl7.fhir.core#5.0.0";
 		}
 		return ig;
 	}
@@ -306,7 +304,8 @@ public class MatchboxEngineSupport {
 						myBinaryStorageSvc, myTxManager);
 
 			} catch (IOException e) {
-				log.error("error generating matchbox engine", e);
+				log.error("error generating matchbox engine, loader could not be created", e);
+				return null;
 			}
 			engine.setIgLoader(igLoader);
 			try {
@@ -321,18 +320,31 @@ public class MatchboxEngineSupport {
 			}
 			log.info("cached default engine forever" +(cliContext.getIg()!=null ? "for "+cliContext.getIg() : "" ) +" with parameters "+cliContext.hashCode());
 			sessionCache.cacheSessionForEver(""+cliContext.hashCode(), engine);
-			
+
 			if (cliContext.getIgsPreloaded()!=null && cliContext.getIgsPreloaded().length>0) {
 				for (String ig : cliContext.getIgsPreloaded()) {
-					CliContext cliContextCp = new CliContext(this.cliContext);
-					cliContextCp.setIg(ig); // set the ig in the cliContext that hashCode will be set
-					if (this.sessionCache.fetchSessionValidatorEngine(""+cliContextCp.hashCode()) == null ) {
-						MatchboxEngine created = this.createMatchboxEngine(engine, ig, cliContextCp);
-						sessionCache.cacheSessionForEver(""+cliContextCp.hashCode(), created);
-						log.info("cached validate engine forever" +(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContextCp.hashCode());
+					if (cliContext.getOnlyOneEngine()) {
+						try {
+							igLoader.loadIg(engine.getIgs(), engine.getBinaries(), ig, true);
+						} catch (FHIRException | IOException e) {
+							log.error("error generating matchbox engine due to igLoader", e);
+						}
+					} else {
+						CliContext cliContextCp = new CliContext(this.cliContext);
+						cliContextCp.setIg(ig); // set the ig in the cliContext that hashCode will be set
+						if (this.sessionCache.fetchSessionValidatorEngine(""+cliContextCp.hashCode()) == null ) {
+							MatchboxEngine created = this.createMatchboxEngine(engine, ig, cliContextCp);
+							sessionCache.cacheSessionForEver(""+cliContextCp.hashCode(), created);
+							log.info("cached validate engine forever" +(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContextCp.hashCode());
+						}
 					}
 				}
 			}
+
+			if (cliContext.getOnlyOneEngine()) {
+				log.info("Only one engine will be provided with the preloaded ig's mentioned in application.yaml, cannot handle multiple versions of ig's, DEVELOPMENT ONLY MODE");
+			}
+
 		}
 
 		if (cliContext == null) {
@@ -367,9 +379,20 @@ public class MatchboxEngineSupport {
 			this.setInitialized(true);
 		}
 
+		if (cliContext.getOnlyOneEngine()) {
+			if (create && cliContext.getIg()!=null) {
+				try {
+					engine.getIgLoader().loadIg(engine.getIgs(), engine.getBinaries(), cliContext.getIg(), true);
+				} catch (FHIRException | IOException e) {
+					log.error("error generating matchbox engine due to igLoader", e);
+				}
+			}
+			return engine;
+		}
+
 		// check if we have already a validator in cache for that
 		MatchboxEngine matchboxEngine = (MatchboxEngine) this.sessionCache.fetchSessionValidatorEngine(""+cliContext.hashCode());
-		if (matchboxEngine!=null && reload == false) {
+		if ((matchboxEngine!=null && reload == false)) {
 			log.info("using cached validate engine" +(cliContext.getIg()!=null ? "for "+cliContext.getIg() : "" ) +" with parameters "+cliContext.hashCode());
 			return matchboxEngine;
 		}
