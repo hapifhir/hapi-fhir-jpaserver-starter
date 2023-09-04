@@ -2,6 +2,7 @@ package ch.ahdis.matchbox;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.hl7.fhir.convertors.conv40_50.VersionConvertor_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.instance.model.api.IBaseBinary;
@@ -137,43 +139,58 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 			SearchContainedModeEnum theSearchContainedMode
 
 	) {
-		try {
-			return new TransactionTemplate(myTxManager).execute(tx -> {
-				final int offset = (theOffset == null ? 0 : theOffset.intValue());
-				final int count = (theCount == null ? 10000 : theCount.intValue());
-				Slice<NpmPackageVersionResourceEntity> outcome = null;
+		if ("ImplementationGuide".equals(resourceType)) {
+			try {
+				return new TransactionTemplate(myTxManager).execute(tx -> {
+					final int offset = (theOffset == null ? 0 : theOffset.intValue());
+					final int count = (theCount == null ? 10000 : theCount.intValue());
+					Slice<NpmPackageVersionResourceEntity> outcome = null;
 
-				if (the_id != null) {
-					String pid = the_id.getValuesAsQueryTokens().get(0).getValuesAsQueryTokens().get(0).getValue();
-					outcome = myPackageVersionResourceDao.findByResourceTypeById(PageRequest.of(offset, count),
-							resourceType,
-							Long.parseLong(pid));
-				} else {
-					if (theUrl != null) {
-						String url = theUrl.getValuesAsQueryTokens().get(0).getValuesAsQueryTokens().get(0).getValue();
-						if (theCanonicalVersion != null) {
-							String canonicalVersion = theCanonicalVersion.getValuesAsQueryTokens().get(0)
-									.getValuesAsQueryTokens().get(0).getValue();
-							outcome = myPackageVersionResourceDao.findByResourceTypeByCanonicalByCanonicalVersion(
-									PageRequest.of(offset, count), resourceType, url, canonicalVersion);
-						} else {
-							outcome = myPackageVersionResourceDao
-									.findByResourceTypeByCanoncial(PageRequest.of(offset, count), resourceType, url);
-						}
+					if (the_id != null) {
+						String pid = the_id.getValuesAsQueryTokens().get(0).getValuesAsQueryTokens().get(0).getValue();
+						outcome = myPackageVersionResourceDao.findByResourceTypeById(PageRequest.of(offset, count),
+								resourceType,
+								Long.parseLong(pid));
 					} else {
-						outcome = myPackageVersionResourceDao.findByResourceType(PageRequest.of(offset, count),
-								resourceType);
+						if (theUrl != null) {
+							String url = theUrl.getValuesAsQueryTokens().get(0).getValuesAsQueryTokens().get(0).getValue();
+							if (theCanonicalVersion != null) {
+								String canonicalVersion = theCanonicalVersion.getValuesAsQueryTokens().get(0)
+										.getValuesAsQueryTokens().get(0).getValue();
+								outcome = myPackageVersionResourceDao.findByResourceTypeByCanonicalByCanonicalVersion(
+										PageRequest.of(offset, count), resourceType, url, canonicalVersion);
+							} else {
+								outcome = myPackageVersionResourceDao
+										.findByResourceTypeByCanoncial(PageRequest.of(offset, count), resourceType, url);
+							}
+						} else {
+							outcome = myPackageVersionResourceDao.findByResourceType(PageRequest.of(offset, count),
+									resourceType);
+						}
 					}
-				}
 
+					SimpleBundleProvider bundleProvider = new SimpleBundleProvider(
+							outcome.stream().map(t -> loadPackageEntityAdjustId(t)).collect(Collectors.toList()));
+					bundleProvider.setCurrentPageOffset(offset);
+					bundleProvider.setCurrentPageSize(count);
+					return bundleProvider;
+				});
+			} finally {
+				}
+		} 
+		
+		if (cliContext.getOnlyOneEngine()){
+			List<org.hl7.fhir.r5.model.Resource> resources = new ArrayList<org.hl7.fhir.r5.model.Resource>();
+			MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(null, cliContext,
+					false, false);
+			if (matchboxEngine != null) {
+				resources.addAll(matchboxEngine.getContext().fetchResourcesByType(classR5));
 				SimpleBundleProvider bundleProvider = new SimpleBundleProvider(
-						outcome.stream().map(t -> loadPackageEntityAdjustId(t)).collect(Collectors.toList()));
-				bundleProvider.setCurrentPageOffset(offset);
-				bundleProvider.setCurrentPageSize(count);
+				resources.stream().map(t -> VersionConvertorFactory_40_50.convertResource(t)).collect(Collectors.toList()));
 				return bundleProvider;
-			});
-		} finally {
 			}
+		}
+		return null;
 	}
 
 	public List<CanonicalType> getCanonicals() {
@@ -302,7 +319,7 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 			
 					// if is current we check if already loaded in a own engine and might be updated
 					// in the cache
-					if (res.getPackageVersion().isCurrentVersion()) {
+					if (res.getPackageVersion().isCurrentVersion() || cliContext.getOnlyOneEngine()) {
 						MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(url, cliContext,
 								false, false);
 						if (matchboxEngine != null) {
