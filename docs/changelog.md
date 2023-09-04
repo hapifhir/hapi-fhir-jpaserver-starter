@@ -1,3 +1,9 @@
+2023/09/04 Release 3.4.1
+
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.1`
+- development mode to create conformance resources [#125](https://github.com/ahdis/matchbox/issues/125)
+- matchbox version in capability statement [matchbox#126](https://github.com/ahdis/matchbox/issues/126)
+
 2023/08/30 Release 3.4.0
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.0`

@@ -149,6 +149,12 @@ public class CliContext {
     return igsPreloaded;
   }
 
+  private boolean onlyOneEngine = false;
+
+  public boolean getOnlyOneEngine() {
+    return this.onlyOneEngine;
+  }
+
   @Autowired
   public CliContext(Environment environment) {
     		// get al list of all JsonProperty of cliContext with return values property name and property type
@@ -172,6 +178,7 @@ public class CliContext {
 		}
     // get properties array from the environment?
     this.igsPreloaded = environment.getProperty("matchbox.fhir.context.igsPreloaded", String[].class);
+    this.onlyOneEngine = environment.getProperty("matchbox.fhir.context.onlyOneEngine", Boolean.class, false);
   }
 
   public CliContext(CliContext other) {
@@ -189,6 +196,7 @@ public class CliContext {
 			} 
 		}
     this.igsPreloaded = other.igsPreloaded;
+    this.onlyOneEngine = other.onlyOneEngine;
   }
 
   @JsonProperty("ig")

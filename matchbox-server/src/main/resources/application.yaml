@@ -56,6 +56,9 @@ hapi:
         name: hl7.fhir.uv.extensions.r4
         version: 1.0.0
         url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
+    #      ch-core:
+    #        name: ch.fhir.ig.ch-core
+    #        version: 4.0.0-ballot
     staticLocation: file:/apps/
     openapi_enabled: true
     fhir_version: R4
@@ -67,3 +70,5 @@ matchbox:
     context:
       fhirVersion: 4.0.1
       txServer: n/a
+#      onlyOneEngine: true
+#      igsPreloaded: ch.fhir.ig.ch-core#4.0.0-ballot

@@ -8,11 +8,14 @@ import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.OperationDefinition.OperationDefinitionParameterComponent;
 import org.hl7.fhir.r4.model.OperationDefinition.OperationParameterUse;
 
+import com.fasterxml.jackson.databind.deser.DataFormatReaders.Match;
+
 import ca.uhn.fhir.rest.annotation.IdParam;
 import ca.uhn.fhir.rest.annotation.Read;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.provider.ServerCapabilityStatementProvider;
+import ch.ahdis.matchbox.engine.cli.VersionUtil;
 
 public class MatchboxCapabilityStatementProvider extends ServerCapabilityStatementProvider {
 
@@ -25,8 +28,12 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 	public MatchboxCapabilityStatementProvider(RestfulServer theServerConfiguration, StructureDefinitionResourceProvider structureDefinitionProvider, CliContext cliContext) {
 		super(theServerConfiguration, null, null);
 		this.structureDefinitionProvider = structureDefinitionProvider;
-		this.setPublisher("matchbox-v3");
 		this.cliContext = cliContext;
+		theServerConfiguration.setServerName(VersionUtil.getPoweredBy());
+		theServerConfiguration.setServerVersion(VersionUtil.getVersion());
+		if (cliContext.getOnlyOneEngine()) {
+			theServerConfiguration.setImplementationDescription("Development mode");
+		}
 	}
 	
 	@Read(typeName = "OperationDefinition")

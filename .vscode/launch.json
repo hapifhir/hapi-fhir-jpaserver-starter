@@ -15,7 +15,10 @@
       "name": "Launch MatchboxCli",
       "request": "launch",
       "mainClass": "ch.ahdis.matchbox.engine.cli.MatchboxCli",
-      "projectName": "${workspaceFolder}/matchbox-engine"
+      "projectName": "matchbox-engine",
+      "args": "-transform test.map",
+      "vmArgs": "-Dlog.ch.ahdis.matchbox.engine.CdaMappingEngine=error",
+      "cwd": "${workspaceFolder}/matchbox-engine"
     },
     {
       "type": "java",
