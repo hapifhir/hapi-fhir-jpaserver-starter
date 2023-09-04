@@ -7,9 +7,11 @@
 - FHIR Mapping Language endpoints for creation of StructureMaps and support for the [StructureMap/$transform](https://www.hl7.org/fhir/operation-structuremap-transform.html) operation
 - SDC (Structured Data Capture) [extraction](https://build.fhir.org/ig/HL7/sdc/extraction.html#map-extract) support based on the FHIR Mapping language and [Questionnaire/$extract](http://build.fhir.org/ig/HL7/sdc/OperationDefinition-QuestionnaireResponse-extract.html)
 
-a public test server is hosted at [https://test.ahdis.ch/matchboxv3/fhir](https://test.ahdis.ch/matchboxv3/fhir) with a corresponding gui [https://test.ahdis.ch/matchboxv3/](https://test.ahdis.ch/matchboxv3/#)
+the server can be run in two configurations, development (allowing updating resources, set flag in application.yaml in matchbox.fhir.context.onlyOneEngine to true) or deployment (default), see also additional [documentation](https://ahdis.github.io/matchbox)
 
-see also additional [documentation](https://ahdis.github.io/matchbox)
+a public development server is hosted at [https://test.ahdis.ch/matchbox/fhir](https://test.ahdis.ch/matchbox/fhir) with a corresponding gui [https://test.ahdis.ch/matchbox/](https://test.ahdis.ch/matchbox/#)
+
+a public test server is hosted at [https://test.ahdis.ch/matchboxv3/fhir](https://test.ahdis.ch/matchboxv3/fhir) with a corresponding gui [https://test.ahdis.ch/matchboxv3/](https://test.ahdis.ch/matchboxv3/#)
 
 ## containers
 
