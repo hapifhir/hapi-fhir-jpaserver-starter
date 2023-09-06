@@ -31,6 +31,15 @@
     },
     {
       "type": "java",
+      "name": "Launch Matchbox-Server (preload)",
+      "request": "launch",
+      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+      "projectName": "matchbox-server",
+      "vmArgs": "-Dspring.config.additional-location=file:with-preload/application.yaml",
+      "cwd": "${workspaceFolder}/matchbox-server"
+    },
+    {
+      "type": "java",
       "name": "Launch Matchbox-Server",
       "request": "launch",
       "mainClass": "ca.uhn.fhir.jpa.starter.Application",

@@ -50,7 +50,7 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 this angular app is directly provided with matchbox
 
 ```
-ng build --configuration production --base-href /matchboxv3/
+ng build --configuration production
 rm -rf ../matchbox-server/src/main/resources/static/*
 cp -r dist/* ../matchbox-server/src/main/resources/static
 ```
