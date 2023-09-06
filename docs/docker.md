@@ -3,13 +3,13 @@
 if you have the rights you can download Matchbox as a docker container:
 
 ```
-docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.1
+docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.2
 ```
 
 ## Configurable base image:
 
 ```bash
-docker run -d --name matchbox -p 8080:8080 -v /Users/oliveregger/apps/:/apps/ matchbox
+docker run -d --name matchbox -p 8080:8080 -e matchbox.fhir.context.onlyOneEngine=true -v /Users/oliveregger/apps/:/apps/ matchbox
 ```
 
 Server will then be accessible at http://localhost:8080/matchboxv3/fhir/metadata.
@@ -17,8 +17,9 @@ Server will then be accessible at http://localhost:8080/matchboxv3/fhir/metadata
 The local volume /Users/oliveregger/apps/ will be mapped inside the container and Matchbox will serve the content
 if is requested via http://localhost:8080/matchboxv3/apps/ (allows you to add own html apps).
 
-We recommend to put at least 2.5 GB of RAM for the container instance, depending on how many ig's yoiu plan to install
-and want to use.
+The last parameter is to set development environment, which allows you to create/update conformance resources (e.g. transfrom StructureMaps). If not provided, you need to provide the conformance resources by an FHIR Implementation Guide.
+
+We recommend to put at least 2.5 GB of RAM for the container instance, depending on how many ig's yoiu plan to install and want to use.
 
 ## Live and Readyness checks
 
