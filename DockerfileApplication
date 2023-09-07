@@ -40,4 +40,4 @@ USER 1001:1001
 WORKDIR /app
 COPY HealthCheck.java .
 CMD ["/app/main.war"]
-HEALTHCHECK --interval=100s --timeout=5s --retries=2 CMD ["java", "HealthCheck.java", "||", "exit", "1"]
+HEALTHCHECK --interval=100s --timeout=100s --retries=5 CMD ["java", "HealthCheck.java", "||", "exit", "1"]
