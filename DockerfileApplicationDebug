@@ -3,7 +3,6 @@ WORKDIR /tmp/hapi-fhir-jpaserver-starter
 
 COPY pom.xml .
 COPY server.xml .
-ADD libs /root/.m2/repository/
 
 COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
 RUN mvn  -T 12 clean install -DskipTests -Djdk.lang.Process.launchMechanism=vfork -Dmaven.artifact.threads=30

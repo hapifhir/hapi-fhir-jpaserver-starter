@@ -48,11 +48,8 @@
             <url>https://repo.maven.apache.org</url>
         </repository>
         <repository>
-            <id>local-repo</id>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <url>file://root/.m2/repository</url>
+            <id>sonatype-releases</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/releases/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -62,7 +59,7 @@
             <version>${jetty_version}</version>
         </dependency>
         <dependency>
-            <groupId>com.iprd.report</groupId>
+            <groupId>org.opencampaignlink</groupId>
             <artifactId>report-generator-jvm</artifactId>
             <version>1.0.28</version>
         </dependency>
