@@ -26,7 +26,9 @@ import java.util.List;
 @Service
 public class TusService {
 	private static final Logger logger = LoggerFactory.getLogger(TusService.class);
-	private static final long FIXED_DELAY = 50 * 60000;
+	private static final long FIXED_DELAY = 15 * 60000;
+
+	private static final long INITIAl_DELAY = 5 * 60000;
 	@Autowired
 	AppProperties appProperties;
 	@Autowired
@@ -42,7 +44,7 @@ public class TusService {
 		}
 	}
 
-	@Scheduled(fixedDelay = FIXED_DELAY)
+	@Scheduled(initialDelay = INITIAl_DELAY, fixedDelay = FIXED_DELAY)
 	private void transferImageToFinalStorageScheduler() throws TusException, IOException{
 		List<String> subDirectories = getSubDirectories(appProperties.getImage_path() + File.separator + "uploads");
 		if(!subDirectories.isEmpty()){
@@ -77,7 +79,7 @@ public class TusService {
 			// Get the complete byte array from the ByteArrayOutputStream.
 			byte[] completeByteArray = byteArrayOutputStream.toByteArray();
 			BufferedImage image = byteArrayToBufferedImage(completeByteArray);
-			boolean isImageSaved = saveImageToFile(image, appProperties.getImage_path(), fileName);
+			boolean isImageSaved = saveImageToFile(tusFileUploadService, image, appProperties.getImage_path(), fileName, uploadUrl);
 			if (isImageSaved)
 				tusFileUploadService.deleteUpload(uploadUrl);
 		} catch (FileNotFoundException e){
@@ -107,13 +109,14 @@ public class TusService {
 		return ImageIO.read(inputStream);
 	}
 
-	private static boolean saveImageToFile(BufferedImage image, String folderPath, String fileName) throws IOException {
+	private static boolean saveImageToFile(TusFileUploadService tusFileUploadService, BufferedImage image, String folderPath, String fileName, String uploadUrl) throws IOException, TusException {
 		Path outputPath = Paths.get(folderPath, fileName);
 		File outputFile = outputPath.toFile();
 
 		// Create parent directories if they don't exist
 		Files.createDirectories(outputPath.getParent());
 		if(outputFile.exists()){
+			tusFileUploadService.deleteUpload(uploadUrl);
 			logger.warn("File already exists with the name" + fileName);
 		}else{
 			if (image != null)
