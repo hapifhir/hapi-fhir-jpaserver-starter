@@ -2,6 +2,7 @@
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+		<includeMdcKeyName>X-Correlation-Id</includeMdcKeyName>
 			<fieldNames>
 				<timestamp>[ignore]</timestamp>
 				<version>[ignore]</version>
