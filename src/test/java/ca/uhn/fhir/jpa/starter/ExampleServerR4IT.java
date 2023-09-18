@@ -18,10 +18,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
@@ -33,10 +31,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
-import static java.lang.Thread.sleep;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.opencds.cqf.fhir.utility.r4.Parameters.parameters;
+import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -113,7 +112,7 @@ class ExampleServerR4IT implements IServerSupport{
 		Parameters.ParametersParameterComponent component = response.get(0);
 		assertTrue(component.getResource() instanceof MeasureReport);
 		MeasureReport report = (MeasureReport) component.getResource();
-		assertEquals(measureUrl, report.getMeasure());
+		assertEquals(measureUrl + "|0.0.003", report.getMeasure());
 	}
 
 	private org.hl7.fhir.r4.model.Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
@@ -121,6 +120,21 @@ class ExampleServerR4IT implements IServerSupport{
 		org.hl7.fhir.r4.model.Bundle bundle = (org.hl7.fhir.r4.model.Bundle) theCtx.newJsonParser().parseResource(json);
 		org.hl7.fhir.r4.model.Bundle result = theClient.transaction().withBundle(bundle).execute();
 		return result;
+	}
+
+	public Parameters runCqlExecution(Parameters parameters){
+
+		var results = ourClient.operation().onServer()
+			.named("$cql")
+			.withParameters(parameters)
+			.execute();
+		return results;
+	}
+	@Test
+	void testSimpleDateCqlExecutionProvider() {
+		Parameters params = parameters(stringPart("expression", "Interval[Today() - 2 years, Today())"));
+		Parameters results = runCqlExecution(params);
+		assertTrue(results.getParameter("return").getValue() instanceof Period);
 	}
 
 	private IBaseResource loadRec(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
@@ -260,10 +274,10 @@ class ExampleServerR4IT implements IServerSupport{
 
 		Parameters params = new Parameters();
 		params.addParameter().setName("periodStart").setValue(new DateType(periodStartValid));
-		params.addParameter().setName("subject").setValue(new DateType(periodEndValid));
-		params.addParameter().setName("status").setValue(new StringType(subjectPatientValid));
-		params.addParameter().setName("measureId").setValue(new StringType(statusValid));
-		params.addParameter().setName("").setValue(new StringType(measureIdValid));
+		params.addParameter().setName("periodEnd").setValue(new DateType(periodEndValid));
+		params.addParameter().setName("subject").setValue(new StringType(subjectPatientValid));
+		params.addParameter().setName("status").setValue(new StringType(statusValid));
+		params.addParameter().setName("measureId").setValue(new IdType(measureIdValid));
 
 
 		assertDoesNotThrow(() -> {

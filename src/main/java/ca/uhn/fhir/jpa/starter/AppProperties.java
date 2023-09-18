@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import ca.uhn.fhir.cr.config.CrProperties;
+
 import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.LibraryBuilder;
 import org.hl7.fhir.r4.model.Bundle;
-import org.opencds.cqf.cql.evaluator.CqlOptions;
-import org.opencds.cqf.cql.evaluator.engine.CqlEngineOptions;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +28,6 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 @EnableConfigurationProperties
 public class AppProperties {
 	//cql settings
-	private CqlEngineOptions cqlEngineOptions = CqlEngineOptions.defaultOptions();
 	private Boolean cql_use_embedded_libraries = true;
 	private Boolean cql_runtime_debug_logging_enabled = false;
 	private Boolean cql_runtime_enable_validation = false;
@@ -385,50 +382,6 @@ public class AppProperties {
 		this.cql_compiler_translator_format = cqlTranslatorFormat;
 	}
 
-	private CqlTranslatorOptions cqlTranslatorOptions = new CqlTranslatorOptions(
-			getCqlTranslatorFormat(),
-			cql_compiler_enable_date_range_optimization,
-			cql_compiler_enable_annotations,
-			cql_compiler_enable_locators,
-			cql_compiler_enable_results_type,
-			isCqlCompilerVerifyOnly(),
-			cql_compiler_enable_detailed_errors,
-			getCqlCompilerErrorSeverityLevel(),
-			cql_compiler_disable_list_traversal,
-			cql_compiler_disable_list_demotion,
-			cql_compiler_disable_list_promotion,
-			cql_compiler_enable_interval_demotion,
-			cql_compiler_enable_interval_promotion,
-			cql_compiler_disable_method_invocation,
-			cql_compiler_require_from_keyword,
-			isCqlCompilerValidateUnits(),
-			cql_compiler_disable_default_model_info_load,
-			getCqlCompilerSignatureLevel(),
-			getCqlCompilerCompatibilityLevel());
-
-	public CqlTranslatorOptions getCqlTranslatorOptions() {
-		return this.cqlTranslatorOptions;
-	}
-
-	public void setCqlTranslator(CqlTranslatorOptions translator) {
-		this.cqlTranslatorOptions = translator;
-	}
-
-	public CqlEngineOptions getCqlEngineOptions() {
-		return this.cqlEngineOptions;
-	}
-
-	public void setCqlEngineOptions(CqlEngineOptions engine) {
-		this.cqlEngineOptions = engine;
-	}
-
-	public CqlOptions getCqlOptions() {
-		CqlOptions cqlOptions = new CqlOptions();
-		cqlOptions.setUseEmbeddedLibraries(this.cql_use_embedded_libraries);
-		cqlOptions.setCqlEngineOptions(this.getCqlEngineOptions());
-		cqlOptions.setCqlTranslatorOptions(this.getCqlTranslatorOptions());
-		return cqlOptions;
-	}
 
 	public Boolean getCr_enabled() {
 		return cr_enabled;
@@ -447,16 +400,6 @@ public class AppProperties {
 	public void setCareGapsSectionAuthor(String theCareGapsSectionAuthor) {this.caregaps_section_author = theCareGapsSectionAuthor;}
 	public void setCareGapsReporter(String theCareGapsReporter) {
 		this.caregaps_reporter = theCareGapsReporter;
-	}
-	public CrProperties.MeasureProperties getMeasureProperties(){
-		var measureProperties = new CrProperties.MeasureProperties();
-		var measureReportConfiguration = new CrProperties.MeasureProperties.MeasureReportConfiguration();
-		measureReportConfiguration.setCareGapsReporter(this.getCareGapsReporter());
-		measureReportConfiguration.setCareGapsCompositionSectionAuthor(this.getCareGapsSectionAuthor());
-
-		measureProperties.setMeasureReportConfiguration(measureReportConfiguration);
-
-		return measureProperties;
 	}
 	public Boolean getIps_enabled() {
 		return ips_enabled;
