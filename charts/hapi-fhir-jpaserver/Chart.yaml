@@ -7,17 +7,21 @@ sources:
   - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
 dependencies:
   - name: postgresql
-    version: 12.1.2
-    repository: https://charts.bitnami.com/bitnami
+    version: 12.5.6
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
-appVersion: 6.2.2
-version: 0.11.1
+appVersion: 6.6.0
+version: 0.13.0
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
+    - kind: added
+      description: allow specifying application properties via yaml config
+    - kind: added
+      description: allow setting resource limits and requests for the Helm test pods
     - kind: changed
-      description: updated HAPI FHIR JPA Server app image version to v6.2.2
+      description: updated curl used by helm tests to version to v8.2.0
     - kind: changed
-      description: updated curl used by helm tests to version to v7.87.0
+      description: allow disabling the liveness-, readiness-, and startup-probes entirely

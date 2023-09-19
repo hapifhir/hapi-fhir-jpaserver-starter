@@ -18,7 +18,7 @@ public class SocketImplementation {
 	private final String myCriteria;
 	protected String myError;
 	protected boolean myGotBound;
-	private final List<String> myMessages = new ArrayList<String>();
+	private final List<String> myMessages = new ArrayList<>();
 	protected int myPingCount;
 	protected String mySubsId;
 	private Session session;

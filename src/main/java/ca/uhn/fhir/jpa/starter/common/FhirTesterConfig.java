@@ -4,6 +4,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.to.FhirTesterMvcConfig;
 import ca.uhn.fhir.to.TesterConfig;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(FhirTesterMvcConfig.class)
+@Conditional(FhirTesterConfigCondition.class)
 public class FhirTesterConfig {
 
 	/**
@@ -26,7 +28,7 @@ public class FhirTesterConfig {
 	 * server, as well as one public server. If you are creating a project to
 	 * deploy somewhere else, you might choose to only put your own server's
 	 * address here.
-	 *
+	 * <p>
 	 * Note the use of the ${serverBase} variable below. This will be replaced with
 	 * the base URL as reported by the server itself. Often for a simple Tomcat
 	 * (or other container) installation, this will end up being something

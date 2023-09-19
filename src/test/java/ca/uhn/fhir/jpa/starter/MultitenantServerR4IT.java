@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     "hapi.fhir.partitioning.partitioning_include_in_search_hashes=false",
 
   })
-public class MultitenantServerR4IT {
+class MultitenantServerR4IT {
 
 
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
@@ -41,7 +41,7 @@ public class MultitenantServerR4IT {
 
 
   @Test
-  public void testCreateAndReadInTenantA() {
+  void testCreateAndReadInTenantA() {
 
 
     // Create tenant A
@@ -67,7 +67,7 @@ public class MultitenantServerR4IT {
   }
 
   @Test
-  public void testCreateAndReadInTenantB() {
+  void testCreateAndReadInTenantB() {
 
 
     // Create tenant A

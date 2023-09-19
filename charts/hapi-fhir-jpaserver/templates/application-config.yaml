@@ -1,0 +1,11 @@
+{{- if .Values.extraConfig -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hapi-fhir-jpaserver.fullname" . }}-application-config
+  labels:
+    {{- include "hapi-fhir-jpaserver.labels" . | nindent 4 }}
+data:
+  application-extra.yaml: |-
+    {{ .Values.extraConfig | nindent 4 }}
+{{- end }}

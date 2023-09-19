@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 		"hapi.fhir.subscription.websocket_enabled=false",
 		"spring.main.allow-bean-definition-overriding=true"
 })
-public class CustomBeanTest {
+class CustomBeanTest {
 
 	@Autowired
 	some.custom.pkg1.CustomBean customBean1;
