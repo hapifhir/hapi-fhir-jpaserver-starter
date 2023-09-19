@@ -3,6 +3,7 @@ package ch.ahdis.matchbox;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,7 +11,6 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.hl7.fhir.convertors.conv40_50.VersionConvertor_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.instance.model.api.IBaseBinary;
@@ -60,6 +60,8 @@ import ca.uhn.fhir.rest.param.TokenAndListParam;
 import ca.uhn.fhir.rest.param.UriAndListParam;
 import ca.uhn.fhir.rest.server.SimpleBundleProvider;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
+import ca.uhn.fhir.rest.server.exceptions.MethodNotAllowedException;
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.util.BinaryUtil;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ca.uhn.fhir.rest.api.MethodOutcome;
@@ -184,7 +186,14 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 			MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(null, cliContext,
 					false, false);
 			if (matchboxEngine != null) {
-				resources.addAll(matchboxEngine.getContext().fetchResourcesByType(classR5));
+
+				if (theUrl != null) {
+					String url = theUrl.getValuesAsQueryTokens().get(0).getValuesAsQueryTokens().get(0).getValue();
+					R5 r = matchboxEngine.getContext().fetchResource(classR5,url);
+					resources.add(r);
+				} else {
+					resources.addAll(matchboxEngine.getContext().fetchResourcesByType(classR5));
+				}
 				SimpleBundleProvider bundleProvider = new SimpleBundleProvider(
 				resources.stream().map(t -> VersionConvertorFactory_40_50.convertResource(t)).collect(Collectors.toList()));
 				return bundleProvider;
@@ -397,14 +406,17 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 					}
 					if (classR4.isInstance(theResource)) {
 						R4 r4 = classR4.cast(theResource);
+						r4.getMeta().setLastUpdated(new Date());
 						matchboxEngine.addCanonicalResource(r4);
 					}
 					if (classR4B.isInstance(theResource)) {
 						R4B r4b = classR4B.cast(theResource);
+						r4b.getMeta().setLastUpdated(new Date());
 						matchboxEngine.addCanonicalResource(r4b);
 					}
 					if (classR5.isInstance(theResource)) {
 						R5 r5 = classR5.cast(theResource);
+						r5.getMeta().setLastUpdated(new Date());
 						matchboxEngine.addCanonicalResource(r5);
 					}
 					MethodOutcome methodOutcome = new MethodOutcome();
@@ -413,21 +425,9 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 					return methodOutcome;
 				}
 			}
-			MethodOutcome outcome = new MethodOutcome();
-			outcome.setResponseStatusCode(400);
-			outcome.setCreated(false);
-			OperationOutcome operationOutcome = new OperationOutcome();
-			operationOutcome.addIssue().setDiagnostics("machbox engine not found for url " + url + " and fhir version " + cliContext.getFhirVersion());
-			outcome.setOperationOutcome(operationOutcome);
-			return outcome;
+			throw new ResourceNotFoundException("matchbox engine not found for url " + url + " and fhir version " + cliContext.getFhirVersion());
 		} else {
-			MethodOutcome outcome = new MethodOutcome();
-			outcome.setResponseStatusCode(400);
-			outcome.setCreated(false);
-			OperationOutcome operationOutcome = new OperationOutcome();
-			operationOutcome.addIssue().setDiagnostics("Creating conformance resources is only allowd in development mode, set matchbox.fhir.context.onlyOneEngine=true in application.yaml");
-			outcome.setOperationOutcome(operationOutcome);
-			return outcome;
+			throw new MethodNotAllowedException("Creating conformance resources is only allowed in development mode, set matchbox.fhir.context.onlyOneEngine=true in application.yaml");
 		}
 	}
 
@@ -441,14 +441,17 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 		if (cliContext.getOnlyOneEngine()) {
 			if (classR4.isInstance(theResource)) {
 				R4 r = classR4.cast(theResource);
+				r.getMeta().setLastUpdated(new Date());
 				url = r.getUrl();
 			}
 			if (classR4B.isInstance(theResource)) {
 				R4B r = classR4B.cast(theResource);
+				r.getMeta().setLastUpdated(new Date());
 				url = r.getUrl();
 			}
 			if (classR5.isInstance(theResource)) {
 				R5 r = classR5.cast(theResource);
+				r.getMeta().setLastUpdated(new Date());
 				url = r.getUrl();
 			}
 
@@ -487,21 +490,9 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 					return methodOutcome;
 				}
 			}
-			MethodOutcome outcome = new MethodOutcome();
-			outcome.setResponseStatusCode(400);
-			outcome.setCreated(false);
-			OperationOutcome operationOutcome = new OperationOutcome();
-			operationOutcome.addIssue().setDiagnostics("machbox engine not found for url " + url + " and fhir version " + cliContext.getFhirVersion());
-			outcome.setOperationOutcome(operationOutcome);
-			return outcome;
+			throw new ResourceNotFoundException("matchbox engine not found for url " + url + " and fhir version " + cliContext.getFhirVersion());
 		} else {
-			MethodOutcome outcome = new MethodOutcome();
-			outcome.setResponseStatusCode(400);
-			outcome.setCreated(false);
-			OperationOutcome operationOutcome = new OperationOutcome();
-			operationOutcome.addIssue().setDiagnostics("Updating conformance resources is only allowd in development mode, set matchbox.fhir.context.onlyOneEngine=true in application.yaml");
-			outcome.setOperationOutcome(operationOutcome);
-			return outcome;
+			throw new MethodNotAllowedException("Updating conformance resources is only allowed in development mode, set matchbox.fhir.context.onlyOneEngine=true in application.yaml");
 		}
 	}
 
