@@ -296,8 +296,9 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
 	protected InputStreamWithSrc loadFromPackageServer(String id, String version) {
   	
-  	// matchbox-engine PATCH, we do not want to load from a package server for hl7.fhir.xver-extension :
-  	if (CommonPackages.ID_XVER.equals(id)) {
+  		// matchbox-engine PATCH, we do not want to load from a package server for hl7.fhir.xver-extension :
+  		if (CommonPackages.ID_XVER.equals(id)) {
+			ourLog.info("loading " +id+ " form classpath");
 		    version = VER_XVER_PROVIDED;
 			InputStream stream = getClass().getResourceAsStream("/"+id+"#"+version+".tgz");
 			if (stream==null) {
@@ -305,7 +306,17 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 				throw new FHIRException("Unable to find/resolve/read from classpath (we dont' want go to the package server) for :" + id+"#"+version+".tgz");
 			}
 			return new InputStreamWithSrc(stream, "http://fhir.org/packages/hl7.fhir.xver-extensions", version);
-  	}
+  		}
+
+	  	if ("hl7.fhir.r5.core".equals(id)) {
+			ourLog.info("loading hl7.fhir.r5.core form classpath");
+			InputStream stream = getClass().getResourceAsStream("/"+id+".tgz");
+			if (stream==null) {
+				ourLog.error("Unable to find/resolve/read from classpath (we dont' want go to the package server) for :" + id+"#"+version+".tgz");
+				throw new FHIRException("Unable to find/resolve/read from classpath (we dont' want go to the package server) for :" + id+"#"+version+".tgz");
+			}
+			return new InputStreamWithSrc(stream, "https://hl7.org/fhir/R5/hl7.fhir.r5.core.tgz", version);
+	  	}
   	
 		InputStreamWithSrc retVal = super.loadFromPackageServer(id, version);
 		if (retVal != null) {
@@ -597,6 +608,12 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 			// org.hl7.fhir.exceptions.FHIRException: Unknown FHIRVersion code '0.0.13'
 			// https://github.com/ahdis/matchbox/issues/135 
 			npm.getNpm().set("version", "4.0");
+		    return npm;
+  		}
+
+		if ("hl7.fhir.r5.core".equals(id)) {
+			InputStreamWithSrc packageTgzInputStream = this.loadFromPackageServer(id, version);
+    	  	NpmPackage npm = NpmPackage.fromPackage(packageTgzInputStream.stream);
 		    return npm;
   		}
 

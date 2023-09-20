@@ -55,6 +55,7 @@ import ca.uhn.fhir.rest.param.StringParam;
 import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.UriParam;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
+import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import ca.uhn.fhir.util.FhirTerser;
 import ca.uhn.fhir.util.SearchParameterUtil;
 
@@ -176,7 +177,13 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 					}
 				}
 
-				NpmPackage npmPackage = myPackageCacheManager.installPackage(theInstallationSpec);
+				NpmPackage npmPackage = null;
+				try {
+					npmPackage = myPackageCacheManager.installPackage(theInstallationSpec);
+				} catch (InvalidRequestException e) {
+					ourLog.error("Error installing package: " +theInstallationSpec.getName() + "#" + theInstallationSpec.getVersion(), e);
+					throw e;
+				}
 				if (npmPackage == null) {
 					throw new IOException("Package not found");
 				}

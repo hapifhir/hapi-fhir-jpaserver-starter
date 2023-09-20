@@ -58,6 +58,7 @@ import ca.uhn.fhir.rest.param.TokenAndListParam;
 import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.UriAndListParam;
 import ca.uhn.fhir.rest.server.SimpleBundleProvider;
+import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
@@ -74,6 +75,9 @@ public class ImplementationGuideProviderR4 extends ca.uhn.fhir.jpa.rp.r4.Impleme
 
 	@Autowired
 	protected MatchboxEngineSupport matchboxEngineSupport;
+
+	@Autowired
+	private CliContext cliContext;
 
 	@Override
 	public MethodOutcome delete(HttpServletRequest theRequest, IIdType theResource, String theConditional,
@@ -103,7 +107,7 @@ public class ImplementationGuideProviderR4 extends ca.uhn.fhir.jpa.rp.r4.Impleme
 
 		// initialize matchbox engine
 		log.info("Initializing matchbox engine(s): " + VersionUtil.getMemory());
-		matchboxEngineSupport.getMatchboxEngine(FHIRVersion._4_0_1.getDisplay(), null, false, true);
+		matchboxEngineSupport.getMatchboxEngine(FHIRVersion._4_0_1.getDisplay(), this.cliContext, false, true);
 		log.info("Initializing matchbox engine finished: " + VersionUtil.getMemory());
 
 		return outcome;
@@ -221,7 +225,7 @@ public class ImplementationGuideProviderR4 extends ca.uhn.fhir.jpa.rp.r4.Impleme
 		matchboxEngineSupport.setInitialized(true);
 		log.info("Initializing packages finished " + VersionUtil.getMemory());
 		log.info("Creating cached engines during startup  " + VersionUtil.getMemory());
-		matchboxEngineSupport.getMatchboxEngine(null,null, false, false);
+		matchboxEngineSupport.getMatchboxEngine(null,this.cliContext, false, false);
 		log.info("Finished engines during startup  " + VersionUtil.getMemory());
 		return installOutcome;
 	}

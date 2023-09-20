@@ -159,15 +159,6 @@ public class MatchboxEngineSupport {
 			MatchboxEngine matchboxEngine = new MatchboxEngine(engine);
 			MatchboxEngine validator = matchboxEngine;
 
-			if (!VersionUtilities.isR5Plus(validator.getContext().getVersion())) {
-				System.out.println("Load R5 Specials");
-				R5ExtensionsLoader r5e = new R5ExtensionsLoader(validator.getPcm(), validator.getContext());
-				r5e.load();
-				System.out.println("Load R5 Specials done");
-				r5e.loadR5SpecialTypes(Collections.unmodifiableList(Arrays.asList("ActorDefinition", "Requirements", "SubscriptionTopic", "TestPlan")));
-				System.out.println("Load R5 Specials types");
-		    }
-
 			log.info("  Terminology server " + cliContext.getTxServer());
 			String txServer = cliContext.getTxServer();
 			if ("n/a".equals(cliContext.getTxServer())) {
@@ -318,8 +309,18 @@ public class MatchboxEngineSupport {
 			engine.setIgLoader(igLoader);
 			try {
 				if (cliContext.getFhirVersion().equals("4.0.1")) {
+					log.info("Preconfigure FHIR R4");
 					engine.loadPackage("hl7.terminology", "5.1.0");
 					engine.loadPackage("hl7.fhir.r4.core", "4.0.1");
+					log.info("Load R5 Specials");
+					R5ExtensionsLoader r5e = new R5ExtensionsLoader(engine.getPcm(), engine.getContext());
+					r5e.load();
+					log.info("Load R5 Specials done");
+					r5e.loadR5SpecialTypes(Collections.unmodifiableList(Arrays.asList("ActorDefinition", "Requirements", "SubscriptionTopic", "TestPlan")));
+					log.info("Load R5 Specials types");
+					if (engine.getCanonicalResource("http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition")==null) {
+						log.error("could not load  R5 Specials");
+					}
 				}
 				cliContext.setIg(this.getIgPackage(cliContext));
 			} catch (FHIRException | IOException e) {
