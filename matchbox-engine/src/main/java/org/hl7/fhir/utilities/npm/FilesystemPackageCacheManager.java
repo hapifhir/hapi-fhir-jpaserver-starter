@@ -116,6 +116,9 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 	private boolean suppressErrors;
 	private boolean minimalMemory;
 
+	private final static String VER_XVER_PROVIDED = "0.0.13";
+
+
 
 	public FilesystemPackageCacheManager(boolean userMode) throws IOException {
 		init(userMode ? FilesystemPackageCacheMode.USER : FilesystemPackageCacheMode.SYSTEM);
@@ -295,7 +298,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   	
   	// matchbox-engine PATCH, we do not want to load from a package server for hl7.fhir.xver-extension :
   	if (CommonPackages.ID_XVER.equals(id)) {
-      version = "0.0.13";
+		    version = VER_XVER_PROVIDED;
 			InputStream stream = getClass().getResourceAsStream("/"+id+"#"+version+".tgz");
 			if (stream==null) {
 				ourLog.error("Unable to find/resolve/read from classpath (we dont' want go to the package server) for :" + id+"#"+version+".tgz");
@@ -464,7 +467,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 	public NpmPackage addPackageToCache(String id, String version, InputStream packageTgzInputStream, String sourceDesc) throws IOException {
   	// matchbox-engine PATCH, we do not want to load from a package server for hl7.fhir.xver-extension :
   	if (CommonPackages.ID_XVER.equals(id)) {
-  		version = "0.0.13";
+  		version = VER_XVER_PROVIDED;
       NpmPackage npm = NpmPackage.fromPackage(packageTgzInputStream, sourceDesc, true);
       return npm;
   	}
@@ -586,6 +589,17 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 	@Override
 	public NpmPackage loadPackage(String id, String version) throws FHIRException, IOException {
 		//ok, try to resolve locally
+
+		if (CommonPackages.ID_XVER.equals(id)) {
+	  		version = VER_XVER_PROVIDED;
+			InputStreamWithSrc packageTgzInputStream = this.loadFromPackageServer(id, version);
+    	  	NpmPackage npm = NpmPackage.fromPackage(packageTgzInputStream.stream);
+			// org.hl7.fhir.exceptions.FHIRException: Unknown FHIRVersion code '0.0.13'
+			// https://github.com/ahdis/matchbox/issues/135 
+			npm.getNpm().set("version", "4.0");
+		    return npm;
+  		}
+
 		if (!Utilities.noString(version) && version.startsWith("file:")) {
 			return loadPackageFromFile(id, version.substring(5));
 		}
