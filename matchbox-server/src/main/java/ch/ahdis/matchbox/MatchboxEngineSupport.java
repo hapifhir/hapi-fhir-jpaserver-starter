@@ -2,12 +2,16 @@ package ch.ahdis.matchbox;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r5.conformance.R5ExtensionsLoader;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
 import org.hl7.fhir.utilities.FhirPublication;
+import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.cli.services.IPackageInstaller;
 import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
@@ -155,14 +159,15 @@ public class MatchboxEngineSupport {
 			MatchboxEngine matchboxEngine = new MatchboxEngine(engine);
 			MatchboxEngine validator = matchboxEngine;
 
-			// FIXME we need to figure out h
-			// if (!VersionUtilities.isR5Ver(validator.getContext().getVersion())) {
-			// 	log.info("  Load R5 Extensions");
-			// 	R5ExtensionsLoader r5e = new R5ExtensionsLoader(validator.getPcm(), validator.getContext());
-			// 	r5e.load();
-			// 	r5e.loadR5Extensions();
-			// 	log.info(" - " + r5e.getCount() + " resources (" + tt.milestone() + ")");
-			// }
+			if (!VersionUtilities.isR5Plus(validator.getContext().getVersion())) {
+				System.out.println("Load R5 Specials");
+				R5ExtensionsLoader r5e = new R5ExtensionsLoader(validator.getPcm(), validator.getContext());
+				r5e.load();
+				System.out.println("Load R5 Specials done");
+				r5e.loadR5SpecialTypes(Collections.unmodifiableList(Arrays.asList("ActorDefinition", "Requirements", "SubscriptionTopic", "TestPlan")));
+				System.out.println("Load R5 Specials types");
+		    }
+
 			log.info("  Terminology server " + cliContext.getTxServer());
 			String txServer = cliContext.getTxServer();
 			if ("n/a".equals(cliContext.getTxServer())) {
@@ -202,7 +207,10 @@ public class MatchboxEngineSupport {
 //			}
 			validator.setLanguage(cliContext.getLang());
 			validator.setLocale(Locale.forLanguageTag(cliContext.getLocale()));
-			validator.setSnomedExtension(cliContext.getSnomedCTCode());
+			if (cliContext.getSnomedCT() != null) {
+				validator.setSnomedExtension(cliContext.getSnomedCT());
+			}
+			validator.setDisplayWarnings(cliContext.isDisplayIssuesAreWarnings());
 			validator.setAssumeValidRestReferences(cliContext.isAssumeValidRestReferences());
 			validator.setShowMessagesFromReferences(cliContext.isShowMessagesFromReferences());
 			validator.setDoImplicitFHIRPathStringConversion(cliContext.isDoImplicitFHIRPathStringConversion());
