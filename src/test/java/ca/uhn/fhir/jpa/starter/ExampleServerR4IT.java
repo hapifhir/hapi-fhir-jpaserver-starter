@@ -7,14 +7,13 @@ import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
+import ca.uhn.fhir.util.BundleBuilder;
+import ca.uhn.fhir.util.BundleUtil;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Observation;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Subscription;
+import org.hl7.fhir.r4.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -22,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import java.net.URI;
+import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +39,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 		"hapi.fhir.mdm_enabled=true",
 		"hapi.fhir.implementationguides.dk-core.name=hl7.fhir.dk.core",
 		"hapi.fhir.implementationguides.dk-core.version=1.1.0",
+		"hapi.fhir.binary_storage_enabled=true",
+		"hapi.fhir.inline_resource_storage_below_size=1",
 		// Override is currently required when using MDM as the construction of the MDM
 		// beans are ambiguous as they are constructed multiple places. This is evident
 		// when running in a spring boot environment
@@ -193,6 +195,22 @@ class ExampleServerR4IT {
 		 * Clean up
 		 */
 		ourClient.delete().resourceById(mySubscriptionId).execute();
+	}
+
+	@Test
+	@Order(2)
+	void transactionWithBinaryStorageInterceptor() {
+
+		var c = new Communication();
+			c.getPayloadFirstRep().getContentAttachment().setContentType("text/plain")
+				.setData(UUID.randomUUID().toString().getBytes());
+		c.setId(UUID.randomUUID().toString());
+		var p = new Patient().addIdentifier(new Identifier().setValue(UUID.randomUUID().toString()).setSystem(UUID.randomUUID().toString()));
+		p.setId(UUID.randomUUID().toString());
+		var b =new BundleBuilder(FhirContext.forR4());
+		b.addTransactionCreateEntry(c);
+		b.addTransactionCreateEntry(p);
+		ourClient.transaction().withBundle(b.getBundle()).execute();
 	}
 
 	private int activeSubscriptionCount() {
