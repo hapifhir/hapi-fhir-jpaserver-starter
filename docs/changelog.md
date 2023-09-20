@@ -1,5 +1,6 @@
 2023/09/20 Release 3.4.3
 
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.3`
 - FML: Contained ConceptMap in StructureMap does not work for transformation [#137](https://github.com/ahdis/matchbox/issues/137)
 - FML: POST / PUT for StructureMap should return HTTP error code 404 instead of 200 in deployment mode [#133](https://github.com/ahdis/matchbox/issues/133)
 - FHIR Validation problem with not support R5 extensions [#135](https://github.com/ahdis/matchbox/issues/135)
