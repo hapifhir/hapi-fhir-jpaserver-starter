@@ -193,7 +193,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 																      "implementationGuideResourceProvider");
 		}
 
-		fhirServer.setServerConformanceProvider(new MatchboxCapabilityStatementProvider(fhirServer, structureDefinitionProvider, getCliContext()));
+		fhirServer.setServerConformanceProvider(new MatchboxCapabilityStatementProvider(this.myFhirContext,fhirServer, structureDefinitionProvider, getCliContext()));
 
 		mySvc.scheduleLocalJob(DateUtils.MILLIS_PER_MINUTE, jobDefinition);
 

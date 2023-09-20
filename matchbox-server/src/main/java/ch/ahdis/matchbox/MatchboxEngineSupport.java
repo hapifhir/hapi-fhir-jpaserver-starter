@@ -2,12 +2,16 @@ package ch.ahdis.matchbox;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r5.conformance.R5ExtensionsLoader;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
 import org.hl7.fhir.utilities.FhirPublication;
+import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.cli.services.IPackageInstaller;
 import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
@@ -155,14 +159,6 @@ public class MatchboxEngineSupport {
 			MatchboxEngine matchboxEngine = new MatchboxEngine(engine);
 			MatchboxEngine validator = matchboxEngine;
 
-			// FIXME we need to figure out h
-			// if (!VersionUtilities.isR5Ver(validator.getContext().getVersion())) {
-			// 	log.info("  Load R5 Extensions");
-			// 	R5ExtensionsLoader r5e = new R5ExtensionsLoader(validator.getPcm(), validator.getContext());
-			// 	r5e.load();
-			// 	r5e.loadR5Extensions();
-			// 	log.info(" - " + r5e.getCount() + " resources (" + tt.milestone() + ")");
-			// }
 			log.info("  Terminology server " + cliContext.getTxServer());
 			String txServer = cliContext.getTxServer();
 			if ("n/a".equals(cliContext.getTxServer())) {
@@ -202,7 +198,10 @@ public class MatchboxEngineSupport {
 //			}
 			validator.setLanguage(cliContext.getLang());
 			validator.setLocale(Locale.forLanguageTag(cliContext.getLocale()));
-			validator.setSnomedExtension(cliContext.getSnomedCTCode());
+			if (cliContext.getSnomedCT() != null) {
+				validator.setSnomedExtension(cliContext.getSnomedCT());
+			}
+			validator.setDisplayWarnings(cliContext.isDisplayIssuesAreWarnings());
 			validator.setAssumeValidRestReferences(cliContext.isAssumeValidRestReferences());
 			validator.setShowMessagesFromReferences(cliContext.isShowMessagesFromReferences());
 			validator.setDoImplicitFHIRPathStringConversion(cliContext.isDoImplicitFHIRPathStringConversion());
@@ -310,8 +309,18 @@ public class MatchboxEngineSupport {
 			engine.setIgLoader(igLoader);
 			try {
 				if (cliContext.getFhirVersion().equals("4.0.1")) {
+					log.info("Preconfigure FHIR R4");
 					engine.loadPackage("hl7.terminology", "5.1.0");
 					engine.loadPackage("hl7.fhir.r4.core", "4.0.1");
+					log.info("Load R5 Specials");
+					R5ExtensionsLoader r5e = new R5ExtensionsLoader(engine.getPcm(), engine.getContext());
+					r5e.load();
+					log.info("Load R5 Specials done");
+					r5e.loadR5SpecialTypes(Collections.unmodifiableList(Arrays.asList("ActorDefinition", "Requirements", "SubscriptionTopic", "TestPlan")));
+					log.info("Load R5 Specials types");
+					if (engine.getCanonicalResource("http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition")==null) {
+						log.error("could not load  R5 Specials");
+					}
 				}
 				cliContext.setIg(this.getIgPackage(cliContext));
 			} catch (FHIRException | IOException e) {

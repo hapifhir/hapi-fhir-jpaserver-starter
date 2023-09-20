@@ -407,6 +407,7 @@ public class MatchboxService {
       validator.setLanguage(cliContext.getLang());
       validator.setLocale(cliContext.getLocale());
       validator.setSnomedExtension(cliContext.getSnomedCTCode());
+      validator.setDisplayWarnings(cliContext.isDisplayWarnings());
       validator.setAssumeValidRestReferences(cliContext.isAssumeValidRestReferences());
       validator.setShowMessagesFromReferences(cliContext.isShowMessagesFromReferences());
       validator.setDoImplicitFHIRPathStringConversion(cliContext.isDoImplicitFHIRPathStringConversion());

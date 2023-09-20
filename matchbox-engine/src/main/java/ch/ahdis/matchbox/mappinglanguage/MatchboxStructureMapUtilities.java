@@ -117,8 +117,7 @@ public class MatchboxStructureMapUtilities extends StructureMapUtilities {
 			ConceptMap cmap = null;
 			if (conceptMapUrl.startsWith("#")) {
 				for (Resource r : map.getContained()) {
-//				if (r instanceof ConceptMap && r.getId().equals(conceptMapUrl)) { FIXME: looks like a simpleworkercontext issue
-					if (r instanceof ConceptMap && r.getId().equals(conceptMapUrl.substring(1))) {
+					if (r instanceof ConceptMap && (r.getId().equals(conceptMapUrl.substring(1)) || r.getId().equals(conceptMapUrl))) {
 						cmap = (ConceptMap) r;
 						su = map.getUrl() + "#" + conceptMapUrl;
 					}
