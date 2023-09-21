@@ -1,15 +1,11 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
-import ca.uhn.fhir.cr.config.r4.CrR4Config;
+import ca.uhn.fhir.cr.config.r4.*;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
 import ca.uhn.fhir.cr.common.CqlThreadFactory;
-import ca.uhn.fhir.cr.config.ApplyOperationConfig;
-import ca.uhn.fhir.cr.config.ExtractOperationConfig;
-import ca.uhn.fhir.cr.config.PackageOperationConfig;
-import ca.uhn.fhir.cr.config.PopulateOperationConfig;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
@@ -29,6 +25,7 @@ import org.springframework.security.concurrent.DelegatingSecurityContextExecutor
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -144,6 +141,16 @@ public class StarterCrR4Config {
 		evaluationSettings.setLibraryCache(theGlobalLibraryCache);
 		evaluationSettings.setModelCache(theGlobalModelCache);
 		return evaluationSettings;
+	}
+
+	@Bean
+	public Map<VersionedIdentifier, CompiledLibrary> globalLibraryCache() {
+		return new ConcurrentHashMap<>();
+	}
+
+	@Bean
+	public Map<ModelIdentifier, Model> globalModelCache() {
+		return new ConcurrentHashMap<>();
 	}
 
 }

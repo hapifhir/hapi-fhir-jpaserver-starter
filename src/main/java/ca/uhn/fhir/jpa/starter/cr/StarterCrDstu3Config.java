@@ -1,6 +1,10 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
 import ca.uhn.fhir.cr.config.dstu3.CrDstu3Config;
+import ca.uhn.fhir.cr.config.dstu3.ApplyOperationConfig;
+import ca.uhn.fhir.cr.config.dstu3.ExtractOperationConfig;
+import ca.uhn.fhir.cr.config.dstu3.PackageOperationConfig;
+import ca.uhn.fhir.cr.config.dstu3.PopulateOperationConfig;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnDSTU3Condition;
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
@@ -23,7 +27,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 @Conditional({ OnDSTU3Condition.class, CrConfigCondition.class })
-@Import({ CrDstu3Config.class })
+@Import({ CrDstu3Config.class,
+	ApplyOperationConfig.class,
+	ExtractOperationConfig.class,
+	PackageOperationConfig.class,
+	PopulateOperationConfig.class})
 public class StarterCrDstu3Config {
 	private static final Logger ourLogger = LoggerFactory.getLogger(StarterCrDstu3Config.class);
 
