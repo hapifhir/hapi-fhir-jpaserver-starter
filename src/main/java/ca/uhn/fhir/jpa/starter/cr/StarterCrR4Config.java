@@ -1,6 +1,11 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
-import ca.uhn.fhir.cr.config.r4.*;
+
+import ca.uhn.fhir.cr.config.r4.ApplyOperationConfig;
+import ca.uhn.fhir.cr.config.r4.CrR4Config;
+import ca.uhn.fhir.cr.config.r4.ExtractOperationConfig;
+import ca.uhn.fhir.cr.config.r4.PackageOperationConfig;
+import ca.uhn.fhir.cr.config.r4.PopulateOperationConfig;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
