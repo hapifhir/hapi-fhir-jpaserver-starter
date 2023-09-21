@@ -19,18 +19,19 @@ import { Construct } from "constructs";
 import { EnvConfig } from "./env-config";
 import { getConfig } from "./shared/config";
 import { vCPU } from "./shared/fargate";
-import { isProd, mbToBytes } from "./util";
+import { isProd, isSandbox, mbToBytes } from "./util";
 
 export function settings() {
   const config = getConfig();
-  const prod = isProd(config);
+  const isLarge = isProd(config) || isSandbox(config);
   return {
-    cpu: prod ? 2 * vCPU : 1 * vCPU,
-    memoryLimitMiB: prod ? 4096 : 2048,
-    taskCountMin: prod ? 2 : 1,
-    taskCountMax: prod ? 10 : 5,
-    minDBCap: prod ? 4 : 1,
-    maxDBCap: prod ? 32 : 8,
+    cpu: isLarge ? 2 * vCPU : 1 * vCPU,
+    memoryLimitMiB: isLarge ? 4096 : 2048,
+    taskCountMin: isLarge ? 2 : 1,
+    taskCountMax: isLarge ? 10 : 5,
+    minDBCap: isLarge ? 4 : 1,
+    maxDBCap: isLarge ? 32 : 8,
+    minSlowLogDurationInMs: 600, // https://www.postgresql.org/docs/current/runtime-config-logging.html#GUC-LOG-MIN-DURATION-STATEMENT
     // The load balancer idle timeout, in seconds. Can be between 1 and 4000 seconds
     maxExecutionTimeout: Duration.minutes(15),
     listenToPort: 8080,
@@ -102,7 +103,7 @@ export class FHIRServerStack extends Stack {
     dbCluster: rds.IDatabaseCluster;
     dbCreds: { username: string; password: secret.Secret };
   } {
-    const { minDBCap, maxDBCap } = settings();
+    const { minDBCap, maxDBCap, minSlowLogDurationInMs } = settings();
 
     // create database credentials
     const dbClusterName = "fhir-server";
@@ -120,6 +121,17 @@ export class FHIRServerStack extends Stack {
       dbPasswordSecret.secretValue
     );
     // aurora serverlessv2 db
+    const parameterGroup = rds.ParameterGroup.fromParameterGroupName(
+      this,
+      "FHIR_DB_Params",
+      "default.aurora-postgresql14"
+    );
+    if (minSlowLogDurationInMs && minSlowLogDurationInMs >= 0) {
+      parameterGroup.addParameter(
+        "log_min_duration_statement",
+        minSlowLogDurationInMs.toString()
+      );
+    }
     const dbCluster = new rds.DatabaseCluster(this, "FHIR_DB", {
       engine: rds.DatabaseClusterEngine.auroraPostgres({
         version: rds.AuroraPostgresEngineVersion.VER_14_4,
@@ -132,6 +144,8 @@ export class FHIRServerStack extends Stack {
       defaultDatabaseName: dbName,
       clusterIdentifier: dbClusterName,
       storageEncrypted: true,
+      parameterGroup,
+      cloudwatchLogsExports: ["postgresql"],
     });
 
     Aspects.of(dbCluster).add({
