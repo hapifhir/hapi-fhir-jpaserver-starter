@@ -7,6 +7,8 @@ import ca.uhn.fhir.cr.config.r4.ExtractOperationConfig;
 import ca.uhn.fhir.cr.config.r4.PackageOperationConfig;
 import ca.uhn.fhir.cr.config.r4.PopulateOperationConfig;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
+import ca.uhn.fhir.rest.server.RestfulServer;
+import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
@@ -156,6 +158,12 @@ public class StarterCrR4Config {
 	@Bean
 	public Map<ModelIdentifier, Model> globalModelCache() {
 		return new ConcurrentHashMap<>();
+	}
+
+	@Bean
+	public PostInitProviderRegisterer postInitProviderRegisterer(RestfulServer theRestfulServer,
+																					 ResourceProviderFactory theResourceProviderFactory) {
+		return new PostInitProviderRegisterer(theRestfulServer, theResourceProviderFactory);
 	}
 
 }

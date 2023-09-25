@@ -1,12 +1,14 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
-import ca.uhn.fhir.cr.config.dstu3.CrDstu3Config;
 import ca.uhn.fhir.cr.config.dstu3.ApplyOperationConfig;
+import ca.uhn.fhir.cr.config.dstu3.CrDstu3Config;
 import ca.uhn.fhir.cr.config.dstu3.ExtractOperationConfig;
 import ca.uhn.fhir.cr.config.dstu3.PackageOperationConfig;
 import ca.uhn.fhir.cr.config.dstu3.PopulateOperationConfig;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnDSTU3Condition;
+import ca.uhn.fhir.rest.server.RestfulServer;
+import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.cql2elm.model.Model;
@@ -130,5 +132,10 @@ public class StarterCrDstu3Config {
 	public Map<ModelIdentifier, Model> globalModelCache() {
 		return new ConcurrentHashMap<>();
 	}
+
+	@Bean
+	public PostInitProviderRegisterer postInitProviderRegisterer(RestfulServer theRestfulServer,
+																					 ResourceProviderFactory theResourceProviderFactory) {
+		return new PostInitProviderRegisterer(theRestfulServer, theResourceProviderFactory);}
 
 }
