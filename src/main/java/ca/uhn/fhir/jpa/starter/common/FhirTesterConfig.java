@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(FhirTesterMvcConfig.class)
-@Conditional(FhirTesterConfigCondition.class)
+//@Conditional(FhirTesterConfigCondition.class)
 public class FhirTesterConfig {
 
 	/**
