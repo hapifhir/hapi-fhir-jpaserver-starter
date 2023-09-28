@@ -113,7 +113,7 @@ postgresql:
   # -- enable an included PostgreSQL DB.
   # see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
   # if set to `false`, the values under `externalDatabase` are used
-  enabled: true
+  enabled: false
   auth:
     # -- name for a custom database to create
     database: "fhir"
@@ -159,15 +159,15 @@ livenessProbe:
 
 externalDatabase:
   # -- external database host used with `postgresql.enabled=false`
-  host: hapi-fhir-jpaserver-ips-postgresql
+  host: postgres-hapi-jpaserver-ips-postgresql
   # -- database port number
   port: 5432
   # -- username for the external database
-  user: postgres
+  user: admin
   # -- database password
   password: ""
   # -- name of an existing secret resource containing the DB password in the `existingSecretKey` key
-  existingSecret: "hapi-fhir-jpaserver-ips-postgresql"
+  existingSecret: "postgres-hapi-jpaserver-ips-postgresql"
   # -- name of the key inside the `existingSecret`
   existingSecretKey: "postgres-password"
   # -- database name
