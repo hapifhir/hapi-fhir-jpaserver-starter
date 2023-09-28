@@ -1,0 +1,12 @@
+auth:
+  enablePostgresUser: true
+  postgresPassword: <password> #This password will be used by postgres
+  username: <username> #This username will be used by hapi-fhir-jpaserver
+  password: <password> #This password will be used by hapi-fhir-jpaserver
+  database: "fhir"
+
+# The postgres helm chart deployment will be using PVC postgres-data-ips
+primary:
+  persistence:
+    enabled: true
+    existingClaim: "postgres-data-ips"
