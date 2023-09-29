@@ -14,7 +14,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-            <version>6.9.7-SNAPSHOT</version>
+            <version>6.9.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -131,6 +131,12 @@
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-mdm</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <!-- This dependency includes the CDS Hooks Server -->
+        <dependency>
+          <groupId>ca.uhn.hapi.fhir</groupId>
+          <artifactId>hapi-fhir-server-cds-hooks</artifactId>
+          <version>${project.version}</version>
         </dependency>
         <!-- This dependency includes the OpenAPI Server -->
         <dependency>

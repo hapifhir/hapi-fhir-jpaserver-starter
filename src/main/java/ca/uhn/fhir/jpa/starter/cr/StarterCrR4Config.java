@@ -1,18 +1,13 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
 
-import ca.uhn.fhir.cr.config.r4.ApplyOperationConfig;
-import ca.uhn.fhir.cr.config.r4.CrR4Config;
-import ca.uhn.fhir.cr.config.r4.ExtractOperationConfig;
-import ca.uhn.fhir.cr.config.r4.PackageOperationConfig;
-import ca.uhn.fhir.cr.config.r4.PopulateOperationConfig;
+import ca.uhn.fhir.cr.repo.HapiFhirRepository;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Import;
-
 import ca.uhn.fhir.cr.common.CqlThreadFactory;
+import ca.uhn.fhir.cr.common.IRepositoryFactory;
+import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
@@ -38,11 +33,7 @@ import java.util.concurrent.Executors;
 
 @Configuration
 @Conditional({ OnR4Condition.class, CrConfigCondition.class })
-@Import({ CrR4Config.class,
-	ApplyOperationConfig.class,
-	ExtractOperationConfig.class,
-	PackageOperationConfig.class,
-	PopulateOperationConfig.class})
+@Import(CrR4Config.class)
 public class StarterCrR4Config {
 	private static final Logger ourLogger = LoggerFactory.getLogger(StarterCrR4Config.class);
 
@@ -57,6 +48,7 @@ public class StarterCrR4Config {
 
 		return executor;
 	}
+
 	@Bean
 	CareGapsProperties careGapsProperties(AppProperties theAppProperties)  {
 		var careGapsProperties = new CareGapsProperties();
@@ -75,6 +67,7 @@ public class StarterCrR4Config {
 		}
 		return measureEvalOptions;
 	}
+
 	@Bean
 	public EvaluationSettings evaluationSettings(
 		AppProperties theAppProperties,
