@@ -1,0 +1,17 @@
+map "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/TestObservation" = "TestObservation"
+
+uses "http://hl7.org/fhir/cda/StructureDefinition/Observation" alias CdaObservation as source
+uses "http://hl7.org/fhir/StructureDefinition/Observation" alias FhirObservation as target
+
+uses "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" alias IVL_TS as source
+uses "http://hl7.org/fhir/StructureDefinition/Period" alias Period as target
+
+imports "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/CdaToFhirDataTypes"
+imports "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/FULLHEADER"
+
+group CdaToFHIR(source cda : CdaObservation, target obs : Observation) {
+    cda -> obs.status ='final' "final";
+    cda.value : IVL_TS as value -> obs.value = create('Period') as period then {
+        value.high as high -> period.end = truncate(high, 10) "high";
+    } "high";
+}

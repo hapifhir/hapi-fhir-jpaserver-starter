@@ -1,0 +1,232 @@
+map "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/CdaToFhirDataTypes" = "CdaToFhirDataTypes"
+
+
+// Adapted from https://github.com/HL7/ccda-to-fhir/tree/master/mappings
+// CDA:  http://build.fhir.org/ig/ahdis/cda-core-2.0/branches/master/index.html
+// FHIR: http://hl7.org/fhir/r4/
+
+conceptmap "addressUse" {
+  prefix s = "http://terminology.hl7.org/ValueSet/v3-AddressUse"
+  prefix t = "http://hl7.org/fhir/address-use"
+
+  s:H == t:home
+  s:HP == t:home
+  s:HV == t:home
+  s:WP == t:work
+  s:DIR == t:work
+  s:PUB == t:work
+  s:TMP == t:temp
+  s:OLD == t:old
+  s:BAD == t:old
+}
+
+uses "http://hl7.org/fhir/cda/StructureDefinition/ED" alias ED as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/INT" alias INT as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/II" as source
+uses "http://hl7.org/fhir/StructureDefinition/Identifier" as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/TS" as source
+uses "http://hl7.org/fhir/StructureDefinition/instant" as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/CS" as source
+uses "http://hl7.org/fhir/StructureDefinition/code" as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/CE" as source
+uses "http://hl7.org/fhir/StructureDefinition/CodeableConcept" as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/ST" as source
+uses "http://hl7.org/fhir/StructureDefinition/string" as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/EN" as source
+uses "http://hl7.org/fhir/StructureDefinition/HumanName" as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/AD" as source
+uses "http://hl7.org/fhir/StructureDefinition/Address" as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/TEL" as source
+uses "http://hl7.org/fhir/StructureDefinition/ContactPoint" as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/BL" as source
+uses "http://hl7.org/fhir/StructureDefinition/boolean" as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" as source
+uses "http://hl7.org/fhir/StructureDefinition/Period" as target
+
+group Any(source src, target tgt) {
+}
+
+group II(source src : II, target tgt : Identifier) extends Any <<types>> {
+  src.root as r where src.extension.exists() -> tgt.system = translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+  src.root as r where src.extension.empty() and src.root.matches('[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}') ->  tgt.system = 'urn:ietf:rfc:3986',  tgt.value = ('urn:uuid:' + r.lower()) "rootuuid";
+  src.root as r where src.extension.empty() and src.root.contains('.') ->  tgt.system = 'urn:ietf:rfc:3986',  tgt.value = append('urn:oid:', r) "rootoid";
+  src.extension as e -> tgt.value = e;
+  src.assigningAuthorityName as s ->  tgt.assigner as a,  a.display = s;
+  // there's no equivalent for displayable in FHIR - and it probably will never matter, but if it does, it might map to Identifier.use.
+}
+
+group INT(source src : INT, target tgt : integer) extends Any <<types>> {
+  src.value as v -> tgt.value = cast(v, 'string') "value";
+}
+
+group TemplateID(source template : II, target tgt) {
+  template -> tgt.extension as ext then {
+    template -> ext.url = 'http://hl7.org/fhir/cda/StructureDefinition/templateID' "url";
+    template -> ext.value = create('Identifier') as value then II(template, value) "value";
+  } "templateId";
+}
+
+group Negation(source negation : BL, target tgt) {
+  negation -> tgt.modifierExtension as ext then {
+    negation -> ext.url = 'http://hl7.org/fhir/cda/StructureDefinition/negationIndicator' "url";
+    negation as neg ->  ext.value = create('boolean'),  ext.value = neg "value";
+  } "negation";
+}
+
+group TSInstant(source src : TS, target tgt : instant) extends Any <<types>> {
+  src.value as v -> tgt.value = cast(v, 'string');
+}
+
+group TSDateTime(source src : TS, target tgt : dateTime) extends TSInstant <<types>> {
+  
+  src  where(value.contains('+')) then{
+    src.value as v -> tgt.value = cast(v, 'string');
+  }"eff";  
+
+  src  where(value.contains('-')) then{
+    src.value as v -> tgt.value = cast(v, 'string');
+  }"eff";  
+
+  src.value  where(value.matches('^\\d{4}(\\-\\d{2}){2}T\\d{2}(:\\d{2}){2}$')) then{
+    src.value as v  -> tgt.value = append(v,'Z') "date";
+  }"eff";    
+
+}
+
+group TSDate(source src : TS, target tgt : date) extends TSInstant <<types>> {
+}
+
+group IVLTSPeriod(source src : IVL_TS, target tgt : Period) extends Any <<types>> {
+  src.low as l -> tgt.start=create('dateTime') as start then TSDateTime(l,start) ;
+   
+  src.high as h -> tgt.end=create('dateTime') as end then TSDateTime(h,end) ;
+  
+ 
+}
+
+group IVLTSDateTime(source src : IVL_TS, target tgt : dateTime) extends Any <<types>> {
+  src.low as s then TSDateTime(s, tgt);
+}
+
+group STstring(source src : ST, target tgt : string) extends Any <<types>> {
+  src as v -> tgt.value = cast(v, 'string') "value";
+}
+
+group EDstring(source src : ED, target tgt : string) extends STstring <<types>> {
+    }
+
+
+group INTstring(source src : INT, target tgt : string) extends STstring <<types>> {
+}
+group ONstring(source src : ON, target tgt : string) extends STstring <<types>> {
+}
+
+group CSCode(source src : CS, target tgt : code) extends Any <<types>> {
+  src.code as c -> tgt.value = cast(c, 'string');
+}
+
+group CECode(source src : CE, target tgt : code) extends CSCode <<types>> {
+}
+
+group CDCode(source src : CD, target tgt : code) extends CSCode <<types>> {
+}
+
+group CECodeableConcept(source src : CE, target tgt : CodeableConcept) extends Any <<types>> {
+  src.originalText as originalText then{
+    originalText.reference as reference-> tgt.text= (reference.value);
+  }"originltext";
+  src -> tgt.coding as coding then {
+    src.code as code -> coding.code = cast(code, 'string');
+    src.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+    src.displayName as display -> coding.display = cast(display, 'string');
+    src.codeSystemVersion as version -> coding.version = cast(version, 'string');
+  } "code";
+  src.translation as translation -> tgt.coding as coding then {
+    translation.code as code -> coding.code = cast(code, 'string');
+    translation.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+    translation.displayName as display -> coding.display = cast(display, 'string');
+    translation.codeSystemVersion as version -> coding.version = cast(version, 'string');
+	translation.qualifier as qualifier then{
+    qualifier.name as name -> tgt.coding as coding then {
+      name.code as code -> coding.code = cast(code, 'string');
+       name.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+       name.displayName as display -> coding.display = cast(display, 'string');
+       name.codeSystemVersion as version -> coding.version = cast(version, 'string');
+      } "name";
+	qualifier.value as value -> tgt.coding as coding then {
+	 value.code as code -> coding.code = cast(code, 'string');
+    value.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+    value.displayName as display -> coding.display = cast(display, 'string');
+    value.codeSystemVersion as version -> coding.version = cast(version, 'string');
+	 } "value";
+	};
+  } "translation";
+}
+
+group CSCodeableConcept(source src : CS, target tgt : CodeableConcept) extends CECodeableConcept <<types>> {
+}
+
+group CDCodeableConcept(source src : CD, target tgt : CodeableConcept) extends CECodeableConcept <<types>> {
+}
+
+group ENHumanName(source src : EN, target tgt : HumanName) extends Any <<types>> {
+  src.family as v -> tgt.family = (v.dataString);
+  src.given as v -> tgt.given = (v.dataString);
+  src.prefix as v -> tgt.prefix = (v.dataString);
+  src.suffix as v -> tgt.suffix = (v.dataString);
+  // src.use as c -> tgt.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
+  src.validTime -> tgt.period;
+}
+
+group ADAddress(source src : AD, target tgt : Address) extends Any <<types>> {
+  src.country as v -> tgt.country = (v.dataString);
+  src.state as v -> tgt.state = (v.dataString);
+  src.county as v -> tgt.district = (v.dataString);
+  src.city as v -> tgt.city = (v.dataString);
+  src.postalCode as v -> tgt.postalCode = (v.dataString);
+  src.streetAddressLine as v -> tgt.line=(v.dataString);
+   
+  src   -> tgt.line  as line then { 
+   src where src.censusTract.exists() then {
+    src.censusTract as v -> line.extension as ext1 then CensusTract(v, ext1) "line";
+   }"sfgfdsg";
+  } "CensusTract";
+
+  //share firstline "streetAddress";
+  //as streetAddress then{
+    //src.censusTract as v->tgt.line as line, line.extension as ext1 then CensusTract(v, ext1) "line";
+  //src.censusTract as v ->tgt.line as line, line.extension as ext1 then CensusTract(v, ext1) "line";
+  src.streetName as v -> tgt.line = (v.dataString);
+  src.houseNumber as v -> tgt.line = (v.dataString);
+  src.use as c -> tgt.use = translate(c, '#addressUse', 'code') "addressUse";
+  src.useablePeriod -> tgt.period;
+}
+
+group TELContactPoint(source src : TEL, target tgt : ContactPoint) extends Any <<types>> {
+  src.value as v where (src.value.startsWith('tel:')) ->  tgt.value = (v.substring(4)),  tgt.system = 'phone' "valuetel";
+  src.value as v where (src.value.startsWith('fax:')) ->  tgt.value = (v.substring(4)),  tgt.system = 'fax' "valuefax";
+  src.value as v where (src.value.startsWith('mailto:')) ->  tgt.value = (v.substring(7)),  tgt.system = 'email' "valuemail";
+  src.value as v where (src.value.startsWith('http:')) ->  tgt.value = (v.substring(5)),  tgt.system = 'url' "valuehttp";
+  src.use where (src.use.startsWith('H')) -> tgt.use = 'home' "usehome";
+  src.use where ((src.use = 'WP') or (src.use = 'DIR') or (src.use = 'PUB')) -> tgt.use = 'work' "usework";
+  src.use where (src.use = 'BAD') -> tgt.use = 'old' "usebad";
+  src.use where (src.use = 'TMP') -> tgt.use = 'temp' "usetmp";
+  src.use where (src.use = 'MC') -> tgt.use = 'mobile' "usemobile";
+  src.useablePeriod -> tgt.period;
+}
+
+group PQQuantity(source src : PQ, target tgt : Quantity) extends Any <<types>> {
+  // src.unit as unit -> tgt.code = unit;
+  src.unit as unit -> tgt.unit = unit;
+  src.value as value -> tgt.value = value;
+}
+
+group RTOPQPQRatio(source src : RTO_PQ_PQ, target tgt : Ratio) extends Any <<types>> {
+  src.numerator as numerator -> tgt.numerator as targetNumerator then PQQuantity(numerator, targetNumerator);
+  src.denominator as denominator -> tgt.denominator as targetDenominator then PQQuantity(denominator, targetDenominator);
+}
+ 
+ group CensusTract(source src : ST, target ext : Extension) {
+  src -> ext.url = 'http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-censusTract' "url";
+    src->  ext.value = create('string'),  ext.value = (src.dataString) "value";
+  } 

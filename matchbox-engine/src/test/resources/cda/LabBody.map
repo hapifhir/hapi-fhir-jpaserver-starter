@@ -1,0 +1,2203 @@
+map "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/RefertodilaboratorioFULLBODY" = "RefertodilaboratorioFULLBODY"
+
+uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" alias AssignedEntity as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/AssociatedEntity" alias AssociatedEntity as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization" alias CustodianOrganization as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/OrganizationPartOf" alias OrganizationPartOf as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/Organization" alias rapresentedOrganization as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/AD" alias AD as source
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as target
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as target
+uses "http://hl7.org/fhir/StructureDefinition/Encounter" alias Encounter as target
+uses "http://hl7.org/fhir/StructureDefinition/Person" alias Patient as target
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as target
+uses "http://hl7.org/fhir/StructureDefinition/Specimen" alias Specimen as target
+uses "http://hl7.org/fhir/StructureDefinition/Procedure" alias Procedure as target
+uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Act" alias Act as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/IVL-PQ" alias IVL_PQ as source
+uses "http://hl7.org/fhir/cda/StructureDefinition/PQ" alias PQ as source
+uses "http://hl7.org/fhir/StructureDefinition/SimpleQuantity" alias SimpleQuantity as target
+uses "http://hl7.org/fhir/cda/StructureDefinition/Organizer" alias Organizer as source
+
+imports "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/CdaToFhirDataTypes"
+imports "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/FULLHEADER"
+
+group CdaToBundle(source cda : ClinicalDocument, target bundle : Bundle) {
+  cda ->  bundle.entry as e, e.request = create('BackboneElement') as request, request.method = 'POST',  e.resource = create('Composition') as composition,  composition.id = uuid() as uuid1,  e.fullUrl = append('https://example/Composition/', uuid1), request.url = 'Composition',  bundle.entry as e2, e2.request = create('BackboneElement') as requestPAT, requestPAT.method = 'PUT', e2.resource = create('Patient') as patient,  patient.id = uuid() as uuid2,  e2.fullUrl = append('https://example/Patient/', uuid2), bundle.entry as e3, e3.request = create('BackboneElement') as request, request.method = 'POST',  e3.resource = create('Encounter') as encounter,  encounter.id = uuid() as uuid3,  e3.fullUrl = append('https://example/Encounter/', uuid3),request.url = 'Encounter',
+ bundle.entry as e6, e6.request = create('BackboneElement') as request, request.method = 'POST',  e6.resource = create('DocumentReference') as DocumentReference,  DocumentReference.id = uuid() as uuid6,  e6.fullUrl = append('https://example/DocumentReference/', uuid6),request.url = 'DocumentReference' then {
+  cda then ClinicalDocumentToBundle(cda, patient, composition, encounter, bundle,DocumentReference) "cdatobundle";
+  cda.recordTarget as recordTarget then{
+    recordTarget.patientRole as patient then{
+        patient.id as id-> patient.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+           id.extension as ext1 -> identifier.value = ext1 "value";
+           id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+         }"idfr";
+         patient.id as id where (root='2.16.840.1.113883.2.9.4.3.2') or (root='2.16.840.1.113883.2.9.4.3.7')
+        or (root='2.16.840.1.113883.2.9.4.3.3') or(root='2.16.840.1.113883.2.9.4.3.17')  or (root = '2.16.840.1.113883.2.9.4.3.18') or (root = '2.16.840.1.113883.2.9.2.10.4.1.1')
+        or (root = '2.16.840.1.113883.2.9.2.20.4.1.1') or (root = '2.16.840.1.113883.2.9.2.30.4.1.1')  or (root = '2.16.840.1.113883.2.9.2.41.4.1.1')  or (root = '2.16.840.1.113883.2.9.2.42.4.1.1')
+        or (root = '2.16.840.1.113883.2.9.2.50.4.1.1') or (root = '2.16.840.1.113883.2.9.2.60.4.1.1')  or (root = '2.16.840.1.113883.2.9.2.70.4.1.1')  or (root = '2.16.840.1.113883.2.9.2.80.4.1.1')
+        or (root = '2.16.840.1.113883.2.9.2.90.4.1.1') or (root = '2.16.840.1.113883.2.9.2.100.4.1.1') or (root = '2.16.840.1.113883.2.9.2.110.4.1.1') or (root = '2.16.840.1.113883.2.9.2.120.4.1.1')
+        or (root = '2.16.840.1.113883.2.9.2.130.4.1.1') or (root = '2.16.840.1.113883.2.9.2.140.4.1.1') or (root = '2.16.840.1.113883.2.9.2.150.4.1.1') or (root = '2.16.840.1.113883.2.9.2.160.4.1.1')
+        or (root = '2.16.840.1.113883.2.9.2.170.4.1.1') or (root = '2.16.840.1.113883.2.9.2.180.4.1.1') or (root = '2.16.840.1.113883.2.9.2.190.4.1.1') or (root = '2.16.840.1.113883.2.9.2.200.4.1.1')
+        or (root = '2.16.840.1.113883.2.9.2.10.4.1') or (root = '2.16.840.1.113883.2.9.2.20.4.1') or (root = '2.16.840.1.113883.2.9.2.30.4.1') or (root = '2.16.840.1.113883.2.9.2.41.4.1')
+        or (root = '2.16.840.1.113883.2.9.2.42.4.1') or (root = '2.16.840.1.113883.2.9.2.50.4.1') or (root = '2.16.840.1.113883.2.9.2.60.4.1') or (root = '2.16.840.1.113883.2.9.2.70.4.1')
+        or (root = '2.16.840.1.113883.2.9.2.80.4.1') or (root = '2.16.840.1.113883.2.9.2.90.4.1') or (root = '2.16.840.1.113883.2.9.2.100.4.1') or (root = '2.16.840.1.113883.2.9.2.110.4.1')
+        or (root = '2.16.840.1.113883.2.9.2.120.4.1')  or (root = '2.16.840.1.113883.2.9.2.130.4.1')  or (root = '2.16.840.1.113883.2.9.2.140.4.1')  or (root = '2.16.840.1.113883.2.9.2.150.4.1')
+        or (root = '2.16.840.1.113883.2.9.2.160.4.1')  or (root = '2.16.840.1.113883.2.9.2.170.4.1')  or (root = '2.16.840.1.113883.2.9.2.180.4.1')  or (root = '2.16.840.1.113883.2.9.2.190.4.1')
+        or (root = '2.16.840.1.113883.2.9.2.200.4.1') or (root='2.16.840.1.113883.2.9.4.3.15')  then {
+          id.extension as ext -> requestPAT.url = append('Patient?identifier=',ext) "UUID";
+          }"ext";
+         }"record";
+   }"patient";
+ } "ClinicalDocumentToBody";
+}
+
+group ClinicalDocumentToBundle(source cda : ClinicalDocument, target patient : Patient, target composition : Composition, target encounter : Encounter, target bundle : Bundle , target documentreference : DocumentReference) {
+  cda -> bundle.id = uuid() "id";
+  cda.id -> bundle.identifier "identifier";
+  cda -> bundle.type = 'transaction' "type";
+  cda -> bundle.timestamp=(timestamp.now()) "date";
+  cda then ClinicalDocumentComposition(cda, composition, patient, encounter, bundle,documentreference) "composition";
+  cda.component as component then {
+    component.structuredBody as body then {
+      body.component as component  then {
+	     component.section as srcSection then {
+        srcSection.code -> composition.section as tgtSection  then ClinicalDocumentSection(cda, srcSection, patient, tgtSection, bundle,encounter,documentreference);       
+       };
+      };
+    }"body";
+  };
+}
+
+group ClinicalDocumentSection(source cda : ClinicalDocument, source src : Section, target patient : Patient, target tgt, target bundle : Bundle, target enc : Encounter,target documentreference : DocumentReference) {
+  src.title as t -> tgt.title = (t.dataString);
+  src.code -> tgt.code;
+  src.text as cdaText -> tgt.text as fhirText then {
+    cdaText -> fhirText.status = 'generated' "narrativeStatus";
+    cdaText as t -> fhirText.div = t "narrativeText";
+  }"cdaText";
+  src.entry as entry1 -> bundle.entry as e1, e1.request = create('BackboneElement') as request, request.method = 'POST',   e1.resource = create('DiagnosticReport') as DiagnosticReport,  DiagnosticReport.id = uuid() as uuid1,  e1.fullUrl = append('https://example/DiagnosticReport/', uuid1), request.url = 'DiagnosticReport' ,tgt.entry  = create('Reference') as reference,  reference.reference = ('https://example/DiagnosticReport/' + %DiagnosticReport.id) then {
+    entry1.act as act1 then Act(act1, patient, DiagnosticReport , enc , bundle) "act";
+  }"entry";
+  src.component as component then {
+    component.section as sec -> tgt.section as tgtSection then ClinicalDocumentSection(cda, sec, patient, tgtSection, bundle,enc,documentreference);
+  }"component";
+}
+
+group Observation (source obs : Observation, target patient : Patient, target encounter : Encounter, target ob : Observation, target bundle : Bundle) {
+    
+  obs->ob.subject=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patient.id) "reference";     
+  obs->ob.encounter=create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) "reference"; 
+  obs.code -> ob.code;
+
+  obs.statusCode as statusc where (code='completed') -> ob.status ='final';
+  obs.statusCode as statusc where (code='active') -> ob.status ='registered';
+  obs.statusCode as statusc where (code='aborted') -> ob.status ='cancelled';
+  obs.statusCode as statusc where (code='suspended') -> ob.status ='partial';
+  obs.effectiveTime as effectiveTime -> ob.effective = create('dateTime') as value then TSDateTime(effectiveTime, value) "value2";
+  obs where effectiveTime.low.exists() or effectiveTime.high.exists() then {
+  obs.effectiveTime as eff-> ob.effective=create('Period') as period then IVLTSPeriod(eff,period);
+  }"where";
+  obs.interpretationCode -> ob.interpretation;
+  obs.methodCode -> ob.method;
+  obs.value:INT as int->ob.value=(int.value) "value";
+  obs.value:BL as boolean ->ob.value=(boolean.value)"boolean";
+  obs.value:CE as val then{
+    val->ob.value =create('CodeableConcept') as ce then {
+      val.originalText as originalText then{
+        originalText.reference as reference-> ce.text=reference;
+      }"originltext";
+      val -> ce.coding as coding then {
+        val.code as code -> coding.code = cast(code, 'string');
+        val.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+        val.displayName as display -> coding.display = cast(display, 'string');
+        val.codeSystemVersion as version -> coding.version = cast(version, 'string');
+      }"code";
+      val.translation as translation -> ce.coding as coding then {
+        translation.code as code -> coding.code = cast(code, 'string');
+        translation.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+        translation.displayName as display -> coding.display = cast(display, 'string');
+        translation.codeSystemVersion as version -> coding.version = cast(version, 'string');
+        translation.qualifier as qualifier then{
+          qualifier.value as value -> ce.coding as coding then {
+            value.code as code -> coding.code = cast(code, 'string');
+            value.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+            value.displayName as display -> coding.display = cast(display, 'string');
+            value.codeSystemVersion as version -> coding.version = cast(version, 'string');
+          }"value";
+        }"qualifier";
+      }"translation";
+    }"coding";
+  }"val";
+  obs.value:CD as val then{
+    val->ob.value =create('CodeableConcept') as ce then {
+      val.originalText as originalText then{
+        originalText.reference as reference-> ce.text=reference;
+      }"originltext";
+      val -> ce.coding as coding then {
+        val.code as code -> coding.code = cast(code, 'string');
+        val.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+        val.displayName as display -> coding.display = cast(display, 'string');
+        val.codeSystemVersion as version -> coding.version = cast(version, 'string');
+      }"code";
+      val.translation as translation -> ce.coding as coding then {
+        translation.code as code -> coding.code = cast(code, 'string');
+        translation.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+        translation.displayName as display -> coding.display = cast(display, 'string');
+        translation.codeSystemVersion as version -> coding.version = cast(version, 'string');
+        translation.qualifier as qualifier then{
+          qualifier.value as value -> ce.coding as coding then {
+            value.code as code -> coding.code = cast(code, 'string');
+            value.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+            value.displayName as display -> coding.display = cast(display, 'string');
+            value.codeSystemVersion as version -> coding.version = cast(version, 'string');
+          }"value";
+        }"qualifier";
+      }"translation";
+    }"coding";
+  }"val";
+  obs.value:PQ as val then{
+    val->ob.value = create('Quantity') as quantity then {
+      val.value as value->quantity.value = value;
+      val.unit as unit-> quantity.unit = unit "unit";
+    }"quantity";
+  }"valueQuantity";
+  obs.value:ST as value->ob.value =create('string'),ob.value= (value.dataString) "value";
+
+  //Note e commenti
+  obs.entryRelationship as entryRelationship then {
+    entryRelationship.act as act then {
+      act.text as text then {
+        text.reference as reference -> ob.note as note then {
+          reference->note.text =(reference.value)"reference";
+        }"reference";
+      }"text";
+    }"Act";
+  }"entryRelationship";
+
+  //subject
+  obs.subject as sbj then {
+    sbj.relatedSubject as relatedSubj-> patient.extension as extension2 then ExtSubjectAnimal(relatedSubj, extension2);
+  }"subject";
+  
+  //performer
+  obs.performer as performer -> bundle.entry as e1, e1.request = create('BackboneElement') as request, request.method = 'POST',  e1.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e1.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url = 'PractitionerRole' then{
+    performer -> ob.performer = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+      performer.assignedEntity as entity then {
+        entity.code -> practitionerRole.code;
+        entity -> bundle.entry as e2,  e2.request = create('BackboneElement') as request, request.method = 'PUT', e2.resource = create('Practitioner') as practitioner then {
+          entity->practitioner.meta as meta then {
+            entity->meta.tag = create('Coding') as coding then {
+              entity -> coding.system ='http://algoritmodiscoring'"system";
+              entity -> coding.code ='ClinicalDocument/body/observation/performer'"code";
+            }"coding";
+          }"meta";
+          entity.id as id -> practitioner.identifier as identifier then {
+            id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+            id.extension as ext->identifier.value = ext then {
+              entity-> request.url = append('Practitioner?identifier=',ext)"UUID";
+            }"ext";
+            id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+            id.root as r then {
+              id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,  e2.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) "performer";
+            }"r";
+          }"identifier";
+          entity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"2.16.840.1.113883.2.9.4.3.2";
+          entity.id as id where (root!='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"diverso";
+          entity.addr -> practitioner.address;      
+          entity.telecom -> practitioner.telecom;
+          entity.assignedPerson as person then {
+            person.name -> practitioner.name;
+            person.birthTime as birthTime then{
+              birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+            }"birth";
+          }"name";
+          //organization
+          entity.representedOrganization as representedOrganization ->  bundle.entry as e3,  e3.request = create('BackboneElement') as request, request.method = 'PUT',  e3.resource = create('Organization') as organization  then {
+            representedOrganization->organization.meta as meta then {
+              representedOrganization->meta.tag = create('Coding') as coding then {
+                representedOrganization -> coding.system ='http://algoritmodiscoring'"system";
+                representedOrganization -> coding.code ='ClinicalDocument/body/observation/performer/representedOrganization'"code";
+              }"coding";
+            }"meta";
+           representedOrganization.id as id -> organization.identifier as identifier then {
+              id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+              id.extension as ext->identifier.value = ext then {
+                representedOrganization-> request.url = append('Organization?identifier=',ext)"UUID";
+              }"ext";
+              id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+              id.root as r then {
+                id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e3.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid3)"aut";
+              }"r";
+            }"identifier";
+            representedOrganization.name as v -> organization.name = (v.other);
+            representedOrganization.telecom -> organization.telecom;
+            representedOrganization.addr -> organization.address;
+            representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e4,  e4.request = create('BackboneElement') as request, e4.resource = create('Organization') as organization1, request.method = 'PUT' then {
+              OrgPartOf->organization1.meta as meta then {
+                OrgPartOf->meta.tag = create('Coding') as coding then {
+                  OrgPartOf -> coding.system ='http://algoritmodiscoring'"system";
+                  OrgPartOf -> coding.code ='ClinicalDocument/body/observation/performer/representedOrganization/asOrganizationPartOf'"code";
+                }"coding";
+              }"meta"; 
+              OrgPartOf.id as id -> organization1.identifier as identifier then {
+                id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+                id.extension as ext->identifier.value = ext then {
+                  OrgPartOf-> request.url = append('Organization?identifier=',ext)"UUID";
+                }"ext";
+                id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+                id.root as r then {
+                  id.extension as ext  -> organization1.id  = (r +'-'+ ext) as uuid4,  e4.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization1.id)  "org";
+                }"r";
+              }"identifier";
+              OrgPartOf.code -> organization1.type;
+              OrgPartOf.statusCode as status where (value ='active') -> organization1.active = create('boolean'), organization1.active = 'true';
+              OrgPartOf.wholeOrganization as wholeOrgan -> bundle.entry as e5,  e5.request = create('BackboneElement') as request, request.method = 'PUT',  e5.resource = create('Organization') as organization2 then{
+                wholeOrgan->organization2.meta as meta then {
+                  wholeOrgan->meta.tag = create('Coding') as coding then {
+                    wholeOrgan -> coding.system ='http://algoritmodiscoring'"system";
+                    wholeOrgan -> coding.code ='ClinicalDocument/body/observation/performer/representedOrganization/wholeOrganization'"code";
+                  }"coding";
+                }"meta";
+                wholeOrgan.id as id -> organization2.identifier as identifier then {
+                  id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+                  id.extension as ext->identifier.value = ext then {
+                    wholeOrgan-> request.url = append('Organization?identifier=',ext)"UUID";
+                  }"ext";
+                  id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+                  id.root as r then {
+                    id.extension as ext  -> organization2.id  = (r +'-'+ ext) as uuid5,  e5.fullUrl = append('https://example/Organization/', uuid5), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id) "org";
+                  }"r"; 
+                }"identifier";
+                wholeOrgan.name as v -> organization2.name = (v.other);
+                wholeOrgan.telecom -> organization2.telecom;
+                wholeOrgan.addr -> organization2.address;
+              }"wholeOrganization";
+            }"OrgPartOf";
+          }"representedOrganization"; 
+        }"practitioner";
+      }"entity";
+    }"practitionerRole";
+  }"performer";
+
+  //author
+  obs.author as srcAuthor ->  bundle.entry as e6, e6.request = create('BackboneElement') as request, request.method = 'POST', e6.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid6,  e6.fullUrl = append('https://example/PractitionerRole/', uuid6), request.url='PractitionerRole', ob.performer = create('Reference') as referenceaut,  referenceaut.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+    srcAuthor.assignedAuthor as assignedAuthor then {
+      assignedAuthor.code as codice -> practitionerRole.code as code2 then CECodeableConcept(codice,code2);
+      assignedAuthor -> bundle.entry as e7,  e7.request = create('BackboneElement') as request, request.method = 'PUT', e7.resource = create('Practitioner') as practitioner,  practitioner.id = uuid() as uuid7 then {
+        srcAuthor.functionCode -> practitionerRole.code;
+        assignedAuthor->practitioner.meta as meta then {
+          assignedAuthor->meta.tag = create('Coding') as coding then {
+            assignedAuthor -> coding.system ='http://algoritmodiscoring'"system";
+            assignedAuthor -> coding.code ='ClinicalDocument/body/observation/author'"code";
+          }"coding";
+        }"meta";
+        assignedAuthor.id as id -> practitioner.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            assignedAuthor-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,   e7.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id)"aut";
+          }"r";
+          assignedAuthor.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"2.16.840.1.113883.2.9.4.3.2";
+          assignedAuthor.id as id where (root!='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"diverso";
+        }"identifier";
+        assignedAuthor.addr -> practitioner.address;      
+        assignedAuthor.telecom -> practitioner.telecom;
+        //person
+        assignedAuthor.assignedPerson as person then {
+          person.name -> practitioner.name;
+          person.birthTime as birthTime then{
+            birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+          }"birth";
+        }"name";
+      }"ASSAUth";
+      //organization
+      assignedAuthor.representedOrganization as representedOrganization ->  bundle.entry as e8,  e8.request = create('BackboneElement') as request, request.method = 'PUT',  e8.resource = create('Organization') as organization then {
+        representedOrganization->organization.meta as meta then {
+          representedOrganization->meta.tag = create('Coding') as coding then {
+            representedOrganization -> coding.system ='http://algoritmodiscoring'"system";
+            representedOrganization -> coding.code ='ClinicalDocument/body/observation/author/representedOrganization'"code";
+          }"coding";
+        }"meta";
+        representedOrganization.id as id -> organization.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            representedOrganization-> request.url = append('Organization?identifier=',ext)"UUID";
+          }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,   e8.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid3)"org";
+          }"r";
+        }"identifier";
+        representedOrganization.name as v -> organization.name = (v.other);
+        representedOrganization.telecom -> organization.telecom;
+        representedOrganization.addr -> organization.address;
+        representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e9,  e9.request = create('BackboneElement') as request, request.method = 'PUT',  e9.resource = create('Organization') as organization1 then {
+          OrgPartOf->organization1.meta as meta then {
+            OrgPartOf->meta.tag = create('Coding') as coding then {
+              OrgPartOf -> coding.system ='http://algoritmodiscoring'"system";
+              OrgPartOf -> coding.code ='ClinicalDocument/body/observation/author/representedOrganization/asOrganizationPartOf'"code";
+            }"coding";
+          }"meta";
+          OrgPartOf.id as id -> organization1.identifier as identifier then {
+            id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+            id.extension as ext->identifier.value = ext then {
+              OrgPartOf-> request.url = append('Organization?identifier=',ext)"UUID";
+            }"ext";
+            id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+            id.root as r then {
+              id.extension as ext  -> organization1.id = (r +'-'+ ext) as uuid4,   e9.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization1.id) "org";
+            }"r"; 
+          }"identifier";
+          OrgPartOf.code -> organization1.type;
+          OrgPartOf.statusCode as status where (value ='active') -> organization1.active = create('boolean'), organization1.active = 'true';
+          OrgPartOf.wholeOrganization as wholeOrgan -> bundle.entry as e10,  e10.request = create('BackboneElement') as request, request.method = 'PUT',  e10.resource = create('Organization') as organization2 then{
+            wholeOrgan->organization2.meta as meta then {
+              wholeOrgan->meta.tag = create('Coding') as coding then {
+                wholeOrgan -> coding.system ='http://algoritmodiscoring'"system";
+                wholeOrgan -> coding.code ='ClinicalDocument/body/observation/author/representedOrganization/asOrganizationPartOf/wholeOrganization'"code";
+              }"coding";
+            }"meta";
+            wholeOrgan.id as id -> organization2.identifier as identifier then {
+              id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+              id.extension as ext->identifier.value = ext then {
+                wholeOrgan-> request.url = append('Organization?identifier=',ext)"UUID";
+              }"ext";
+              id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+              id.root as r then {
+                id.extension as ext  -> organization2.id = (r +'-'+ ext) as uuid4, e10.fullUrl = append('https://example/Organization/', uuid4), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id)    "org";
+              }"r"; 
+            }"identifier";
+            wholeOrgan.name as v -> organization2.name = (v.other);
+            wholeOrgan.telecom -> organization2.telecom;
+            wholeOrgan.addr -> organization2.address;
+          }"wholeOrganization";
+        }"OrgPartOf";
+      }"representedOrganization"; 
+      //device
+      assignedAuthor.assignedAuthoringDevice as assignedAuthoringDevice -> bundle.entry as e11,  e11.request = create('BackboneElement') as request, request.method = 'POST',  e11.resource = create('Device') as device,  device.id = uuid() as uuid11,  e11.fullUrl = append('https://example/Device/', uuid11), request.url ='Device', tgt.author = create('Reference') as reference, reference.reference= ('https://example/Device/' + %device.id) then{
+        assignedAuthoringDevice.templateId -> device.identifier; 
+        assignedAuthoringDevice.code -> device.type;
+        assignedAuthoringDevice.manufacturerModelName as manufacturerModelName then{
+          manufacturerModelName as m-> device.manufacturer = (m.displayName) "displayRule";
+        }"manufacturer"; 
+        assignedAuthoringDevice.softwareName as softwareName -> device.deviceName as deviceName then{
+          softwareName -> deviceName.type = 'other' "typeName";		
+          softwareName as s -> deviceName.name = (s.displayName) "name";
+        }"deviceName";
+      }"Device";
+    }"assignedAuthor";
+  }"author";
+
+  //participant person
+  obs.participant as participant where(typeCode!='DEV') ->  ob.encounter = create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) then {
+    participant -> encounter.participant as FhirParticipant then {
+      participant as p -> FhirParticipant.type as type then { 
+        p -> type.coding as coding then{
+          p-> coding.code = (p.typeCode) "codice";
+          p-> coding.system = 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType' "system";
+        } "codeType"; 
+      }"type";
+    }"fhirParticipant";
+    participant.participantRole as participantRole -> bundle.entry as e12,   e12.request = create('BackboneElement') as request, request.method = 'POST',  e12.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid12 ,  e12.fullUrl = append('https://example/PractitionerRole/', uuid12), request.url = 'PractitionerRole', encounter.participant = create('BackboneElement') as participant1, participant1.individual = create('Reference') as referencepart, referencepart.reference =  ('https://example/Practitioner/' + %practitionerRole.id) then { 
+     // participant.time -> participant1.period;
+      participant.time as time1 -> participant1.period = create('Period') as period then{
+        time1 -> period.start = create('dateTime') as start then TSDateTime(time1,start) "val";
+       }"time";
+       participant.time as time1 -> participant1.period =create('Period') as period then IVLTSPeriod(time1,period);
+      participant.functionCode -> practitionerRole.code;
+      //non mappa i 2 precedenti
+      participantRole  -> bundle.entry as e13, e13.request = create('BackboneElement') as request, request.method = 'PUT', e13.resource = create('Practitioner') as practitioner then {
+        participantRole->practitioner.meta as meta then {
+          participantRole->meta.tag = create('Coding') as coding then {
+            participantRole -> coding.system ='http://algoritmodiscoring'"system";
+            participantRole -> coding.code ='ClinicalDocument/body/observation/participant'"code";
+          }"coding";
+        }"meta";
+        participantRole.id as id -> practitioner.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            participantRole-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> practitioner.id  = (r +'-'+ ext) as uuid4,  e13.fullUrl = append('https://example/Practitioner/', uuid4),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) "org";
+          }"r";
+        }"identifier";
+        participantRole.code -> practitionerRole.code;
+        participantRole.addr -> practitioner.address;
+        participantRole.telecom -> practitioner.telecom;
+        participantRole.playingEntity as playingEntity then {
+          playingEntity.name -> practitioner.name;
+          playingEntity.birthTime as birthTime then{
+            birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+          }"birth";
+        }"name";
+      }"practitioner";
+    }"partRole";
+  }"participantEncounter";
+
+  //participant device
+  obs.participant as devParticipant where(typeCode='DEV') -> bundle.entry as e14, e14.request = create('BackboneElement') as request, request.method = 'POST', e14.resource = create('Device') as device,  device.id = uuid() as uuid14,  e14.fullUrl = append('https://example/Device/', uuid14), request.url='Device', ob.device = create('Reference') as reference,  reference.reference = ('https://example/Device/' + %device.id) then {
+    devParticipant.participantRole as participantRoleDev then {
+      participantRoleDev.playingDevice as playingDevice then {
+        playingDevice.code -> device.type;
+        playingDevice.manufacturerModelName as manufacturerModelName then{
+          manufacturerModelName as m-> device.manufacturer = (m.displayName) "displayRule";
+        }"manufacturer"; 
+        playingDevice.softwareName as softwareName -> device.deviceName as deviceName then{
+          softwareName -> deviceName.type = 'other' "typeName";		
+          softwareName as s -> deviceName.name = (s.displayName) "name";
+        }"deviceName";
+      }"playingDevice";
+    }"participantRoleDev";
+  }"devParticipant";
+
+  //observationMedia
+  obs.entryRelationship as er then {
+    er.observationMedia as obsMedia -> bundle.entry as e15, e15.request = create('BackboneElement') as request, request.method = 'POST', e15.resource = create('Media') as media1,  media1.id = uuid() as uuid15,  e15.fullUrl = append('https://example/Media/', uuid15), request.url='Media', ob.derivedFrom = create('Reference') as reference,  reference.reference = ('https://example/Media/' + %media1.id) then {
+      obsMedia-> media1.content = create('Attachment') as Attachment then {
+        obsMedia -> media1.status='unknown'"status";
+        obsMedia.value as valueMedia then {
+          valueMedia.mediaType as type -> Attachment.contentType=type "type";
+          valueMedia -> Attachment.data=(valueMedia.dataBase64Binary) "data";
+        }"valuemedia";
+      } "Attachment";
+    }"media";
+  }"observationMedia";
+
+  //referenceRange   
+  obs.referenceRange as refRange -> ob.referenceRange = create('BackboneElement') as ref then {
+    refRange.observationRange as obsRange then {
+    obsRange.value:ST as value->ref.text =create('string'),ref.text= (value.dataString) "value";
+      obsRange -> ref.low = create('Quantity') as Low  then {
+      obsRange.value: IVL_PQ as v  then {
+        v.low as l1 then {
+          l1.value as decValue-> Low.value = decValue;
+          l1.unit as Unit-> Low.unit = Unit;
+        }"decValue"; 
+        v->ref.high = create('Quantity') as high  then {
+          v.high as h1 then {
+            h1.value as decValue1-> high.value = decValue1;
+            h1.unit as Unit1-> high.unit = Unit1;
+          }"decValue";
+        }"high";           
+      }"IVL-PQ";
+      obsRange.interpretationCode->ref.type;
+      obsRange.precondition as precondition then { 
+        precondition.criterion as criterion then{ 
+          criterion.code -> ref.appliesTo "appliesTo";
+          criterion.value: IVL_PQ as v then {
+            v.high as l1 then {
+           l1-> ref.age = create('Quantity')as age then {
+            l1 -> age.high as high then {
+              l1.value as decValue -> high.value = decValue;
+              l1.unit as Unit1-> high.unit = Unit1;
+                      }"high";
+                    }"age";
+                  } "low"; 
+             } "v"; 
+          } "criterion"; 
+       }"precondition";
+    }"obsRange";              
+  }"refRange";  
+ }"ref";
+
+}
+
+group Observation2 (source obs : Observation, target patient : Patient, target encounter : Encounter, target ob : Observation, target bundle : Bundle, source cda: Act, target specimenp : Specimen) {
+    
+  obs->ob.subject=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patient.id) "reference";     
+  obs->ob.encounter=create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) "reference"; 
+  obs.code -> ob.code;
+
+  obs.statusCode as statusc where (code='completed') -> ob.status ='final';
+  obs.statusCode as statusc where (code='active') -> ob.status ='registered';
+  obs.statusCode as statusc where (code='aborted') -> ob.status ='cancelled';
+  obs.statusCode as statusc where (code='suspended') -> ob.status ='partial';
+  obs.effectiveTime as effectiveTime -> ob.effective = create('dateTime') as value then TSDateTime(effectiveTime, value) "value2";
+  obs where effectiveTime.low.exists() or effectiveTime.high.exists() then {
+  obs.effectiveTime as eff-> ob.effective=create('Period') as period then IVLTSPeriod(eff,period);
+  }"where";
+  obs.interpretationCode -> ob.interpretation;
+  obs.methodCode -> ob.method;
+  obs.value:INT as int->ob.value=(int.value) "value";
+  obs.value:BL as boolean ->ob.value=(boolean.value)"boolean";
+  obs.value:CE as val then{
+    val->ob.value =create('CodeableConcept') as ce then {
+      val.originalText as originalText then{
+        originalText.reference as reference-> ce.text=reference;
+      }"originltext";
+      val -> ce.coding as coding then {
+        val.code as code -> coding.code = cast(code, 'string');
+        val.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+        val.displayName as display -> coding.display = cast(display, 'string');
+        val.codeSystemVersion as version -> coding.version = cast(version, 'string');
+      }"code";
+      val.translation as translation -> ce.coding as coding then {
+        translation.code as code -> coding.code = cast(code, 'string');
+        translation.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+        translation.displayName as display -> coding.display = cast(display, 'string');
+        translation.codeSystemVersion as version -> coding.version = cast(version, 'string');
+        translation.qualifier as qualifier then{
+          qualifier.value as value -> ce.coding as coding then {
+            value.code as code -> coding.code = cast(code, 'string');
+            value.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+            value.displayName as display -> coding.display = cast(display, 'string');
+            value.codeSystemVersion as version -> coding.version = cast(version, 'string');
+          }"value";
+        }"qualifier";
+      }"translation";
+    }"coding";
+  }"val";
+  obs.value:PQ as val then{
+    val->ob.value = create('Quantity') as quantity then {
+      val.value as value->quantity.value = value;
+      val.unit as unit-> quantity.unit = unit "unit";
+    }"quantity";
+  }"valueQuantity";
+  obs.value:ST as value->ob.value =create('string'),ob.value= (value.dataString) "value";
+
+
+  //Note e commenti
+  obs.entryRelationship as entryRelationship then {
+    entryRelationship.act as act then {
+      act.text as text then {
+        text.reference as reference -> ob.note as note then {
+          reference->note.text =(reference.value)"reference";
+        }"reference";
+      }"text";
+    }"Act";
+  }"entryRelationship";
+
+  //subject
+  obs.subject as sbj then {
+    sbj.relatedSubject as relatedSubj-> patient.extension as extension2 then ExtSubjectAnimal(relatedSubj, extension2);
+  }"subject";
+
+  cda where cda.entryRelationship.act.exists() then {
+  //specimen
+    obs.specimen as spmn  then {
+      spmn.specimenRole as specimenRole then{  
+        specimenRole.id as id then{
+          id.extension as extobs then{
+            cda.entryRelationship as entryRelationship then{
+              entryRelationship.act as a then{
+                a.specimen as sp then{
+                  sp.specimenRole as spr then{
+                    spr.id where(extension = extobs) -> bundle.entry as e4o, e4o.request = create('BackboneElement') as request, request.method = 'POST', e4o.resource = create('Specimen') as specimen, specimen.id = uuid() as uuid4o, e4o.fullUrl = append('https://example/Specimen/', uuid4o), request.url = 'Specimen', ob.specimen=create('Reference') as reference, reference.reference = ('https://example/Specimen/' + %specimen.id) then{
+                      spr -> specimen.parent=create('Reference') as reference,  reference.reference = ('https://example/Specimen/' + %specimenp.id) "reference";   
+                      spr.id -> specimen.identifier;
+                      specimenRole.specimenPlayingEntity as spent then{
+                        spent.code -> specimen.type;
+                      }"ent";
+                      spr.specimenPlayingEntity as specimenPlayingEntity then {
+                        specimenPlayingEntity.code -> specimen.type;
+                      }"specimenPlayingEntity";   
+                        a -> specimen.collection=create('BackboneElement') as collection then {
+                          a.effectiveTime as effectivetime -> collection.collected =create('dateTime') as value then TSDateTime(effectivetime,value)"value";
+                          a where effectiveTime.low.exists() or effectiveTime.high.exists() then {
+                          a.effectiveTime as eff-> collection.collected=create('Period') as period then IVLTSPeriod(eff,period);
+                          }"where";
+                          a.participant as participant ->bundle.entry as e10, e10.request = create('BackboneElement') as request, request.method = 'PUT', e10.resource = create('Practitioner') as practitioner, practitioner.id = uuid() as uuid11, e10.fullUrl = append('https://example/Practitioner/', uuid11),  collection.collector = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) then {
+                            participant.participantRole as participantRole then {
+                              participantRole->practitioner.meta as meta then {
+                                participantRole->meta.tag = create('Coding') as coding then {
+                                  participantRole -> coding.system ='http://algoritmodiscoring'"system";
+                                  participantRole -> coding.code ='ClinicalDocument/body/act/participant'"code";
+                                }"coding";
+                              }"meta";
+                              participantRole.id as id -> practitioner.identifier as identifier then {
+                                id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+                                id.extension as ext->identifier.value = ext then {
+                                  participantRole-> request.url = append('Practitioner?identifier=',ext)"UUID";
+                                }"ext";
+                                id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+                              }"identifier";
+                              participantRole.addr -> practitioner.address;
+                              participantRole.playingEntity  as playingEntity then{
+                                playingEntity.name -> practitioner.name;
+                              }"playingEntity";
+                            }"participantRole";
+                          }"participant";
+                        }"collection";  
+                    }"cont";
+                  }"spr";
+                }"sp";
+              }"a";
+            }"en";             
+          }"extobs";
+        }"id"; 
+    }"specimenRole";  
+    }"specimen";
+  }"conditionactexists";
+  
+  cda where cda.entryRelationship.act.exists().not() and (obs.specimen.specimenRole.specimenPlayingEntity.code.code != specimenp.type.coding.code) then {
+    obs.specimen as spmn ->bundle.entry as e4o, e4o.request = create('BackboneElement') as request, request.method = 'POST', e4o.resource = create('Specimen') as specimen, specimen.id = uuid() as uuid4o, e4o.fullUrl = append('https://example/Specimen/', uuid4o), request.url = 'Specimen', ob.specimen=create('Reference') as reference, reference.reference = ('https://example/Specimen/' + %specimen.id) then {
+      spmn.specimenRole as specimenRole then{
+        specimenRole.id  -> specimen.identifier;
+     specimenRole.specimenPlayingEntity as specimenPlayingEntity then {
+          specimenPlayingEntity.code -> specimen.type;
+        }"specimenPlayingEntity";
+      }"specimenRole";
+    }"specimen";    
+  }"wherenotexists";
+  
+  //performer
+  obs.performer as performer -> bundle.entry as e1, e1.request = create('BackboneElement') as request, request.method = 'POST',  e1.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e1.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url = 'PractitionerRole' then{
+    performer -> ob.performer = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+      performer.assignedEntity as entity then {
+        entity.code -> practitionerRole.code;
+        entity -> bundle.entry as e2,  e2.request = create('BackboneElement') as request, request.method = 'PUT', e2.resource = create('Practitioner') as practitioner then {
+          entity->practitioner.meta as meta then {
+            entity->meta.tag = create('Coding') as coding then {
+              entity -> coding.system ='http://algoritmodiscoring'"system";
+              entity -> coding.code ='ClinicalDocument/body/observation/performer'"code";
+            }"coding";
+          }"meta";
+          entity.id as id -> practitioner.identifier as identifier then {
+            id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+            id.extension as ext->identifier.value = ext then {
+              entity-> request.url = append('Practitioner?identifier=',ext)"UUID";
+            }"ext";
+            id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+            id.root as r then {
+              id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,  e2.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) "performer";
+            }"r";
+          }"identifier";
+          entity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"2.16.840.1.113883.2.9.4.3.2";
+          entity.id as id where (root!='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"diverso";
+          entity.addr -> practitioner.address;      
+          entity.telecom -> practitioner.telecom;
+          entity.assignedPerson as person then {
+            person.name -> practitioner.name;
+            person.birthTime as birthTime then{
+              birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+            }"birth";
+          }"name";
+          //organization
+          entity.representedOrganization as representedOrganization ->  bundle.entry as e3,  e3.request = create('BackboneElement') as request, request.method = 'PUT',  e3.resource = create('Organization') as organization  then {
+            representedOrganization->organization.meta as meta then {
+              representedOrganization->meta.tag = create('Coding') as coding then {
+                representedOrganization -> coding.system ='http://algoritmodiscoring'"system";
+                representedOrganization -> coding.code ='ClinicalDocument/body/observation/performer/representedOrganization'"code";
+              }"coding";
+            }"meta";
+           representedOrganization.id as id -> organization.identifier as identifier then {
+              id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+              id.extension as ext->identifier.value = ext then {
+                representedOrganization-> request.url = append('Organization?identifier=',ext)"UUID";
+              }"ext";
+              id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+              id.root as r then {
+                id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e3.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid3)"aut";
+              }"r";
+            }"identifier";
+            representedOrganization.name as v -> organization.name = (v.other);
+            representedOrganization.telecom -> organization.telecom;
+            representedOrganization.addr -> organization.address;
+            representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e4,  e4.request = create('BackboneElement') as request, e4.resource = create('Organization') as organization1, request.method = 'PUT' then {
+              OrgPartOf->organization1.meta as meta then {
+                OrgPartOf->meta.tag = create('Coding') as coding then {
+                  OrgPartOf -> coding.system ='http://algoritmodiscoring'"system";
+                  OrgPartOf -> coding.code ='ClinicalDocument/body/observation/performer/representedOrganization/asOrganizationPartOf'"code";
+                }"coding";
+              }"meta"; 
+              OrgPartOf.id as id -> organization1.identifier as identifier then {
+                id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+                id.extension as ext->identifier.value = ext then {
+                  OrgPartOf-> request.url = append('Organization?identifier=',ext)"UUID";
+                }"ext";
+                id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+                id.root as r then {
+                  id.extension as ext  -> organization1.id  = (r +'-'+ ext) as uuid4,  e4.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization1.id)  "org";
+                }"r";
+              }"identifier";
+              OrgPartOf.code -> organization1.type;
+              OrgPartOf.statusCode as status where (value ='active') -> organization1.active = create('boolean'), organization1.active = 'true';
+              OrgPartOf.wholeOrganization as wholeOrgan -> bundle.entry as e5,  e5.request = create('BackboneElement') as request, request.method = 'PUT',  e5.resource = create('Organization') as organization2 then{
+                wholeOrgan->organization2.meta as meta then {
+                  wholeOrgan->meta.tag = create('Coding') as coding then {
+                    wholeOrgan -> coding.system ='http://algoritmodiscoring'"system";
+                    wholeOrgan -> coding.code ='ClinicalDocument/body/observation/performer/representedOrganization/wholeOrganization'"code";
+                  }"coding";
+                }"meta";
+                wholeOrgan.id as id -> organization2.identifier as identifier then {
+                  id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+                  id.extension as ext->identifier.value = ext then {
+                    wholeOrgan-> request.url = append('Organization?identifier=',ext)"UUID";
+                  }"ext";
+                  id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+                  id.root as r then {
+                    id.extension as ext  -> organization2.id  = (r +'-'+ ext) as uuid5,  e5.fullUrl = append('https://example/Organization/', uuid5), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id) "org";
+                  }"r"; 
+                }"identifier";
+                wholeOrgan.name as v -> organization2.name = (v.other);
+                wholeOrgan.telecom -> organization2.telecom;
+                wholeOrgan.addr -> organization2.address;
+              }"wholeOrganization";
+            }"OrgPartOf";
+          }"representedOrganization"; 
+        }"practitioner";
+      }"entity";
+    }"practitionerRole";
+  }"performer";
+
+  //author
+  obs.author as srcAuthor ->  bundle.entry as e6, e6.request = create('BackboneElement') as request, request.method = 'POST', e6.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid6,  e6.fullUrl = append('https://example/PractitionerRole/', uuid6), request.url='PractitionerRole', ob.performer = create('Reference') as referenceaut,  referenceaut.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+    srcAuthor.assignedAuthor as assignedAuthor then {
+      assignedAuthor.code as codice -> practitionerRole.code as code2 then CECodeableConcept(codice,code2);
+      assignedAuthor -> bundle.entry as e7,  e7.request = create('BackboneElement') as request, request.method = 'PUT', e7.resource = create('Practitioner') as practitioner,  practitioner.id = uuid() as uuid7 then {
+        srcAuthor.functionCode -> practitionerRole.code;
+        assignedAuthor->practitioner.meta as meta then {
+          assignedAuthor->meta.tag = create('Coding') as coding then {
+            assignedAuthor -> coding.system ='http://algoritmodiscoring'"system";
+            assignedAuthor -> coding.code ='ClinicalDocument/body/observation/author'"code";
+          }"coding";
+        }"meta";
+        assignedAuthor.id as id -> practitioner.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            assignedAuthor-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,   e7.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id)"aut";
+          }"r";
+          assignedAuthor.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"2.16.840.1.113883.2.9.4.3.2";
+          assignedAuthor.id as id where (root!='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"diverso";
+        }"identifier";
+        assignedAuthor.addr -> practitioner.address;      
+        assignedAuthor.telecom -> practitioner.telecom;
+        //person
+        assignedAuthor.assignedPerson as person then {
+          person.name -> practitioner.name;
+          person.birthTime as birthTime then{
+            birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+          }"birth";
+        }"name";
+      }"ASSAUth";
+      //organization
+      assignedAuthor.representedOrganization as representedOrganization ->  bundle.entry as e8,  e8.request = create('BackboneElement') as request, request.method = 'PUT',  e8.resource = create('Organization') as organization then {
+        representedOrganization->organization.meta as meta then {
+          representedOrganization->meta.tag = create('Coding') as coding then {
+            representedOrganization -> coding.system ='http://algoritmodiscoring'"system";
+            representedOrganization -> coding.code ='ClinicalDocument/body/observation/author/representedOrganization'"code";
+          }"coding";
+        }"meta";
+        representedOrganization.id as id -> organization.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            representedOrganization-> request.url = append('Organization?identifier=',ext)"UUID";
+          }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,   e8.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid3)"org";
+          }"r";
+        }"identifier";
+        representedOrganization.name as v -> organization.name = (v.other);
+        representedOrganization.telecom -> organization.telecom;
+        representedOrganization.addr -> organization.address;
+        representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e9,  e9.request = create('BackboneElement') as request, request.method = 'PUT',  e9.resource = create('Organization') as organization1 then {
+          OrgPartOf->organization1.meta as meta then {
+            OrgPartOf->meta.tag = create('Coding') as coding then {
+              OrgPartOf -> coding.system ='http://algoritmodiscoring'"system";
+              OrgPartOf -> coding.code ='ClinicalDocument/body/observation/author/representedOrganization/asOrganizationPartOf'"code";
+            }"coding";
+          }"meta";
+          OrgPartOf.id as id -> organization1.identifier as identifier then {
+            id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+            id.extension as ext->identifier.value = ext then {
+              OrgPartOf-> request.url = append('Organization?identifier=',ext)"UUID";
+            }"ext";
+            id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+            id.root as r then {
+              id.extension as ext  -> organization1.id = (r +'-'+ ext) as uuid4,   e9.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization1.id) "org";
+            }"r"; 
+          }"identifier";
+          OrgPartOf.code -> organization1.type;
+          OrgPartOf.statusCode as status where (value ='active') -> organization1.active = create('boolean'), organization1.active = 'true';
+          OrgPartOf.wholeOrganization as wholeOrgan -> bundle.entry as e10,  e10.request = create('BackboneElement') as request, request.method = 'PUT',  e10.resource = create('Organization') as organization2 then{
+            wholeOrgan->organization2.meta as meta then {
+              wholeOrgan->meta.tag = create('Coding') as coding then {
+                wholeOrgan -> coding.system ='http://algoritmodiscoring'"system";
+                wholeOrgan -> coding.code ='ClinicalDocument/body/observation/author/representedOrganization/asOrganizationPartOf/wholeOrganization'"code";
+              }"coding";
+            }"meta";
+            wholeOrgan.id as id -> organization2.identifier as identifier then {
+              id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+              id.extension as ext->identifier.value = ext then {
+                wholeOrgan-> request.url = append('Organization?identifier=',ext)"UUID";
+              }"ext";
+              id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+              id.root as r then {
+                id.extension as ext  -> organization2.id = (r +'-'+ ext) as uuid4, e10.fullUrl = append('https://example/Organization/', uuid4), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id)    "org";
+              }"r"; 
+            }"identifier";
+            wholeOrgan.name as v -> organization2.name = (v.other);
+            wholeOrgan.telecom -> organization2.telecom;
+            wholeOrgan.addr -> organization2.address;
+          }"wholeOrganization";
+        }"OrgPartOf";
+      }"representedOrganization"; 
+      //device
+      assignedAuthor.assignedAuthoringDevice as assignedAuthoringDevice -> bundle.entry as e11,  e11.request = create('BackboneElement') as request, request.method = 'POST',  e11.resource = create('Device') as device,  device.id = uuid() as uuid11,  e11.fullUrl = append('https://example/Device/', uuid11), request.url ='Device', tgt.author = create('Reference') as reference, reference.reference= ('https://example/Device/' + %device.id) then{
+        assignedAuthoringDevice.templateId -> device.identifier; 
+        assignedAuthoringDevice.code -> device.type;
+        assignedAuthoringDevice.manufacturerModelName as manufacturerModelName then{
+          manufacturerModelName as m-> device.manufacturer = (m.displayName) "displayRule";
+        }"manufacturer"; 
+        assignedAuthoringDevice.softwareName as softwareName -> device.deviceName as deviceName then{
+          softwareName -> deviceName.type = 'other' "typeName";		
+          softwareName as s -> deviceName.name = (s.displayName) "name";
+        }"deviceName";
+      }"Device";
+    }"assignedAuthor";
+  }"author";
+
+  //participant person
+  obs.participant as participant where(typeCode!='DEV') ->  ob.encounter = create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) then {
+    participant -> encounter.participant as FhirParticipant then {
+      participant as p -> FhirParticipant.type as type then { 
+        p -> type.coding as coding then{
+          p-> coding.code = (p.typeCode) "codice";
+          p-> coding.system = 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType' "system";
+        } "codeType"; 
+      }"type";
+    }"fhirParticipant";
+    participant.participantRole as participantRole -> bundle.entry as e12,   e12.request = create('BackboneElement') as request, request.method = 'POST',  e12.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid12 ,  e12.fullUrl = append('https://example/PractitionerRole/', uuid12), request.url = 'PractitionerRole', encounter.participant = create('BackboneElement') as participant1, participant1.individual = create('Reference') as referencepart, referencepart.reference =  ('https://example/Practitioner/' + %practitionerRole.id) then { 
+      //participant.time -> participant1.period;
+      participant.time as time1 -> participant1.period = create('Period') as period then{
+        time1 -> period.start = create('dateTime') as start then TSDateTime(time1,start) "val";
+       }"time"; 
+       participant.time as time1 -> participant1.period =create('Period') as period then IVLTSPeriod(time1,period);
+      participant.functionCode -> practitionerRole.code;
+      //non mappa i 2 precedenti
+      participantRole  -> bundle.entry as e13, e13.request = create('BackboneElement') as request, request.method = 'PUT', e13.resource = create('Practitioner') as practitioner then {
+        participantRole->practitioner.meta as meta then {
+          participantRole->meta.tag = create('Coding') as coding then {
+            participantRole -> coding.system ='http://algoritmodiscoring'"system";
+            participantRole -> coding.code ='ClinicalDocument/body/observation/participant'"code";
+          }"coding";
+        }"meta";
+        participantRole.id as id -> practitioner.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            participantRole-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> practitioner.id  = (r +'-'+ ext) as uuid4,  e13.fullUrl = append('https://example/Practitioner/', uuid4),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) "org";
+          }"r";
+        }"identifier";
+        participantRole.code -> practitionerRole.code;
+        participantRole.addr -> practitioner.address;
+        participantRole.telecom -> practitioner.telecom;
+        participantRole.playingEntity as playingEntity then {
+          playingEntity.name -> practitioner.name;
+          playingEntity.birthTime as birthTime then{
+            birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+          }"birth";
+        }"name";
+      }"practitioner";
+    }"partRole";
+  }"participantEncounter";
+
+  //participant device
+  obs.participant as devParticipant where(typeCode='DEV') -> bundle.entry as e14, e14.request = create('BackboneElement') as request, request.method = 'POST', e14.resource = create('Device') as device,  device.id = uuid() as uuid14,  e14.fullUrl = append('https://example/Device/', uuid14), request.url='Device', ob.device = create('Reference') as reference,  reference.reference = ('https://example/Device/' + %device.id) then {
+    devParticipant.participantRole as participantRoleDev then {
+      participantRoleDev.playingDevice as playingDevice then {
+        playingDevice.code -> device.type;
+        playingDevice.manufacturerModelName as manufacturerModelName then{
+          manufacturerModelName as m-> device.manufacturer = (m.displayName) "displayRule";
+        }"manufacturer"; 
+        playingDevice.softwareName as softwareName -> device.deviceName as deviceName then{
+          softwareName -> deviceName.type = 'other' "typeName";		
+          softwareName as s -> deviceName.name = (s.displayName) "name";
+        }"deviceName";
+      }"playingDevice";
+    }"participantRoleDev";
+  }"devParticipant";
+
+  //observationMedia
+  obs.entryRelationship as er then {
+    er.observationMedia as obsMedia -> bundle.entry as e15, e15.request = create('BackboneElement') as request, request.method = 'POST', e15.resource = create('Media') as media1,  media1.id = uuid() as uuid15,  e15.fullUrl = append('https://example/Media/', uuid15), request.url='Media', ob.derivedFrom = create('Reference') as reference,  reference.reference = ('https://example/Media/' + %media1.id) then {
+      obsMedia-> media1.content = create('Attachment') as Attachment then {
+        obsMedia -> media1.status='unknown'"status";
+        obsMedia.value as valueMedia then {
+          valueMedia.mediaType as type -> Attachment.contentType=type "type";
+          valueMedia -> Attachment.data=(valueMedia.dataBase64Binary) "data";
+        }"valuemedia";
+      } "Attachment";
+    }"media";
+  }"observationMedia";
+
+  //referenceRange   
+  obs.referenceRange as refRange -> ob.referenceRange = create('BackboneElement') as ref then {
+    refRange.observationRange as obsRange then {
+    obsRange.value:ST as value->ref.text =create('string'),ref.text= (value.dataString) "value";
+      obsRange -> ref.low = create('Quantity') as Low  then {
+      obsRange.value: IVL_PQ as v  then {
+        v.low as l1 then {
+          l1.value as decValue-> Low.value = decValue;
+          l1.unit as Unit-> Low.unit = Unit;
+        }"decValue"; 
+        v->ref.high = create('Quantity') as high  then {
+          v.high as h1 then {
+            h1.value as decValue1-> high.value = decValue1;
+            h1.unit as Unit1-> high.unit = Unit1;
+          }"decValue";
+        }"high";           
+      }"IVL-PQ";
+      obsRange.interpretationCode->ref.type;
+      obsRange.precondition as precondition then { 
+        precondition.criterion as criterion then{ 
+          criterion.code -> ref.appliesTo "appliesTo";
+          criterion.value: IVL_PQ as v then {
+            v.high as l1 then {
+           l1-> ref.age = create('Quantity')as age then {
+            l1 -> age.high as high then {
+              l1.value as decValue -> high.value = decValue;
+              l1.unit as Unit1-> high.unit = Unit1;
+                      }"high";
+                    }"age";
+                  } "low"; 
+             } "v"; 
+          } "criterion"; 
+       }"precondition";
+    }"obsRange";              
+  }"refRange";  
+ }"ref";
+
+}
+
+group Observation3 (source obs : Observation, target patient : Patient, target encounter : Encounter, target ob : Observation, target bundle : Bundle, source cda: Act) {
+    
+  obs->ob.subject=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patient.id) "reference";     
+  obs->ob.encounter=create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) "reference"; 
+  obs.code -> ob.code;
+
+  obs.statusCode as statusc where (code='completed') -> ob.status ='final';
+  obs.statusCode as statusc where (code='active') -> ob.status ='registered';
+  obs.statusCode as statusc where (code='aborted') -> ob.status ='cancelled';
+  obs.statusCode as statusc where (code='suspended') -> ob.status ='partial';
+  obs.effectiveTime as effectiveTime -> ob.effective = create('dateTime') as value then TSDateTime(effectiveTime, value) "value2";
+  obs where effectiveTime.low.exists() or effectiveTime.high.exists() then {
+  obs.effectiveTime as eff-> ob.effective=create('Period') as period then IVLTSPeriod(eff,period);
+  }"where";
+  obs.interpretationCode -> ob.interpretation;
+  obs.methodCode -> ob.method;
+  obs.value:INT as int->ob.value=(int.value) "value";
+  obs.value:BL as boolean ->ob.value=(boolean.value)"boolean";
+  obs.value:CE as val then{
+    val->ob.value =create('CodeableConcept') as ce then {
+      val.originalText as originalText then{
+        originalText.reference as reference-> ce.text=reference;
+      }"originltext";
+      val -> ce.coding as coding then {
+        val.code as code -> coding.code = cast(code, 'string');
+        val.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+        val.displayName as display -> coding.display = cast(display, 'string');
+        val.codeSystemVersion as version -> coding.version = cast(version, 'string');
+      }"code";
+      val.translation as translation -> ce.coding as coding then {
+        translation.code as code -> coding.code = cast(code, 'string');
+        translation.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+        translation.displayName as display -> coding.display = cast(display, 'string');
+        translation.codeSystemVersion as version -> coding.version = cast(version, 'string');
+        translation.qualifier as qualifier then{
+          qualifier.value as value -> ce.coding as coding then {
+            value.code as code -> coding.code = cast(code, 'string');
+            value.codeSystem as system -> coding.system = translate(system, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri');
+            value.displayName as display -> coding.display = cast(display, 'string');
+            value.codeSystemVersion as version -> coding.version = cast(version, 'string');
+          }"value";
+        }"qualifier";
+      }"translation";
+    }"coding";
+  }"val";
+  obs.value:PQ as val then{
+    val->ob.value = create('Quantity') as quantity then {
+      val.value as value->quantity.value = value;
+      val.unit as unit-> quantity.unit = unit "unit";
+    }"quantity";
+  }"valueQuantity";
+  obs.value:ST as value->ob.value =create('string'),ob.value= (value.dataString) "value";
+
+  //Note e commenti
+  obs.entryRelationship as entryRelationship then {
+    entryRelationship.act as act then {
+      act.text as text then {
+        text.reference as reference -> ob.note as note then {
+          reference->note.text =(reference.value)"reference";
+        }"reference";
+      }"text";
+    }"Act";
+  }"entryRelationship";
+
+  //subject
+  obs.subject as sbj then {
+    sbj.relatedSubject as relatedSubj-> patient.extension as extension2 then ExtSubjectAnimal(relatedSubj, extension2);
+  }"subject";
+
+  //specimen
+  // cda where cda.specimen.exists() then {
+  // obs.specimen -> ob.specimen = create('Reference') as reference,  reference.reference = ('https://example/Specimen/' + %specimenp.id) "ref";
+  // obs.specimen as spmn  then {    
+  //   spmn.specimenRole as specimenRole then{        
+  //     specimenRole.specimenPlayingEntity as ent then{
+  //       ent where(specimenp.type.exists().not()) then{
+  //         ent.code -> specimenp.type;
+  //       }"once";
+  //     }"ent";
+  //   }"specimenRole";  
+  // }"specimen";
+  // }"cda";
+  obs.specimen as  spmn ->bundle.entry as e4o, e4o.request = create('BackboneElement') as request, request.method = 'POST', e4o.resource = create('Specimen') as specimen, specimen.id = uuid() as uuid4o, e4o.fullUrl = append('https://example/Specimen/', uuid4o), request.url = 'Specimen', ob.specimen=create('Reference') as reference, reference.reference = ('https://example/Specimen/' + %specimen.id) then {
+      spmn.specimenRole as specimenRole then{
+          specimenRole.id as id -> specimen.identifier;
+          specimenRole.specimenPlayingEntity as specimenPlayingEntity then {
+          specimenPlayingEntity.code -> specimen.type;
+            }"specimenPlayingEntity";
+        }"specimenRole";
+  }"specimen";
+
+  
+  //performer
+  obs.performer as performer -> bundle.entry as e1, e1.request = create('BackboneElement') as request, request.method = 'POST',  e1.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e1.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url = 'PractitionerRole' then{
+    performer -> ob.performer = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+      performer.assignedEntity as entity then {
+        entity.code -> practitionerRole.code;
+        entity -> bundle.entry as e2,  e2.request = create('BackboneElement') as request, request.method = 'PUT', e2.resource = create('Practitioner') as practitioner then {
+          entity->practitioner.meta as meta then {
+            entity->meta.tag = create('Coding') as coding then {
+              entity -> coding.system ='http://algoritmodiscoring'"system";
+              entity -> coding.code ='ClinicalDocument/body/observation/performer'"code";
+            }"coding";
+          }"meta";
+          entity.id as id -> practitioner.identifier as identifier then {
+            id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+            id.extension as ext->identifier.value = ext then {
+              entity-> request.url = append('Practitioner?identifier=',ext)"UUID";
+            }"ext";
+            id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+            id.root as r then {
+              id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,  e2.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) "performer";
+            }"r";
+          }"identifier";
+          entity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"2.16.840.1.113883.2.9.4.3.2";
+          entity.id as id where (root!='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"diverso";
+          entity.addr -> practitioner.address;      
+          entity.telecom -> practitioner.telecom;
+          entity.assignedPerson as person then {
+            person.name -> practitioner.name;
+            person.birthTime as birthTime then{
+              birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+            }"birth";
+          }"name";
+          //organization
+          entity.representedOrganization as representedOrganization ->  bundle.entry as e3,  e3.request = create('BackboneElement') as request, request.method = 'PUT',  e3.resource = create('Organization') as organization  then {
+            representedOrganization->organization.meta as meta then {
+              representedOrganization->meta.tag = create('Coding') as coding then {
+                representedOrganization -> coding.system ='http://algoritmodiscoring'"system";
+                representedOrganization -> coding.code ='ClinicalDocument/body/observation/performer/representedOrganization'"code";
+              }"coding";
+            }"meta";
+           representedOrganization.id as id -> organization.identifier as identifier then {
+              id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+              id.extension as ext->identifier.value = ext then {
+                representedOrganization-> request.url = append('Organization?identifier=',ext)"UUID";
+              }"ext";
+              id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+              id.root as r then {
+                id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e3.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid3)"aut";
+              }"r";
+            }"identifier";
+            representedOrganization.name as v -> organization.name = (v.other);
+            representedOrganization.telecom -> organization.telecom;
+            representedOrganization.addr -> organization.address;
+            representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e4,  e4.request = create('BackboneElement') as request, e4.resource = create('Organization') as organization1, request.method = 'PUT' then {
+              OrgPartOf->organization1.meta as meta then {
+                OrgPartOf->meta.tag = create('Coding') as coding then {
+                  OrgPartOf -> coding.system ='http://algoritmodiscoring'"system";
+                  OrgPartOf -> coding.code ='ClinicalDocument/body/observation/performer/representedOrganization/asOrganizationPartOf'"code";
+                }"coding";
+              }"meta"; 
+              OrgPartOf.id as id -> organization1.identifier as identifier then {
+                id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+                id.extension as ext->identifier.value = ext then {
+                  OrgPartOf-> request.url = append('Organization?identifier=',ext)"UUID";
+                }"ext";
+                id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+                id.root as r then {
+                  id.extension as ext  -> organization1.id  = (r +'-'+ ext) as uuid4,  e4.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization1.id)  "org";
+                }"r";
+              }"identifier";
+              OrgPartOf.code -> organization1.type;
+              OrgPartOf.statusCode as status where (value ='active') -> organization1.active = create('boolean'), organization1.active = 'true';
+              OrgPartOf.wholeOrganization as wholeOrgan -> bundle.entry as e5,  e5.request = create('BackboneElement') as request, request.method = 'PUT',  e5.resource = create('Organization') as organization2 then{
+                wholeOrgan->organization2.meta as meta then {
+                  wholeOrgan->meta.tag = create('Coding') as coding then {
+                    wholeOrgan -> coding.system ='http://algoritmodiscoring'"system";
+                    wholeOrgan -> coding.code ='ClinicalDocument/body/observation/performer/representedOrganization/wholeOrganization'"code";
+                  }"coding";
+                }"meta";
+                wholeOrgan.id as id -> organization2.identifier as identifier then {
+                  id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+                  id.extension as ext->identifier.value = ext then {
+                    wholeOrgan-> request.url = append('Organization?identifier=',ext)"UUID";
+                  }"ext";
+                  id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+                  id.root as r then {
+                    id.extension as ext  -> organization2.id  = (r +'-'+ ext) as uuid5,  e5.fullUrl = append('https://example/Organization/', uuid5), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id) "org";
+                  }"r"; 
+                }"identifier";
+                wholeOrgan.name as v -> organization2.name = (v.other);
+                wholeOrgan.telecom -> organization2.telecom;
+                wholeOrgan.addr -> organization2.address;
+              }"wholeOrganization";
+            }"OrgPartOf";
+          }"representedOrganization"; 
+        }"practitioner";
+      }"entity";
+    }"practitionerRole";
+  }"performer";
+
+  //author
+  obs.author as srcAuthor ->  bundle.entry as e6, e6.request = create('BackboneElement') as request, request.method = 'POST', e6.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid6,  e6.fullUrl = append('https://example/PractitionerRole/', uuid6), request.url='PractitionerRole', ob.performer = create('Reference') as referenceaut,  referenceaut.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+    srcAuthor.assignedAuthor as assignedAuthor then {
+      assignedAuthor.code as codice -> practitionerRole.code as code2 then CECodeableConcept(codice,code2);
+      assignedAuthor -> bundle.entry as e7,  e7.request = create('BackboneElement') as request, request.method = 'PUT', e7.resource = create('Practitioner') as practitioner,  practitioner.id = uuid() as uuid7 then {
+        srcAuthor.functionCode -> practitionerRole.code;
+        assignedAuthor->practitioner.meta as meta then {
+          assignedAuthor->meta.tag = create('Coding') as coding then {
+            assignedAuthor -> coding.system ='http://algoritmodiscoring'"system";
+            assignedAuthor -> coding.code ='ClinicalDocument/body/observation/author'"code";
+          }"coding";
+        }"meta";
+        assignedAuthor.id as id -> practitioner.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            assignedAuthor-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,   e7.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id)"aut";
+          }"r";
+          assignedAuthor.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"2.16.840.1.113883.2.9.4.3.2";
+          assignedAuthor.id as id where (root!='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"diverso";
+        }"identifier";
+        assignedAuthor.addr -> practitioner.address;      
+        assignedAuthor.telecom -> practitioner.telecom;
+        //person
+        assignedAuthor.assignedPerson as person then {
+          person.name -> practitioner.name;
+          person.birthTime as birthTime then{
+            birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+          }"birth";
+        }"name";
+      }"ASSAUth";
+      //organization
+      assignedAuthor.representedOrganization as representedOrganization ->  bundle.entry as e8,  e8.request = create('BackboneElement') as request, request.method = 'PUT',  e8.resource = create('Organization') as organization then {
+        representedOrganization->organization.meta as meta then {
+          representedOrganization->meta.tag = create('Coding') as coding then {
+            representedOrganization -> coding.system ='http://algoritmodiscoring'"system";
+            representedOrganization -> coding.code ='ClinicalDocument/body/observation/author/representedOrganization'"code";
+          }"coding";
+        }"meta";
+        representedOrganization.id as id -> organization.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            representedOrganization-> request.url = append('Organization?identifier=',ext)"UUID";
+          }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,   e8.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid3)"org";
+          }"r";
+        }"identifier";
+        representedOrganization.name as v -> organization.name = (v.other);
+        representedOrganization.telecom -> organization.telecom;
+        representedOrganization.addr -> organization.address;
+        representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e9,  e9.request = create('BackboneElement') as request, request.method = 'PUT',  e9.resource = create('Organization') as organization1 then {
+          OrgPartOf->organization1.meta as meta then {
+            OrgPartOf->meta.tag = create('Coding') as coding then {
+              OrgPartOf -> coding.system ='http://algoritmodiscoring'"system";
+              OrgPartOf -> coding.code ='ClinicalDocument/body/observation/author/representedOrganization/asOrganizationPartOf'"code";
+            }"coding";
+          }"meta";
+          OrgPartOf.id as id -> organization1.identifier as identifier then {
+            id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+            id.extension as ext->identifier.value = ext then {
+              OrgPartOf-> request.url = append('Organization?identifier=',ext)"UUID";
+            }"ext";
+            id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+            id.root as r then {
+              id.extension as ext  -> organization1.id = (r +'-'+ ext) as uuid4,   e9.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization1.id) "org";
+            }"r"; 
+          }"identifier";
+          OrgPartOf.code -> organization1.type;
+          OrgPartOf.statusCode as status where (value ='active') -> organization1.active = create('boolean'), organization1.active = 'true';
+          OrgPartOf.wholeOrganization as wholeOrgan -> bundle.entry as e10,  e10.request = create('BackboneElement') as request, request.method = 'PUT',  e10.resource = create('Organization') as organization2 then{
+            wholeOrgan->organization2.meta as meta then {
+              wholeOrgan->meta.tag = create('Coding') as coding then {
+                wholeOrgan -> coding.system ='http://algoritmodiscoring'"system";
+                wholeOrgan -> coding.code ='ClinicalDocument/body/observation/author/representedOrganization/asOrganizationPartOf/wholeOrganization'"code";
+              }"coding";
+            }"meta";
+            wholeOrgan.id as id -> organization2.identifier as identifier then {
+              id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+              id.extension as ext->identifier.value = ext then {
+                wholeOrgan-> request.url = append('Organization?identifier=',ext)"UUID";
+              }"ext";
+              id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+              id.root as r then {
+                id.extension as ext  -> organization2.id = (r +'-'+ ext) as uuid4, e10.fullUrl = append('https://example/Organization/', uuid4), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id)    "org";
+              }"r"; 
+            }"identifier";
+            wholeOrgan.name as v -> organization2.name = (v.other);
+            wholeOrgan.telecom -> organization2.telecom;
+            wholeOrgan.addr -> organization2.address;
+          }"wholeOrganization";
+        }"OrgPartOf";
+      }"representedOrganization"; 
+      //device
+      assignedAuthor.assignedAuthoringDevice as assignedAuthoringDevice -> bundle.entry as e11,  e11.request = create('BackboneElement') as request, request.method = 'POST',  e11.resource = create('Device') as device,  device.id = uuid() as uuid11,  e11.fullUrl = append('https://example/Device/', uuid11), request.url ='Device', tgt.author = create('Reference') as reference, reference.reference= ('https://example/Device/' + %device.id) then{
+        assignedAuthoringDevice.templateId -> device.identifier; 
+        assignedAuthoringDevice.code -> device.type;
+        assignedAuthoringDevice.manufacturerModelName as manufacturerModelName then{
+          manufacturerModelName as m-> device.manufacturer = (m.displayName) "displayRule";
+        }"manufacturer"; 
+        assignedAuthoringDevice.softwareName as softwareName -> device.deviceName as deviceName then{
+          softwareName -> deviceName.type = 'other' "typeName";		
+          softwareName as s -> deviceName.name = (s.displayName) "name";
+        }"deviceName";
+      }"Device";
+    }"assignedAuthor";
+  }"author";
+
+  //participant person
+  obs.participant as participant where(typeCode!='DEV') ->  ob.encounter = create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) then {
+    participant -> encounter.participant as FhirParticipant then {
+      participant as p -> FhirParticipant.type as type then { 
+        p -> type.coding as coding then{
+          p-> coding.code = (p.typeCode) "codice";
+          p-> coding.system = 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType' "system";
+        } "codeType"; 
+      }"type";
+    }"fhirParticipant";
+    participant.participantRole as participantRole -> bundle.entry as e12,   e12.request = create('BackboneElement') as request, request.method = 'POST',  e12.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid12 ,  e12.fullUrl = append('https://example/PractitionerRole/', uuid12), request.url = 'PractitionerRole', encounter.participant = create('BackboneElement') as participant1, participant1.individual = create('Reference') as referencepart, referencepart.reference =  ('https://example/Practitioner/' + %practitionerRole.id) then { 
+      //participant.time -> participant1.period;
+      participant.time as time1 -> participant1.period = create('Period') as period then {
+        time1 -> period.start = create('dateTime') as start then TSDateTime(time1,start) "val";
+       }"time";
+       participant.time as time1 -> participant1.period =create('Period') as period then IVLTSPeriod(time1,period);
+      participant.functionCode -> practitionerRole.code;
+      //non mappa i 2 precedenti
+      participantRole  -> bundle.entry as e13, e13.request = create('BackboneElement') as request, request.method = 'PUT', e13.resource = create('Practitioner') as practitioner then {
+        participantRole->practitioner.meta as meta then {
+          participantRole->meta.tag = create('Coding') as coding then {
+            participantRole -> coding.system ='http://algoritmodiscoring'"system";
+            participantRole -> coding.code ='ClinicalDocument/body/observation/participant'"code";
+          }"coding";
+        }"meta";
+        participantRole.id as id -> practitioner.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            participantRole-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> practitioner.id  = (r +'-'+ ext) as uuid4,  e13.fullUrl = append('https://example/Practitioner/', uuid4),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) "org";
+          }"r";
+        }"identifier";
+        participantRole.code -> practitionerRole.code;
+        participantRole.addr -> practitioner.address;
+        participantRole.telecom -> practitioner.telecom;
+        participantRole.playingEntity as playingEntity then {
+          playingEntity.name -> practitioner.name;
+          playingEntity.birthTime as birthTime then{
+            birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+          }"birth";
+        }"name";
+      }"practitioner";
+    }"partRole";
+  }"participantEncounter";
+
+  //participant device
+  obs.participant as devParticipant where(typeCode='DEV') -> bundle.entry as e14, e14.request = create('BackboneElement') as request, request.method = 'POST', e14.resource = create('Device') as device,  device.id = uuid() as uuid14,  e14.fullUrl = append('https://example/Device/', uuid14), request.url='Device', ob.device = create('Reference') as reference,  reference.reference = ('https://example/Device/' + %device.id) then {
+    devParticipant.participantRole as participantRoleDev then {
+      participantRoleDev.playingDevice as playingDevice then {
+        playingDevice.code -> device.type;
+        playingDevice.manufacturerModelName as manufacturerModelName then{
+          manufacturerModelName as m-> device.manufacturer = (m.displayName) "displayRule";
+        }"manufacturer"; 
+        playingDevice.softwareName as softwareName -> device.deviceName as deviceName then{
+          softwareName -> deviceName.type = 'other' "typeName";		
+          softwareName as s -> deviceName.name = (s.displayName) "name";
+        }"deviceName";
+      }"playingDevice";
+    }"participantRoleDev";
+  }"devParticipant";
+
+  //observationMedia
+  obs.entryRelationship as er then {
+    er.observationMedia as obsMedia -> bundle.entry as e15, e15.request = create('BackboneElement') as request, request.method = 'POST', e15.resource = create('Media') as media1,  media1.id = uuid() as uuid15,  e15.fullUrl = append('https://example/Media/', uuid15), request.url='Media', ob.derivedFrom = create('Reference') as reference,  reference.reference = ('https://example/Media/' + %media1.id) then {
+      obsMedia-> media1.content = create('Attachment') as Attachment then {
+        obsMedia -> media1.status='unknown'"status";
+        obsMedia.value as valueMedia then {
+          valueMedia.mediaType as type -> Attachment.contentType=type "type";
+          valueMedia -> Attachment.data=(valueMedia.dataBase64Binary) "data";
+        }"valuemedia";
+      } "Attachment";
+    }"media";
+  }"observationMedia";
+
+  //referenceRange   
+  obs.referenceRange as refRange -> ob.referenceRange = create('BackboneElement') as ref then {
+    refRange.observationRange as obsRange then {
+    obsRange.value:ST as value->ref.text =create('string'),ref.text= (value.dataString) "value";
+      obsRange -> ref.low = create('Quantity') as Low  then {
+      obsRange.value: IVL_PQ as v  then {
+        v.low as l1 then {
+          l1.value as decValue-> Low.value = decValue;
+          l1.unit as Unit-> Low.unit = Unit;
+        }"decValue"; 
+        v->ref.high = create('Quantity') as high  then {
+          v.high as h1 then {
+            h1.value as decValue1-> high.value = decValue1;
+            h1.unit as Unit1-> high.unit = Unit1;
+          }"decValue";
+        }"high";           
+      }"IVLPQ";
+      obsRange.interpretationCode->ref.type;
+      obsRange.precondition as precondition then { 
+        precondition.criterion as criterion then{ 
+          criterion.code -> ref.appliesTo "appliesTo";
+          criterion.value: IVL_PQ as v then {
+            v.high as l1 then {
+           l1-> ref.age = create('Quantity')as age then {
+            l1 -> age.high as high then {
+              l1.value as decValue -> high.value = decValue;
+              l1.unit as Unit1-> high.unit = Unit1;
+                      }"high";
+                    }"age";
+                  } "low"; 
+             } "v"; 
+          } "criterion"; 
+       }"precondition";
+    }"obsRange";              
+  }"refRange";  
+ }"ref";
+
+}
+
+group Act (source cda: Act, target pat : Patient, target ac : DiagnosticReport, target enc : Encounter, target bundle : Bundle){
+  cda.code -> ac.code;
+  cda where cda.statusCode .exists().not() then {
+    cda->ac.status ='final'"statuscode";
+  }"status";
+  cda.statusCode as statusc where (code='completed') -> ac.status ='final';
+  cda.statusCode as statusc where (code='active') -> ac.status ='registered';
+  cda.statusCode as statusc where (code='aborted') -> ac.status ='cancelled';
+  cda.statusCode as statusc where (code='suspended') -> ac.status ='partial';
+  cda.effectiveTime as effectiveTime -> ac.effective = create('dateTime') as value then TSDateTime(effectiveTime, value) "value3";
+  cda where effectiveTime.low.exists() or effectiveTime.high.exists() then {
+  cda.effectiveTime as eff-> ac.effective=create('Period') as period then IVLTSPeriod(eff,period);
+  }"where";
+  
+  cda -> ac.subject=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %pat.id) "reference";
+  cda -> ac.encounter=create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %enc.id) "reference";
+
+  //specimen
+  cda where cda.specimen.exists() then {
+    cda.specimen as src->bundle.entry as e4, e4.request = create('BackboneElement') as request, request.method = 'POST', e4.resource = create('Specimen') as specimen,  specimen.id = uuid() as uuid4,  e4.fullUrl = append('https://example/Specimen/', uuid4), request.url = 'Specimen', ac.specimen=create('Reference') as reference,  reference.reference = ('https://example/Specimen/' + %specimen.id) then {
+      src.specimenRole as specimenRole then{
+        specimenRole.id ->specimen.identifier;
+          specimenRole.specimenPlayingEntity as specimenPlayingEntity then {
+          specimenPlayingEntity.code -> specimen.type;
+        }"specimenPlayingEntity";
+      }"SpecimenRole";
+      src->specimen.subject=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patient.id) "reference";
+      cda.entryRelationship as entryRelationship then {
+      entryRelationship.observation as observation then {
+      observation -> bundle.entry as e12, e12.request = create('BackboneElement') as request, request.method = 'POST', e12.resource = create('Observation') as obs,  obs.id = uuid() as uuid13,  e12.fullUrl = append('https://example/Observation/', uuid13), request.url = 'Observation', ac.result = create('Reference') as reference,  reference.reference = ('https://example/Observation/' + %obs.id) then {
+        observation then  Observation2(observation,pat,enc,obs,bundle,cda,specimen) "ORG";
+        // procedure
+        cda.entryRelationship as entryRelationship1 then {
+          entryRelationship1.procedure as proc  -> bundle.entry as e5, e5.request = create('BackboneElement') as request, request.method = 'POST', e5.resource = create('Procedure') as procedure,  procedure.id = uuid() as uuid5,  e5.fullUrl = append('https://example/Procedure/', uuid5), request.url = 'Procedure', obs.partOf=create('Reference') as reference,  reference.reference = ('https://example/Procedure/' + %procedure.id)  then{
+            proc -> procedure.subject=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patient.id) "reference";     
+            proc -> procedure.encounter=create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) "reference";
+            proc where proc.statusCode .exists().not() then {
+              proc->procedure.status ='unknown'"statuscode";
+            }"status";
+            proc.statusCode as statusc where (code='completed') -> procedure.status ='completed';
+            proc.statusCode as statusc where (code='active') -> procedure.status ='in-progress';
+            proc.statusCode as statusc where (code='aborted') -> procedure.status ='stopped';
+            proc.statusCode as statusc where (code='suspended') -> procedure.status ='on-hold';
+            proc.statusCode as statusc where (code='cancelled') -> procedure.status ='not-done';
+            proc.statusCode as statusc where (code='held') -> procedure.status ='on-hold';
+            proc.statusCode as statusc where (code='new') -> procedure.status ='preparation';
+            proc.statusCode as statusc where (code='obsolete') -> procedure.status ='entered-in-error';
+            proc.statusCode as statusc where (code='nullified') -> procedure.status ='unknown';
+            proc.effectiveTime as effectiveTime -> procedure.performed = create('dateTime') as value then TSDateTime(effectiveTime, value) "datetime";
+            proc where effectiveTime.low.exists() or effectiveTime.high.exists() then {
+            proc.effectiveTime as  eff-> procedure.performed=create('Period') as period then IVLTSPeriod(eff,period);
+            }"where";
+            proc.targetSiteCode -> procedure.bodySite;     
+          }"procedure"; 
+        }"entryRelationshipprocedure"; 
+      }"obs";
+      }"observation";
+
+      entryRelationship.organizer as organizer then {
+        organizer -> bundle.entry as e12, e12.request = create('BackboneElement') as request, request.method = 'POST', e12.resource = create('Observation') as obs,  obs.id = uuid() as uuid13,  e12.fullUrl = append('https://example/Observation/', uuid13), request.url = 'Observation', ac.result = create('Reference') as reference,  reference.reference = ('https://example/Observation/' + %obs.id) then {
+          organizer then  Organizer(cda,organizer,pat,enc,obs,bundle) "ORG";
+          // procedure
+          cda.entryRelationship as entryRelationship1 then {
+            entryRelationship1.procedure as proc  -> bundle.entry as e5, e5.request = create('BackboneElement') as request, request.method = 'POST', e5.resource = create('Procedure') as procedure,  procedure.id = uuid() as uuid5,  e5.fullUrl = append('https://example/Procedure/', uuid5), request.url = 'Procedure', obs.partOf=create('Reference') as reference,  reference.reference = ('https://example/Procedure/' + %procedure.id)  then{
+              proc -> procedure.subject=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patient.id) "reference";     
+              proc -> procedure.encounter=create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) "reference";
+              proc where proc.statusCode .exists().not() then {
+                proc->procedure.status ='unknown'"statuscode";
+              }"status";
+              proc.statusCode as statusc where (code='completed') -> procedure.status ='completed';
+              proc.statusCode as statusc where (code='active') -> procedure.status ='in-progress';
+              proc.statusCode as statusc where (code='aborted') -> procedure.status ='stopped';
+              proc.statusCode as statusc where (code='suspended') -> procedure.status ='on-hold';
+              proc.statusCode as statusc where (code='cancelled') -> procedure.status ='not-done';
+              proc.statusCode as statusc where (code='held') -> procedure.status ='on-hold';
+              proc.statusCode as statusc where (code='new') -> procedure.status ='preparation';
+              proc.statusCode as statusc where (code='obsolete') -> procedure.status ='entered-in-error';
+              proc.statusCode as statusc where (code='nullified') -> procedure.status ='unknown';
+              proc.effectiveTime as effectiveTime -> procedure.performed = create('dateTime') as value then TSDateTime(effectiveTime, value) "datetime";
+              proc where effectiveTime.low.exists() or effectiveTime.high.exists() then {
+              proc.effectiveTime as  eff-> procedure.performed=create('Period') as period then IVLTSPeriod(eff,period);
+              }"where";
+              proc.targetSiteCode -> procedure.bodySite;     
+            }"pbservation"; 
+          }"entryRelationshiprocedure"; 
+        }"Organizer";
+      }"organizer";
+
+      }"entryRelationshipobservation";
+    }"specimen";
+  }"exist";
+
+  cda where cda.specimen.exists().not() then {
+   // cda -> bundle.entry as e4, e4.request = create('BackboneElement') as request, request.method = 'POST', e4.resource = create('Specimen') as specimen,  specimen.id = uuid() as uuid4,  e4.fullUrl = append('https://example/Specimen/', uuid4), request.url = 'Specimen' then {
+      cda.entryRelationship as entryRelationship then {
+      entryRelationship.observation as observation then {
+      observation -> bundle.entry as e12, e12.request = create('BackboneElement') as request, request.method = 'POST', e12.resource = create('Observation') as obs,  obs.id = uuid() as uuid13,  e12.fullUrl = append('https://example/Observation/', uuid13), request.url = 'Observation', ac.result = create('Reference') as reference,  reference.reference = ('https://example/Observation/' + %obs.id) then {
+        observation then  Observation3(observation,pat,enc,obs,bundle,cda) "ORG";
+        // procedure
+        cda.entryRelationship as entryRelationship1 then {
+          entryRelationship1.procedure as proc  -> bundle.entry as e5, e5.request = create('BackboneElement') as request, request.method = 'POST', e5.resource = create('Procedure') as procedure,  procedure.id = uuid() as uuid5,  e5.fullUrl = append('https://example/Procedure/', uuid5), request.url = 'Procedure', obs.partOf=create('Reference') as reference,  reference.reference = ('https://example/Procedure/' + %procedure.id)  then{
+            proc -> procedure.subject=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patient.id) "reference";     
+            proc -> procedure.encounter=create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) "reference";
+            proc where proc.statusCode .exists().not() then {
+              proc->procedure.status ='unknown'"statuscode";
+            }"status";
+            proc.statusCode as statusc where (code='completed') -> procedure.status ='completed';
+            proc.statusCode as statusc where (code='active') -> procedure.status ='in-progress';
+            proc.statusCode as statusc where (code='aborted') -> procedure.status ='stopped';
+            proc.statusCode as statusc where (code='suspended') -> procedure.status ='on-hold';
+            proc.statusCode as statusc where (code='cancelled') -> procedure.status ='not-done';
+            proc.statusCode as statusc where (code='held') -> procedure.status ='on-hold';
+            proc.statusCode as statusc where (code='new') -> procedure.status ='preparation';
+            proc.statusCode as statusc where (code='obsolete') -> procedure.status ='entered-in-error';
+            proc.statusCode as statusc where (code='nullified') -> procedure.status ='unknown';
+            proc.effectiveTime as effectiveTime -> procedure.performed = create('dateTime') as value then TSDateTime(effectiveTime, value) "datetime";
+            proc where effectiveTime.low.exists() or effectiveTime.high.exists() then {
+            proc.effectiveTime as  eff-> procedure.performed=create('Period') as period then IVLTSPeriod(eff,period);
+            }"where";
+            proc.targetSiteCode -> procedure.bodySite;     
+          }"procedure"; 
+        }"entryRelationshipprocedure"; 
+      }"obs";
+      }"observation";
+      entryRelationship.organizer as organizer then {
+        organizer -> bundle.entry as e12, e12.request = create('BackboneElement') as request, request.method = 'POST', e12.resource = create('Observation') as obs,  obs.id = uuid() as uuid13,  e12.fullUrl = append('https://example/Observation/', uuid13), request.url = 'Observation', ac.result = create('Reference') as reference,  reference.reference = ('https://example/Observation/' + %obs.id) then {
+          organizer then  Organizer(cda,organizer,pat,enc,obs,bundle) "ORG";
+          // procedure
+          cda.entryRelationship as entryRelationship1 then {
+            entryRelationship1.procedure as proc  -> bundle.entry as e5, e5.request = create('BackboneElement') as request, request.method = 'POST', e5.resource = create('Procedure') as procedure,  procedure.id = uuid() as uuid5,  e5.fullUrl = append('https://example/Procedure/', uuid5), request.url = 'Procedure', obs.partOf=create('Reference') as reference,  reference.reference = ('https://example/Procedure/' + %procedure.id)  then{
+              proc -> procedure.subject=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patient.id) "reference";     
+              proc -> procedure.encounter=create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) "reference";
+              proc where proc.statusCode .exists().not() then {
+                proc->procedure.status ='unknown'"statuscode";
+              }"status";
+              proc.statusCode as statusc where (code='completed') -> procedure.status ='completed';
+              proc.statusCode as statusc where (code='active') -> procedure.status ='in-progress';
+              proc.statusCode as statusc where (code='aborted') -> procedure.status ='stopped';
+              proc.statusCode as statusc where (code='suspended') -> procedure.status ='on-hold';
+              proc.statusCode as statusc where (code='cancelled') -> procedure.status ='not-done';
+              proc.statusCode as statusc where (code='held') -> procedure.status ='on-hold';
+              proc.statusCode as statusc where (code='new') -> procedure.status ='preparation';
+              proc.statusCode as statusc where (code='obsolete') -> procedure.status ='entered-in-error';
+              proc.statusCode as statusc where (code='nullified') -> procedure.status ='unknown';
+              proc.effectiveTime as effectiveTime -> procedure.performed = create('dateTime') as value then TSDateTime(effectiveTime, value) "datetime";
+              proc where effectiveTime.low.exists() or effectiveTime.high.exists() then {
+              proc.effectiveTime as eff-> procedure.performed=create('Period') as period then IVLTSPeriod(eff,period);
+              }"where";
+              proc.targetSiteCode -> procedure.bodySite;     
+            }"pbservation"; 
+          }"entryRelationshiprocedure"; 
+        }"Organizer";
+      }"organizer";
+      }"entryRelationshipobservation";
+     
+    //}"specimen";
+  }"existnot";
+
+  //PARTICIPANT
+  cda.participant  as part where(typeCode!='DEV') ->  enc.participant as participant then{
+      part  -> participant.type as type then { 
+        part -> type.coding as coding then {
+        part-> coding.code = (part.typeCode) "codice";
+        part-> coding.system = 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType' "system";
+        } "codeType"; 
+      }"type";
+  
+     part.participantRole as participantRole ->  participant.individual = create('Reference') as reference then {
+        participantRole ->  bundle.entry as e, e.request = create('BackboneElement') as request, request.method = 'PUT', e.resource = create('Practitioner') as practitioner  then { 
+          part.time as time1 -> participant.period = create('Period') as period then{
+            time1 -> period.start = create('dateTime') as start then TSDateTime(time1,start) "val";
+           }"time";
+           part.time as time1 -> participant.period =create('Period') as period then IVLTSPeriod(time1,period);
+          participantRole->practitioner.meta as meta then {
+            participantRole->meta.tag = create('Coding') as coding then {
+              participantRole -> coding.system ='http://algoritmodiscoring'"system";
+              participantRole -> coding.code ='ClinicalDocument/body/act/participant'"code";
+            }"coding";
+          }"meta";
+          participantRole.id as id -> practitioner.identifier as identifier then {
+            id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+            id.extension as ext->identifier.value = ext then {
+               participantRole-> request.url = append('Practitioner?identifier=',ext)"UUID";
+               }"ext";
+            id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+            id.root as r then {
+              id.extension as ext  -> practitioner.id  = (r +'-'+ ext) as uuid4,  e.fullUrl = append('https://example/Practitioner/', uuid4),  reference.reference = ('https://example/Practitioner/' + %practitioner.id) "org";
+            }"r";
+            }"identifier";
+
+          participantRole.addr -> practitioner.address;
+          participantRole.playingEntity  as playingEntity then{
+          playingEntity.name -> practitioner.name;
+        }"playingEntity";
+      }"participanRoleBund";  
+    }"participantRole";
+  }"participant";
+
+ // PERFORMER
+  cda.performer as performer-> bundle.entry as e1, e1.request = create('BackboneElement') as request, request.method = 'POST', e1.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e1.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url='PractitionerRole', ac.performer = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+    performer.assignedEntity as assignedEntity then {
+      assignedEntity.code as codice -> practitionerRole.code;
+      assignedEntity -> bundle.entry as e2,  e2.request = create('BackboneElement') as request, request.method = 'PUT', e2.resource = create('Practitioner') as practitioner   then {
+      assignedEntity.code -> practitionerRole.code;
+      assignedEntity->practitioner.meta as meta then {
+        assignedEntity->meta.tag = create('Coding') as coding then {
+          assignedEntity -> coding.system ='http://algoritmodiscoring'"system";
+          assignedEntity -> coding.code ='ClinicalDocument/body/act/performer'"code";
+        }"coding";
+      }"meta";
+      assignedEntity.id as id -> practitioner.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            assignedEntity-> request.url = append('Practitioner?identifier=',ext)"UUID";
+            }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> practitioner.id  = (r +'-'+ ext) as uuid4,  e2.fullUrl = append('https://example/Practitioner/', uuid4),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) "pra";
+          }"r";
+
+          }"identifier";
+      assignedEntity.addr -> practitioner.address;      
+      assignedEntity.telecom -> practitioner.telecom;
+      assignedEntity.assignedPerson as person then {
+        person.name -> practitioner.name;
+        person.birthTime as birthTime then{
+          birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+        }"birth";
+      }"name";
+      } "ASSAUth";
+      assignedEntity.representedOrganization as representedOrganization ->  bundle.entry as e3,  e3.request = create('BackboneElement') as request, request.method = 'PUT',  e3.resource = create('Organization') as organization then {
+        representedOrganization->organization.meta as meta then {
+          representedOrganization->meta.tag = create('Coding') as coding then {
+            representedOrganization -> coding.system ='http://algoritmodiscoring'"system";
+            representedOrganization -> coding.code ='ClinicalDocument/body/act/representedOrganization'"code";
+          }"coding";
+        }"meta";
+        representedOrganization.id as id -> organization.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            representedOrganization-> request.url = append('Organization?identifier=',ext)"UUID";
+            }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> organization.id  = (r +'-'+ ext) as uuid2, e3.fullUrl = append('https://example/Organization/', uuid2), practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid2)  "org";
+          }"r";
+          }"identifier";
+        representedOrganization.name as v -> organization.name = (v.other);
+        representedOrganization.telecom -> organization.telecom;
+        representedOrganization.addr -> organization.address;
+        representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e4,  e4.request = create('BackboneElement') as request, request.method = 'PUT',  e4.resource = create('Organization') as organization1 then {
+          OrgPartOf->organization1.meta as meta then {
+            OrgPartOf->meta.tag = create('Coding') as coding then {
+              OrgPartOf -> coding.system ='http://algoritmodiscoring'"system";
+              OrgPartOf -> coding.code ='ClinicalDocument/body/act/representedOrganization/asOrganizationPartOf'"code";
+            }"coding";
+          }"meta";
+          OrgPartOf.id as id -> organization1.identifier as identifier then {
+              id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+              id.extension as ext->identifier.value = ext then {
+                OrgPartOf-> request.url = append('Organization?identifier=',ext)"UUID";
+               }"ext";
+            id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+            id.root as r then {
+              id.extension as ext  -> organization1.id  = (r +'-'+ ext) as uuid3,   organization1.id = uuid() as uuid3,  e4.fullUrl = append('https://example/Organization/', uuid3), organization.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization1.id) "org";
+            }"r";
+            }"identifier";
+          OrgPartOf.code -> organization1.type;
+          OrgPartOf.statusCode as status where (value ='active') -> organization1.active = create('boolean'), organization1.active = 'true';
+          OrgPartOf.wholeOrganization as wholeOrgan -> bundle.entry as e10bis,  e10bis.request = create('BackboneElement') as request, request.method = 'PUT',  e10bis.resource = create('Organization') as organization2 then{
+            OrgPartOf->organization2.meta as meta then {
+              OrgPartOf->meta.tag = create('Coding') as coding then {
+                OrgPartOf -> coding.system ='http://algoritmodiscoring'"system";
+                OrgPartOf -> coding.code ='ClinicalDocument/body/act/representedOrganization/asOrganizationPartOf/wholeOrganization'"code";
+              }"coding";
+            }"meta";
+            wholeOrgan.id as id -> organization2.identifier as identifier then {
+              id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+              id.extension as ext->identifier.value = ext then {
+                  wholeOrgan-> request.url = append('Organization?identifier=',ext)"UUID";
+               }"ext";
+              id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+              id.root as r then {
+                id.extension as ext  -> organization2.id  = (r +'-'+ ext) as uuid5,   e10bis.fullUrl = append('https://example/Organization/', uuid5), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id) "org";
+              }"r";
+              }"identifier";
+            wholeOrgan.name as v -> organization2.name = (v.other);
+            wholeOrgan.telecom -> organization2.telecom;
+            wholeOrgan.addr -> organization2.address;
+            }"wholeOrganization";
+          } "OrgPartOf";
+       } "representedOrganization"; 
+    }"performer";
+  }; 
+ 
+  // AUTHOR
+  cda.author as srcAuthor-> bundle.entry as e5, e5.request = create('BackboneElement') as request, request.method = 'POST', e5.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid6,  e5.fullUrl = append('https://example/PractitionerRole/', uuid6), request.url='PractitionerRole', ac.performer = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+    srcAuthor.assignedAuthor as assignedAuthor then {
+        assignedAuthor.code as codice -> practitionerRole.code;
+        assignedAuthor -> bundle.entry as e7,  e7.request = create('BackboneElement') as request, request.method = 'PUT', e7.resource = create('Practitioner') as practitioner  then {
+        srcAuthor.functionCode -> practitionerRole.code;
+        assignedAuthor.code -> practitionerRole.code;
+        assignedAuthor->practitioner.meta as meta then {
+          assignedAuthor->meta.tag = create('Coding') as coding then {
+            assignedAuthor -> coding.system ='http://algoritmodiscoring'"system";
+            assignedAuthor -> coding.code ='ClinicalDocument/body/act/author'"code";
+          }"coding";
+        }"meta";
+        assignedAuthor.id as id -> practitioner.identifier as identifier then {
+            id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+            id.extension as ext->identifier.value = ext then {
+              assignedAuthor-> request.url = append('Practitioner?identifier=',ext)"UUID";
+            }"ext";
+            id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+            id.root as r then {
+              id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,  e7.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) "aut";
+            }"r";
+           }"identifier";
+           assignedAuthor.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"2.16.840.1.113883.2.9.4.3.2";
+          assignedAuthor.id as id where (root!='2.16.840.1.113883.2.9.4.3.2') then {
+            id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"diverso";
+        assignedAuthor.addr -> practitioner.address;      
+        assignedAuthor.telecom -> practitioner.telecom;
+        //person
+        assignedAuthor.assignedPerson as person then {
+          person.name -> practitioner.name;
+          person.birthTime as birthTime then{
+            birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+          }"birth";
+        }"name";
+      }"ASSAUth";
+      //organization
+      assignedAuthor.representedOrganization as representedOrganization ->  bundle.entry as e8,  e8.request = create('BackboneElement') as request, request.method = 'PUT',  e8.resource = create('Organization') as organization then {
+        representedOrganization->organization.meta as meta then {
+          representedOrganization->meta.tag = create('Coding') as coding then {
+            representedOrganization -> coding.system ='http://algoritmodiscoring'"system";
+            representedOrganization -> coding.code ='ClinicalDocument/body/act/author/representedOrganization'"code";
+          }"coding";
+        }"meta";
+        representedOrganization.id as id -> organization.identifier as identifier then {
+            id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+            id.extension as ext->identifier.value = ext then {
+              representedOrganization-> request.url = append('Organization?identifier=',ext)"UUID";
+             }"ext";
+            id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+            id.root as r then {
+              id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid8,  e8.fullUrl = append('https://example/Organization/', uuid8), practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid8) "org";
+            }"r";
+            }"identifier";
+        representedOrganization.name as v -> organization.name = (v.other);
+        representedOrganization.telecom -> organization.telecom;
+        representedOrganization.addr -> organization.address;
+        representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e9,  e9.request = create('BackboneElement') as request, request.method = 'PUT',  e9.resource = create('Organization') as organization1   then {
+          OrgPartOf->organization1.meta as meta then {
+            OrgPartOf->meta.tag = create('Coding') as coding then {
+              OrgPartOf -> coding.system ='http://algoritmodiscoring'"system";
+              OrgPartOf -> coding.code ='ClinicalDocument/body/act/author/representedOrganization/asOrganizationPartOf'"code";
+            }"coding";
+          }"meta";  
+          OrgPartOf.id as id -> organization1.identifier as identifier then {
+              id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+              id.extension as ext->identifier.value = ext then {
+                OrgPartOf-> request.url = append('Organization?identifier=',ext)"UUID";
+               }"ext";
+            id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+            id.root as r then {
+              id.extension as ext  -> organization1.id = (r +'-'+ ext) as uuid9,  e9.fullUrl = append('https://example/Organization/', uuid9), organization.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization1.id) "org";
+            }"r";
+            }"identifier";
+            OrgPartOf.code -> organization1.type;
+            OrgPartOf.statusCode as status where (value ='active') -> organization1.active = create('boolean'), organization1.active = 'true';
+            OrgPartOf.wholeOrganization as wholeOrgan -> bundle.entry as e10,  e10.request = create('BackboneElement') as request, request.method = 'PUT',  e10.resource = create('Organization') as organization2   then{
+              wholeOrgan->organization2.meta as meta then {
+                wholeOrgan->meta.tag = create('Coding') as coding then {
+                  wholeOrgan -> coding.system ='http://algoritmodiscoring'"system";
+                  wholeOrgan -> coding.code ='ClinicalDocument/body/act/author/representedOrganization/asOrganizationPartOf/wholeOrganization'"code";
+                }"coding";
+              }"meta";  
+              wholeOrgan.id as id -> organization2.identifier as identifier then {
+                 id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+                 id.extension as ext->identifier.value = ext then {
+                   wholeOrgan-> request.url = append('Organization?identifier=',ext)"UUID";
+                }"ext";
+                id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+                id.root as r then {
+                  id.extension as ext  -> organization2.id = (r +'-'+ ext) as uuid10,  e10.fullUrl = append('https://example/Organization/', uuid10), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id) "org";
+                }"r";
+              }"identifier";
+                wholeOrgan.name as v -> organization2.name = (v.other);
+                wholeOrgan.telecom -> organization2.telecom;
+                wholeOrgan.addr -> organization2.address;
+               }"wholeOrganization";
+           }"OrgPartOf";
+        }"representedOrganization"; 
+     }"author";
+  };
+
+  //<!--entryRelationship per la gestione delle note e commenti-->
+  cda.entryRelationship as entryRelationship then {
+    entryRelationship.act as act then {
+      act.text as text then {
+        text.reference as reference -> ac.conclusion=(reference.value);
+      }"text";
+    }"Act";
+  }"entryRelationship"; 
+}
+
+group Organizer(source cda: Act, source org : Organizer, target patient : Patient, target encounter : Encounter, target observation : Observation, target bundle : Bundle) {
+  org->observation.subject=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patient.id) "reference";     
+  org->observation.encounter=create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) "reference";  
+  org.code -> observation.code;
+  org where org.code.exists().not() then {
+    cda.code ->observation.code;
+  }"act";
+  org.statusCode as statusc where (code='completed') -> observation.status ='final';
+  org.statusCode as statusc where (code='active') -> observation.status ='registered';
+  org.statusCode as statusc where (code='aborted') -> observation.status ='cancelled';
+  org.statusCode as statusc where (code='suspended') -> observation.status ='partial';
+  org.effectiveTime as effectiveTime -> observation.effective = create('dateTime') as value then TSDateTime(effectiveTime, value) "value2";
+  org where effectiveTime.low.exists() or effectiveTime.high.exists() then {
+  org.effectiveTime as eff-> observation.effective=create('Period') as period then IVLTSPeriod(eff,period);
+ }"where";
+  //specimen
+  org.specimen as  spmn ->bundle.entry as e4o, e4o.request = create('BackboneElement') as request, request.method = 'POST', e4o.resource = create('Specimen') as specimen, specimen.id = uuid() as uuid4o, e4o.fullUrl = append('https://example/Specimen/', uuid4o), request.url = 'Specimen', observation.specimen=create('Reference') as reference, reference.reference = ('https://example/Specimen/' + %specimen.id) then {
+      spmn.specimenRole as specimenRole then{
+          specimenRole.id as id -> specimen.identifier;
+          specimenRole.specimenPlayingEntity as specimenPlayingEntity then {
+          specimenPlayingEntity.code -> specimen.type;
+            }"specimenPlayingEntity";
+        }"specimenRole";
+  }"specimen";
+
+  //subject
+  org.subject as sbj then {
+    sbj.relatedSubject as relatedSubj-> patient.extension as extension2 then ExtSubjectAnimal(relatedSubj, extension2);
+  }"subject";
+
+  //performer
+  org.performer as performer -> bundle.entry as e1, e1.request = create('BackboneElement') as request, request.method = 'POST',  e1.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e1.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url = 'PractitionerRole' then{
+    performer -> observation.performer = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+      performer.assignedEntity as entity then {
+          entity.code -> practitionerRole.code;
+          entity -> bundle.entry as e2,  e2.request = create('BackboneElement') as request, request.method = 'PUT', e2.resource = create('Practitioner') as practitioner  then {
+            entity->practitioner.meta as meta then {
+              entity->meta.tag = create('Coding') as coding then {
+                entity -> coding.system ='http://algoritmodiscoring'"system";
+                entity -> coding.code ='ClinicalDocument/body/organizer/performer'"code";
+              }"coding";
+            }"meta";
+            entity.id as id -> practitioner.identifier as identifier then {
+              id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+              id.extension as ext->identifier.value = ext then {
+                entity-> request.url = append('Practitioner?identifier=',ext)"UUID";
+              }"ext";
+              id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+              id.root as r then {
+                id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,  e2.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) "aut";
+              }"r";
+            }"identifier";
+            entity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
+              id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+            }"2.16.840.1.113883.2.9.4.3.2";
+            entity.id as id where (root!='2.16.840.1.113883.2.9.4.3.2') then {
+              id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+            }"diverso";
+            entity.addr -> practitioner.address;      
+            entity.telecom -> practitioner.telecom;
+            entity.assignedPerson as person then {
+              person.name -> practitioner.name;
+              person.birthTime as birthTime then{
+                birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+              }"birth";
+            }"name";
+              
+          entity.representedOrganization as representedOrganization ->  bundle.entry as e3,  e3.request = create('BackboneElement') as request, request.method = 'PUT',  e3.resource = create('Organization') as organization  then {
+            representedOrganization->organization.meta as meta then {
+              representedOrganization->meta.tag = create('Coding') as coding then {
+                representedOrganization -> coding.system ='http://algoritmodiscoring'"system";
+                representedOrganization -> coding.code ='ClinicalDocument/body/organizer/performer/representedOrganization'"code";
+              }"coding";
+            }"meta";
+            representedOrganization.id as id -> organization.identifier as identifier then {
+                id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+                id.extension as ext->identifier.value = ext then {
+                   representedOrganization-> request.url = append('Organization?identifier=',ext)"UUID";
+                  }"ext";
+                id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+                id.root as r then {
+                  id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e3.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid3)"aut";
+                }"r";
+                }"identifier";
+            representedOrganization.name as v -> organization.name = (v.other);
+            representedOrganization.telecom -> organization.telecom;
+            representedOrganization.addr -> organization.address;
+            representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e4,  e4.request = create('BackboneElement') as request, request.method = 'PUT',  e4.resource = create('Organization') as organization1  then {
+              OrgPartOf->organization1.meta as meta then {
+                OrgPartOf->meta.tag = create('Coding') as coding then {
+                  OrgPartOf -> coding.system ='http://algoritmodiscoring'"system";
+                  OrgPartOf -> coding.code ='ClinicalDocument/body/organizer/performer/representedOrganization/asOrganizationPartOf'"code";
+                }"coding";
+              }"meta";  
+              OrgPartOf.id as id -> organization1.identifier as identifier then {
+                id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+                id.extension as ext->identifier.value = ext then {
+                  OrgPartOf-> request.url = append('Organization?identifier=',ext)"UUID";
+                }"ext";
+                id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+                id.root as r then {
+                  id.extension as ext  -> organization1.id = (r +'-'+ ext) as uuid4,  e4.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization1.id)"org";
+                }"r";
+              }"identifier";
+              OrgPartOf.code -> organization1.type;
+              OrgPartOf.statusCode as status where (value ='active') -> organization1.active = create('boolean'), organization1.active = 'true';
+              OrgPartOf.wholeOrganization as wholeOrgan -> bundle.entry as e5,  e5.request = create('BackboneElement') as request, request.method = 'PUT',  e5.resource = create('Organization') as organization2 then{
+                wholeOrgan->organization2.meta as meta then {
+                  wholeOrgan->meta.tag = create('Coding') as coding then {
+                    wholeOrgan -> coding.system ='http://algoritmodiscoring'"system";
+                    wholeOrgan -> coding.code ='ClinicalDocument/body/organizer/performer/representedOrganization/asOrganizationPartOf/wholeOrganization'"code";
+                  }"coding";
+                }"meta"; 
+                wholeOrgan.id as id -> organization2.identifier as identifier then {
+                      id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+                      id.extension as ext->identifier.value = ext then {
+                          wholeOrgan-> request.url = append('Organization?identifier=',ext)"UUID";
+                          }"ext";
+                       id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+                       id.root as r then {
+                        id.extension as ext  -> organization2.id = (r +'-'+ ext) as uuid4,  e5.fullUrl = append('https://example/Organization/', uuid4), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id)"org";
+                      }"r";
+                     }"identifier";
+                  wholeOrgan.name as v -> organization2.name = (v.other);
+                  wholeOrgan.telecom -> organization2.telecom;
+                  wholeOrgan.addr -> organization2.address;
+                  }"wholeOrganization";
+                }"OrgPartOf";
+            }"representedOrganization"; 
+         }"practitioner";
+       }"entity";
+     }"practitionerRole";
+  }"performer";
+
+  //author
+  org.author as srcAuthor ->  bundle.entry as e6, e6.request = create('BackboneElement') as request, request.method = 'POST', e6.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid6,  e6.fullUrl = append('https://example/PractitionerRole/', uuid6), request.url='PractitionerRole', observation.performer = create('Reference') as referenceaut,  referenceaut.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+    //srcAuthor.time as time -> tgt.date;
+    srcAuthor.assignedAuthor as assignedAuthor then {
+       assignedAuthor.code as codice -> practitionerRole.code as code2 then CECodeableConcept(codice,code2);
+       assignedAuthor -> bundle.entry as e7,  e7.request = create('BackboneElement') as request, request.method = 'PUT', e7.resource = create('Practitioner') as practitioner  then {
+         srcAuthor.functionCode -> practitionerRole.code;
+        //assignedAuthor.code -> practitionerRole.code;
+        assignedAuthor->practitioner.meta as meta then {
+          assignedAuthor->meta.tag = create('Coding') as coding then {
+            assignedAuthor -> coding.system ='http://algoritmodiscoring'"system";
+            assignedAuthor -> coding.code ='ClinicalDocument/body/organizer/author'"code";
+          }"coding";
+        }"meta";
+         assignedAuthor.id as id -> practitioner.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            assignedAuthor-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid7,  e7.fullUrl = append('https://example/Practitioner/', uuid7),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) "aut";
+          }"r";
+        }"identifier";
+        assignedAuthor.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
+          id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+        }"2.16.840.1.113883.2.9.4.3.2";
+        assignedAuthor.id as id where (root!='2.16.840.1.113883.2.9.4.3.2') then {
+          id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+        }"diverso";
+        assignedAuthor.addr -> practitioner.address;      
+        assignedAuthor.telecom -> practitioner.telecom;
+        //person
+        assignedAuthor.assignedPerson as person then {
+          person.name -> practitioner.name;
+          person.birthTime as birthTime then{
+            birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+          }"birth";
+        }"name";
+      }"ASSAUth";
+      //organization
+      assignedAuthor.representedOrganization as representedOrganization ->  bundle.entry as e8,  e8.request = create('BackboneElement') as request, request.method = 'PUT',  e8.resource = create('Organization') as organization then {
+        representedOrganization->organization.meta as meta then {
+          representedOrganization->meta.tag = create('Coding') as coding then {
+            representedOrganization -> coding.system ='http://algoritmodiscoring'"system";
+            representedOrganization -> coding.code ='ClinicalDocument/body/organizer/author/representedOrganization'"code";
+          }"coding";
+        }"meta";
+        representedOrganization.id as id -> organization.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            representedOrganization-> request.url = append('Organization?identifier=',ext)"UUID";
+          }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid8,  e8.fullUrl = append('https://example/Organization/', uuid8), practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid8)"aut";
+          }"r";
+        }"identifier";
+        representedOrganization.name as v -> organization.name = (v.other);
+        representedOrganization.telecom -> organization.telecom;
+        representedOrganization.addr -> organization.address;
+        representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e9,  e9.request = create('BackboneElement') as request, request.method = 'PUT',  e9.resource = create('Organization') as organization1 then {
+          OrgPartOf->organization1.meta as meta then {
+            OrgPartOf->meta.tag = create('Coding') as coding then {
+              OrgPartOf -> coding.system ='http://algoritmodiscoring'"system";
+              OrgPartOf -> coding.code ='ClinicalDocument/body/organizer/author/representedOrganization/asOrganizationPartOf'"code";
+            }"coding";
+          }"meta";
+          OrgPartOf.id as id -> organization1.identifier as identifier then {
+            id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+            id.extension as ext->identifier.value = ext then {
+              OrgPartOf-> request.url = append('Organization?identifier=',ext)"UUID";
+            }"ext";
+            id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+            id.root as r then {
+              id.extension as ext  -> organization1.id = (r +'-'+ ext) as uuid9,  e9.fullUrl = append('https://example/Organization/', uuid9), organization.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization1.id)"aut";
+            }"r";
+          }"identifier";
+          OrgPartOf.code -> organization1.type;
+          OrgPartOf.statusCode as status where (value ='active') -> organization1.active = create('boolean'), organization1.active = 'true';
+          OrgPartOf.wholeOrganization as wholeOrgan -> bundle.entry as e10,  e10.request = create('BackboneElement') as request, request.method = 'PUT',  e10.resource = create('Organization') as organization2   then{
+            OrgPartOf->organization2.meta as meta then {
+              OrgPartOf->meta.tag = create('Coding') as coding then {
+                OrgPartOf -> coding.system ='http://algoritmodiscoring'"system";
+                OrgPartOf -> coding.code ='ClinicalDocument/body/organizer/author/representedOrganization/asOrganizationPartOf/wholeOrganization'"code";
+              }"coding";
+            }"meta";
+            wholeOrgan.id as id -> organization2.identifier as identifier then {
+              id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+              id.extension as ext->identifier.value = ext then {
+                wholeOrgan-> request.url = append('Organization?identifier=',ext)"UUID";
+              }"ext";
+              id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+              id.root as r then {
+                id.extension as ext  -> organization2.id = (r +'-'+ ext) as uuid10,  e10.fullUrl = append('https://example/Organization/', uuid10), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id)"aut";
+              }"r";
+            }"identifier";
+            wholeOrgan.name as v -> organization2.name = (v.other);
+            wholeOrgan.telecom -> organization2.telecom;
+            wholeOrgan.addr -> organization2.address;
+          }"wholeOrganization";
+        }"OrgPartOf";
+      }"representedOrganization"; 
+      //device
+      assignedAuthor.assignedAuthoringDevice as assignedAuthoringDevice -> bundle.entry as e11,  e11.request = create('BackboneElement') as request, request.method = 'POST',  e11.resource = create('Device') as device,  device.id = uuid() as uuid11,  e11.fullUrl = append('https://example/Device/', uuid11), request.url ='Device', tgt.author = create('Reference') as reference, reference.reference= ('https://example/Device/' + %device.id) then{
+        assignedAuthoringDevice.templateId -> device.identifier; 
+        assignedAuthoringDevice.code -> device.type;
+        assignedAuthoringDevice.manufacturerModelName as manufacturerModelName then{
+          manufacturerModelName as m-> device.manufacturer = (m.displayName) "displayRule";
+        }"manufacturer"; 
+        assignedAuthoringDevice.softwareName as softwareName -> device.deviceName as deviceName then{
+          softwareName -> deviceName.type = 'other' "typeName";		
+          softwareName as s -> deviceName.name = (s.displayName) "name";
+        }"deviceName";
+      }"Device";
+    }"assignedAuthor";
+  }"author";
+
+  //participant person
+  org.participant as participant where(typeCode!='DEV') ->  observation.encounter = create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) then {
+    participant -> encounter.participant as FhirParticipant then {
+      participant as p -> FhirParticipant.type as type then { 
+        p -> type.coding as coding then{
+          p-> coding.code = (p.typeCode) "codice";
+          p-> coding.system = 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType' "system";
+        } "codeType"; 
+      }"type";
+    }"fhirParticipant";
+    participant.participantRole as participantRole -> bundle.entry as e12,   e12.request = create('BackboneElement') as request, request.method = 'POST',  e12.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid12,  e12.fullUrl = append('https://example/PractitionerRole/', uuid12), request.url = 'PractitionerRole', encounter.participant = create('BackboneElement') as participant1  then { 
+     // participant.time -> participant1.period; 
+      participant.time as time1 -> participant1.period = create('Period') as period then{
+        time1 -> period.start = create('dateTime') as start then TSDateTime(time1,start) "val";
+       }"time";
+       participant.time as time1 -> participant1.period =create('Period') as period then IVLTSPeriod(time1,period); 
+      participant.functionCode -> practitionerRole.code;
+      //non mappa i 2 precedenti
+      participantRole  -> bundle.entry as e13, e13.request = create('BackboneElement') as request, request.method = 'PUT', e13.resource = create('Practitioner') as practitioner then {
+        participantRole-> participant1.individual = create('Reference') as referencepart, referencepart.reference =  ('https://example/PractitionerRole/' + %practitionerRole.id)"par";
+        participantRole->practitioner.meta as meta then {
+          participantRole->meta.tag = create('Coding') as coding then {
+            participantRole -> coding.system ='http://algoritmodiscoring'"system";
+            participantRole -> coding.code ='ClinicalDocument/body/organizer/participant'"code";
+          }"coding";
+        }"meta";
+        participantRole.id as id -> practitioner.identifier as identifier then {
+          id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
+          id.extension as ext->identifier.value = ext then {
+            participantRole-> request.url = append('Practitioner?identifier=',ext)"UUID";
+          }"ext";
+          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
+          id.root as r then {
+            id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2, e13.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id)"part";
+          }"r";
+        }"identifier";
+        participantRole.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
+          id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+        }"2.16.840.1.113883.2.9.4.3.2";
+        participantRole.id as id where (root!='2.16.840.1.113883.2.9.4.3.2') then {
+          id.extension as ext-> request.url = append('Practitioner?identifier=',ext)"UUID";
+        }"diverso";
+        participantRole.code -> practitionerRole.code;
+        participantRole.addr -> practitioner.address;
+        participantRole.telecom -> practitioner.telecom;
+        participantRole.playingEntity as playingEntity then {
+          playingEntity.name -> practitioner.name;
+          playingEntity.birthTime as birthTime then{
+            birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
+          }"birth";
+        }"name";
+      }"practitioner";
+    }"partRole";
+  }"participantEncounter";
+
+  //participant device 
+  org.participant as devParticipant where(typeCode='DEV') -> bundle.entry as e14, e14.request = create('BackboneElement') as request, request.method = 'POST', e14.resource = create('Device') as device,  device.id = uuid() as uuid14,  e14.fullUrl = append('https://example/Device/', uuid14), request.url='Device', observation.device = create('Reference') as reference,  reference.reference = ('https://example/Device/' + %device.id) then {
+    devParticipant.participantRole as participantRoleDev then {
+      participantRoleDev.playingDevice as playingDevice then {
+        playingDevice.code -> device.type;
+        playingDevice.manufacturerModelName as manufacturerModelName then{
+          manufacturerModelName as m-> device.manufacturer = (m.displayName) "displayRule";
+        }"manufacturer"; 
+        playingDevice.softwareName as softwareName -> device.deviceName as deviceName then{
+          softwareName -> deviceName.type = 'other' "typeName";		
+          softwareName as s -> deviceName.name = (s.displayName) "name";
+        }"deviceName";
+      }"playingDevice";
+    }"participantRoleDev";
+  }"devParticipant";
+
+  org.component as component then {
+      component.observation as observation -> bundle.entry as e, e.request = create('BackboneElement') as request, request.method = 'POST', e.resource = create('Observation') as observationhasmember, 
+          observationhasmember.id = uuid() as uuid2, e.fullUrl = append('https://example/Observation/', uuid2), request.url = 'Observation',
+          observation.hasMember = create('Reference') as reference,  reference.reference = ('https://example/Observation/' + %observationhasmember.id) then Observation(observation,patient,encounter,observationhasmember,bundle) "OBS";
+  }"componentobservation";
+      
+  org.component as component then {
+        component.organizer as organizer -> bundle.entry as e1, e1.request = create('BackboneElement') as request, request.method = 'POST', e1.resource = create('Observation') as observationorganizer, 
+          observationorganizer.id = uuid() as uuid3, e1.fullUrl = append('https://example/Observation/', uuid3), request.url = 'Observation',  observation.hasMember = create('Reference') as reference,  reference.reference = ('https://example/Observation/' + %observationorganizer.id) then  {
+          organizer then  Organizer(cda,organizer,patient,encounter,observationorganizer,bundle) "ORG";
+        }"organizer";
+  }"componentorganizer";
+
+  //observationMedia  
+  org.component as component then {
+        component.observationMedia as obsMedia -> bundle.entry as e15, e15.request = create('BackboneElement') as request, request.method = 'POST', e15.resource = create('Media') as media1,  media1.id = uuid() as uuid15,  e15.fullUrl = append('https://example/Media/', uuid15), request.url='Media', observation.derivedFrom = create('Reference') as reference,  reference.reference = ('https://example/Media/' + %media1.id) then {
+          obsMedia-> media1.content = create('Attachment') as Attachment then {
+          obsMedia -> media1.status='unknown'"status";
+          obsMedia.value as valueMedia then {
+              valueMedia.mediaType as type -> Attachment.contentType=type "type";
+              valueMedia -> Attachment.data=(valueMedia.dataBase64Binary) "data";
+              }"valuemedia";
+          } "Attachment";
+         }"obsmedia";
+  }"component";
+
+  //note
+  org.component as component then {
+      component.act as act then {
+        act.text as text then {
+            text.reference as reference -> observation.note as note then {
+            reference->note.text =(reference.value)"reference";
+            }"note";
+        }"text"; 
+      }"componentact";
+  }"component";
+
+}
+
+group ExtSubjectAnimal(source src: relatedSubject, target ext: Extension) {
+  src -> ext.url = 'http://hl7.org/fhir/StructureDefinition/patient-animal' "url";
+  src.code as code -> ext.extension as ext, ext.url='species' ,ext.value = create('CodeableConcept') as code1 then CECodeableConcept(code,code1) "code";  
+}
