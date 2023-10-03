@@ -111,7 +111,7 @@ hapi:
       fhir_hapi_client_secret: xyz
       keycloak_username: managegroup
       keycloak_password: 12345
-      sms_password: IPRDHACEY123
+      sms_password: password
       fhir_user: kjois@iprdgroup.com
       fhir_password: 12345
       hapi_server_address: http://localhost:8085/fhir
