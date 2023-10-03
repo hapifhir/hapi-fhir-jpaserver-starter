@@ -44,7 +44,7 @@ public class CdsHooksServlet extends HttpServlet {
 	// CORS Pre-flight
 	@Override
 	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		//ErrorHandling.setAccessControlHeaders(resp, appProperties);
+		ErrorHandling.setAccessControlHeaders(resp, appProperties);
 		resp.setHeader("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
 		resp.setHeader("X-Content-Type-Options", "nosniff");
 		resp.setStatus(HttpServletResponse.SC_OK);
@@ -59,7 +59,7 @@ public class CdsHooksServlet extends HttpServlet {
 			logger.error(request.getRequestURI());
 			throw new ServletException("This servlet is not configured to handle GET requests.");
 		}
-		//ErrorHandling.setAccessControlHeaders(response, myAppProperties);
+		ErrorHandling.setAccessControlHeaders(response, appProperties);
 		response.setHeader("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
 		response.getWriter().println(new GsonBuilder().setPrettyPrinting().create().toJson(getServices()));
 	}
@@ -90,7 +90,7 @@ public class CdsHooksServlet extends HttpServlet {
 			response.setContentType("text/json;charset=UTF-8");
 			response.getWriter().println(jsonResponse);
 		} catch (BaseServerResponseException e) {
-			// ErrorHandling.handleError(response, "ERROR: Exception connecting to remote server.", e, myAppProperties);
+			ErrorHandling.handleError(response, "ERROR: Exception connecting to remote server.", e, appProperties);
 			logger.error(e.toString());
 		} catch (Exception e) {
 			logger.error(e.toString());
