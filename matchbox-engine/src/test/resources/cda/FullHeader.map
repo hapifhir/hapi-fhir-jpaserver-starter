@@ -26,13 +26,13 @@ conceptmap "cm-v3-relatesTo-code" {
   s:RPLC == t:replaces
 }
 
-uses "http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor" alias AssignedAuthor as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" alias AssignedEntity as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/AssociatedEntity" alias AssociatedEntity as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/CustodianOrganization" alias CustodianOrganization as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/Section" alias Section as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/PatientRole" alias PatientRole as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument" alias ClinicalDocument as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AssignedAuthor" alias AssignedAuthor as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity" alias AssignedEntity as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AssociatedEntity" alias AssociatedEntity as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/CustodianOrganization" alias CustodianOrganization as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/Section" alias Section as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/PatientRole" alias PatientRole as source
 uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
 uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as target
 uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as target
@@ -41,7 +41,7 @@ uses "http://hl7.org/fhir/StructureDefinition/Person" alias Patient as target
 uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as target
 uses "http://hl7.org/fhir/StructureDefinition/Specimen" alias Specimen as target
 uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/HealthCareFacility" alias HealthCareFacility as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/HealthCareFacility" alias HealthCareFacility as source
 
 imports "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/CdaToFhirDataTypes"
 
@@ -82,7 +82,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
   src.setId -> tgt.identifier "identifier";
   src -> tgt.status = 'final' "status";
   src.code -> tgt.type;
-  src.title as t -> tgt.title = (t.dataString);
+  src.title as t -> tgt.title = (t.data);
   src where src.title.exists().not() then {
     src.code  as code then {
       code.displayName as display ->tgt.title = cast(display,'string');

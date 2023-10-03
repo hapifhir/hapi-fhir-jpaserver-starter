@@ -63,6 +63,7 @@ public class MatchboxStructureMapUtilities extends StructureMapUtilities {
 		this.worker = worker;
 		this.engine = engine;
 		this.contextUtilites = new ContextUtilities(this.worker);
+		super.setDebug(true);
 	}
 
 	public MatchboxStructureMapUtilities(IWorkerContext worker, MatchboxEngine engine) {

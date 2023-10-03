@@ -82,7 +82,7 @@ public class TransformSupportServices implements ITransformerServices {
 
   @Override
   public void log(String message) {
-    log.debug(message);
+    log.info(message);
   }
 
 }

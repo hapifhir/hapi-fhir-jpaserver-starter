@@ -1,5 +1,5 @@
-### @host = http://localhost:8080/matchboxv3/fhir
-@host = https://test.ahdis.ch/matchboxv3/fhir
+@host = http://localhost:8080/matchbox/fhir
+### @host = https://test.ahdis.ch/matchbox/fhir
 
 ### Check if server is available
 GET {{host}}/metadata HTTP/1.1
@@ -11,73 +11,38 @@ GET {{host}}/ImplementationGuide HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Origin: http://localhost
 
-### post CDA Implementation Guide to server
-###
-POST {{host}}/ImplementationGuide HTTP/1.1
-Accept: application/fhir+json
-Content-Type: application/fhir+json
-
-{
-  "resourceType": "ImplementationGuide",
-  "version": "2.1.0-cibuild",
-  "name": "hl7.fhir.cda",
-  "packageId": "hl7.fhir.cda",
-  "url": "https://github.com/ahdis/cda-core-2.0/releases/download/v0.0.4-dev/cda-core-2.0.2.1.0-cibuild.tgz"
-}
-
-### post CDA Implementation Guide to server
-###
-POST {{host}}/ImplementationGuide HTTP/1.1
-Accept: application/fhir+json
-Content-Type: application/fhir+json
-
-{
-  "resourceType": "ImplementationGuide",
-  "version": "0.1.0",
-  "name": "it.ey.cda-fhir-maps",
-  "packageId": "it.ey.cda-fhir-maps",
-  "url": "https://github.com/ahdis/cda-core-2.0/releases/download/v0.0.4-dev/cda-fhir-maps-300.tgz"
-}
+### verify that StructureDefinintion is there
+GET {{host}}/StructureDefinition?url=http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument HTTP/1.1
 
 ### verify that StructureDefinintion is there
-GET {{host}}/StructureDefinition?url=http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument HTTP/1.1
+GET {{host}}/StructureDefinition/ClinicalDocument HTTP/1.1
 
-### validate CDA-CH
-POST {{host}}/$validate?profile=http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument HTTP/1.1
-Content-Type: application/fhir+xml
-
-< ../matchbox-engine/src/test/resources/cda-ch.xml
-
-
-### validate CDA2_Lettera_di_Dimissione_Ospedaliera
-POST {{host}}/$validate?profile=http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument HTTP/1.1
-Content-Type: application/fhir+xml
-
-< ../matchbox-engine/src/test/resources/cda-it.xml
-
-### validate CDA2_Referto di Laboratorio
-POST {{host}}/StructureMap/$transform?source=http://www.ey.com/italy/ig/cda-fhir-maps/StructureMap/RefertodilaboratorioFULLBODY HTTP/1.1
-Content-Type: application/fhir+xml
-
-< ../matchbox-engine/src/test/resources/cda-it.xml
 
 ### upload test structure map for observation
 POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: text/fhir-mapping
 
-< ../matchbox-engine/src/test/resources/cda-it-observation.map
+< ./matchbox-engine/src/test/resources/cda/datatypes.map
 
-### validate CDA-CH
-POST {{host}}/$validate?profile=http://hl7.org/fhir/cda/StructureDefinition/Observation HTTP/1.1
-Content-Type: application/fhir+xml
+### upload test structure map for observation
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
 
-< ../matchbox-engine/src/test/resources/cda-it-observation.xml
+< ./matchbox-engine/src/test/resources/cda/FullHeader.map
 
+
+### upload test structure map for observation
+POST {{host}}/StructureMap HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+Content-Type: text/fhir-mapping
+
+< ./matchbox-engine/src/test/resources/cda/LabBody.map
 
 ### transform cda enty observation
-POST {{host}}/StructureMap/$transform?source=http://www.ey.com/italy/ig/cda-fhir-maps/StructureMap/TestObservation HTTP/1.1
+POST {{host}}/StructureMap/$transform?source=http://salute.gov.it/ig/cda-fhir-maps/StructureMap/RefertodilaboratorioFULLBODY HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
 Content-Type: application/fhir+xml
 
-< ../matchbox-engine/src/test/resources/cda-it-observation.xml
+< ./matchbox-engine/src/test/resources/cda/cda-it.xml

@@ -174,6 +174,7 @@ public class ImplementationGuideProviderR4 extends ca.uhn.fhir.jpa.rp.r4.Impleme
 				.addInstallResourceTypes(MatchboxPackageInstallerImpl.DEFAULT_INSTALL_TYPES.toArray(new String[0]))
 				.setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_ONLY)
 				.addDependencyExclude("hl7.fhir.r4.core")
+				.addDependencyExclude("hl7.fhir.r5.core")
 				.addDependencyExclude("hl7.terminology")
 				.addDependencyExclude("hl7.terminology.r4")
 				.addDependencyExclude("hl7.fhir.r4.examples");

@@ -1,0 +1,14 @@
+map "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/TestObservationConditionCoding" = "TestObservationConditionCoding"
+
+uses "http://hl7.org/cda/stds/core/StructureDefinition/Observation" alias CdaObservation as source
+uses "http://hl7.org/fhir/StructureDefinition/Condition" alias FhirObservation as target
+
+uses "http://hl7.org/cda/stds/core/StructureDefinition/CD" alias ST as source
+uses "http://hl7.org/fhir/StructureDefinition/CodeableConcept" alias CodeableConcept as target
+
+imports "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/CdaToFhirDataTypes"
+imports "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/FULLHEADER"
+
+group CdaToFHIR(source cda : CdaObservation, target condition : Condition) {
+    cda.value -> condition.code "implicit coding for CE Type";
+}

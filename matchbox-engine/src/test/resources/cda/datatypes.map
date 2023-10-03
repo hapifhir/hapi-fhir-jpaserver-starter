@@ -20,28 +20,36 @@ conceptmap "addressUse" {
   s:BAD == t:old
 }
 
-uses "http://hl7.org/fhir/cda/StructureDefinition/ED" alias ED as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/INT" alias INT as source
-uses "http://hl7.org/fhir/cda/StructureDefinition/II" as source
-uses "http://hl7.org/fhir/StructureDefinition/Identifier" as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/TS" as source
-uses "http://hl7.org/fhir/StructureDefinition/instant" as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/CS" as source
-uses "http://hl7.org/fhir/StructureDefinition/code" as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/CE" as source
-uses "http://hl7.org/fhir/StructureDefinition/CodeableConcept" as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/ST" as source
-uses "http://hl7.org/fhir/StructureDefinition/string" as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/EN" as source
-uses "http://hl7.org/fhir/StructureDefinition/HumanName" as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/AD" as source
-uses "http://hl7.org/fhir/StructureDefinition/Address" as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/TEL" as source
-uses "http://hl7.org/fhir/StructureDefinition/ContactPoint" as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/BL" as source
-uses "http://hl7.org/fhir/StructureDefinition/boolean" as target
-uses "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" as source
-uses "http://hl7.org/fhir/StructureDefinition/Period" as target
+
+uses "http://hl7.org/cda/stds/core/StructureDefinition/ED" alias ED as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/INT" alias INT as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/II" alias II as source
+uses "http://hl7.org/fhir/StructureDefinition/Identifier" alias Identifier as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/TS" alias TS as source
+uses "http://hl7.org/fhir/StructureDefinition/instant" alias instanat as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/CS" alias CS as source
+uses "http://hl7.org/fhir/StructureDefinition/code" alias code as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/CE" alias CE as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/CD" alias CD as source
+uses "http://hl7.org/fhir/StructureDefinition/CodeableConcept" alias CodeableConcept as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/ST" alias ST as source
+uses "http://hl7.org/fhir/StructureDefinition/string" alias string as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/EN" alias EN as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/PN" alias PN as source
+uses "http://hl7.org/fhir/StructureDefinition/HumanName" alias HumanName as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/AD" alias AD as source
+uses "http://hl7.org/fhir/StructureDefinition/Address" alias Address as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/TEL" alias TEL as source
+uses "http://hl7.org/fhir/StructureDefinition/ContactPoint" alias ContactPoint as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/RTO-PQ-PQ" alias RTO_PQ_PQ as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/PQ" alias PQ as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/ON" alias ON as source
+uses "http://hl7.org/fhir/StructureDefinition/boolean" alias booelan as target
+uses "http://hl7.org/cda/stds/core/StructureDefinition/TS" alias TS as source
+uses "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS" alias IVL_TS as source
+uses "http://hl7.org/fhir/StructureDefinition/Period" alias Period as target
+
+
 
 group Any(source src, target tgt) {
 }
@@ -61,14 +69,14 @@ group INT(source src : INT, target tgt : integer) extends Any <<types>> {
 
 group TemplateID(source template : II, target tgt) {
   template -> tgt.extension as ext then {
-    template -> ext.url = 'http://hl7.org/fhir/cda/StructureDefinition/templateID' "url";
+    template -> ext.url = 'http://hl7.org/cda/stds/core/StructureDefinition/templateID' "url";
     template -> ext.value = create('Identifier') as value then II(template, value) "value";
   } "templateId";
 }
 
 group Negation(source negation : BL, target tgt) {
   negation -> tgt.modifierExtension as ext then {
-    negation -> ext.url = 'http://hl7.org/fhir/cda/StructureDefinition/negationIndicator' "url";
+    negation -> ext.url = 'http://hl7.org/cda/stds/core/StructureDefinition/negationIndicator' "url";
     negation as neg ->  ext.value = create('boolean'),  ext.value = neg "value";
   } "negation";
 }
@@ -170,21 +178,24 @@ group CDCodeableConcept(source src : CD, target tgt : CodeableConcept) extends C
 }
 
 group ENHumanName(source src : EN, target tgt : HumanName) extends Any <<types>> {
-  src.family as v -> tgt.family = (v.dataString);
-  src.given as v -> tgt.given = (v.dataString);
-  src.prefix as v -> tgt.prefix = (v.dataString);
-  src.suffix as v -> tgt.suffix = (v.dataString);
+  src.family as v -> tgt.family = (v.data);
+  src.given as v -> tgt.given = (v.data);
+  src.prefix as v -> tgt.prefix = (v.data);
+  src.suffix as v -> tgt.suffix = (v.data);
   // src.use as c -> tgt.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
   src.validTime -> tgt.period;
 }
 
+group PNHumanName(source src : PN, target tgt : HumanName) extends ENHumanName <<types>> {
+}
+
 group ADAddress(source src : AD, target tgt : Address) extends Any <<types>> {
-  src.country as v -> tgt.country = (v.dataString);
-  src.state as v -> tgt.state = (v.dataString);
-  src.county as v -> tgt.district = (v.dataString);
-  src.city as v -> tgt.city = (v.dataString);
-  src.postalCode as v -> tgt.postalCode = (v.dataString);
-  src.streetAddressLine as v -> tgt.line=(v.dataString);
+  src.country as v -> tgt.country = (v.data);
+  src.state as v -> tgt.state = (v.data);
+  src.county as v -> tgt.district = (v.data);
+  src.city as v -> tgt.city = (v.data);
+  src.postalCode as v -> tgt.postalCode = (v.data);
+  src.streetAddressLine as v -> tgt.line=(v.data);
    
   src   -> tgt.line  as line then { 
    src where src.censusTract.exists() then {
@@ -196,8 +207,8 @@ group ADAddress(source src : AD, target tgt : Address) extends Any <<types>> {
   //as streetAddress then{
     //src.censusTract as v->tgt.line as line, line.extension as ext1 then CensusTract(v, ext1) "line";
   //src.censusTract as v ->tgt.line as line, line.extension as ext1 then CensusTract(v, ext1) "line";
-  src.streetName as v -> tgt.line = (v.dataString);
-  src.houseNumber as v -> tgt.line = (v.dataString);
+  src.streetName as v -> tgt.line = (v.data);
+  src.houseNumber as v -> tgt.line = (v.data);
   src.use as c -> tgt.use = translate(c, '#addressUse', 'code') "addressUse";
   src.useablePeriod -> tgt.period;
 }
@@ -228,5 +239,5 @@ group RTOPQPQRatio(source src : RTO_PQ_PQ, target tgt : Ratio) extends Any <<typ
  
  group CensusTract(source src : ST, target ext : Extension) {
   src -> ext.url = 'http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-censusTract' "url";
-    src->  ext.value = create('string'),  ext.value = (src.dataString) "value";
+    src->  ext.value = create('string'),  ext.value = (src.data) "value";
   } 

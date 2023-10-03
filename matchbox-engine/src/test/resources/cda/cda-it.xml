@@ -227,7 +227,7 @@
 	<documentationOf>
 		<serviceEvent moodCode="EVN">
 			<lab:statusCode code="completed"/>
-			<statusCode code="completed"/>
+<!--			<statusCode code="completed"/> -->
 			<effectiveTime value="20220324112426+0100"/>
 				<performer typeCode="PRF">
 				<assignedEntity>

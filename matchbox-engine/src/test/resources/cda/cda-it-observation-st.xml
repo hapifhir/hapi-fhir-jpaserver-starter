@@ -9,5 +9,5 @@
 	</text>
 	<statusCode code="completed"/>
 	<effectiveTime value="20220203092200+0200"/>
-	<value xsi:type="st">Nessun Trauma riscontrato</value>
+    <value xsi:type="ST">Nessun Trauma riscontrato</value>
 </Observation>
