@@ -97,7 +97,7 @@ public class NotificationService {
 		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
 
 		// TODO: Can query parameters be assigned dynamically through app properties instead of hardcoding?
-		String smsUrl = "https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&password=IPRDHACEY123&message=" + message + "&sender=HACEY-IPRD&mobiles=" + mobileNumber;
+		String smsUrl = "https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&message=" + message + "&sender=HACEY-IPRD&mobiles=" + mobileNumber;
 		Request smsRequest = new Request.Builder().url(smsUrl).build();
 		okhttp3.Response smsResponse = client.newCall(smsRequest).execute();
 		try {
