@@ -1,13 +1,84 @@
 ### @host = http://test.ahdis.ch/matchbox/fhir
-@host = http://localhost:8080/matchbox/fhir
+@host = http://localhost:8080/matchboxv3/fhir
 
 ### @host = http://hapi.fhir.org/baseR4
 
 ## No issues detected during validation
-POST {{host}}/$validate HTTP/1.1
-Content-Type: application/xml
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/DiagnosticReport HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+json
 
-< ../ch-core/input/examples/patient/FranzMuster.xml
+{
+    "resourceType" : "DiagnosticReport",
+    "extension" : [{
+    "url" : "http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition",
+    "valueReference" : {
+        "reference" : "urn:uuid:da065461-34df-4e2e-b69f-4181908575d0",
+        "type" : "Composition"
+    }
+    }],
+    "status" : "final",
+    "code" : {
+    "text" : "test"
+    }
+}
+
+
+### No issues detected during validation (works only the second time? but only in Bundle?)
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Bundle HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+< /Users/oegger/Desktop/Bundle-2Doc-ChlamydiaTrachomatis-noprofile.json
+
+
+
+### No issues detected during validation
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-elm/StructureDefinition/ch-elm-diagnosticreport HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+{
+    "resourceType" : "DiagnosticReport",
+    "meta" : {
+        "profile" : ["http://fhir.ch/ig/ch-elm/StructureDefinition/ch-elm-diagnosticreport"]
+      },
+    "status" : "final",
+    "code" : {
+    "text" : "test"
+    }
+}
+
+### No issues detected during validation
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-elm/StructureDefinition/ch-elm-diagnosticreport HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+{
+    "resourceType" : "DiagnosticReport",
+    "meta" : {
+        "profile" : ["http://fhir.ch/ig/ch-elm/StructureDefinition/ch-elm-diagnosticreport"]
+      },
+     "extension" : [{
+    "url" : "http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition",
+    "valueReference" : {
+        "reference" : "urn:uuid:da065461-34df-4e2e-b69f-4181908575d0",
+        "type" : "Composition"
+    }
+    }],
+    "status" : "final",
+    "code" : {
+    "text" : "test"
+    }
+}
+
+### No issues detected during validation (works only the second time? but only in Bundle?)
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-elm/StructureDefinition/ch-elm-document HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+< /Users/oegger/Desktop/Bundle-2Doc-ChlamydiaTrachomatis.json
+
 
 ###
 POST  https://lforms-fhir.nlm.nih.gov/baseR4/Patient/$validate

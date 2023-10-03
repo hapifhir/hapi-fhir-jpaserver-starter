@@ -296,7 +296,12 @@ public class XmlParser extends ParserBase {
 	private void parseChildren(String path, org.w3c.dom.Element node, Element element) throws FHIRFormatError, FHIRException, IOException, DefinitionException {
 		// this parsing routine retains the original order in a the XML file, to support validation
 		reapComments(node, element);
-		List<Property> properties = element.getProperty().getChildProperties(element.getName(), XMLUtil.getXsiType(node));
+
+		String xsiType = XMLUtil.getXsiType(node);
+		if (xsiType!=null && ("urn:hl7-org:v3".equals(node.getNamespaceURI()) || "urn:hl7-org:sdtc".equals(node.getNamespaceURI()) || "urn:ihe:pharm".equals(node.getNamespaceURI()) || "urn:oid:1.3.6.1.4.1.19376.1.3.2".equals(node.getNamespaceURI()))) {
+            xsiType = xsiType.toUpperCase(); // PATCH for italian CDA where ST is lowercase see ahdis/matchbox #145
+        }
+		List<Property> properties = element.getProperty().getChildProperties(element.getName(), xsiType);
 
 		String text = XMLUtil.getDirectText(node).trim();
 		int line = line(node, false);
@@ -304,13 +309,14 @@ public class XmlParser extends ParserBase {
 		if (!Utilities.noString(text)) {
 			Property property = getTextProp(properties);
 			if (property != null) {
-				if ("ED.data[x]".equals(property.getDefinition().getId()) || (property.getDefinition()!=null && property.getDefinition().getBase()!=null && "ED.data[x]".equals(property.getDefinition().getBase().getPath()))) {
+				if (("ST.data[x]".equals(property.getDefinition().getId()) || (property.getDefinition()!=null && property.getDefinition().getBase()!=null && "ST.data[x]".equals(property.getDefinition().getBase().getPath()))) 
+				 || ("ED.data[x]".equals(property.getDefinition().getId()) || (property.getDefinition()!=null && property.getDefinition().getBase()!=null && "ED.data[x]".equals(property.getDefinition().getBase().getPath())))){
 					if ("B64".equals(node.getAttribute("representation"))) {
-						Element n = new Element("dataBase64Binary", property, "base64Binary", text).markLocation(line, col);
+						Element n = new Element("data", property, "base64Binary", text).markLocation(line, col);
 						n.setPath(element.getPath()+"."+property.getName());
 						element.getChildren().add(n);
 					} else {
-						Element n = new Element("dataString", property, "string", text).markLocation(line, col);
+						Element n = new Element("data", property, "string", text).markLocation(line, col);
 						n.setPath(element.getPath()+"."+property.getName());
 						element.getChildren().add(n);
 					}
@@ -426,7 +432,7 @@ public class XmlParser extends ParserBase {
 						boolean ok = true;
 						if (property.isChoice()) {
 							if (property.getDefinition().hasRepresentation(PropertyRepresentation.TYPEATTR)) {
-								String xsiType = ((org.w3c.dom.Element) child).getAttributeNS(FormatUtilities.NS_XSI, "type");
+								xsiType = ((org.w3c.dom.Element) child).getAttributeNS(FormatUtilities.NS_XSI, "type");
 								if (Utilities.noString(xsiType)) {
 									if (ToolingExtensions.hasExtension(property.getDefinition(), "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype")) {
 										xsiType = ToolingExtensions.readStringExtension(property.getDefinition(), "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype");
@@ -438,6 +444,9 @@ public class XmlParser extends ParserBase {
 								} else {
 									if (xsiType.contains(":"))
 										xsiType = xsiType.substring(xsiType.indexOf(":")+1);
+									if ("urn:hl7-org:v3".equals(node.getNamespaceURI()) || "urn:hl7-org:sdtc".equals(node.getNamespaceURI()) || "urn:ihe:pharm".equals(node.getNamespaceURI()) || "urn:oid:1.3.6.1.4.1.19376.1.3.2".equals(node.getNamespaceURI())) {
+										xsiType = xsiType.toUpperCase(); // PATCH for italian CDA where ST is lowercase see matchbox issue #145
+									}
 									n.setType(xsiType);
 									n.setExplicitType(xsiType);
 								}

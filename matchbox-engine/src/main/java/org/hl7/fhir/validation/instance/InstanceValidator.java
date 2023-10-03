@@ -3978,7 +3978,8 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       if (sd.getAbstract()) {
         StructureDefinition sdt = context.fetchTypeDefinition(type);
         StructureDefinition tt = sdt;
-        while (tt != null) {
+//        while (tt != null) { patch endless loop in CDA validation ahdis/matchbox#145
+        if (tt != null) {
           if (tt.getBaseDefinition().equals(sd.getUrl())) {
             return sdt;
           }

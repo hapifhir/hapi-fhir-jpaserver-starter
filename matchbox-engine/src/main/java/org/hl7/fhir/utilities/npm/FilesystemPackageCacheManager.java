@@ -484,7 +484,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   	}
 
     if ("hl7.cda.uv.core".equals(id)) {
-  		version = "2.1.0-draft1";
+  		version = "2.1.0-draft2-mb";
       NpmPackage npm = NpmPackage.fromPackage(packageTgzInputStream, sourceDesc, true);
       return npm;
   	}
