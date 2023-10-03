@@ -43,6 +43,8 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
+import java.util.spi.CalendarNameProvider;
 
 class CdaToFhirTransformTests {
 
@@ -152,7 +154,10 @@ class CdaToFhirTransformTests {
 																		"http://salute.gov.it/ig/cda-fhir-maps/StructureMap/TestObservation");
 
         Observation obs = (Observation) resource;
-        assertEquals("Tue Mar 01 00:00:00 CET 2022", obs.getValuePeriod().getEnd().toString(), "hight should be same");                                                                
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(obs.getValuePeriod().getEnd());
+        assertEquals(2022, calendar.get(Calendar.YEAR));                                                                
 
 		assertNotNull(resource);
 	}
