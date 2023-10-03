@@ -13,8 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
@@ -27,6 +27,8 @@ import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceRequestJson;
 import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceResponseJson;
 import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServicesJson;
 
+import static ca.uhn.hapi.fhir.cdshooks.config.CdsHooksConfig.CDS_HOOKS_OBJECT_MAPPER_FACTORY;
+
 @Configurable
 public class CdsHooksServlet extends HttpServlet {
 	private static final Logger logger = LoggerFactory.getLogger(CdsHooksServlet.class);
@@ -38,8 +40,9 @@ public class CdsHooksServlet extends HttpServlet {
 	ICdsServiceRegistry cdsServiceRegistry;
 	@Autowired
 	RestfulServer restfulServer;
-
-	// private final ServletRequestDetails requestDetails = new ServletRequestDetails();
+	@Autowired
+	@Qualifier(CDS_HOOKS_OBJECT_MAPPER_FACTORY)
+	ObjectMapper objectMapper;
 
 	// CORS Pre-flight
 	@Override
@@ -74,18 +77,16 @@ public class CdsHooksServlet extends HttpServlet {
 			}
 			logger.info(request.getRequestURI());
 			String service = request.getPathInfo().replace("/", "");
-			ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
 			String requestJson = request.getReader().lines().collect(Collectors.joining());
-			CdsServiceRequestJson cdsHooksRequest = mapper.readValue(requestJson, CdsServiceRequestJson.class);
+			CdsServiceRequestJson cdsHooksRequest = objectMapper.readValue(requestJson, CdsServiceRequestJson.class);
 			logRequestInfo(cdsHooksRequest, requestJson);
 
 			CdsServiceResponseJson serviceResponseJson = cdsServiceRegistry.callService(service, cdsHooksRequest);
 
-
 			// Using GSON pretty print format as Jackson's is ugly
 			String jsonResponse = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create()
-					.toJson(JsonParser.parseString(mapper.writeValueAsString(serviceResponseJson)));
+					.toJson(JsonParser.parseString(objectMapper.writeValueAsString(serviceResponseJson)));
 			logger.info(jsonResponse);
 			response.setContentType("text/json;charset=UTF-8");
 			response.getWriter().println(jsonResponse);
