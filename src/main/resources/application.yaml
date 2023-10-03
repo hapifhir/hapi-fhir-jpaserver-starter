@@ -77,19 +77,19 @@ hapi:
 #      hibernate.search.backend.directory.type: local-filesystem
 #      hibernate.search.backend.directory.root: target/lucenefiles
 #      hibernate.search.backend.lucene_version: lucene_current
-      envs: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\envs
-      notification_datasource_config_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\notificationDataSourceConfig.xml
-      anc_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\anc_config.json
-      filters_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\filters_config.json
-      daily_and_summary_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\daily_and_summary_config.json
-      pie_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\pie_config.json
-      gcp_credential_file_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\gcpCredential.json
-      sql_screen_time_file_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\sql_screen_time.txt
-      line_chart_definitions_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\chart_definition.json
-      tabular_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\tabular_config.json
-      analytics_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\analytics_config.json
-      pk_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\android.txt
-      dashboard_public_key_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\android.txt
+      envs: C:\Workspace\anc-oyo\data\hapi\envs
+      notification_datasource_config_path: C:\Workspace\anc-oyo\data\hapi\notificationDataSourceConfig.xml
+      anc_config_file: C:\Workspace\anc-oyo\data\hapi\anc_config.json
+      filters_config_file: C:\Workspace\anc-oyo\data\hapi\filters_config.json
+      daily_and_summary_config_file: C:\Workspace\anc-oyo\data\hapi\daily_and_summary_config.json
+      pie_config_file: C:\Workspace\anc-oyo\data\hapi\pie_config.json
+      gcp_credential_file_path: C:\Workspace\anc-oyo\data\hapi\gcpCredential.json
+      sql_screen_time_file_path: C:\Workspace\anc-oyo\data\hapi\sql_screen_time.txt
+      line_chart_definitions_file: C:\Workspace\anc-oyo\data\hapi\chart_definition.json
+      tabular_config_file: C:\Workspace\anc-oyo\data\hapi\tabular_config.json
+      analytics_config_file: C:\Workspace\anc-oyo\data\hapi\analytics_config.json
+      pk_file: C:\Workspace\anc-oyo\data\hapi\pk.txt
+      dashboard_public_key_file: C:\Workspace\anc-oyo\data\hapi\pk.txt
       organization_ids_for_caching:
         - "c91ee7cd-f994-4771-8863-3713e6e52e98"
         - "b759ff8c-e659-4adf-adc3-8bdc17733b14"
@@ -111,9 +111,10 @@ hapi:
       fhir_hapi_client_secret: xyz
       keycloak_username: managegroup
       keycloak_password: 12345
+      sms_password: IPRDHACEY123
       fhir_user: kjois@iprdgroup.com
       fhir_password: 12345
-      hapi_server_address: http://localhost:8085/fhir
+      hapi_server_address: http://testhost.dashboard:8085/fhir
       advanced_lucene_indexing: true
       fhirpath_interceptor_enabled: true
       mdm_enabled: false
@@ -205,7 +206,7 @@ hapi:
       retain_cached_searches_mins: 30
       reuse_cached_search_results_millis: 6000
 keycloak:
-   auth-server-url: http://localhost:8081/auth
+   auth-server-url: http://testhost.dashboard:8081/auth
    realm: fhir-hapi
    resource: fhir-hapi-server
    credentials:

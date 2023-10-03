@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
+import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.rest.server.exceptions.ResourceGoneException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -97,7 +98,9 @@ public class NotificationService {
 		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
 
 		// TODO: Can query parameters be assigned dynamically through app properties instead of hardcoding?
-		String smsUrl = "https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org&message=" + message + "&sender=HACEY-IPRD&mobiles=" + mobileNumber;
+		AppProperties appProperties = new AppProperties();
+		String smsPassword = appProperties.getSms_Password();
+		String smsUrl = "https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org" + "&password=" + smsPassword + "&message=" + message + "&sender=HACEY-IPRD&mobiles=" + mobileNumber;
 		Request smsRequest = new Request.Builder().url(smsUrl).build();
 		okhttp3.Response smsResponse = client.newCall(smsRequest).execute();
 		try {
