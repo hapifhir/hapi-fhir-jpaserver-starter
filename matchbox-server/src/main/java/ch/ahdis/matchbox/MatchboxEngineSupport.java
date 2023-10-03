@@ -30,7 +30,7 @@ import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.MatchboxEngine.MatchboxEngineBuilder;
-import ch.ahdis.matchbox.util.EgineSessionCache;
+import ch.ahdis.matchbox.util.EngineSessionCache;
 
 
 public class MatchboxEngineSupport {
@@ -38,7 +38,7 @@ public class MatchboxEngineSupport {
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxEngineSupport.class);
 
 	private static MatchboxEngine engine = null;
-	private EgineSessionCache sessionCache;
+	private EngineSessionCache sessionCache;
 	
 	private boolean initialized = false;
 
@@ -65,7 +65,7 @@ public class MatchboxEngineSupport {
 	private CliContext cliContext;
 
 	public MatchboxEngineSupport() {
-		this.sessionCache = new EgineSessionCache();
+		this.sessionCache = new EngineSessionCache();
 	}
 
 	public NpmPackageVersionResourceEntity loadPackageAssetByUrl(String theCanonicalUrl) {
@@ -277,9 +277,6 @@ public class MatchboxEngineSupport {
 		}		
 		if (reload) {
 			engine = null;
-			if ("default".endsWith(canonical)){
-				this.sessionCache = new EgineSessionCache();
-			}
 			this.setInitialized(false);
 		}
 		if (engine == null) {
@@ -329,6 +326,7 @@ public class MatchboxEngineSupport {
 			}
 			log.info("cached default engine forever" +(cliContext.getIg()!=null ? "for "+cliContext.getIg() : "" ) +" with parameters "+cliContext.hashCode());
 			sessionCache.cacheSessionForEver(""+cliContext.hashCode(), engine);
+			cliContext.setIg(null); // otherwise we get for reloads the pacakge name instead a new one later  set ahdis/matchbox #144
 
 			if (cliContext.getIgsPreloaded()!=null && cliContext.getIgsPreloaded().length>0) {
 				for (String ig : cliContext.getIgsPreloaded()) {
@@ -340,7 +338,7 @@ public class MatchboxEngineSupport {
 						}
 					} else {
 						CliContext cliContextCp = new CliContext(this.cliContext);
-						cliContextCp.setIg(ig); // set the ig in the cliContext that hashCode will be set
+						cliContextCp.setIg(ig); // set the ig in the cliContext that hashCode will be 
 						if (this.sessionCache.fetchSessionValidatorEngine(""+cliContextCp.hashCode()) == null ) {
 							MatchboxEngine created = this.createMatchboxEngine(engine, ig, cliContextCp);
 							sessionCache.cacheSessionForEver(""+cliContextCp.hashCode(), created);
@@ -352,8 +350,7 @@ public class MatchboxEngineSupport {
 
 			if (cliContext.getOnlyOneEngine()) {
 				log.info("Only one engine will be provided with the preloaded ig's mentioned in application.yaml, cannot handle multiple versions of ig's, DEVELOPMENT ONLY MODE");
-			}
-
+			} 
 		}
 
 		if (cliContext == null) {

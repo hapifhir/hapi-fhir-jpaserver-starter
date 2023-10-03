@@ -2,6 +2,7 @@
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.4`
 - CDA Logical Model update for xsi-type ST [#145](https://github.com/ahdis/matchbox/issues/145)
 - update hl7.terminology package from 5.1.0 to 5.3.0 [#146](https://github.com/ahdis/matchbox/issues/146)
+- Validation: Upload of new IG over API does not configure it for validation [#144](https://github.com/ahdis/matchbox/issues/144)
 
 2023/09/20 Release 3.4.3
 

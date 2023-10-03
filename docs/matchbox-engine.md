@@ -12,8 +12,9 @@ default fhir package configuration:
 
 - cda-core-2.0#2.1.0-cibuild.tgz(\*patched)
 - hl7.fhir.r4.core.tgz
+- hl7.fhir.r4.core.tgz
 - hl7.fhir.xver-extensions#0.0.13.tgz
-- hl7.terminology#5.1.0.tgz
+- hl7.terminology#5.3.0.tgz
 - hl7.fhir.uv.extensions.r4#1.0.0.tgz
 
 ## Library based on matchbox and hapi-fhir / org.hl7.fhir.core
@@ -44,7 +45,7 @@ You can add the matchbox-engine dependency in your `pom.xml`:
 <dependency>
     <groupId>health.matchbox</groupId>
     <artifactId>matchbox-engine</artifactId>
-    <version>3.4.1</version>
+    <version>3.4.4</version>
 </dependency>
 ```
 
@@ -104,13 +105,13 @@ For the transformation the canonical Url of the StructureMaps has to be used.
 
 ### CDA to FHIR mapping
 
-To support CDA to FHIR mapping (or vice versa) a specific CDAEngine is available, which is configured with [CDA Logical Model](https://ahdis.github.io/matchbox/cda-logical-model/index.html). To do CDA to FHIR transformations you need to write the mapping logic and provide them as StructureMap resources. E.g. for the Swiss medication project the following maps have been developed: [http://fhir.ch/ig/cda-fhir-maps/index.html](http://fhir.ch/ig/cda-fhir-maps/index.html)
+To support CDA to FHIR mapping (or vice versa) a specific CDAEngine is available, which is configured with [CDA Logical Model](https://ahdis.github.io/matchbox/cda-logical-model/index.html). To do CDA to FHIR transformations you need to write the mapping logic and provide them as StructureMap resources in an Implementation Guide. 
 
 You can then load the engine with those maps:
 
 ```java
 engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngine();
-engine.loadPackage(getClass().getResourceAsStream("/cda-fhir-maps-300.tgz"));
+engine.loadPackage(getClass().getResourceAsStream("/cda-fhir-maps.tgz"));
 ```
 
 And then do the transformation with

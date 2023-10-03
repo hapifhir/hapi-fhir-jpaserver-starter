@@ -3,7 +3,7 @@
 if you have the rights you can download Matchbox as a docker container:
 
 ```
-docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.2
+docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.4
 ```
 
 ## Configurable base image:
@@ -17,9 +17,9 @@ Server will then be accessible at http://localhost:8080/matchboxv3/fhir/metadata
 The local volume /Users/oliveregger/apps/ will be mapped inside the container and Matchbox will serve the content
 if is requested via http://localhost:8080/matchboxv3/apps/ (allows you to add own html apps).
 
-The last parameter is to set development environment, which allows you to create/update conformance resources (e.g. transfrom StructureMaps). If not provided, you need to provide the conformance resources by an FHIR Implementation Guide.
+The last parameter is to set development environment, which allows you to create/update conformance resources (e.g. transform StructureMaps). If not provided, you need to provide the conformance resources by an FHIR Implementation Guide.
 
-We recommend to put at least 2.5 GB of RAM for the container instance, depending on how many ig's yoiu plan to install and want to use.
+We recommend to put at least 2.5 GB of RAM for the container instance, depending on how many ImplementationGuides's you plan to install and want to use.
 
 ## Live and Readyness checks
 
@@ -95,8 +95,8 @@ During a regular container startup all implementation guides will be deployed to
 3. classpath
 4. filesystem
 
-If you want to prepare a container which does not need internet acess during the startup (required by 1 and 2) you can
-build a new containter image will do the download and installation packages already during the startup process (adding this line
+If you want to prepare a container which does not need internet access during the startup (required by 1 and 2) you can
+build a new container image will do the download and installation packages already during the startup process (adding this line
 into the Dockerfile):
 
 RUN java -Xmx1G -Xms1G -jar /matchbox.jar --hapi.fhir.only_install_packages=true

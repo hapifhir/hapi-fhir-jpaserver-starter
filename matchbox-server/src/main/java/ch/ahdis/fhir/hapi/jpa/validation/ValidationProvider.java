@@ -21,6 +21,7 @@ package ch.ahdis.fhir.hapi.jpa.validation;
  */
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -59,14 +60,6 @@ import java.util.List;
  */
 public class ValidationProvider {
 
-	// @Autowired
-	// protected DefaultProfileValidationSupport defaultProfileValidationSuport;
-	/*
-	 * @Autowired
-	 *
-	 * @Qualifier("myJpaValidationSupport") protected IValidationSupport
-	 * myJpaValidationSupport;
-	 */
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ValidationProvider.class);
 
 	@Autowired
@@ -77,6 +70,9 @@ public class ValidationProvider {
 
 	@Autowired
 	private FhirContext myContext;
+
+	@Autowired
+	private INpmPackageVersionDao myPackageVersionDao;
 
 //	@Operation(name = "$canonical", manualRequest = true, idempotent = true, returnParameters = {
 //			@OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })

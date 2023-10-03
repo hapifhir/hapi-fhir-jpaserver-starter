@@ -34,7 +34,7 @@ import org.hl7.fhir.validation.cli.services.SessionCache;
  *         We want to have a validation engines also that are not timed out as
  *         in the parent classe.
  */
-public class EgineSessionCache extends SessionCache {
+public class EngineSessionCache extends SessionCache {
 
     private final Map<String, ValidationEngine> cachedSessionsNoTimeout = new java.util.HashMap<String, ValidationEngine>();
 
