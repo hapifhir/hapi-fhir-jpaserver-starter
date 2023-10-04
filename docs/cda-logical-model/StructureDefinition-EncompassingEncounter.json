@@ -6,30 +6,43 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>This optional class represents the setting of the clinical encounter during which the documented act(s) or ServiceEvent occurred. Documents are not necessarily generated during an encounter, such as when a clinician, in response to an abnormal lab result, attempts to contact the patient but can't, and writes a Progress Note.</p>\n      <p>In some cases, the setting of the encounter is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is &quot;Diabetes Clinic Progress Note&quot;. The setting of an encounter can also be transmitted in the HealthCareFacility.code attribute. If HealthCareFacility.code is sent, it should be equivalent to or further specialize the value inherent in the ClinicalDocument.code (such as where the ClinicalDocument.code is simply &quot;Clinic Progress Note&quot; and the value of HealthCareFacility.code is &quot;cardiology clinic&quot;), and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.</p>\n      <p>EncompassingEncounter.dischargeDispositionCode can be used to depict the disposition of the patient at the time of hospital discharge (e.g., discharged to home, expired, against medical advice, etc.).</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+    "valueUri" : "encompassingEncounter"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/EncompassingEncounter",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/EncompassingEncounter",
+  "version" : "2.1.0-draft2-mb",
   "name" : "CDAR2.EncompassingEncounter",
   "title" : "EncompassingEncounter (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "This optional class represents the setting of the clinical encounter during which the documented act(s) or ServiceEvent occurred. Documents are not necessarily generated during an encounter, such as when a clinician, in response to an abnormal lab result, attempts to contact the patient but can't, and writes a Progress Note.\nIn some cases, the setting of the encounter is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is \"Diabetes Clinic Progress Note\". The setting of an encounter can also be transmitted in the HealthCareFacility.code attribute. If HealthCareFacility.code is sent, it should be equivalent to or further specialize the value inherent in the ClinicalDocument.code (such as where the ClinicalDocument.code is simply \"Clinic Progress Note\" and the value of HealthCareFacility.code is \"cardiology clinic\"), and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.\nEncompassingEncounter.dischargeDispositionCode can be used to depict the disposition of the patient at the time of hospital discharge (e.g., discharged to home, expired, against medical advice, etc.).",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,7 +50,7 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "EncompassingEncounter",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/EncompassingEncounter",
   "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
   "derivation" : "specialization",
   "snapshot" : {
@@ -70,17 +83,17 @@
       "id" : "EncompassingEncounter.classCode",
       "path" : "EncompassingEncounter.classCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "EncompassingEncounter.classCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "ENC",
       "fixedCode" : "ENC",
       "binding" : {
         "strength" : "required",
@@ -91,17 +104,17 @@
       "id" : "EncompassingEncounter.moodCode",
       "path" : "EncompassingEncounter.moodCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "EncompassingEncounter.moodCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "EVN",
       "fixedCode" : "EVN",
       "binding" : {
         "strength" : "required",
@@ -120,7 +133,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -134,7 +147,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -148,7 +161,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }],
       "binding" : {
         "strength" : "extensible",
@@ -166,7 +179,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"
       }]
     },
     {
@@ -188,7 +201,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }]
     },
     {
@@ -202,7 +215,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }],
       "binding" : {
         "strength" : "extensible",
@@ -212,6 +225,7 @@
     {
       "id" : "EncompassingEncounter.responsibleParty",
       "path" : "EncompassingEncounter.responsibleParty",
+      "definition" : "The responsibleParty participant represents the participant having primary legal responsibility for the encounter. This differs from the legalAuthenticator participant in that the legalAuthenticator may or may not be the responsible party, and is serving a medical records function by signing off on the document, moving it into a completed state.",
       "min" : 0,
       "max" : "1",
       "base" : {
@@ -220,7 +234,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "Element"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"
       }],
       "constraint" : [{
         "key" : "ele-1",
@@ -231,94 +245,87 @@
       }]
     },
     {
-      "id" : "EncompassingEncounter.responsibleParty.id",
-      "path" : "EncompassingEncounter.responsibleParty.id",
+      "id" : "EncompassingEncounter.responsibleParty.nullFlavor",
+      "path" : "EncompassingEncounter.responsibleParty.nullFlavor",
       "representation" : ["xmlAttr"],
-      "short" : "Unique id for inter-element referencing",
-      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
       "min" : 0,
       "max" : "1",
       "base" : {
-        "path" : "Element.id",
+        "path" : "ANY.nullFlavor",
         "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "extension" : [{
-          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
-          "valueUrl" : "string"
-        }],
-        "code" : "http://hl7.org/fhirpath/System.String"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
-      }]
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
     },
     {
-      "id" : "EncompassingEncounter.responsibleParty.extension",
-      "path" : "EncompassingEncounter.responsibleParty.extension",
-      "slicing" : {
-        "discriminator" : [{
-          "type" : "value",
-          "path" : "url"
-        }],
-        "description" : "Extensions are always sliced by (at least) url",
-        "rules" : "open"
-      },
-      "short" : "Additional content defined by implementations",
-      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
-      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-      "alias" : ["extensions",
-      "user content"],
+      "id" : "EncompassingEncounter.responsibleParty.realmCode",
+      "path" : "EncompassingEncounter.responsibleParty.realmCode",
+      "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
       "min" : 0,
       "max" : "*",
       "base" : {
-        "path" : "Element.extension",
+        "path" : "InfrastructureRoot.realmCode",
         "min" : 0,
         "max" : "*"
       },
       "type" : [{
-        "code" : "Extension"
-      }],
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.responsibleParty.typeId",
+      "path" : "EncompassingEncounter.responsibleParty.typeId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "InfrastructureRoot.typeId",
+        "min" : 0,
+        "max" : "1"
       },
-      {
-        "key" : "ext-1",
-        "severity" : "error",
-        "human" : "Must have either extensions or value[x], not both",
-        "expression" : "extension.exists() != value.exists()",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
-      }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.responsibleParty.templateId",
+      "path" : "EncompassingEncounter.responsibleParty.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InfrastructureRoot.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
       "id" : "EncompassingEncounter.responsibleParty.typeCode",
       "path" : "EncompassingEncounter.responsibleParty.typeCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "EncompassingEncounter.responsibleParty.typeCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "RESP",
       "fixedCode" : "RESP",
       "binding" : {
         "strength" : "required",
@@ -336,7 +343,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity"
       }]
     },
     {
@@ -350,12 +357,13 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EncounterParticipant"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/EncounterParticipant"
       }]
     },
     {
       "id" : "EncompassingEncounter.location",
       "path" : "EncompassingEncounter.location",
+      "definition" : "The location participant (location class) relates a healthcare facility (HealthCareFacility class) to the encounter to indicate where the encounter took place. The entity playing the role of HealthCareFacility is a place (Place class). The entity scoping the HealthCareFacility role is an organization (Organization class).\n\nThe setting of an encounter (e.g. cardiology clinic, primary care clinic, rehabilitation hospital, skilled nursing facility) can be expressed in HealthCareFacility.code. Note that setting and physical location are not the same. There is a many-to-many relationship between setting and the physical location where care is delivered. Thus, a particular room can provide the location for cardiology clinic one day, and for primary care clinic another day; and cardiology clinic today might be held in one physical location, but in another physical location tomorrow.\n\nWhen the location is an organization, this is indicated by the presence of a scoping Organization, without a playing Place.",
       "min" : 0,
       "max" : "1",
       "base" : {
@@ -364,7 +372,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "Element"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"
       }],
       "constraint" : [{
         "key" : "ele-1",
@@ -375,94 +383,87 @@
       }]
     },
     {
-      "id" : "EncompassingEncounter.location.id",
-      "path" : "EncompassingEncounter.location.id",
+      "id" : "EncompassingEncounter.location.nullFlavor",
+      "path" : "EncompassingEncounter.location.nullFlavor",
       "representation" : ["xmlAttr"],
-      "short" : "Unique id for inter-element referencing",
-      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
       "min" : 0,
       "max" : "1",
       "base" : {
-        "path" : "Element.id",
+        "path" : "ANY.nullFlavor",
         "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "extension" : [{
-          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
-          "valueUrl" : "string"
-        }],
-        "code" : "http://hl7.org/fhirpath/System.String"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
-      }]
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
     },
     {
-      "id" : "EncompassingEncounter.location.extension",
-      "path" : "EncompassingEncounter.location.extension",
-      "slicing" : {
-        "discriminator" : [{
-          "type" : "value",
-          "path" : "url"
-        }],
-        "description" : "Extensions are always sliced by (at least) url",
-        "rules" : "open"
-      },
-      "short" : "Additional content defined by implementations",
-      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
-      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-      "alias" : ["extensions",
-      "user content"],
+      "id" : "EncompassingEncounter.location.realmCode",
+      "path" : "EncompassingEncounter.location.realmCode",
+      "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
       "min" : 0,
       "max" : "*",
       "base" : {
-        "path" : "Element.extension",
+        "path" : "InfrastructureRoot.realmCode",
         "min" : 0,
         "max" : "*"
       },
       "type" : [{
-        "code" : "Extension"
-      }],
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.location.typeId",
+      "path" : "EncompassingEncounter.location.typeId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "InfrastructureRoot.typeId",
+        "min" : 0,
+        "max" : "1"
       },
-      {
-        "key" : "ext-1",
-        "severity" : "error",
-        "human" : "Must have either extensions or value[x], not both",
-        "expression" : "extension.exists() != value.exists()",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
-      }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "EncompassingEncounter.location.templateId",
+      "path" : "EncompassingEncounter.location.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InfrastructureRoot.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
       "id" : "EncompassingEncounter.location.typeCode",
       "path" : "EncompassingEncounter.location.typeCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "EncompassingEncounter.location.typeCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "LOC",
       "fixedCode" : "LOC",
       "binding" : {
         "strength" : "required",
@@ -480,7 +481,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/HealthCareFacility"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/HealthCareFacility"
       }]
     }]
   },
@@ -495,12 +496,12 @@
       "id" : "EncompassingEncounter.classCode",
       "path" : "EncompassingEncounter.classCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "ENC",
       "fixedCode" : "ENC",
       "binding" : {
         "strength" : "required",
@@ -511,12 +512,12 @@
       "id" : "EncompassingEncounter.moodCode",
       "path" : "EncompassingEncounter.moodCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "EVN",
       "fixedCode" : "EVN",
       "binding" : {
         "strength" : "required",
@@ -530,7 +531,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -539,7 +540,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -548,7 +549,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }],
       "binding" : {
         "strength" : "extensible",
@@ -561,7 +562,7 @@
       "min" : 1,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"
       }]
     },
     {
@@ -578,7 +579,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }]
     },
     {
@@ -587,7 +588,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }],
       "binding" : {
         "strength" : "extensible",
@@ -597,22 +598,23 @@
     {
       "id" : "EncompassingEncounter.responsibleParty",
       "path" : "EncompassingEncounter.responsibleParty",
+      "definition" : "The responsibleParty participant represents the participant having primary legal responsibility for the encounter. This differs from the legalAuthenticator participant in that the legalAuthenticator may or may not be the responsible party, and is serving a medical records function by signing off on the document, moving it into a completed state.",
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "Element"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"
       }]
     },
     {
       "id" : "EncompassingEncounter.responsibleParty.typeCode",
       "path" : "EncompassingEncounter.responsibleParty.typeCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "RESP",
       "fixedCode" : "RESP",
       "binding" : {
         "strength" : "required",
@@ -625,7 +627,7 @@
       "min" : 1,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity"
       }]
     },
     {
@@ -634,28 +636,29 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EncounterParticipant"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/EncounterParticipant"
       }]
     },
     {
       "id" : "EncompassingEncounter.location",
       "path" : "EncompassingEncounter.location",
+      "definition" : "The location participant (location class) relates a healthcare facility (HealthCareFacility class) to the encounter to indicate where the encounter took place. The entity playing the role of HealthCareFacility is a place (Place class). The entity scoping the HealthCareFacility role is an organization (Organization class).\n\nThe setting of an encounter (e.g. cardiology clinic, primary care clinic, rehabilitation hospital, skilled nursing facility) can be expressed in HealthCareFacility.code. Note that setting and physical location are not the same. There is a many-to-many relationship between setting and the physical location where care is delivered. Thus, a particular room can provide the location for cardiology clinic one day, and for primary care clinic another day; and cardiology clinic today might be held in one physical location, but in another physical location tomorrow.\n\nWhen the location is an organization, this is indicated by the presence of a scoping Organization, without a playing Place.",
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "Element"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"
       }]
     },
     {
       "id" : "EncompassingEncounter.location.typeCode",
       "path" : "EncompassingEncounter.location.typeCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "LOC",
       "fixedCode" : "LOC",
       "binding" : {
         "strength" : "required",
@@ -668,7 +671,7 @@
       "min" : 1,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/HealthCareFacility"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/HealthCareFacility"
       }]
     }]
   }

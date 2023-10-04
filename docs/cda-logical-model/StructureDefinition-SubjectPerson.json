@@ -6,30 +6,43 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The entity playing the role is a person (SubjectPerson class).</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+    "valueUri" : "subjectPerson"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/SubjectPerson",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/SubjectPerson",
+  "version" : "2.1.0-draft2-mb",
   "name" : "CDAR2.SubjectPerson",
   "title" : "SubjectPerson (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "The entity playing the role is a person (SubjectPerson class).",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,7 +50,7 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "SubjectPerson",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/SubjectPerson",
   "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
   "derivation" : "specialization",
   "snapshot" : {
@@ -70,17 +83,17 @@
       "id" : "SubjectPerson.classCode",
       "path" : "SubjectPerson.classCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "SubjectPerson.classCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "PSN",
       "fixedCode" : "PSN",
       "binding" : {
         "strength" : "required",
@@ -91,17 +104,17 @@
       "id" : "SubjectPerson.determinerCode",
       "path" : "SubjectPerson.determinerCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "SubjectPerson.determinerCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "INSTANCE",
       "fixedCode" : "INSTANCE",
       "binding" : {
         "strength" : "required",
@@ -120,7 +133,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -134,7 +147,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EN"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PN"
       }]
     },
     {
@@ -156,7 +169,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ED"
       }]
     },
     {
@@ -170,7 +183,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }],
       "binding" : {
         "strength" : "extensible",
@@ -188,7 +201,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
       }]
     },
     {
@@ -210,7 +223,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/BL"
       }]
     },
     {
@@ -232,7 +245,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
       }]
     }]
   },
@@ -247,12 +260,12 @@
       "id" : "SubjectPerson.classCode",
       "path" : "SubjectPerson.classCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "PSN",
       "fixedCode" : "PSN",
       "binding" : {
         "strength" : "required",
@@ -263,12 +276,12 @@
       "id" : "SubjectPerson.determinerCode",
       "path" : "SubjectPerson.determinerCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "INSTANCE",
       "fixedCode" : "INSTANCE",
       "binding" : {
         "strength" : "required",
@@ -282,7 +295,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -291,7 +304,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EN"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PN"
       }]
     },
     {
@@ -308,7 +321,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ED"
       }]
     },
     {
@@ -317,7 +330,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }],
       "binding" : {
         "strength" : "extensible",
@@ -330,7 +343,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
       }]
     },
     {
@@ -347,7 +360,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/BL"
       }]
     },
     {
@@ -364,7 +377,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
       }]
     }]
   }

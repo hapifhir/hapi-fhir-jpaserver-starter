@@ -18,6 +18,6 @@ group CdaToFHIR(source cda : CdaObservation, target obs : Observation) {
         } "high";
     } "high";
     cda.value : ST as value then {
-        value.data as data  -> obs.value = data "value";
+        value.xmlText as data  -> obs.value = data "value";
     } "st";
 }

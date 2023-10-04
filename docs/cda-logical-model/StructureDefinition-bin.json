@@ -1,0 +1,161 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "bin",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Primitive type 'bin'</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics",
+    "valueCode" : "has-size"
+  }],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/bin",
+  "version" : "2.1.0-draft2-mb",
+  "name" : "bin",
+  "title" : "bin: Binary Data",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-10-04T23:00:58+02:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "Binary data is a raw block of bits. Binary data is a protected type that MUST not be used outside the data type specification.",
+  "fhirVersion" : "5.0.0",
+  "kind" : "primitive-type",
+  "abstract" : false,
+  "type" : "base64Binary",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/base64Binary",
+  "derivation" : "constraint",
+  "snapshot" : {
+    "element" : [{
+      "id" : "base64Binary",
+      "path" : "base64Binary",
+      "short" : "Primitive Type base64Binary",
+      "definition" : "A stream of bytes",
+      "comment" : "A stream of bytes, base64 encoded",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "base64Binary",
+        "min" : 0,
+        "max" : "*"
+      },
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "id" : "base64Binary.id",
+      "path" : "base64Binary.id",
+      "representation" : ["xmlAttr"],
+      "short" : "xml:id (or equivalent in JSON)",
+      "definition" : "unique id for the element within a resource (for internal references)",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "string"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "id" : "base64Binary.extension",
+      "path" : "base64Binary.extension",
+      "short" : "Extension",
+      "definition" : "An Extension",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "id" : "base64Binary.value",
+      "path" : "base64Binary.value",
+      "representation" : ["xmlAttr"],
+      "short" : "Primitive value for base64Binary",
+      "definition" : "The actual value",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "base64Binary.value",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "base64Binary"
+        },
+        {
+          "url" : "http://hl7.org/fhir/StructureDefinition/regex",
+          "valueString" : "(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "base64Binary.id",
+      "path" : "base64Binary.id",
+      "max" : "0"
+    },
+    {
+      "id" : "base64Binary.extension",
+      "path" : "base64Binary.extension",
+      "max" : "0"
+    }]
+  }
+}

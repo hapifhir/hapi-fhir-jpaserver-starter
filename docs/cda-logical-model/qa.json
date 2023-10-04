@@ -1,12 +1,13 @@
 {
   "url" : "http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core",
-  "name" : "ClinicalDocumentArchitectureV201",
+  "name" : "ClinicalDocumentArchitecture",
   "package-id" : "hl7.cda.uv.core",
-  "ig-ver" : "2.1.0-draft1",
-  "date" : "Tue, 07 Feb, 2023 19:43:49 +0100",
-  "errs" : 442,
-  "warnings" : 12,
-  "hints" : 0,
-  "version" : "5.0.0-snapshot3",
-  "tool" : "5.0.0-snapshot2 (3)"
+  "ig-ver" : "2.1.0-draft2-mb",
+  "date" : "Wed, 04 Oct, 2023 23:00:58 +0200",
+  "errs" : 4,
+  "warnings" : 9,
+  "hints" : 8,
+  "version" : "5.0.0",
+  "tool" : "5.0.0 (3)",
+  "maxMemory" : 1998884360
 }

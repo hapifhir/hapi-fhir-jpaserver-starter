@@ -6,30 +6,39 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A quantity specifying a point on the axis of natural time. A point in time is most often represented as a calendar expression.</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/TS",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/TS",
+  "version" : "2.1.0-draft2-mb",
   "name" : "TS",
   "title" : "TS: PointInTime (V3 Data Type)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "A quantity specifying a point on the axis of natural time. A point in time is most often represented as a calendar expression.",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,8 +46,8 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "TS",
-  "baseDefinition" : "http://hl7.org/fhir/cda/StructureDefinition/ANY",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/TS",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/ANY",
   "derivation" : "specialization",
   "snapshot" : {
     "element" : [{
@@ -80,7 +89,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -91,7 +101,7 @@
       "id" : "TS.value",
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-date-format",
-        "valueCode" : "YYYYMMDDHHMMSS.UUUU[+|-ZZzz]"
+        "valueString" : "YYYYMMDDHHMMSS.UUUU[+|-ZZzz]"
       }],
       "path" : "TS.value",
       "representation" : ["xmlAttr"],
@@ -104,23 +114,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "dateTime"
-      }]
-    },
-    {
-      "id" : "TS.inclusive",
-      "path" : "TS.inclusive",
-      "representation" : ["xmlAttr"],
-      "definition" : "Specifies whether the limit is included in the interval (interval is closed) or excluded from the interval (interval is open).",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "TS.inclusive",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "boolean"
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/ts-simple"]
       }]
     }]
   },
@@ -136,7 +131,7 @@
       "id" : "TS.value",
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-date-format",
-        "valueCode" : "YYYYMMDDHHMMSS.UUUU[+|-ZZzz]"
+        "valueString" : "YYYYMMDDHHMMSS.UUUU[+|-ZZzz]"
       }],
       "path" : "TS.value",
       "representation" : ["xmlAttr"],
@@ -144,18 +139,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "dateTime"
-      }]
-    },
-    {
-      "id" : "TS.inclusive",
-      "path" : "TS.inclusive",
-      "representation" : ["xmlAttr"],
-      "definition" : "Specifies whether the limit is included in the interval (interval is closed) or excluded from the interval (interval is open).",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "boolean"
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/ts-simple"]
       }]
     }]
   }

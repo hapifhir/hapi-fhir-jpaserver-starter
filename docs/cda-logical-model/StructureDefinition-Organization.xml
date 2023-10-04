@@ -8,30 +8,40 @@
       <p>Companies and institutions, a government department, an incorporated body that is responsible for administering a facility, an insurance company.</p>
     </div>
   </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
-  <url value="http://hl7.org/fhir/cda/StructureDefinition/Organization"/>
-  <version value="2.1.0-draft1"/>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+    <valueUri value="organization"/>
+  </extension>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/Organization"/>
+  <version value="2.1.0-draft2-mb"/>
   <name value="CDAR2.Organization"/>
   <title value="Organization (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-02-07T19:43:49+01:00"/>
+  <date value="2023-10-04T23:00:58+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
-    <name value="HL7 International - Cross-Group Projects"/>
+    <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/cgp"/>
+      <value value="http://www.hl7.org/Special/committees/structdoc"/>
     </telecom>
     <telecom>
       <system value="email"/>
-      <value value="cgp@lists.HL7.org"/>
+      <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
   <description value="An Entity representing a formalized group of persons or other organizations with a common purpose and the infrastructure to carry out that purpose.&#xA;Companies and institutions, a government department, an incorporated body that is responsible for administering a facility, an insurance company."/>
-  <fhirVersion value="5.0.0-snapshot3"/>
+  <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
     <uri value="http://hl7.org/v3"/>
@@ -39,7 +49,7 @@
   </mapping>
   <kind value="logical"/>
   <abstract value="false"/>
-  <type value="Organization"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/Organization"/>
   <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
   <derivation value="specialization"/>
   <snapshot>
@@ -67,20 +77,41 @@
         <map value="n/a"/>
       </mapping>
     </element>
-    <element id="Organization.classCode">
-      <path value="Organization.classCode"/>
+    <element id="Organization.nullFlavor">
+      <path value="Organization.nullFlavor"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
       <max value="1"/>
       <base>
-        <path value="Organization.classCode"/>
-        <min value="1"/>
+        <path value="Organization.nullFlavor"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="ORG"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+      </binding>
+    </element>
+    <element id="Organization.classCode">
+      <path value="Organization.classCode"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Organization.classCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
       <fixedCode value="ORG"/>
       <binding>
         <strength value="required"/>
@@ -90,22 +121,48 @@
     <element id="Organization.determinerCode">
       <path value="Organization.determinerCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="Organization.determinerCode"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="INSTANCE"/>
       <fixedCode value="INSTANCE"/>
       <binding>
         <strength value="required"/>
         <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityDeterminer"/>
       </binding>
+    </element>
+    <element id="Organization.realmCode">
+      <path value="Organization.realmCode"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Organization.realmCode"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+      </type>
+    </element>
+    <element id="Organization.typeId">
+      <path value="Organization.typeId"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Organization.typeId"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
     </element>
     <element id="Organization.templateId">
       <path value="Organization.templateId"/>
@@ -118,7 +175,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Organization.id">
@@ -131,7 +188,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Organization.name">
@@ -144,7 +201,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ON"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ON"/>
       </type>
     </element>
     <element id="Organization.telecom">
@@ -157,7 +214,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/TEL"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TEL"/>
       </type>
     </element>
     <element id="Organization.addr">
@@ -170,7 +227,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/AD"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/AD"/>
       </type>
     </element>
     <element id="Organization.standardIndustryClassCode">
@@ -183,7 +240,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
         <strength value="extensible"/>
@@ -200,7 +257,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/OrganizationPartOf"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/OrganizationPartOf"/>
       </type>
     </element>
   </snapshot>
@@ -210,15 +267,31 @@
       <min value="1"/>
       <max value="1"/>
     </element>
-    <element id="Organization.classCode">
-      <path value="Organization.classCode"/>
+    <element id="Organization.nullFlavor">
+      <path value="Organization.nullFlavor"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="ORG"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+      </binding>
+    </element>
+    <element id="Organization.classCode">
+      <path value="Organization.classCode"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
       <fixedCode value="ORG"/>
       <binding>
         <strength value="required"/>
@@ -228,17 +301,33 @@
     <element id="Organization.determinerCode">
       <path value="Organization.determinerCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="INSTANCE"/>
       <fixedCode value="INSTANCE"/>
       <binding>
         <strength value="required"/>
         <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityDeterminer"/>
       </binding>
+    </element>
+    <element id="Organization.realmCode">
+      <path value="Organization.realmCode"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+      </type>
+    </element>
+    <element id="Organization.typeId">
+      <path value="Organization.typeId"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
     </element>
     <element id="Organization.templateId">
       <path value="Organization.templateId"/>
@@ -246,7 +335,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Organization.id">
@@ -254,7 +343,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Organization.name">
@@ -262,7 +351,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ON"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ON"/>
       </type>
     </element>
     <element id="Organization.telecom">
@@ -270,7 +359,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/TEL"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TEL"/>
       </type>
     </element>
     <element id="Organization.addr">
@@ -278,7 +367,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/AD"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/AD"/>
       </type>
     </element>
     <element id="Organization.standardIndustryClassCode">
@@ -286,7 +375,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
         <strength value="extensible"/>
@@ -298,7 +387,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/OrganizationPartOf"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/OrganizationPartOf"/>
       </type>
     </element>
   </differential>

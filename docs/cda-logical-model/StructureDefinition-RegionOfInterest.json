@@ -6,30 +6,43 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A derivative of the RIM Observation class that represents a region of interest on an image, using an overlay shape. RegionOfInterest is used to make reference to specific regions in images, e.g., to specify the site of a physical finding by &quot;circling&quot; a region in a schematic picture of a human body. The units of the coordinate values in RegionOfInterest.value are in pixels, expressed as a list of integers. The origin is in the upper left hand corner, with positive X values going to the right and positive Y values going down. The relationship between a RegionOfInterest and its referenced ObservationMedia or ExternalObservation is specified by traversing the entryRelationship or reference class, respectively, where typeCode equals &quot;SUBJ&quot;. A RegionOfInterest must reference exactly one ObservationMedia or one ExternalObservation. If the RegionOfInterest is the target of a &lt;renderMultimedia&gt; reference, then it shall only reference an ObservationMedia and not an ExternalObservation.</p>\n      <p>An XML attribute &quot;ID&quot; of type XML ID, is added to RegionOfInterest within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+    "valueUri" : "regionOfInterest"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/RegionOfInterest",
+  "version" : "2.1.0-draft2-mb",
   "name" : "CDAR2.RegionOfInterest",
   "title" : "RegionOfInterest (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
-  "description" : "A derivative of the RIM Observation class that represents a region of interest on an image, using an overlay shape. RegionOfInterest is used to make reference to specific regions in images, e.g., to specify the site of a physical finding by \"circling\" a region in a schematic picture of a human body. The units of the coordinate values in RegionOfInterest.value are in pixels, expressed as a list of integers. The origin is in the upper left hand corner, with positive X values going to the right and positive Y values going down. The relationship between a RegionOfInterest and its referenced ObservationMedia or ExternalObservation is specified by traversing the entryRelationship or reference class, respectively, where typeCode equals \"SUBJ\". A RegionOfInterest must reference exactly one ObservationMedia or one ExternalObservation. If the RegionOfInterest is the target of a <renderMultimedia> reference, then it shall only reference an ObservationMedia and not an ExternalObservation.\nAn XML attribute \"ID\" of type XML ID, is added to RegionOfInterest within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "description" : "A derivative of the RIM Observation class that represents a region of interest on an image, using an overlay shape. RegionOfInterest is used to make reference to specific regions in images, e.g., to specify the site of a physical finding by \"circling\" a region in a schematic picture of a human body. The units of the coordinate values in RegionOfInterest.value are in pixels, expressed as a list of integers. The origin is in the upper left hand corner, with positive X values going to the right and positive Y values going down. The relationship between a RegionOfInterest and its referenced ObservationMedia or ExternalObservation is specified by traversing the entryRelationship or reference class, respectively, where typeCode equals \"SUBJ\". A RegionOfInterest must reference exactly one ObservationMedia or one ExternalObservation. If the RegionOfInterest is the target of a renderMultimedia reference, then it shall only reference an ObservationMedia and not an ExternalObservation.\nAn XML attribute \"ID\" of type XML ID, is added to RegionOfInterest within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,7 +50,7 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "RegionOfInterest",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/RegionOfInterest",
   "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
   "derivation" : "specialization",
   "snapshot" : {
@@ -78,7 +91,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "string"
+        "code" : "id",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/xs-ID"]
       }]
     },
     {
@@ -93,7 +107,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "defaultValueCode" : "ROIOVL",
       "fixedCode" : "ROIOVL",
@@ -114,7 +129,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "defaultValueCode" : "EVN",
       "fixedCode" : "EVN",
@@ -134,7 +150,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }]
     },
     {
@@ -148,7 +164,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -163,7 +179,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -177,7 +193,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -191,7 +207,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }]
     },
     {
@@ -205,7 +221,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/INT"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/INT"
       }]
     },
     {
@@ -219,162 +235,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "Element"
-      }],
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.subject.id",
-      "path" : "RegionOfInterest.subject.id",
-      "representation" : ["xmlAttr"],
-      "short" : "Unique id for inter-element referencing",
-      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "Element.id",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "extension" : [{
-          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
-          "valueUrl" : "string"
-        }],
-        "code" : "http://hl7.org/fhirpath/System.String"
-      }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.subject.extension",
-      "path" : "RegionOfInterest.subject.extension",
-      "slicing" : {
-        "discriminator" : [{
-          "type" : "value",
-          "path" : "url"
-        }],
-        "description" : "Extensions are always sliced by (at least) url",
-        "rules" : "open"
-      },
-      "short" : "Additional content defined by implementations",
-      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
-      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-      "alias" : ["extensions",
-      "user content"],
-      "min" : 0,
-      "max" : "*",
-      "base" : {
-        "path" : "Element.extension",
-        "min" : 0,
-        "max" : "*"
-      },
-      "type" : [{
-        "code" : "Extension"
-      }],
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      },
-      {
-        "key" : "ext-1",
-        "severity" : "error",
-        "human" : "Must have either extensions or value[x], not both",
-        "expression" : "extension.exists() != value.exists()",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
-      }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.subject.typeCode",
-      "path" : "RegionOfInterest.subject.typeCode",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.subject.typeCode",
-        "min" : 1,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "code"
-      }],
-      "defaultValueCode" : "SBJ",
-      "fixedCode" : "SBJ",
-      "binding" : {
-        "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"
-      }
-    },
-    {
-      "id" : "RegionOfInterest.subject.contextControlCode",
-      "path" : "RegionOfInterest.subject.contextControlCode",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.subject.contextControlCode",
-        "min" : 1,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "code"
-      }],
-      "defaultValueCode" : "OP",
-      "fixedCode" : "OP",
-      "binding" : {
-        "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
-      }
-    },
-    {
-      "id" : "RegionOfInterest.subject.awarenessCode",
-      "path" : "RegionOfInterest.subject.awarenessCode",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.subject.awarenessCode",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
-      }],
-      "binding" : {
-        "strength" : "extensible",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-TargetAwareness"
-      }
-    },
-    {
-      "id" : "RegionOfInterest.subject.relatedSubject",
-      "path" : "RegionOfInterest.subject.relatedSubject",
-      "min" : 1,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.subject.relatedSubject",
-        "min" : 1,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Subject"
       }]
     },
     {
@@ -388,7 +249,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Specimen"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Specimen"
       }]
     },
     {
@@ -402,7 +263,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Performer2"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Performer2"
       }]
     },
     {
@@ -416,7 +277,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Author"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Author"
       }]
     },
     {
@@ -430,158 +291,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "Element"
-      }],
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.informant.id",
-      "path" : "RegionOfInterest.informant.id",
-      "representation" : ["xmlAttr"],
-      "short" : "Unique id for inter-element referencing",
-      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "Element.id",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "extension" : [{
-          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
-          "valueUrl" : "string"
-        }],
-        "code" : "http://hl7.org/fhirpath/System.String"
-      }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.informant.extension",
-      "path" : "RegionOfInterest.informant.extension",
-      "slicing" : {
-        "discriminator" : [{
-          "type" : "value",
-          "path" : "url"
-        }],
-        "description" : "Extensions are always sliced by (at least) url",
-        "rules" : "open"
-      },
-      "short" : "Additional content defined by implementations",
-      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
-      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-      "alias" : ["extensions",
-      "user content"],
-      "min" : 0,
-      "max" : "*",
-      "base" : {
-        "path" : "Element.extension",
-        "min" : 0,
-        "max" : "*"
-      },
-      "type" : [{
-        "code" : "Extension"
-      }],
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      },
-      {
-        "key" : "ext-1",
-        "severity" : "error",
-        "human" : "Must have either extensions or value[x], not both",
-        "expression" : "extension.exists() != value.exists()",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
-      }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.informant.typeCode",
-      "path" : "RegionOfInterest.informant.typeCode",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.informant.typeCode",
-        "min" : 1,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "code"
-      }],
-      "defaultValueCode" : "INF",
-      "fixedCode" : "INF",
-      "binding" : {
-        "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator"
-      }
-    },
-    {
-      "id" : "RegionOfInterest.informant.contextControlCode",
-      "path" : "RegionOfInterest.informant.contextControlCode",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.informant.contextControlCode",
-        "min" : 1,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "code"
-      }],
-      "defaultValueCode" : "OP",
-      "fixedCode" : "OP",
-      "binding" : {
-        "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
-      }
-    },
-    {
-      "id" : "RegionOfInterest.informant.assignedEntity",
-      "path" : "RegionOfInterest.informant.assignedEntity",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.informant.assignedEntity",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.informant.relatedEntity",
-      "path" : "RegionOfInterest.informant.relatedEntity",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.informant.relatedEntity",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Informant"
       }]
     },
     {
@@ -595,7 +305,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Participant2"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Participant2"
       }]
     },
     {
@@ -609,309 +319,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "Element"
-      }],
-      "constraint" : [{
-        "key" : "roi-er-1",
-        "severity" : "error",
-        "human" : "Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act",
-        "expression" : "(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1"
-      },
-      {
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.id",
-      "path" : "RegionOfInterest.entryRelationship.id",
-      "representation" : ["xmlAttr"],
-      "short" : "Unique id for inter-element referencing",
-      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "Element.id",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "extension" : [{
-          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
-          "valueUrl" : "string"
-        }],
-        "code" : "http://hl7.org/fhirpath/System.String"
-      }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.extension",
-      "path" : "RegionOfInterest.entryRelationship.extension",
-      "slicing" : {
-        "discriminator" : [{
-          "type" : "value",
-          "path" : "url"
-        }],
-        "description" : "Extensions are always sliced by (at least) url",
-        "rules" : "open"
-      },
-      "short" : "Additional content defined by implementations",
-      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
-      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-      "alias" : ["extensions",
-      "user content"],
-      "min" : 0,
-      "max" : "*",
-      "base" : {
-        "path" : "Element.extension",
-        "min" : 0,
-        "max" : "*"
-      },
-      "type" : [{
-        "code" : "Extension"
-      }],
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      },
-      {
-        "key" : "ext-1",
-        "severity" : "error",
-        "human" : "Must have either extensions or value[x], not both",
-        "expression" : "extension.exists() != value.exists()",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
-      }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.typeCode",
-      "path" : "RegionOfInterest.entryRelationship.typeCode",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.typeCode",
-        "min" : 1,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "code"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.inversionInd",
-      "path" : "RegionOfInterest.entryRelationship.inversionInd",
-      "representation" : ["xmlAttr"],
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.inversionInd",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "boolean"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.contextConductionInd",
-      "path" : "RegionOfInterest.entryRelationship.contextConductionInd",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.contextConductionInd",
-        "min" : 1,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "boolean"
-      }],
-      "defaultValueBoolean" : true
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.sequenceNumber",
-      "path" : "RegionOfInterest.entryRelationship.sequenceNumber",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.sequenceNumber",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/INT"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.negationInd",
-      "path" : "RegionOfInterest.entryRelationship.negationInd",
-      "representation" : ["xmlAttr"],
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.negationInd",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "boolean"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.seperatableInd",
-      "path" : "RegionOfInterest.entryRelationship.seperatableInd",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.seperatableInd",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.observation",
-      "path" : "RegionOfInterest.entryRelationship.observation",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.observation",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Observation"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.regionOfInterest",
-      "path" : "RegionOfInterest.entryRelationship.regionOfInterest",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.regionOfInterest",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.observationMedia",
-      "path" : "RegionOfInterest.entryRelationship.observationMedia",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.observationMedia",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.substanceAdministration",
-      "path" : "RegionOfInterest.entryRelationship.substanceAdministration",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.substanceAdministration",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.supply",
-      "path" : "RegionOfInterest.entryRelationship.supply",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.supply",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Supply"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.procedure",
-      "path" : "RegionOfInterest.entryRelationship.procedure",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.procedure",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Procedure"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.encounter",
-      "path" : "RegionOfInterest.entryRelationship.encounter",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.encounter",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Encounter"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.organizer",
-      "path" : "RegionOfInterest.entryRelationship.organizer",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.organizer",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Organizer"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.act",
-      "path" : "RegionOfInterest.entryRelationship.act",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.entryRelationship.act",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Act"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/EntryRelationship"
       }]
     },
     {
@@ -925,173 +333,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "Element"
-      }],
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.id",
-      "path" : "RegionOfInterest.reference.id",
-      "representation" : ["xmlAttr"],
-      "short" : "Unique id for inter-element referencing",
-      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "Element.id",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "extension" : [{
-          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
-          "valueUrl" : "string"
-        }],
-        "code" : "http://hl7.org/fhirpath/System.String"
-      }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.extension",
-      "path" : "RegionOfInterest.reference.extension",
-      "slicing" : {
-        "discriminator" : [{
-          "type" : "value",
-          "path" : "url"
-        }],
-        "description" : "Extensions are always sliced by (at least) url",
-        "rules" : "open"
-      },
-      "short" : "Additional content defined by implementations",
-      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
-      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-      "alias" : ["extensions",
-      "user content"],
-      "min" : 0,
-      "max" : "*",
-      "base" : {
-        "path" : "Element.extension",
-        "min" : 0,
-        "max" : "*"
-      },
-      "type" : [{
-        "code" : "Extension"
-      }],
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      },
-      {
-        "key" : "ext-1",
-        "severity" : "error",
-        "human" : "Must have either extensions or value[x], not both",
-        "expression" : "extension.exists() != value.exists()",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
-      }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.typeCode",
-      "path" : "RegionOfInterest.reference.typeCode",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.reference.typeCode",
-        "min" : 1,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "code"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.seperatableInd",
-      "path" : "RegionOfInterest.reference.seperatableInd",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.reference.seperatableInd",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.externalAct",
-      "path" : "RegionOfInterest.reference.externalAct",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.reference.externalAct",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalAct"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.externalObservation",
-      "path" : "RegionOfInterest.reference.externalObservation",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.reference.externalObservation",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.externalProcedure",
-      "path" : "RegionOfInterest.reference.externalProcedure",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.reference.externalProcedure",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.externalDocument",
-      "path" : "RegionOfInterest.reference.externalDocument",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "RegionOfInterest.reference.externalDocument",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Reference"
       }]
     },
     {
@@ -1105,7 +347,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Precondition"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Precondition"
       }]
     }]
   },
@@ -1123,7 +365,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "string"
+        "code" : "id",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/xs-ID"]
       }]
     },
     {
@@ -1133,7 +376,8 @@
       "min" : 1,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "defaultValueCode" : "ROIOVL",
       "fixedCode" : "ROIOVL",
@@ -1149,7 +393,8 @@
       "min" : 1,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "defaultValueCode" : "EVN",
       "fixedCode" : "EVN",
@@ -1164,7 +409,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }]
     },
     {
@@ -1173,7 +418,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -1183,7 +428,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -1192,7 +437,7 @@
       "min" : 1,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -1201,7 +446,7 @@
       "min" : 1,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }]
     },
     {
@@ -1210,7 +455,7 @@
       "min" : 1,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/INT"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/INT"
       }]
     },
     {
@@ -1219,61 +464,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "Element"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.subject.typeCode",
-      "path" : "RegionOfInterest.subject.typeCode",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "type" : [{
-        "code" : "code"
-      }],
-      "defaultValueCode" : "SBJ",
-      "fixedCode" : "SBJ",
-      "binding" : {
-        "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"
-      }
-    },
-    {
-      "id" : "RegionOfInterest.subject.contextControlCode",
-      "path" : "RegionOfInterest.subject.contextControlCode",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "type" : [{
-        "code" : "code"
-      }],
-      "defaultValueCode" : "OP",
-      "fixedCode" : "OP",
-      "binding" : {
-        "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
-      }
-    },
-    {
-      "id" : "RegionOfInterest.subject.awarenessCode",
-      "path" : "RegionOfInterest.subject.awarenessCode",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
-      }],
-      "binding" : {
-        "strength" : "extensible",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-TargetAwareness"
-      }
-    },
-    {
-      "id" : "RegionOfInterest.subject.relatedSubject",
-      "path" : "RegionOfInterest.subject.relatedSubject",
-      "min" : 1,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Subject"
       }]
     },
     {
@@ -1282,7 +473,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Specimen"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Specimen"
       }]
     },
     {
@@ -1291,7 +482,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Performer2"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Performer2"
       }]
     },
     {
@@ -1300,7 +491,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Author"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Author"
       }]
     },
     {
@@ -1309,57 +500,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "Element"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.informant.typeCode",
-      "path" : "RegionOfInterest.informant.typeCode",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "type" : [{
-        "code" : "code"
-      }],
-      "defaultValueCode" : "INF",
-      "fixedCode" : "INF",
-      "binding" : {
-        "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator"
-      }
-    },
-    {
-      "id" : "RegionOfInterest.informant.contextControlCode",
-      "path" : "RegionOfInterest.informant.contextControlCode",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "type" : [{
-        "code" : "code"
-      }],
-      "defaultValueCode" : "OP",
-      "fixedCode" : "OP",
-      "binding" : {
-        "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
-      }
-    },
-    {
-      "id" : "RegionOfInterest.informant.assignedEntity",
-      "path" : "RegionOfInterest.informant.assignedEntity",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.informant.relatedEntity",
-      "path" : "RegionOfInterest.informant.relatedEntity",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Informant"
       }]
     },
     {
@@ -1368,7 +509,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Participant2"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Participant2"
       }]
     },
     {
@@ -1377,153 +518,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "Element"
-      }],
-      "constraint" : [{
-        "key" : "roi-er-1",
-        "severity" : "error",
-        "human" : "Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act",
-        "expression" : "(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.typeCode",
-      "path" : "RegionOfInterest.entryRelationship.typeCode",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "type" : [{
-        "code" : "code"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.inversionInd",
-      "path" : "RegionOfInterest.entryRelationship.inversionInd",
-      "representation" : ["xmlAttr"],
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "boolean"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.contextConductionInd",
-      "path" : "RegionOfInterest.entryRelationship.contextConductionInd",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "type" : [{
-        "code" : "boolean"
-      }],
-      "defaultValueBoolean" : true
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.sequenceNumber",
-      "path" : "RegionOfInterest.entryRelationship.sequenceNumber",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/INT"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.negationInd",
-      "path" : "RegionOfInterest.entryRelationship.negationInd",
-      "representation" : ["xmlAttr"],
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "boolean"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.seperatableInd",
-      "path" : "RegionOfInterest.entryRelationship.seperatableInd",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.observation",
-      "path" : "RegionOfInterest.entryRelationship.observation",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Observation"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.regionOfInterest",
-      "path" : "RegionOfInterest.entryRelationship.regionOfInterest",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.observationMedia",
-      "path" : "RegionOfInterest.entryRelationship.observationMedia",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.substanceAdministration",
-      "path" : "RegionOfInterest.entryRelationship.substanceAdministration",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.supply",
-      "path" : "RegionOfInterest.entryRelationship.supply",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Supply"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.procedure",
-      "path" : "RegionOfInterest.entryRelationship.procedure",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Procedure"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.encounter",
-      "path" : "RegionOfInterest.entryRelationship.encounter",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Encounter"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.organizer",
-      "path" : "RegionOfInterest.entryRelationship.organizer",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Organizer"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.entryRelationship.act",
-      "path" : "RegionOfInterest.entryRelationship.act",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Act"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/EntryRelationship"
       }]
     },
     {
@@ -1532,62 +527,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "Element"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.typeCode",
-      "path" : "RegionOfInterest.reference.typeCode",
-      "representation" : ["xmlAttr"],
-      "min" : 1,
-      "max" : "1",
-      "type" : [{
-        "code" : "code"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.seperatableInd",
-      "path" : "RegionOfInterest.reference.seperatableInd",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.externalAct",
-      "path" : "RegionOfInterest.reference.externalAct",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalAct"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.externalObservation",
-      "path" : "RegionOfInterest.reference.externalObservation",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.externalProcedure",
-      "path" : "RegionOfInterest.reference.externalProcedure",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure"
-      }]
-    },
-    {
-      "id" : "RegionOfInterest.reference.externalDocument",
-      "path" : "RegionOfInterest.reference.externalDocument",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Reference"
       }]
     },
     {
@@ -1596,7 +536,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Precondition"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Precondition"
       }]
     }]
   }

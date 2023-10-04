@@ -132,6 +132,17 @@ table.colsi td {
 	background-color: #ffffe6;
 }
 
+table.colsdp {
+	width: 100%;
+}
+
+table.colsdp td {
+  border: 1px grey solid;
+	border-spacing: 0;
+	padding: 5px;
+	border-collapse: collapse;
+	background-color: #ffcccc;
+}
 
 
 table.list td {

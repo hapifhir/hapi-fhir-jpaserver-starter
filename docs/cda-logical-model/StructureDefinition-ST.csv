@@ -1,25 +1,14 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
-"ED","ED","","","",1,*,"","","","null {[]} {[]}
-","Base for all types and resources","The character string data type stands for text data, primarily intended for machine processing (e.g., sorting, querying, indexing, etc.) Used for names, symbols, and formal expressions.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
-"ED.nullFlavor","ED.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
+"ST","ST","","","",1,*,"","","","null {[]} {[]}
+","Base for all types and resources","The character string data type stands for text data, primarily intended for machine processing (e.g., sorting, querying, indexing, etc.) Used for names, symbols, and formal expressions.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+","n/a"
+"ST.nullFlavor","ST.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"ED.charset","ED.charset","","","Charset",0,1,"","","","code {[]} {[]}
-","","For character-based encoding types, this property specifies the character set and character encoding used. The charset shall be identified by an Internet Assigned Numbers Authority (IANA) Charset Registration [] in accordance with RFC 2978 [].","","","","","","","","","",,,,,"",,,,"ED.charset",0,1,"",""
-"ED.compression","ED.compression","","","Compression",0,0,"","","","code {[]} {[]}
-","","Indicates whether the raw byte data is compressed, and what compression algorithm was used.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-CompressionAlgorithm","",,,,"ED.compression",0,1,"",""
-"ED.integrityCheck","ED.integrityCheck","","","Integrity Check",0,0,"","","","base64Binary {[]} {[]}
-","","The integrity check is a short binary value representing a cryptographically strong checksum that is calculated over the binary data. The purpose of this property, when communicated with a reference is for anyone to validate later whether the reference still resolved to the same data that the reference resolved to when the encapsulated data value with reference was created.","","","","","","","","","",,,,,"",,,,"ED.integrityCheck",0,1,"",""
-"ED.integrityCheckAlgorithm","ED.integrityCheckAlgorithm","","","Integrity Check Algorithm",0,0,"","","","code {[]} {[]}
-","","Specifies the algorithm used to compute the integrityCheck value. The cryptographically strong checksum algorithm Secure Hash Algorithm-1 (SHA-1) is currently the industry standard. It has superseded the MD5 algorithm only a couple of years ago, when certain flaws in the security of MD5 were discovered. Currently the SHA-1 hash algorithm is the default choice for the integrity check algorithm. Note that SHA-256 is also entering widespread usage.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-IntegrityCheckAlgorithm","",,,,"ED.integrityCheckAlgorithm",0,1,"",""
-"ED.language","ED.language","","","Language",0,1,"","","","code {[]} {[]}
-","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ED.language",0,1,"",""
-"ED.mediaType","ED.mediaType","","","Media Type",0,1,"","","","code {[]} {[]}
-","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ED.mediaType",0,1,"",""
-"ED.representation","ED.representation","","","",0,1,"","","","code {[]} {[]}
-","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ED.representation",0,1,"",""
-"ED.data[x]","ED.data[x]","","","",0,1,"","","","string {[]} {[]}
-","","The string value","","","","","","","","","",,,,,"",,,,"ED.data[x]",0,1,"",""
-"ED.reference","ED.reference","","","Reference",0,0,"","","","http://hl7.org/fhir/cda/StructureDefinition/TEL {[]} {[]}
-","","A telecommunication address (TEL), such as a URL for HTTP or FTP, which will resolve to precisely the same binary data that could as well have been provided as inline data.","","","","","","","","","",,,,,"",,,,"ED.reference",0,1,"",""
-"ED.thumbnail","ED.thumbnail","","","Thumbnail",0,0,"","","","http://hl7.org/fhir/cda/StructureDefinition/ED {[]} {[]}
-","","An abbreviated rendition of the full data. A thumbnail requires significantly fewer resources than the full data, while still maintaining some distinctive similarity with the full data. A thumbnail is typically used with by-reference encapsulated data. It allows a user to select data more efficiently before actually downloading through the reference.","","","","","","","","","",,,,,"",,,,"ED.thumbnail",0,1,"",""
+"ST.representation","ST.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
+"ST.mediaType","ST.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
+"ST.language","ST.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
+"ST.xmlText","ST.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""

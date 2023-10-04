@@ -7,33 +7,43 @@
       <p>A representation of a physical quantity in a unit from any code system. Used to show alternative representation for a physical quantity.</p>
     </div>
   </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
+  <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics">
+    <valueCode value="can-bind"/>
+  </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
   <extension url="http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-binding-style">
     <valueCode value="CDA"/>
   </extension>
-  <url value="http://hl7.org/fhir/cda/StructureDefinition/PQR"/>
-  <version value="2.1.0-draft1"/>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/PQR"/>
+  <version value="2.1.0-draft2-mb"/>
   <name value="PQR"/>
   <title value="PQR: PhysicalQuantityRepresentation (V3 Data Type)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-02-07T19:43:49+01:00"/>
+  <date value="2023-10-04T23:00:58+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
-    <name value="HL7 International - Cross-Group Projects"/>
+    <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/cgp"/>
+      <value value="http://www.hl7.org/Special/committees/structdoc"/>
     </telecom>
     <telecom>
       <system value="email"/>
-      <value value="cgp@lists.HL7.org"/>
+      <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
   <description value="An extension of the coded value data type representating a physical quantity using a unit from any code system. Used to show alternative representation for a physical quantity."/>
-  <fhirVersion value="5.0.0-snapshot3"/>
+  <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
     <uri value="http://hl7.org/v3"/>
@@ -41,8 +51,8 @@
   </mapping>
   <kind value="logical"/>
   <abstract value="false"/>
-  <type value="PQR"/>
-  <baseDefinition value="http://hl7.org/fhir/cda/StructureDefinition/CV"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/PQR"/>
+  <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/CV"/>
   <derivation value="specialization"/>
   <snapshot>
     <element id="PQR">
@@ -83,6 +93,7 @@
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -102,7 +113,8 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="string"/>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
     </element>
     <element id="PQR.codeSystem">
@@ -119,6 +131,9 @@
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/oid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/uuid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/ruid"/>
       </type>
     </element>
     <element id="PQR.codeSystemName">
@@ -135,6 +150,7 @@
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
     <element id="PQR.codeSystemVersion">
@@ -151,6 +167,7 @@
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
     <element id="PQR.displayName">
@@ -167,6 +184,7 @@
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
     <element id="PQR.sdtcValueSet">
@@ -188,6 +206,7 @@
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/oid"/>
       </type>
     </element>
     <element id="PQR.sdtcValueSetVersion">
@@ -209,6 +228,7 @@
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
     <element id="PQR.originalText">
@@ -223,7 +243,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ED"/>
       </type>
     </element>
     <element id="PQR.qualifier">
@@ -238,7 +258,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CR"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CR"/>
       </type>
     </element>
     <element id="PQR.translation">
@@ -254,7 +274,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CD"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
       </type>
     </element>
     <element id="PQR.value">
@@ -271,6 +291,7 @@
       </base>
       <type>
         <code value="decimal"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/real-simple"/>
       </type>
     </element>
   </snapshot>
@@ -290,6 +311,7 @@
       <max value="1"/>
       <type>
         <code value="decimal"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/real-simple"/>
       </type>
     </element>
   </differential>

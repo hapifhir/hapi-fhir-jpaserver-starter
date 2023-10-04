@@ -198,6 +198,12 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+table code {
+  white-space: normal;
+}
+table td {
+  overflow-wrap: break-word;
+}
 @media print {
   * {
     text-shadow: none !important;

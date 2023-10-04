@@ -1,0 +1,11 @@
+"Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)"
+"base64Binary","base64Binary","","","",0,*,"","","","null {[]} {[]}
+","Primitive Type base64Binary","A stream of bytes","A stream of bytes, base64 encoded","","","","","","","","",,,,,"",,,,"base64Binary",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
+"base64Binary.id","base64Binary.id","","","",0,0,"","","","string {[]} {[]}
+","xml:id (or equivalent in JSON)","unique id for the element within a resource (for internal references)","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"",""
+"base64Binary.extension","base64Binary.extension","","","",0,0,"","","","Extension {[]} {[]}
+","Extension","An Extension","","","","","","","","","",,,,,"",,,,"Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}"
+"base64Binary.value","base64Binary.value","","","",0,1,"","","","base64Binary {[]} {[]}
+","Primitive value for base64Binary","The actual value","","","","","","","","","",,,,,"",,,,"base64Binary.value",0,1,"",""

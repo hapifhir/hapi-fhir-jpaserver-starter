@@ -1,0 +1,19 @@
+﻿/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 159, col 52, Info - The code 'COND' is valid but is deprecated (INVALID)
+/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 175, col 52, Info - The code 'COND' is valid but is deprecated (INVALID)
+/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 201, col 52, Info - The code 'COND' is valid but is deprecated (INVALID)
+/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 947, col 52, Info - The code 'COND' is valid but is deprecated (INVALID)
+/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 955, col 47, Info - The code 'COND' is valid but is deprecated (INVALID)
+/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 962, col 52, Info - The code 'COND' is valid but is deprecated (INVALID)
+/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 970, col 47, Info - The code 'COND' is valid but is deprecated (INVALID)
+/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 977, col 52, Info - The code 'COND' is valid but is deprecated (INVALID)
+/Users/oegger/Documents/github/cda-core-2.0/input/resources/IVL-INT.xml: line 1, col 18008, Error - Error in constraint 'ivl-int-center' with expression 'center.empty() or (low.empty() and high.empty())': Error evaluating FHIRPath expression: The type 'http://hl7.org/cda/stds/core/StructureDefinition/IVL_INT' is unknown or not supported at getChildTypesByName (@char 5) (INVALID)
+/Users/oegger/Documents/github/cda-core-2.0/input/resources/IVL-PQ.xml: line 1, col 19795, Error - Error in constraint 'ivl-pq-center' with expression 'center.empty() or (low.empty() and high.empty())': Error evaluating FHIRPath expression: The type 'http://hl7.org/cda/stds/core/StructureDefinition/IVL_PQ' is unknown or not supported at getChildTypesByName (@char 5) (INVALID)
+/Users/oegger/Documents/github/cda-core-2.0/input/resources/IVL-TS.xml: line 1, col 15043, Error - Error in constraint 'ivl-ts-center' with expression 'center.empty() or (low.empty() and high.empty())': Error evaluating FHIRPath expression: The type 'http://hl7.org/cda/stds/core/StructureDefinition/IVL_TS' is unknown or not supported at getChildTypesByName (@char 5) (INVALID)
+/Users/oegger/Documents/github/cda-core-2.0/input/resources/PN.xml: line 1, col 3221, Warning - pn-no-ls: The left side is inherently a collection, and so the expression 'qualifier = 'LS'' may fail or return false if there is more than one item in the content being evaluated (BUSINESSRULE)
+
+ClinicalDocumentArchitecture : Validation Results
+=========================================
+
+err = 4, warn = 9, info = 8
+IG Publisher Version: 1.4.10 Out of date - current version is 1.4.11
+Generated Wed Oct 04 23:02:00 CEST 2023. FHIR version 5.0.0 for hl7.cda.uv.core#2.1.0-draft2-mb (canonical = http://hl7.org/cda/stds/core)

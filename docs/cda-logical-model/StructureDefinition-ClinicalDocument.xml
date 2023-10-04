@@ -10,30 +10,40 @@
       <p>ClinicalDocument.typeId is a technology-neutral explicit reference to this CDA, Release Two specification, and must be valued as follows: ClinicalDocument.typeId.root = &quot;2.16.840.1.113883.1.3&quot; (which is the OID for HL7 Registered models); ClinicalDocument.typeId.extension = &quot;POCD_HD000040&quot; (which is the unique identifier for the CDA, Release Two Hierarchical Description).</p>
     </div>
   </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
-  <url value="http://hl7.org/fhir/cda/StructureDefinition/ClinicalDocument"/>
-  <version value="2.1.0-draft1"/>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+    <valueUri value="ClinicalDocument"/>
+  </extension>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
+  <version value="2.1.0-draft2-mb"/>
   <name value="CDAR2.ClinicalDocument"/>
   <title value="ClinicalDocument (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-02-07T19:43:49+01:00"/>
+  <date value="2023-10-04T23:00:58+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
-    <name value="HL7 International - Cross-Group Projects"/>
+    <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/cgp"/>
+      <value value="http://www.hl7.org/Special/committees/structdoc"/>
     </telecom>
     <telecom>
       <system value="email"/>
-      <value value="cgp@lists.HL7.org"/>
+      <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
   <description value="This is a generated StructureDefinition that describes CDA - that is, CDA as it actually is for R2. The intent of this StructureDefinition is to enable CDA to be a FHIR resource. That enables the FHIR infrastructure - API, conformance, query - to be used directly against CDA"/>
-  <fhirVersion value="5.0.0-snapshot3"/>
+  <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
     <uri value="http://hl7.org/v3"/>
@@ -41,7 +51,7 @@
   </mapping>
   <kind value="logical"/>
   <abstract value="false"/>
-  <type value="ClinicalDocument"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
   <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
   <derivation value="specialization"/>
   <snapshot>
@@ -72,17 +82,17 @@
     <element id="ClinicalDocument.classCode">
       <path value="ClinicalDocument.classCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="ClinicalDocument.classCode"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="DOCCLIN"/>
       <fixedCode value="DOCCLIN"/>
       <binding>
         <strength value="extensible"/>
@@ -92,17 +102,17 @@
     <element id="ClinicalDocument.moodCode">
       <path value="ClinicalDocument.moodCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="ClinicalDocument.moodCode"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="EVN"/>
       <fixedCode value="EVN"/>
       <binding>
         <strength value="required"/>
@@ -120,7 +130,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
     </element>
     <element id="ClinicalDocument.typeId">
@@ -134,7 +144,38 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="ClinicalDocument.typeId.root">
+      <path value="ClinicalDocument.typeId.root"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="ClinicalDocument.typeId.root"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+      <fixedString value="2.16.840.1.113883.1.3"/>
+    </element>
+    <element id="ClinicalDocument.typeId.extension">
+      <path value="ClinicalDocument.typeId.extension"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="ClinicalDocument.typeId.extension"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
     <element id="ClinicalDocument.templateId">
@@ -148,7 +189,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="ClinicalDocument.id">
@@ -161,7 +202,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="ClinicalDocument.code">
@@ -174,7 +215,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
         <strength value="extensible"/>
@@ -191,7 +232,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ST"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ST"/>
       </type>
     </element>
     <element id="ClinicalDocument.statusCode">
@@ -210,7 +251,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
     </element>
     <element id="ClinicalDocument.effectiveTime">
@@ -223,7 +264,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TS"/>
       </type>
     </element>
     <element id="ClinicalDocument.confidentialityCode">
@@ -236,7 +277,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
     </element>
     <element id="ClinicalDocument.languageCode">
@@ -249,7 +290,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -266,7 +307,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="ClinicalDocument.versionNumber">
@@ -279,7 +320,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/INT"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/INT"/>
       </type>
     </element>
     <element id="ClinicalDocument.copyTime">
@@ -292,7 +333,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TS"/>
       </type>
     </element>
     <element id="ClinicalDocument.recordTarget">
@@ -305,7 +346,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/RecordTarget"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/RecordTarget"/>
       </type>
     </element>
     <element id="ClinicalDocument.author">
@@ -318,7 +359,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Author"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Author"/>
       </type>
     </element>
     <element id="ClinicalDocument.dataEnterer">
@@ -331,7 +372,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/DataEnterer"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/DataEnterer"/>
       </type>
     </element>
     <element id="ClinicalDocument.informant">
@@ -344,7 +385,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Informant"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Informant"/>
       </type>
     </element>
     <element id="ClinicalDocument.custodian">
@@ -357,7 +398,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Custodian"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Custodian"/>
       </type>
     </element>
     <element id="ClinicalDocument.informationRecipient">
@@ -370,7 +411,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/InformationRecipient"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/InformationRecipient"/>
       </type>
     </element>
     <element id="ClinicalDocument.legalAuthenticator">
@@ -383,7 +424,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/LegalAuthenticator"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator"/>
       </type>
     </element>
     <element id="ClinicalDocument.authenticator">
@@ -396,7 +437,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Authenticator"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Authenticator"/>
       </type>
     </element>
     <element id="ClinicalDocument.participant">
@@ -409,7 +450,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Participant1"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Participant1"/>
       </type>
     </element>
     <element id="ClinicalDocument.inFulfillmentOf">
@@ -422,7 +463,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/InFulfillmentOf"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/InFulfillmentOf"/>
       </type>
     </element>
     <element id="ClinicalDocument.documentationOf">
@@ -435,7 +476,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/DocumentationOf"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/DocumentationOf"/>
       </type>
     </element>
     <element id="ClinicalDocument.relatedDocument">
@@ -448,7 +489,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedDocument"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/RelatedDocument"/>
       </type>
     </element>
     <element id="ClinicalDocument.authorization">
@@ -461,7 +502,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Authorization"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Authorization"/>
       </type>
     </element>
     <element id="ClinicalDocument.componentOf">
@@ -474,7 +515,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ComponentOf"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ComponentOf"/>
       </type>
     </element>
     <element id="ClinicalDocument.component">
@@ -487,7 +528,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Component2"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Component"/>
       </type>
     </element>
   </snapshot>
@@ -500,12 +541,12 @@
     <element id="ClinicalDocument.classCode">
       <path value="ClinicalDocument.classCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="DOCCLIN"/>
       <fixedCode value="DOCCLIN"/>
       <binding>
         <strength value="extensible"/>
@@ -515,12 +556,12 @@
     <element id="ClinicalDocument.moodCode">
       <path value="ClinicalDocument.moodCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="EVN"/>
       <fixedCode value="EVN"/>
       <binding>
         <strength value="required"/>
@@ -533,7 +574,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
     </element>
     <element id="ClinicalDocument.typeId">
@@ -542,7 +583,28 @@
       <min value="1"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="ClinicalDocument.typeId.root">
+      <path value="ClinicalDocument.typeId.root"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+      <fixedString value="2.16.840.1.113883.1.3"/>
+    </element>
+    <element id="ClinicalDocument.typeId.extension">
+      <path value="ClinicalDocument.typeId.extension"/>
+      <representation value="xmlAttr"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
     <element id="ClinicalDocument.templateId">
@@ -551,7 +613,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="ClinicalDocument.id">
@@ -559,7 +621,7 @@
       <min value="1"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="ClinicalDocument.code">
@@ -567,7 +629,7 @@
       <min value="1"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
         <strength value="extensible"/>
@@ -579,7 +641,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ST"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ST"/>
       </type>
     </element>
     <element id="ClinicalDocument.statusCode">
@@ -593,7 +655,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
     </element>
     <element id="ClinicalDocument.effectiveTime">
@@ -601,7 +663,7 @@
       <min value="1"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TS"/>
       </type>
     </element>
     <element id="ClinicalDocument.confidentialityCode">
@@ -609,7 +671,7 @@
       <min value="1"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
     </element>
     <element id="ClinicalDocument.languageCode">
@@ -617,7 +679,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -629,7 +691,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="ClinicalDocument.versionNumber">
@@ -637,7 +699,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/INT"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/INT"/>
       </type>
     </element>
     <element id="ClinicalDocument.copyTime">
@@ -645,7 +707,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TS"/>
       </type>
     </element>
     <element id="ClinicalDocument.recordTarget">
@@ -653,7 +715,7 @@
       <min value="1"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/RecordTarget"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/RecordTarget"/>
       </type>
     </element>
     <element id="ClinicalDocument.author">
@@ -661,7 +723,7 @@
       <min value="1"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Author"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Author"/>
       </type>
     </element>
     <element id="ClinicalDocument.dataEnterer">
@@ -669,7 +731,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/DataEnterer"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/DataEnterer"/>
       </type>
     </element>
     <element id="ClinicalDocument.informant">
@@ -677,7 +739,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Informant"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Informant"/>
       </type>
     </element>
     <element id="ClinicalDocument.custodian">
@@ -685,7 +747,7 @@
       <min value="1"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Custodian"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Custodian"/>
       </type>
     </element>
     <element id="ClinicalDocument.informationRecipient">
@@ -693,7 +755,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/InformationRecipient"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/InformationRecipient"/>
       </type>
     </element>
     <element id="ClinicalDocument.legalAuthenticator">
@@ -701,7 +763,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/LegalAuthenticator"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator"/>
       </type>
     </element>
     <element id="ClinicalDocument.authenticator">
@@ -709,7 +771,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Authenticator"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Authenticator"/>
       </type>
     </element>
     <element id="ClinicalDocument.participant">
@@ -717,7 +779,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Participant1"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Participant1"/>
       </type>
     </element>
     <element id="ClinicalDocument.inFulfillmentOf">
@@ -725,7 +787,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/InFulfillmentOf"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/InFulfillmentOf"/>
       </type>
     </element>
     <element id="ClinicalDocument.documentationOf">
@@ -733,7 +795,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/DocumentationOf"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/DocumentationOf"/>
       </type>
     </element>
     <element id="ClinicalDocument.relatedDocument">
@@ -741,7 +803,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedDocument"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/RelatedDocument"/>
       </type>
     </element>
     <element id="ClinicalDocument.authorization">
@@ -749,7 +811,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Authorization"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Authorization"/>
       </type>
     </element>
     <element id="ClinicalDocument.componentOf">
@@ -757,7 +819,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ComponentOf"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ComponentOf"/>
       </type>
     </element>
     <element id="ClinicalDocument.component">
@@ -765,7 +827,7 @@
       <min value="1"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Component2"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Component"/>
       </type>
     </element>
   </differential>

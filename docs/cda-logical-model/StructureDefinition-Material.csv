@@ -1,27 +1,28 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "Material","Material","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
-"Material.classCode","Material.classCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""MMAT""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""MMAT""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityClassManufacturedMaterial","",,,,"Material.classCode",1,1,"",""
-"Material.determinerCode","Material.determinerCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""KIND""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""KIND""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityDeterminerDetermined","",,,,"Material.determinerCode",1,1,"",""
-"Material.nullFlavor","Material.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+","n/a"
+"Material.classCode","Material.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""MMAT""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityClassManufacturedMaterial","",,,,"Material.classCode",0,1,"",""
+"Material.determinerCode","Material.determinerCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""KIND""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityDeterminerDetermined","",,,,"Material.determinerCode",0,1,"",""
+"Material.nullFlavor","Material.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"Material.nullFlavor",0,1,"",""
-"Material.templateId","Material.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+"Material.templateId","Material.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"Material.templateId",0,*,"",""
-"Material.code","Material.code","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"Material.code","Material.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-MaterialEntityClassType","",,,,"Material.code",0,1,"",""
-"Material.name","Material.name","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/EN {[]} {[]}
+"Material.name","Material.name","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/EN {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Material.name",0,1,"",""
-"Material.formCode","Material.formCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"Material.formCode","Material.formCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Material.formCode",0,1,"",""
-"Material.lotNumberText","Material.lotNumberText","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ST {[]} {[]}
+"Material.lotNumberText","Material.lotNumberText","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ST {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Material.lotNumberText",0,1,"",""
-"Material.expirationTime","Material.expirationTime","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/IVL-TS {[]} {[]}
+"Material.expirationTime","Material.expirationTime","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Material.expirationTime",0,1,"",""
-"Material.asContent","Material.asContent","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/PharmContent {[]} {[]}
+"Material.asContent","Material.asContent","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/PharmContent {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Material.asContent",0,1,"",""
-"Material.asSpecializedKind","Material.asSpecializedKind","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/PharmSpecializedKind {[]} {[]}
+"Material.asSpecializedKind","Material.asSpecializedKind","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/PharmSpecializedKind {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Material.asSpecializedKind",0,*,"",""
-"Material.ingredient","Material.ingredient","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/PharmIngredient {[]} {[]}
+"Material.ingredient","Material.ingredient","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/PharmIngredient {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Material.ingredient",0,*,"",""

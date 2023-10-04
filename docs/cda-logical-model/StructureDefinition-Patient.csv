@@ -1,45 +1,46 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "Patient","Patient","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
-"Patient.classCode","Patient.classCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PSN""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PSN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityClassLivingSubject","",,,,"Patient.classCode",1,1,"",""
-"Patient.determinerCode","Patient.determinerCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""INSTANCE""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""INSTANCE""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityDeterminer","",,,,"Patient.determinerCode",1,1,"",""
-"Patient.templateId","Patient.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+","n/a"
+"Patient.classCode","Patient.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PSN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityClassLivingSubject","",,,,"Patient.classCode",0,1,"",""
+"Patient.determinerCode","Patient.determinerCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""INSTANCE""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityDeterminer","",,,,"Patient.determinerCode",0,1,"",""
+"Patient.templateId","Patient.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"Patient.templateId",0,*,"",""
-"Patient.id","Patient.id","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+"Patient.id","Patient.id","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Patient.id",0,1,"",""
-"Patient.name","Patient.name","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/EN {[]} {[]}
+"Patient.name","Patient.name","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/PN {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Patient.name",0,*,"",""
-"Patient.sdtcDesc","Patient.sdtcDesc","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ED {[]} {[]}
+"Patient.sdtcDesc","Patient.sdtcDesc","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ED {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Patient.sdtcDesc",0,1,"",""
-"Patient.administrativeGenderCode","Patient.administrativeGenderCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"Patient.administrativeGenderCode","Patient.administrativeGenderCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-AdministrativeGender","",,,,"Patient.administrativeGenderCode",0,1,"",""
-"Patient.birthTime","Patient.birthTime","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/TS {[]} {[]}
+"Patient.birthTime","Patient.birthTime","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TS {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Patient.birthTime",0,1,"",""
-"Patient.sdtcDeceasedInd","Patient.sdtcDeceasedInd","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/BL {[]} {[]}
+"Patient.sdtcDeceasedInd","Patient.sdtcDeceasedInd","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/BL {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Patient.sdtcDeceasedInd",0,1,"",""
-"Patient.sdtcDeceasedTime","Patient.sdtcDeceasedTime","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/TS {[]} {[]}
+"Patient.sdtcDeceasedTime","Patient.sdtcDeceasedTime","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TS {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Patient.sdtcDeceasedTime",0,1,"",""
-"Patient.sdtcMultipleBirthInd","Patient.sdtcMultipleBirthInd","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/BL {[]} {[]}
+"Patient.sdtcMultipleBirthInd","Patient.sdtcMultipleBirthInd","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/BL {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Patient.sdtcMultipleBirthInd",0,1,"",""
-"Patient.sdtcMultipleBirthOrderNumber","Patient.sdtcMultipleBirthOrderNumber","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/INT-POS {[]} {[]}
+"Patient.sdtcMultipleBirthOrderNumber","Patient.sdtcMultipleBirthOrderNumber","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/INT-POS {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Patient.sdtcMultipleBirthOrderNumber",0,1,"",""
-"Patient.maritalStatusCode","Patient.maritalStatusCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"Patient.maritalStatusCode","Patient.maritalStatusCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-MaritalStatus","",,,,"Patient.maritalStatusCode",0,1,"",""
-"Patient.religiousAffiliationCode","Patient.religiousAffiliationCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"Patient.religiousAffiliationCode","Patient.religiousAffiliationCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ReligiousAffiliation","",,,,"Patient.religiousAffiliationCode",0,1,"",""
-"Patient.raceCode","Patient.raceCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"Patient.raceCode","Patient.raceCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-Race","",,,,"Patient.raceCode",0,1,"",""
-"Patient.sdtcRaceCode","Patient.sdtcRaceCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"Patient.sdtcRaceCode","Patient.sdtcRaceCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-Race","",,,,"Patient.sdtcRaceCode",0,*,"",""
-"Patient.ethnicGroupCode","Patient.ethnicGroupCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"Patient.ethnicGroupCode","Patient.ethnicGroupCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-Ethnicity","",,,,"Patient.ethnicGroupCode",0,1,"",""
-"Patient.sdtcEthnicGroupCode","Patient.sdtcEthnicGroupCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"Patient.sdtcEthnicGroupCode","Patient.sdtcEthnicGroupCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-Ethnicity","",,,,"Patient.sdtcEthnicGroupCode",0,*,"",""
-"Patient.guardian","Patient.guardian","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Guardian {[]} {[]}
+"Patient.guardian","Patient.guardian","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Guardian {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Patient.guardian",0,*,"",""
-"Patient.birthplace","Patient.birthplace","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Birthplace {[]} {[]}
+"Patient.birthplace","Patient.birthplace","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Birthplace {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Patient.birthplace",0,1,"",""
-"Patient.languageCommunication","Patient.languageCommunication","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/LanguageCommunication {[]} {[]}
+"Patient.languageCommunication","Patient.languageCommunication","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/LanguageCommunication {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Patient.languageCommunication",0,*,"",""

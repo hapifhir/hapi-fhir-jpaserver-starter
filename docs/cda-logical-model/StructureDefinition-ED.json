@@ -6,30 +6,39 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Data that is primarily intended for human interpretation or for further machine processing is outside the scope of HL7. This includes unformatted or formatted written language, multimedia data, or structured information as defined by a different standard (e.g., XML-signatures.) Instead of the data itself, an ED may contain only a reference (see TEL.) Note that the ST data type is a specialization of the ED data type when the ED media type is text/plain.</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/ED",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ED",
+  "version" : "2.1.0-draft2-mb",
   "name" : "ED",
   "title" : "ED: EncapsulatedData (V3 Data Type)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "Data that is primarily intended for human interpretation or for further machine processing outside the scope of HL7. This includes unformatted or formatted written language, multimedia data, or structured information in as defined by a different standard (e.g., XML-signatures.) Instead of the data itself, an may contain only a reference (see .) Note that the data type is a specialization of the data type when the media type is text/plain.",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,8 +46,8 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "ED",
-  "baseDefinition" : "http://hl7.org/fhir/cda/StructureDefinition/ANY",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/ED",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/ANY",
   "derivation" : "specialization",
   "snapshot" : {
     "element" : [{
@@ -59,6 +68,12 @@
         "human" : "All FHIR elements must have a @value or children",
         "expression" : "hasValue() or (children().count() > id.count())",
         "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ed-base64",
+        "severity" : "error",
+        "human" : "If @representation='B64', then xmlText SHALL be a base64binary string.",
+        "expression" : "(representation.empty() or representation != 'B64') or xmlText.empty() or xmlText.matches('^(?:[A-Za-z0-9+//]{4})*(?:[A-Za-z0-9+//]{2}==|[A-Za-z0-9+//]{3}=)?$')"
       }],
       "isModifier" : false,
       "mapping" : [{
@@ -80,7 +95,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -101,7 +117,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }]
     },
     {
@@ -118,7 +135,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -139,7 +157,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "base64Binary"
+        "code" : "base64Binary",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bin"]
       }]
     },
     {
@@ -156,7 +175,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -177,7 +197,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }]
     },
     {
@@ -194,7 +215,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }]
     },
     {
@@ -209,26 +231,27 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }]
     },
     {
-      "id" : "ED.data[x]",
-      "path" : "ED.data[x]",
+      "id" : "ED.xmlText",
+      "path" : "ED.xmlText",
       "representation" : ["xmlText"],
+      "short" : "Allows for mixed text content. If @representation='B64', this SHALL be a base64binary string.",
       "definition" : "Data that is primarily intended for human interpretation or for further machine processing is outside the scope of HL7. This includes unformatted or formatted written language, multimedia data, or structured information as defined by a different standard (e.g., XML-signatures.)",
+      "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
       "min" : 0,
       "max" : "1",
       "base" : {
-        "path" : "ED.data[x]",
+        "path" : "ED.xmlText",
         "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "string"
-      },
-      {
-        "code" : "base64Binary"
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
       }]
     },
     {
@@ -244,7 +267,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TEL"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TEL"
       }]
     },
     {
@@ -260,7 +283,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ED"
       }]
     }]
   },
@@ -270,7 +293,13 @@
       "path" : "ED",
       "definition" : "Data that is primarily intended for human interpretation or for further machine processing is outside the scope of HL7. This includes unformatted or formatted written language, multimedia data, or structured information as defined by a different standard (e.g., XML-signatures.) Instead of the data itself, an ED may contain only a reference (see TEL.) Note that the ST data type is a specialization of when the is text/plain.",
       "min" : 1,
-      "max" : "*"
+      "max" : "*",
+      "constraint" : [{
+        "key" : "ed-base64",
+        "severity" : "error",
+        "human" : "If @representation='B64', then xmlText SHALL be a base64binary string.",
+        "expression" : "(representation.empty() or representation != 'B64') or xmlText.empty() or xmlText.matches('^(?:[A-Za-z0-9+//]{4})*(?:[A-Za-z0-9+//]{2}==|[A-Za-z0-9+//]{3}=)?$')"
+      }]
     },
     {
       "id" : "ED.charset",
@@ -281,7 +310,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }]
     },
     {
@@ -293,7 +323,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -309,7 +340,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "base64Binary"
+        "code" : "base64Binary",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bin"]
       }]
     },
     {
@@ -321,7 +353,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -337,7 +370,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }]
     },
     {
@@ -349,7 +383,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }]
     },
     {
@@ -359,21 +394,22 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }]
     },
     {
-      "id" : "ED.data[x]",
-      "path" : "ED.data[x]",
+      "id" : "ED.xmlText",
+      "path" : "ED.xmlText",
       "representation" : ["xmlText"],
+      "short" : "Allows for mixed text content. If @representation='B64', this SHALL be a base64binary string.",
       "definition" : "Data that is primarily intended for human interpretation or for further machine processing is outside the scope of HL7. This includes unformatted or formatted written language, multimedia data, or structured information as defined by a different standard (e.g., XML-signatures.)",
+      "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "string"
-      },
-      {
-        "code" : "base64Binary"
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
       }]
     },
     {
@@ -384,7 +420,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TEL"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TEL"
       }]
     },
     {
@@ -395,7 +431,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/ED"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ED"
       }]
     }]
   }

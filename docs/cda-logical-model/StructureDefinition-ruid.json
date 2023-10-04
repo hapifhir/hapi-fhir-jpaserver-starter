@@ -1,0 +1,178 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "ruid",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Primitive type 'ruid'</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics",
+    "valueCode" : "can-bind"
+  }],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ruid",
+  "version" : "2.1.0-draft2-mb",
+  "name" : "ruid",
+  "title" : "ruid: HL7 Reserved Identifier Scheme",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-10-04T23:00:58+02:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "HL7 Reserved Identifier Scheme (RUID)\\nA globally unique string defined exclusively by HL7. Identifiers in this scheme are only defined by balloted HL7 specifications. Local communities or systems must never use such reserved identifiers based on bilateral negotiations.\n\nHL7 reserved identifiers are strings that consist only of (US-ASCII) letters, digits and hyphens, where the first character must be a letter. HL7 may assign these reserved identifiers as mnemonic identifiers for major concepts of interest to HL7.",
+  "fhirVersion" : "5.0.0",
+  "kind" : "primitive-type",
+  "abstract" : false,
+  "type" : "string",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/string",
+  "derivation" : "constraint",
+  "snapshot" : {
+    "element" : [{
+      "id" : "string",
+      "path" : "string",
+      "short" : "Primitive Type string",
+      "definition" : "A sequence of Unicode characters",
+      "comment" : "Note that FHIR strings SHALL NOT exceed 1,048,576 (1024*1024) characters in size",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "string",
+        "min" : 0,
+        "max" : "*"
+      },
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ruid-pattern",
+        "severity" : "error",
+        "human" : "An identifier that starts with a letter and contains any combination of letters, numbers, and hyphen.",
+        "expression" : "matches('^[A-Za-z][A-Za-z0-9\\\\-]*$')"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "id" : "string.id",
+      "path" : "string.id",
+      "representation" : ["xmlAttr"],
+      "short" : "xml:id (or equivalent in JSON)",
+      "definition" : "unique id for the element within a resource (for internal references)",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "string"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "id" : "string.extension",
+      "path" : "string.extension",
+      "short" : "Extension",
+      "definition" : "An Extension",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "id" : "string.value",
+      "path" : "string.value",
+      "representation" : ["xmlAttr"],
+      "short" : "Primitive value for string",
+      "definition" : "The actual value",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "string.value",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "string"
+        },
+        {
+          "url" : "http://hl7.org/fhir/StructureDefinition/regex",
+          "valueString" : "^[\\s\\S]+$"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "maxLength" : 1048576,
+      "isModifier" : false,
+      "isSummary" : false
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "string",
+      "path" : "string",
+      "constraint" : [{
+        "key" : "ruid-pattern",
+        "severity" : "error",
+        "human" : "An identifier that starts with a letter and contains any combination of letters, numbers, and hyphen.",
+        "expression" : "matches('^[A-Za-z][A-Za-z0-9\\\\-]*$')"
+      }]
+    },
+    {
+      "id" : "string.id",
+      "path" : "string.id",
+      "min" : 0
+    },
+    {
+      "id" : "string.extension",
+      "path" : "string.extension",
+      "min" : 0
+    }]
+  }
+}

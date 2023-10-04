@@ -6,30 +6,39 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>An identifier that uniquely identifies a thing or object. Examples are object identifier for HL7 RIM objects, medical record number, order id, service catalog item id, Vehicle Identification Number (VIN), etc. Instance identifiers are defined based on ISO object identifiers.</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/II",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/II",
+  "version" : "2.1.0-draft2-mb",
   "name" : "II",
   "title" : "II: InstanceIdentifier (V3 Data Type)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "An identifier that uniquely identifies a thing or object. Examples are object identifier for HL7 RIM objects, medical record number, order id, service catalog item id, Vehicle Identification Number (VIN), etc. Instance identifiers are defined based on ISO object identifiers.",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,8 +46,8 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "II",
-  "baseDefinition" : "http://hl7.org/fhir/cda/StructureDefinition/ANY",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/II",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/ANY",
   "derivation" : "specialization",
   "snapshot" : {
     "element" : [{
@@ -80,7 +89,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -101,7 +111,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "string"
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
       }]
     },
     {
@@ -118,7 +129,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "boolean"
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"]
       }]
     },
     {
@@ -135,7 +147,10 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "string"
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/oid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/uuid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/ruid"]
       }]
     },
     {
@@ -152,7 +167,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "string"
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
       }]
     }]
   },
@@ -173,7 +189,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "string"
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
       }]
     },
     {
@@ -185,7 +202,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "boolean"
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"]
       }]
     },
     {
@@ -197,7 +215,10 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "string"
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/oid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/uuid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/ruid"]
       }]
     },
     {
@@ -209,7 +230,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "string"
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
       }]
     }]
   }

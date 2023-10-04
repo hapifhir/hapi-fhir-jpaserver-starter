@@ -1,0 +1,1 @@
+fhir-table-scripts.js and fhir.js are not used in the base template, however they're needed by the FHIR-extensions IG, and are included here because this is the 'trusted' ig that defines them

@@ -1,163 +1,66 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "SubstanceAdministration","SubstanceAdministration","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
-"SubstanceAdministration.classCode","SubstanceAdministration.classCode","","","",1,1,"","","","code {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+","n/a"
+"SubstanceAdministration.classCode","SubstanceAdministration.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBADM""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBADM""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClass","",,,,"SubstanceAdministration.classCode",1,1,"",""
-"SubstanceAdministration.moodCode","SubstanceAdministration.moodCode","","","",1,1,"","","","code {[]} {[]}
+"SubstanceAdministration.moodCode","SubstanceAdministration.moodCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.moodCode",1,1,"",""
-"SubstanceAdministration.realmCode","SubstanceAdministration.realmCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/CS {[]} {[]}
+"SubstanceAdministration.realmCode","SubstanceAdministration.realmCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.realmCode",0,*,"",""
-"SubstanceAdministration.typeId","SubstanceAdministration.typeId","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+"SubstanceAdministration.typeId","SubstanceAdministration.typeId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.typeId",0,1,"",""
-"SubstanceAdministration.templateId","SubstanceAdministration.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+"SubstanceAdministration.templateId","SubstanceAdministration.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.templateId",0,*,"",""
-"SubstanceAdministration.id","SubstanceAdministration.id","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+"SubstanceAdministration.id","SubstanceAdministration.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.id",0,*,"",""
-"SubstanceAdministration.code","SubstanceAdministration.code","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CD {[]} {[]}
+"SubstanceAdministration.code","SubstanceAdministration.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActSubstanceAdministrationCode","",,,,"SubstanceAdministration.code",0,1,"",""
-"SubstanceAdministration.negationInd","SubstanceAdministration.negationInd","","","",0,1,"","","","boolean {[]} {[]}
+"SubstanceAdministration.negationInd","SubstanceAdministration.negationInd","","","",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.negationInd",0,1,"",""
-"SubstanceAdministration.text","SubstanceAdministration.text","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ED {[]} {[]}
+"SubstanceAdministration.text","SubstanceAdministration.text","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ED {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.text",0,1,"",""
-"SubstanceAdministration.statusCode","SubstanceAdministration.statusCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CS {[]} {[]}
+"SubstanceAdministration.statusCode","SubstanceAdministration.statusCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
 ","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActStatus","",,,,"SubstanceAdministration.statusCode",0,1,"",""
-"SubstanceAdministration.effectiveTime","SubstanceAdministration.effectiveTime","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/SXCM-TS {[]} {[]}
-http://hl7.org/fhir/cda/StructureDefinition/IVL-TS {[]} {[]}http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS {[]} {[]}http://hl7.org/fhir/cda/StructureDefinition/PIVL-TS {[]} {[]}http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS {[]} {[]}","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.effectiveTime",0,*,"",""
-"SubstanceAdministration.priorityCode","SubstanceAdministration.priorityCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"SubstanceAdministration.effectiveTime","SubstanceAdministration.effectiveTime","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/SXCM-TS {[]} {[]}
+http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS {[]} {[]}","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.effectiveTime",0,*,"",""
+"SubstanceAdministration.priorityCode","SubstanceAdministration.priorityCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActPriority","",,,,"SubstanceAdministration.priorityCode",0,1,"",""
-"SubstanceAdministration.repeatNumber","SubstanceAdministration.repeatNumber","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/IVL-INT {[]} {[]}
+"SubstanceAdministration.repeatNumber","SubstanceAdministration.repeatNumber","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-INT {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.repeatNumber",0,1,"",""
-"SubstanceAdministration.routeCode","SubstanceAdministration.routeCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"SubstanceAdministration.routeCode","SubstanceAdministration.routeCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-RouteOfAdministration","",,,,"SubstanceAdministration.routeCode",0,1,"",""
-"SubstanceAdministration.approachSiteCode","SubstanceAdministration.approachSiteCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/CD {[]} {[]}
+"SubstanceAdministration.approachSiteCode","SubstanceAdministration.approachSiteCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActSite","",,,,"SubstanceAdministration.approachSiteCode",0,*,"",""
-"SubstanceAdministration.doseQuantity","SubstanceAdministration.doseQuantity","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/IVL-PQ {[]} {[]}
+"SubstanceAdministration.doseQuantity","SubstanceAdministration.doseQuantity","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-PQ {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.doseQuantity",0,1,"",""
-"SubstanceAdministration.rateQuantity","SubstanceAdministration.rateQuantity","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/IVL-PQ {[]} {[]}
+"SubstanceAdministration.rateQuantity","SubstanceAdministration.rateQuantity","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-PQ {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.rateQuantity",0,1,"",""
-"SubstanceAdministration.maxDoseQuantity","SubstanceAdministration.maxDoseQuantity","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/RTO-PQ-PQ {[]} {[]}
+"SubstanceAdministration.maxDoseQuantity","SubstanceAdministration.maxDoseQuantity","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/RTO-PQ-PQ {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.maxDoseQuantity",0,1,"",""
-"SubstanceAdministration.administrationUnitCode","SubstanceAdministration.administrationUnitCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"SubstanceAdministration.administrationUnitCode","SubstanceAdministration.administrationUnitCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-AdministrableDrugForm","",,,,"SubstanceAdministration.administrationUnitCode",0,1,"",""
-"SubstanceAdministration.consumable","SubstanceAdministration.consumable","","","",1,1,"","","","Element {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.consumable",1,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-"
-"SubstanceAdministration.consumable.id","SubstanceAdministration.consumable.id","","","",0,1,"","","","string {[]} {[]}
-","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
-"SubstanceAdministration.consumable.extension","SubstanceAdministration.consumable.extension","","extensions
-user content","",0,*,"","","","Extension {[]} {[]}
-","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
-","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
-"SubstanceAdministration.consumable.typeCode","SubstanceAdministration.consumable.typeCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CSM""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CSM""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationTargetDirect","",,,,"SubstanceAdministration.consumable.typeCode",1,1,"",""
-"SubstanceAdministration.consumable.manufacturedProduct","SubstanceAdministration.consumable.manufacturedProduct","","","",1,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ManufacturedProduct {[]} {[]}
+"SubstanceAdministration.consumable","SubstanceAdministration.consumable","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot {[]} {[]}
+","","The consumable participation is used to bring in the LabeledDrug or Material entity that describes the administered substance. The LabeledDrug class, which is an Entity class playing the Role of Manufactured Product, identifies the drug that is consumed in the substance administration. The medication is identified by means of the LabeledDrug.code or the LabeledDrug.name. The Material entity is used to identify non-drug administered substances such as vaccines and blood products.","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.consumable",1,1,"",""
+"SubstanceAdministration.consumable.typeCode","SubstanceAdministration.consumable.typeCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CSM""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationTargetDirect","",,,,"SubstanceAdministration.consumable.typeCode",0,1,"",""
+"SubstanceAdministration.consumable.manufacturedProduct","SubstanceAdministration.consumable.manufacturedProduct","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ManufacturedProduct {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.consumable.manufacturedProduct",1,1,"",""
-"SubstanceAdministration.subject","SubstanceAdministration.subject","","","",0,1,"","","","Element {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.subject",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-"
-"SubstanceAdministration.subject.id","SubstanceAdministration.subject.id","","","",0,1,"","","","string {[]} {[]}
-","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
-"SubstanceAdministration.subject.extension","SubstanceAdministration.subject.extension","","extensions
-user content","",0,*,"","","","Extension {[]} {[]}
-","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
-","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
-"SubstanceAdministration.subject.typeCode","SubstanceAdministration.subject.typeCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBJ""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBJ""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject","",,,,"SubstanceAdministration.subject.typeCode",1,1,"",""
-"SubstanceAdministration.subject.contextControlCode","SubstanceAdministration.subject.contextControlCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ContextControl","",,,,"SubstanceAdministration.subject.contextControlCode",1,1,"",""
-"SubstanceAdministration.subject.awarenessCode","SubstanceAdministration.subject.awarenessCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-TargetAwareness","",,,,"SubstanceAdministration.subject.awarenessCode",0,1,"",""
-"SubstanceAdministration.subject.relatedSubject","SubstanceAdministration.subject.relatedSubject","","","",1,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.subject.relatedSubject",1,1,"",""
-"SubstanceAdministration.specimen","SubstanceAdministration.specimen","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Specimen {[]} {[]}
+"SubstanceAdministration.subject","SubstanceAdministration.subject","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Subject {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.subject",0,1,"",""
+"SubstanceAdministration.specimen","SubstanceAdministration.specimen","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Specimen {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.specimen",0,*,"",""
-"SubstanceAdministration.performer","SubstanceAdministration.performer","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Performer2 {[]} {[]}
+"SubstanceAdministration.performer","SubstanceAdministration.performer","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Performer2 {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.performer",0,*,"",""
-"SubstanceAdministration.author","SubstanceAdministration.author","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Author {[]} {[]}
+"SubstanceAdministration.author","SubstanceAdministration.author","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Author {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.author",0,*,"",""
-"SubstanceAdministration.informant","SubstanceAdministration.informant","","","",0,*,"","","","Element {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.informant",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-"
-"SubstanceAdministration.informant.id","SubstanceAdministration.informant.id","","","",0,1,"","","","string {[]} {[]}
-","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
-"SubstanceAdministration.informant.extension","SubstanceAdministration.informant.extension","","extensions
-user content","",0,*,"","","","Extension {[]} {[]}
-","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
-","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
-"SubstanceAdministration.informant.typeCode","SubstanceAdministration.informant.typeCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""INF""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""INF""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator","",,,,"SubstanceAdministration.informant.typeCode",1,1,"",""
-"SubstanceAdministration.informant.contextControlCode","SubstanceAdministration.informant.contextControlCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ContextControl","",,,,"SubstanceAdministration.informant.contextControlCode",1,1,"",""
-"SubstanceAdministration.informant.assignedEntity","SubstanceAdministration.informant.assignedEntity","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.informant.assignedEntity",0,1,"",""
-"SubstanceAdministration.informant.relatedEntity","SubstanceAdministration.informant.relatedEntity","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.informant.relatedEntity",0,1,"",""
-"SubstanceAdministration.participant","SubstanceAdministration.participant","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Participant2 {[]} {[]}
+"SubstanceAdministration.informant","SubstanceAdministration.informant","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Informant {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.informant",0,*,"",""
+"SubstanceAdministration.participant","SubstanceAdministration.participant","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Participant2 {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.participant",0,*,"",""
-"SubstanceAdministration.entryRelationship","SubstanceAdministration.entryRelationship","","","",0,*,"","","","Element {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship",0,*,"","subst-er-1:Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act {(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1}
-ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}"
-"SubstanceAdministration.entryRelationship.id","SubstanceAdministration.entryRelationship.id","","","",0,1,"","","","string {[]} {[]}
-","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
-"SubstanceAdministration.entryRelationship.extension","SubstanceAdministration.entryRelationship.extension","","extensions
-user content","",0,*,"","","","Extension {[]} {[]}
-","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
-","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
-"SubstanceAdministration.entryRelationship.typeCode","SubstanceAdministration.entryRelationship.typeCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.typeCode",1,1,"",""
-"SubstanceAdministration.entryRelationship.inversionInd","SubstanceAdministration.entryRelationship.inversionInd","","","",0,1,"","","","boolean {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.inversionInd",0,1,"",""
-"SubstanceAdministration.entryRelationship.contextConductionInd","SubstanceAdministration.entryRelationship.contextConductionInd","","","",1,1,"","","","boolean {[]} {[]}
-","","","","","<valueBoolean xmlns=""http://hl7.org/fhir"" value=""true""/>","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.contextConductionInd",1,1,"",""
-"SubstanceAdministration.entryRelationship.sequenceNumber","SubstanceAdministration.entryRelationship.sequenceNumber","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/INT {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.sequenceNumber",0,1,"",""
-"SubstanceAdministration.entryRelationship.negationInd","SubstanceAdministration.entryRelationship.negationInd","","","",0,1,"","","","boolean {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.negationInd",0,1,"",""
-"SubstanceAdministration.entryRelationship.seperatableInd","SubstanceAdministration.entryRelationship.seperatableInd","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/BL {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.seperatableInd",0,1,"",""
-"SubstanceAdministration.entryRelationship.observation","SubstanceAdministration.entryRelationship.observation","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Observation {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.observation",0,1,"",""
-"SubstanceAdministration.entryRelationship.regionOfInterest","SubstanceAdministration.entryRelationship.regionOfInterest","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.regionOfInterest",0,1,"",""
-"SubstanceAdministration.entryRelationship.observationMedia","SubstanceAdministration.entryRelationship.observationMedia","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.observationMedia",0,1,"",""
-"SubstanceAdministration.entryRelationship.substanceAdministration","SubstanceAdministration.entryRelationship.substanceAdministration","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.substanceAdministration",0,1,"",""
-"SubstanceAdministration.entryRelationship.supply","SubstanceAdministration.entryRelationship.supply","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Supply {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.supply",0,1,"",""
-"SubstanceAdministration.entryRelationship.procedure","SubstanceAdministration.entryRelationship.procedure","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Procedure {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.procedure",0,1,"",""
-"SubstanceAdministration.entryRelationship.encounter","SubstanceAdministration.entryRelationship.encounter","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Encounter {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.encounter",0,1,"",""
-"SubstanceAdministration.entryRelationship.organizer","SubstanceAdministration.entryRelationship.organizer","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Organizer {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.organizer",0,1,"",""
-"SubstanceAdministration.entryRelationship.act","SubstanceAdministration.entryRelationship.act","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Act {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship.act",0,1,"",""
-"SubstanceAdministration.reference","SubstanceAdministration.reference","","","",0,*,"","","","Element {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.reference",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-"
-"SubstanceAdministration.reference.id","SubstanceAdministration.reference.id","","","",0,1,"","","","string {[]} {[]}
-","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
-"SubstanceAdministration.reference.extension","SubstanceAdministration.reference.extension","","extensions
-user content","",0,*,"","","","Extension {[]} {[]}
-","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
-","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
-"SubstanceAdministration.reference.typeCode","SubstanceAdministration.reference.typeCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.reference.typeCode",1,1,"",""
-"SubstanceAdministration.reference.seperatableInd","SubstanceAdministration.reference.seperatableInd","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/BL {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.reference.seperatableInd",0,1,"",""
-"SubstanceAdministration.reference.externalAct","SubstanceAdministration.reference.externalAct","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ExternalAct {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.reference.externalAct",0,1,"",""
-"SubstanceAdministration.reference.externalObservation","SubstanceAdministration.reference.externalObservation","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.reference.externalObservation",0,1,"",""
-"SubstanceAdministration.reference.externalProcedure","SubstanceAdministration.reference.externalProcedure","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.reference.externalProcedure",0,1,"",""
-"SubstanceAdministration.reference.externalDocument","SubstanceAdministration.reference.externalDocument","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.reference.externalDocument",0,1,"",""
-"SubstanceAdministration.precondition","SubstanceAdministration.precondition","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Precondition {[]} {[]}
+"SubstanceAdministration.entryRelationship","SubstanceAdministration.entryRelationship","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/EntryRelationship {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.entryRelationship",0,*,"",""
+"SubstanceAdministration.reference","SubstanceAdministration.reference","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Reference {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.reference",0,*,"",""
+"SubstanceAdministration.precondition","SubstanceAdministration.precondition","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Precondition {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.precondition",0,*,"",""
