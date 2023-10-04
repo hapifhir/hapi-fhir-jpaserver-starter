@@ -1,23 +1,24 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "AssignedAuthor","AssignedAuthor","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
-"AssignedAuthor.classCode","AssignedAuthor.classCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ASSIGNED""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ASSIGNED""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-RoleClassAssignedEntity","",,,,"AssignedAuthor.classCode",1,1,"",""
-"AssignedAuthor.templateId","AssignedAuthor.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+","n/a"
+"AssignedAuthor.classCode","AssignedAuthor.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ASSIGNED""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-RoleClassAssignedEntity","",,,,"AssignedAuthor.classCode",0,1,"",""
+"AssignedAuthor.templateId","AssignedAuthor.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"AssignedAuthor.templateId",0,*,"",""
-"AssignedAuthor.id","AssignedAuthor.id","","","",1,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+"AssignedAuthor.id","AssignedAuthor.id","","","",1,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"AssignedAuthor.id",1,*,"",""
-"AssignedAuthor.sdtcIdentifiedBy","AssignedAuthor.sdtcIdentifiedBy","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/IdentifiedBy {[]} {[]}
+"AssignedAuthor.sdtcIdentifiedBy","AssignedAuthor.sdtcIdentifiedBy","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IdentifiedBy {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"AssignedAuthor.sdtcIdentifiedBy",0,*,"",""
-"AssignedAuthor.code","AssignedAuthor.code","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"AssignedAuthor.code","AssignedAuthor.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-RoleCode","",,,,"AssignedAuthor.code",0,1,"",""
-"AssignedAuthor.addr","AssignedAuthor.addr","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/AD {[]} {[]}
+"AssignedAuthor.addr","AssignedAuthor.addr","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/AD {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"AssignedAuthor.addr",0,*,"",""
-"AssignedAuthor.telecom","AssignedAuthor.telecom","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/TEL {[]} {[]}
+"AssignedAuthor.telecom","AssignedAuthor.telecom","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TEL {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"AssignedAuthor.telecom",0,*,"",""
-"AssignedAuthor.assignedPerson","AssignedAuthor.assignedPerson","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Person {[]} {[]}
+"AssignedAuthor.assignedPerson","AssignedAuthor.assignedPerson","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Person {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"AssignedAuthor.assignedPerson",0,1,"",""
-"AssignedAuthor.assignedAuthoringDevice","AssignedAuthor.assignedAuthoringDevice","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/AuthoringDevice {[]} {[]}
+"AssignedAuthor.assignedAuthoringDevice","AssignedAuthor.assignedAuthoringDevice","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/AuthoringDevice {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"AssignedAuthor.assignedAuthoringDevice",0,1,"",""
-"AssignedAuthor.representedOrganization","AssignedAuthor.representedOrganization","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Organization {[]} {[]}
+"AssignedAuthor.representedOrganization","AssignedAuthor.representedOrganization","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Organization {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"AssignedAuthor.representedOrganization",0,1,"",""

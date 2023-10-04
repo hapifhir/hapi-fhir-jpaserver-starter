@@ -1,0 +1,42 @@
+"Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
+"EntryRelationship","EntryRelationship","","","",1,*,"","","","null {[]} {[]}
+","Base for all types and resources","Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+entry-rel-only-one:SHALL have no more than one of act, encounter, observation, observationMedia, organizer, procedure, regionOfInterest, substanceAdministration, or supply. {(act | encounter | observation | observationMedia | organizer | procedure | regionOfInterest | substanceAdministration | supply).count() = 1}","n/a"
+"EntryRelationship.nullFlavor","EntryRelationship.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"EntryRelationship.realmCode","EntryRelationship.realmCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.realmCode",0,*,"",""
+"EntryRelationship.typeId","EntryRelationship.typeId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.typeId",0,1,"",""
+"EntryRelationship.templateId","EntryRelationship.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
+"EntryRelationship.typeCode","EntryRelationship.typeCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-xActRelationshipEntryRelationship","",,,,"EntryRelationship.typeCode",1,1,"",""
+"EntryRelationship.inversionInd","EntryRelationship.inversionInd","","","",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
+","","The entryRelationship.inversionInd can be set to ""true"" to indicate that the relationship should be interpreted as if the roles of the source and target entries were reversed.","","","","","","","","","",,,,,"",,,,"EntryRelationship.inversionInd",0,1,"",""
+"EntryRelationship.contextConductionInd","EntryRelationship.contextConductionInd","","","",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
+","","The entryRelationship.contextConductionInd differs from the otherwise common use of this attribute in that in all other cases where this attribute is used, the value is fixed at ""true"", whereas here the value is defaulted to ""true"", and can be changed to ""false"" when referencing an entry in the same document. Setting the context conduction to false when referencing an entry in the same document keeps clear the fact that the referenced object retains its original context.","","","<valueBoolean xmlns=""http://hl7.org/fhir"" value=""true""/>","","","","","","",,,,,"",,,,"EntryRelationship.contextConductionInd",0,1,"",""
+"EntryRelationship.negationInd","EntryRelationship.negationInd","","","",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EntryRelationship.negationInd",0,1,"",""
+"EntryRelationship.sequenceNumber","EntryRelationship.sequenceNumber","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/INT {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EntryRelationship.sequenceNumber",0,1,"",""
+"EntryRelationship.seperatableInd","EntryRelationship.seperatableInd","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/BL {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EntryRelationship.seperatableInd",0,1,"",""
+"EntryRelationship.act","EntryRelationship.act","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Act {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EntryRelationship.act",0,1,"",""
+"EntryRelationship.encounter","EntryRelationship.encounter","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Encounter {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EntryRelationship.encounter",0,1,"",""
+"EntryRelationship.observation","EntryRelationship.observation","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Observation {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EntryRelationship.observation",0,1,"",""
+"EntryRelationship.observationMedia","EntryRelationship.observationMedia","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ObservationMedia {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EntryRelationship.observationMedia",0,1,"",""
+"EntryRelationship.organizer","EntryRelationship.organizer","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Organizer {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EntryRelationship.organizer",0,1,"",""
+"EntryRelationship.procedure","EntryRelationship.procedure","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Procedure {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EntryRelationship.procedure",0,1,"",""
+"EntryRelationship.regionOfInterest","EntryRelationship.regionOfInterest","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/RegionOfInterest {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EntryRelationship.regionOfInterest",0,1,"",""
+"EntryRelationship.substanceAdministration","EntryRelationship.substanceAdministration","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/SubstanceAdministration {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EntryRelationship.substanceAdministration",0,1,"",""
+"EntryRelationship.supply","EntryRelationship.supply","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Supply {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EntryRelationship.supply",0,1,"",""

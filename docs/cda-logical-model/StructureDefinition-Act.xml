@@ -8,30 +8,40 @@
       <p>Act.negationInd, when set to &quot;true&quot;, is a positive assertion that the Act as a whole is negated. Some properties such as Act.id, Act.moodCode, and the participations are not affected. These properties always have the same meaning: i.e., the author remains the author of the negative Act. An act statement with negationInd is still a statement about the specific fact described by the Act. For instance, a negated &quot;finding of wheezing on July 1&quot; means that the author positively denies that there was wheezing on July 1, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.</p>
     </div>
   </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
-  <url value="http://hl7.org/fhir/cda/StructureDefinition/Act"/>
-  <version value="2.1.0-draft1"/>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+    <valueUri value="act"/>
+  </extension>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/Act"/>
+  <version value="2.1.0-draft2-mb"/>
   <name value="CDAR2.Act"/>
   <title value="Act (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-02-07T19:43:49+01:00"/>
+  <date value="2023-10-04T23:00:58+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
-    <name value="HL7 International - Cross-Group Projects"/>
+    <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/cgp"/>
+      <value value="http://www.hl7.org/Special/committees/structdoc"/>
     </telecom>
     <telecom>
       <system value="email"/>
-      <value value="cgp@lists.HL7.org"/>
+      <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
   <description value="A derivative of the RIM Act class, to be used when the other more specific classes aren't appropriate.&#xA;Act.negationInd, when set to &quot;true&quot;, is a positive assertion that the Act as a whole is negated. Some properties such as Act.id, Act.moodCode, and the participations are not affected. These properties always have the same meaning: i.e., the author remains the author of the negative Act. An act statement with negationInd is still a statement about the specific fact described by the Act. For instance, a negated &quot;finding of wheezing on July 1&quot; means that the author positively denies that there was wheezing on July 1, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation."/>
-  <fhirVersion value="5.0.0-snapshot3"/>
+  <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
     <uri value="http://hl7.org/v3"/>
@@ -39,7 +49,7 @@
   </mapping>
   <kind value="logical"/>
   <abstract value="false"/>
-  <type value="Act"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/Act"/>
   <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
   <derivation value="specialization"/>
   <snapshot>
@@ -67,9 +77,31 @@
         <map value="n/a"/>
       </mapping>
     </element>
+    <element id="Act.nullFlavor">
+      <path value="Act.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Act.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+      </binding>
+    </element>
     <element id="Act.classCode">
       <path value="Act.classCode"/>
       <representation value="xmlAttr"/>
+      <definition value="Element Act.classCode"/>
       <min value="1"/>
       <max value="1"/>
       <base>
@@ -79,6 +111,7 @@
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
     </element>
     <element id="Act.moodCode">
@@ -93,6 +126,7 @@
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
     </element>
     <element id="Act.realmCode">
@@ -105,7 +139,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
     </element>
     <element id="Act.typeId">
@@ -118,7 +152,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Act.templateId">
@@ -132,7 +166,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Act.id">
@@ -145,7 +179,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Act.code">
@@ -158,7 +192,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CD"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
       </type>
       <binding>
         <strength value="extensible"/>
@@ -177,6 +211,7 @@
       </base>
       <type>
         <code value="boolean"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"/>
       </type>
     </element>
     <element id="Act.text">
@@ -189,7 +224,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ED"/>
       </type>
     </element>
     <element id="Act.statusCode">
@@ -202,7 +237,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -219,7 +254,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"/>
       </type>
     </element>
     <element id="Act.priorityCode">
@@ -232,7 +267,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
         <strength value="extensible"/>
@@ -249,7 +284,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -266,155 +301,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="Element"/>
-      </type>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
-    </element>
-    <element id="Act.subject.id">
-      <path value="Act.subject.id"/>
-      <representation value="xmlAttr"/>
-      <short value="Unique id for inter-element referencing"/>
-      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Element.id"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
-          <valueUrl value="string"/>
-        </extension>
-        <code value="http://hl7.org/fhirpath/System.String"/>
-      </type>
-      <isModifier value="false"/>
-      <isSummary value="false"/>
-      <mapping>
-        <identity value="rim"/>
-        <map value="n/a"/>
-      </mapping>
-    </element>
-    <element id="Act.subject.extension">
-      <path value="Act.subject.extension"/>
-      <slicing>
-        <discriminator>
-          <type value="value"/>
-          <path value="url"/>
-        </discriminator>
-        <description value="Extensions are always sliced by (at least) url"/>
-        <rules value="open"/>
-      </slicing>
-      <short value="Additional content defined by implementations"/>
-      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
-      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
-      <alias value="extensions"/>
-      <alias value="user content"/>
-      <min value="0"/>
-      <max value="*"/>
-      <base>
-        <path value="Element.extension"/>
-        <min value="0"/>
-        <max value="*"/>
-      </base>
-      <type>
-        <code value="Extension"/>
-      </type>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
-      <constraint>
-        <key value="ext-1"/>
-        <severity value="error"/>
-        <human value="Must have either extensions or value[x], not both"/>
-        <expression value="extension.exists() != value.exists()"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
-      </constraint>
-      <isModifier value="false"/>
-      <isSummary value="false"/>
-      <mapping>
-        <identity value="rim"/>
-        <map value="n/a"/>
-      </mapping>
-    </element>
-    <element id="Act.subject.typeCode">
-      <path value="Act.subject.typeCode"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.subject.typeCode"/>
-        <min value="1"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="code"/>
-      </type>
-      <defaultValueCode value="SBJ"/>
-      <fixedCode value="SBJ"/>
-      <binding>
-        <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"/>
-      </binding>
-    </element>
-    <element id="Act.subject.contextControlCode">
-      <path value="Act.subject.contextControlCode"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.subject.contextControlCode"/>
-        <min value="1"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="code"/>
-      </type>
-      <defaultValueCode value="OP"/>
-      <fixedCode value="OP"/>
-      <binding>
-        <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
-      </binding>
-    </element>
-    <element id="Act.subject.awarenessCode">
-      <path value="Act.subject.awarenessCode"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.subject.awarenessCode"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
-      </type>
-      <binding>
-        <strength value="extensible"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-TargetAwareness"/>
-      </binding>
-    </element>
-    <element id="Act.subject.relatedSubject">
-      <path value="Act.subject.relatedSubject"/>
-      <min value="1"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.subject.relatedSubject"/>
-        <min value="1"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Subject"/>
       </type>
     </element>
     <element id="Act.specimen">
@@ -427,7 +314,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Specimen"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Specimen"/>
       </type>
     </element>
     <element id="Act.performer">
@@ -440,7 +327,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Performer2"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Performer2"/>
       </type>
     </element>
     <element id="Act.author">
@@ -453,7 +340,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Author"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Author"/>
       </type>
     </element>
     <element id="Act.informant">
@@ -466,151 +353,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="Element"/>
-      </type>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
-    </element>
-    <element id="Act.informant.id">
-      <path value="Act.informant.id"/>
-      <representation value="xmlAttr"/>
-      <short value="Unique id for inter-element referencing"/>
-      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Element.id"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
-          <valueUrl value="string"/>
-        </extension>
-        <code value="http://hl7.org/fhirpath/System.String"/>
-      </type>
-      <isModifier value="false"/>
-      <isSummary value="false"/>
-      <mapping>
-        <identity value="rim"/>
-        <map value="n/a"/>
-      </mapping>
-    </element>
-    <element id="Act.informant.extension">
-      <path value="Act.informant.extension"/>
-      <slicing>
-        <discriminator>
-          <type value="value"/>
-          <path value="url"/>
-        </discriminator>
-        <description value="Extensions are always sliced by (at least) url"/>
-        <rules value="open"/>
-      </slicing>
-      <short value="Additional content defined by implementations"/>
-      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
-      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
-      <alias value="extensions"/>
-      <alias value="user content"/>
-      <min value="0"/>
-      <max value="*"/>
-      <base>
-        <path value="Element.extension"/>
-        <min value="0"/>
-        <max value="*"/>
-      </base>
-      <type>
-        <code value="Extension"/>
-      </type>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
-      <constraint>
-        <key value="ext-1"/>
-        <severity value="error"/>
-        <human value="Must have either extensions or value[x], not both"/>
-        <expression value="extension.exists() != value.exists()"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
-      </constraint>
-      <isModifier value="false"/>
-      <isSummary value="false"/>
-      <mapping>
-        <identity value="rim"/>
-        <map value="n/a"/>
-      </mapping>
-    </element>
-    <element id="Act.informant.typeCode">
-      <path value="Act.informant.typeCode"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.informant.typeCode"/>
-        <min value="1"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="code"/>
-      </type>
-      <defaultValueCode value="INF"/>
-      <fixedCode value="INF"/>
-      <binding>
-        <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator"/>
-      </binding>
-    </element>
-    <element id="Act.informant.contextControlCode">
-      <path value="Act.informant.contextControlCode"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.informant.contextControlCode"/>
-        <min value="1"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="code"/>
-      </type>
-      <defaultValueCode value="OP"/>
-      <fixedCode value="OP"/>
-      <binding>
-        <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
-      </binding>
-    </element>
-    <element id="Act.informant.assignedEntity">
-      <path value="Act.informant.assignedEntity"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.informant.assignedEntity"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"/>
-      </type>
-    </element>
-    <element id="Act.informant.relatedEntity">
-      <path value="Act.informant.relatedEntity"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.informant.relatedEntity"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Informant"/>
       </type>
     </element>
     <element id="Act.participant">
@@ -623,7 +366,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Participant2"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Participant2"/>
       </type>
     </element>
     <element id="Act.entryRelationship">
@@ -636,291 +379,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="Element"/>
-      </type>
-      <constraint>
-        <key value="act-er-1"/>
-        <severity value="error"/>
-        <human value="Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act"/>
-        <expression value="(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1"/>
-      </constraint>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
-    </element>
-    <element id="Act.entryRelationship.id">
-      <path value="Act.entryRelationship.id"/>
-      <representation value="xmlAttr"/>
-      <short value="Unique id for inter-element referencing"/>
-      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Element.id"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
-          <valueUrl value="string"/>
-        </extension>
-        <code value="http://hl7.org/fhirpath/System.String"/>
-      </type>
-      <isModifier value="false"/>
-      <isSummary value="false"/>
-      <mapping>
-        <identity value="rim"/>
-        <map value="n/a"/>
-      </mapping>
-    </element>
-    <element id="Act.entryRelationship.extension">
-      <path value="Act.entryRelationship.extension"/>
-      <slicing>
-        <discriminator>
-          <type value="value"/>
-          <path value="url"/>
-        </discriminator>
-        <description value="Extensions are always sliced by (at least) url"/>
-        <rules value="open"/>
-      </slicing>
-      <short value="Additional content defined by implementations"/>
-      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
-      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
-      <alias value="extensions"/>
-      <alias value="user content"/>
-      <min value="0"/>
-      <max value="*"/>
-      <base>
-        <path value="Element.extension"/>
-        <min value="0"/>
-        <max value="*"/>
-      </base>
-      <type>
-        <code value="Extension"/>
-      </type>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
-      <constraint>
-        <key value="ext-1"/>
-        <severity value="error"/>
-        <human value="Must have either extensions or value[x], not both"/>
-        <expression value="extension.exists() != value.exists()"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
-      </constraint>
-      <isModifier value="false"/>
-      <isSummary value="false"/>
-      <mapping>
-        <identity value="rim"/>
-        <map value="n/a"/>
-      </mapping>
-    </element>
-    <element id="Act.entryRelationship.typeCode">
-      <path value="Act.entryRelationship.typeCode"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.typeCode"/>
-        <min value="1"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="code"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.inversionInd">
-      <path value="Act.entryRelationship.inversionInd"/>
-      <representation value="xmlAttr"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.inversionInd"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="boolean"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.contextConductionInd">
-      <path value="Act.entryRelationship.contextConductionInd"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.contextConductionInd"/>
-        <min value="1"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="boolean"/>
-      </type>
-      <defaultValueBoolean value="true"/>
-    </element>
-    <element id="Act.entryRelationship.sequenceNumber">
-      <path value="Act.entryRelationship.sequenceNumber"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.sequenceNumber"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/INT"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.negationInd">
-      <path value="Act.entryRelationship.negationInd"/>
-      <representation value="xmlAttr"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.negationInd"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="boolean"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.seperatableInd">
-      <path value="Act.entryRelationship.seperatableInd"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.seperatableInd"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.observation">
-      <path value="Act.entryRelationship.observation"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.observation"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Observation"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.regionOfInterest">
-      <path value="Act.entryRelationship.regionOfInterest"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.regionOfInterest"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.observationMedia">
-      <path value="Act.entryRelationship.observationMedia"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.observationMedia"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.substanceAdministration">
-      <path value="Act.entryRelationship.substanceAdministration"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.substanceAdministration"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.supply">
-      <path value="Act.entryRelationship.supply"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.supply"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Supply"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.procedure">
-      <path value="Act.entryRelationship.procedure"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.procedure"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Procedure"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.encounter">
-      <path value="Act.entryRelationship.encounter"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.encounter"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Encounter"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.organizer">
-      <path value="Act.entryRelationship.organizer"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.organizer"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Organizer"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.act">
-      <path value="Act.entryRelationship.act"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.entryRelationship.act"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Act"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/EntryRelationship"/>
       </type>
     </element>
     <element id="Act.reference">
@@ -933,164 +392,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="Element"/>
-      </type>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
-    </element>
-    <element id="Act.reference.id">
-      <path value="Act.reference.id"/>
-      <representation value="xmlAttr"/>
-      <short value="Unique id for inter-element referencing"/>
-      <definition value="Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces."/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Element.id"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
-          <valueUrl value="string"/>
-        </extension>
-        <code value="http://hl7.org/fhirpath/System.String"/>
-      </type>
-      <isModifier value="false"/>
-      <isSummary value="false"/>
-      <mapping>
-        <identity value="rim"/>
-        <map value="n/a"/>
-      </mapping>
-    </element>
-    <element id="Act.reference.extension">
-      <path value="Act.reference.extension"/>
-      <slicing>
-        <discriminator>
-          <type value="value"/>
-          <path value="url"/>
-        </discriminator>
-        <description value="Extensions are always sliced by (at least) url"/>
-        <rules value="open"/>
-      </slicing>
-      <short value="Additional content defined by implementations"/>
-      <definition value="May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension."/>
-      <comment value="There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone."/>
-      <alias value="extensions"/>
-      <alias value="user content"/>
-      <min value="0"/>
-      <max value="*"/>
-      <base>
-        <path value="Element.extension"/>
-        <min value="0"/>
-        <max value="*"/>
-      </base>
-      <type>
-        <code value="Extension"/>
-      </type>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
-      <constraint>
-        <key value="ext-1"/>
-        <severity value="error"/>
-        <human value="Must have either extensions or value[x], not both"/>
-        <expression value="extension.exists() != value.exists()"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
-      </constraint>
-      <isModifier value="false"/>
-      <isSummary value="false"/>
-      <mapping>
-        <identity value="rim"/>
-        <map value="n/a"/>
-      </mapping>
-    </element>
-    <element id="Act.reference.typeCode">
-      <path value="Act.reference.typeCode"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.reference.typeCode"/>
-        <min value="1"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="code"/>
-      </type>
-    </element>
-    <element id="Act.reference.seperatableInd">
-      <path value="Act.reference.seperatableInd"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.reference.seperatableInd"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
-      </type>
-    </element>
-    <element id="Act.reference.externalAct">
-      <path value="Act.reference.externalAct"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.reference.externalAct"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalAct"/>
-      </type>
-    </element>
-    <element id="Act.reference.externalObservation">
-      <path value="Act.reference.externalObservation"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.reference.externalObservation"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation"/>
-      </type>
-    </element>
-    <element id="Act.reference.externalProcedure">
-      <path value="Act.reference.externalProcedure"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.reference.externalProcedure"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure"/>
-      </type>
-    </element>
-    <element id="Act.reference.externalDocument">
-      <path value="Act.reference.externalDocument"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Act.reference.externalDocument"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Reference"/>
       </type>
     </element>
     <element id="Act.precondition">
@@ -1103,7 +405,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Precondition"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Precondition"/>
       </type>
     </element>
   </snapshot>
@@ -1113,13 +415,31 @@
       <min value="1"/>
       <max value="1"/>
     </element>
+    <element id="Act.nullFlavor">
+      <path value="Act.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+      </binding>
+    </element>
     <element id="Act.classCode">
       <path value="Act.classCode"/>
       <representation value="xmlAttr"/>
+      <definition value="Element Act.classCode"/>
       <min value="1"/>
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
     </element>
     <element id="Act.moodCode">
@@ -1129,6 +449,7 @@
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
     </element>
     <element id="Act.realmCode">
@@ -1136,7 +457,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
     </element>
     <element id="Act.typeId">
@@ -1144,7 +465,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Act.templateId">
@@ -1153,7 +474,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Act.id">
@@ -1161,7 +482,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Act.code">
@@ -1169,7 +490,7 @@
       <min value="1"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CD"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
       </type>
       <binding>
         <strength value="extensible"/>
@@ -1183,6 +504,7 @@
       <max value="1"/>
       <type>
         <code value="boolean"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"/>
       </type>
     </element>
     <element id="Act.text">
@@ -1190,7 +512,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ED"/>
       </type>
     </element>
     <element id="Act.statusCode">
@@ -1198,7 +520,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -1210,7 +532,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"/>
       </type>
     </element>
     <element id="Act.priorityCode">
@@ -1218,7 +540,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
         <strength value="extensible"/>
@@ -1230,7 +552,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -1242,57 +564,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="Element"/>
-      </type>
-    </element>
-    <element id="Act.subject.typeCode">
-      <path value="Act.subject.typeCode"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <type>
-        <code value="code"/>
-      </type>
-      <defaultValueCode value="SBJ"/>
-      <fixedCode value="SBJ"/>
-      <binding>
-        <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"/>
-      </binding>
-    </element>
-    <element id="Act.subject.contextControlCode">
-      <path value="Act.subject.contextControlCode"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <type>
-        <code value="code"/>
-      </type>
-      <defaultValueCode value="OP"/>
-      <fixedCode value="OP"/>
-      <binding>
-        <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
-      </binding>
-    </element>
-    <element id="Act.subject.awarenessCode">
-      <path value="Act.subject.awarenessCode"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
-      </type>
-      <binding>
-        <strength value="extensible"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-TargetAwareness"/>
-      </binding>
-    </element>
-    <element id="Act.subject.relatedSubject">
-      <path value="Act.subject.relatedSubject"/>
-      <min value="1"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Subject"/>
       </type>
     </element>
     <element id="Act.specimen">
@@ -1300,7 +572,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Specimen"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Specimen"/>
       </type>
     </element>
     <element id="Act.performer">
@@ -1308,7 +580,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Performer2"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Performer2"/>
       </type>
     </element>
     <element id="Act.author">
@@ -1316,7 +588,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Author"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Author"/>
       </type>
     </element>
     <element id="Act.informant">
@@ -1324,53 +596,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="Element"/>
-      </type>
-    </element>
-    <element id="Act.informant.typeCode">
-      <path value="Act.informant.typeCode"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <type>
-        <code value="code"/>
-      </type>
-      <defaultValueCode value="INF"/>
-      <fixedCode value="INF"/>
-      <binding>
-        <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator"/>
-      </binding>
-    </element>
-    <element id="Act.informant.contextControlCode">
-      <path value="Act.informant.contextControlCode"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <type>
-        <code value="code"/>
-      </type>
-      <defaultValueCode value="OP"/>
-      <fixedCode value="OP"/>
-      <binding>
-        <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
-      </binding>
-    </element>
-    <element id="Act.informant.assignedEntity">
-      <path value="Act.informant.assignedEntity"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"/>
-      </type>
-    </element>
-    <element id="Act.informant.relatedEntity">
-      <path value="Act.informant.relatedEntity"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Informant"/>
       </type>
     </element>
     <element id="Act.participant">
@@ -1378,7 +604,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Participant2"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Participant2"/>
       </type>
     </element>
     <element id="Act.entryRelationship">
@@ -1386,138 +612,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="Element"/>
-      </type>
-      <constraint>
-        <key value="act-er-1"/>
-        <severity value="error"/>
-        <human value="Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act"/>
-        <expression value="(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1"/>
-      </constraint>
-    </element>
-    <element id="Act.entryRelationship.typeCode">
-      <path value="Act.entryRelationship.typeCode"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <type>
-        <code value="code"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.inversionInd">
-      <path value="Act.entryRelationship.inversionInd"/>
-      <representation value="xmlAttr"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="boolean"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.contextConductionInd">
-      <path value="Act.entryRelationship.contextConductionInd"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <type>
-        <code value="boolean"/>
-      </type>
-      <defaultValueBoolean value="true"/>
-    </element>
-    <element id="Act.entryRelationship.sequenceNumber">
-      <path value="Act.entryRelationship.sequenceNumber"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/INT"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.negationInd">
-      <path value="Act.entryRelationship.negationInd"/>
-      <representation value="xmlAttr"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="boolean"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.seperatableInd">
-      <path value="Act.entryRelationship.seperatableInd"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.observation">
-      <path value="Act.entryRelationship.observation"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Observation"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.regionOfInterest">
-      <path value="Act.entryRelationship.regionOfInterest"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.observationMedia">
-      <path value="Act.entryRelationship.observationMedia"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.substanceAdministration">
-      <path value="Act.entryRelationship.substanceAdministration"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.supply">
-      <path value="Act.entryRelationship.supply"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Supply"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.procedure">
-      <path value="Act.entryRelationship.procedure"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Procedure"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.encounter">
-      <path value="Act.entryRelationship.encounter"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Encounter"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.organizer">
-      <path value="Act.entryRelationship.organizer"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Organizer"/>
-      </type>
-    </element>
-    <element id="Act.entryRelationship.act">
-      <path value="Act.entryRelationship.act"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Act"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/EntryRelationship"/>
       </type>
     </element>
     <element id="Act.reference">
@@ -1525,56 +620,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="Element"/>
-      </type>
-    </element>
-    <element id="Act.reference.typeCode">
-      <path value="Act.reference.typeCode"/>
-      <representation value="xmlAttr"/>
-      <min value="1"/>
-      <max value="1"/>
-      <type>
-        <code value="code"/>
-      </type>
-    </element>
-    <element id="Act.reference.seperatableInd">
-      <path value="Act.reference.seperatableInd"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
-      </type>
-    </element>
-    <element id="Act.reference.externalAct">
-      <path value="Act.reference.externalAct"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalAct"/>
-      </type>
-    </element>
-    <element id="Act.reference.externalObservation">
-      <path value="Act.reference.externalObservation"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation"/>
-      </type>
-    </element>
-    <element id="Act.reference.externalProcedure">
-      <path value="Act.reference.externalProcedure"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure"/>
-      </type>
-    </element>
-    <element id="Act.reference.externalDocument">
-      <path value="Act.reference.externalDocument"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Reference"/>
       </type>
     </element>
     <element id="Act.precondition">
@@ -1582,7 +628,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Precondition"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Precondition"/>
       </type>
     </element>
   </differential>

@@ -7,30 +7,40 @@
       <p>The entity playing the role is a person (SubjectPerson class).</p>
     </div>
   </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
-  <url value="http://hl7.org/fhir/cda/StructureDefinition/SubjectPerson"/>
-  <version value="2.1.0-draft1"/>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+    <valueUri value="subjectPerson"/>
+  </extension>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/SubjectPerson"/>
+  <version value="2.1.0-draft2-mb"/>
   <name value="CDAR2.SubjectPerson"/>
   <title value="SubjectPerson (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-02-07T19:43:49+01:00"/>
+  <date value="2023-10-04T23:00:58+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
-    <name value="HL7 International - Cross-Group Projects"/>
+    <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/cgp"/>
+      <value value="http://www.hl7.org/Special/committees/structdoc"/>
     </telecom>
     <telecom>
       <system value="email"/>
-      <value value="cgp@lists.HL7.org"/>
+      <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
   <description value="The entity playing the role is a person (SubjectPerson class)."/>
-  <fhirVersion value="5.0.0-snapshot3"/>
+  <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
     <uri value="http://hl7.org/v3"/>
@@ -38,7 +48,7 @@
   </mapping>
   <kind value="logical"/>
   <abstract value="false"/>
-  <type value="SubjectPerson"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/SubjectPerson"/>
   <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
   <derivation value="specialization"/>
   <snapshot>
@@ -69,17 +79,17 @@
     <element id="SubjectPerson.classCode">
       <path value="SubjectPerson.classCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="SubjectPerson.classCode"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="PSN"/>
       <fixedCode value="PSN"/>
       <binding>
         <strength value="required"/>
@@ -89,17 +99,17 @@
     <element id="SubjectPerson.determinerCode">
       <path value="SubjectPerson.determinerCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="SubjectPerson.determinerCode"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="INSTANCE"/>
       <fixedCode value="INSTANCE"/>
       <binding>
         <strength value="required"/>
@@ -117,7 +127,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="SubjectPerson.name">
@@ -130,7 +140,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/EN"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PN"/>
       </type>
     </element>
     <element id="SubjectPerson.sdtcDesc">
@@ -149,7 +159,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ED"/>
       </type>
     </element>
     <element id="SubjectPerson.administrativeGenderCode">
@@ -162,7 +172,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
         <strength value="extensible"/>
@@ -179,7 +189,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TS"/>
       </type>
     </element>
     <element id="SubjectPerson.sdtcDeceasedInd">
@@ -198,7 +208,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/BL"/>
       </type>
     </element>
     <element id="SubjectPerson.sdtcDeceasedTime">
@@ -217,7 +227,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TS"/>
       </type>
     </element>
   </snapshot>
@@ -230,12 +240,12 @@
     <element id="SubjectPerson.classCode">
       <path value="SubjectPerson.classCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="PSN"/>
       <fixedCode value="PSN"/>
       <binding>
         <strength value="required"/>
@@ -245,12 +255,12 @@
     <element id="SubjectPerson.determinerCode">
       <path value="SubjectPerson.determinerCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="INSTANCE"/>
       <fixedCode value="INSTANCE"/>
       <binding>
         <strength value="required"/>
@@ -263,7 +273,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="SubjectPerson.name">
@@ -271,7 +281,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/EN"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PN"/>
       </type>
     </element>
     <element id="SubjectPerson.sdtcDesc">
@@ -285,7 +295,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ED"/>
       </type>
     </element>
     <element id="SubjectPerson.administrativeGenderCode">
@@ -293,7 +303,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
         <strength value="extensible"/>
@@ -305,7 +315,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TS"/>
       </type>
     </element>
     <element id="SubjectPerson.sdtcDeceasedInd">
@@ -319,7 +329,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/BL"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/BL"/>
       </type>
     </element>
     <element id="SubjectPerson.sdtcDeceasedTime">
@@ -333,7 +343,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TS"/>
       </type>
     </element>
   </differential>

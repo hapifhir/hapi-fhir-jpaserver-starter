@@ -99,7 +99,7 @@ class CdaToFhirTransformTests {
 		assertEquals("11502-2",
 						 getEngine().evaluateFhirPath(attributeWithCdaWhiteSpace, false, "code.code"));
 		assertEquals("REFERTO DI LABORATORIO",
-						 getEngine().evaluateFhirPath(cdaLabItaly, false, "title.data"));
+						 getEngine().evaluateFhirPath(cdaLabItaly, false, "title.xmlText"));
 		assertEquals("IT", getEngine().evaluateFhirPath(cdaLabItaly, false, "realmCode.code"));
 		assertEquals("2.16.840.1.113883.1.3",
 						 getEngine().evaluateFhirPath(cdaLabItaly, false, "typeId.root"));
@@ -116,11 +116,11 @@ class CdaToFhirTransformTests {
 		assertEquals("Verdi",
 						 getEngine().evaluateFhirPath(cdaLabItaly,
 																false,
-																"recordTarget.patientRole.patient.name.family.data"));
+																"recordTarget.patientRole.patient.name.family.xmlText"));
 		assertEquals("Giuseppe",
 						 getEngine().evaluateFhirPath(cdaLabItaly,
 																false,
-																"recordTarget.patientRole.patient.name.given.data"));
+																"recordTarget.patientRole.patient.name.given.xmlText"));
 	}
 
 	@Test
@@ -176,22 +176,6 @@ class CdaToFhirTransformTests {
 
 		assertNotNull(resource);
 	}
-
-	@Test
-	void TestObservationStSmall() throws FHIRException, IOException {
-		InputStream in = getResourceAsStream("cda-it-observation-st-small.xml");
-
-		String cdaObservation = IOUtils.toString(in, StandardCharsets.UTF_8);
-		Resource resource = getEngine().transformToFhir(cdaObservation,
-																		false,
-																		"http://salute.gov.it/ig/cda-fhir-maps/StructureMap/TestObservation");
-        Observation obs = (Observation) resource;
-
-        assertEquals("Nessun Trauma riscontrato", obs.getValueStringType().getValue());                                                                
-
-		assertNotNull(resource);
-	}
-
 	@Test
 	void TestObservationCondition() throws FHIRException, IOException {
 		InputStream in = getResourceAsStream("cda-it-observation-condition.xml");

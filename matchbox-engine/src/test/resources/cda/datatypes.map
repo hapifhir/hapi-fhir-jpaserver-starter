@@ -178,10 +178,10 @@ group CDCodeableConcept(source src : CD, target tgt : CodeableConcept) extends C
 }
 
 group ENHumanName(source src : EN, target tgt : HumanName) extends Any <<types>> {
-  src.family as v -> tgt.family = (v.data);
-  src.given as v -> tgt.given = (v.data);
-  src.prefix as v -> tgt.prefix = (v.data);
-  src.suffix as v -> tgt.suffix = (v.data);
+  src.family as v -> tgt.family = (v.xmlText);
+  src.given as v -> tgt.given = (v.xmlText);
+  src.prefix as v -> tgt.prefix = (v.xmlText);
+  src.suffix as v -> tgt.suffix = (v.xmlText);
   // src.use as c -> tgt.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
   src.validTime -> tgt.period;
 }
@@ -190,12 +190,12 @@ group PNHumanName(source src : PN, target tgt : HumanName) extends ENHumanName <
 }
 
 group ADAddress(source src : AD, target tgt : Address) extends Any <<types>> {
-  src.country as v -> tgt.country = (v.data);
-  src.state as v -> tgt.state = (v.data);
-  src.county as v -> tgt.district = (v.data);
-  src.city as v -> tgt.city = (v.data);
-  src.postalCode as v -> tgt.postalCode = (v.data);
-  src.streetAddressLine as v -> tgt.line=(v.data);
+  src.country as v -> tgt.country = (v.xmlText);
+  src.state as v -> tgt.state = (v.xmlText);
+  src.county as v -> tgt.district = (v.xmlText);
+  src.city as v -> tgt.city = (v.xmlText);
+  src.postalCode as v -> tgt.postalCode = (v.xmlText);
+  src.streetAddressLine as v -> tgt.line=(v.xmlText);
    
   src   -> tgt.line  as line then { 
    src where src.censusTract.exists() then {
@@ -207,8 +207,8 @@ group ADAddress(source src : AD, target tgt : Address) extends Any <<types>> {
   //as streetAddress then{
     //src.censusTract as v->tgt.line as line, line.extension as ext1 then CensusTract(v, ext1) "line";
   //src.censusTract as v ->tgt.line as line, line.extension as ext1 then CensusTract(v, ext1) "line";
-  src.streetName as v -> tgt.line = (v.data);
-  src.houseNumber as v -> tgt.line = (v.data);
+  src.streetName as v -> tgt.line = (v.xmlText);
+  src.houseNumber as v -> tgt.line = (v.xmlText);
   src.use as c -> tgt.use = translate(c, '#addressUse', 'code') "addressUse";
   src.useablePeriod -> tgt.period;
 }
@@ -239,5 +239,5 @@ group RTOPQPQRatio(source src : RTO_PQ_PQ, target tgt : Ratio) extends Any <<typ
  
  group CensusTract(source src : ST, target ext : Extension) {
   src -> ext.url = 'http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-censusTract' "url";
-    src->  ext.value = create('string'),  ext.value = (src.data) "value";
+    src->  ext.value = create('string'),  ext.value = (src.xmlText) "value";
   } 

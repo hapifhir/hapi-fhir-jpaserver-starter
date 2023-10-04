@@ -6,30 +6,43 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The StructuredBody class represents a CDA document body that is comprised of one or more document sections.</p>\n      <p>The StructuredBody class is associated with one or more Section classes through a component relationship.</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+    "valueUri" : "structuredBody"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/StructuredBody",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/StructuredBody",
+  "version" : "2.1.0-draft2-mb",
   "name" : "CDAR2.StructuredBody",
   "title" : "StructuredBody (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "The StructuredBody class represents a CDA document body that is comprised of one or more document sections.\nThe StructuredBody class is associated with one or more Section classes through a component relationship.",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,17 +50,17 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "StructuredBody",
-  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/StructuredBody",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot",
   "derivation" : "specialization",
   "snapshot" : {
     "element" : [{
       "id" : "StructuredBody",
       "path" : "StructuredBody",
       "short" : "Base for all types and resources",
-      "definition" : "Base definition for all types defined in FHIR type system.",
+      "definition" : "Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.",
       "min" : 1,
-      "max" : "1",
+      "max" : "*",
       "base" : {
         "path" : "Base",
         "min" : 0,
@@ -67,20 +80,87 @@
       }]
     },
     {
-      "id" : "StructuredBody.classCode",
-      "path" : "StructuredBody.classCode",
+      "id" : "StructuredBody.nullFlavor",
+      "path" : "StructuredBody.nullFlavor",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
       "max" : "1",
       "base" : {
-        "path" : "StructuredBody.classCode",
-        "min" : 1,
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "DOCBODY",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
+    },
+    {
+      "id" : "StructuredBody.realmCode",
+      "path" : "StructuredBody.realmCode",
+      "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InfrastructureRoot.realmCode",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "StructuredBody.typeId",
+      "path" : "StructuredBody.typeId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "InfrastructureRoot.typeId",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "StructuredBody.templateId",
+      "path" : "StructuredBody.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InfrastructureRoot.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "StructuredBody.classCode",
+      "path" : "StructuredBody.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "StructuredBody.classCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
       "fixedCode" : "DOCBODY",
       "binding" : {
         "strength" : "required",
@@ -91,17 +171,17 @@
       "id" : "StructuredBody.moodCode",
       "path" : "StructuredBody.moodCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "StructuredBody.moodCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "EVN",
       "fixedCode" : "EVN",
       "binding" : {
         "strength" : "required",
@@ -119,7 +199,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }]
     },
     {
@@ -133,7 +213,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }],
       "binding" : {
         "strength" : "required",
@@ -151,7 +231,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "Element"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"
       }],
       "constraint" : [{
         "key" : "ele-1",
@@ -162,111 +242,105 @@
       }]
     },
     {
-      "id" : "StructuredBody.component.id",
-      "path" : "StructuredBody.component.id",
+      "id" : "StructuredBody.component.nullFlavor",
+      "path" : "StructuredBody.component.nullFlavor",
       "representation" : ["xmlAttr"],
-      "short" : "Unique id for inter-element referencing",
-      "definition" : "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.",
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
       "min" : 0,
       "max" : "1",
       "base" : {
-        "path" : "Element.id",
+        "path" : "ANY.nullFlavor",
         "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "extension" : [{
-          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
-          "valueUrl" : "string"
-        }],
-        "code" : "http://hl7.org/fhirpath/System.String"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
-      }]
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
     },
     {
-      "id" : "StructuredBody.component.extension",
-      "path" : "StructuredBody.component.extension",
-      "slicing" : {
-        "discriminator" : [{
-          "type" : "value",
-          "path" : "url"
-        }],
-        "description" : "Extensions are always sliced by (at least) url",
-        "rules" : "open"
-      },
-      "short" : "Additional content defined by implementations",
-      "definition" : "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.",
-      "comment" : "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.",
-      "alias" : ["extensions",
-      "user content"],
+      "id" : "StructuredBody.component.realmCode",
+      "path" : "StructuredBody.component.realmCode",
+      "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
       "min" : 0,
       "max" : "*",
       "base" : {
-        "path" : "Element.extension",
+        "path" : "InfrastructureRoot.realmCode",
         "min" : 0,
         "max" : "*"
       },
       "type" : [{
-        "code" : "Extension"
-      }],
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "StructuredBody.component.typeId",
+      "path" : "StructuredBody.component.typeId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "InfrastructureRoot.typeId",
+        "min" : 0,
+        "max" : "1"
       },
-      {
-        "key" : "ext-1",
-        "severity" : "error",
-        "human" : "Must have either extensions or value[x], not both",
-        "expression" : "extension.exists() != value.exists()",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
-      }],
-      "isModifier" : false,
-      "isSummary" : false,
-      "mapping" : [{
-        "identity" : "rim",
-        "map" : "n/a"
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "StructuredBody.component.templateId",
+      "path" : "StructuredBody.component.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InfrastructureRoot.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
       "id" : "StructuredBody.component.typeCode",
       "path" : "StructuredBody.component.typeCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "StructuredBody.component.typeCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "COMP",
       "fixedCode" : "COMP"
     },
     {
       "id" : "StructuredBody.component.contextConductionInd",
       "path" : "StructuredBody.component.contextConductionInd",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "StructuredBody.component.contextConductionInd",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "boolean"
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"]
       }],
-      "defaultValueBoolean" : true
+      "fixedBoolean" : true
     },
     {
       "id" : "StructuredBody.component.section",
@@ -279,27 +353,21 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Section"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Section"
       }]
     }]
   },
   "differential" : {
     "element" : [{
-      "id" : "StructuredBody",
-      "path" : "StructuredBody",
-      "min" : 1,
-      "max" : "1"
-    },
-    {
       "id" : "StructuredBody.classCode",
       "path" : "StructuredBody.classCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "DOCBODY",
       "fixedCode" : "DOCBODY",
       "binding" : {
         "strength" : "required",
@@ -310,12 +378,12 @@
       "id" : "StructuredBody.moodCode",
       "path" : "StructuredBody.moodCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "EVN",
       "fixedCode" : "EVN",
       "binding" : {
         "strength" : "required",
@@ -328,7 +396,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }]
     },
     {
@@ -337,7 +405,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }],
       "binding" : {
         "strength" : "required",
@@ -350,31 +418,32 @@
       "min" : 1,
       "max" : "*",
       "type" : [{
-        "code" : "Element"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"
       }]
     },
     {
       "id" : "StructuredBody.component.typeCode",
       "path" : "StructuredBody.component.typeCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "COMP",
       "fixedCode" : "COMP"
     },
     {
       "id" : "StructuredBody.component.contextConductionInd",
       "path" : "StructuredBody.component.contextConductionInd",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "boolean"
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"]
       }],
-      "defaultValueBoolean" : true
+      "fixedBoolean" : true
     },
     {
       "id" : "StructuredBody.component.section",
@@ -382,7 +451,7 @@
       "min" : 1,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/Section"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Section"
       }]
     }]
   }

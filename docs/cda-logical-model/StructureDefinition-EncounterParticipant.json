@@ -6,30 +6,43 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>TODO</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+    "valueUri" : "encounterParticipant"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/EncounterParticipant",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/EncounterParticipant",
+  "version" : "2.1.0-draft2-mb",
   "name" : "CDAR2.EncounterParticipant",
   "title" : "EncounterParticipant (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "TODO",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,7 +50,7 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "EncounterParticipant",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/EncounterParticipant",
   "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
   "derivation" : "specialization",
   "snapshot" : {
@@ -80,7 +93,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -99,7 +113,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -118,7 +133,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }]
     },
     {
@@ -133,7 +148,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -148,7 +163,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -162,7 +177,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"
       }]
     },
     {
@@ -176,7 +191,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity"
       }]
     }]
   },
@@ -196,7 +211,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -210,7 +226,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -224,7 +241,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }]
     },
     {
@@ -234,7 +251,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -244,7 +261,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -253,7 +270,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"
       }]
     },
     {
@@ -262,7 +279,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity"
       }]
     }]
   }

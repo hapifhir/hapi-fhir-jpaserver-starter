@@ -1,0 +1,161 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "xs-ID",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Primitive type 'xs:ID'</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics",
+    "valueCode" : "has-length"
+  }],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/xs-ID",
+  "version" : "2.1.0-draft2-mb",
+  "name" : "xs:ID",
+  "title" : "xs:ID",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-10-04T23:00:58+02:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "ID represents the ID attribute type from [XML 1.0 (Second Edition)]. The \"value space\" of ID is the set of all strings that \"match\" the NCName production in [Namespaces in XML]. The \"lexical space\" of ID is the set of all strings that \"match\" the NCName production in [Namespaces in XML].",
+  "fhirVersion" : "5.0.0",
+  "kind" : "primitive-type",
+  "abstract" : false,
+  "type" : "id",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/id",
+  "derivation" : "constraint",
+  "snapshot" : {
+    "element" : [{
+      "id" : "id",
+      "path" : "id",
+      "short" : "Primitive Type id",
+      "definition" : "Any combination of letters, numerals, \"-\" and \".\", with a length limit of 64 characters.  (This might be an integer, an unprefixed OID, UUID or any other identifier pattern that meets these constraints.)  Ids are case-insensitive.",
+      "comment" : "RFC 4122",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "id",
+        "min" : 0,
+        "max" : "*"
+      },
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "id" : "id.id",
+      "path" : "id.id",
+      "representation" : ["xmlAttr"],
+      "short" : "xml:id (or equivalent in JSON)",
+      "definition" : "unique id for the element within a resource (for internal references)",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "string"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "id" : "id.extension",
+      "path" : "id.extension",
+      "short" : "Extension",
+      "definition" : "An Extension",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "id" : "id.value",
+      "path" : "id.value",
+      "representation" : ["xmlAttr"],
+      "short" : "Primitive value for id",
+      "definition" : "Primitive value for id",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "string.value",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "id"
+        },
+        {
+          "url" : "http://hl7.org/fhir/StructureDefinition/regex",
+          "valueString" : "[A-Za-z0-9\\-\\.]{1,64}"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "id.id",
+      "path" : "id.id",
+      "max" : "0"
+    },
+    {
+      "id" : "id.extension",
+      "path" : "id.extension",
+      "max" : "0"
+    }]
+  }
+}

@@ -6,30 +6,43 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A bounded physical place or site, including any contained structures.</p>\n      <p>Place may be natural or man-made. The geographic position of a place may or may not be constant. Places may be work facilities (where relevant acts occur), homes (where people live) or offices (where people work). Places may contain sub-places (floor, room, booth, bed). Places may also be sites that are investigated in the context of health care, social work, public health administration (e.g., buildings, picnic grounds, day care centers, prisons, counties, states, and other focuses of epidemiological events).</p>\n      <p>Examples: A field, lake, city, county, state, country, lot (land), building, pipeline, power line, playground, ship, truck</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+    "valueUri" : "place"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/Place",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Place",
+  "version" : "2.1.0-draft2-mb",
   "name" : "CDAR2.Place",
   "title" : "Place (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "A bounded physical place or site, including any contained structures.\nPlace may be natural or man-made. The geographic position of a place may or may not be constant. Places may be work facilities (where relevant acts occur), homes (where people live) or offices (where people work). Places may contain sub-places (floor, room, booth, bed). Places may also be sites that are investigated in the context of health care, social work, public health administration (e.g., buildings, picnic grounds, day care centers, prisons, counties, states, and other focuses of epidemiological events).\nExamples: A field, lake, city, county, state, country, lot (land), building, pipeline, power line, playground, ship, truck",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,7 +50,7 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "Place",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/Place",
   "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
   "derivation" : "specialization",
   "snapshot" : {
@@ -70,17 +83,17 @@
       "id" : "Place.classCode",
       "path" : "Place.classCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "Place.classCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "PLC",
       "fixedCode" : "PLC",
       "binding" : {
         "strength" : "required",
@@ -91,17 +104,17 @@
       "id" : "Place.determinerCode",
       "path" : "Place.determinerCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "Place.determinerCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "INSTANCE",
       "fixedCode" : "INSTANCE",
       "binding" : {
         "strength" : "required",
@@ -120,7 +133,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -134,7 +147,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EN"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/EN"
       }]
     },
     {
@@ -148,7 +161,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AD"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/AD"
       }]
     }]
   },
@@ -163,12 +176,12 @@
       "id" : "Place.classCode",
       "path" : "Place.classCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "PLC",
       "fixedCode" : "PLC",
       "binding" : {
         "strength" : "required",
@@ -179,12 +192,12 @@
       "id" : "Place.determinerCode",
       "path" : "Place.determinerCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "INSTANCE",
       "fixedCode" : "INSTANCE",
       "binding" : {
         "strength" : "required",
@@ -198,7 +211,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -207,7 +220,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EN"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/EN"
       }]
     },
     {
@@ -216,7 +229,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AD"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/AD"
       }]
     }]
   }

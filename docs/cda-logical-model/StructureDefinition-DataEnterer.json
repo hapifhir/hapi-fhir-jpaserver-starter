@@ -6,30 +6,43 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Represents the participant who has transformed a dictated note into text.</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+    "valueUri" : "dataEnterer"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/DataEnterer",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/DataEnterer",
+  "version" : "2.1.0-draft2-mb",
   "name" : "CDAR2.DataEnterer",
   "title" : "DataEnterer (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "Represents the participant who has transformed a dictated note into text.",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,7 +50,7 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "DataEnterer",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/DataEnterer",
   "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
   "derivation" : "specialization",
   "snapshot" : {
@@ -80,7 +93,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -99,7 +113,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "fixedCode" : "ENT",
       "binding" : {
@@ -119,7 +134,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "fixedCode" : "OP",
       "binding" : {
@@ -139,7 +155,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }]
     },
     {
@@ -154,7 +170,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -169,7 +185,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -183,7 +199,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
       }]
     },
     {
@@ -197,7 +213,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity"
       }]
     }]
   },
@@ -217,7 +233,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -231,7 +248,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "fixedCode" : "ENT",
       "binding" : {
@@ -246,7 +264,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "fixedCode" : "OP",
       "binding" : {
@@ -261,7 +280,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }]
     },
     {
@@ -271,7 +290,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -281,7 +300,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -290,7 +309,7 @@
       "min" : 1,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
       }]
     },
     {
@@ -299,7 +318,7 @@
       "min" : 1,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity"
       }]
     }]
   }

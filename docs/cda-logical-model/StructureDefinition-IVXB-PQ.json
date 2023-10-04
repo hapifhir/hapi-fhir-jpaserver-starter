@@ -1,0 +1,198 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "IVXB-PQ",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A physical quantity interval boundary containing an inclusive/exclusive flag.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics",
+    "valueCode" : "can-bind"
+  }],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/IVXB-PQ",
+  "version" : "2.1.0-draft2-mb",
+  "name" : "IVXB_PQ",
+  "title" : "IVXB_PQ: Interval Boundary PhysicalQuantity (V3 Data Type)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-10-04T23:00:58+02:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "A physical quantity interval boundary containing an inclusive/exclusive flag.",
+  "fhirVersion" : "5.0.0",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/IVXB_PQ",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/PQ",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "IVXB_PQ",
+      "path" : "IVXB_PQ",
+      "short" : "Base for all types and resources",
+      "definition" : "A physical quantity interval boundary containing an inclusive/exclusive flag.",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }],
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "IVXB_PQ.nullFlavor",
+      "path" : "IVXB_PQ.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+      }
+    },
+    {
+      "id" : "IVXB_PQ.unit",
+      "path" : "IVXB_PQ.unit",
+      "representation" : ["xmlAttr"],
+      "label" : "Unit of Measure",
+      "definition" : "The unit of measure specified in the Unified Code for Units of Measure (UCUM) [].",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "PQ.unit",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "defaultValueCode" : "1"
+    },
+    {
+      "id" : "IVXB_PQ.value",
+      "path" : "IVXB_PQ.value",
+      "representation" : ["xmlAttr"],
+      "label" : "Maginitude Value",
+      "definition" : "The magnitude of the quantity measured in terms of the unit.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "PQ.value",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "decimal",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/real-simple"]
+      }]
+    },
+    {
+      "id" : "IVXB_PQ.translation",
+      "path" : "IVXB_PQ.translation",
+      "label" : "Translation",
+      "definition" : "An alternative representation of the same physical quantity expressed in a different unit, of a different unit code system and possibly with a different value.",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "PQ.translation",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PQR"
+      }]
+    },
+    {
+      "id" : "IVXB_PQ.inclusive",
+      "path" : "IVXB_PQ.inclusive",
+      "representation" : ["xmlAttr"],
+      "definition" : "Specifies whether the limit is included in the interval (interval is closed) or excluded from the interval (interval is open).",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "IVXB_PQ.inclusive",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"]
+      }],
+      "defaultValueBoolean" : true
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "IVXB_PQ",
+      "path" : "IVXB_PQ",
+      "definition" : "A physical quantity interval boundary containing an inclusive/exclusive flag.",
+      "min" : 1,
+      "max" : "*"
+    },
+    {
+      "id" : "IVXB_PQ.inclusive",
+      "path" : "IVXB_PQ.inclusive",
+      "representation" : ["xmlAttr"],
+      "definition" : "Specifies whether the limit is included in the interval (interval is closed) or excluded from the interval (interval is open).",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"]
+      }],
+      "defaultValueBoolean" : true
+    }]
+  }
+}

@@ -7,33 +7,40 @@
       <p>A name for an organization. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for organization name values are &quot;Health Level Seven, Inc.&quot;, &quot;Hospital&quot;, etc. An organization name may be as simple as a character string or may consist of several person name parts, such as, &quot;Health Level 7&quot;, &quot;Inc.&quot;. ON differs from EN because certain person related name parts are not possible.</p>
     </div>
   </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-xml-no-order">
     <valueBoolean value="true"/>
   </extension>
-  <url value="http://hl7.org/fhir/cda/StructureDefinition/ON"/>
-  <version value="2.1.0-draft1"/>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/ON"/>
+  <version value="2.1.0-draft2-mb"/>
   <name value="ON"/>
   <title value="ON: OrganizationName (V3 Data Type)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-02-07T19:43:49+01:00"/>
+  <date value="2023-10-04T23:00:58+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
-    <name value="HL7 International - Cross-Group Projects"/>
+    <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/cgp"/>
+      <value value="http://www.hl7.org/Special/committees/structdoc"/>
     </telecom>
     <telecom>
       <system value="email"/>
-      <value value="cgp@lists.HL7.org"/>
+      <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
   <description value="A name for an organization. A sequence of name parts. Examples for organization name values are &quot;Health Level Seven, Inc.&quot;, &quot;Hospital&quot;, etc. An organization name may be as simple as a character string or may consist of several person name parts, such as, &quot;Health Level 7&quot;, &quot;Inc.&quot;. ON differs from EN because certain person related name parts are not possible."/>
-  <fhirVersion value="5.0.0-snapshot3"/>
+  <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
     <uri value="http://hl7.org/v3"/>
@@ -41,8 +48,8 @@
   </mapping>
   <kind value="logical"/>
   <abstract value="false"/>
-  <type value="ON"/>
-  <baseDefinition value="http://hl7.org/fhir/cda/StructureDefinition/EN"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/ON"/>
+  <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/EN"/>
   <derivation value="specialization"/>
   <snapshot>
     <element id="ON">
@@ -83,6 +90,7 @@
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -95,14 +103,15 @@
       <label value="Use Code"/>
       <definition value="A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose"/>
       <min value="0"/>
-      <max value="1"/>
+      <max value="*"/>
       <base>
         <path value="EN.use"/>
         <min value="0"/>
-        <max value="1"/>
+        <max value="*"/>
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -119,7 +128,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ENXP"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
       </type>
     </element>
     <element id="ON.family">
@@ -132,7 +141,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ENXP"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
       </type>
     </element>
     <element id="ON.given">
@@ -145,7 +154,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ENXP"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
       </type>
     </element>
     <element id="ON.prefix">
@@ -158,11 +167,12 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ENXP"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
       </type>
     </element>
     <element id="ON.suffix">
       <path value="ON.suffix"/>
+      <definition value="Element EN.family"/>
       <min value="0"/>
       <max value="*"/>
       <base>
@@ -171,21 +181,24 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ENXP"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
       </type>
     </element>
-    <element id="ON.other">
-      <path value="ON.other"/>
+    <element id="ON.xmlText">
+      <path value="ON.xmlText"/>
       <representation value="xmlText"/>
+      <short value="Allows for mixed text content"/>
+      <comment value="This element is represented in XML as textual content. The actual name &quot;xmlText&quot; will not appear in a CDA instance."/>
       <min value="0"/>
       <max value="1"/>
       <base>
-        <path value="EN.other"/>
+        <path value="EN.xmlText"/>
         <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
     <element id="ON.validTime">
@@ -200,7 +213,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"/>
       </type>
     </element>
   </snapshot>

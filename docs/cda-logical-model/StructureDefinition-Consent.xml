@@ -7,30 +7,40 @@
       <p>This class references the consents associated with this document. The type of consent (e.g. a consent to perform the related ServiceEvent, a consent for the information contained in the document to be released to a third party) is conveyed in Consent.code. Consents referenced in the CDA Header have been finalized (Consent.statusCode must equal &quot;completed&quot;) and should be on file.</p>
     </div>
   </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
-  <url value="http://hl7.org/fhir/cda/StructureDefinition/Consent"/>
-  <version value="2.1.0-draft1"/>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+    <valueUri value="consent"/>
+  </extension>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/Consent"/>
+  <version value="2.1.0-draft2-mb"/>
   <name value="CDAR2.Consent"/>
   <title value="Consent (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-02-07T19:43:49+01:00"/>
+  <date value="2023-10-04T23:00:58+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
-    <name value="HL7 International - Cross-Group Projects"/>
+    <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/cgp"/>
+      <value value="http://www.hl7.org/Special/committees/structdoc"/>
     </telecom>
     <telecom>
       <system value="email"/>
-      <value value="cgp@lists.HL7.org"/>
+      <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
   <description value="This class references the consents associated with this document. The type of consent (e.g. a consent to perform the related ServiceEvent, a consent for the information contained in the document to be released to a third party) is conveyed in Consent.code. Consents referenced in the CDA Header have been finalized (Consent.statusCode must equal &quot;completed&quot;) and should be on file."/>
-  <fhirVersion value="5.0.0-snapshot3"/>
+  <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
     <uri value="http://hl7.org/v3"/>
@@ -38,7 +48,7 @@
   </mapping>
   <kind value="logical"/>
   <abstract value="false"/>
-  <type value="Consent"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/Consent"/>
   <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
   <derivation value="specialization"/>
   <snapshot>
@@ -69,17 +79,17 @@
     <element id="Consent.classCode">
       <path value="Consent.classCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="Consent.classCode"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="CONS"/>
       <fixedCode value="CONS"/>
       <binding>
         <strength value="required"/>
@@ -89,17 +99,17 @@
     <element id="Consent.moodCode">
       <path value="Consent.moodCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="Consent.moodCode"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="EVN"/>
       <fixedCode value="EVN"/>
       <binding>
         <strength value="required"/>
@@ -117,7 +127,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Consent.id">
@@ -130,7 +140,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Consent.code">
@@ -143,7 +153,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
         <strength value="extensible"/>
@@ -160,7 +170,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -170,6 +180,7 @@
     <element id="Consent.statusCode.code">
       <path value="Consent.statusCode.code"/>
       <representation value="xmlAttr"/>
+      <comment value="Consents referenced in the CDA Header have been finalized (Consent.statusCode must equal &quot;completed&quot;) and should be on file."/>
       <min value="1"/>
       <max value="1"/>
       <base>
@@ -179,8 +190,8 @@
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="completed"/>
       <fixedCode value="completed"/>
     </element>
   </snapshot>
@@ -193,12 +204,12 @@
     <element id="Consent.classCode">
       <path value="Consent.classCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="CONS"/>
       <fixedCode value="CONS"/>
       <binding>
         <strength value="required"/>
@@ -208,12 +219,12 @@
     <element id="Consent.moodCode">
       <path value="Consent.moodCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="EVN"/>
       <fixedCode value="EVN"/>
       <binding>
         <strength value="required"/>
@@ -226,7 +237,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Consent.id">
@@ -234,7 +245,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Consent.code">
@@ -242,7 +253,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
         <strength value="extensible"/>
@@ -254,7 +265,7 @@
       <min value="1"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -264,12 +275,13 @@
     <element id="Consent.statusCode.code">
       <path value="Consent.statusCode.code"/>
       <representation value="xmlAttr"/>
+      <comment value="Consents referenced in the CDA Header have been finalized (Consent.statusCode must equal &quot;completed&quot;) and should be on file."/>
       <min value="1"/>
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="completed"/>
       <fixedCode value="completed"/>
     </element>
   </differential>

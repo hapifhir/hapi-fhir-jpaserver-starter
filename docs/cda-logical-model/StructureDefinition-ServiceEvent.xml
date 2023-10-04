@@ -9,30 +9,40 @@
       <p>ServiceEvent.effectiveTime can be used to indicate the time the actual event (as opposed to the encounter surrounding the event) took place.</p>
     </div>
   </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
-  <url value="http://hl7.org/fhir/cda/StructureDefinition/ServiceEvent"/>
-  <version value="2.1.0-draft1"/>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+    <valueUri value="serviceEvent"/>
+  </extension>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/ServiceEvent"/>
+  <version value="2.1.0-draft2-mb"/>
   <name value="CDAR2.ServiceEvent"/>
   <title value="ServiceEvent (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-02-07T19:43:49+01:00"/>
+  <date value="2023-10-04T23:00:58+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
-    <name value="HL7 International - Cross-Group Projects"/>
+    <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/cgp"/>
+      <value value="http://www.hl7.org/Special/committees/structdoc"/>
     </telecom>
     <telecom>
       <system value="email"/>
-      <value value="cgp@lists.HL7.org"/>
+      <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
   <description value="This class represents the main Act, such as a colonoscopy or an appendectomy, being documented.&#xA;In some cases, the ServiceEvent is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is &quot;History and Physical Report&quot; and the procedure being documented is a &quot;History and Physical&quot; act. A ServiceEvent can further specialize the act inherent in the ClinicalDocument.code, such as where the ClinicalDocument.code is simply &quot;Procedure Report&quot; and the procedure was a &quot;colonoscopy&quot;. If ServiceEvent is included, it must be equivalent to or further specialize the value inherent in the ClinicalDocument.code, and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.&#xA;ServiceEvent.effectiveTime can be used to indicate the time the actual event (as opposed to the encounter surrounding the event) took place."/>
-  <fhirVersion value="5.0.0-snapshot3"/>
+  <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
     <uri value="http://hl7.org/v3"/>
@@ -40,7 +50,7 @@
   </mapping>
   <kind value="logical"/>
   <abstract value="false"/>
-  <type value="ServiceEvent"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/ServiceEvent"/>
   <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
   <derivation value="specialization"/>
   <snapshot>
@@ -80,6 +90,7 @@
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
       <defaultValueCode value="ACT"/>
       <binding>
@@ -90,17 +101,17 @@
     <element id="ServiceEvent.moodCode">
       <path value="ServiceEvent.moodCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="ServiceEvent.moodCode"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="EVN"/>
       <fixedCode value="EVN"/>
       <binding>
         <strength value="required"/>
@@ -118,7 +129,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="ServiceEvent.id">
@@ -131,7 +142,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="ServiceEvent.code">
@@ -145,7 +156,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
     </element>
     <element id="ServiceEvent.statusCode">
@@ -164,7 +175,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
     </element>
     <element id="ServiceEvent.effectiveTime">
@@ -177,7 +188,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"/>
       </type>
     </element>
     <element id="ServiceEvent.performer">
@@ -190,7 +201,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Performer1"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Performer1"/>
       </type>
     </element>
   </snapshot>
@@ -207,6 +218,7 @@
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
       <defaultValueCode value="ACT"/>
       <binding>
@@ -217,12 +229,12 @@
     <element id="ServiceEvent.moodCode">
       <path value="ServiceEvent.moodCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="EVN"/>
       <fixedCode value="EVN"/>
       <binding>
         <strength value="required"/>
@@ -235,7 +247,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="ServiceEvent.id">
@@ -243,7 +255,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="ServiceEvent.code">
@@ -252,7 +264,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CE"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
     </element>
     <element id="ServiceEvent.statusCode">
@@ -266,7 +278,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
     </element>
     <element id="ServiceEvent.effectiveTime">
@@ -274,7 +286,7 @@
       <min value="0"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"/>
       </type>
     </element>
     <element id="ServiceEvent.performer">
@@ -282,7 +294,7 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/Performer1"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Performer1"/>
       </type>
     </element>
   </differential>

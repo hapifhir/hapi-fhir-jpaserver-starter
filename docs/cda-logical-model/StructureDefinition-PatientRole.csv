@@ -1,19 +1,20 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "PatientRole","PatientRole","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
-"PatientRole.classCode","PatientRole.classCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PAT""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PAT""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-RoleClassRelationshipFormal","",,,,"PatientRole.classCode",1,1,"",""
-"PatientRole.templateId","PatientRole.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+","n/a"
+"PatientRole.classCode","PatientRole.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PAT""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-RoleClassRelationshipFormal","",,,,"PatientRole.classCode",0,1,"",""
+"PatientRole.templateId","PatientRole.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"PatientRole.templateId",0,*,"",""
-"PatientRole.id","PatientRole.id","","","",1,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+"PatientRole.id","PatientRole.id","","","",1,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"PatientRole.id",1,*,"",""
-"PatientRole.sdtcIdentifiedBy","PatientRole.sdtcIdentifiedBy","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/IdentifiedBy {[]} {[]}
+"PatientRole.sdtcIdentifiedBy","PatientRole.sdtcIdentifiedBy","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IdentifiedBy {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"PatientRole.sdtcIdentifiedBy",0,*,"",""
-"PatientRole.addr","PatientRole.addr","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/AD {[]} {[]}
+"PatientRole.addr","PatientRole.addr","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/AD {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"PatientRole.addr",0,*,"",""
-"PatientRole.telecom","PatientRole.telecom","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/TEL {[]} {[]}
+"PatientRole.telecom","PatientRole.telecom","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TEL {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"PatientRole.telecom",0,*,"",""
-"PatientRole.patient","PatientRole.patient","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Patient {[]} {[]}
+"PatientRole.patient","PatientRole.patient","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Patient {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"PatientRole.patient",0,1,"",""
-"PatientRole.providerOrganization","PatientRole.providerOrganization","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Organization {[]} {[]}
+"PatientRole.providerOrganization","PatientRole.providerOrganization","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Organization {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"PatientRole.providerOrganization",0,1,"",""

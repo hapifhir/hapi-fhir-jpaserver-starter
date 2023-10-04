@@ -6,30 +6,39 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A telephone number (voice or fax), e-mail address, or other locator for a resource (information or service) mediated by telecommunication equipment. The address is specified as a Universal Resource Locator (URL) qualified by time specification and use codes that help in deciding which address to use for a given time and purpose.</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/TEL",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/TEL",
+  "version" : "2.1.0-draft2-mb",
   "name" : "TEL",
   "title" : "TEL: TelecommunicationAddress (V3 Data Type)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "A telephone number (voice or fax), e-mail address, or other locator for a resource mediated by telecommunication equipment. The address is specified as a Universal Resource Locator (URL) qualified by time specification and use codes that help in deciding which address to use for a given time and purpose.",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,8 +46,8 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "TEL",
-  "baseDefinition" : "http://hl7.org/fhir/cda/StructureDefinition/ANY",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/TEL",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/ANY",
   "derivation" : "specialization",
   "snapshot" : {
     "element" : [{
@@ -80,7 +89,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -99,14 +109,15 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "uri"
+        "code" : "url",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/url"]
       }]
     },
     {
       "id" : "TEL.useablePeriod",
       "extension" : [{
         "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype",
-        "valueCanonical" : "http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"
+        "valueCanonical" : "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS"
       }],
       "path" : "TEL.useablePeriod",
       "representation" : ["typeAttr"],
@@ -120,16 +131,16 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"
       },
       {
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS"
       },
       {
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/PIVL-TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS"
       },
       {
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS"
       }]
     },
     {
@@ -146,7 +157,8 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -168,14 +180,15 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "uri"
+        "code" : "url",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/url"]
       }]
     },
     {
       "id" : "TEL.useablePeriod",
       "extension" : [{
         "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype",
-        "valueCanonical" : "http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"
+        "valueCanonical" : "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS"
       }],
       "path" : "TEL.useablePeriod",
       "representation" : ["typeAttr"],
@@ -184,16 +197,16 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"
       },
       {
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/EIVL-TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS"
       },
       {
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/PIVL-TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS"
       },
       {
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SXPR-TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS"
       }]
     },
     {
@@ -205,7 +218,8 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",

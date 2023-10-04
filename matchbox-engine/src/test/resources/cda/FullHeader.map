@@ -82,7 +82,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
   src.setId -> tgt.identifier "identifier";
   src -> tgt.status = 'final' "status";
   src.code -> tgt.type;
-  src.title as t -> tgt.title = (t.data);
+  src.title as t -> tgt.title = (t.xmlText);
   src where src.title.exists().not() then {
     src.code  as code then {
       code.displayName as display ->tgt.title = cast(display,'string');
@@ -158,7 +158,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                 }"coding";
               }"meta";
               
-                representedOrganization.name as v -> organization.name = (v.other);
+                representedOrganization.name as v -> organization.name = (v.xmlText);
                 representedOrganization.telecom -> organization.telecom;
                 representedOrganization.addr -> organization.address;
                 representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e4,  e4.request = create('BackboneElement') as request, request.method = 'PUT',  e4.resource = create('Organization') as organization1 then {
@@ -199,7 +199,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                         id.extension as ext  -> organization2.id =  (r +'-'+ ext) as uuid5,  e10bis.fullUrl = append('https://example/Organization/', uuid5), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id) "aut";
                       }"r";
                   }"identifier";
-                    wholeOrgan.name as v -> organization2.name = (v.other);
+                    wholeOrgan.name as v -> organization2.name = (v.xmlText);
                     wholeOrgan.telecom -> organization2.telecom;
                     wholeOrgan.addr -> organization2.address;
                   }"wholeOrganization";
@@ -247,7 +247,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
     } "assignedAuthor";
 
     //START DATA ENTER
-  src.dataEnterer as dataEnt ->  bundle.entry as e6, e6.request = create('BackboneElement') as request, request.method = 'POST',  e6.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e6.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url ='PractitionerRole' , tgt.author = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+  src.xmlTextEnterer as dataEnt ->  bundle.entry as e6, e6.request = create('BackboneElement') as request, request.method = 'POST',  e6.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e6.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url ='PractitionerRole' , tgt.author = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
     dataEnt.time as time -> tgt.date;
     dataEnt.assignedEntity as assignedEntity -> bundle.entry as e7,  e7.request = create('BackboneElement') as request, request.method = 'PUT', e7.resource = create('Practitioner') as practitioner then {
       
@@ -302,7 +302,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
             id.extension as ext  -> organization.id =  (r +'-'+ ext) as uuid3, e8.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid3)  "dataenterer";
           }"r";
       }"identifier";
-        representedOrganization.name as v -> organization.name = (v.other);
+        representedOrganization.name as v -> organization.name = (v.xmlText);
         representedOrganization.telecom -> organization.telecom;
         representedOrganization.addr -> organization.address;
         representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e9,  e9.request = create('BackboneElement') as request, request.method = 'PUT',  e9.resource = create('Organization') as organization1 then{
@@ -345,7 +345,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                 id.extension as ext  ->  organization2.id =  (r +'-'+ ext) as uuid5,  e10.fullUrl = append('https://example/Organization/', uuid5), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id)   "dataenterer";
               }"r";
           }"identifier";
-            wholeOrgan.name as v -> organization2.name = (v.other);
+            wholeOrgan.name as v -> organization2.name = (v.xmlText);
             wholeOrgan.telecom -> organization2.telecom;
             wholeOrgan.addr -> organization2.address;
           }"wholeOrganization";
@@ -412,7 +412,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
               id.extension as ext  -> organization.id =  (r +'-'+ ext) as uuid3,  e13.fullUrl = append('https://example/Organization/', uuid3),  practitionerRole.organization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organization.id);
             }"r" ;
         }"identifier";
-        representedOrganization.name as v -> organization.name = (v.other);
+        representedOrganization.name as v -> organization.name = (v.xmlText);
         representedOrganization.telecom -> organization.telecom;
         representedOrganization.addr -> organization.address;
         representedOrganization.asOrganizationPartOf -> organization.partOf as partOf then {
@@ -457,7 +457,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
               id.extension as ext  -> organization2.id = (r +'-'+ ext) as uuid5,  e15.fullUrl = append('https://example/Organization/', uuid5)  , organization1.partOf = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organization2.id);
             }"r" ;
         }"identifier";
-        wholeOrganization.name as v -> organization2.name = (v.other);
+        wholeOrganization.name as v -> organization2.name = (v.xmlText);
         wholeOrganization.telecom -> organization2.telecom;
         wholeOrganization.addr -> organization2.address;
        }"wholeOrganization";
@@ -577,7 +577,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                       id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e20.fullUrl = append('https://example/Organization/', uuid3),  attester.party = create('Reference') as reference2, reference2.reference = ('https://example/Organization/' + %organization.id);
                     }"r" ;
                 }"identifier";
-                receivedOrganization.name as v -> organization.name = (v.other);
+                receivedOrganization.name as v -> organization.name = (v.xmlText);
                 receivedOrganization.telecom -> organization.telecom;
                 receivedOrganization.addr -> organization.address;
                 receivedOrganization.asOrganizationPartOf as asOrganizationPartOf -> bundle.entry as e21, e21.request = create('BackboneElement') as request, request.method = 'PUT', e21.resource = create('Organization') as organization2 , organization2.id = uuid() as uuid4,  e21.fullUrl = append('https://example/Organization', uuid4), organization.partOf = create('Reference') as referenceor, referenceor.reference = ('https://example/Organization' + %organization2.id) then {
@@ -620,7 +620,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                           id.extension as ext  -> organization3.id = (r +'-'+ ext) as uuid5,  e22.fullUrl = append('https://example/Organization/', uuid5),  organization2.partOf = create('Reference') as referenceor, referenceor.reference = ('https://example/Organization/' + %organization3.id);
                         }"r" ;   
                     }"identifier";
-                        wholeOrganization3.name as v -> organization3.name = (v.other);
+                        wholeOrganization3.name as v -> organization3.name = (v.xmlText);
                         wholeOrganization3.telecom -> organization3.telecom;
                         wholeOrganization3.addr -> organization3.address;
                     }"wholeOrganization";
@@ -689,7 +689,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                      id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid2,  e25.fullUrl = append('https://example/Organization/', uuid2),  practitionerRole.organization = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %organization.id);
                    }"r" ;
                }"identifier";
-               rapresentedOrg.name as v -> organization.name = (v.other);
+               rapresentedOrg.name as v -> organization.name = (v.xmlText);
                rapresentedOrg.telecom -> organization.telecom;
                rapresentedOrg.addr -> organization.address;
                rapresentedOrg.asOrganizationPartOf as asOrgPartOf then {
@@ -731,7 +731,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                                  id.extension as ext  -> wholeorganization.id= (r +'-'+ ext) as uuid4,  e27.fullUrl = append('https://example/Organization/', uuid4), asorganization.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %wholeorganization.id);
                                }"r" ;
                            }"identifier";
-                               wholeOrg1.name as v -> wholeorganization.name = (v.other);
+                               wholeOrg1.name as v -> wholeorganization.name = (v.xmlText);
                                wholeOrg1.telecom -> wholeorganization.telecom;
                                wholeOrg1.addr -> wholeorganization.address;
                            }"wholeOrg1";
@@ -825,7 +825,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
             id.extension as ext  -> organization.id =(r +'-'+ ext) as uuid3,  e30.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %organization.id);
           }"r" ;   
       }"identifier";
-      reporganization.name as v -> organization.name = (v.other);
+      reporganization.name as v -> organization.name = (v.xmlText);
       reporganization.telecom -> organization.telecom;
       reporganization.addr -> organization.address;
     
@@ -869,7 +869,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                   id.extension as ext  -> wholeOrganization.id = (r +'-'+ ext) as uuid5,  e32.fullUrl = append('https://example/Organization/', uuid5), asOrganizationpartof.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %wholeOrganization.id);
                 }"r" ;  
             }"identifier";
-            wholeorg.name as v -> wholeOrganization.name = (v.other);
+            wholeorg.name as v -> wholeOrganization.name = (v.xmlText);
             wholeorg.telecom -> wholeOrganization.telecom;
             wholeorg.addr -> wholeOrganization.address;
 
@@ -945,7 +945,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                   id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e34.fullUrl = append('https://example/Organization/', uuid3),  practitionerRole.organization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organization.id);
                 }"r" ; 
             }"identifier";
-              scopingOrganization.name as v -> organization.name = (v.other);
+              scopingOrganization.name as v -> organization.name = (v.xmlText);
               scopingOrganization.telecom -> organization.telecom;
               scopingOrganization.addr -> organization.address; 
               scopingOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e35,  e35.request = create('BackboneElement') as request, request.method = 'PUT',  e35.resource = create('Organization') as organization1 then{
@@ -989,7 +989,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                       id.extension as ext  -> organization1.id= (r +'-'+ ext) as uuid5,  e36.fullUrl = append('https://example/Organization/', uuid5), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id)  ;
                     }"r" ;   
                 }"identifier";
-                  wholeOrgan.name as v -> organization2.name = (v.other);
+                  wholeOrgan.name as v -> organization2.name = (v.xmlText);
                   wholeOrgan.telecom -> organization2.telecom;
                   wholeOrgan.addr -> organization2.address;
                 }"wholeOrgan";
@@ -1064,7 +1064,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                   id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e34.fullUrl = append('https://example/Organization/', uuid3),  practitionerRole.organization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organization.id);
                 }"r" ;   
             }"identifier";
-              scopingOrganization.name as v -> organization.name = (v.other);
+              scopingOrganization.name as v -> organization.name = (v.xmlText);
               scopingOrganization.telecom -> organization.telecom;
               scopingOrganization.addr -> organization.address; 
               scopingOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e35,  e35.request = create('BackboneElement') as request, request.method = 'PUT',  e35.resource = create('Organization') as organization1  then{
@@ -1107,7 +1107,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                       id.extension as ext  ->organization1.id = (r +'-'+ ext) as uuid5,  e36.fullUrl = append('https://example/Organization/', uuid5), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id);
                     }"r" ; 
                 }"identifier";
-                  wholeOrgan.name as v -> organization2.name = (v.other);
+                  wholeOrgan.name as v -> organization2.name = (v.xmlText);
                   wholeOrgan.telecom -> organization2.telecom;
                   wholeOrgan.addr -> organization2.address;
                 }"wholeOrgan";
@@ -1168,7 +1168,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
               id.extension as ext  ->organization.id = (r +'-'+ ext) as uuid1,  e37.fullUrl = append('https://example/Organization/', uuid1), patientResource.generalPractitioner = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid1);
             }"r" ;  
         }"identifier";
-        scopingOrganization.name as v -> organization.name = (v.other);
+        scopingOrganization.name as v -> organization.name = (v.xmlText);
         scopingOrganization.telecom -> organization.telecom;
         scopingOrganization.addr -> organization.address; 
         scopingOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e38,  e38.request = create('BackboneElement') as request, request.method = 'PUT',  e38.resource = create('Organization') as organizationPOF then{
@@ -1211,7 +1211,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                 id.extension as ext  ->organizationW.id =(r +'-'+ ext) as uuid3,  e39.fullUrl = append('https://example/Organization/', uuid3), organizationPOF.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organizationW.id) ;
               }"r" ; 
           }"identifier";
-            wholeOrgan.name as v -> organizationW.name = (v.other);
+            wholeOrgan.name as v -> organizationW.name = (v.xmlText);
             wholeOrgan.telecom -> organizationW.telecom;
             wholeOrgan.addr -> organizationW.address;
           }"wholeOrgan";
@@ -1300,7 +1300,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                 id.extension as ext  ->organization.id =(r +'-'+ ext) as uuid3, e8.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as referenceOrg,  referenceOrg.reference = append('https://example/Organization/', uuid3);
               }"r" ;  
           }"identifier";
-            representedOrganization.name as v -> organization.name = (v.other);
+            representedOrganization.name as v -> organization.name = (v.xmlText);
             representedOrganization.telecom -> organization.telecom;
             representedOrganization.addr -> organization.address;
             representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e9,  e9.request = create('BackboneElement') as request, request.method = 'PUT',  e9.resource = create('Organization') as organization1 then{
@@ -1343,7 +1343,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                     id.extension as ext  ->organization2.id =(r +'-'+ ext) as uuid5,  e10.fullUrl = append('https://example/Organization/', uuid5), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id);
                   }"r" ;  
                  }"identifier";
-                wholeOrgan.name as v -> organization2.name = (v.other);
+                wholeOrgan.name as v -> organization2.name = (v.xmlText);
                 wholeOrgan.telecom -> organization2.telecom;
                 wholeOrgan.addr -> organization2.address;
               }"wholeOrganization";
@@ -1440,7 +1440,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
               }"r" ;
 
           }"identifier";
-                 guardianorg.name as v -> organizationcontact.name = (v.other);
+                 guardianorg.name as v -> organizationcontact.name = (v.xmlText);
                  guardianorg.telecom -> organizationcontact.telecom;
                  guardianorg.addr -> organizationcontact.address;
             guardianorg.asOrganizationPartOf as OrgPartOf -> bundle.entry as e2, e2.request = create('BackboneElement') as request, request.method = 'PUT',  e2.resource = create('Organization') as organizationpartOf  then {
@@ -1485,7 +1485,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
                           id.extension as ext  ->WholeOrganization.id =(r +'-'+ ext) as uuid4,  e3.fullUrl = append('https://example/Organization/', uuid4);
                         }"r" ; 
                     }"identifier";
-                       wholeORG.name as v -> WholeOrganization.name = (v.other);
+                       wholeORG.name as v -> WholeOrganization.name = (v.xmlText);
                       wholeORG.telecom -> WholeOrganization.telecom;
                       wholeORG.addr -> WholeOrganization.address;
                       }"WholeOrganization";
@@ -1518,7 +1518,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
           id.extension as ext  ->providerorganization.id =(r +'-'+ ext) as uuid5,  e4.fullUrl = append('https://example/Organization/', uuid5), tgt.managingOrganization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %providerorganization.id) "reference";
         }"r" ;  
     }"identifier";
-          org.name as v -> providerorganization.name = (v.other);
+          org.name as v -> providerorganization.name = (v.xmlText);
            org.telecom -> providerorganization.telecom;
             org.addr -> providerorganization.address;
             org.asOrganizationPartOf as OrgPartOfProvider ->bundle.entry as e5, e5.request = create('BackboneElement') as request, request.method = 'PUT',  e5.resource = create('Organization') as organizationpartOfprovider then {
@@ -1563,7 +1563,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
                     id.extension as ext  ->WholeOrganizationprovider.id =(r +'-'+ ext) as uuid7,  e6.fullUrl = append('https://example/Organization/', uuid7);
                   }"r" ;   
               }"identifier";
-                wholeORGproveder.name as v -> WholeOrganizationprovider.name = (v.other);
+                wholeORGproveder.name as v -> WholeOrganizationprovider.name = (v.xmlText);
                 wholeORGproveder.telecom -> WholeOrganizationprovider.telecom;
                 wholeORGproveder.addr -> WholeOrganizationprovider.address;
               }"wholeOrganizationprovider";
@@ -1573,7 +1573,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
  }"patient";
 }
 group CustodianOrganization(source src : CustodianOrganization, target tgt : Organization){
- src.name as v -> tgt.name = (v.other);
+ src.name as v -> tgt.name = (v.xmlText);
   src.telecom -> tgt.telecom;
   src.addr -> tgt.address;
  
@@ -1665,7 +1665,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
               id.extension as ext  -> rapresentedorganization.id =(r +'-'+ ext) as uuid3,  e2.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %rapresentedorganization.id);
             }"r" ;  
             }"identifier";
-           raporg.name as v -> rapresentedorganization.name = (v.other);
+           raporg.name as v -> rapresentedorganization.name = (v.xmlText);
            raporg.telecom -> rapresentedorganization.telecom;
            raporg.addr -> rapresentedorganization.address;
            raporg.asOrganizationPartOf as OrgPartOf -> bundle.entry as e3,  e3.request = create('BackboneElement') as request, request.method = 'PUT',  e3.resource = create('Organization') as organization1,  organization1.id = uuid() as uuid4,  e3.fullUrl = append('https://example/Organization/', uuid4), rapresentedorganization.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization1.id) then{
@@ -1710,7 +1710,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
                 id.extension as ext  -> organization2.id =(r +'-'+ ext) as uuid5,  e4.fullUrl = append('https://example/Organization/', uuid5), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id) ;
               }"r" ; 
             }"identifier";
-              wholeOrgan.name as v -> organization2.name = (v.other);
+              wholeOrgan.name as v -> organization2.name = (v.xmlText);
               wholeOrgan.telecom -> organization2.telecom;
               wholeOrgan.addr -> organization2.address;
             }"wholeOrgan";
@@ -1784,7 +1784,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
          id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e34.fullUrl = append('https://example/Organization/', uuid3),  practitionerRole.organization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organization.id);
        }"r" ; 
    }"identifier";
-   representedOrganization.name as v -> organization.name = (v.other);
+   representedOrganization.name as v -> organization.name = (v.xmlText);
    representedOrganization.telecom -> organization.telecom;
    representedOrganization.addr -> organization.address; 
    representedOrganization.asOrganizationPartOf as OrgPartOf -> bundle.entry as e35,  e35.request = create('BackboneElement') as request, request.method = 'PUT',  e35.resource = create('Organization') as organization1 then{
@@ -1828,7 +1828,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
              id.extension as ext  -> organization1.id= (r +'-'+ ext) as uuid5,  e36.fullUrl = append('https://example/Organization/', uuid5), organization1.partOf = create('Reference') as reference, reference.reference= ('https://example/Organization/' + %organization2.id)  ;
            }"r" ;   
        }"identifier";
-         wholeOrgan.name as v -> organization2.name = (v.other);
+         wholeOrgan.name as v -> organization2.name = (v.xmlText);
          wholeOrgan.telecom -> organization2.telecom;
          wholeOrgan.addr -> organization2.address;
             }"wholeOrgan";
@@ -1862,7 +1862,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
       }"identifier";
       HCF.code -> loc.type;
       HCF.location as srcLocation then {
-        srcLocation.name as v -> loc.name = (v.other);
+        srcLocation.name as v -> loc.name = (v.xmlText);
         srcLocation.addr -> loc.address;
       }"location2";
      HCF.serviceProviderOrganization as servProvOrg ->  bundle.entry as e, e.request = create('BackboneElement') as request, request.method = 'PUT',  e.resource = create('Organization') as serviceProviderOrganization  then {
@@ -1884,7 +1884,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
             id.extension as ext  -> serviceProviderOrganization.id =(r +'-'+ ext) as uuid,  e.fullUrl = append('https://example/Organization/', uuid), loc.managingOrganization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %serviceProviderOrganization.id);
           }"r" ;  
         }"identifier";
-        servProvOrg.name as v -> serviceProviderOrganization.name = (v.other);
+        servProvOrg.name as v -> serviceProviderOrganization.name = (v.xmlText);
         servProvOrg.telecom -> serviceProviderOrganization.telecom;
         servProvOrg.addr -> serviceProviderOrganization.address;
         servProvOrg.asOrganizationPartOf as asOrgPartOf then {
@@ -1929,7 +1929,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
                         id.extension as ext  ->  wholeorganization.id =(r +'-'+ ext) as uuid2,  e2.fullUrl = append('https://example/Organization/', uuid2), asorganization.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %wholeorganization.id);
                       }"r" ;    
                     }"identifier";
-                    wholeOrg1.name as v -> wholeorganization.name = (v.other);
+                    wholeOrg1.name as v -> wholeorganization.name = (v.xmlText);
                     wholeOrg1.telecom -> wholeorganization.telecom;
                     wholeOrg1.addr -> wholeorganization.address;
                   }"wholeOrg1";
@@ -2005,7 +2005,7 @@ group ClinicalDocumentationOf(source src: representedOrganization, target tgt: o
 //     src.id -> loc.identifier;
 //     src.code -> loc.type;
 //     src.location as srcLocation then {
-//     srcLocation.name as v -> loc.name = (v.other);
+//     srcLocation.name as v -> loc.name = (v.xmlText);
 //     srcLocation.addr -> loc.address;
 //     }"location2";
 //     src.serviceProviderOrganization as servProvOrg ->  bundle.entry as e, e.request = create('BackboneElement') as request, request.method = 'PUT',  e.resource = create('Organization') as serviceProviderOrganization,  serviceProviderOrganization.id = uuid() as uuid,  e.fullUrl = append('https://example/Organization/', uuid),  loc.managingOrganization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %serviceProviderOrganization.id)  then {
@@ -2025,7 +2025,7 @@ group ClinicalDocumentationOf(source src: representedOrganization, target tgt: o
 //         id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
 //     }"identifier";
 //       servProvOrg.id -> serviceProviderOrganization.identifier;
-//             servProvOrg.name as v -> serviceProviderOrganization.name = (v.other);
+//             servProvOrg.name as v -> serviceProviderOrganization.name = (v.xmlText);
 //             servProvOrg.telecom -> serviceProviderOrganization.telecom;
 //             servProvOrg.addr -> serviceProviderOrganization.address;
 //             servProvOrg.asOrganizationPartOf as asOrgPartOf then {
@@ -2067,7 +2067,7 @@ group ClinicalDocumentationOf(source src: representedOrganization, target tgt: o
 //                         id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
 //                     }"identifier";
 //                       wholeOrg1.id -> wholeorganization.identifier;
-//                         wholeOrg1.name as v -> wholeorganization.name = (v.other);
+//                         wholeOrg1.name as v -> wholeorganization.name = (v.xmlText);
 //                         wholeOrg1.telecom -> wholeorganization.telecom;
 //                         wholeOrg1.addr -> wholeorganization.address;
 //                     }"wholeOrg1";
@@ -2084,7 +2084,7 @@ group ChExtEprVersionNumber(source src: INT, target ext: Extension) {
 
 group ClinicalDocumentOrganization(source src : CustodianOrganization, target tgt : Organization) {
   src.id -> tgt.identifier;
-  src.name as v -> tgt.name = (v.other);
+  src.name as v -> tgt.name = (v.xmlText);
   src.telecom -> tgt.telecom;
   src.addr -> tgt.address;
 }

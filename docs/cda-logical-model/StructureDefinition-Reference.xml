@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="Reference"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
+      <p>CDA entries can reference external objects such as external images and prior reports. These external objects are not part of the authenticated document content. They contain sufficient attributes to enable an explicit reference rather than duplicating the entire referenced object. The CDA entry that wraps the external reference can be used to encode the specific portions of the external reference that are addressed in the narrative block.</p>
+      <p>Each object allows for an identifier and a code, and contains the RIM Act.text attribute, which can be used to store the URL and MIME type of the object. External objects always have a fixed moodCode of &quot;EVN&quot;.</p>
+      <p>The reference class contains the attribute reference.seperatableInd, which indicates whether or not the source is intended to be interpreted independently of the target. The indicator cannot prevent an individual or application from separating the source and target, but indicates the author's desire and willingness to attest to the content of the source if separated from the target. Typically, where seperatableInd is &quot;false&quot;, the exchanged package should include the target of the reference so that the recipient can render it.</p>
+    </div>
+  </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+    <valueUri value="reference"/>
+  </extension>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/Reference"/>
+  <version value="2.1.0-draft2-mb"/>
+  <name value="CDAR2.Reference"/>
+  <title value="Reference (CDA Class)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2023-10-04T23:00:58+02:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structdoc"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="CDA entries can reference external objects such as external images and prior reports. These external objects are not part of the authenticated document content. They contain sufficient attributes to enable an explicit reference rather than duplicating the entire referenced object. The CDA entry that wraps the external reference can be used to encode the specific portions of the external reference that are addressed in the narrative block.&#xA;&#xA;Each object allows for an identifier and a code, and contains the RIM Act.text attribute, which can be used to store the URL and MIME type of the object. External objects always have a fixed moodCode of &quot;EVN&quot;.&#xA;&#xA;The reference class contains the attribute reference.seperatableInd, which indicates whether or not the source is intended to be interpreted independently of the target. The indicator cannot prevent an individual or application from separating the source and target, but indicates the author's desire and willingness to attest to the content of the source if separated from the target. Typically, where seperatableInd is &quot;false&quot;, the exchanged package should include the target of the reference so that the recipient can render it."/>
+  <fhirVersion value="5.0.0"/>
+  <mapping>
+    <identity value="rim"/>
+    <uri value="http://hl7.org/v3"/>
+    <name value="RIM Mapping"/>
+  </mapping>
+  <kind value="logical"/>
+  <abstract value="false"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/Reference"/>
+  <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"/>
+  <derivation value="specialization"/>
+  <snapshot>
+    <element id="Reference">
+      <path value="Reference"/>
+      <short value="Base for all types and resources"/>
+      <definition value="Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type."/>
+      <min value="1"/>
+      <max value="*"/>
+      <base>
+        <path value="Base"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+      <constraint>
+        <key value="reference-external"/>
+        <severity value="error"/>
+        <human value="Must contain one (and only one) external reference"/>
+        <expression value="(externalAct | externalObservation | externalProcedure | externalDocument).count() = 1"/>
+      </constraint>
+      <isModifier value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="Reference.nullFlavor">
+      <path value="Reference.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+      </binding>
+    </element>
+    <element id="Reference.realmCode">
+      <path value="Reference.realmCode"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="InfrastructureRoot.realmCode"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+      </type>
+    </element>
+    <element id="Reference.typeId">
+      <path value="Reference.typeId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="InfrastructureRoot.typeId"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Reference.templateId">
+      <path value="Reference.templateId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="InfrastructureRoot.templateId"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Reference.typeCode">
+      <path value="Reference.typeCode"/>
+      <representation value="xmlAttr"/>
+      <definition value="Element Act.typeCode"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Reference.typeCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-xActRelationshipExternalReference"/>
+      </binding>
+    </element>
+    <element id="Reference.seperatableInd">
+      <path value="Reference.seperatableInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Reference.seperatableInd"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="Reference.externalAct">
+      <path value="Reference.externalAct"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Reference.externalAct"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ExternalAct"/>
+      </type>
+    </element>
+    <element id="Reference.externalObservation">
+      <path value="Reference.externalObservation"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Reference.externalObservation"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation"/>
+      </type>
+    </element>
+    <element id="Reference.externalProcedure">
+      <path value="Reference.externalProcedure"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Reference.externalProcedure"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ExternalProcedure"/>
+      </type>
+    </element>
+    <element id="Reference.externalDocument">
+      <path value="Reference.externalDocument"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Reference.externalDocument"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ExternalDocument"/>
+      </type>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="Reference">
+      <path value="Reference"/>
+      <min value="1"/>
+      <max value="*"/>
+      <constraint>
+        <key value="reference-external"/>
+        <severity value="error"/>
+        <human value="Must contain one (and only one) external reference"/>
+        <expression value="(externalAct | externalObservation | externalProcedure | externalDocument).count() = 1"/>
+      </constraint>
+    </element>
+    <element id="Reference.typeCode">
+      <path value="Reference.typeCode"/>
+      <representation value="xmlAttr"/>
+      <definition value="Element Act.typeCode"/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-xActRelationshipExternalReference"/>
+      </binding>
+    </element>
+    <element id="Reference.seperatableInd">
+      <path value="Reference.seperatableInd"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/BL"/>
+      </type>
+    </element>
+    <element id="Reference.externalAct">
+      <path value="Reference.externalAct"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ExternalAct"/>
+      </type>
+    </element>
+    <element id="Reference.externalObservation">
+      <path value="Reference.externalObservation"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation"/>
+      </type>
+    </element>
+    <element id="Reference.externalProcedure">
+      <path value="Reference.externalProcedure"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ExternalProcedure"/>
+      </type>
+    </element>
+    <element id="Reference.externalDocument">
+      <path value="Reference.externalDocument"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ExternalDocument"/>
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

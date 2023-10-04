@@ -1,49 +1,56 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "EncompassingEncounter","EncompassingEncounter","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
-"EncompassingEncounter.classCode","EncompassingEncounter.classCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ENC""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ENC""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClass","",,,,"EncompassingEncounter.classCode",1,1,"",""
-"EncompassingEncounter.moodCode","EncompassingEncounter.moodCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"EncompassingEncounter.moodCode",1,1,"",""
-"EncompassingEncounter.templateId","EncompassingEncounter.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+","n/a"
+"EncompassingEncounter.classCode","EncompassingEncounter.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ENC""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClass","",,,,"EncompassingEncounter.classCode",0,1,"",""
+"EncompassingEncounter.moodCode","EncompassingEncounter.moodCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"EncompassingEncounter.moodCode",0,1,"",""
+"EncompassingEncounter.templateId","EncompassingEncounter.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"EncompassingEncounter.templateId",0,*,"",""
-"EncompassingEncounter.id","EncompassingEncounter.id","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+"EncompassingEncounter.id","EncompassingEncounter.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"EncompassingEncounter.id",0,*,"",""
-"EncompassingEncounter.code","EncompassingEncounter.code","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"EncompassingEncounter.code","EncompassingEncounter.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActEncounterCode","",,,,"EncompassingEncounter.code",0,1,"",""
-"EncompassingEncounter.effectiveTime","EncompassingEncounter.effectiveTime","","","",1,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/IVL-TS {[]} {[]}
+"EncompassingEncounter.effectiveTime","EncompassingEncounter.effectiveTime","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"EncompassingEncounter.effectiveTime",1,1,"",""
-"EncompassingEncounter.sdtcAdmissionReferralSourceCode","EncompassingEncounter.sdtcAdmissionReferralSourceCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"EncompassingEncounter.sdtcAdmissionReferralSourceCode","EncompassingEncounter.sdtcAdmissionReferralSourceCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"EncompassingEncounter.sdtcAdmissionReferralSourceCode",0,1,"",""
-"EncompassingEncounter.dischargeDispositionCode","EncompassingEncounter.dischargeDispositionCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"EncompassingEncounter.dischargeDispositionCode","EncompassingEncounter.dischargeDispositionCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-USEncounterDischargeDisposition","",,,,"EncompassingEncounter.dischargeDispositionCode",0,1,"",""
-"EncompassingEncounter.responsibleParty","EncompassingEncounter.responsibleParty","","","",0,1,"","","","Element {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"EncompassingEncounter.responsibleParty",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"EncompassingEncounter.responsibleParty","EncompassingEncounter.responsibleParty","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot {[]} {[]}
+","","The responsibleParty participant represents the participant having primary legal responsibility for the encounter. This differs from the legalAuthenticator participant in that the legalAuthenticator may or may not be the responsible party, and is serving a medical records function by signing off on the document, moving it into a completed state.","","","","","","","","","",,,,,"",,,,"EncompassingEncounter.responsibleParty",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"EncompassingEncounter.responsibleParty.id","EncompassingEncounter.responsibleParty.id","","","",0,1,"","","","string {[]} {[]}
-","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
-"EncompassingEncounter.responsibleParty.extension","EncompassingEncounter.responsibleParty.extension","","extensions
-user content","",0,*,"","","","Extension {[]} {[]}
-","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
-","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
-"EncompassingEncounter.responsibleParty.typeCode","EncompassingEncounter.responsibleParty.typeCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""RESP""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""RESP""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationType","",,,,"EncompassingEncounter.responsibleParty.typeCode",1,1,"",""
-"EncompassingEncounter.responsibleParty.assignedEntity","EncompassingEncounter.responsibleParty.assignedEntity","","","",1,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity {[]} {[]}
+"EncompassingEncounter.responsibleParty.nullFlavor","EncompassingEncounter.responsibleParty.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"EncompassingEncounter.responsibleParty.realmCode","EncompassingEncounter.responsibleParty.realmCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.realmCode",0,*,"",""
+"EncompassingEncounter.responsibleParty.typeId","EncompassingEncounter.responsibleParty.typeId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.typeId",0,1,"",""
+"EncompassingEncounter.responsibleParty.templateId","EncompassingEncounter.responsibleParty.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
+"EncompassingEncounter.responsibleParty.typeCode","EncompassingEncounter.responsibleParty.typeCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""RESP""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationType","",,,,"EncompassingEncounter.responsibleParty.typeCode",0,1,"",""
+"EncompassingEncounter.responsibleParty.assignedEntity","EncompassingEncounter.responsibleParty.assignedEntity","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"EncompassingEncounter.responsibleParty.assignedEntity",1,1,"",""
-"EncompassingEncounter.encounterParticipant","EncompassingEncounter.encounterParticipant","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/EncounterParticipant {[]} {[]}
+"EncompassingEncounter.encounterParticipant","EncompassingEncounter.encounterParticipant","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/EncounterParticipant {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"EncompassingEncounter.encounterParticipant",0,*,"",""
-"EncompassingEncounter.location","EncompassingEncounter.location","","","",0,1,"","","","Element {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"EncompassingEncounter.location",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"EncompassingEncounter.location","EncompassingEncounter.location","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot {[]} {[]}
+","","The location participant (location class) relates a healthcare facility (HealthCareFacility class) to the encounter to indicate where the encounter took place. The entity playing the role of HealthCareFacility is a place (Place class). The entity scoping the HealthCareFacility role is an organization (Organization class).
+
+The setting of an encounter (e.g. cardiology clinic, primary care clinic, rehabilitation hospital, skilled nursing facility) can be expressed in HealthCareFacility.code. Note that setting and physical location are not the same. There is a many-to-many relationship between setting and the physical location where care is delivered. Thus, a particular room can provide the location for cardiology clinic one day, and for primary care clinic another day; and cardiology clinic today might be held in one physical location, but in another physical location tomorrow.
+
+When the location is an organization, this is indicated by the presence of a scoping Organization, without a playing Place.","","","","","","","","","",,,,,"",,,,"EncompassingEncounter.location",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 "
-"EncompassingEncounter.location.id","EncompassingEncounter.location.id","","","",0,1,"","","","string {[]} {[]}
-","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
-"EncompassingEncounter.location.extension","EncompassingEncounter.location.extension","","extensions
-user content","",0,*,"","","","Extension {[]} {[]}
-","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
-","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
-"EncompassingEncounter.location.typeCode","EncompassingEncounter.location.typeCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""LOC""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""LOC""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationTargetLocation","",,,,"EncompassingEncounter.location.typeCode",1,1,"",""
-"EncompassingEncounter.location.healthCareFacility","EncompassingEncounter.location.healthCareFacility","","","",1,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/HealthCareFacility {[]} {[]}
+"EncompassingEncounter.location.nullFlavor","EncompassingEncounter.location.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"EncompassingEncounter.location.realmCode","EncompassingEncounter.location.realmCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.realmCode",0,*,"",""
+"EncompassingEncounter.location.typeId","EncompassingEncounter.location.typeId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.typeId",0,1,"",""
+"EncompassingEncounter.location.templateId","EncompassingEncounter.location.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
+"EncompassingEncounter.location.typeCode","EncompassingEncounter.location.typeCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""LOC""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationTargetLocation","",,,,"EncompassingEncounter.location.typeCode",0,1,"",""
+"EncompassingEncounter.location.healthCareFacility","EncompassingEncounter.location.healthCareFacility","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/HealthCareFacility {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"EncompassingEncounter.location.healthCareFacility",1,1,"",""

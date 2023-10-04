@@ -6,30 +6,43 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The language communication capabilities of an Entity.</p>\n      <p>While it may seem on the surface that this class would be restricted in usage to only the LivingSubject subtypes, Devices also have the ability to communicate, such as automated telephony devices that transmit patient information to live operators on a triage line or provide automated laboratory results to clinicians.</p>\n      <p>A patient who originally came from Mexico may have fluent language capabilities to speak, read and write in Spanish, and rudimentary capabilities in English. A person from Russia may have the capability to communicate equally well in spoken language in Russian, Armenian or Ukrainian, and a preference to speak in Armenian.</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+    "valueUri" : "languageCommunication"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/LanguageCommunication",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/LanguageCommunication",
+  "version" : "2.1.0-draft2-mb",
   "name" : "CDAR2.LanguageCommunication",
   "title" : "LanguageCommunication (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "The language communication capabilities of an Entity.\nWhile it may seem on the surface that this class would be restricted in usage to only the LivingSubject subtypes, Devices also have the ability to communicate, such as automated telephony devices that transmit patient information to live operators on a triage line or provide automated laboratory results to clinicians.\nA patient who originally came from Mexico may have fluent language capabilities to speak, read and write in Spanish, and rudimentary capabilities in English. A person from Russia may have the capability to communicate equally well in spoken language in Russian, Armenian or Ukrainian, and a preference to speak in Armenian.",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,7 +50,7 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "LanguageCommunication",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/LanguageCommunication",
   "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
   "derivation" : "specialization",
   "snapshot" : {
@@ -78,7 +91,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -92,7 +105,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }],
       "binding" : {
         "strength" : "required",
@@ -110,7 +123,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }],
       "binding" : {
         "strength" : "extensible",
@@ -128,7 +141,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }],
       "binding" : {
         "strength" : "extensible",
@@ -146,7 +159,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/BL"
       }]
     }]
   },
@@ -164,7 +177,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -173,7 +186,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }],
       "binding" : {
         "strength" : "required",
@@ -186,7 +199,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }],
       "binding" : {
         "strength" : "extensible",
@@ -199,7 +212,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }],
       "binding" : {
         "strength" : "extensible",
@@ -212,7 +225,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/BL"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/BL"
       }]
     }]
   }

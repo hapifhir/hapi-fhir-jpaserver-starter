@@ -1,0 +1,160 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "url",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Primitive type 'url'</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics",
+    "valueCode" : "can-bind"
+  }],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/url",
+  "version" : "2.1.0-draft2-mb",
+  "name" : "url",
+  "title" : "url: Universal Resource Locator",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2023-10-04T23:00:58+02:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "A telecommunications address specified according to Internet standard RFC 1738 [http://www.ietf.org/rfc/rfc1738.txt]. The URL specifies the protocol and the contact point defined by that protocol for the resource.  Notable uses of the telecommunication address data type are for telephone and telefax numbers, e-mail addresses, Hypertext references, FTP references, etc.",
+  "fhirVersion" : "5.0.0",
+  "kind" : "primitive-type",
+  "abstract" : false,
+  "type" : "url",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/url",
+  "derivation" : "constraint",
+  "snapshot" : {
+    "element" : [{
+      "id" : "url",
+      "path" : "url",
+      "short" : "Primitive Type url",
+      "definition" : "A URI that is a literal reference",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "url",
+        "min" : 0,
+        "max" : "*"
+      },
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "id" : "url.id",
+      "path" : "url.id",
+      "representation" : ["xmlAttr"],
+      "short" : "xml:id (or equivalent in JSON)",
+      "definition" : "unique id for the element within a resource (for internal references)",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "Element.id",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "string"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "id" : "url.extension",
+      "path" : "url.extension",
+      "short" : "Extension",
+      "definition" : "An Extension",
+      "min" : 0,
+      "max" : "0",
+      "base" : {
+        "path" : "Element.extension",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "Extension"
+      }],
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      {
+        "key" : "ext-1",
+        "severity" : "error",
+        "human" : "Must have either extensions or value[x], not both",
+        "expression" : "extension.exists() != value.exists()",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Extension"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "id" : "url.value",
+      "path" : "url.value",
+      "representation" : ["xmlAttr"],
+      "short" : "Primitive value for url",
+      "definition" : "Primitive value for url",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "uri.value",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "extension" : [{
+          "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
+          "valueUrl" : "url"
+        },
+        {
+          "url" : "http://hl7.org/fhir/StructureDefinition/regex",
+          "valueString" : "\\S*"
+        }],
+        "code" : "http://hl7.org/fhirpath/System.String"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "url.id",
+      "path" : "url.id",
+      "max" : "0"
+    },
+    {
+      "id" : "url.extension",
+      "path" : "url.extension",
+      "max" : "0"
+    }]
+  }
+}

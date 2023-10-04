@@ -11,7 +11,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title>HL7.CDA.UV.CORE\ServiceEvent (CDA Class) - XML Representation - FHIR v5.0.0-snapshot3</title>
+    <title>ServiceEvent (CDA Class) - XML Representation - Clinical Document Architecture v2.1.0-draft2-mb</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="author" content="http://hl7.org/fhir"/>
@@ -39,18 +39,18 @@
     <![endif]-->
 
     <!-- Favicons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png"/>
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png"/>
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png"/>
-    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png"/>
+    <link rel="fhir-logo" sizes="144x144" href="assets/ico/icon-fhir-144.png"/>
+    <link rel="fhir-logo" sizes="114x114" href="assets/ico/icon-fhir-114.png"/>
+    <link rel="fhir-logo" sizes="72x72" href="assets/ico/icon-fhir-72.png"/>
+    <link rel="fhir-logo" href="assets/ico/icon-fhir-57.png"/>
     <link rel="shortcut icon" href="assets/ico/favicon.png"/>
   </head>
   <body onload="document.body.style.opacity='1'">
 
 	  <script src="assets/js/prism.js"></script>
 
-    <style type="text/css">h2{--heading-prefix:"3.110"}
-    h3,h4,h5,h6{--heading-prefix:"3.110"}</style>
+    <style type="text/css">h2{--heading-prefix:"3.75"}
+    h3,h4,h5,h6{--heading-prefix:"3.75"}</style>
     <div id="segment-header" class="segment">  <!-- segment-header -->
       <div class="container">  <!-- container -->
         <!-- Placeholder for child template header declarations -->
@@ -69,9 +69,9 @@
 
 
         <div id="ig-status">
-          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture V2.0.1</span>
+          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture</span>
             <br/>
-            <span style="display:inline-block;">2.1.0-draft1 - 1st Draft
+            <span style="display:inline-block;">2.1.0-draft2-mb - active
 
 
             </span>
@@ -93,7 +93,7 @@
               <span class="icon-bar"> </span>
               <span class="icon-bar"> </span>
             </button>
-            <a class="navbar-brand hidden" href="http://build.fhir.org/index.html">FHIR</a>
+            <a class="navbar-brand hidden" href="http://hl7.org/fhir/R5/index.html">FHIR</a>
             <div class="nav-collapse collapse navbar-inverse-collapse">
               <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
   <li><a href="index.html">IG Home</a></li>
@@ -125,7 +125,7 @@
           <div class="inner-wrapper">
 
 <div style="counter-reset: section 7" class="col-12">
-  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture V2.0.1 - Local Development build (v2.1.0-draft1). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.1.0-draft2-mb). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
   
 
 
@@ -171,18 +171,6 @@
   
 
 
-  
-    <li>
-      <a href="StructureDefinition-ServiceEvent.profile.json.html">JSON</a>
-    </li>
-  
-
-
-  
-    <li>
-      <a href="StructureDefinition-ServiceEvent.profile.ttl.html">TTL</a>
-    </li>
-  
 
 
 </ul>
@@ -190,6 +178,7 @@
 
 <a name="root"> </a>
 <h2 id="root">Logical Model: CDAR2.ServiceEvent - XML Profile</h2>
+
   <table class="colsi">
     <tr>
 
@@ -197,7 +186,7 @@
         
           Active
           
-            as of 2023-02-07
+            as of 2023-10-04
           
         
       </td>
@@ -217,302 +206,326 @@
 
   <pre class="xml" style="white-space: pre; overflow: hidden"><code class="language-xml">
 
-&lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition">StructureDefinition</a> xmlns=&quot;http://hl7.org/fhir&quot;&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.id">id</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">value</a>=&quot;ServiceEvent&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.text">text</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/narrative.html#Narrative#Narrative.status">status</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;generated&quot;/&gt;
+&lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition">StructureDefinition</a> xmlns=&quot;http://hl7.org/fhir&quot;&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.id">id</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">value</a>=&quot;ServiceEvent&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.text">text</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/narrative.html#Narrative#Narrative.status">status</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;generated&quot;/&gt;
     &lt;div xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
       &lt;p&gt;This class represents the main Act, such as a colonoscopy or an appendectomy, being documented.&lt;/p&gt;
       &lt;p&gt;In some cases, the ServiceEvent is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is &amp;quot;History and Physical Report&amp;quot; and the procedure being documented is a &amp;quot;History and Physical&amp;quot; act. A ServiceEvent can further specialize the act inherent in the ClinicalDocument.code, such as where the ClinicalDocument.code is simply &amp;quot;Procedure Report&amp;quot; and the procedure was a &amp;quot;colonoscopy&amp;quot;. If ServiceEvent is included, it must be equivalent to or further specialize the value inherent in the ClinicalDocument.code, and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.&lt;/p&gt;
       &lt;p&gt;ServiceEvent.effectiveTime can be used to indicate the time the actual event (as opposed to the encounter surrounding the event) took place.&lt;/p&gt;
     &lt;/div&gt;<a name="end-xhtml"></a>
   &lt;/text&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.extension">extension</a>
-             <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;urn:hl7-org:v3&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.extension">extension</a>
+             <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/tools/StructureDefinition/logical-target&quot;&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueBoolean</a>&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#boolean#boolean.extension">extension</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/data-absent-reason&quot;&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;not-applicable&quot;/&gt;
+      &lt;/extension&gt;
+    &lt;/valueBoolean&gt;
   &lt;/extension&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.url">url</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/ServiceEvent&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.version">version</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;2.1.0-draft1&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.name">name</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;CDAR2.ServiceEvent&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.title">title</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent (CDA Class)&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.status">status</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;active&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.experimental">experimental</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.date">date</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#dateTime">value</a>=&quot;2023-02-07T19:43:49+01:00&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.publisher">publisher</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Health Level 7&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.contact">contact</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.name">name</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;HL7 International - Cross-Group Projects&quot;/&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;url&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;http://www.hl7.org/Special/committees/cgp&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.extension">extension</a>
+             <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;urn:hl7-org:v3&quot;/&gt;
+  &lt;/extension&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.extension">extension</a>
+             <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name&quot;&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;serviceEvent&quot;/&gt;
+  &lt;/extension&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.url">url</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/ServiceEvent&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.version">version</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;2.1.0-draft2-mb&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.name">name</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;CDAR2.ServiceEvent&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.title">title</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent (CDA Class)&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.status">status</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;active&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.experimental">experimental</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.date">date</a> <a href="http://hl7.org/fhir/R5/datatypes.html#dateTime">value</a>=&quot;2023-10-04T23:00:58+02:00&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.publisher">publisher</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Health Level 7&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.contact">contact</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/metadatatypes.html#ContactDetail#ContactDetail.name">name</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;HL7 International - Structured Documents&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;url&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;http://www.hl7.org/Special/committees/structdoc&quot;/&gt;
     &lt;/telecom&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;email&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;cgp@lists.HL7.org&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;email&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;structdog@lists.HL7.org&quot;/&gt;
     &lt;/telecom&gt;
   &lt;/contact&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.description">description</a>
-               <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;This class represents the main Act, such as a colonoscopy or an appendectomy, being documented.
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.description">description</a>
+               <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;This class represents the main Act, such as a colonoscopy or an appendectomy, being documented.
 In some cases, the ServiceEvent is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is &amp;quot;History and Physical Report&amp;quot; and the procedure being documented is a &amp;quot;History and Physical&amp;quot; act. A ServiceEvent can further specialize the act inherent in the ClinicalDocument.code, such as where the ClinicalDocument.code is simply &amp;quot;Procedure Report&amp;quot; and the procedure was a &amp;quot;colonoscopy&amp;quot;. If ServiceEvent is included, it must be equivalent to or further specialize the value inherent in the ClinicalDocument.code, and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.
 ServiceEvent.effectiveTime can be used to indicate the time the actual event (as opposed to the encounter surrounding the event) took place.&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;5.0.0-snapshot3&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping">mapping</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.identity">identity</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.uri">uri</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/v3&quot;/&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.name">name</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;RIM Mapping&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;5.0.0&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.mapping">mapping</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.mapping.identity">identity</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.mapping.uri">uri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/v3&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.mapping.name">name</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;RIM Mapping&quot;/&gt;
   &lt;/mapping&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.kind">kind</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;logical&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.abstract">abstract</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.type">type</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;ServiceEvent&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://hl7.org/fhir/StructureDefinition/Base&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.derivation">derivation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;specialization&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Base for all types and resources&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;Base definition for all types defined in FHIR type system.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Base&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.kind">kind</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;logical&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.abstract">abstract</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.type">type</a>
+        <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/ServiceEvent&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a> <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/fhir/StructureDefinition/Base&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.derivation">derivation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;specialization&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Base for all types and resources&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;Base definition for all types defined in FHIR type system.&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Base&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint">constraint</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.key">key</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">value</a>=&quot;ele-1&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.severity">severity</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;error&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.human">human</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;All FHIR elements must have a @value or children&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.expression">expression</a>
-                    <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;hasValue() or (children().count() &amp;gt; id.count())&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.source">source</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://hl7.org/fhir/StructureDefinition/Element&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint">constraint</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.key">key</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">value</a>=&quot;ele-1&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.severity">severity</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;error&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.human">human</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;All FHIR elements must have a @value or children&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.expression">expression</a>
+                    <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;hasValue() or (children().count() &amp;gt; id.count())&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.source">source</a> <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/fhir/StructureDefinition/Element&quot;/&gt;
       &lt;/constraint&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;n/a&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;n/a&quot;/&gt;
       &lt;/mapping&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.classCode&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.classCode&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.classCode&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.classCode&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.classCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.classCode&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/cs-simple&quot;/&gt;
       &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;ACT&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-ActClass&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;ACT&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a> <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-ActClass&quot;/&gt;
       &lt;/binding&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.moodCode&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.moodCode&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.moodCode&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.moodCode&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.moodCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.moodCode&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/cs-simple&quot;/&gt;
       &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;EVN&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;EVN&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-ActMood&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;EVN&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a> <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-ActMood&quot;/&gt;
       &lt;/binding&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.templateId&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.templateId&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.templateId&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.templateId&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.templateId&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.templateId&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/II&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/II&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.id&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.id&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.id&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.id&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.id&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.id&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/II&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/II&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.code&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.code&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;Drawn from concept domain ActCode&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.code&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.code&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a> <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;Drawn from concept domain ActCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/CE&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/CE&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.statusCode&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
-                 <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;urn:oid:1.3.6.1.4.1.19376.1.3.2&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.statusCode&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;urn:oid:1.3.6.1.4.1.19376.1.3.2&quot;/&gt;
       &lt;/extension&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
-                 <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name&quot;&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueString</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;statusCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name&quot;&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueString</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;statusCode&quot;/&gt;
       &lt;/extension&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.statusCode&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.statusCode&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.statusCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.statusCode&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/CS&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/CS&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.effectiveTime&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.effectiveTime&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.effectiveTime&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.effectiveTime&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.effectiveTime&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.effectiveTime&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/IVL-TS&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>
+              <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.performer&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.performer&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.performer&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.performer&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.performer&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.performer&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/Performer1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>
+              <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/Performer1&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
   &lt;/snapshot&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential">differential</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential">differential</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.classCode&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.classCode&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.classCode&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.classCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/cs-simple&quot;/&gt;
       &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;ACT&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-ActClass&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;ACT&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a> <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-ActClass&quot;/&gt;
       &lt;/binding&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.moodCode&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.moodCode&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.moodCode&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.moodCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/cs-simple&quot;/&gt;
       &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;EVN&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;EVN&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-ActMood&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;EVN&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a> <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-ActMood&quot;/&gt;
       &lt;/binding&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.templateId&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.templateId&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/II&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.templateId&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.templateId&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/II&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.id&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.id&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/II&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.id&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.id&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/II&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.code&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.code&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;Drawn from concept domain ActCode&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/CE&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.code&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a> <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;Drawn from concept domain ActCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/CE&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.statusCode&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
-                 <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;urn:oid:1.3.6.1.4.1.19376.1.3.2&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.statusCode&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;urn:oid:1.3.6.1.4.1.19376.1.3.2&quot;/&gt;
       &lt;/extension&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
-                 <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name&quot;&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueString</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;statusCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name&quot;&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueString</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;statusCode&quot;/&gt;
       &lt;/extension&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.statusCode&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/CS&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.statusCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/CS&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.effectiveTime&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.effectiveTime&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/IVL-TS&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.effectiveTime&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.effectiveTime&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>
+              <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ServiceEvent.performer&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ServiceEvent.performer&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/Performer1&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ServiceEvent.performer&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ServiceEvent.performer&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>
+              <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/Performer1&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
   &lt;/differential&gt;
@@ -570,7 +583,7 @@ ServiceEvent.effectiveTime can be used to indicate the time the actual event (as
 
       <div class="inner-wrapper">
         <p>
-          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/cgp">Health Level 7</a>.  Package hl7.cda.uv.core#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-snapshot3</a>. Generated <span title="Tue, Feb 7, 2023 19:43+0100">2023-02-07</span>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structdoc">Health Level 7</a>.  Package hl7.cda.uv.core#2.1.0-draft2-mb based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Wed, Oct 4, 2023 23:00+0200">2023-10-04</span>
           <br/>
           <span style="color: var(--footer-highlight-text-color)">
                       Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
@@ -578,7 +591,7 @@ ServiceEvent.effectiveTime can be used to indicate the time the actual event (as
                  
                 
                  | <a style="color: #81BEF7" target="_blank" href="http://hl7.org/cda/stds/core/history.html">Version History <img alt="external" style="vertical-align: baseline" src="external.png"/></a></a> |
-                 <a style="color: #81BEF7" rel="license" href="http://build.fhir.org/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
+                 <a style="color: #81BEF7" rel="license" href="http://hl7.org/fhir/R5/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
                  <!--<a style="color: #81BEF7" href="todo.html">Search</a> | --> 
                  <a style="color: #81BEF7" target="_blank" href="https://jira.hl7.org/projects/CDA/issues">Propose a change <img alt="external" style="vertical-align: baseline" src="external.png"/></a>
 

@@ -5,450 +5,410 @@
 
 # - resource -------------------------------------------------------------------
 
-<http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator> a fhir:StructureDefinition;
-  fhir:nodeRole fhir:treeRoot;
-  fhir:Resource.id [ fhir:value "LegalAuthenticator"]; # 
-  fhir:DomainResource.text [
-     fhir:Narrative.status [ fhir:value "generated" ];
-     fhir:Narrative.div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Represents a participant who has legally authenticated the document.</p>\n      <p>The CDA is a standard that specifies the structure of exchanged clinical documents. In the case where a local document is transformed into a CDA document for exchange, authentication occurs on the local document, and that fact is reflected in the exchanged CDA document. A CDA document can reflect the unauthenticated, authenticated, or legally authenticated state. The unauthenticated state exists when no authentication information has been recorded (i.e., it is the absence of being either authenticated or legally authenticated).</p>\n      <p>While electronic signatures are not captured in a CDA document, both authentication and legal authentication require that a document has been signed manually or electronically by the responsible individual. A legalAuthenticator has a required legalAuthenticator.time indicating the time of authentication, and a required legalAuthenticator.signatureCode, indicating that a signature has been obtained and is on file.</p>\n    </div>"
-  ]; # 
-  fhir:DomainResource.extension [
-     fhir:index 0;
-     fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
-     fhir:Extension.valueUri [ fhir:value "urn:hl7-org:v3" ]
-  ]; # 
-  fhir:StructureDefinition.url [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/LegalAuthenticator"]; # 
-  fhir:StructureDefinition.version [ fhir:value "2.1.0-draft1"]; # 
-  fhir:StructureDefinition.name [ fhir:value "CDAR2.LegalAuthenticator"]; # 
-  fhir:StructureDefinition.title [ fhir:value "LegalAuthenticator (CDA Class)"]; # 
-  fhir:StructureDefinition.status [ fhir:value "active"]; # 
-  fhir:StructureDefinition.experimental [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.date [ fhir:value "2023-02-07T19:43:49+01:00"^^xsd:dateTime]; # 
-  fhir:StructureDefinition.publisher [ fhir:value "Health Level 7"]; # 
-  fhir:StructureDefinition.contact [
-     fhir:index 0;
-     fhir:ContactDetail.name [ fhir:value "HL7 International - Cross-Group Projects" ];
-     fhir:ContactDetail.telecom [
-       fhir:index 0;
-       fhir:ContactPoint.system [ fhir:value "url" ];
-       fhir:ContactPoint.value [ fhir:value "http://www.hl7.org/Special/committees/cgp" ]
-     ], [
-       fhir:index 1;
-       fhir:ContactPoint.system [ fhir:value "email" ];
-       fhir:ContactPoint.value [ fhir:value "cgp@lists.HL7.org" ]
+<http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator> a fhir:StructureDefinition ;
+  fhir:nodeRole fhir:treeRoot ;
+  fhir:id [ fhir:v "LegalAuthenticator"] ; # 
+  fhir:text [
+     fhir:status [ fhir:v "generated" ] ;
+     fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Represents a participant who has legally authenticated the document.</p>\n      <p>The CDA is a standard that specifies the structure of exchanged clinical documents. In the case where a local document is transformed into a CDA document for exchange, authentication occurs on the local document, and that fact is reflected in the exchanged CDA document. A CDA document can reflect the unauthenticated, authenticated, or legally authenticated state. The unauthenticated state exists when no authentication information has been recorded (i.e., it is the absence of being either authenticated or legally authenticated).</p>\n      <p>While electronic signatures are not captured in a CDA document, both authentication and legal authentication require that a document has been signed manually or electronically by the responsible individual. A legalAuthenticator has a required legalAuthenticator.time indicating the time of authentication, and a required legalAuthenticator.signatureCode, indicating that a signature has been obtained and is on file.</p>\n    </div>"
+  ] ; # 
+  fhir:extension ( [
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-target"^^xsd:anyURI ] ;
+     fhir:value [
+       a fhir:boolean ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/data-absent-reason"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "not-applicable" ]
+       ] )
      ]
-  ]; # 
-  fhir:StructureDefinition.description [ fhir:value "Represents a participant who has legally authenticated the document. The CDA is a standard that specifies the structure of exchanged clinical documents. In the case where a local document is transformed into a CDA document for exchange, authentication occurs on the local document, and that fact is reflected in the exchanged CDA document. A CDA document can reflect the unauthenticated, authenticated, or legally authenticated state. The unauthenticated state exists when no authentication information has been recorded (i.e., it is the absence of being either authenticated or legally authenticated). While electronic signatures are not captured in a CDA document, both authentication and legal authentication require that a document has been signed manually or electronically by the responsible individual. A legalAuthenticator has a required legalAuthenticator.time indicating the time of authentication, and a required legalAuthenticator.signatureCode, indicating that a signature has been obtained and is on file."]; # 
-  fhir:StructureDefinition.fhirVersion [ fhir:value "5.0.0-snapshot3"]; # 
-  fhir:StructureDefinition.mapping [
-     fhir:index 0;
-     fhir:StructureDefinition.mapping.identity [ fhir:value "rim" ];
-     fhir:StructureDefinition.mapping.uri [ fhir:value "http://hl7.org/v3" ];
-     fhir:StructureDefinition.mapping.name [ fhir:value "RIM Mapping" ]
-  ]; # 
-  fhir:StructureDefinition.kind [ fhir:value "logical"]; # 
-  fhir:StructureDefinition.abstract [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.type [ fhir:value "LegalAuthenticator"]; # 
-  fhir:StructureDefinition.baseDefinition [
-     fhir:value "http://hl7.org/fhir/StructureDefinition/Base";
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "urn:hl7-org:v3"^^xsd:anyURI ]
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "legalAuthenticator"^^xsd:anyURI ]
+  ] ) ; # 
+  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator"^^xsd:anyURI] ; # 
+  fhir:version [ fhir:v "2.1.0-draft2-mb"] ; # 
+  fhir:name [ fhir:v "CDAR2.LegalAuthenticator"] ; # 
+  fhir:title [ fhir:v "LegalAuthenticator (CDA Class)"] ; # 
+  fhir:status [ fhir:v "active"] ; # 
+  fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:date [ fhir:v "2023-10-04T23:00:58+02:00"^^xsd:dateTime] ; # 
+  fhir:publisher [ fhir:v "Health Level 7"] ; # 
+  fhir:contact ( [
+     fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
+     fhir:telecom ( [
+       fhir:system [ fhir:v "url" ] ;
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structdoc" ]
+     ] [
+       fhir:system [ fhir:v "email" ] ;
+       fhir:value [ fhir:v "structdog@lists.HL7.org" ]
+     ] )
+  ] ) ; # 
+  fhir:description [ fhir:v "Represents a participant who has legally authenticated the document. The CDA is a standard that specifies the structure of exchanged clinical documents. In the case where a local document is transformed into a CDA document for exchange, authentication occurs on the local document, and that fact is reflected in the exchanged CDA document. A CDA document can reflect the unauthenticated, authenticated, or legally authenticated state. The unauthenticated state exists when no authentication information has been recorded (i.e., it is the absence of being either authenticated or legally authenticated). While electronic signatures are not captured in a CDA document, both authentication and legal authentication require that a document has been signed manually or electronically by the responsible individual. A legalAuthenticator has a required legalAuthenticator.time indicating the time of authentication, and a required legalAuthenticator.signatureCode, indicating that a signature has been obtained and is on file."] ; # 
+  fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
+  fhir:mapping ( [
+     fhir:identity [ fhir:v "rim" ] ;
+     fhir:uri [ fhir:v "http://hl7.org/v3"^^xsd:anyURI ] ;
+     fhir:name [ fhir:v "RIM Mapping" ]
+  ] ) ; # 
+  fhir:kind [ fhir:v "logical"] ; # 
+  fhir:abstract [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:type [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator"^^xsd:anyURI] ; # 
+  fhir:baseDefinition [
+     fhir:v "http://hl7.org/fhir/StructureDefinition/Base"^^xsd:anyURI ;
      fhir:link <http://hl7.org/fhir/StructureDefinition/Base>
-  ]; # 
-  fhir:StructureDefinition.derivation [ fhir:value "specialization"]; # 
-  fhir:StructureDefinition.snapshot [
-     fhir:StructureDefinition.snapshot.element [
-       fhir:index 0;
-       fhir:Element.id [ fhir:value "LegalAuthenticator" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator" ];
-       fhir:ElementDefinition.short [ fhir:value "Base for all types and resources" ];
-       fhir:ElementDefinition.definition [ fhir:value "Base definition for all types defined in FHIR type system." ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "Base" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.constraint [
-         fhir:index 0;
-         fhir:ElementDefinition.constraint.key [ fhir:value "ele-1" ];
-         fhir:ElementDefinition.constraint.severity [ fhir:value "error" ];
-         fhir:ElementDefinition.constraint.human [ fhir:value "All FHIR elements must have a @value or children" ];
-         fhir:ElementDefinition.constraint.expression [ fhir:value "hasValue() or (children().count() > id.count())" ];
-         fhir:ElementDefinition.constraint.source [
-           fhir:value "http://hl7.org/fhir/StructureDefinition/Element";
+  ] ; # 
+  fhir:derivation [ fhir:v "specialization"] ; # 
+  fhir:snapshot [
+     fhir:element ( [
+       fhir:id [ fhir:v "LegalAuthenticator" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator" ] ;
+       fhir:short [ fhir:v "Base for all types and resources" ] ;
+       fhir:definition [ fhir:v "Base definition for all types defined in FHIR type system." ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "Base" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:constraint ( [
+         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
+         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:source [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
            fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
          ]
-       ];
-       fhir:ElementDefinition.isModifier [ fhir:value "false"^^xsd:boolean ];
-       fhir:ElementDefinition.mapping [
-         fhir:index 0;
-         fhir:ElementDefinition.mapping.identity [ fhir:value "rim" ];
-         fhir:ElementDefinition.mapping.map [ fhir:value "n/a" ]
-       ]
-     ], [
-       fhir:index 1;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.nullFlavor" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.nullFlavor" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Exceptional Value Detail" ];
-       fhir:ElementDefinition.definition [ fhir:value "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "LegalAuthenticator.nullFlavor" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-NullFlavor";
+       ] ) ;
+       fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
+       fhir:mapping ( [
+         fhir:identity [ fhir:v "rim" ] ;
+         fhir:map [ fhir:v "n/a" ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.nullFlavor" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.nullFlavor" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Exceptional Value Detail" ] ;
+       fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "LegalAuthenticator.nullFlavor" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
          ]
        ]
-     ], [
-       fhir:index 2;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.typeCode" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.typeCode" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "LegalAuthenticator.typeCode" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.fixedCode [ fhir:value "LA" ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-ParticipationType";
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.typeCode" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.typeCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "LegalAuthenticator.typeCode" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "LA" ] ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-ParticipationType"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-ParticipationType>
          ]
        ]
-     ], [
-       fhir:index 3;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.contextControlCode" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.contextControlCode" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "LegalAuthenticator.contextControlCode" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.fixedCode [ fhir:value "OP" ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-ContextControl";
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.contextControlCode" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.contextControlCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "LegalAuthenticator.contextControlCode" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "OP" ] ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-ContextControl"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-ContextControl>
          ]
        ]
-     ], [
-       fhir:index 4;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.realmCode" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.realmCode" ];
-       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "LegalAuthenticator.realmCode" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CS" ]
-       ]
-     ], [
-       fhir:index 5;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.typeId" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.typeId" ];
-       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "LegalAuthenticator.typeId" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/II" ]
-       ]
-     ], [
-       fhir:index 6;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.templateId" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.templateId" ];
-       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "LegalAuthenticator.templateId" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/II" ]
-       ]
-     ], [
-       fhir:index 7;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.time" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.time" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "LegalAuthenticator.time" ];
-         fhir:ElementDefinition.base.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/TS" ]
-       ]
-     ], [
-       fhir:index 8;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.signatureCode" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.signatureCode" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "LegalAuthenticator.signatureCode" ];
-         fhir:ElementDefinition.base.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CS" ]
-       ]
-     ], [
-       fhir:index 9;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.sdtcSignatureText" ];
-       fhir:Element.extension [
-         fhir:index 0;
-         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
-         fhir:Extension.valueUri [ fhir:value "urn:hl7-org:sdtc" ]
-       ], [
-         fhir:index 1;
-         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name" ];
-         fhir:Extension.valueString [ fhir:value "signatureText" ]
-       ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.sdtcSignatureText" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "LegalAuthenticator.sdtcSignatureText" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/ED" ]
-       ]
-     ], [
-       fhir:index 10;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.assignedEntity" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.assignedEntity" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "LegalAuthenticator.assignedEntity" ];
-         fhir:ElementDefinition.base.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" ]
-       ]
-     ]
-  ]; # 
-  fhir:StructureDefinition.differential [
-     fhir:StructureDefinition.differential.element [
-       fhir:index 0;
-       fhir:Element.id [ fhir:value "LegalAuthenticator" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ]
-     ], [
-       fhir:index 1;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.nullFlavor" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.nullFlavor" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Exceptional Value Detail" ];
-       fhir:ElementDefinition.definition [ fhir:value "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-NullFlavor";
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.realmCode" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.realmCode" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "LegalAuthenticator.realmCode" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CS"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.typeId" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.typeId" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "LegalAuthenticator.typeId" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.templateId" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.templateId" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "LegalAuthenticator.templateId" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.time" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.time" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "LegalAuthenticator.time" ] ;
+         fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/TS"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.signatureCode" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.signatureCode" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "LegalAuthenticator.signatureCode" ] ;
+         fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CS"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.sdtcSignatureText" ] ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "urn:hl7-org:sdtc"^^xsd:anyURI ]
+       ] [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "signatureText" ]
+       ] ) ;
+       fhir:path [ fhir:v "LegalAuthenticator.sdtcSignatureText" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "LegalAuthenticator.sdtcSignatureText" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ED"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.assignedEntity" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.assignedEntity" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "LegalAuthenticator.assignedEntity" ] ;
+         fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity"^^xsd:anyURI ]
+       ] )
+     ] )
+  ] ; # 
+  fhir:differential [
+     fhir:element ( [
+       fhir:id [ fhir:v "LegalAuthenticator" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ]
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.nullFlavor" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.nullFlavor" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Exceptional Value Detail" ] ;
+       fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
          ]
        ]
-     ], [
-       fhir:index 2;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.typeCode" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.typeCode" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.fixedCode [ fhir:value "LA" ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-ParticipationType";
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.typeCode" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.typeCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "LA" ] ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-ParticipationType"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-ParticipationType>
          ]
        ]
-     ], [
-       fhir:index 3;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.contextControlCode" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.contextControlCode" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.fixedCode [ fhir:value "OP" ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-ContextControl";
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.contextControlCode" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.contextControlCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "OP" ] ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-ContextControl"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-ContextControl>
          ]
        ]
-     ], [
-       fhir:index 4;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.realmCode" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.realmCode" ];
-       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CS" ]
-       ]
-     ], [
-       fhir:index 5;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.typeId" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.typeId" ];
-       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/II" ]
-       ]
-     ], [
-       fhir:index 6;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.templateId" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.templateId" ];
-       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/II" ]
-       ]
-     ], [
-       fhir:index 7;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.time" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.time" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/TS" ]
-       ]
-     ], [
-       fhir:index 8;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.signatureCode" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.signatureCode" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CS" ]
-       ]
-     ], [
-       fhir:index 9;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.sdtcSignatureText" ];
-       fhir:Element.extension [
-         fhir:index 0;
-         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
-         fhir:Extension.valueUri [ fhir:value "urn:hl7-org:sdtc" ]
-       ], [
-         fhir:index 1;
-         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name" ];
-         fhir:Extension.valueString [ fhir:value "signatureText" ]
-       ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.sdtcSignatureText" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/ED" ]
-       ]
-     ], [
-       fhir:index 10;
-       fhir:Element.id [ fhir:value "LegalAuthenticator.assignedEntity" ];
-       fhir:ElementDefinition.path [ fhir:value "LegalAuthenticator.assignedEntity" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity" ]
-       ]
-     ]
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.realmCode" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.realmCode" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CS"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.typeId" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.typeId" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.templateId" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.templateId" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.time" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.time" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/TS"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.signatureCode" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.signatureCode" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CS"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.sdtcSignatureText" ] ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "urn:hl7-org:sdtc"^^xsd:anyURI ]
+       ] [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "signatureText" ]
+       ] ) ;
+       fhir:path [ fhir:v "LegalAuthenticator.sdtcSignatureText" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ED"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "LegalAuthenticator.assignedEntity" ] ;
+       fhir:path [ fhir:v "LegalAuthenticator.assignedEntity" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity"^^xsd:anyURI ]
+       ] )
+     ] )
   ] . # 
-
-# - ontology header ------------------------------------------------------------
-
-<http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator.ttl> a owl:Ontology;
-  owl:imports fhir:fhir.ttl .
 
 # -------------------------------------------------------------------------------------
 

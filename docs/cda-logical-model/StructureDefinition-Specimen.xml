@@ -7,30 +7,40 @@
       <p>A specimen is a part of some entity, typically the subject, that is the target of focused laboratory, radiology or other observations. In many clinical observations, such as physical examination of a patient, the patient is the subject of the observation, and there is no specimen. The specimen participant is only used when observations are made against some substance or object that is taken or derived from the subject.</p>
     </div>
   </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
-  <url value="http://hl7.org/fhir/cda/StructureDefinition/Specimen"/>
-  <version value="2.1.0-draft1"/>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+    <valueUri value="specimen"/>
+  </extension>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/Specimen"/>
+  <version value="2.1.0-draft2-mb"/>
   <name value="CDAR2.Specimen"/>
   <title value="Specimen (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-02-07T19:43:49+01:00"/>
+  <date value="2023-10-04T23:00:58+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
-    <name value="HL7 International - Cross-Group Projects"/>
+    <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/cgp"/>
+      <value value="http://www.hl7.org/Special/committees/structdoc"/>
     </telecom>
     <telecom>
       <system value="email"/>
-      <value value="cgp@lists.HL7.org"/>
+      <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
   <description value="A specimen is a part of some entity, typically the subject, that is the target of focused laboratory, radiology or other observations. In many clinical observations, such as physical examination of a patient, the patient is the subject of the observation, and there is no specimen. The specimen participant is only used when observations are made against some substance or object that is taken or derived from the subject."/>
-  <fhirVersion value="5.0.0-snapshot3"/>
+  <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
     <uri value="http://hl7.org/v3"/>
@@ -38,8 +48,8 @@
   </mapping>
   <kind value="logical"/>
   <abstract value="false"/>
-  <type value="Specimen"/>
-  <baseDefinition value="http://hl7.org/fhir/cda/StructureDefinition/InfrastructureRoot"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/Specimen"/>
+  <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"/>
   <derivation value="specialization"/>
   <snapshot>
     <element id="Specimen">
@@ -80,6 +90,7 @@
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -97,7 +108,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
     </element>
     <element id="Specimen.typeId">
@@ -111,7 +122,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Specimen.templateId">
@@ -125,23 +136,23 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/II"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
     <element id="Specimen.typeCode">
       <path value="Specimen.typeCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="Specimen.typeCode"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="SPC"/>
       <fixedCode value="SPC"/>
       <binding>
         <strength value="required"/>
@@ -158,7 +169,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/SpecimenRole"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/SpecimenRole"/>
       </type>
     </element>
   </snapshot>
@@ -171,12 +182,12 @@
     <element id="Specimen.typeCode">
       <path value="Specimen.typeCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-      <defaultValueCode value="SPC"/>
       <fixedCode value="SPC"/>
       <binding>
         <strength value="required"/>
@@ -188,7 +199,7 @@
       <min value="1"/>
       <max value="1"/>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/SpecimenRole"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/SpecimenRole"/>
       </type>
     </element>
   </differential>

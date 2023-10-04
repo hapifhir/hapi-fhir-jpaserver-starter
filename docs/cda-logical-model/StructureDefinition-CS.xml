@@ -7,39 +7,46 @@
       <p>Coded data, consists of a code, display name, code system, and original text. Used when a single code value must be sent.</p>
     </div>
   </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
+  <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics">
+    <valueCode value="can-bind"/>
+  </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics">
     <valueCode value="can-bind"/>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-binding-style">
-    <valueCode value="CDA"/>
-  </extension>
   <extension url="http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-binding-style">
     <valueCode value="CDA"/>
   </extension>
-  <url value="http://hl7.org/fhir/cda/StructureDefinition/CS"/>
-  <version value="2.1.0-draft1"/>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+  <version value="2.1.0-draft2-mb"/>
   <name value="CS"/>
   <title value="CS: CodedSimpleValue (V3 Data Type)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-02-07T19:43:49+01:00"/>
+  <date value="2023-10-04T23:00:58+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
-    <name value="HL7 International - Cross-Group Projects"/>
+    <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/cgp"/>
+      <value value="http://www.hl7.org/Special/committees/structdoc"/>
     </telecom>
     <telecom>
       <system value="email"/>
-      <value value="cgp@lists.HL7.org"/>
+      <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
-  <description value="XCoded data in its simplest form, where only the code is not predetermined. The code system and code system version are fixed by the context in which the CS value occurs. CS is used for coded attributes that have a single HL7-defined value set."/>
-  <fhirVersion value="5.0.0-snapshot3"/>
+  <description value="Coded data in its simplest form, where only the code is not predetermined. The code system and code system version are fixed by the context in which the CS value occurs. CS is used for coded attributes that have a single HL7-defined value set."/>
+  <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
     <uri value="http://hl7.org/v3"/>
@@ -47,14 +54,14 @@
   </mapping>
   <kind value="logical"/>
   <abstract value="false"/>
-  <type value="CS"/>
-  <baseDefinition value="http://hl7.org/fhir/cda/StructureDefinition/CV"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+  <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/CV"/>
   <derivation value="specialization"/>
   <snapshot>
     <element id="CS">
       <path value="CS"/>
       <short value="Base for all types and resources"/>
-      <definition value="Coded data, consists of a code, display name, code system, and original text. Used when a single code value must be sent."/>
+      <definition value="Coded data in its simplest form, where only the code is not predetermined. Used when a single code value must be sent."/>
       <min value="1"/>
       <max value="*"/>
       <base>
@@ -89,6 +96,7 @@
       </base>
       <type>
         <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
       <binding>
         <strength value="required"/>
@@ -108,7 +116,8 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="string"/>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
     </element>
     <element id="CS.codeSystem">
@@ -125,6 +134,9 @@
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/oid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/uuid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/ruid"/>
       </type>
     </element>
     <element id="CS.codeSystemName">
@@ -141,6 +153,7 @@
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
     <element id="CS.codeSystemVersion">
@@ -157,6 +170,7 @@
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
     <element id="CS.displayName">
@@ -173,6 +187,7 @@
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
     <element id="CS.sdtcValueSet">
@@ -194,6 +209,7 @@
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/oid"/>
       </type>
     </element>
     <element id="CS.sdtcValueSetVersion">
@@ -215,6 +231,7 @@
       </base>
       <type>
         <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
     <element id="CS.originalText">
@@ -229,7 +246,7 @@
         <max value="1"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ED"/>
       </type>
     </element>
     <element id="CS.qualifier">
@@ -244,7 +261,7 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CR"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CR"/>
       </type>
     </element>
     <element id="CS.translation">
@@ -260,14 +277,14 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/CD"/>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
       </type>
     </element>
   </snapshot>
   <differential>
     <element id="CS">
       <path value="CS"/>
-      <definition value="Coded data, consists of a code, display name, code system, and original text. Used when a single code value must be sent."/>
+      <definition value="Coded data in its simplest form, where only the code is not predetermined. Used when a single code value must be sent."/>
       <min value="1"/>
       <max value="*"/>
     </element>
@@ -277,9 +294,6 @@
       <label value="Code System"/>
       <min value="0"/>
       <max value="0"/>
-      <type>
-        <code value="string"/>
-      </type>
     </element>
     <element id="CS.codeSystemName">
       <path value="CS.codeSystemName"/>
@@ -287,9 +301,6 @@
       <label value="Code System Name"/>
       <min value="0"/>
       <max value="0"/>
-      <type>
-        <code value="string"/>
-      </type>
     </element>
     <element id="CS.codeSystemVersion">
       <path value="CS.codeSystemVersion"/>
@@ -297,9 +308,6 @@
       <label value="Code System Version"/>
       <min value="0"/>
       <max value="0"/>
-      <type>
-        <code value="string"/>
-      </type>
     </element>
     <element id="CS.displayName">
       <path value="CS.displayName"/>
@@ -307,49 +315,12 @@
       <label value="Display Name"/>
       <min value="0"/>
       <max value="0"/>
-      <type>
-        <code value="string"/>
-      </type>
-    </element>
-    <element id="CS.sdtcValueSet">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
-        <valueUri value="urn:hl7-org:sdtc"/>
-      </extension>
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
-        <valueString value="valueSet"/>
-      </extension>
-      <path value="CS.sdtcValueSet"/>
-      <representation value="xmlAttr"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="string"/>
-      </type>
-    </element>
-    <element id="CS.sdtcValueSetVersion">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
-        <valueUri value="urn:hl7-org:sdtc"/>
-      </extension>
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
-        <valueString value="valueSetVersion"/>
-      </extension>
-      <path value="CS.sdtcValueSetVersion"/>
-      <representation value="xmlAttr"/>
-      <definition value="The valueSetVersion extension adds an attribute for elements with a CD dataType which indicates the version of the particular value set constraining the coded concept."/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="string"/>
-      </type>
     </element>
     <element id="CS.originalText">
       <path value="CS.originalText"/>
       <label value="Original Text"/>
       <min value="0"/>
       <max value="0"/>
-      <type>
-        <code value="http://hl7.org/fhir/cda/StructureDefinition/ED"/>
-      </type>
     </element>
   </differential>
 </StructureDefinition>

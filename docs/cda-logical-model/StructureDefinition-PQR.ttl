@@ -5,390 +5,370 @@
 
 # - resource -------------------------------------------------------------------
 
-<http://hl7.org/cda/stds/core/StructureDefinition/PQR> a fhir:StructureDefinition;
-  fhir:nodeRole fhir:treeRoot;
-  fhir:Resource.id [ fhir:value "PQR"]; # 
-  fhir:DomainResource.text [
-     fhir:Narrative.status [ fhir:value "generated" ];
-     fhir:Narrative.div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A representation of a physical quantity in a unit from any code system. Used to show alternative representation for a physical quantity.</p>\n    </div>"
-  ]; # 
-  fhir:DomainResource.extension [
-     fhir:index 0;
-     fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
-     fhir:Extension.valueUri [ fhir:value "urn:hl7-org:v3" ]
-  ], [
-     fhir:index 1;
-     fhir:Extension.url [ fhir:value "http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-binding-style" ];
-     fhir:Extension.valueCode [ fhir:value "CDA" ]
-  ]; # 
-  fhir:StructureDefinition.url [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/PQR"]; # 
-  fhir:StructureDefinition.version [ fhir:value "2.1.0-draft1"]; # 
-  fhir:StructureDefinition.name [ fhir:value "PQR"]; # 
-  fhir:StructureDefinition.title [ fhir:value "PQR: PhysicalQuantityRepresentation (V3 Data Type)"]; # 
-  fhir:StructureDefinition.status [ fhir:value "active"]; # 
-  fhir:StructureDefinition.experimental [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.date [ fhir:value "2023-02-07T19:43:49+01:00"^^xsd:dateTime]; # 
-  fhir:StructureDefinition.publisher [ fhir:value "Health Level 7"]; # 
-  fhir:StructureDefinition.contact [
-     fhir:index 0;
-     fhir:ContactDetail.name [ fhir:value "HL7 International - Cross-Group Projects" ];
-     fhir:ContactDetail.telecom [
-       fhir:index 0;
-       fhir:ContactPoint.system [ fhir:value "url" ];
-       fhir:ContactPoint.value [ fhir:value "http://www.hl7.org/Special/committees/cgp" ]
-     ], [
-       fhir:index 1;
-       fhir:ContactPoint.system [ fhir:value "email" ];
-       fhir:ContactPoint.value [ fhir:value "cgp@lists.HL7.org" ]
+<http://hl7.org/cda/stds/core/StructureDefinition/PQR> a fhir:StructureDefinition ;
+  fhir:nodeRole fhir:treeRoot ;
+  fhir:id [ fhir:v "PQR"] ; # 
+  fhir:text [
+     fhir:status [ fhir:v "generated" ] ;
+     fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A representation of a physical quantity in a unit from any code system. Used to show alternative representation for a physical quantity.</p>\n    </div>"
+  ] ; # 
+  fhir:extension ( [
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-target"^^xsd:anyURI ] ;
+     fhir:value [
+       a fhir:boolean ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/data-absent-reason"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "not-applicable" ]
+       ] )
      ]
-  ]; # 
-  fhir:StructureDefinition.description [ fhir:value "An extension of the coded value data type representating a physical quantity using a unit from any code system. Used to show alternative representation for a physical quantity."]; # 
-  fhir:StructureDefinition.fhirVersion [ fhir:value "5.0.0-snapshot3"]; # 
-  fhir:StructureDefinition.mapping [
-     fhir:index 0;
-     fhir:StructureDefinition.mapping.identity [ fhir:value "rim" ];
-     fhir:StructureDefinition.mapping.uri [ fhir:value "http://hl7.org/v3" ];
-     fhir:StructureDefinition.mapping.name [ fhir:value "RIM Mapping" ]
-  ]; # 
-  fhir:StructureDefinition.kind [ fhir:value "logical"]; # 
-  fhir:StructureDefinition.abstract [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.type [ fhir:value "PQR"]; # 
-  fhir:StructureDefinition.baseDefinition [
-     fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CV";
-     fhir:link <http://hl7.org/fhir/cda/StructureDefinition/CV>
-  ]; # 
-  fhir:StructureDefinition.derivation [ fhir:value "specialization"]; # 
-  fhir:StructureDefinition.snapshot [
-     fhir:StructureDefinition.snapshot.element [
-       fhir:index 0;
-       fhir:Element.id [ fhir:value "PQR" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR" ];
-       fhir:ElementDefinition.short [ fhir:value "Base for all types and resources" ];
-       fhir:ElementDefinition.definition [ fhir:value "A representation of a physical quantity in a unit from any code system. Used to show alternative representation for a physical quantity." ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "Base" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.constraint [
-         fhir:index 0;
-         fhir:ElementDefinition.constraint.key [ fhir:value "ele-1" ];
-         fhir:ElementDefinition.constraint.severity [ fhir:value "error" ];
-         fhir:ElementDefinition.constraint.human [ fhir:value "All FHIR elements must have a @value or children" ];
-         fhir:ElementDefinition.constraint.expression [ fhir:value "hasValue() or (children().count() > id.count())" ];
-         fhir:ElementDefinition.constraint.source [
-           fhir:value "http://hl7.org/fhir/StructureDefinition/Element";
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "can-bind" ]
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "urn:hl7-org:v3"^^xsd:anyURI ]
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-binding-style"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "CDA" ]
+  ] ) ; # 
+  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PQR"^^xsd:anyURI] ; # 
+  fhir:version [ fhir:v "2.1.0-draft2-mb"] ; # 
+  fhir:name [ fhir:v "PQR"] ; # 
+  fhir:title [ fhir:v "PQR: PhysicalQuantityRepresentation (V3 Data Type)"] ; # 
+  fhir:status [ fhir:v "active"] ; # 
+  fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:date [ fhir:v "2023-10-04T23:00:58+02:00"^^xsd:dateTime] ; # 
+  fhir:publisher [ fhir:v "Health Level 7"] ; # 
+  fhir:contact ( [
+     fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
+     fhir:telecom ( [
+       fhir:system [ fhir:v "url" ] ;
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structdoc" ]
+     ] [
+       fhir:system [ fhir:v "email" ] ;
+       fhir:value [ fhir:v "structdog@lists.HL7.org" ]
+     ] )
+  ] ) ; # 
+  fhir:description [ fhir:v "An extension of the coded value data type representating a physical quantity using a unit from any code system. Used to show alternative representation for a physical quantity."] ; # 
+  fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
+  fhir:mapping ( [
+     fhir:identity [ fhir:v "rim" ] ;
+     fhir:uri [ fhir:v "http://hl7.org/v3"^^xsd:anyURI ] ;
+     fhir:name [ fhir:v "RIM Mapping" ]
+  ] ) ; # 
+  fhir:kind [ fhir:v "logical"] ; # 
+  fhir:abstract [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:type [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PQR"^^xsd:anyURI] ; # 
+  fhir:baseDefinition [
+     fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CV"^^xsd:anyURI ;
+     fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/CV>
+  ] ; # 
+  fhir:derivation [ fhir:v "specialization"] ; # 
+  fhir:snapshot [
+     fhir:element ( [
+       fhir:id [ fhir:v "PQR" ] ;
+       fhir:path [ fhir:v "PQR" ] ;
+       fhir:short [ fhir:v "Base for all types and resources" ] ;
+       fhir:definition [ fhir:v "A representation of a physical quantity in a unit from any code system. Used to show alternative representation for a physical quantity." ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "Base" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:constraint ( [
+         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
+         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:source [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
            fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
          ]
-       ];
-       fhir:ElementDefinition.isModifier [ fhir:value "false"^^xsd:boolean ];
-       fhir:ElementDefinition.mapping [
-         fhir:index 0;
-         fhir:ElementDefinition.mapping.identity [ fhir:value "rim" ];
-         fhir:ElementDefinition.mapping.map [ fhir:value "n/a" ]
-       ]
-     ], [
-       fhir:index 1;
-       fhir:Element.id [ fhir:value "PQR.nullFlavor" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.nullFlavor" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Exceptional Value Detail" ];
-       fhir:ElementDefinition.definition [ fhir:value "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "ANY.nullFlavor" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-NullFlavor";
+       ] ) ;
+       fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
+       fhir:mapping ( [
+         fhir:identity [ fhir:v "rim" ] ;
+         fhir:map [ fhir:v "n/a" ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "PQR.nullFlavor" ] ;
+       fhir:path [ fhir:v "PQR.nullFlavor" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Exceptional Value Detail" ] ;
+       fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "ANY.nullFlavor" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
          ]
        ]
-     ], [
-       fhir:index 2;
-       fhir:Element.id [ fhir:value "PQR.code" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.code" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Code" ];
-       fhir:ElementDefinition.definition [ fhir:value "The plain code symbol defined by the code system. For example, \"784.0\" is the code symbol of the ICD-9 code \"784.0\" for headache." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "CD.code" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "string" ]
-       ]
-     ], [
-       fhir:index 3;
-       fhir:Element.id [ fhir:value "PQR.codeSystem" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.codeSystem" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Code System" ];
-       fhir:ElementDefinition.definition [ fhir:value "Specifies the code system that defines the code." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "CD.codeSystem" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "string" ]
-       ]
-     ], [
-       fhir:index 4;
-       fhir:Element.id [ fhir:value "PQR.codeSystemName" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.codeSystemName" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Code System Name" ];
-       fhir:ElementDefinition.definition [ fhir:value "The common name of the coding system." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "CD.codeSystemName" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "string" ]
-       ]
-     ], [
-       fhir:index 5;
-       fhir:Element.id [ fhir:value "PQR.codeSystemVersion" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.codeSystemVersion" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Code System Version" ];
-       fhir:ElementDefinition.definition [ fhir:value "If applicable, a version descriptor defined specifically for the given code system." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "CD.codeSystemVersion" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "string" ]
-       ]
-     ], [
-       fhir:index 6;
-       fhir:Element.id [ fhir:value "PQR.displayName" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.displayName" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Display Name" ];
-       fhir:ElementDefinition.definition [ fhir:value "A name or title for the code, under which the sending system shows the code value to its users." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "CD.displayName" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "string" ]
-       ]
-     ], [
-       fhir:index 7;
-       fhir:Element.id [ fhir:value "PQR.sdtcValueSet" ];
-       fhir:Element.extension [
-         fhir:index 0;
-         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
-         fhir:Extension.valueUri [ fhir:value "urn:hl7-org:sdtc" ]
-       ], [
-         fhir:index 1;
-         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name" ];
-         fhir:Extension.valueString [ fhir:value "valueSet" ]
-       ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.sdtcValueSet" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.definition [ fhir:value "The valueSet extension adds an attribute for elements with a CD dataType which indicates the particular value set constraining the coded concept." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "CD.valueSet" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "string" ]
-       ]
-     ], [
-       fhir:index 8;
-       fhir:Element.id [ fhir:value "PQR.sdtcValueSetVersion" ];
-       fhir:Element.extension [
-         fhir:index 0;
-         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
-         fhir:Extension.valueUri [ fhir:value "urn:hl7-org:sdtc" ]
-       ], [
-         fhir:index 1;
-         fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name" ];
-         fhir:Extension.valueString [ fhir:value "valueSetVersion" ]
-       ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.sdtcValueSetVersion" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.definition [ fhir:value "The valueSetVersion extension adds an attribute for elements with a CD dataType which indicates the version of the particular value set constraining the coded concept." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "CD.sdtcValueSetVersion" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "string" ]
-       ]
-     ], [
-       fhir:index 9;
-       fhir:Element.id [ fhir:value "PQR.originalText" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.originalText" ];
-       fhir:ElementDefinition.label [ fhir:value "Original Text" ];
-       fhir:ElementDefinition.definition [ fhir:value "The text or phrase used as the basis for the coding." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "CD.originalText" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/ED" ]
-       ]
-     ], [
-       fhir:index 10;
-       fhir:Element.id [ fhir:value "PQR.qualifier" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.qualifier" ];
-       fhir:ElementDefinition.label [ fhir:value "Qualifier" ];
-       fhir:ElementDefinition.definition [ fhir:value "Specifies additional codes that increase the specificity of the the primary code." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "0" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "CD.qualifier" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CR" ]
-       ]
-     ], [
-       fhir:index 11;
-       fhir:Element.id [ fhir:value "PQR.translation" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.translation" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "typeAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Translation" ];
-       fhir:ElementDefinition.definition [ fhir:value "A set of other concept descriptors that translate this concept descriptor into other code systems." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "0" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "CD.translation" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CD" ]
-       ]
-     ], [
-       fhir:index 12;
-       fhir:Element.id [ fhir:value "PQR.value" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.value" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Value" ];
-       fhir:ElementDefinition.definition [ fhir:value "The magnitude of the measurement value in terms of the unit specified by this code." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "PQR.value" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "decimal" ]
-       ]
-     ]
-  ]; # 
-  fhir:StructureDefinition.differential [
-     fhir:StructureDefinition.differential.element [
-       fhir:index 0;
-       fhir:Element.id [ fhir:value "PQR" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR" ];
-       fhir:ElementDefinition.definition [ fhir:value "A representation of a physical quantity in a unit from any code system. Used to show alternative representation for a physical quantity." ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ]
-     ], [
-       fhir:index 1;
-       fhir:Element.id [ fhir:value "PQR.value" ];
-       fhir:ElementDefinition.path [ fhir:value "PQR.value" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Value" ];
-       fhir:ElementDefinition.definition [ fhir:value "The magnitude of the measurement value in terms of the unit specified by this code." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "decimal" ]
-       ]
-     ]
+     ] [
+       fhir:id [ fhir:v "PQR.code" ] ;
+       fhir:path [ fhir:v "PQR.code" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Code" ] ;
+       fhir:definition [ fhir:v "The plain code symbol defined by the code system. For example, \"784.0\" is the code symbol of the ICD-9 code \"784.0\" for headache." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "CD.code" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] )
+     ] [
+       fhir:id [ fhir:v "PQR.codeSystem" ] ;
+       fhir:path [ fhir:v "PQR.codeSystem" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Code System" ] ;
+       fhir:definition [ fhir:v "Specifies the code system that defines the code." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "CD.codeSystem" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/oid"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/oid>
+         ] [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/uuid"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/uuid>
+         ] [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ruid"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ruid>
+         ] )
+       ] )
+     ] [
+       fhir:id [ fhir:v "PQR.codeSystemName" ] ;
+       fhir:path [ fhir:v "PQR.codeSystemName" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Code System Name" ] ;
+       fhir:definition [ fhir:v "The common name of the coding system." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "CD.codeSystemName" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+         ] )
+       ] )
+     ] [
+       fhir:id [ fhir:v "PQR.codeSystemVersion" ] ;
+       fhir:path [ fhir:v "PQR.codeSystemVersion" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Code System Version" ] ;
+       fhir:definition [ fhir:v "If applicable, a version descriptor defined specifically for the given code system." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "CD.codeSystemVersion" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+         ] )
+       ] )
+     ] [
+       fhir:id [ fhir:v "PQR.displayName" ] ;
+       fhir:path [ fhir:v "PQR.displayName" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Display Name" ] ;
+       fhir:definition [ fhir:v "A name or title for the code, under which the sending system shows the code value to its users." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "CD.displayName" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+         ] )
+       ] )
+     ] [
+       fhir:id [ fhir:v "PQR.sdtcValueSet" ] ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "urn:hl7-org:sdtc"^^xsd:anyURI ]
+       ] [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "valueSet" ]
+       ] ) ;
+       fhir:path [ fhir:v "PQR.sdtcValueSet" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:definition [ fhir:v "The valueSet extension adds an attribute for elements with a CD dataType which indicates the particular value set constraining the coded concept." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "CD.valueSet" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/oid"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/oid>
+         ] )
+       ] )
+     ] [
+       fhir:id [ fhir:v "PQR.sdtcValueSetVersion" ] ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "urn:hl7-org:sdtc"^^xsd:anyURI ]
+       ] [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "valueSetVersion" ]
+       ] ) ;
+       fhir:path [ fhir:v "PQR.sdtcValueSetVersion" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:definition [ fhir:v "The valueSetVersion extension adds an attribute for elements with a CD dataType which indicates the version of the particular value set constraining the coded concept." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "CD.sdtcValueSetVersion" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+         ] )
+       ] )
+     ] [
+       fhir:id [ fhir:v "PQR.originalText" ] ;
+       fhir:path [ fhir:v "PQR.originalText" ] ;
+       fhir:label [ fhir:v "Original Text" ] ;
+       fhir:definition [ fhir:v "The text or phrase used as the basis for the coding." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "CD.originalText" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ED"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "PQR.qualifier" ] ;
+       fhir:path [ fhir:v "PQR.qualifier" ] ;
+       fhir:label [ fhir:v "Qualifier" ] ;
+       fhir:definition [ fhir:v "Specifies additional codes that increase the specificity of the the primary code." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "0" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "CD.qualifier" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CR"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "PQR.translation" ] ;
+       fhir:path [ fhir:v "PQR.translation" ] ;
+       fhir:representation ( [ fhir:v "typeAttr" ] ) ;
+       fhir:label [ fhir:v "Translation" ] ;
+       fhir:definition [ fhir:v "A set of other concept descriptors that translate this concept descriptor into other code systems." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "0" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "CD.translation" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CD"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "PQR.value" ] ;
+       fhir:path [ fhir:v "PQR.value" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Value" ] ;
+       fhir:definition [ fhir:v "The magnitude of the measurement value in terms of the unit specified by this code." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "PQR.value" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "decimal"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/real-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/real-simple>
+         ] )
+       ] )
+     ] )
+  ] ; # 
+  fhir:differential [
+     fhir:element ( [
+       fhir:id [ fhir:v "PQR" ] ;
+       fhir:path [ fhir:v "PQR" ] ;
+       fhir:definition [ fhir:v "A representation of a physical quantity in a unit from any code system. Used to show alternative representation for a physical quantity." ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ]
+     ] [
+       fhir:id [ fhir:v "PQR.value" ] ;
+       fhir:path [ fhir:v "PQR.value" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Value" ] ;
+       fhir:definition [ fhir:v "The magnitude of the measurement value in terms of the unit specified by this code." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "decimal"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/real-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/real-simple>
+         ] )
+       ] )
+     ] )
   ] . # 
-
-# - ontology header ------------------------------------------------------------
-
-<http://hl7.org/cda/stds/core/StructureDefinition/PQR.ttl> a owl:Ontology;
-  owl:imports fhir:fhir.ttl .
 
 # -------------------------------------------------------------------------------------
 

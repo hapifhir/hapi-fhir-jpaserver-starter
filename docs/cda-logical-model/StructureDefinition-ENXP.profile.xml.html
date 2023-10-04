@@ -11,7 +11,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title>HL7.CDA.UV.CORE\ENXP: Entity Name Part (V3 Data Type) - XML Representation - FHIR v5.0.0-snapshot3</title>
+    <title>ENXP: Entity Name Part (V3 Data Type) - XML Representation - Clinical Document Architecture v2.1.0-draft2-mb</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="author" content="http://hl7.org/fhir"/>
@@ -39,18 +39,18 @@
     <![endif]-->
 
     <!-- Favicons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png"/>
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png"/>
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png"/>
-    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png"/>
+    <link rel="fhir-logo" sizes="144x144" href="assets/ico/icon-fhir-144.png"/>
+    <link rel="fhir-logo" sizes="114x114" href="assets/ico/icon-fhir-114.png"/>
+    <link rel="fhir-logo" sizes="72x72" href="assets/ico/icon-fhir-72.png"/>
+    <link rel="fhir-logo" href="assets/ico/icon-fhir-57.png"/>
     <link rel="shortcut icon" href="assets/ico/favicon.png"/>
   </head>
   <body onload="document.body.style.opacity='1'">
 
 	  <script src="assets/js/prism.js"></script>
 
-    <style type="text/css">h2{--heading-prefix:"3.41"}
-    h3,h4,h5,h6{--heading-prefix:"3.41"}</style>
+    <style type="text/css">h2{--heading-prefix:"3.96"}
+    h3,h4,h5,h6{--heading-prefix:"3.96"}</style>
     <div id="segment-header" class="segment">  <!-- segment-header -->
       <div class="container">  <!-- container -->
         <!-- Placeholder for child template header declarations -->
@@ -69,9 +69,9 @@
 
 
         <div id="ig-status">
-          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture V2.0.1</span>
+          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture</span>
             <br/>
-            <span style="display:inline-block;">2.1.0-draft1 - 1st Draft
+            <span style="display:inline-block;">2.1.0-draft2-mb - active
 
 
             </span>
@@ -93,7 +93,7 @@
               <span class="icon-bar"> </span>
               <span class="icon-bar"> </span>
             </button>
-            <a class="navbar-brand hidden" href="http://build.fhir.org/index.html">FHIR</a>
+            <a class="navbar-brand hidden" href="http://hl7.org/fhir/R5/index.html">FHIR</a>
             <div class="nav-collapse collapse navbar-inverse-collapse">
               <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
   <li><a href="index.html">IG Home</a></li>
@@ -125,7 +125,7 @@
           <div class="inner-wrapper">
 
 <div style="counter-reset: section 7" class="col-12">
-  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture V2.0.1 - Local Development build (v2.1.0-draft1). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.1.0-draft2-mb). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
   
 
 
@@ -171,18 +171,6 @@
   
 
 
-  
-    <li>
-      <a href="StructureDefinition-ENXP.profile.json.html">JSON</a>
-    </li>
-  
-
-
-  
-    <li>
-      <a href="StructureDefinition-ENXP.profile.ttl.html">TTL</a>
-    </li>
-  
 
 
 </ul>
@@ -190,6 +178,7 @@
 
 <a name="root"> </a>
 <h2 id="root">Logical Model: ENXP - XML Profile</h2>
+
   <table class="colsi">
     <tr>
 
@@ -197,7 +186,7 @@
         
           Active
           
-            as of 2023-02-07
+            as of 2023-10-04
           
         
       </td>
@@ -217,358 +206,282 @@
 
   <pre class="xml" style="white-space: pre; overflow: hidden"><code class="language-xml">
 
-&lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition">StructureDefinition</a> xmlns=&quot;http://hl7.org/fhir&quot;&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.id">id</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">value</a>=&quot;ENXP&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.text">text</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/narrative.html#Narrative#Narrative.status">status</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;generated&quot;/&gt;
+&lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition">StructureDefinition</a> xmlns=&quot;http://hl7.org/fhir&quot;&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.id">id</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">value</a>=&quot;ENXP&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.text">text</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/narrative.html#Narrative#Narrative.status">status</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;generated&quot;/&gt;
     &lt;div xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
       &lt;p&gt;A character string token representing a part of a name. May have a type code signifying the role of the part in the whole entity name, and a qualifier code for more detail about the name part type. Typical name parts for person names are given names, and family names, titles, etc.&lt;/p&gt;
     &lt;/div&gt;<a name="end-xhtml"></a>
   &lt;/text&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.extension">extension</a>
-             <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;urn:hl7-org:v3&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.extension">extension</a>
+             <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/tools/StructureDefinition/logical-target&quot;&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueBoolean</a>&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#boolean#boolean.extension">extension</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/data-absent-reason&quot;&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;not-applicable&quot;/&gt;
+      &lt;/extension&gt;
+    &lt;/valueBoolean&gt;
   &lt;/extension&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.url">url</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/ENXP&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.version">version</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;2.1.0-draft1&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.name">name</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.title">title</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP: Entity Name Part (V3 Data Type)&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.status">status</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;active&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.experimental">experimental</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.date">date</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#dateTime">value</a>=&quot;2023-02-07T19:43:49+01:00&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.publisher">publisher</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Health Level 7&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.contact">contact</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.name">name</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;HL7 International - Cross-Group Projects&quot;/&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;url&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;http://www.hl7.org/Special/committees/cgp&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.extension">extension</a>
+             <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics&quot;&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;can-bind&quot;/&gt;
+  &lt;/extension&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.extension">extension</a>
+             <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;urn:hl7-org:v3&quot;/&gt;
+  &lt;/extension&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.url">url</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/ENXP&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.version">version</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;2.1.0-draft2-mb&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.name">name</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.title">title</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP: Entity Name Part (V3 Data Type)&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.status">status</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;active&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.experimental">experimental</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.date">date</a> <a href="http://hl7.org/fhir/R5/datatypes.html#dateTime">value</a>=&quot;2023-10-04T23:00:58+02:00&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.publisher">publisher</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Health Level 7&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.contact">contact</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/metadatatypes.html#ContactDetail#ContactDetail.name">name</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;HL7 International - Structured Documents&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;url&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;http://www.hl7.org/Special/committees/structdoc&quot;/&gt;
     &lt;/telecom&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;email&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;cgp@lists.HL7.org&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;email&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;structdog@lists.HL7.org&quot;/&gt;
     &lt;/telecom&gt;
   &lt;/contact&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.description">description</a>
-               <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;A character string token representing a part of a name. May have a type code signifying the role of the part in the whole entity name, and a qualifier code for more detail about the name part type. Typical name parts for person names are given names, and family names, titles, etc.&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;5.0.0-snapshot3&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping">mapping</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.identity">identity</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.uri">uri</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/v3&quot;/&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.name">name</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;RIM Mapping&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.description">description</a>
+               <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;A character string token representing a part of a name. May have a type code signifying the role of the part in the whole entity name, and a qualifier code for more detail about the name part type. Typical name parts for person names are given names, and family names, titles, etc.&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;5.0.0&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.mapping">mapping</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.mapping.identity">identity</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.mapping.uri">uri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/v3&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.mapping.name">name</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;RIM Mapping&quot;/&gt;
   &lt;/mapping&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.kind">kind</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;logical&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.abstract">abstract</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.type">type</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;ENXP&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/ST&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.derivation">derivation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;specialization&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Base for all types and resources&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;The character string data type stands for text data, primarily intended for machine processing (e.g., sorting, querying, indexing, etc.) Used for names, symbols, and formal expressions.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Base&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.kind">kind</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;logical&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.abstract">abstract</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.type">type</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/ENXP&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/ST&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.derivation">derivation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;specialization&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ENXP&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Base for all types and resources&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;The character string data type stands for text data, primarily intended for machine processing (e.g., sorting, querying, indexing, etc.) Used for names, symbols, and formal expressions.&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Base&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint">constraint</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.key">key</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">value</a>=&quot;ele-1&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.severity">severity</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;error&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.human">human</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;All FHIR elements must have a @value or children&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.expression">expression</a>
-                    <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;hasValue() or (children().count() &amp;gt; id.count())&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.source">source</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://hl7.org/fhir/StructureDefinition/Element&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint">constraint</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.key">key</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">value</a>=&quot;ele-1&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.severity">severity</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;error&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.human">human</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;All FHIR elements must have a @value or children&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.expression">expression</a>
+                    <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;hasValue() or (children().count() &amp;gt; id.count())&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.source">source</a> <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/fhir/StructureDefinition/Element&quot;/&gt;
       &lt;/constraint&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;n/a&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;n/a&quot;/&gt;
       &lt;/mapping&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.nullFlavor&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.nullFlavor&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Exceptional Value Detail&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ANY.nullFlavor&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ENXP.nullFlavor&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP.nullFlavor&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Exceptional Value Detail&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ANY.nullFlavor&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/cs-simple&quot;/&gt;
       &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-NullFlavor&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a> <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-NullFlavor&quot;/&gt;
       &lt;/binding&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.charset&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.charset&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Charset&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;For character-based encoding types, this property specifies the character set and character encoding used. The charset shall be identified by an Internet Assigned Numbers Authority (IANA) Charset Registration [] in accordance with RFC 2978 [].&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ED.charset&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ENXP.representation&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP.representation&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;Specifies the representation of the binary data that is the content of the binary data value&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ST.representation&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/cs-simple&quot;/&gt;
+      &lt;/type&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;TXT&quot;/&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ENXP.mediaType&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP.mediaType&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Media Type&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;Identifies the type of the encapsulated data and identifies a method to interpret or render the data.&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ST.mediaType&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/cs-simple&quot;/&gt;
+      &lt;/type&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;text/plain&quot;/&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ENXP.language&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP.language&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Language&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;For character based information the language property specifies the human language of the text.&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ST.language&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/cs-simple&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.compression&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.compression&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Compression&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;Indicates whether the raw byte data is compressed, and what compression algorithm was used.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ED.compression&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ENXP.xmlText&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP.xmlText&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlText&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Allows for mixed text content&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.comment">comment</a>
+               <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;This element is represented in XML as textual content. The actual name &amp;quot;xmlText&amp;quot; will not appear in a CDA instance.&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ST.xmlText&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;string&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/st-simple&quot;/&gt;
       &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-CompressionAlgorithm&quot;/&gt;
+    &lt;/element&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ENXP.partType&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP.partType&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Name Part Type Code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;Indicates whether the name part is a given name, family name, prefix, suffix, etc.&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP.partType&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;/base&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/cs-simple&quot;/&gt;
+      &lt;/type&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-EntityNamePartType&quot;/&gt;
       &lt;/binding&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.integrityCheck&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.integrityCheck&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Integrity Check&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;The integrity check is a short binary value representing a cryptographically strong checksum that is calculated over the binary data. The purpose of this property, when communicated with a reference is for anyone to validate later whether the reference still resolved to the same data that the reference resolved to when the encapsulated data value with reference was created.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ED.integrityCheck&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ENXP.qualifier&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP.qualifier&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Qualifier Code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;qualifier is a set of codes each of which specifies a certain subcategory of the name part in addition to the main name part type. For example, a given name may be flagged as a nickname, a family name may be a pseudonym or a name of public records.&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP.qualifier&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;base64Binary&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/cs-simple&quot;/&gt;
       &lt;/type&gt;
-    &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.integrityCheckAlgorithm&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.integrityCheckAlgorithm&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Integrity Check Algorithm&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;Specifies the algorithm used to compute the integrityCheck value. The cryptographically strong checksum algorithm Secure Hash Algorithm-1 (SHA-1) is currently the industry standard. It has superseded the MD5 algorithm only a couple of years ago, when certain flaws in the security of MD5 were discovered. Currently the SHA-1 hash algorithm is the default choice for the integrity check algorithm. Note that SHA-256 is also entering widespread usage.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ED.integrityCheckAlgorithm&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
-      &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-IntegrityCheckAlgorithm&quot;/&gt;
-      &lt;/binding&gt;
-    &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.language&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.language&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Language&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;For character based information the language property specifies the human language of the text.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ED.language&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
-      &lt;/type&gt;
-    &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.mediaType&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.mediaType&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Media Type&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;Identifies the type of the encapsulated data and identifies a method to interpret or render the data.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ED.mediaType&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
-      &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;text/plain&quot;/&gt;
-    &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.representation&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.representation&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;Specifies the representation of the binary data that is the content of the binary data value&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ED.representation&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
-      &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;TXT&quot;/&gt;
-    &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.data[x]&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.data[x]&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlText&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;The string value&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ED.data[x]&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;string&quot;/&gt;
-      &lt;/type&gt;
-    &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.reference&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.reference&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Reference&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;A telecommunication address (TEL), such as a URL for HTTP or FTP, which will resolve to precisely the same binary data that could as well have been provided as inline data.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ED.reference&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/TEL&quot;/&gt;
-      &lt;/type&gt;
-    &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.thumbnail&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.thumbnail&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Thumbnail&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;An abbreviated rendition of the full data. A thumbnail requires significantly fewer resources than the full data, while still maintaining some distinctive similarity with the full data. A thumbnail is typically used with by-reference encapsulated data. It allows a user to select data more efficiently before actually downloading through the reference.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ED.thumbnail&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/ED&quot;/&gt;
-      &lt;/type&gt;
-    &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.partType&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.partType&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Name Part Type Code&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;Indicates whether the name part is a given name, family name, prefix, suffix, etc.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.partType&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
-      &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-EntityNamePartType&quot;/&gt;
-      &lt;/binding&gt;
-    &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.qualifier&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.qualifier&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Qualifier Code&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;qualifier is a set of codes each of which specifies a certain subcategory of the name part in addition to the main name part type. For example, a given name may be flagged as a nickname, a family name may be a pseudonym or a name of public records.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.qualifier&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
-      &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
-      &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-EntityNamePartQualifier&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-EntityNamePartQualifier&quot;/&gt;
       &lt;/binding&gt;
     &lt;/element&gt;
   &lt;/snapshot&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential">differential</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential">differential</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ENXP&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.partType&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.partType&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Name Part Type Code&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;Indicates whether the name part is a given name, family name, prefix, suffix, etc.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ENXP.partType&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP.partType&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Name Part Type Code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;Indicates whether the name part is a given name, family name, prefix, suffix, etc.&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/cs-simple&quot;/&gt;
       &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-EntityNamePartType&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-EntityNamePartType&quot;/&gt;
       &lt;/binding&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;ENXP.qualifier&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;ENXP.qualifier&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Qualifier Code&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;qualifier is a set of codes each of which specifies a certain subcategory of the name part in addition to the main name part type. For example, a given name may be flagged as a nickname, a family name may be a pseudonym or a name of public records.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;ENXP.qualifier&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;ENXP.qualifier&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Qualifier Code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;qualifier is a set of codes each of which specifies a certain subcategory of the name part in addition to the main name part type. For example, a given name may be flagged as a nickname, a family name may be a pseudonym or a name of public records.&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/cs-simple&quot;/&gt;
       &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-EntityNamePartQualifier&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;required&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://terminology.hl7.org/ValueSet/v3-EntityNamePartQualifier&quot;/&gt;
       &lt;/binding&gt;
     &lt;/element&gt;
   &lt;/differential&gt;
@@ -626,7 +539,7 @@
 
       <div class="inner-wrapper">
         <p>
-          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/cgp">Health Level 7</a>.  Package hl7.cda.uv.core#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-snapshot3</a>. Generated <span title="Tue, Feb 7, 2023 19:43+0100">2023-02-07</span>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structdoc">Health Level 7</a>.  Package hl7.cda.uv.core#2.1.0-draft2-mb based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Wed, Oct 4, 2023 23:00+0200">2023-10-04</span>
           <br/>
           <span style="color: var(--footer-highlight-text-color)">
                       Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
@@ -634,7 +547,7 @@
                  
                 
                  | <a style="color: #81BEF7" target="_blank" href="http://hl7.org/cda/stds/core/history.html">Version History <img alt="external" style="vertical-align: baseline" src="external.png"/></a></a> |
-                 <a style="color: #81BEF7" rel="license" href="http://build.fhir.org/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
+                 <a style="color: #81BEF7" rel="license" href="http://hl7.org/fhir/R5/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
                  <!--<a style="color: #81BEF7" href="todo.html">Search</a> | --> 
                  <a style="color: #81BEF7" target="_blank" href="https://jira.hl7.org/projects/CDA/issues">Propose a change <img alt="external" style="vertical-align: baseline" src="external.png"/></a>
 

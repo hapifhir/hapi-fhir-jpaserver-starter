@@ -6,30 +6,43 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A specimen is a part of some entity, typically the subject, that is the target of focused laboratory, radiology or other observations. In many clinical observations, such as physical examination of a patient, the patient is the subject of the observation, and there is no specimen. The specimen participant is only used when observations are made against some substance or object that is taken or derived from the subject.</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+    "valueUri" : "specimen"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/Specimen",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Specimen",
+  "version" : "2.1.0-draft2-mb",
   "name" : "CDAR2.Specimen",
   "title" : "Specimen (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "A specimen is a part of some entity, typically the subject, that is the target of focused laboratory, radiology or other observations. In many clinical observations, such as physical examination of a patient, the patient is the subject of the observation, and there is no specimen. The specimen participant is only used when observations are made against some substance or object that is taken or derived from the subject.",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,8 +50,8 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "Specimen",
-  "baseDefinition" : "http://hl7.org/fhir/cda/StructureDefinition/InfrastructureRoot",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/Specimen",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot",
   "derivation" : "specialization",
   "snapshot" : {
     "element" : [{
@@ -80,7 +93,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -99,7 +113,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }]
     },
     {
@@ -114,7 +128,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -129,24 +143,24 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
       "id" : "Specimen.typeCode",
       "path" : "Specimen.typeCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "Specimen.typeCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "SPC",
       "fixedCode" : "SPC",
       "binding" : {
         "strength" : "required",
@@ -164,7 +178,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SpecimenRole"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/SpecimenRole"
       }]
     }]
   },
@@ -179,12 +193,12 @@
       "id" : "Specimen.typeCode",
       "path" : "Specimen.typeCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
-      "defaultValueCode" : "SPC",
       "fixedCode" : "SPC",
       "binding" : {
         "strength" : "required",
@@ -197,7 +211,7 @@
       "min" : 1,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/SpecimenRole"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/SpecimenRole"
       }]
     }]
   }

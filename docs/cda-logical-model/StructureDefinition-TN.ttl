@@ -5,315 +5,291 @@
 
 # - resource -------------------------------------------------------------------
 
-<http://hl7.org/cda/stds/core/StructureDefinition/TN> a fhir:StructureDefinition;
-  fhir:nodeRole fhir:treeRoot;
-  fhir:Resource.id [ fhir:value "TN"]; # 
-  fhir:DomainResource.text [
-     fhir:Narrative.status [ fhir:value "generated" ];
-     fhir:Narrative.div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A restriction of entity name that is effectively a simple string used for a simple name for things and places.</p>\n    </div>"
-  ]; # 
-  fhir:DomainResource.extension [
-     fhir:index 0;
-     fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
-     fhir:Extension.valueUri [ fhir:value "urn:hl7-org:v3" ]
-  ], [
-     fhir:index 1;
-     fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/structuredefinition-xml-no-order" ];
-     fhir:Extension.valueBoolean [ fhir:value "true"^^xsd:boolean ]
-  ]; # 
-  fhir:StructureDefinition.url [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/TN"]; # 
-  fhir:StructureDefinition.version [ fhir:value "2.1.0-draft1"]; # 
-  fhir:StructureDefinition.name [ fhir:value "TN"]; # 
-  fhir:StructureDefinition.title [ fhir:value "TN: TrivialName (V3 Data Type)"]; # 
-  fhir:StructureDefinition.status [ fhir:value "active"]; # 
-  fhir:StructureDefinition.experimental [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.date [ fhir:value "2023-02-07T19:43:49+01:00"^^xsd:dateTime]; # 
-  fhir:StructureDefinition.publisher [ fhir:value "Health Level 7"]; # 
-  fhir:StructureDefinition.contact [
-     fhir:index 0;
-     fhir:ContactDetail.name [ fhir:value "HL7 International - Cross-Group Projects" ];
-     fhir:ContactDetail.telecom [
-       fhir:index 0;
-       fhir:ContactPoint.system [ fhir:value "url" ];
-       fhir:ContactPoint.value [ fhir:value "http://www.hl7.org/Special/committees/cgp" ]
-     ], [
-       fhir:index 1;
-       fhir:ContactPoint.system [ fhir:value "email" ];
-       fhir:ContactPoint.value [ fhir:value "cgp@lists.HL7.org" ]
+<http://hl7.org/cda/stds/core/StructureDefinition/TN> a fhir:StructureDefinition ;
+  fhir:nodeRole fhir:treeRoot ;
+  fhir:id [ fhir:v "TN"] ; # 
+  fhir:text [
+     fhir:status [ fhir:v "generated" ] ;
+     fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A restriction of entity name that is effectively a simple string used for a simple name for things and places.</p>\n    </div>"
+  ] ; # 
+  fhir:extension ( [
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-target"^^xsd:anyURI ] ;
+     fhir:value [
+       a fhir:boolean ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/data-absent-reason"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "not-applicable" ]
+       ] )
      ]
-  ]; # 
-  fhir:StructureDefinition.description [ fhir:value "A restriction of entity name that is effectively a simple string used for a simple name for things and places."]; # 
-  fhir:StructureDefinition.fhirVersion [ fhir:value "5.0.0-snapshot3"]; # 
-  fhir:StructureDefinition.mapping [
-     fhir:index 0;
-     fhir:StructureDefinition.mapping.identity [ fhir:value "rim" ];
-     fhir:StructureDefinition.mapping.uri [ fhir:value "http://hl7.org/v3" ];
-     fhir:StructureDefinition.mapping.name [ fhir:value "RIM Mapping" ]
-  ]; # 
-  fhir:StructureDefinition.kind [ fhir:value "logical"]; # 
-  fhir:StructureDefinition.abstract [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.type [ fhir:value "EN"]; # 
-  fhir:StructureDefinition.baseDefinition [
-     fhir:value "http://hl7.org/fhir/cda/StructureDefinition/EN";
-     fhir:link <http://hl7.org/fhir/cda/StructureDefinition/EN>
-  ]; # 
-  fhir:StructureDefinition.derivation [ fhir:value "constraint"]; # 
-  fhir:StructureDefinition.snapshot [
-     fhir:StructureDefinition.snapshot.element [
-       fhir:index 0;
-       fhir:Element.id [ fhir:value "EN" ];
-       fhir:ElementDefinition.path [ fhir:value "EN" ];
-       fhir:ElementDefinition.short [ fhir:value "Base for all types and resources" ];
-       fhir:ElementDefinition.definition [ fhir:value "A restriction of entity name that is effectively a simple string used for a simple name for things and places." ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "Base" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.constraint [
-         fhir:index 0;
-         fhir:ElementDefinition.constraint.key [ fhir:value "ele-1" ];
-         fhir:ElementDefinition.constraint.severity [ fhir:value "error" ];
-         fhir:ElementDefinition.constraint.human [ fhir:value "All FHIR elements must have a @value or children" ];
-         fhir:ElementDefinition.constraint.expression [ fhir:value "hasValue() or (children().count() > id.count())" ];
-         fhir:ElementDefinition.constraint.source [
-           fhir:value "http://hl7.org/fhir/StructureDefinition/Element";
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "urn:hl7-org:v3"^^xsd:anyURI ]
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/structuredefinition-xml-no-order"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "true"^^xsd:boolean ]
+  ] ) ; # 
+  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/TN"^^xsd:anyURI] ; # 
+  fhir:version [ fhir:v "2.1.0-draft2-mb"] ; # 
+  fhir:name [ fhir:v "TN"] ; # 
+  fhir:title [ fhir:v "TN: TrivialName (V3 Data Type)"] ; # 
+  fhir:status [ fhir:v "active"] ; # 
+  fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:date [ fhir:v "2023-10-04T23:00:58+02:00"^^xsd:dateTime] ; # 
+  fhir:publisher [ fhir:v "Health Level 7"] ; # 
+  fhir:contact ( [
+     fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
+     fhir:telecom ( [
+       fhir:system [ fhir:v "url" ] ;
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structdoc" ]
+     ] [
+       fhir:system [ fhir:v "email" ] ;
+       fhir:value [ fhir:v "structdog@lists.HL7.org" ]
+     ] )
+  ] ) ; # 
+  fhir:description [ fhir:v "A restriction of entity name that is effectively a simple string used for a simple name for things and places."] ; # 
+  fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
+  fhir:mapping ( [
+     fhir:identity [ fhir:v "rim" ] ;
+     fhir:uri [ fhir:v "http://hl7.org/v3"^^xsd:anyURI ] ;
+     fhir:name [ fhir:v "RIM Mapping" ]
+  ] ) ; # 
+  fhir:kind [ fhir:v "logical"] ; # 
+  fhir:abstract [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:type [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/EN"^^xsd:anyURI] ; # 
+  fhir:baseDefinition [
+     fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/EN"^^xsd:anyURI ;
+     fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/EN>
+  ] ; # 
+  fhir:derivation [ fhir:v "constraint"] ; # 
+  fhir:snapshot [
+     fhir:element ( [
+       fhir:id [ fhir:v "EN" ] ;
+       fhir:path [ fhir:v "EN" ] ;
+       fhir:short [ fhir:v "Base for all types and resources" ] ;
+       fhir:definition [ fhir:v "A restriction of entity name that is effectively a simple string used for a simple name for things and places." ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "Base" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:constraint ( [
+         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
+         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:source [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
            fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
          ]
-       ];
-       fhir:ElementDefinition.isModifier [ fhir:value "false"^^xsd:boolean ];
-       fhir:ElementDefinition.mapping [
-         fhir:index 0;
-         fhir:ElementDefinition.mapping.identity [ fhir:value "rim" ];
-         fhir:ElementDefinition.mapping.map [ fhir:value "n/a" ]
-       ]
-     ], [
-       fhir:index 1;
-       fhir:Element.id [ fhir:value "EN.nullFlavor" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.nullFlavor" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Exceptional Value Detail" ];
-       fhir:ElementDefinition.definition [ fhir:value "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "ANY.nullFlavor" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-NullFlavor";
+       ] ) ;
+       fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
+       fhir:mapping ( [
+         fhir:identity [ fhir:v "rim" ] ;
+         fhir:map [ fhir:v "n/a" ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "EN.nullFlavor" ] ;
+       fhir:path [ fhir:v "EN.nullFlavor" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Exceptional Value Detail" ] ;
+       fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "ANY.nullFlavor" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
          ]
        ]
-     ], [
-       fhir:index 2;
-       fhir:Element.id [ fhir:value "EN.use" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.use" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.label [ fhir:value "Use Code" ];
-       fhir:ElementDefinition.definition [ fhir:value "A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "EN.use" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-EntityNameUse";
+     ] [
+       fhir:id [ fhir:v "EN.use" ] ;
+       fhir:path [ fhir:v "EN.use" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Use Code" ] ;
+       fhir:definition [ fhir:v "A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "EN.use" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-EntityNameUse"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-EntityNameUse>
          ]
        ]
-     ], [
-       fhir:index 3;
-       fhir:Element.id [ fhir:value "EN.delimiter" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.delimiter" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "0" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "EN.delimiter" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/ENXP" ]
-       ]
-     ], [
-       fhir:index 4;
-       fhir:Element.id [ fhir:value "EN.family" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.family" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "0" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "EN.family" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/ENXP" ]
-       ]
-     ], [
-       fhir:index 5;
-       fhir:Element.id [ fhir:value "EN.given" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.given" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "0" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "EN.given" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/ENXP" ]
-       ]
-     ], [
-       fhir:index 6;
-       fhir:Element.id [ fhir:value "EN.prefix" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.prefix" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "0" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "EN.prefix" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/ENXP" ]
-       ]
-     ], [
-       fhir:index 7;
-       fhir:Element.id [ fhir:value "EN.suffix" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.suffix" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "0" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "EN.suffix" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/ENXP" ]
-       ]
-     ], [
-       fhir:index 8;
-       fhir:Element.id [ fhir:value "EN.other" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.other" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlText";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "EN.other" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "string" ]
-       ]
-     ], [
-       fhir:index 9;
-       fhir:Element.id [ fhir:value "EN.validTime" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.validTime" ];
-       fhir:ElementDefinition.label [ fhir:value "Valid Time" ];
-       fhir:ElementDefinition.definition [ fhir:value "An interval of time specifying the time during which the name is or was used for the entity. This accomodates the fact that people change names for people, places and things." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "EN.validTime" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" ]
-       ]
-     ]
-  ]; # 
-  fhir:StructureDefinition.differential [
-     fhir:StructureDefinition.differential.element [
-       fhir:index 0;
-       fhir:Element.id [ fhir:value "EN" ];
-       fhir:ElementDefinition.path [ fhir:value "EN" ];
-       fhir:ElementDefinition.definition [ fhir:value "A restriction of entity name that is effectively a simple string used for a simple name for things and places." ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ]
-     ], [
-       fhir:index 1;
-       fhir:Element.id [ fhir:value "EN.use" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.use" ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-EntityNameUse";
+     ] [
+       fhir:id [ fhir:v "EN.delimiter" ] ;
+       fhir:path [ fhir:v "EN.delimiter" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "0" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "EN.delimiter" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "EN.family" ] ;
+       fhir:path [ fhir:v "EN.family" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "0" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "EN.family" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "EN.given" ] ;
+       fhir:path [ fhir:v "EN.given" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "0" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "EN.given" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "EN.prefix" ] ;
+       fhir:path [ fhir:v "EN.prefix" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "0" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "EN.prefix" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "EN.suffix" ] ;
+       fhir:path [ fhir:v "EN.suffix" ] ;
+       fhir:definition [ fhir:v "Element EN.family" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "0" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "EN.suffix" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "EN.xmlText" ] ;
+       fhir:path [ fhir:v "EN.xmlText" ] ;
+       fhir:representation ( [ fhir:v "xmlText" ] ) ;
+       fhir:short [ fhir:v "Allows for mixed text content" ] ;
+       fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "EN.xmlText" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+         ] )
+       ] )
+     ] [
+       fhir:id [ fhir:v "EN.validTime" ] ;
+       fhir:path [ fhir:v "EN.validTime" ] ;
+       fhir:label [ fhir:v "Valid Time" ] ;
+       fhir:definition [ fhir:v "An interval of time specifying the time during which the name is or was used for the entity. This accomodates the fact that people change names for people, places and things." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "EN.validTime" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"^^xsd:anyURI ]
+       ] )
+     ] )
+  ] ; # 
+  fhir:differential [
+     fhir:element ( [
+       fhir:id [ fhir:v "EN" ] ;
+       fhir:path [ fhir:v "EN" ] ;
+       fhir:definition [ fhir:v "A restriction of entity name that is effectively a simple string used for a simple name for things and places." ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ]
+     ] [
+       fhir:id [ fhir:v "EN.use" ] ;
+       fhir:path [ fhir:v "EN.use" ] ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-EntityNameUse"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-EntityNameUse>
          ]
        ]
-     ], [
-       fhir:index 2;
-       fhir:Element.id [ fhir:value "EN.delimiter" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.delimiter" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "0" ]
-     ], [
-       fhir:index 3;
-       fhir:Element.id [ fhir:value "EN.family" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.family" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "0" ]
-     ], [
-       fhir:index 4;
-       fhir:Element.id [ fhir:value "EN.given" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.given" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "0" ]
-     ], [
-       fhir:index 5;
-       fhir:Element.id [ fhir:value "EN.prefix" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.prefix" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "0" ]
-     ], [
-       fhir:index 6;
-       fhir:Element.id [ fhir:value "EN.suffix" ];
-       fhir:ElementDefinition.path [ fhir:value "EN.suffix" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "0" ]
-     ]
+     ] [
+       fhir:id [ fhir:v "EN.delimiter" ] ;
+       fhir:path [ fhir:v "EN.delimiter" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "0" ]
+     ] [
+       fhir:id [ fhir:v "EN.family" ] ;
+       fhir:path [ fhir:v "EN.family" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "0" ]
+     ] [
+       fhir:id [ fhir:v "EN.given" ] ;
+       fhir:path [ fhir:v "EN.given" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "0" ]
+     ] [
+       fhir:id [ fhir:v "EN.prefix" ] ;
+       fhir:path [ fhir:v "EN.prefix" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "0" ]
+     ] [
+       fhir:id [ fhir:v "EN.suffix" ] ;
+       fhir:path [ fhir:v "EN.suffix" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "0" ]
+     ] )
   ] . # 
-
-# - ontology header ------------------------------------------------------------
-
-<http://hl7.org/cda/stds/core/StructureDefinition/TN.ttl> a owl:Ontology;
-  owl:imports fhir:fhir.ttl .
 
 # -------------------------------------------------------------------------------------
 

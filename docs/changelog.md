@@ -1,3 +1,7 @@
+2023/10/05 Release 3.4.5
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.4`
+- CDA Logical Model update for xsi-type ST [#145](https://github.com/ahdis/matchbox/issues/145)
+
 2023/10/03 Release 3.4.4
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.4`
 - CDA Logical Model update for xsi-type ST [#145](https://github.com/ahdis/matchbox/issues/145)

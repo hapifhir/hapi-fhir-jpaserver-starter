@@ -5,496 +5,501 @@
 
 # - resource -------------------------------------------------------------------
 
-<http://hl7.org/cda/stds/core/StructureDefinition/StructuredBody> a fhir:StructureDefinition;
-  fhir:nodeRole fhir:treeRoot;
-  fhir:Resource.id [ fhir:value "StructuredBody"]; # 
-  fhir:DomainResource.text [
-     fhir:Narrative.status [ fhir:value "generated" ];
-     fhir:Narrative.div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The StructuredBody class represents a CDA document body that is comprised of one or more document sections.</p>\n      <p>The StructuredBody class is associated with one or more Section classes through a component relationship.</p>\n    </div>"
-  ]; # 
-  fhir:DomainResource.extension [
-     fhir:index 0;
-     fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
-     fhir:Extension.valueUri [ fhir:value "urn:hl7-org:v3" ]
-  ]; # 
-  fhir:StructureDefinition.url [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/StructuredBody"]; # 
-  fhir:StructureDefinition.version [ fhir:value "2.1.0-draft1"]; # 
-  fhir:StructureDefinition.name [ fhir:value "CDAR2.StructuredBody"]; # 
-  fhir:StructureDefinition.title [ fhir:value "StructuredBody (CDA Class)"]; # 
-  fhir:StructureDefinition.status [ fhir:value "active"]; # 
-  fhir:StructureDefinition.experimental [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.date [ fhir:value "2023-02-07T19:43:49+01:00"^^xsd:dateTime]; # 
-  fhir:StructureDefinition.publisher [ fhir:value "Health Level 7"]; # 
-  fhir:StructureDefinition.contact [
-     fhir:index 0;
-     fhir:ContactDetail.name [ fhir:value "HL7 International - Cross-Group Projects" ];
-     fhir:ContactDetail.telecom [
-       fhir:index 0;
-       fhir:ContactPoint.system [ fhir:value "url" ];
-       fhir:ContactPoint.value [ fhir:value "http://www.hl7.org/Special/committees/cgp" ]
-     ], [
-       fhir:index 1;
-       fhir:ContactPoint.system [ fhir:value "email" ];
-       fhir:ContactPoint.value [ fhir:value "cgp@lists.HL7.org" ]
+<http://hl7.org/cda/stds/core/StructureDefinition/StructuredBody> a fhir:StructureDefinition ;
+  fhir:nodeRole fhir:treeRoot ;
+  fhir:id [ fhir:v "StructuredBody"] ; # 
+  fhir:text [
+     fhir:status [ fhir:v "generated" ] ;
+     fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The StructuredBody class represents a CDA document body that is comprised of one or more document sections.</p>\n      <p>The StructuredBody class is associated with one or more Section classes through a component relationship.</p>\n    </div>"
+  ] ; # 
+  fhir:extension ( [
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-target"^^xsd:anyURI ] ;
+     fhir:value [
+       a fhir:boolean ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/data-absent-reason"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "not-applicable" ]
+       ] )
      ]
-  ]; # 
-  fhir:StructureDefinition.description [ fhir:value "The StructuredBody class represents a CDA document body that is comprised of one or more document sections.\nThe StructuredBody class is associated with one or more Section classes through a component relationship."]; # 
-  fhir:StructureDefinition.fhirVersion [ fhir:value "5.0.0-snapshot3"]; # 
-  fhir:StructureDefinition.mapping [
-     fhir:index 0;
-     fhir:StructureDefinition.mapping.identity [ fhir:value "rim" ];
-     fhir:StructureDefinition.mapping.uri [ fhir:value "http://hl7.org/v3" ];
-     fhir:StructureDefinition.mapping.name [ fhir:value "RIM Mapping" ]
-  ]; # 
-  fhir:StructureDefinition.kind [ fhir:value "logical"]; # 
-  fhir:StructureDefinition.abstract [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.type [ fhir:value "StructuredBody"]; # 
-  fhir:StructureDefinition.baseDefinition [
-     fhir:value "http://hl7.org/fhir/StructureDefinition/Base";
-     fhir:link <http://hl7.org/fhir/StructureDefinition/Base>
-  ]; # 
-  fhir:StructureDefinition.derivation [ fhir:value "specialization"]; # 
-  fhir:StructureDefinition.snapshot [
-     fhir:StructureDefinition.snapshot.element [
-       fhir:index 0;
-       fhir:Element.id [ fhir:value "StructuredBody" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody" ];
-       fhir:ElementDefinition.short [ fhir:value "Base for all types and resources" ];
-       fhir:ElementDefinition.definition [ fhir:value "Base definition for all types defined in FHIR type system." ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "Base" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.constraint [
-         fhir:index 0;
-         fhir:ElementDefinition.constraint.key [ fhir:value "ele-1" ];
-         fhir:ElementDefinition.constraint.severity [ fhir:value "error" ];
-         fhir:ElementDefinition.constraint.human [ fhir:value "All FHIR elements must have a @value or children" ];
-         fhir:ElementDefinition.constraint.expression [ fhir:value "hasValue() or (children().count() > id.count())" ];
-         fhir:ElementDefinition.constraint.source [
-           fhir:value "http://hl7.org/fhir/StructureDefinition/Element";
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "urn:hl7-org:v3"^^xsd:anyURI ]
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "structuredBody"^^xsd:anyURI ]
+  ] ) ; # 
+  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/StructuredBody"^^xsd:anyURI] ; # 
+  fhir:version [ fhir:v "2.1.0-draft2-mb"] ; # 
+  fhir:name [ fhir:v "CDAR2.StructuredBody"] ; # 
+  fhir:title [ fhir:v "StructuredBody (CDA Class)"] ; # 
+  fhir:status [ fhir:v "active"] ; # 
+  fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:date [ fhir:v "2023-10-04T23:00:58+02:00"^^xsd:dateTime] ; # 
+  fhir:publisher [ fhir:v "Health Level 7"] ; # 
+  fhir:contact ( [
+     fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
+     fhir:telecom ( [
+       fhir:system [ fhir:v "url" ] ;
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structdoc" ]
+     ] [
+       fhir:system [ fhir:v "email" ] ;
+       fhir:value [ fhir:v "structdog@lists.HL7.org" ]
+     ] )
+  ] ) ; # 
+  fhir:description [ fhir:v "The StructuredBody class represents a CDA document body that is comprised of one or more document sections.\nThe StructuredBody class is associated with one or more Section classes through a component relationship."] ; # 
+  fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
+  fhir:mapping ( [
+     fhir:identity [ fhir:v "rim" ] ;
+     fhir:uri [ fhir:v "http://hl7.org/v3"^^xsd:anyURI ] ;
+     fhir:name [ fhir:v "RIM Mapping" ]
+  ] ) ; # 
+  fhir:kind [ fhir:v "logical"] ; # 
+  fhir:abstract [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:type [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/StructuredBody"^^xsd:anyURI] ; # 
+  fhir:baseDefinition [
+     fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"^^xsd:anyURI ;
+     fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot>
+  ] ; # 
+  fhir:derivation [ fhir:v "specialization"] ; # 
+  fhir:snapshot [
+     fhir:element ( [
+       fhir:id [ fhir:v "StructuredBody" ] ;
+       fhir:path [ fhir:v "StructuredBody" ] ;
+       fhir:short [ fhir:v "Base for all types and resources" ] ;
+       fhir:definition [ fhir:v "Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type." ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "Base" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:constraint ( [
+         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
+         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:source [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
            fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
          ]
-       ];
-       fhir:ElementDefinition.isModifier [ fhir:value "false"^^xsd:boolean ];
-       fhir:ElementDefinition.mapping [
-         fhir:index 0;
-         fhir:ElementDefinition.mapping.identity [ fhir:value "rim" ];
-         fhir:ElementDefinition.mapping.map [ fhir:value "n/a" ]
+       ] ) ;
+       fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
+       fhir:mapping ( [
+         fhir:identity [ fhir:v "rim" ] ;
+         fhir:map [ fhir:v "n/a" ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "StructuredBody.nullFlavor" ] ;
+       fhir:path [ fhir:v "StructuredBody.nullFlavor" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Exceptional Value Detail" ] ;
+       fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "ANY.nullFlavor" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
+           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+         ]
        ]
-     ], [
-       fhir:index 1;
-       fhir:Element.id [ fhir:value "StructuredBody.classCode" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.classCode" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "StructuredBody.classCode" ];
-         fhir:ElementDefinition.base.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.defaultValueCode [ fhir:value "DOCBODY" ];
-       fhir:ElementDefinition.fixedCode [ fhir:value "DOCBODY" ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer";
+     ] [
+       fhir:id [ fhir:v "StructuredBody.realmCode" ] ;
+       fhir:path [ fhir:v "StructuredBody.realmCode" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "InfrastructureRoot.realmCode" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CS"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "StructuredBody.typeId" ] ;
+       fhir:path [ fhir:v "StructuredBody.typeId" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "InfrastructureRoot.typeId" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "StructuredBody.templateId" ] ;
+       fhir:path [ fhir:v "StructuredBody.templateId" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "InfrastructureRoot.templateId" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "StructuredBody.classCode" ] ;
+       fhir:path [ fhir:v "StructuredBody.classCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "StructuredBody.classCode" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "DOCBODY" ] ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer>
          ]
        ]
-     ], [
-       fhir:index 2;
-       fhir:Element.id [ fhir:value "StructuredBody.moodCode" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.moodCode" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "StructuredBody.moodCode" ];
-         fhir:ElementDefinition.base.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.defaultValueCode [ fhir:value "EVN" ];
-       fhir:ElementDefinition.fixedCode [ fhir:value "EVN" ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-ActMood";
+     ] [
+       fhir:id [ fhir:v "StructuredBody.moodCode" ] ;
+       fhir:path [ fhir:v "StructuredBody.moodCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "StructuredBody.moodCode" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "EVN" ] ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-ActMood"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-ActMood>
          ]
        ]
-     ], [
-       fhir:index 3;
-       fhir:Element.id [ fhir:value "StructuredBody.confidentialityCode" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.confidentialityCode" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "StructuredBody.confidentialityCode" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CE" ]
-       ]
-     ], [
-       fhir:index 4;
-       fhir:Element.id [ fhir:value "StructuredBody.languageCode" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.languageCode" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "StructuredBody.languageCode" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CS" ]
-       ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-HumanLanguage";
+     ] [
+       fhir:id [ fhir:v "StructuredBody.confidentialityCode" ] ;
+       fhir:path [ fhir:v "StructuredBody.confidentialityCode" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "StructuredBody.confidentialityCode" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CE"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "StructuredBody.languageCode" ] ;
+       fhir:path [ fhir:v "StructuredBody.languageCode" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "StructuredBody.languageCode" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CS"^^xsd:anyURI ]
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-HumanLanguage"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-HumanLanguage>
          ]
        ]
-     ], [
-       fhir:index 5;
-       fhir:Element.id [ fhir:value "StructuredBody.component" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.component" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "StructuredBody.component" ];
-         fhir:ElementDefinition.base.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "Element" ]
-       ];
-       fhir:ElementDefinition.constraint [
-         fhir:index 0;
-         fhir:ElementDefinition.constraint.key [ fhir:value "ele-1" ];
-         fhir:ElementDefinition.constraint.severity [ fhir:value "error" ];
-         fhir:ElementDefinition.constraint.human [ fhir:value "All FHIR elements must have a @value or children" ];
-         fhir:ElementDefinition.constraint.expression [ fhir:value "hasValue() or (children().count() > id.count())" ];
-         fhir:ElementDefinition.constraint.source [
-           fhir:value "http://hl7.org/fhir/StructureDefinition/Element";
+     ] [
+       fhir:id [ fhir:v "StructuredBody.component" ] ;
+       fhir:path [ fhir:v "StructuredBody.component" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "StructuredBody.component" ] ;
+         fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"^^xsd:anyURI ]
+       ] ) ;
+       fhir:constraint ( [
+         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
+         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:source [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
            fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
          ]
-       ]
-     ], [
-       fhir:index 6;
-       fhir:Element.id [ fhir:value "StructuredBody.component.id" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.component.id" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.short [ fhir:value "Unique id for inter-element referencing" ];
-       fhir:ElementDefinition.definition [ fhir:value "Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces." ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "Element.id" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:Element.extension [
-           fhir:index 0;
-           fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type" ];
-           fhir:Extension.valueUrl [ fhir:value "string" ]
-         ];
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhirpath/System.String" ]
-       ];
-       fhir:ElementDefinition.isModifier [ fhir:value "false"^^xsd:boolean ];
-       fhir:ElementDefinition.isSummary [ fhir:value "false"^^xsd:boolean ];
-       fhir:ElementDefinition.mapping [
-         fhir:index 0;
-         fhir:ElementDefinition.mapping.identity [ fhir:value "rim" ];
-         fhir:ElementDefinition.mapping.map [ fhir:value "n/a" ]
-       ]
-     ], [
-       fhir:index 7;
-       fhir:Element.id [ fhir:value "StructuredBody.component.extension" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.component.extension" ];
-       fhir:ElementDefinition.slicing [
-         fhir:ElementDefinition.slicing.discriminator [
-           fhir:index 0;
-           fhir:ElementDefinition.slicing.discriminator.type [ fhir:value "value" ];
-           fhir:ElementDefinition.slicing.discriminator.path [ fhir:value "url" ]
-         ];
-         fhir:ElementDefinition.slicing.description [ fhir:value "Extensions are always sliced by (at least) url" ];
-         fhir:ElementDefinition.slicing.rules [ fhir:value "open" ]
-       ];
-       fhir:ElementDefinition.short [ fhir:value "Additional content defined by implementations" ];
-       fhir:ElementDefinition.definition [ fhir:value "May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension." ];
-       fhir:ElementDefinition.comment [ fhir:value "There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone." ];
-       fhir:ElementDefinition.alias [
-         fhir:value "extensions";
-         fhir:index 0
-       ], [
-         fhir:value "user content";
-         fhir:index 1
-       ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "Element.extension" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "Extension" ]
-       ];
-       fhir:ElementDefinition.constraint [
-         fhir:index 0;
-         fhir:ElementDefinition.constraint.key [ fhir:value "ele-1" ];
-         fhir:ElementDefinition.constraint.severity [ fhir:value "error" ];
-         fhir:ElementDefinition.constraint.human [ fhir:value "All FHIR elements must have a @value or children" ];
-         fhir:ElementDefinition.constraint.expression [ fhir:value "hasValue() or (children().count() > id.count())" ];
-         fhir:ElementDefinition.constraint.source [
-           fhir:value "http://hl7.org/fhir/StructureDefinition/Element";
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+       ] )
+     ] [
+       fhir:id [ fhir:v "StructuredBody.component.nullFlavor" ] ;
+       fhir:path [ fhir:v "StructuredBody.component.nullFlavor" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Exceptional Value Detail" ] ;
+       fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "ANY.nullFlavor" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
+           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
          ]
-       ], [
-         fhir:index 1;
-         fhir:ElementDefinition.constraint.key [ fhir:value "ext-1" ];
-         fhir:ElementDefinition.constraint.severity [ fhir:value "error" ];
-         fhir:ElementDefinition.constraint.human [ fhir:value "Must have either extensions or value[x], not both" ];
-         fhir:ElementDefinition.constraint.expression [ fhir:value "extension.exists() != value.exists()" ];
-         fhir:ElementDefinition.constraint.source [
-           fhir:value "http://hl7.org/fhir/StructureDefinition/Extension";
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Extension>
-         ]
-       ];
-       fhir:ElementDefinition.isModifier [ fhir:value "false"^^xsd:boolean ];
-       fhir:ElementDefinition.isSummary [ fhir:value "false"^^xsd:boolean ];
-       fhir:ElementDefinition.mapping [
-         fhir:index 0;
-         fhir:ElementDefinition.mapping.identity [ fhir:value "rim" ];
-         fhir:ElementDefinition.mapping.map [ fhir:value "n/a" ]
        ]
-     ], [
-       fhir:index 8;
-       fhir:Element.id [ fhir:value "StructuredBody.component.typeCode" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.component.typeCode" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "StructuredBody.component.typeCode" ];
-         fhir:ElementDefinition.base.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.defaultValueCode [ fhir:value "COMP" ];
-       fhir:ElementDefinition.fixedCode [ fhir:value "COMP" ]
-     ], [
-       fhir:index 9;
-       fhir:Element.id [ fhir:value "StructuredBody.component.contextConductionInd" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.component.contextConductionInd" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "StructuredBody.component.contextConductionInd" ];
-         fhir:ElementDefinition.base.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "boolean" ]
-       ];
-       fhir:ElementDefinition.defaultValueBoolean [ fhir:value "true"^^xsd:boolean ]
-     ], [
-       fhir:index 10;
-       fhir:Element.id [ fhir:value "StructuredBody.component.section" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.component.section" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "StructuredBody.component.section" ];
-         fhir:ElementDefinition.base.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Section" ]
-       ]
-     ]
-  ]; # 
-  fhir:StructureDefinition.differential [
-     fhir:StructureDefinition.differential.element [
-       fhir:index 0;
-       fhir:Element.id [ fhir:value "StructuredBody" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ]
-     ], [
-       fhir:index 1;
-       fhir:Element.id [ fhir:value "StructuredBody.classCode" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.classCode" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.defaultValueCode [ fhir:value "DOCBODY" ];
-       fhir:ElementDefinition.fixedCode [ fhir:value "DOCBODY" ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer";
+     ] [
+       fhir:id [ fhir:v "StructuredBody.component.realmCode" ] ;
+       fhir:path [ fhir:v "StructuredBody.component.realmCode" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "InfrastructureRoot.realmCode" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CS"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "StructuredBody.component.typeId" ] ;
+       fhir:path [ fhir:v "StructuredBody.component.typeId" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "InfrastructureRoot.typeId" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "StructuredBody.component.templateId" ] ;
+       fhir:path [ fhir:v "StructuredBody.component.templateId" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "InfrastructureRoot.templateId" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "StructuredBody.component.typeCode" ] ;
+       fhir:path [ fhir:v "StructuredBody.component.typeCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "StructuredBody.component.typeCode" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "COMP" ]
+     ] [
+       fhir:id [ fhir:v "StructuredBody.component.contextConductionInd" ] ;
+       fhir:path [ fhir:v "StructuredBody.component.contextConductionInd" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "StructuredBody.component.contextConductionInd" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "boolean"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/bl-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "true"^^xsd:boolean ]
+     ] [
+       fhir:id [ fhir:v "StructuredBody.component.section" ] ;
+       fhir:path [ fhir:v "StructuredBody.component.section" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "StructuredBody.component.section" ] ;
+         fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/Section"^^xsd:anyURI ]
+       ] )
+     ] )
+  ] ; # 
+  fhir:differential [
+     fhir:element ( [
+       fhir:id [ fhir:v "StructuredBody.classCode" ] ;
+       fhir:path [ fhir:v "StructuredBody.classCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "DOCBODY" ] ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer>
          ]
        ]
-     ], [
-       fhir:index 2;
-       fhir:Element.id [ fhir:value "StructuredBody.moodCode" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.moodCode" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.defaultValueCode [ fhir:value "EVN" ];
-       fhir:ElementDefinition.fixedCode [ fhir:value "EVN" ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-ActMood";
+     ] [
+       fhir:id [ fhir:v "StructuredBody.moodCode" ] ;
+       fhir:path [ fhir:v "StructuredBody.moodCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "EVN" ] ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-ActMood"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-ActMood>
          ]
        ]
-     ], [
-       fhir:index 3;
-       fhir:Element.id [ fhir:value "StructuredBody.confidentialityCode" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.confidentialityCode" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CE" ]
-       ]
-     ], [
-       fhir:index 4;
-       fhir:Element.id [ fhir:value "StructuredBody.languageCode" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.languageCode" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/CS" ]
-       ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-HumanLanguage";
+     ] [
+       fhir:id [ fhir:v "StructuredBody.confidentialityCode" ] ;
+       fhir:path [ fhir:v "StructuredBody.confidentialityCode" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CE"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "StructuredBody.languageCode" ] ;
+       fhir:path [ fhir:v "StructuredBody.languageCode" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CS"^^xsd:anyURI ]
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-HumanLanguage"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-HumanLanguage>
          ]
        ]
-     ], [
-       fhir:index 5;
-       fhir:Element.id [ fhir:value "StructuredBody.component" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.component" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "Element" ]
-       ]
-     ], [
-       fhir:index 6;
-       fhir:Element.id [ fhir:value "StructuredBody.component.typeCode" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.component.typeCode" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.defaultValueCode [ fhir:value "COMP" ];
-       fhir:ElementDefinition.fixedCode [ fhir:value "COMP" ]
-     ], [
-       fhir:index 7;
-       fhir:Element.id [ fhir:value "StructuredBody.component.contextConductionInd" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.component.contextConductionInd" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "boolean" ]
-       ];
-       fhir:ElementDefinition.defaultValueBoolean [ fhir:value "true"^^xsd:boolean ]
-     ], [
-       fhir:index 8;
-       fhir:Element.id [ fhir:value "StructuredBody.component.section" ];
-       fhir:ElementDefinition.path [ fhir:value "StructuredBody.component.section" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Section" ]
-       ]
-     ]
+     ] [
+       fhir:id [ fhir:v "StructuredBody.component" ] ;
+       fhir:path [ fhir:v "StructuredBody.component" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "StructuredBody.component.typeCode" ] ;
+       fhir:path [ fhir:v "StructuredBody.component.typeCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "COMP" ]
+     ] [
+       fhir:id [ fhir:v "StructuredBody.component.contextConductionInd" ] ;
+       fhir:path [ fhir:v "StructuredBody.component.contextConductionInd" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "boolean"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/bl-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "true"^^xsd:boolean ]
+     ] [
+       fhir:id [ fhir:v "StructuredBody.component.section" ] ;
+       fhir:path [ fhir:v "StructuredBody.component.section" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/Section"^^xsd:anyURI ]
+       ] )
+     ] )
   ] . # 
-
-# - ontology header ------------------------------------------------------------
-
-<http://hl7.org/cda/stds/core/StructureDefinition/StructuredBody.ttl> a owl:Ontology;
-  owl:imports fhir:fhir.ttl .
 
 # -------------------------------------------------------------------------------------
 

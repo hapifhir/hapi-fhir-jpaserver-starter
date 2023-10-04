@@ -5,230 +5,212 @@
 
 # - resource -------------------------------------------------------------------
 
-<http://hl7.org/cda/stds/core/StructureDefinition/MaintainedEntity> a fhir:StructureDefinition;
-  fhir:nodeRole fhir:treeRoot;
-  fhir:Resource.id [ fhir:value "MaintainedEntity"]; # 
-  fhir:DomainResource.text [
-     fhir:Narrative.status [ fhir:value "generated" ];
-     fhir:Narrative.div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The MaintainedEntity class is present for backwards compatibility, and its use is discouraged, except where needed to support the transformation of CDA, Release One documents.</p>\n      <p>NOTE: In CDA, Release One, it was possible to specify those individuals responsible for the device. This functionality has been deprecated in CDA, Release Two.</p>\n    </div>"
-  ]; # 
-  fhir:DomainResource.extension [
-     fhir:index 0;
-     fhir:Extension.url [ fhir:value "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace" ];
-     fhir:Extension.valueUri [ fhir:value "urn:hl7-org:v3" ]
-  ]; # 
-  fhir:StructureDefinition.url [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/MaintainedEntity"]; # 
-  fhir:StructureDefinition.version [ fhir:value "2.1.0-draft1"]; # 
-  fhir:StructureDefinition.name [ fhir:value "CDAR2.MaintainedEntity"]; # 
-  fhir:StructureDefinition.title [ fhir:value "MaintainedEntity (CDA Class)"]; # 
-  fhir:StructureDefinition.status [ fhir:value "active"]; # 
-  fhir:StructureDefinition.experimental [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.date [ fhir:value "2023-02-07T19:43:49+01:00"^^xsd:dateTime]; # 
-  fhir:StructureDefinition.publisher [ fhir:value "Health Level 7"]; # 
-  fhir:StructureDefinition.contact [
-     fhir:index 0;
-     fhir:ContactDetail.name [ fhir:value "HL7 International - Cross-Group Projects" ];
-     fhir:ContactDetail.telecom [
-       fhir:index 0;
-       fhir:ContactPoint.system [ fhir:value "url" ];
-       fhir:ContactPoint.value [ fhir:value "http://www.hl7.org/Special/committees/cgp" ]
-     ], [
-       fhir:index 1;
-       fhir:ContactPoint.system [ fhir:value "email" ];
-       fhir:ContactPoint.value [ fhir:value "cgp@lists.HL7.org" ]
+<http://hl7.org/cda/stds/core/StructureDefinition/MaintainedEntity> a fhir:StructureDefinition ;
+  fhir:nodeRole fhir:treeRoot ;
+  fhir:id [ fhir:v "MaintainedEntity"] ; # 
+  fhir:text [
+     fhir:status [ fhir:v "generated" ] ;
+     fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The MaintainedEntity class is present for backwards compatibility, and its use is discouraged, except where needed to support the transformation of CDA, Release One documents.</p>\n      <p>NOTE: In CDA, Release One, it was possible to specify those individuals responsible for the device. This functionality has been deprecated in CDA, Release Two.</p>\n    </div>"
+  ] ; # 
+  fhir:extension ( [
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-target"^^xsd:anyURI ] ;
+     fhir:value [
+       a fhir:boolean ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/data-absent-reason"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "not-applicable" ]
+       ] )
      ]
-  ]; # 
-  fhir:StructureDefinition.description [ fhir:value "The MaintainedEntity class is present for backwards compatibility, and its use is discouraged, except where needed to support the transformation of CDA, Release One documents.\nNOTE: In CDA, Release One, it was possible to specify those individuals responsible for the device. This functionality has been deprecated in CDA, Release Two."]; # 
-  fhir:StructureDefinition.fhirVersion [ fhir:value "5.0.0-snapshot3"]; # 
-  fhir:StructureDefinition.mapping [
-     fhir:index 0;
-     fhir:StructureDefinition.mapping.identity [ fhir:value "rim" ];
-     fhir:StructureDefinition.mapping.uri [ fhir:value "http://hl7.org/v3" ];
-     fhir:StructureDefinition.mapping.name [ fhir:value "RIM Mapping" ]
-  ]; # 
-  fhir:StructureDefinition.kind [ fhir:value "logical"]; # 
-  fhir:StructureDefinition.abstract [ fhir:value "false"^^xsd:boolean]; # 
-  fhir:StructureDefinition.type [ fhir:value "MaintainedEntity"]; # 
-  fhir:StructureDefinition.baseDefinition [
-     fhir:value "http://hl7.org/fhir/StructureDefinition/Base";
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "urn:hl7-org:v3"^^xsd:anyURI ]
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "maintainedEntity"^^xsd:anyURI ]
+  ] ) ; # 
+  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/MaintainedEntity"^^xsd:anyURI] ; # 
+  fhir:version [ fhir:v "2.1.0-draft2-mb"] ; # 
+  fhir:name [ fhir:v "CDAR2.MaintainedEntity"] ; # 
+  fhir:title [ fhir:v "MaintainedEntity (CDA Class)"] ; # 
+  fhir:status [ fhir:v "active"] ; # 
+  fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:date [ fhir:v "2023-10-04T23:00:58+02:00"^^xsd:dateTime] ; # 
+  fhir:publisher [ fhir:v "Health Level 7"] ; # 
+  fhir:contact ( [
+     fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
+     fhir:telecom ( [
+       fhir:system [ fhir:v "url" ] ;
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structdoc" ]
+     ] [
+       fhir:system [ fhir:v "email" ] ;
+       fhir:value [ fhir:v "structdog@lists.HL7.org" ]
+     ] )
+  ] ) ; # 
+  fhir:description [ fhir:v "The MaintainedEntity class is present for backwards compatibility, and its use is discouraged, except where needed to support the transformation of CDA, Release One documents.\nNOTE: In CDA, Release One, it was possible to specify those individuals responsible for the device. This functionality has been deprecated in CDA, Release Two."] ; # 
+  fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
+  fhir:mapping ( [
+     fhir:identity [ fhir:v "rim" ] ;
+     fhir:uri [ fhir:v "http://hl7.org/v3"^^xsd:anyURI ] ;
+     fhir:name [ fhir:v "RIM Mapping" ]
+  ] ) ; # 
+  fhir:kind [ fhir:v "logical"] ; # 
+  fhir:abstract [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:type [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/MaintainedEntity"^^xsd:anyURI] ; # 
+  fhir:baseDefinition [
+     fhir:v "http://hl7.org/fhir/StructureDefinition/Base"^^xsd:anyURI ;
      fhir:link <http://hl7.org/fhir/StructureDefinition/Base>
-  ]; # 
-  fhir:StructureDefinition.derivation [ fhir:value "specialization"]; # 
-  fhir:StructureDefinition.snapshot [
-     fhir:StructureDefinition.snapshot.element [
-       fhir:index 0;
-       fhir:Element.id [ fhir:value "MaintainedEntity" ];
-       fhir:ElementDefinition.path [ fhir:value "MaintainedEntity" ];
-       fhir:ElementDefinition.short [ fhir:value "Base for all types and resources" ];
-       fhir:ElementDefinition.definition [ fhir:value "Base definition for all types defined in FHIR type system." ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "Base" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.constraint [
-         fhir:index 0;
-         fhir:ElementDefinition.constraint.key [ fhir:value "ele-1" ];
-         fhir:ElementDefinition.constraint.severity [ fhir:value "error" ];
-         fhir:ElementDefinition.constraint.human [ fhir:value "All FHIR elements must have a @value or children" ];
-         fhir:ElementDefinition.constraint.expression [ fhir:value "hasValue() or (children().count() > id.count())" ];
-         fhir:ElementDefinition.constraint.source [
-           fhir:value "http://hl7.org/fhir/StructureDefinition/Element";
+  ] ; # 
+  fhir:derivation [ fhir:v "specialization"] ; # 
+  fhir:snapshot [
+     fhir:element ( [
+       fhir:id [ fhir:v "MaintainedEntity" ] ;
+       fhir:path [ fhir:v "MaintainedEntity" ] ;
+       fhir:short [ fhir:v "Base for all types and resources" ] ;
+       fhir:definition [ fhir:v "Base definition for all types defined in FHIR type system." ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "Base" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:constraint ( [
+         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
+         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:source [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
            fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
          ]
-       ];
-       fhir:ElementDefinition.isModifier [ fhir:value "false"^^xsd:boolean ];
-       fhir:ElementDefinition.mapping [
-         fhir:index 0;
-         fhir:ElementDefinition.mapping.identity [ fhir:value "rim" ];
-         fhir:ElementDefinition.mapping.map [ fhir:value "n/a" ]
-       ]
-     ], [
-       fhir:index 1;
-       fhir:Element.id [ fhir:value "MaintainedEntity.classCode" ];
-       fhir:ElementDefinition.path [ fhir:value "MaintainedEntity.classCode" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "MaintainedEntity.classCode" ];
-         fhir:ElementDefinition.base.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.defaultValueCode [ fhir:value "MNT" ];
-       fhir:ElementDefinition.fixedCode [ fhir:value "MNT" ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-RoleClassPassive";
+       ] ) ;
+       fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
+       fhir:mapping ( [
+         fhir:identity [ fhir:v "rim" ] ;
+         fhir:map [ fhir:v "n/a" ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "MaintainedEntity.classCode" ] ;
+       fhir:path [ fhir:v "MaintainedEntity.classCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "MaintainedEntity.classCode" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "MNT" ] ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-RoleClassPassive"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-RoleClassPassive>
          ]
        ]
-     ], [
-       fhir:index 2;
-       fhir:Element.id [ fhir:value "MaintainedEntity.templateId" ];
-       fhir:ElementDefinition.path [ fhir:value "MaintainedEntity.templateId" ];
-       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "MaintainedEntity.templateId" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "*" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/II" ]
-       ]
-     ], [
-       fhir:index 3;
-       fhir:Element.id [ fhir:value "MaintainedEntity.effectiveTime" ];
-       fhir:ElementDefinition.path [ fhir:value "MaintainedEntity.effectiveTime" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "MaintainedEntity.effectiveTime" ];
-         fhir:ElementDefinition.base.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" ]
-       ]
-     ], [
-       fhir:index 4;
-       fhir:Element.id [ fhir:value "MaintainedEntity.maintainingPerson" ];
-       fhir:ElementDefinition.path [ fhir:value "MaintainedEntity.maintainingPerson" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.base [
-         fhir:ElementDefinition.base.path [ fhir:value "MaintainedEntity.maintainingPerson" ];
-         fhir:ElementDefinition.base.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-         fhir:ElementDefinition.base.max [ fhir:value "1" ]
-       ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Person" ]
-       ]
-     ]
-  ]; # 
-  fhir:StructureDefinition.differential [
-     fhir:StructureDefinition.differential.element [
-       fhir:index 0;
-       fhir:Element.id [ fhir:value "MaintainedEntity" ];
-       fhir:ElementDefinition.path [ fhir:value "MaintainedEntity" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ]
-     ], [
-       fhir:index 1;
-       fhir:Element.id [ fhir:value "MaintainedEntity.classCode" ];
-       fhir:ElementDefinition.path [ fhir:value "MaintainedEntity.classCode" ];
-       fhir:ElementDefinition.representation [
-         fhir:value "xmlAttr";
-         fhir:index 0
-       ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "code" ]
-       ];
-       fhir:ElementDefinition.defaultValueCode [ fhir:value "MNT" ];
-       fhir:ElementDefinition.fixedCode [ fhir:value "MNT" ];
-       fhir:ElementDefinition.binding [
-         fhir:ElementDefinition.binding.strength [ fhir:value "required" ];
-         fhir:ElementDefinition.binding.valueSet [
-           fhir:value "http://terminology.hl7.org/ValueSet/v3-RoleClassPassive";
+     ] [
+       fhir:id [ fhir:v "MaintainedEntity.templateId" ] ;
+       fhir:path [ fhir:v "MaintainedEntity.templateId" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "MaintainedEntity.templateId" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "MaintainedEntity.effectiveTime" ] ;
+       fhir:path [ fhir:v "MaintainedEntity.effectiveTime" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "MaintainedEntity.effectiveTime" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "MaintainedEntity.maintainingPerson" ] ;
+       fhir:path [ fhir:v "MaintainedEntity.maintainingPerson" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "MaintainedEntity.maintainingPerson" ] ;
+         fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/Person"^^xsd:anyURI ]
+       ] )
+     ] )
+  ] ; # 
+  fhir:differential [
+     fhir:element ( [
+       fhir:id [ fhir:v "MaintainedEntity" ] ;
+       fhir:path [ fhir:v "MaintainedEntity" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ]
+     ] [
+       fhir:id [ fhir:v "MaintainedEntity.classCode" ] ;
+       fhir:path [ fhir:v "MaintainedEntity.classCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:fixed [ fhir:v "MNT" ] ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-RoleClassPassive"^^xsd:anyURI ;
            fhir:link <http://terminology.hl7.org/ValueSet/v3-RoleClassPassive>
          ]
        ]
-     ], [
-       fhir:index 2;
-       fhir:Element.id [ fhir:value "MaintainedEntity.templateId" ];
-       fhir:ElementDefinition.path [ fhir:value "MaintainedEntity.templateId" ];
-       fhir:ElementDefinition.definition [ fhir:value "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "*" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/II" ]
-       ]
-     ], [
-       fhir:index 3;
-       fhir:Element.id [ fhir:value "MaintainedEntity.effectiveTime" ];
-       fhir:ElementDefinition.path [ fhir:value "MaintainedEntity.effectiveTime" ];
-       fhir:ElementDefinition.min [ fhir:value "0"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/IVL-TS" ]
-       ]
-     ], [
-       fhir:index 4;
-       fhir:Element.id [ fhir:value "MaintainedEntity.maintainingPerson" ];
-       fhir:ElementDefinition.path [ fhir:value "MaintainedEntity.maintainingPerson" ];
-       fhir:ElementDefinition.min [ fhir:value "1"^^xsd:nonNegativeInteger ];
-       fhir:ElementDefinition.max [ fhir:value "1" ];
-       fhir:ElementDefinition.type [
-         fhir:index 0;
-         fhir:ElementDefinition.type.code [ fhir:value "http://hl7.org/fhir/cda/StructureDefinition/Person" ]
-       ]
-     ]
+     ] [
+       fhir:id [ fhir:v "MaintainedEntity.templateId" ] ;
+       fhir:path [ fhir:v "MaintainedEntity.templateId" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "MaintainedEntity.effectiveTime" ] ;
+       fhir:path [ fhir:v "MaintainedEntity.effectiveTime" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "MaintainedEntity.maintainingPerson" ] ;
+       fhir:path [ fhir:v "MaintainedEntity.maintainingPerson" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/Person"^^xsd:anyURI ]
+       ] )
+     ] )
   ] . # 
-
-# - ontology header ------------------------------------------------------------
-
-<http://hl7.org/cda/stds/core/StructureDefinition/MaintainedEntity.ttl> a owl:Ontology;
-  owl:imports fhir:fhir.ttl .
 
 # -------------------------------------------------------------------------------------
 

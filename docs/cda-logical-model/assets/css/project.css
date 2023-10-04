@@ -609,7 +609,8 @@ div.markdown-toc p.link
 
 /* Fix to avoid truncating letter descenders in headings */
 h1, h2, h3, h4, h5, h6, .title {
-overflow: visible;
+  overflow: visible;
+  margin: 1em 0 0.4em 0;
 }
 
 /* Common content for section numbering */
@@ -661,6 +662,19 @@ li a[href^="http://"]:not([no-external^="true"]):after,li a[href^="https://"]:no
     color: #3c763d;
     background-color: #dff0d8;
     border-color: #d6e9c6;
+}
+
+.modified-content::before {
+  white-space: pre;
+  content: "Modified Content\A ";
+  color: red;
+  font-weight: bold;}
+.modified-content{
+    margin: 5px;
+    padding: 10px;
+    color: #784212;
+    background-color: #fef9e7;
+    border-color: #f9e79f;
 }
 
 .bg-success{

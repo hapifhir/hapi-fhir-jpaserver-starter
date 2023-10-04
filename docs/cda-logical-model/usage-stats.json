@@ -1,13 +1,10 @@
 {
   "package": "hl7.cda.uv.core",
-  "version": "2.1.0-draft1",
-  "fhirVersion": "5.0.0-snapshot3",
+  "version": "2.1.0-draft2-mb",
+  "fhirVersion": "5.0.0",
   "extensions": [],
   "profiles": {},
   "usage": {
-    "http://hl7.org/fhir/StructureDefinition/elementdefinition-binding-style": [
-      "StructureDefinition"
-    ],
     "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype": [
       "StructureDefinition.differential.element",
       "StructureDefinition.snapshot.element"
@@ -21,6 +18,9 @@
       "StructureDefinition",
       "StructureDefinition.differential.element",
       "StructureDefinition.snapshot.element"
+    ],
+    "http://hl7.org/fhir/StructureDefinition/implementationguide-resource-format": [
+      "ImplementationGuide.definition.resource"
     ],
     "http://hl7.org/fhir/StructureDefinition/regex": [
       "StructureDefinition.snapshot.element.type"
@@ -41,11 +41,14 @@
       "StructureDefinition.differential.element",
       "StructureDefinition.snapshot.element"
     ],
-    "http://hl7.org/fhir/tools/StructureDefinition/ig-parameter": [
+    "http://hl7.org/fhir/tools/StructureDefinition/ig-internal-dependency": [
       "ImplementationGuide.definition"
     ],
     "http://hl7.org/fhir/tools/StructureDefinition/implementationguide-dependency-comment": [
       "ImplementationGuide.dependsOn"
+    ],
+    "http://hl7.org/fhir/tools/StructureDefinition/logical-target": [
+      "StructureDefinition"
     ],
     "http://hl7.org/fhir/tools/StructureDefinition/resource-information": [
       "ImplementationGuide.definition.resource"

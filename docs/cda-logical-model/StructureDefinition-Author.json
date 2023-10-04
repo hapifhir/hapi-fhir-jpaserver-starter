@@ -6,30 +6,43 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Represents the humans and/or machines that authored the document.</p>\n      <p>In some cases, the role or function of the author is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is &quot;Medical Student Progress Note&quot;. The role of the author can also be recorded in the Author.functionCode or AssignedAuthor.code attribute. If either of these attributes is included, they should be equivalent to or further specialize the role inherent in the ClinicalDocument.code (such as where the ClinicalDocument.code is simply &quot;Physician Progress Note&quot; and the value of Author.functionCode is &quot;rounding physician&quot;), and shall not conflict with the role inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.</p>\n    </div>"
   },
   "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
     "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
+    "valueUri" : "author"
   }],
-  "url" : "http://hl7.org/fhir/cda/StructureDefinition/Author",
-  "version" : "2.1.0-draft1",
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Author",
+  "version" : "2.1.0-draft2-mb",
   "name" : "CDAR2.Author",
   "title" : "Author (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-02-07T19:43:49+01:00",
+  "date" : "2023-10-04T23:00:58+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
-    "name" : "HL7 International - Cross-Group Projects",
+    "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/cgp"
+      "value" : "http://www.hl7.org/Special/committees/structdoc"
     },
     {
       "system" : "email",
-      "value" : "cgp@lists.HL7.org"
+      "value" : "structdog@lists.HL7.org"
     }]
   }],
   "description" : "Represents the humans and/or machines that authored the document. In some cases, the role or function of the author is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is \"Medical Student Progress Note\". The role of the author can also be recorded in the Author.functionCode or AssignedAuthor.code attribute. If either of these attributes is included, they should be equivalent to or further specialize the role inherent in the ClinicalDocument.code (such as where the ClinicalDocument.code is simply \"Physician Progress Note\" and the value of Author.functionCode is \"rounding physician\"), and shall not conflict with the role inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.",
-  "fhirVersion" : "5.0.0-snapshot3",
+  "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
     "uri" : "http://hl7.org/v3",
@@ -37,7 +50,7 @@
   }],
   "kind" : "logical",
   "abstract" : false,
-  "type" : "Author",
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/Author",
   "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
   "derivation" : "specialization",
   "snapshot" : {
@@ -80,7 +93,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -99,7 +113,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "fixedCode" : "AUT",
       "binding" : {
@@ -119,7 +134,8 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "fixedCode" : "OP",
       "binding" : {
@@ -139,7 +155,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }]
     },
     {
@@ -154,7 +170,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -169,7 +185,7 @@
         "max" : "*"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -183,7 +199,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }]
     },
     {
@@ -197,7 +213,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
       }]
     },
     {
@@ -211,7 +227,7 @@
         "max" : "1"
       },
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/AssignedAuthor"
       }]
     }]
   },
@@ -231,7 +247,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "binding" : {
         "strength" : "required",
@@ -245,7 +262,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "fixedCode" : "AUT",
       "binding" : {
@@ -260,7 +278,8 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "code"
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
       }],
       "fixedCode" : "OP",
       "binding" : {
@@ -275,7 +294,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
       }]
     },
     {
@@ -285,7 +304,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -295,7 +314,7 @@
       "min" : 0,
       "max" : "*",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/II"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
       }]
     },
     {
@@ -304,7 +323,7 @@
       "min" : 0,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/CE"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
       }]
     },
     {
@@ -313,7 +332,7 @@
       "min" : 1,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/TS"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
       }]
     },
     {
@@ -322,7 +341,7 @@
       "min" : 1,
       "max" : "1",
       "type" : [{
-        "code" : "http://hl7.org/fhir/cda/StructureDefinition/AssignedAuthor"
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/AssignedAuthor"
       }]
     }]
   }

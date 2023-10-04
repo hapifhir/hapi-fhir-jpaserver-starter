@@ -1,143 +1,54 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "Procedure","Procedure","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
-"Procedure.classCode","Procedure.classCode","","","",1,1,"","","","code {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+","n/a"
+"Procedure.classCode","Procedure.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PROC""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PROC""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassProcedure","",,,,"Procedure.classCode",1,1,"",""
-"Procedure.moodCode","Procedure.moodCode","","","",1,1,"","","","code {[]} {[]}
+"Procedure.moodCode","Procedure.moodCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Procedure.moodCode",1,1,"",""
-"Procedure.realmCode","Procedure.realmCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/CS {[]} {[]}
+"Procedure.realmCode","Procedure.realmCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Procedure.realmCode",0,*,"",""
-"Procedure.typeId","Procedure.typeId","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+"Procedure.typeId","Procedure.typeId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Procedure.typeId",0,1,"",""
-"Procedure.templateId","Procedure.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+"Procedure.templateId","Procedure.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"Procedure.templateId",0,*,"",""
-"Procedure.id","Procedure.id","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+"Procedure.id","Procedure.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Procedure.id",0,*,"",""
-"Procedure.code","Procedure.code","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CD {[]} {[]}
+"Procedure.code","Procedure.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
 ","","Drawn from concept domain ActCode","","","","","","","","","",,,,,"",,,,"Procedure.code",0,1,"",""
-"Procedure.negationInd","Procedure.negationInd","","","",0,1,"","","","boolean {[]} {[]}
+"Procedure.negationInd","Procedure.negationInd","","","",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Procedure.negationInd",0,1,"",""
-"Procedure.text","Procedure.text","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ED {[]} {[]}
+"Procedure.text","Procedure.text","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ED {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Procedure.text",0,1,"",""
-"Procedure.statusCode","Procedure.statusCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CS {[]} {[]}
+"Procedure.statusCode","Procedure.statusCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
 ","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActStatus","",,,,"Procedure.statusCode",0,1,"",""
-"Procedure.effectiveTime","Procedure.effectiveTime","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/IVL-TS {[]} {[]}
+"Procedure.effectiveTime","Procedure.effectiveTime","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Procedure.effectiveTime",0,1,"",""
-"Procedure.priorityCode","Procedure.priorityCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"Procedure.priorityCode","Procedure.priorityCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActPriority","",,,,"Procedure.priorityCode",0,1,"",""
-"Procedure.languageCode","Procedure.languageCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CS {[]} {[]}
+"Procedure.languageCode","Procedure.languageCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
 ","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-HumanLanguage","",,,,"Procedure.languageCode",0,1,"",""
-"Procedure.methodCode","Procedure.methodCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"Procedure.methodCode","Procedure.methodCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","Drawn from concept domain ProcedureMethod","","","","","","","","","",,,,,"",,,,"Procedure.methodCode",0,*,"",""
-"Procedure.approachSiteCode","Procedure.approachSiteCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/CD {[]} {[]}
+"Procedure.approachSiteCode","Procedure.approachSiteCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
 ","","Drawn from concept domain ActSite","","","","","","","","","",,,,,"",,,,"Procedure.approachSiteCode",0,*,"",""
-"Procedure.targetSiteCode","Procedure.targetSiteCode","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/CD {[]} {[]}
+"Procedure.targetSiteCode","Procedure.targetSiteCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
 ","","Drawn from concept domain ActSite","","","","","","","","","",,,,,"",,,,"Procedure.targetSiteCode",0,*,"",""
-"Procedure.subject","Procedure.subject","","","",0,1,"","","","Element {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.subject",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-"
-"Procedure.subject.id","Procedure.subject.id","","","",0,1,"","","","string {[]} {[]}
-","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
-"Procedure.subject.extension","Procedure.subject.extension","","extensions
-user content","",0,*,"","","","Extension {[]} {[]}
-","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
-","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
-"Procedure.subject.typeCode","Procedure.subject.typeCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBJ""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBJ""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject","",,,,"Procedure.subject.typeCode",1,1,"",""
-"Procedure.subject.contextControlCode","Procedure.subject.contextControlCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ContextControl","",,,,"Procedure.subject.contextControlCode",1,1,"",""
-"Procedure.subject.awarenessCode","Procedure.subject.awarenessCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-TargetAwareness","",,,,"Procedure.subject.awarenessCode",0,1,"",""
-"Procedure.subject.relatedSubject","Procedure.subject.relatedSubject","","","",1,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/RelatedSubject {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.subject.relatedSubject",1,1,"",""
-"Procedure.specimen","Procedure.specimen","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Specimen {[]} {[]}
+"Procedure.subject","Procedure.subject","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Subject {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Procedure.subject",0,1,"",""
+"Procedure.specimen","Procedure.specimen","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Specimen {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Procedure.specimen",0,*,"",""
-"Procedure.performer","Procedure.performer","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Performer2 {[]} {[]}
+"Procedure.performer","Procedure.performer","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Performer2 {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Procedure.performer",0,*,"",""
-"Procedure.author","Procedure.author","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Author {[]} {[]}
+"Procedure.author","Procedure.author","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Author {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Procedure.author",0,*,"",""
-"Procedure.informant","Procedure.informant","","","",0,*,"","","","Element {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.informant",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-"
-"Procedure.informant.id","Procedure.informant.id","","","",0,1,"","","","string {[]} {[]}
-","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
-"Procedure.informant.extension","Procedure.informant.extension","","extensions
-user content","",0,*,"","","","Extension {[]} {[]}
-","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
-","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
-"Procedure.informant.typeCode","Procedure.informant.typeCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""INF""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""INF""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationInformationGenerator","",,,,"Procedure.informant.typeCode",1,1,"",""
-"Procedure.informant.contextControlCode","Procedure.informant.contextControlCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ContextControl","",,,,"Procedure.informant.contextControlCode",1,1,"",""
-"Procedure.informant.assignedEntity","Procedure.informant.assignedEntity","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/AssignedEntity {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.informant.assignedEntity",0,1,"",""
-"Procedure.informant.relatedEntity","Procedure.informant.relatedEntity","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/RelatedEntity {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.informant.relatedEntity",0,1,"",""
-"Procedure.participant","Procedure.participant","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Participant2 {[]} {[]}
+"Procedure.informant","Procedure.informant","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Informant {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Procedure.informant",0,*,"",""
+"Procedure.participant","Procedure.participant","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Participant2 {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Procedure.participant",0,*,"",""
-"Procedure.entryRelationship","Procedure.entryRelationship","","","",0,*,"","","","Element {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship",0,*,"","proc-er-1:Only one of observation, regionOfInterest, observationMedia, substanceAdministration, supply, procedure, encounter, organizer, and act {(observation | regionOfInterest | observationMedia | substanceAdministration | supply | procedure | encounter | organizer | act).count() = 1}
-ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}"
-"Procedure.entryRelationship.id","Procedure.entryRelationship.id","","","",0,1,"","","","string {[]} {[]}
-","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
-"Procedure.entryRelationship.extension","Procedure.entryRelationship.extension","","extensions
-user content","",0,*,"","","","Extension {[]} {[]}
-","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
-","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
-"Procedure.entryRelationship.typeCode","Procedure.entryRelationship.typeCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.typeCode",1,1,"",""
-"Procedure.entryRelationship.inversionInd","Procedure.entryRelationship.inversionInd","","","",0,1,"","","","boolean {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.inversionInd",0,1,"",""
-"Procedure.entryRelationship.contextConductionInd","Procedure.entryRelationship.contextConductionInd","","","",1,1,"","","","boolean {[]} {[]}
-","","","","","<valueBoolean xmlns=""http://hl7.org/fhir"" value=""true""/>","","","","","","",,,,,"",,,,"Procedure.entryRelationship.contextConductionInd",1,1,"",""
-"Procedure.entryRelationship.sequenceNumber","Procedure.entryRelationship.sequenceNumber","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/INT {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.sequenceNumber",0,1,"",""
-"Procedure.entryRelationship.negationInd","Procedure.entryRelationship.negationInd","","","",0,1,"","","","boolean {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.negationInd",0,1,"",""
-"Procedure.entryRelationship.seperatableInd","Procedure.entryRelationship.seperatableInd","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/BL {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.seperatableInd",0,1,"",""
-"Procedure.entryRelationship.observation","Procedure.entryRelationship.observation","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Observation {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.observation",0,1,"",""
-"Procedure.entryRelationship.regionOfInterest","Procedure.entryRelationship.regionOfInterest","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/RegionOfInterest {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.regionOfInterest",0,1,"",""
-"Procedure.entryRelationship.observationMedia","Procedure.entryRelationship.observationMedia","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ObservationMedia {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.observationMedia",0,1,"",""
-"Procedure.entryRelationship.substanceAdministration","Procedure.entryRelationship.substanceAdministration","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/SubstanceAdministration {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.substanceAdministration",0,1,"",""
-"Procedure.entryRelationship.supply","Procedure.entryRelationship.supply","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Supply {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.supply",0,1,"",""
-"Procedure.entryRelationship.procedure","Procedure.entryRelationship.procedure","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Procedure {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.procedure",0,1,"",""
-"Procedure.entryRelationship.encounter","Procedure.entryRelationship.encounter","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Encounter {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.encounter",0,1,"",""
-"Procedure.entryRelationship.organizer","Procedure.entryRelationship.organizer","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Organizer {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.organizer",0,1,"",""
-"Procedure.entryRelationship.act","Procedure.entryRelationship.act","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/Act {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship.act",0,1,"",""
-"Procedure.reference","Procedure.reference","","","",0,*,"","","","Element {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.reference",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-"
-"Procedure.reference.id","Procedure.reference.id","","","",0,1,"","","","string {[]} {[]}
-","Unique id for inter-element referencing","Unique id for the element within a resource (for internal references). This may be any string value that does not contain spaces.","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"","","n/a"
-"Procedure.reference.extension","Procedure.reference.extension","","extensions
-user content","",0,*,"","","","Extension {[]} {[]}
-","Additional content defined by implementations","May be used to represent additional information that is not part of the basic definition of the element. To make the use of extensions safe and manageable, there is a strict set of governance  applied to the definition and use of extensions. Though any implementer can define an extension, there is a set of requirements that SHALL be met as part of the definition of the extension.","There can be no stigma associated with the use of extensions by any application, project, or standard - regardless of the institution or jurisdiction that uses or defines the extensions.  The use of extensions is what allows the FHIR specification to retain a core level of simplicity for everyone.","","","","","","","","",,,,,"","value:url}
-","Extensions are always sliced by (at least) url",,"open","Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}","n/a"
-"Procedure.reference.typeCode","Procedure.reference.typeCode","","","",1,1,"","","","code {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.reference.typeCode",1,1,"",""
-"Procedure.reference.seperatableInd","Procedure.reference.seperatableInd","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/BL {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.reference.seperatableInd",0,1,"",""
-"Procedure.reference.externalAct","Procedure.reference.externalAct","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ExternalAct {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.reference.externalAct",0,1,"",""
-"Procedure.reference.externalObservation","Procedure.reference.externalObservation","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ExternalObservation {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.reference.externalObservation",0,1,"",""
-"Procedure.reference.externalProcedure","Procedure.reference.externalProcedure","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ExternalProcedure {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.reference.externalProcedure",0,1,"",""
-"Procedure.reference.externalDocument","Procedure.reference.externalDocument","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/ExternalDocument {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Procedure.reference.externalDocument",0,1,"",""
-"Procedure.precondition","Procedure.precondition","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/Precondition {[]} {[]}
+"Procedure.entryRelationship","Procedure.entryRelationship","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/EntryRelationship {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Procedure.entryRelationship",0,*,"",""
+"Procedure.reference","Procedure.reference","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Reference {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Procedure.reference",0,*,"",""
+"Procedure.precondition","Procedure.precondition","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Precondition {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Procedure.precondition",0,*,"",""

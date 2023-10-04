@@ -1,0 +1,336 @@
+@prefix fhir: <http://hl7.org/fhir/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# - resource -------------------------------------------------------------------
+
+<http://hl7.org/cda/stds/core/StructureDefinition/Reference> a fhir:StructureDefinition ;
+  fhir:nodeRole fhir:treeRoot ;
+  fhir:id [ fhir:v "Reference"] ; # 
+  fhir:text [
+     fhir:status [ fhir:v "generated" ] ;
+     fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>CDA entries can reference external objects such as external images and prior reports. These external objects are not part of the authenticated document content. They contain sufficient attributes to enable an explicit reference rather than duplicating the entire referenced object. The CDA entry that wraps the external reference can be used to encode the specific portions of the external reference that are addressed in the narrative block.</p>\n      <p>Each object allows for an identifier and a code, and contains the RIM Act.text attribute, which can be used to store the URL and MIME type of the object. External objects always have a fixed moodCode of &quot;EVN&quot;.</p>\n      <p>The reference class contains the attribute reference.seperatableInd, which indicates whether or not the source is intended to be interpreted independently of the target. The indicator cannot prevent an individual or application from separating the source and target, but indicates the author's desire and willingness to attest to the content of the source if separated from the target. Typically, where seperatableInd is &quot;false&quot;, the exchanged package should include the target of the reference so that the recipient can render it.</p>\n    </div>"
+  ] ; # 
+  fhir:extension ( [
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-target"^^xsd:anyURI ] ;
+     fhir:value [
+       a fhir:boolean ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/data-absent-reason"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "not-applicable" ]
+       ] )
+     ]
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "urn:hl7-org:v3"^^xsd:anyURI ]
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "reference"^^xsd:anyURI ]
+  ] ) ; # 
+  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/Reference"^^xsd:anyURI] ; # 
+  fhir:version [ fhir:v "2.1.0-draft2-mb"] ; # 
+  fhir:name [ fhir:v "CDAR2.Reference"] ; # 
+  fhir:title [ fhir:v "Reference (CDA Class)"] ; # 
+  fhir:status [ fhir:v "active"] ; # 
+  fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:date [ fhir:v "2023-10-04T23:00:58+02:00"^^xsd:dateTime] ; # 
+  fhir:publisher [ fhir:v "Health Level 7"] ; # 
+  fhir:contact ( [
+     fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
+     fhir:telecom ( [
+       fhir:system [ fhir:v "url" ] ;
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structdoc" ]
+     ] [
+       fhir:system [ fhir:v "email" ] ;
+       fhir:value [ fhir:v "structdog@lists.HL7.org" ]
+     ] )
+  ] ) ; # 
+  fhir:description [ fhir:v "CDA entries can reference external objects such as external images and prior reports. These external objects are not part of the authenticated document content. They contain sufficient attributes to enable an explicit reference rather than duplicating the entire referenced object. The CDA entry that wraps the external reference can be used to encode the specific portions of the external reference that are addressed in the narrative block.\n\nEach object allows for an identifier and a code, and contains the RIM Act.text attribute, which can be used to store the URL and MIME type of the object. External objects always have a fixed moodCode of \"EVN\".\n\nThe reference class contains the attribute reference.seperatableInd, which indicates whether or not the source is intended to be interpreted independently of the target. The indicator cannot prevent an individual or application from separating the source and target, but indicates the author's desire and willingness to attest to the content of the source if separated from the target. Typically, where seperatableInd is \"false\", the exchanged package should include the target of the reference so that the recipient can render it."] ; # 
+  fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
+  fhir:mapping ( [
+     fhir:identity [ fhir:v "rim" ] ;
+     fhir:uri [ fhir:v "http://hl7.org/v3"^^xsd:anyURI ] ;
+     fhir:name [ fhir:v "RIM Mapping" ]
+  ] ) ; # 
+  fhir:kind [ fhir:v "logical"] ; # 
+  fhir:abstract [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:type [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/Reference"^^xsd:anyURI] ; # 
+  fhir:baseDefinition [
+     fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"^^xsd:anyURI ;
+     fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot>
+  ] ; # 
+  fhir:derivation [ fhir:v "specialization"] ; # 
+  fhir:snapshot [
+     fhir:element ( [
+       fhir:id [ fhir:v "Reference" ] ;
+       fhir:path [ fhir:v "Reference" ] ;
+       fhir:short [ fhir:v "Base for all types and resources" ] ;
+       fhir:definition [ fhir:v "Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type." ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "Base" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:constraint ( [
+         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
+         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:source [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+         ]
+       ] [
+         fhir:key [ fhir:v "reference-external" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "Must contain one (and only one) external reference" ] ;
+         fhir:expression [ fhir:v "(externalAct | externalObservation | externalProcedure | externalDocument).count() = 1" ]
+       ] ) ;
+       fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
+       fhir:mapping ( [
+         fhir:identity [ fhir:v "rim" ] ;
+         fhir:map [ fhir:v "n/a" ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.nullFlavor" ] ;
+       fhir:path [ fhir:v "Reference.nullFlavor" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:label [ fhir:v "Exceptional Value Detail" ] ;
+       fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "ANY.nullFlavor" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
+           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+         ]
+       ]
+     ] [
+       fhir:id [ fhir:v "Reference.realmCode" ] ;
+       fhir:path [ fhir:v "Reference.realmCode" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "InfrastructureRoot.realmCode" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CS"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.typeId" ] ;
+       fhir:path [ fhir:v "Reference.typeId" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "InfrastructureRoot.typeId" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.templateId" ] ;
+       fhir:path [ fhir:v "Reference.templateId" ] ;
+       fhir:definition [ fhir:v "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "InfrastructureRoot.templateId" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.typeCode" ] ;
+       fhir:path [ fhir:v "Reference.typeCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:definition [ fhir:v "Element Act.typeCode" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "Reference.typeCode" ] ;
+         fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-xActRelationshipExternalReference"^^xsd:anyURI ;
+           fhir:link <http://terminology.hl7.org/ValueSet/v3-xActRelationshipExternalReference>
+         ]
+       ]
+     ] [
+       fhir:id [ fhir:v "Reference.seperatableInd" ] ;
+       fhir:path [ fhir:v "Reference.seperatableInd" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "Reference.seperatableInd" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/BL"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.externalAct" ] ;
+       fhir:path [ fhir:v "Reference.externalAct" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "Reference.externalAct" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ExternalAct"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.externalObservation" ] ;
+       fhir:path [ fhir:v "Reference.externalObservation" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "Reference.externalObservation" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.externalProcedure" ] ;
+       fhir:path [ fhir:v "Reference.externalProcedure" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "Reference.externalProcedure" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ExternalProcedure"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.externalDocument" ] ;
+       fhir:path [ fhir:v "Reference.externalDocument" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "Reference.externalDocument" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ExternalDocument"^^xsd:anyURI ]
+       ] )
+     ] )
+  ] ; # 
+  fhir:differential [
+     fhir:element ( [
+       fhir:id [ fhir:v "Reference" ] ;
+       fhir:path [ fhir:v "Reference" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:constraint ( [
+         fhir:key [ fhir:v "reference-external" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "Must contain one (and only one) external reference" ] ;
+         fhir:expression [ fhir:v "(externalAct | externalObservation | externalProcedure | externalDocument).count() = 1" ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.typeCode" ] ;
+       fhir:path [ fhir:v "Reference.typeCode" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
+       fhir:definition [ fhir:v "Element Act.typeCode" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:profile ( [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+         ] )
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://terminology.hl7.org/ValueSet/v3-xActRelationshipExternalReference"^^xsd:anyURI ;
+           fhir:link <http://terminology.hl7.org/ValueSet/v3-xActRelationshipExternalReference>
+         ]
+       ]
+     ] [
+       fhir:id [ fhir:v "Reference.seperatableInd" ] ;
+       fhir:path [ fhir:v "Reference.seperatableInd" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/BL"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.externalAct" ] ;
+       fhir:path [ fhir:v "Reference.externalAct" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ExternalAct"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.externalObservation" ] ;
+       fhir:path [ fhir:v "Reference.externalObservation" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.externalProcedure" ] ;
+       fhir:path [ fhir:v "Reference.externalProcedure" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ExternalProcedure"^^xsd:anyURI ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "Reference.externalDocument" ] ;
+       fhir:path [ fhir:v "Reference.externalDocument" ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ExternalDocument"^^xsd:anyURI ]
+       ] )
+     ] )
+  ] . # 
+
+# -------------------------------------------------------------------------------------
+

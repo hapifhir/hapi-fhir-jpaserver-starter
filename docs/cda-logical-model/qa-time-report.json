@@ -1,0 +1,5788 @@
+{
+  "date" : "Wed, 04 Oct, 2023 23:00:58 +0200",
+  "doco" : "For each file: start is seconds after start activity occurred. Length = milliseconds activity took",
+  "files" : [
+    {
+      "name" : "/input/hl7.cda.uv.core.xml",
+      "size" : 25460,
+      "processes" : [
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 62
+        },
+        {
+          "activity" : "checkR4R4B",
+          "start" : 19,
+          "length" : 2
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 75
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 1946
+        },
+        {
+          "activity" : "scanForUsageStats",
+          "start" : 28,
+          "length" : 1
+        },
+        {
+          "activity" : "generate1",
+          "start" : 28,
+          "length" : 193
+        },
+        {
+          "activity" : "generate2",
+          "start" : 36,
+          "length" : 58
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 7
+        },
+        {
+          "activity" : "scanExamplesForR5",
+          "start" : 77,
+          "length" : 2
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/IdentifiedBy.xml",
+      "size" : 3115,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 14
+        },
+        {
+          "activity" : "loadDepInfo",
+          "start" : 16,
+          "length" : 1
+        },
+        {
+          "activity" : "loadInfo",
+          "start" : 16,
+          "length" : 1
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 8
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 8
+        },
+        {
+          "activity" : "validate",
+          "start" : 19,
+          "length" : 333
+        },
+        {
+          "activity" : "checkConformanceResources",
+          "start" : 24,
+          "length" : 1
+        },
+        {
+          "activity" : "generate1",
+          "start" : 28,
+          "length" : 23
+        },
+        {
+          "activity" : "generate2",
+          "start" : 36,
+          "length" : 1439
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/SubstanceAdministration.xml",
+      "size" : 18477,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 31
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 26
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 34
+        },
+        {
+          "activity" : "validate",
+          "start" : 19,
+          "length" : 91
+        },
+        {
+          "activity" : "generate1",
+          "start" : 28,
+          "length" : 57
+        },
+        {
+          "activity" : "generate2",
+          "start" : 38,
+          "length" : 313
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/RegionOfInterest.xml",
+      "size" : 9947,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 17
+        },
+        {
+          "activity" : "load-configure",
+          "start" : 16,
+          "length" : 1
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 9
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 23
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 54
+        },
+        {
+          "activity" : "generate1",
+          "start" : 28,
+          "length" : 31
+        },
+        {
+          "activity" : "generate2",
+          "start" : 38,
+          "length" : 146
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Material.xml",
+      "size" : 8360,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 14
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 8
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 17
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 39
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 28
+        },
+        {
+          "activity" : "generate2",
+          "start" : 38,
+          "length" : 102
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        },
+        {
+          "activity" : "scanExamplesForR5",
+          "start" : 77,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/OrganizerComponent.xml",
+      "size" : 6904,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 92
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 7
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 49
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 45
+        },
+        {
+          "activity" : "scanForUsageStats",
+          "start" : 28,
+          "length" : 1
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 31
+        },
+        {
+          "activity" : "generate2",
+          "start" : 38,
+          "length" : 171
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ParticipantRole.xml",
+      "size" : 5128,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 12
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 39
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 17
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 27
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 28
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 52
+        },
+        {
+          "activity" : "generate2",
+          "start" : 38,
+          "length" : 92
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/probability.xml",
+      "size" : 1442,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 13
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 16
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 13
+        },
+        {
+          "activity" : "generate2",
+          "start" : 39,
+          "length" : 97
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/IVL-INT.xml",
+      "size" : 4655,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 18
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 17
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 29
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 47
+        },
+        {
+          "activity" : "generate2",
+          "start" : 39,
+          "length" : 72
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ComponentOf.xml",
+      "size" : 2305,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 12
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 12
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 15
+        },
+        {
+          "activity" : "generate2",
+          "start" : 39,
+          "length" : 93
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/AuthoringDevice.xml",
+      "size" : 4659,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 13
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 15
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 22
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 44
+        },
+        {
+          "activity" : "generate2",
+          "start" : 39,
+          "length" : 147
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/EntryRelationship.xml",
+      "size" : 7877,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 15
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 8
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 17
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 29
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 32
+        },
+        {
+          "activity" : "generate2",
+          "start" : 39,
+          "length" : 98
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/CO.xml",
+      "size" : 2451,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 52
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 35
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 19
+        },
+        {
+          "activity" : "generate2",
+          "start" : 39,
+          "length" : 67
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/SXPR-TS.xml",
+      "size" : 2093,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 20
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 18
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 35
+        },
+        {
+          "activity" : "generate2",
+          "start" : 39,
+          "length" : 49
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        },
+        {
+          "activity" : "scanExamplesForR5",
+          "start" : 77,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/CustodianOrganization.xml",
+      "size" : 4627,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 16
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 39,
+          "length" : 69
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ADXP.xml",
+      "size" : 3219,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 15
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 11
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 19
+        },
+        {
+          "activity" : "generate2",
+          "start" : 39,
+          "length" : 59
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ON.xml",
+      "size" : 2949,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 20
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 12
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 39,
+          "length" : 75
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/TS.xml",
+      "size" : 2428,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 9
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 12
+        },
+        {
+          "activity" : "generate2",
+          "start" : 39,
+          "length" : 116
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Observation.xml",
+      "size" : 16008,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 22
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 14
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 30
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 61
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 53
+        },
+        {
+          "activity" : "generate2",
+          "start" : 39,
+          "length" : 144
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/TEL.xml",
+      "size" : 4214,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 13
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 17
+        },
+        {
+          "activity" : "generate2",
+          "start" : 40,
+          "length" : 62
+        },
+        {
+          "activity" : "scanExamplesForR5",
+          "start" : 77,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/IVL-PQ.xml",
+      "size" : 5295,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 12
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 13
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 16
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 45
+        },
+        {
+          "activity" : "generate2",
+          "start" : 40,
+          "length" : 63
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ClinicalDocument.xml",
+      "size" : 14228,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 18
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 12
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 29
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 32
+        },
+        {
+          "activity" : "scanForUsageStats",
+          "start" : 28,
+          "length" : 1
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 45
+        },
+        {
+          "activity" : "generate2",
+          "start" : 40,
+          "length" : 136
+        },
+        {
+          "activity" : "makeDependencies",
+          "start" : 51,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ExternalAct.xml",
+      "size" : 4206,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 12
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 19
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 16
+        },
+        {
+          "activity" : "generate2",
+          "start" : 40,
+          "length" : 54
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/HealthCareFacility.xml",
+      "size" : 4455,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 11
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 15
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 14
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 48
+        },
+        {
+          "activity" : "generate2",
+          "start" : 40,
+          "length" : 50
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/AssociatedEntity.xml",
+      "size" : 5229,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 14
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 16
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 22
+        },
+        {
+          "activity" : "generate2",
+          "start" : 40,
+          "length" : 58
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ExternalProcedure.xml",
+      "size" : 4299,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 12
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 40,
+          "length" : 51
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Place.xml",
+      "size" : 4945,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load-configure",
+          "start" : 16,
+          "length" : 1
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 40,
+          "length" : 45
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/IVXB-TS.xml",
+      "size" : 2189,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 8
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 13
+        },
+        {
+          "activity" : "generate2",
+          "start" : 40,
+          "length" : 43
+        },
+        {
+          "activity" : "generateExampleZip",
+          "start" : 57,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Criterion.xml",
+      "size" : 6041,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 11
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 15
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 18
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 26
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 95
+        },
+        {
+          "activity" : "generate2",
+          "start" : 40,
+          "length" : 53
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/AD.xml",
+      "size" : 31088,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 45
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 21
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 127
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 130
+        },
+        {
+          "activity" : "scanForUsageStats",
+          "start" : 28,
+          "length" : 1
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 200
+        },
+        {
+          "activity" : "generate2",
+          "start" : 40,
+          "length" : 480
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 5
+        },
+        {
+          "activity" : "scanExamplesForR5",
+          "start" : 77,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/BL.xml",
+      "size" : 2285,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 6
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 29,
+          "length" : 11
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 43
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 2
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/AssignedEntity.xml",
+      "size" : 4914,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 10
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 73
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 14
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 47
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 52
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        },
+        {
+          "activity" : "scanProfilesForR5",
+          "start" : 77,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/SubjectPerson.xml",
+      "size" : 5980,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 10
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 11
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 1
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 16
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 21
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 49
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PharmSubstance.xml",
+      "size" : 2664,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 7
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 8
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 9
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 29
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 98
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/AssignedAuthor.xml",
+      "size" : 5412,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 10
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 17,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 12
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 19
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 54
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/InfrastructureRoot.xml",
+      "size" : 4017,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 16
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 45
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PharmMedicineClass.xml",
+      "size" : 2306,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 8
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 6
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 8
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 26
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 39
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/real-simple.xml",
+      "size" : 1710,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 6
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 17
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 54
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Order.xml",
+      "size" : 4839,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 18
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 16
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 45
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/RelatedDocument.xml",
+      "size" : 4785,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 8
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 11
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 17
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 48
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/bn.xml",
+      "size" : 1256,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 7
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 9
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 11
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 40
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Act.xml",
+      "size" : 10248,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 15
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 10
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 20
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 21
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 32
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 84
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Organizer.xml",
+      "size" : 8412,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 14
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 8
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 16
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 18
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 27
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 65
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/LabCriterion.xml",
+      "size" : 6242,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 11
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 13
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 17
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 20
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 99
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 55
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/RelatedSubject.xml",
+      "size" : 3945,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 11
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 8
+        },
+        {
+          "activity" : "validate",
+          "start" : 20,
+          "length" : 14
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 17
+        },
+        {
+          "activity" : "generate2",
+          "start" : 41,
+          "length" : 45
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Guardian.xml",
+      "size" : 5792,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 7
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 13
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 20
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 80
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ObservationMedia.xml",
+      "size" : 9749,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 12
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 8
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 16
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 24
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 30
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 65
+        },
+        {
+          "activity" : "scanExamplesForR5",
+          "start" : 77,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/RecordTarget.xml",
+      "size" : 6845,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 13
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 22
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 48
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/REAL.xml",
+      "size" : 3037,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 6
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 12
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 38
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/EN.xml",
+      "size" : 6055,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 1
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 11
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 20
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 49
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/RTO-PQ-PQ.xml",
+      "size" : 2632,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load-configure",
+          "start" : 16,
+          "length" : 1
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 6
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 7
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 26
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 40
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ST.xml",
+      "size" : 3953,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 9
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 16
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 44
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ExternalDocument.xml",
+      "size" : 5047,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 32
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 11
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 19
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 45
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/SC.xml",
+      "size" : 4235,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 9
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 16
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 12
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 21
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 53
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Custodian.xml",
+      "size" : 5524,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 18
+        },
+        {
+          "activity" : "scanForUsageStats",
+          "start" : 28,
+          "length" : 1
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 20
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 45
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Authenticator.xml",
+      "size" : 7238,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 13
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 27
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 50
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/int-simple.xml",
+      "size" : 1478,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 6
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 11
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 42
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PN.xml",
+      "size" : 3150,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 46
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ObservationRange.xml",
+      "size" : 7098,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 10
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 14
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 20
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 22
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 105
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 51
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 2
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/uuid.xml",
+      "size" : 2191,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 7
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 15
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 38
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Person.xml",
+      "size" : 4533,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 25
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 43
+        },
+        {
+          "activity" : "generateExampleZip",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Reference.xml",
+      "size" : 6240,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 12
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 29
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 69
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/SXCM-TS.xml",
+      "size" : 2412,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 8
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 11
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 28
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 47
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Birthplace.xml",
+      "size" : 3172,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 7
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 14
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 39
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/II.xml",
+      "size" : 4679,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 19
+        },
+        {
+          "activity" : "generate2",
+          "start" : 42,
+          "length" : 59
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Performer1.xml",
+      "size" : 5048,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 13
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 19,
+          "length" : 1
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 20
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 55
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Section.xml",
+      "size" : 8996,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 15
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 9
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 20
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 20
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 36
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 66
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PatientRole.xml",
+      "size" : 5127,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 11
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 19
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 42
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ParentDocument.xml",
+      "size" : 5206,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 11
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 19
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 43
+        },
+        {
+          "activity" : "scanExamplesForR5",
+          "start" : 77,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ts-simple.xml",
+      "size" : 1731,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 7
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 13
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 36
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/xs-ID.xml",
+      "size" : 1548,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load-configure",
+          "start" : 16,
+          "length" : 1
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 6
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 30,
+          "length" : 12
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 35
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/IVXB-INT.xml",
+      "size" : 2198,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 12
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 6
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 11
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 33
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Performer2.xml",
+      "size" : 5662,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 13
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 20
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 47
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PharmPackagedMedicine.xml",
+      "size" : 4692,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 12
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 31
+        },
+        {
+          "activity" : "checkConformanceResources",
+          "start" : 24,
+          "length" : 1
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 47
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 43
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ManufacturedProduct.xml",
+      "size" : 4359,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 13
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 40
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 42
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ED.xml",
+      "size" : 9517,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 11
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 7
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 16
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 17
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 29
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 59
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PharmSuperContent.xml",
+      "size" : 1511,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 2
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 4
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 5
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 6
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 20
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 31
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Entry.xml",
+      "size" : 6316,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 7
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 14
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 16
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 25
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 53
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/INT-POS.xml",
+      "size" : 1453,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 3
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 5
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 6
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 10
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 40
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/url.xml",
+      "size" : 1501,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "scan",
+          "start" : 16,
+          "length" : 1
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 6
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 12
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 37
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/InFulfillmentOf.xml",
+      "size" : 5466,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 44
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Procedure.xml",
+      "size" : 11007,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 16
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 10
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 21
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 20
+        },
+        {
+          "activity" : "scanForUsageStats",
+          "start" : 28,
+          "length" : 1
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 34
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 118
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ANY.xml",
+      "size" : 2778,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 6
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 11
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 37
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PQ.xml",
+      "size" : 3147,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 7
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 16
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 40
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/RelatedEntity.xml",
+      "size" : 4265,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 17
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 38
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/IVL-TS.xml",
+      "size" : 3351,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 12
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 36
+        },
+        {
+          "activity" : "generate2",
+          "start" : 43,
+          "length" : 46
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Component.xml",
+      "size" : 3357,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 22
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 49
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/LabPrecondition.xml",
+      "size" : 4719,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 43
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PharmSpecializedKind.xml",
+      "size" : 1945,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 5
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 7
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 24
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 32
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/DataEnterer.xml",
+      "size" : 5532,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 20
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 46
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/IVXB-PQ.xml",
+      "size" : 2218,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 8
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 14
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 37
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/uid.xml",
+      "size" : 2166,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 120
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 13
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 35
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        },
+        {
+          "activity" : "scanExamplesForR5",
+          "start" : 77,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ExternalObservation.xml",
+      "size" : 4393,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 20
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 9
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 17
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 41
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ruid.xml",
+      "size" : 2066,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 7
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 13
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 37
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/DocumentationOf.xml",
+      "size" : 4664,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 41
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/MaintainedEntity.xml",
+      "size" : 3866,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load-configure",
+          "start" : 16,
+          "length" : 1
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 15
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 35
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Supply.xml",
+      "size" : 12358,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 17
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 10
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 30
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 23
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 46
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 72
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/IntendedRecipient.xml",
+      "size" : 4363,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 10
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 12
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 42
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 40
+        },
+        {
+          "activity" : "makeDependencies",
+          "start" : 51,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PharmIngredient.xml",
+      "size" : 2321,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 6
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 6
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 27
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 33
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Encounter.xml",
+      "size" : 9139,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 13
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 9
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 19
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 19
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 30
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 65
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/INT.xml",
+      "size" : 2674,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 6
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 12
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 36
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Consent.xml",
+      "size" : 5354,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 48
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/LanguageCommunication.xml",
+      "size" : 5184,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 8
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 17
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 56
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/AssignedCustodian.xml",
+      "size" : 3172,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 7
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 6
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 14
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 36
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Precondition.xml",
+      "size" : 4915,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 29
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 1
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 9
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 40
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/bin.xml",
+      "size" : 1296,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 6
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 11
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 63
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ENXP.xml",
+      "size" : 3533,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 9
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 23
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 77
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Device.xml",
+      "size" : 4841,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 12
+        },
+        {
+          "activity" : "scanForUsageStats",
+          "start" : 28,
+          "length" : 1
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 17
+        },
+        {
+          "activity" : "generate2",
+          "start" : 44,
+          "length" : 43
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        },
+        {
+          "activity" : "scanProfilesForR5",
+          "start" : 77,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/OrganizationPartOf.xml",
+      "size" : 4749,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 10
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 13
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 44
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 43
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/EncompassingEncounter.xml",
+      "size" : 11948,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 13
+        },
+        {
+          "activity" : "load",
+          "start" : 16,
+          "length" : 98
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 21
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 22
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 44
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 75
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/NonXMLBody.xml",
+      "size" : 4242,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 15,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 50
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 17
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 44
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/TN.xml",
+      "size" : 2722,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 9
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 15
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 43
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PIVL-TS.xml",
+      "size" : 4873,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 9
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 20
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 45
+        },
+        {
+          "activity" : "scanExamplesForR5",
+          "start" : 77,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Patient.xml",
+      "size" : 11372,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 16
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 11
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 21
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 31
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 36
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 74
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/bl-simple.xml",
+      "size" : 1249,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 6
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 12
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 13
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 36
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/AlternateIdentification.xml",
+      "size" : 4356,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 7
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 14
+        },
+        {
+          "activity" : "generate1",
+          "start" : 31,
+          "length" : 16
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 42
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/LabeledDrug.xml",
+      "size" : 4882,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 17
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 40
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Authorization.xml",
+      "size" : 4648,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 8
+        },
+        {
+          "activity" : "load-configure",
+          "start" : 16,
+          "length" : 1
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 9
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 17
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 41
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/EIVL-TS.xml",
+      "size" : 3643,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 8
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 16
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 39
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/oid.xml",
+      "size" : 1734,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 6
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 12
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 35
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/MO.xml",
+      "size" : 3454,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 18,
+          "length" : 7
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 5
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 14
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 36
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/CS.xml",
+      "size" : 3384,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 12
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 20
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 49
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/CD.xml",
+      "size" : 9132,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 12
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 7
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 14
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 27
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 107
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/cs-simple.xml",
+      "size" : 1813,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 25
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 6
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 12
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 41
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PQR.xml",
+      "size" : 2472,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 12
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 11
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 19
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 56
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/CE.xml",
+      "size" : 2744,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 4
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 11
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 19
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 67
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/EncounterParticipant.xml",
+      "size" : 5001,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 9
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 47
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/CR.xml",
+      "size" : 4760,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 8
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 1
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 7
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 17
+        },
+        {
+          "activity" : "generate2",
+          "start" : 45,
+          "length" : 43
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/CV.xml",
+      "size" : 2532,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 11
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 4
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 49
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 2
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/StructuredBody.xml",
+      "size" : 5067,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 11
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 14
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 14
+        },
+        {
+          "activity" : "scanForUsageStats",
+          "start" : 28,
+          "length" : 1
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 28
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 57
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Participant2.xml",
+      "size" : 6668,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 12
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 7
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 12
+        },
+        {
+          "activity" : "validate",
+          "start" : 21,
+          "length" : 12
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 22
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 46
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Entity.xml",
+      "size" : 5024,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 9
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 12
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 17
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 39
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/LegalAuthenticator.xml",
+      "size" : 8498,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 12
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 12
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 13
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 25
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 49
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        },
+        {
+          "activity" : "scanExamplesForR5",
+          "start" : 77,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Author.xml",
+      "size" : 7103,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 11
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 13
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 21
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 45
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Informant.xml",
+      "size" : 3851,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 11
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 18
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 42
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Specimen.xml",
+      "size" : 3182,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 8
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 8
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 16
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 42
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/QTY.xml",
+      "size" : 2414,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 5
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 3
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 5
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 11
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 32
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Participant1.xml",
+      "size" : 5918,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 15
+        },
+        {
+          "activity" : "load-configure",
+          "start" : 16,
+          "length" : 1
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 11
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 11
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 20
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 76
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PlayingEntity.xml",
+      "size" : 4784,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 9
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 10
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 16
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 13
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 43
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 42
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/st-simple.xml",
+      "size" : 1331,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 6
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 13
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 35
+        },
+        {
+          "activity" : "generateExampleZip",
+          "start" : 57,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Organization.xml",
+      "size" : 6692,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 10
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 7
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 17
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 13
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 23
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 48
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 1
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/SpecimenRole.xml",
+      "size" : 3599,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 10
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 10
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 34
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 47
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/InformationRecipient.xml",
+      "size" : 5915,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 5
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 12
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 9
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 20
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 44
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/ServiceEvent.xml",
+      "size" : 6659,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 8
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 6
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 13
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 11
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 21
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 43
+        },
+        {
+          "activity" : "generateValidationPack",
+          "start" : 58,
+          "length" : 3
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/Subject.xml",
+      "size" : 4171,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 6
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 4
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 13
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 10
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 19
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 47
+        }
+      ]
+    },
+    {
+      "name" : "input/resources/PharmContent.xml",
+      "size" : 1862,
+      "processes" : [
+        {
+          "activity" : "loadResources",
+          "start" : 16,
+          "length" : 4
+        },
+        {
+          "activity" : "load",
+          "start" : 17,
+          "length" : 3
+        },
+        {
+          "activity" : "generateSnapshots",
+          "start" : 19,
+          "length" : 6
+        },
+        {
+          "activity" : "generateNarratives",
+          "start" : 19,
+          "length" : 6
+        },
+        {
+          "activity" : "validate",
+          "start" : 22,
+          "length" : 6
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 23
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 34
+        }
+      ]
+    },
+    {
+      "name" : "/input/examples/clinicaldocument-example.xml",
+      "size" : 46142,
+      "processes" : [
+        {
+          "activity" : "validate",
+          "start" : 28,
+          "length" : 315
+        },
+        {
+          "activity" : "generate1",
+          "start" : 32,
+          "length" : 93
+        },
+        {
+          "activity" : "generate2",
+          "start" : 46,
+          "length" : 8
+        }
+      ]
+    }
+  ]
+}

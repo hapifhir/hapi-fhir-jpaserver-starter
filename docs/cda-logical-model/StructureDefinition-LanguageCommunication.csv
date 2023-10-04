@@ -1,13 +1,14 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "LanguageCommunication","LanguageCommunication","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
-"LanguageCommunication.templateId","LanguageCommunication.templateId","","","",0,*,"","","","http://hl7.org/fhir/cda/StructureDefinition/II {[]} {[]}
+","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+","n/a"
+"LanguageCommunication.templateId","LanguageCommunication.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"LanguageCommunication.templateId",0,*,"",""
-"LanguageCommunication.languageCode","LanguageCommunication.languageCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CS {[]} {[]}
+"LanguageCommunication.languageCode","LanguageCommunication.languageCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
 ","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-HumanLanguage","",,,,"LanguageCommunication.languageCode",0,1,"",""
-"LanguageCommunication.modeCode","LanguageCommunication.modeCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"LanguageCommunication.modeCode","LanguageCommunication.modeCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-LanguageAbilityMode","",,,,"LanguageCommunication.modeCode",0,1,"",""
-"LanguageCommunication.proficiencyLevelCode","LanguageCommunication.proficiencyLevelCode","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/CE {[]} {[]}
+"LanguageCommunication.proficiencyLevelCode","LanguageCommunication.proficiencyLevelCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-LanguageAbilityProficiency","",,,,"LanguageCommunication.proficiencyLevelCode",0,1,"",""
-"LanguageCommunication.preferenceInd","LanguageCommunication.preferenceInd","","","",0,1,"","","","http://hl7.org/fhir/cda/StructureDefinition/BL {[]} {[]}
+"LanguageCommunication.preferenceInd","LanguageCommunication.preferenceInd","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/BL {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"LanguageCommunication.preferenceInd",0,1,"",""

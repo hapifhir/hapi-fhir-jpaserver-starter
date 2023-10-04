@@ -11,7 +11,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title>HL7.CDA.UV.CORE\PharmSubstance (CDA Pharm Class) - XML Representation - FHIR v5.0.0-snapshot3</title>
+    <title>PharmSubstance (CDA Pharm Class) - XML Representation - Clinical Document Architecture v2.1.0-draft2-mb</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="author" content="http://hl7.org/fhir"/>
@@ -39,18 +39,18 @@
     <![endif]-->
 
     <!-- Favicons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png"/>
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png"/>
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png"/>
-    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png"/>
+    <link rel="fhir-logo" sizes="144x144" href="assets/ico/icon-fhir-144.png"/>
+    <link rel="fhir-logo" sizes="114x114" href="assets/ico/icon-fhir-114.png"/>
+    <link rel="fhir-logo" sizes="72x72" href="assets/ico/icon-fhir-72.png"/>
+    <link rel="fhir-logo" href="assets/ico/icon-fhir-57.png"/>
     <link rel="shortcut icon" href="assets/ico/favicon.png"/>
   </head>
   <body onload="document.body.style.opacity='1'">
 
 	  <script src="assets/js/prism.js"></script>
 
-    <style type="text/css">h2{--heading-prefix:"3.90"}
-    h3,h4,h5,h6{--heading-prefix:"3.90"}</style>
+    <style type="text/css">h2{--heading-prefix:"3.144"}
+    h3,h4,h5,h6{--heading-prefix:"3.144"}</style>
     <div id="segment-header" class="segment">  <!-- segment-header -->
       <div class="container">  <!-- container -->
         <!-- Placeholder for child template header declarations -->
@@ -69,9 +69,9 @@
 
 
         <div id="ig-status">
-          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture V2.0.1</span>
+          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture</span>
             <br/>
-            <span style="display:inline-block;">2.1.0-draft1 - 1st Draft
+            <span style="display:inline-block;">2.1.0-draft2-mb - active
 
 
             </span>
@@ -93,7 +93,7 @@
               <span class="icon-bar"> </span>
               <span class="icon-bar"> </span>
             </button>
-            <a class="navbar-brand hidden" href="http://build.fhir.org/index.html">FHIR</a>
+            <a class="navbar-brand hidden" href="http://hl7.org/fhir/R5/index.html">FHIR</a>
             <div class="nav-collapse collapse navbar-inverse-collapse">
               <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
   <li><a href="index.html">IG Home</a></li>
@@ -125,7 +125,7 @@
           <div class="inner-wrapper">
 
 <div style="counter-reset: section 7" class="col-12">
-  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture V2.0.1 - Local Development build (v2.1.0-draft1). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.1.0-draft2-mb). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
   
 
 
@@ -171,18 +171,6 @@
   
 
 
-  
-    <li>
-      <a href="StructureDefinition-PharmSubstance.profile.json.html">JSON</a>
-    </li>
-  
-
-
-  
-    <li>
-      <a href="StructureDefinition-PharmSubstance.profile.ttl.html">TTL</a>
-    </li>
-  
 
 
 </ul>
@@ -190,6 +178,7 @@
 
 <a name="root"> </a>
 <h2 id="root">Logical Model: CDAR2.PharmSubstance - XML Profile</h2>
+
   <table class="colsi">
     <tr>
 
@@ -197,7 +186,7 @@
         
           Active
           
-            as of 2023-02-07
+            as of 2023-10-04
           
         
       </td>
@@ -215,203 +204,203 @@
 
 
 
-  <pre class="xml" style="white-space: pre; overflow: hidden"><code class="language-xml">
+  <pre class="xml" style="white-space: pre; overflow: hidden"><code>
 
-&lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition">StructureDefinition</a> xmlns=&quot;http://hl7.org/fhir&quot;&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.id">id</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">value</a>=&quot;PharmSubstance&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.text">text</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/narrative.html#Narrative#Narrative.status">status</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;extensions&quot;/&gt;
-    &lt;div xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;&lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border: 0px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;&quot;&gt;&lt;tr style=&quot;border: 1px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top&quot;&gt;&lt;th style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;The logical name of the element&quot;&gt;Name&lt;/a&gt;&lt;/th&gt;&lt;th style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;Information about the use of the element&quot;&gt;Flags&lt;/a&gt;&lt;/th&gt;&lt;th style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;Minimum and Maximum # of times the the element can appear in the instance&quot;&gt;Card.&lt;/a&gt;&lt;/th&gt;&lt;th style=&quot;width: 100px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;Reference to the type of the element&quot;&gt;Type&lt;/a&gt;&lt;/th&gt;&lt;th style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;Additional information about the element&quot;&gt;Description &amp;amp; Constraints&lt;/a&gt;&lt;span style=&quot;float: right&quot;&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;Legend for this format&quot;&gt;&lt;img src=&quot;http://build.fhir.org/help16.png&quot; alt=&quot;doco&quot; style=&quot;background-color: inherit&quot;/&gt;&lt;/a&gt;&lt;/span&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr style=&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white&quot;&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck1.png)&quot; class=&quot;hierarchy&quot;&gt;&lt;img src=&quot;tbl_spacer.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;icon_element.gif&quot; alt=&quot;.&quot; style=&quot;background-color: white; background-color: inherit&quot; title=&quot;Element&quot; class=&quot;hierarchy&quot;/&gt; &lt;a href=&quot;StructureDefinition-PharmSubstance-definitions.html#PharmSubstance&quot;&gt;PharmSubstance&lt;/a&gt;&lt;a name=&quot;PharmSubstance&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;/&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;1..1&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;http://hl7.org/fhir/5.0.0-snapshot3/types.html#Base&quot;&gt;Base&lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;XML Namespace: &lt;/span&gt;urn:ihe:pharm&lt;br/&gt;&lt;span style=&quot;opacity: 0.5&quot;&gt;Base for all types and resources&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
-&lt;tr style=&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7&quot;&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)&quot; class=&quot;hierarchy&quot;&gt;&lt;img src=&quot;tbl_spacer.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;tbl_vjoin.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;icon_primitive.png&quot; alt=&quot;.&quot; style=&quot;background-color: #F7F7F7; background-color: inherit&quot; title=&quot;Primitive Data Type&quot; class=&quot;hierarchy&quot;/&gt; &lt;a href=&quot;StructureDefinition-PharmSubstance-definitions.html#PharmSubstance.classCode&quot;&gt;@classCode&lt;/a&gt;&lt;a name=&quot;PharmSubstance.classCode&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;span style=&quot;padding-left: 3px; padding-right: 3px; color: white; background-color: red&quot; title=&quot;This element must be supported&quot;&gt;S&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;1..1&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code&quot;&gt;code&lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;Fixed Value: &lt;/span&gt;&lt;span style=&quot;color: darkgreen&quot;&gt;MMAT&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
-&lt;tr style=&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white&quot;&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)&quot; class=&quot;hierarchy&quot;&gt;&lt;img src=&quot;tbl_spacer.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;tbl_vjoin.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;icon_primitive.png&quot; alt=&quot;.&quot; style=&quot;background-color: white; background-color: inherit&quot; title=&quot;Primitive Data Type&quot; class=&quot;hierarchy&quot;/&gt; &lt;a href=&quot;StructureDefinition-PharmSubstance-definitions.html#PharmSubstance.determinerCode&quot;&gt;@determinerCode&lt;/a&gt;&lt;a name=&quot;PharmSubstance.determinerCode&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;span style=&quot;padding-left: 3px; padding-right: 3px; color: white; background-color: red&quot; title=&quot;This element must be supported&quot;&gt;S&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;1..1&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code&quot;&gt;code&lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;Fixed Value: &lt;/span&gt;&lt;span style=&quot;color: darkgreen&quot;&gt;KIND&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition">StructureDefinition</a> xmlns=&quot;http://hl7.org/fhir&quot;&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.id">id</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">value</a>=&quot;PharmSubstance&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.text">text</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/narrative.html#Narrative#Narrative.status">status</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;extensions&quot;/&gt;
+    &lt;div xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;&lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border: 0px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;&quot;&gt;&lt;tr style=&quot;border: 1px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top&quot;&gt;&lt;th style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;The logical name of the element&quot;&gt;Name&lt;/a&gt;&lt;/th&gt;&lt;th style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;Information about the use of the element&quot;&gt;Flags&lt;/a&gt;&lt;/th&gt;&lt;th style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;Minimum and Maximum # of times the the element can appear in the instance&quot;&gt;Card.&lt;/a&gt;&lt;/th&gt;&lt;th style=&quot;width: 100px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;Reference to the type of the element&quot;&gt;Type&lt;/a&gt;&lt;/th&gt;&lt;th style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;Additional information about the element&quot;&gt;Description &amp;amp; Constraints&lt;/a&gt;&lt;span style=&quot;float: right&quot;&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;Legend for this format&quot;&gt;&lt;img src=&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3goXBCwdPqAP0wAAAldJREFUOMuNk0tIlFEYhp9z/vE2jHkhxXA0zJCMitrUQlq4lnSltEqCFhFG2MJFhIvIFpkEWaTQqjaWZRkp0g26URZkTpbaaOJkDqk10szoODP//7XIMUe0elcfnPd9zsfLOYplGrpRwZaqTtw3K7PtGem7Q6FoidbGgqHVy/HRb669R+56zx7eRV1L31JGxYbBtjKK93cxeqfyQHbehkZbUkK20goELEuIzEd+dHS+qz/Y8PTSif0FnGkbiwcAjHaU1+QWOptFiyCLp/LnKptpqIuXHx6rbR26kJcBX3yLgBfnd7CxwJmflpP2wUg0HIAoUUpZBmKzELGWcN8nAr6Gpu7tLU/CkwAaoKTWRSQyt89Q8w6J+oVQkKnBoblH7V0PPvUOvDYXfopE/SJmALsxnVm6LbkotrUtNowMeIrVrBcBpaMmdS0j9df7abpSuy7HWehwJdt1lhVwi/J58U5beXGAF6c3UXLycw1wdFklArBn87xdh0ZsZtArghBdAA3+OEDVubG4UEzP6x1FOWneHh2VDAHBAt80IbdXDcesNoCvs3E5AFyNSU5nbrDPZpcUEQQTFZiEVx+51fxMhhyJEAgvlriadIJZZksRuwBYMOPBbO3hePVVqgEJhFeUuFLhIPkRP6BQLIBrmMenujm/3g4zc398awIe90Zb5A1vREALqneMcYgP/xVQWlG+Ncu5vgwwlaUNx+3799rfe96u9K0JSDXcOzOTJg4B6IgmXfsygc7/Bvg9g9E58/cDVmGIBOP/zT8Bz1zqWqpbXIsd0O9hajXfL6u4BaOS6SeWAAAAAElFTkSuQmCC&quot; alt=&quot;doco&quot; style=&quot;background-color: inherit&quot;/&gt;&lt;/a&gt;&lt;/span&gt;&lt;/th&gt;&lt;/tr&gt;&lt;tr style=&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white&quot;&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck1.png)&quot; class=&quot;hierarchy&quot;&gt;&lt;img src=&quot;tbl_spacer.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;icon_element.gif&quot; alt=&quot;.&quot; style=&quot;background-color: white; background-color: inherit&quot; title=&quot;Element&quot; class=&quot;hierarchy&quot;/&gt; &lt;a href=&quot;StructureDefinition-PharmSubstance-definitions.html#PharmSubstance&quot;&gt;PharmSubstance&lt;/a&gt;&lt;a name=&quot;PharmSubstance&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;/&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;1..1&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;http://hl7.org/fhir/R5/types.html#Base&quot;&gt;Base&lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;XML Namespace: &lt;/span&gt;urn:ihe:pharm&lt;br/&gt;&lt;span style=&quot;opacity: 0.5&quot;&gt;Base for all types and resources&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;Instances of this logical model are not marked to be the target of a Reference&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style=&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7&quot;&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)&quot; class=&quot;hierarchy&quot;&gt;&lt;img src=&quot;tbl_spacer.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;tbl_vjoin.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;icon_primitive.png&quot; alt=&quot;.&quot; style=&quot;background-color: #F7F7F7; background-color: inherit&quot; title=&quot;Primitive Data Type&quot; class=&quot;hierarchy&quot;/&gt; &lt;a href=&quot;StructureDefinition-PharmSubstance-definitions.html#PharmSubstance.classCode&quot;&gt;@classCode&lt;/a&gt;&lt;a name=&quot;PharmSubstance.classCode&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;span style=&quot;padding-left: 3px; padding-right: 3px; color: white; background-color: red&quot; title=&quot;This element must be supported&quot;&gt;S&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;1..1&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;http://hl7.org/fhir/R5/datatypes.html#code&quot;&gt;code&lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;Fixed Value: &lt;/span&gt;&lt;span style=&quot;color: darkgreen&quot;&gt;MMAT&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style=&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white&quot;&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)&quot; class=&quot;hierarchy&quot;&gt;&lt;img src=&quot;tbl_spacer.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;tbl_vjoin.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;icon_primitive.png&quot; alt=&quot;.&quot; style=&quot;background-color: white; background-color: inherit&quot; title=&quot;Primitive Data Type&quot; class=&quot;hierarchy&quot;/&gt; &lt;a href=&quot;StructureDefinition-PharmSubstance-definitions.html#PharmSubstance.determinerCode&quot;&gt;@determinerCode&lt;/a&gt;&lt;a name=&quot;PharmSubstance.determinerCode&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;span style=&quot;padding-left: 3px; padding-right: 3px; color: white; background-color: red&quot; title=&quot;This element must be supported&quot;&gt;S&lt;/span&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;1..1&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;http://hl7.org/fhir/R5/datatypes.html#code&quot;&gt;code&lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;Fixed Value: &lt;/span&gt;&lt;span style=&quot;color: darkgreen&quot;&gt;KIND&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;
 &lt;tr style=&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7&quot;&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)&quot; class=&quot;hierarchy&quot;&gt;&lt;img src=&quot;tbl_spacer.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;tbl_vjoin.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;icon_resource.png&quot; alt=&quot;.&quot; style=&quot;background-color: #F7F7F7; background-color: inherit&quot; title=&quot;Resource&quot; class=&quot;hierarchy&quot;/&gt; &lt;a href=&quot;StructureDefinition-PharmSubstance-definitions.html#PharmSubstance.code&quot;&gt;code&lt;/a&gt;&lt;a name=&quot;PharmSubstance.code&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;/&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;0..1&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;StructureDefinition-CE.html&quot;&gt;CE&lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;XML Namespace: &lt;/span&gt;urn:ihe:pharm&lt;/td&gt;&lt;/tr&gt;
 &lt;tr style=&quot;border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white&quot;&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck00.png)&quot; class=&quot;hierarchy&quot;&gt;&lt;img src=&quot;tbl_spacer.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;tbl_vjoin_end.png&quot; alt=&quot;.&quot; style=&quot;background-color: inherit&quot; class=&quot;hierarchy&quot;/&gt;&lt;img src=&quot;icon_resource.png&quot; alt=&quot;.&quot; style=&quot;background-color: white; background-color: inherit&quot; title=&quot;Resource&quot; class=&quot;hierarchy&quot;/&gt; &lt;a href=&quot;StructureDefinition-PharmSubstance-definitions.html#PharmSubstance.name&quot;&gt;name&lt;/a&gt;&lt;a name=&quot;PharmSubstance.name&quot;&gt; &lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;/&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;0..1&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;a href=&quot;StructureDefinition-EN.html&quot;&gt;EN&lt;/a&gt;&lt;/td&gt;&lt;td style=&quot;vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px&quot; class=&quot;hierarchy&quot;&gt;&lt;span style=&quot;font-weight:bold&quot;&gt;XML Namespace: &lt;/span&gt;urn:ihe:pharm&lt;/td&gt;&lt;/tr&gt;
-&lt;tr&gt;&lt;td colspan=&quot;5&quot; class=&quot;hierarchy&quot;&gt;&lt;br/&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;Legend for this format&quot;&gt;&lt;img src=&quot;http://build.fhir.org/help16.png&quot; alt=&quot;doco&quot; style=&quot;background-color: inherit&quot;/&gt; Documentation for this format&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;<a name="end-xhtml"></a>
+&lt;tr&gt;&lt;td colspan=&quot;5&quot; class=&quot;hierarchy&quot;&gt;&lt;br/&gt;&lt;a href=&quot;https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views&quot; title=&quot;Legend for this format&quot;&gt;&lt;img src=&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3goXBCwdPqAP0wAAAldJREFUOMuNk0tIlFEYhp9z/vE2jHkhxXA0zJCMitrUQlq4lnSltEqCFhFG2MJFhIvIFpkEWaTQqjaWZRkp0g26URZkTpbaaOJkDqk10szoODP//7XIMUe0elcfnPd9zsfLOYplGrpRwZaqTtw3K7PtGem7Q6FoidbGgqHVy/HRb669R+56zx7eRV1L31JGxYbBtjKK93cxeqfyQHbehkZbUkK20goELEuIzEd+dHS+qz/Y8PTSif0FnGkbiwcAjHaU1+QWOptFiyCLp/LnKptpqIuXHx6rbR26kJcBX3yLgBfnd7CxwJmflpP2wUg0HIAoUUpZBmKzELGWcN8nAr6Gpu7tLU/CkwAaoKTWRSQyt89Q8w6J+oVQkKnBoblH7V0PPvUOvDYXfopE/SJmALsxnVm6LbkotrUtNowMeIrVrBcBpaMmdS0j9df7abpSuy7HWehwJdt1lhVwi/J58U5beXGAF6c3UXLycw1wdFklArBn87xdh0ZsZtArghBdAA3+OEDVubG4UEzP6x1FOWneHh2VDAHBAt80IbdXDcesNoCvs3E5AFyNSU5nbrDPZpcUEQQTFZiEVx+51fxMhhyJEAgvlriadIJZZksRuwBYMOPBbO3hePVVqgEJhFeUuFLhIPkRP6BQLIBrmMenujm/3g4zc398awIe90Zb5A1vREALqneMcYgP/xVQWlG+Ncu5vgwwlaUNx+3799rfe96u9K0JSDXcOzOTJg4B6IgmXfsygc7/Bvg9g9E58/cDVmGIBOP/zT8Bz1zqWqpbXIsd0O9hajXfL6u4BaOS6SeWAAAAAElFTkSuQmCC&quot; alt=&quot;doco&quot; style=&quot;background-color: inherit&quot;/&gt; Documentation for this format&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;<a name="end-xhtml"></a>
   &lt;/text&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.extension">extension</a>
-             <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;urn:ihe:pharm&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.extension">extension</a>
+             <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;urn:ihe:pharm&quot;/&gt;
   &lt;/extension&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.url">url</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/PharmSubstance&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.version">version</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;2.1.0-draft1&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.name">name</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;CDAR2.PharmSubstance&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.title">title</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance (CDA Pharm Class)&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.status">status</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;active&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.experimental">experimental</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.date">date</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#dateTime">value</a>=&quot;2023-02-07T19:43:49+01:00&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.publisher">publisher</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Health Level 7&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.contact">contact</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.name">name</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;HL7 International - Cross-Group Projects&quot;/&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;url&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;http://www.hl7.org/Special/committees/cgp&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.url">url</a>
+       <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/PharmSubstance&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.version">version</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;2.1.0-draft2-mb&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.name">name</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;CDAR2.PharmSubstance&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.title">title</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance (CDA Pharm Class)&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.status">status</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;active&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.experimental">experimental</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.date">date</a> <a href="http://hl7.org/fhir/R5/datatypes.html#dateTime">value</a>=&quot;2023-10-04T23:00:58+02:00&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.publisher">publisher</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Health Level 7&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.contact">contact</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/metadatatypes.html#ContactDetail#ContactDetail.name">name</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;HL7 International - Structured Documents&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;url&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;http://www.hl7.org/Special/committees/structdoc&quot;/&gt;
     &lt;/telecom&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;email&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;cgp@lists.HL7.org&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.system">system</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;email&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.value">value</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;structdog@lists.HL7.org&quot;/&gt;
     &lt;/telecom&gt;
   &lt;/contact&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.description">description</a>
-               <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;IHE PHARM extension, [see confluence](https://confluence.hl7.org/display/SD/CDA+Extensions)&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;5.0.0-snapshot3&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping">mapping</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.identity">identity</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.uri">uri</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/v3&quot;/&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.mapping.name">name</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;RIM Mapping&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.fhirVersion">fhirVersion</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;5.0.0&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.mapping">mapping</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.mapping.identity">identity</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.mapping.uri">uri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/v3&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.mapping.name">name</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;RIM Mapping&quot;/&gt;
   &lt;/mapping&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.kind">kind</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;logical&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.abstract">abstract</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.type">type</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;PharmSubstance&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://hl7.org/fhir/StructureDefinition/Base&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.derivation">derivation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;specialization&quot;/&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;PharmSubstance&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Base for all types and resources&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
-                  <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#markdown">value</a>=&quot;Base definition for all types defined in FHIR type system.&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;Base&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.kind">kind</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;logical&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.abstract">abstract</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.type">type</a>
+        <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/PharmSubstance&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a> <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/fhir/StructureDefinition/Base&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.derivation">derivation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;specialization&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;PharmSubstance&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Base for all types and resources&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>
+                  <a href="http://hl7.org/fhir/R5/datatypes.html#markdown">value</a>=&quot;Base definition for all types defined in FHIR type system.&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;Base&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;*&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint">constraint</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.key">key</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">value</a>=&quot;ele-1&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.severity">severity</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;error&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.human">human</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;All FHIR elements must have a @value or children&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.expression">expression</a>
-                    <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;hasValue() or (children().count() &amp;gt; id.count())&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.source">source</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#canonical">value</a>=&quot;http://hl7.org/fhir/StructureDefinition/Element&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint">constraint</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.key">key</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">value</a>=&quot;ele-1&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.severity">severity</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;error&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.human">human</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;All FHIR elements must have a @value or children&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.expression">expression</a>
+                    <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;hasValue() or (children().count() &amp;gt; id.count())&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.source">source</a> <a href="http://hl7.org/fhir/R5/datatypes.html#canonical">value</a>=&quot;http://hl7.org/fhir/StructureDefinition/Element&quot;/&gt;
       &lt;/constraint&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;n/a&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;false&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.identity">identity</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">value</a>=&quot;rim&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mapping.map">map</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;n/a&quot;/&gt;
       &lt;/mapping&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;PharmSubstance.classCode&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance.classCode&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance.classCode&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;PharmSubstance.classCode&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance.classCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance.classCode&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
       &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;MMAT&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;MMAT&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mustSupport">mustSupport</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;true&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;MMAT&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;MMAT&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mustSupport">mustSupport</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;true&quot;/&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;PharmSubstance.determinerCode&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance.determinerCode&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance.determinerCode&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;PharmSubstance.determinerCode&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance.determinerCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance.determinerCode&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
       &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;KIND&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;KIND&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mustSupport">mustSupport</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;true&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;KIND&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;KIND&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mustSupport">mustSupport</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;true&quot;/&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;PharmSubstance.code&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
-                 <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;urn:ihe:pharm&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;PharmSubstance.code&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;urn:ihe:pharm&quot;/&gt;
       &lt;/extension&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance.code&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance.code&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance.code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance.code&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/CE&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/CE&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;PharmSubstance.name&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
-                 <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;urn:ihe:pharm&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;PharmSubstance.name&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;urn:ihe:pharm&quot;/&gt;
       &lt;/extension&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance.name&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance.name&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance.name&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance.name&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
       &lt;/base&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/EN&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/EN&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
   &lt;/snapshot&gt;
-  &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential">differential</a>&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;PharmSubstance&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+  &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential">differential</a>&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;PharmSubstance&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;PharmSubstance.classCode&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance.classCode&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;PharmSubstance.classCode&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance.classCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
       &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;MMAT&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;MMAT&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mustSupport">mustSupport</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;true&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;MMAT&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;MMAT&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mustSupport">mustSupport</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;true&quot;/&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;PharmSubstance.determinerCode&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance.determinerCode&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;PharmSubstance.determinerCode&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance.determinerCode&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;xmlAttr&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;code&quot;/&gt;
       &lt;/type&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;KIND&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#code">value</a>=&quot;KIND&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.mustSupport">mustSupport</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#boolean">value</a>=&quot;true&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.defaultValue[x]">defaultValueCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;KIND&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a> <a href="http://hl7.org/fhir/R5/datatypes.html#code">value</a>=&quot;KIND&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mustSupport">mustSupport</a> <a href="http://hl7.org/fhir/R5/datatypes.html#boolean">value</a>=&quot;true&quot;/&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;PharmSubstance.code&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
-                 <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;urn:ihe:pharm&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;PharmSubstance.code&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;urn:ihe:pharm&quot;/&gt;
       &lt;/extension&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance.code&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/CE&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance.code&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/CE&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
-    &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#id">id</a>=&quot;PharmSubstance.name&quot;&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
-                 <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;urn:ihe:pharm&quot;/&gt;
+    &lt;<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.differential.element">element</a> <a href="http://hl7.org/fhir/R5/datatypes.html#id">id</a>=&quot;PharmSubstance.name&quot;&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.extension">extension</a>
+                 <a href="http://hl7.org/fhir/R5/datatypes.html#uri">url</a>=&quot;http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace&quot;&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;urn:ihe:pharm&quot;/&gt;
       &lt;/extension&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;PharmSubstance.name&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
-      &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
-        &lt;<a href="http://hl7.org/fhir/5.0.0-snapshot3/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/5.0.0-snapshot3/datatypes.html#uri">value</a>=&quot;http://hl7.org/fhir/cda/StructureDefinition/EN&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;PharmSubstance.name&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a> <a href="http://hl7.org/fhir/R5/datatypes.html#unsignedInt">value</a>=&quot;0&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a> <a href="http://hl7.org/fhir/R5/datatypes.html#string">value</a>=&quot;1&quot;/&gt;
+      &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>&gt;
+        &lt;<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a> <a href="http://hl7.org/fhir/R5/datatypes.html#uri">value</a>=&quot;http://hl7.org/cda/stds/core/StructureDefinition/EN&quot;/&gt;
       &lt;/type&gt;
     &lt;/element&gt;
   &lt;/differential&gt;
@@ -469,7 +458,7 @@
 
       <div class="inner-wrapper">
         <p>
-          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/cgp">Health Level 7</a>.  Package hl7.cda.uv.core#2.1.0-draft1 based on <a style="color: var(--footer-hyperlink-text-color)" href="http://build.fhir.org/">FHIR 5.0.0-snapshot3</a>. Generated <span title="Tue, Feb 7, 2023 19:43+0100">2023-02-07</span>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structdoc">Health Level 7</a>.  Package hl7.cda.uv.core#2.1.0-draft2-mb based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Wed, Oct 4, 2023 23:00+0200">2023-10-04</span>
           <br/>
           <span style="color: var(--footer-highlight-text-color)">
                       Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
@@ -477,7 +466,7 @@
                  
                 
                  | <a style="color: #81BEF7" target="_blank" href="http://hl7.org/cda/stds/core/history.html">Version History <img alt="external" style="vertical-align: baseline" src="external.png"/></a></a> |
-                 <a style="color: #81BEF7" rel="license" href="http://build.fhir.org/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
+                 <a style="color: #81BEF7" rel="license" href="http://hl7.org/fhir/R5/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
                  <!--<a style="color: #81BEF7" href="todo.html">Search</a> | --> 
                  <a style="color: #81BEF7" target="_blank" href="https://jira.hl7.org/projects/CDA/issues">Propose a change <img alt="external" style="vertical-align: baseline" src="external.png"/></a>
 
