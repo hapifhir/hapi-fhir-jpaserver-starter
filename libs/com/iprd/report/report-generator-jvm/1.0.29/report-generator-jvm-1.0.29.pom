@@ -8,14 +8,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.iprd.report</groupId>
   <artifactId>report-generator-jvm</artifactId>
-  <version>1.0.27</version>
+  <version>1.0.29</version>
   <dependencies>
     <dependency>
       <groupId>com.itextpdf</groupId>
       <artifactId>itext7-core</artifactId>
       <version>7.2.2</version>
-      <scope>compile</scope>
       <type>pom</type>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>

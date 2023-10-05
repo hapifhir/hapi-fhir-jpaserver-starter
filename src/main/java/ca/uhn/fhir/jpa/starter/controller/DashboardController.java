@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -294,6 +293,17 @@ public class DashboardController {
 		analyticItems.add(helperService.getPatientCount(practitionerRoleId));
 		return ResponseEntity.ok(analyticItems);
 	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/maps")
+	public List<HelperService.MapResponse> getEncountersForMap(
+		@RequestHeader(name = "Authorization") String token,
+		@RequestParam ("lga") String orgId,
+		@RequestParam("from") String from,
+		@RequestParam("to") String to
+	) {
+		return helperService.getEncounterForMap(orgId, from, to);
+	}
+
 
 	@RequestMapping(method = RequestMethod.GET, value = "/cacheDashboardDataSequential")
 	public ResponseEntity<?> cacheDashboardDataSequential(

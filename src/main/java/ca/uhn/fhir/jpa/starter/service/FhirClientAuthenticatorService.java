@@ -1,8 +1,10 @@
 package ca.uhn.fhir.jpa.starter.service;
 
-import javax.ws.rs.client.ClientBuilder;
-
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -11,12 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
-import ca.uhn.fhir.jpa.starter.AppProperties;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 
 @Import(AppProperties.class)
 @Service
@@ -31,11 +27,11 @@ public class FhirClientAuthenticatorService {
 	
 	private Keycloak keycloak;
 
-	private FhirContext ctx;
+	private static FhirContext ctx;
 	static String serverBase;
 	private Keycloak instance;
 	private TokenManager tokenManager;
-	private BearerTokenAuthInterceptor authInterceptor;
+	private static BearerTokenAuthInterceptor authInterceptor;
 
 	public void initializeKeycloak() {
 		  ctx = FhirContext.forCached(FhirVersionEnum.R4);
@@ -76,7 +72,7 @@ public class FhirClientAuthenticatorService {
 		return keycloak;
 	}
 	
-	public IGenericClient getFhirClient() {
+	public static IGenericClient getFhirClient() {
 		IGenericClient fhirClient = ctx.newRestfulGenericClient(serverBase);
 		fhirClient.registerInterceptor(authInterceptor);
 		return fhirClient;

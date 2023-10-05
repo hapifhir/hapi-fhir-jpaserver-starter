@@ -59,9 +59,9 @@
             <version>${jetty_version}</version>
         </dependency>
         <dependency>
-            <groupId>org.opencampaignlink</groupId>
+            <groupId>org.opencampaignlink.</groupId>
             <artifactId>report-generator-jvm</artifactId>
-            <version>1.0.29</version>
+            <version>1.0.33</version>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
@@ -78,6 +78,11 @@
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
             <version>3.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.openlocationcode</groupId>
+            <artifactId>openlocationcode</artifactId>
+            <version>1.0.4</version>
         </dependency>
         <dependency>
             <groupId>org.imgscalr</groupId>
@@ -485,6 +490,10 @@
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-logging-logback</artifactId>
             <version>0.129.4-alpha</version>
+	</dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
             <groupId>me.desair.tus</groupId>

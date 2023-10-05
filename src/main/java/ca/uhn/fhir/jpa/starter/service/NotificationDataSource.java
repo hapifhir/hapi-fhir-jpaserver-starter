@@ -1,12 +1,7 @@
 package ca.uhn.fhir.jpa.starter.service;
 
-import java.io.File;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import ca.uhn.fhir.jpa.starter.model.*;
+import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 import com.iprd.fhir.utils.PatientIdentifierStatus;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.Session;
@@ -15,12 +10,15 @@ import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
-
-import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.PersistenceException;
+import java.io.File;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class NotificationDataSource {
 
@@ -43,7 +41,7 @@ public class NotificationDataSource {
 
 	public void configure(String filePath) {
 		conf = new Configuration().configure(new File(filePath)).addAnnotatedClass(ComGenerator.class)
-				.addAnnotatedClass(CacheEntity.class).addAnnotatedClass(ApiAsyncTaskEntity.class)
+				.addAnnotatedClass(CacheEntity.class).addAnnotatedClass(MapCacheEntity.class).addAnnotatedClass(ApiAsyncTaskEntity.class)
 				.addAnnotatedClass(EncounterIdEntity.class).addAnnotatedClass(PatientIdentifierEntity.class);
 		sf = conf.buildSessionFactory();
 	}
@@ -121,7 +119,7 @@ public class NotificationDataSource {
 		session.close();
 	}
 	
-	public void insertObjects(ArrayList<CacheEntity> cacheEntities) {
+	public void insertObjects(ArrayList<?> cacheEntities) {
 		StatelessSession session = sf.openStatelessSession();
 		Transaction transaction = session.beginTransaction();
 		try {
@@ -138,7 +136,7 @@ public class NotificationDataSource {
 		}
 	}
 	
-	public void updateObjects(ArrayList<CacheEntity> cacheEntities) {
+	public void updateObjects(ArrayList<?> cacheEntities) {
 		StatelessSession session = sf.openStatelessSession();
 		Transaction transaction = session.beginTransaction();
 		try {
@@ -421,7 +419,7 @@ public class NotificationDataSource {
 				.createQuery("SELECT DISTINCT(indicator) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2");
 		query.setParameter("param1", from);
 		query.setParameter("param2", to);
-		List resultList = query.getResultList();
+		List<String> resultList = query.getResultList();
 		session.close();
 		return resultList;
 	}
@@ -436,6 +434,17 @@ public class NotificationDataSource {
 		query.executeUpdate();
 		transaction.commit();
 		session.close();
+	}
+
+	public List<MapCacheEntity> getMapCacheByDateOrgIdAndCategory(Date date, String orgId, String categoryId) {
+		Session session = sf.openSession();
+		Query query = session.createQuery("FROM MapCacheEntity WHERE date=:param1 AND org_id=:param2 AND category_id=:param3");
+		query.setParameter("param1", date);
+		query.setParameter("param2", orgId);
+		query.setParameter("param3", categoryId);
+		List<MapCacheEntity> resultList = query.getResultList();
+		session.close();
+		return resultList;
 	}
 
 	public void clearAsyncTable() {
@@ -455,5 +464,36 @@ public class NotificationDataSource {
 		query.executeUpdate();
 		session.close();
 	}
+
+	public List<MapCacheEntity> getMapCacheByKeyIdList(List<String> mapDataCacheKeyList) {
+		Session session = sf.openSession();
+		Query query = session.createQuery("FROM MapCacheEntity WHERE id IN (:param1)");
+		query.setParameter("param1", mapDataCacheKeyList);
+		List<MapCacheEntity> resultList = query.getResultList();
+		session.close();
+		return resultList;
+	}
+
+	public List<MapCacheEntity> getMapCacheByKeyId(String mapDataCacheKey) {
+		Session session = sf.openSession();
+		Query query = session.createQuery("FROM MapCacheEntity WHERE id=:param1");
+		query.setParameter("param1", mapDataCacheKey);
+		List<MapCacheEntity> resultList = query.getResultList();
+		session.close();
+		return resultList;
+	}
+
+	public List<MapCacheEntity> getMapDataByOrgIdAndDateRange(List<String> allClinics, Date from, Date to) {
+		Session session = sf.openSession();
+		Query query = session.createQuery(
+			"FROM MapCacheEntity WHERE date BETWEEN :param2 AND :param3 AND org_id IN (:param1) ORDER BY lat, lng");
+		query.setParameter("param1", allClinics);
+		query.setParameter("param2", from);
+		query.setParameter("param3", to);
+		List<MapCacheEntity> resultList = query.getResultList();
+		session.close();
+		return resultList;
+	}
+
 
 }

@@ -18,5 +18,6 @@
 
     </cache-template>
     <cache alias="ca.uhn.fhir.jpa.starter.model.CacheEntity" uses-template="simple"/>
+    <cache alias="ca.uhn.fhir.jpa.starter.model.MapCacheEntity" uses-template="simple"/>
 
 </config>

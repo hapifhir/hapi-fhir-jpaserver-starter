@@ -154,6 +154,9 @@ public class FhirResourceTemplateHelper {
 		facility.setStatus(LocationStatus.ACTIVE);
 		facility.setMode(LocationMode.INSTANCE);
 		facility.setPhysicalType(facilityPhysicalType);
+		Reference organizationRef = new Reference();
+		organizationRef.setReference("Organization/"+organizationReference);
+		facility.setManagingOrganization(organizationRef);
 		try{
 			Location.LocationPositionComponent position = new Location.LocationPositionComponent();
 			position.setLongitude(Double.parseDouble(longitude));
@@ -167,9 +170,6 @@ public class FhirResourceTemplateHelper {
 		}catch (NumberFormatException e){
 			logger.warn("The provided latitude or longitude value is non-numeric. Clinic Details - ", clinic, district, city, state);
 		}
-		Reference organizationRef = new Reference();
-		organizationRef.setReference("Organization/"+organizationReference);
-		facility.setManagingOrganization(organizationRef);
 		return facility;
 	}
 	

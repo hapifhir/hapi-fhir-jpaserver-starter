@@ -1,10 +1,10 @@
 {
   "formatVersion": "1.1",
   "component": {
-    "url": "../../report-generator/1.0.27/report-generator-1.0.27.module",
+    "url": "../../report-generator/1.0.29/report-generator-1.0.29.module",
     "group": "com.iprd.report",
     "module": "report-generator",
-    "version": "1.0.27",
+    "version": "1.0.29",
     "attributes": {
       "org.gradle.status": "release"
     }
@@ -28,6 +28,13 @@
           "module": "itext7-core",
           "version": {
             "requires": "7.2.2"
+          },
+          "thirdPartyCompatibility": {
+            "artifactSelector": {
+              "name": "itext7-core",
+              "type": "pom",
+              "extension": "pom"
+            }
           }
         },
         {
@@ -47,13 +54,13 @@
       ],
       "files": [
         {
-          "name": "report-generator-jvm-1.0.27.jar",
-          "url": "report-generator-jvm-1.0.27.jar",
-          "size": 351596,
-          "sha512": "2a01f75c884aac96b1148ca7a4f1baca2b4c076fb0118a0af1b1b23b22bebe1c5b075825eb4708f46bb81824875d9e5117318ef5e88c2f1e887c9e70ee9e6d9b",
-          "sha256": "7be00323f50b632c0d4f4a3f9ed0dfdb879eb686e95c6d0489e6e35a3e53253d",
-          "sha1": "3e4488a84a1c52752083ca9916bc78ff203e1d96",
-          "md5": "c70dbde4b8a2c6bc21a4be4403014ee3"
+          "name": "report-generator-jvm-1.0.29.jar",
+          "url": "report-generator-jvm-1.0.29.jar",
+          "size": 326402,
+          "sha512": "e533f902cc933e2fb66a27c1986d4060e31ada39f7a374a7d25219a4a8ba70652bd8bfc144637b25faa361477d2f2d7b169893975f7e570bb5cb088cd3c822de",
+          "sha256": "786a5e5217feb71697e1e90f4e0b3b544d5c464b4cc357dfae47f753772b4869",
+          "sha1": "8c037d00409ab05e6a51d798715eda705a40e514",
+          "md5": "5d66ff760b7425ebd64ae4765ce0b8fa"
         }
       ]
     },
@@ -70,6 +77,13 @@
           "module": "itext7-core",
           "version": {
             "requires": "7.2.2"
+          },
+          "thirdPartyCompatibility": {
+            "artifactSelector": {
+              "name": "itext7-core",
+              "type": "pom",
+              "extension": "pom"
+            }
           }
         },
         {
@@ -145,13 +159,13 @@
       ],
       "files": [
         {
-          "name": "report-generator-jvm-1.0.27.jar",
-          "url": "report-generator-jvm-1.0.27.jar",
-          "size": 351596,
-          "sha512": "2a01f75c884aac96b1148ca7a4f1baca2b4c076fb0118a0af1b1b23b22bebe1c5b075825eb4708f46bb81824875d9e5117318ef5e88c2f1e887c9e70ee9e6d9b",
-          "sha256": "7be00323f50b632c0d4f4a3f9ed0dfdb879eb686e95c6d0489e6e35a3e53253d",
-          "sha1": "3e4488a84a1c52752083ca9916bc78ff203e1d96",
-          "md5": "c70dbde4b8a2c6bc21a4be4403014ee3"
+          "name": "report-generator-jvm-1.0.29.jar",
+          "url": "report-generator-jvm-1.0.29.jar",
+          "size": 326402,
+          "sha512": "e533f902cc933e2fb66a27c1986d4060e31ada39f7a374a7d25219a4a8ba70652bd8bfc144637b25faa361477d2f2d7b169893975f7e570bb5cb088cd3c822de",
+          "sha256": "786a5e5217feb71697e1e90f4e0b3b544d5c464b4cc357dfae47f753772b4869",
+          "sha1": "8c037d00409ab05e6a51d798715eda705a40e514",
+          "md5": "5d66ff760b7425ebd64ae4765ce0b8fa"
         }
       ]
     }
