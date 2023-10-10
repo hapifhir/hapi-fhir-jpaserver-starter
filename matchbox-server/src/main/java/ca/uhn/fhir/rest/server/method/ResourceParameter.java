@@ -59,15 +59,15 @@ public class ResourceParameter implements IParameter {
 	private final boolean myMethodIsOperationOrPatch;
 	private Mode myMode;
 	private Class<? extends IBaseResource> myResourceType;
-	// added by matchbox
+// added by matchbox
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ResourceParameter.class);
 
 	public ResourceParameter(
-		Class<? extends IBaseResource> theParameterType,
-		Object theProvider,
-		Mode theMode,
-		boolean theMethodIsOperation,
-		boolean theMethodIsPatch) {
+			Class<? extends IBaseResource> theParameterType,
+			Object theProvider,
+			Mode theMode,
+			boolean theMethodIsOperation,
+			boolean theMethodIsPatch) {
 		Validate.notNull(theParameterType, "theParameterType can not be null");
 		Validate.notNull(theMode, "theMode can not be null");
 
@@ -95,17 +95,17 @@ public class ResourceParameter implements IParameter {
 
 	@Override
 	public void initializeTypes(
-		Method theMethod,
-		Class<? extends Collection<?>> theOuterCollectionType,
-		Class<? extends Collection<?>> theInnerCollectionType,
-		Class<?> theParameterType) {
+			Method theMethod,
+			Class<? extends Collection<?>> theOuterCollectionType,
+			Class<? extends Collection<?>> theInnerCollectionType,
+			Class<?> theParameterType) {
 		// ignore for now
 	}
 
 	@Override
 	public Object translateQueryParametersIntoServerArgument(
-		RequestDetails theRequest, BaseMethodBinding theMethodBinding)
-		throws InternalErrorException, InvalidRequestException {
+			RequestDetails theRequest, BaseMethodBinding theMethodBinding)
+			throws InternalErrorException, InvalidRequestException {
 		switch (myMode) {
 			case BODY:
 				try {
@@ -177,9 +177,9 @@ public class ResourceParameter implements IParameter {
 
 	@SuppressWarnings("unchecked")
 	static <T extends IBaseResource> T loadResourceFromRequest(
-		RequestDetails theRequest, @Nonnull BaseMethodBinding theMethodBinding, Class<T> theResourceType) {
+			RequestDetails theRequest, @Nonnull BaseMethodBinding theMethodBinding, Class<T> theResourceType) {
 		FhirContext ctx = theRequest.getServer().getFhirContext();
-		// added for matchbox to adjust the context with the FHIR Release according of github issue https://github.com/ahdis/matchbox/issues/55
+// added for matchbox to adjust the context with the FHIR Release according of github issue https://github.com/ahdis/matchbox/issues/55
 		Enumerations.FHIRVersion version = extractFhirVersion(theRequest.getHeader(Constants.HEADER_CONTENT_TYPE));
 		if (version != null && !ctx.getVersion().getVersion().getFhirVersionString().equals(version.toCode())) {
 			ctx = FhirContext.forCached(FhirVersionEnum.forVersionString(version.toCode()));
@@ -191,7 +191,7 @@ public class ResourceParameter implements IParameter {
 		Reader requestReader = createRequestReader(theRequest, charset);
 
 		RestOperationTypeEnum restOperationType =
-			theMethodBinding != null ? theMethodBinding.getRestOperationType() : null;
+				theMethodBinding != null ? theMethodBinding.getRestOperationType() : null;
 
 		EncodingEnum encoding = RestfulServerUtils.determineRequestEncodingNoDefault(theRequest);
 		if (encoding == null) {
@@ -199,14 +199,14 @@ public class ResourceParameter implements IParameter {
 			if (ctValue != null) {
 				if (ctValue.startsWith("application/x-www-form-urlencoded")) {
 					String msg = theRequest
-						.getServer()
-						.getFhirContext()
-						.getLocalizer()
-						.getMessage(
-							ResourceParameter.class,
-							"invalidContentTypeInRequest",
-							ctValue,
-							theMethodBinding.getRestOperationType());
+							.getServer()
+							.getFhirContext()
+							.getLocalizer()
+							.getMessage(
+									ResourceParameter.class,
+									"invalidContentTypeInRequest",
+									ctValue,
+									theMethodBinding.getRestOperationType());
 					throw new InvalidRequestException(Msg.code(446) + msg);
 				}
 			}
@@ -223,11 +223,11 @@ public class ResourceParameter implements IParameter {
 				}
 
 				String msg = ctx.getLocalizer()
-					.getMessage(ResourceParameter.class, "noContentTypeInRequest", restOperationType);
+						.getMessage(ResourceParameter.class, "noContentTypeInRequest", restOperationType);
 				throw new InvalidRequestException(Msg.code(448) + msg);
 			} else {
 				String msg = ctx.getLocalizer()
-					.getMessage(ResourceParameter.class, "invalidContentTypeInRequest", ctValue, restOperationType);
+						.getMessage(ResourceParameter.class, "invalidContentTypeInRequest", ctValue, restOperationType);
 				throw new InvalidRequestException(Msg.code(449) + msg);
 			}
 		}
@@ -243,7 +243,7 @@ public class ResourceParameter implements IParameter {
 			}
 		} catch (DataFormatException e) {
 			String msg = ctx.getLocalizer()
-				.getMessage(ResourceParameter.class, "failedToParseRequest", encoding.name(), e.getMessage());
+					.getMessage(ResourceParameter.class, "failedToParseRequest", encoding.name(), e.getMessage());
 			throw new InvalidRequestException(Msg.code(450) + msg);
 		}
 
@@ -251,9 +251,9 @@ public class ResourceParameter implements IParameter {
 	}
 
 	static IBaseResource parseResourceFromRequest(
-		RequestDetails theRequest,
-		@Nonnull BaseMethodBinding theMethodBinding,
-		Class<? extends IBaseResource> theResourceType) {
+			RequestDetails theRequest,
+			@Nonnull BaseMethodBinding theMethodBinding,
+			Class<? extends IBaseResource> theResourceType) {
 		if (theRequest.getResource() != null) {
 			return theRequest.getResource();
 		}

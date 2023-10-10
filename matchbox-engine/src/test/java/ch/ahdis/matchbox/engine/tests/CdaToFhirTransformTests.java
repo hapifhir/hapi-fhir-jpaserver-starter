@@ -230,7 +230,7 @@ class CdaToFhirTransformTests {
 				}
 				// https://terminology.hl7.org/5.0.0/ValueSet-v3-RoleClassAssignedEntity.json.html has a filter with an is-a concept to ASSIGEND and this cannot be evaluated by org.hl7.fhir.r5.terminologies.ValueSetCheckerSimple
 				if (vm.getDetails().getText().startsWith(
-					"The value provided ('ASSIGNED') is not in the value set 'RoleClassAssignedEntity' (http://terminology.hl7.org/ValueSet/v3-RoleClassAssignedEntity|2.0.0), and a code is required from this value set) (error message = Unable to resolve system - value set http://terminology.hl7.org/ValueSet/v3-RoleClassAssignedEntity|2.0.0 include #0 has no system)")) {
+					"The value provided ('ASSIGNED') is not in the value set 'RoleClassAssignedEntity'")) {
 					continue;
 				}
 				// id value 'ESAMI_URINE' is not valid

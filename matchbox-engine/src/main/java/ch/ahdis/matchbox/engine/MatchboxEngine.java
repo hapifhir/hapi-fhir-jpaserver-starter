@@ -60,7 +60,6 @@ import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
 import org.hl7.fhir.validation.instance.InstanceValidator;
-import org.hl7.fhir.validation.instance.utils.ValidatorHostContext;
 
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.mappinglanguage.MatchboxStructureMapUtilities;
@@ -267,7 +266,6 @@ public class MatchboxEngine extends ValidationEngine {
 	 * Adapted transform operation from Validation Engine to use patched
 	 * MatchboxStructureMapUtilities
 	 */
-	@Override
 	public org.hl7.fhir.r5.elementmodel.Element transform(byte[] source, FhirFormat cntType, String mapUri)
 			throws FHIRException, IOException {
 		SimpleWorkerContext context = this.getContext();
@@ -644,7 +642,7 @@ public class MatchboxEngine extends ValidationEngine {
 			throws FHIRException, IOException {
 		StructureDefinition sdR5 = (StructureDefinition) VersionConvertorFactory_40_50.convertResource(sd);
 		try {
-			new ContextUtilities(this.getContext()).generateSnapshot(sdR5, sdR5.getKind() !=null && sdR5.getKind() == StructureDefinitionKind.LOGICAL); 
+			new ContextUtilities(this.getContext()).generateSnapshot(sdR5); 
 		  } catch (Exception e) {
 			// not sure what to do in this case?
 			log.error("Unable to generate snapshot for "+sd.getUrl(), e);

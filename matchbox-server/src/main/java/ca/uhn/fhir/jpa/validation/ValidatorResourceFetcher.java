@@ -62,10 +62,12 @@ public class ValidatorResourceFetcher implements IValidatorResourceFetcher {
 		return null;
 	}
 
-	@Override
-	public boolean resolveURL(IResourceValidator iResourceValidator, Object o, String s, String s1, String s2) throws IOException, FHIRException {
+		@Override
+	public boolean resolveURL(IResourceValidator validator, Object appContext, String path, String url, String type,
+			boolean canonical) throws IOException, FHIRException {
 		return true;
 	}
+
 
 	@Override
 	public byte[] fetchRaw(IResourceValidator iResourceValidator, String s) throws MalformedURLException, IOException {
@@ -87,4 +89,5 @@ public class ValidatorResourceFetcher implements IValidatorResourceFetcher {
 	public boolean fetchesCanonicalResource(IResourceValidator iResourceValidator, String s) {
 		return false;
 	}
+
 }

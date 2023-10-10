@@ -54,10 +54,10 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 		if (isNotBlank(theSpec.getPackageUrl())) {
 			byte[] contents = loadPackageUrlContents(theSpec.getPackageUrl());
 			return createNpmPackageDataFromData(
-				theSpec.getName(),
-				theSpec.getVersion(),
-				theSpec.getPackageUrl(),
-				new ByteArrayInputStream(contents));
+					theSpec.getName(),
+					theSpec.getVersion(),
+					theSpec.getPackageUrl(),
+					new ByteArrayInputStream(contents));
 		}
 
 		return fetchPackageFromServerInternal(theSpec.getName(), theSpec.getVersion());
@@ -72,21 +72,21 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 	 * @throws IOException
 	 */
 	public NpmPackageData fetchPackageFromPackageSpec(String thePackageId, String thePackageVersion)
-		throws FHIRException, IOException {
+			throws FHIRException, IOException {
 		return fetchPackageFromServerInternal(thePackageId, thePackageVersion);
 	}
 
 	private NpmPackageData fetchPackageFromServerInternal(String thePackageId, String thePackageVersion)
-		throws IOException {
+			throws IOException {
 		BasePackageCacheManager.InputStreamWithSrc pkg = this.loadFromPackageServer(thePackageId, thePackageVersion);
 
 		if (pkg == null) {
 			throw new ResourceNotFoundException(
-				Msg.code(1301) + "Unable to locate package " + thePackageId + "#" + thePackageVersion);
+					Msg.code(1301) + "Unable to locate package " + thePackageId + "#" + thePackageVersion);
 		}
 
 		NpmPackageData npmPackage = createNpmPackageDataFromData(
-			thePackageId, thePackageVersion == null ? pkg.version : thePackageVersion, pkg.url, pkg.stream);
+				thePackageId, thePackageVersion == null ? pkg.version : thePackageVersion, pkg.url, pkg.stream);
 
 		return npmPackage;
 	}
@@ -103,8 +103,8 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 	 * @throws IOException
 	 */
 	public NpmPackageData createNpmPackageDataFromData(
-		String thePackageId, String thePackageVersionId, String theSourceDesc, InputStream thePackageTgzInputStream)
-		throws IOException {
+			String thePackageId, String thePackageVersionId, String theSourceDesc, InputStream thePackageTgzInputStream)
+			throws IOException {
 		Validate.notBlank(thePackageId, "thePackageId must not be null");
 		Validate.notBlank(thePackageVersionId, "thePackageVersionId must not be null");
 		Validate.notNull(thePackageTgzInputStream, "thePackageTgzInputStream must not be null");
@@ -116,22 +116,22 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 		NpmPackage npmPackage = NpmPackage.fromPackage(new ByteArrayInputStream(bytes));
 
 		return new NpmPackageData(
-			thePackageId, thePackageVersionId, theSourceDesc, bytes, npmPackage, thePackageTgzInputStream);
+				thePackageId, thePackageVersionId, theSourceDesc, bytes, npmPackage, thePackageTgzInputStream);
 	}
 
 	@Override
 	public NpmPackage loadPackageFromCacheOnly(String theS, @Nullable String theS1) {
 		throw new UnsupportedOperationException(Msg.code(2215)
-																 + "Cannot load from cache. "
-																 + "Caching not supported in PackageLoaderSvc. Use JpaPackageCache instead.");
+				+ "Cannot load from cache. "
+				+ "Caching not supported in PackageLoaderSvc. Use JpaPackageCache instead.");
 	}
 
 	@Override
 	public NpmPackage addPackageToCache(String theS, String theS1, InputStream theInputStream, String theS2)
-		throws IOException {
+			throws IOException {
 		throw new UnsupportedOperationException(Msg.code(2216)
-																 + "Cannot add to cache. "
-																 + "Caching not supported in PackageLoaderSvc. Use JpaPackageCache instead.");
+				+ "Cannot add to cache. "
+				+ "Caching not supported in PackageLoaderSvc. Use JpaPackageCache instead.");
 	}
 
 	@Override
@@ -143,10 +143,10 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 		 *
 		 */
 		throw new UnsupportedOperationException(Msg.code(2217)
-																 + "No packages are cached; "
-																 + " this service only loads from the server directly. "
-																 + "Call fetchPackageFromServer to fetch the npm package from the server. "
-																 + "Or use JpaPackageCache for a cache implementation.");
+				+ "No packages are cached; "
+				+ " this service only loads from the server directly. "
+				+ "Call fetchPackageFromServer to fetch the npm package from the server. "
+				+ "Or use JpaPackageCache for a cache implementation.");
 	}
 
 	public byte[] loadPackageUrlContents(String thePackageUrl) {
@@ -158,7 +158,7 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 				return bytes;
 			} catch (IOException | URISyntaxException e) {
 				throw new InternalErrorException(
-					Msg.code(2031) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
+						Msg.code(2031) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
 			}
 		} else {
 			// matchbox: https://github.com/ahdis/matchbox/issues/75

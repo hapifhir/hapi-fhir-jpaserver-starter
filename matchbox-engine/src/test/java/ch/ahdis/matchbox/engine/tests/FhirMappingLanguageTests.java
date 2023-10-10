@@ -164,7 +164,7 @@ class FhirMappingLanguageTests {
 			assertEquals("kg", obs.getValueQuantity().getUnit());
 			assertEquals("kg", obs.getValueQuantity().getCode());
 			assertEquals("90", obs.getValueQuantity().getValue());
-		} catch (java.lang.Error e) {
+		} catch (FHIRException e) {
 			log.info("qty is not yet implmemented");
 			// correct Transform Unknown: qty
 		}

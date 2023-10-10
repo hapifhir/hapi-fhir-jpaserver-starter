@@ -24,6 +24,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.context.support.IValidationSupport;
+import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.dao.JpaPersistedResourceValidationSupport;
 import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
@@ -33,6 +34,7 @@ import ca.uhn.fhir.validation.IInstanceValidatorModule;
 import ca.uhn.fhir.validation.IValidationContext;
 
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
+import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.hl7.fhir.common.hapi.validation.validator.HapiToHl7OrgDstu2ValidatingSupportWrapper;
@@ -67,7 +69,16 @@ public class ValidationSupportConfig {
 			return context;
 		}
 	}
-	
+
+	@Bean
+	public InMemoryTerminologyServerValidationSupport inMemoryTerminologyServerValidationSupport(
+			FhirContext theFhirContext, JpaStorageSettings theStorageSettings) {
+		InMemoryTerminologyServerValidationSupport retVal =
+				new InMemoryTerminologyServerValidationSupport(theFhirContext);
+		retVal.setIssueSeverityForCodeDisplayMismatch(theStorageSettings.getIssueSeverityForCodeDisplayMismatch());
+		return retVal;
+	}
+
 	@Bean(name = "myDefaultProfileValidationSupport")
 	public DefaultProfileValidationSupport defaultProfileValidationSupport(FhirContext theFhirContext) {
 		return new DefaultProfileValidationSupport(theFhirContext);

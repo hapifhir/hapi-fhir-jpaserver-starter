@@ -39,8 +39,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
-        <fhir.core.version>6.0.22</fhir.core.version>
-        <hapi.fhir.version>6.8.0</hapi.fhir.version>
+        <fhir.core.version>6.1.14</fhir.core.version>
+        <hapi.fhir.version>6.8.3</hapi.fhir.version>
 
         <!-- Dependency Versions -->
         <activation_api_version>1.2.0</activation_api_version>
@@ -106,9 +106,9 @@
         <woodstox_core_asl_version>4.4.1</woodstox_core_asl_version>
         <jacoco_version>0.8.7</jacoco_version>
         <info_cqframework_version>1.5.1</info_cqframework_version>
-        <lombok_version>1.18.26</lombok_version>
-        <byte_buddy_version>1.10.21</byte_buddy_version>
-        <apache_poi_version>4.1.1</apache_poi_version>
+        <lombok_version>1.18.30</lombok_version>
+        <byte_buddy_version>1.14.8</byte_buddy_version>
+        <apache_poi_version>5.2.1</apache_poi_version>
     </properties>
 
     <developers>

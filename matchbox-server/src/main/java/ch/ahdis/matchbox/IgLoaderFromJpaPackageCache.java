@@ -38,6 +38,7 @@ import org.hl7.fhir.instance.model.api.IBaseBinary;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.hl7.fhir.r5.model.ImplementationGuide;
 import org.hl7.fhir.r5.model.Resource;
+import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
@@ -157,7 +158,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 	}
 
 	@Override
-	public void loadIg(List<ImplementationGuide> igs, Map<String, byte[]> binaries, String src, boolean recursive)
+	public void loadIg(List<ImplementationGuide> igs, Map<String, ByteProvider> binaries, String src, boolean recursive)
 			throws IOException, FHIRException {
 		if (src.startsWith("hl7.terminology.r4") || src.startsWith("hl7.terminology.r5")) {
 			log.info("Package ignored (use hl7.terminology#5.3.0) " + src);
@@ -282,7 +283,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 	 * manager
 	 */
 	@Override
-	public Map<String, byte[]> loadIgSource(String src, boolean recursive, boolean explore)
+	public Map<String, ByteProvider> loadIgSource(String src, boolean recursive, boolean explore)
 			throws FHIRException, IOException {
 		throw new RuntimeException(Msg.code(1305) + "Failed to load package, should not be here (loadIgSource) " + src);
 	}
@@ -291,7 +292,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 	 * we overwrite this method to not provoke depend packages to be loaded,
 	 * otherwise we get cda-core-2.0.tgz .. load IG from hl7.terminology.r4#5.3.0
 	 */
-	public Map<String, byte[]> loadPackage(NpmPackage pi, boolean loadInContext) throws FHIRException, IOException {
+	public Map<String, ByteProvider> loadPackage(NpmPackage pi, boolean loadInContext) throws FHIRException, IOException {
 		throw new RuntimeException(Msg.code(1305) + "Failed to load package, should not be her (loadpackage) " + pi);
 	}
 
