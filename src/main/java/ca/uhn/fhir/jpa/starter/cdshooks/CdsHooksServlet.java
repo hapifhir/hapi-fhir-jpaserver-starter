@@ -46,7 +46,7 @@ public class CdsHooksServlet extends HttpServlet {
 
 	// CORS Pre-flight
 	@Override
-	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) {
 		ErrorHandling.setAccessControlHeaders(resp, appProperties);
 		resp.setHeader("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
 		resp.setHeader("X-Content-Type-Options", "nosniff");
@@ -64,7 +64,8 @@ public class CdsHooksServlet extends HttpServlet {
 		}
 		ErrorHandling.setAccessControlHeaders(response, appProperties);
 		response.setHeader("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
-		response.getWriter().println(new GsonBuilder().setPrettyPrinting().create().toJson(getServices()));
+		response.getWriter().println(new GsonBuilder().setPrettyPrinting().create().toJson(
+			JsonParser.parseString(objectMapper.writeValueAsString(getServices()))));
 	}
 
 	@Override
