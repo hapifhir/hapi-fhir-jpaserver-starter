@@ -11,7 +11,6 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.util.JpaHibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.EmailSenderImpl;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
-import ca.uhn.fhir.rest.server.mail.IMailSvc;
 import ca.uhn.fhir.rest.server.mail.MailConfig;
 import ca.uhn.fhir.rest.server.mail.MailSvc;
 import com.google.common.base.Strings;
@@ -221,21 +220,23 @@ public class FhirServerConfigCommon {
   @Bean
   public IEmailSender emailSender(AppProperties appProperties) {
 	  if (appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null) {
-		  MailConfig mailConfig = new MailConfig();
 
-		  AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
-		  mailConfig.setSmtpHostname(email.getHost());
-		  mailConfig.setSmtpPort(email.getPort());
-		  mailConfig.setSmtpUsername(email.getUsername());
-		  mailConfig.setSmtpPassword(email.getPassword());
-		  mailConfig.setSmtpUseStartTLS(email.getStartTlsEnable());
-
-		  IMailSvc mailSvc = new MailSvc(mailConfig);
-		  IEmailSender emailSender = new EmailSenderImpl(mailSvc);
-
-		  return emailSender;
+          return buildEmailSender(appProperties.getSubscription().getEmail());
 	  }
 
-	  return null;
+	  // Return a dummy anonymous function instead of null. Spring does not like null beans.
+	  // TODO Get the signature of ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory
+	  //  changed so it does not require an instance of an IEmailSender
+	  return theDetails -> {};
   }
+
+	private static IEmailSender buildEmailSender(AppProperties.Subscription.Email email) {
+
+		return new EmailSenderImpl(new MailSvc(new MailConfig()
+			.setSmtpHostname(email.getHost())
+			.setSmtpPort(email.getPort())
+			.setSmtpUsername(email.getUsername())
+			.setSmtpPassword(email.getPassword())
+			.setSmtpUseStartTLS(email.getStartTlsEnable())));
+	}
 }
