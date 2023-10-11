@@ -17,7 +17,6 @@ import ca.uhn.fhir.cr.r4.activitydefinition.ActivityDefinitionApplyProvider;
 import ca.uhn.fhir.cr.r4.cqlexecution.CqlExecutionOperationProvider;
 import ca.uhn.fhir.cr.r4.measure.CareGapsOperationProvider;
 import ca.uhn.fhir.cr.r4.measure.MeasureOperationsProvider;
-import ca.uhn.fhir.cr.r4.measure.MeasureService;
 import ca.uhn.fhir.cr.r4.measure.SubmitDataProvider;
 import ca.uhn.fhir.cr.r4.plandefinition.PlanDefinitionApplyProvider;
 import ca.uhn.fhir.cr.r4.plandefinition.PlanDefinitionPackageProvider;
@@ -31,6 +30,7 @@ import org.opencds.cqf.fhir.cr.cql.r4.R4CqlExecutionService;
 import org.opencds.cqf.fhir.cr.measure.CareGapsProperties;
 import org.opencds.cqf.fhir.cr.measure.MeasureEvaluationOptions;
 import org.opencds.cqf.fhir.cr.measure.r4.R4CareGapsService;
+import org.opencds.cqf.fhir.cr.measure.r4.R4MeasureService;
 import org.opencds.cqf.fhir.cr.measure.r4.R4SubmitDataService;
 import org.opencds.cqf.fhir.cr.plandefinition.r4.PlanDefinitionProcessor;
 import org.opencds.cqf.fhir.cr.questionnaire.r4.QuestionnaireProcessor;
@@ -49,8 +49,8 @@ public class CrR4Config {
 
 	@Bean
 	IMeasureServiceFactory r4MeasureServiceFactory(
-			IRepositoryFactory theRepositoryFactory, MeasureEvaluationOptions theEvaluationOptions) {
-		return rd -> new MeasureService(theRepositoryFactory.create(rd), theEvaluationOptions);
+		IRepositoryFactory theRepositoryFactory, MeasureEvaluationOptions theEvaluationOptions) {
+		return rd -> new R4MeasureService(theRepositoryFactory.create(rd), theEvaluationOptions);
 	}
 
 	@Bean
@@ -60,7 +60,7 @@ public class CrR4Config {
 
 	@Bean
 	ICqlExecutionServiceFactory r4CqlExecutionServiceFactory(
-			IRepositoryFactory theRepositoryFactory, EvaluationSettings theEvaluationSettings) {
+		IRepositoryFactory theRepositoryFactory, EvaluationSettings theEvaluationSettings) {
 		return rd -> new R4CqlExecutionService(theRepositoryFactory.create(rd), theEvaluationSettings);
 	}
 
@@ -71,16 +71,16 @@ public class CrR4Config {
 
 	@Bean
 	ICareGapsServiceFactory careGapsServiceFactory(
-			IRepositoryFactory theRepositoryFactory,
-			CareGapsProperties theCareGapsProperties,
-			MeasureEvaluationOptions theMeasureEvaluationOptions,
-			@Qualifier("cqlExecutor") Executor theExecutor) {
+		IRepositoryFactory theRepositoryFactory,
+		CareGapsProperties theCareGapsProperties,
+		MeasureEvaluationOptions theMeasureEvaluationOptions,
+		@Qualifier("cqlExecutor") Executor theExecutor) {
 		return rd -> new R4CareGapsService(
-				theCareGapsProperties,
-				theRepositoryFactory.create(rd),
-				theMeasureEvaluationOptions,
-				theExecutor,
-				rd.getFhirServerBase());
+			theCareGapsProperties,
+			theRepositoryFactory.create(rd),
+			theMeasureEvaluationOptions,
+			theExecutor,
+			rd.getFhirServerBase());
 	}
 
 	@Bean
@@ -100,30 +100,30 @@ public class CrR4Config {
 
 	@Bean
 	IActivityDefinitionProcessorFactory r4ActivityDefinitionProcessorFactory(
-			IRepositoryFactory theRepositoryFactory, EvaluationSettings theEvaluationSettings) {
+		IRepositoryFactory theRepositoryFactory, EvaluationSettings theEvaluationSettings) {
 		return rd -> new ActivityDefinitionProcessor(
-				theRepositoryFactory.create(rd), theEvaluationSettings);
+			theRepositoryFactory.create(rd), theEvaluationSettings);
 	}
 
 	@Bean
 	IPlanDefinitionProcessorFactory r4PlanDefinitionProcessorFactory(
-			IRepositoryFactory theRepositoryFactory, EvaluationSettings theEvaluationSettings) {
+		IRepositoryFactory theRepositoryFactory, EvaluationSettings theEvaluationSettings) {
 		return rd -> new PlanDefinitionProcessor(
-				theRepositoryFactory.create(rd), theEvaluationSettings);
+			theRepositoryFactory.create(rd), theEvaluationSettings);
 	}
 
 	@Bean
 	IQuestionnaireProcessorFactory r4QuestionnaireProcessorFactory(
-			IRepositoryFactory theRepositoryFactory, EvaluationSettings theEvaluationSettings) {
+		IRepositoryFactory theRepositoryFactory, EvaluationSettings theEvaluationSettings) {
 		return rd -> new QuestionnaireProcessor(
-				theRepositoryFactory.create(rd), theEvaluationSettings);
+			theRepositoryFactory.create(rd), theEvaluationSettings);
 	}
 
 	@Bean
 	IQuestionnaireResponseProcessorFactory r4QuestionnaireResponseProcessorFactory(
-			IRepositoryFactory theRepositoryFactory, EvaluationSettings theEvaluationSettings) {
+		IRepositoryFactory theRepositoryFactory, EvaluationSettings theEvaluationSettings) {
 		return rd -> new QuestionnaireResponseProcessor(
-				theRepositoryFactory.create(rd), theEvaluationSettings);
+			theRepositoryFactory.create(rd), theEvaluationSettings);
 	}
 
 	@Bean
@@ -138,7 +138,7 @@ public class CrR4Config {
 
 	@Bean
 	QuestionnaireResponseExtractProvider
-			r4QuestionnaireResponseExtractProvider() {
+	r4QuestionnaireResponseExtractProvider() {
 		return new QuestionnaireResponseExtractProvider();
 	}
 
@@ -159,23 +159,23 @@ public class CrR4Config {
 
 	@Bean
 	public ProviderLoader r4PdLoader(
-			ApplicationContext theApplicationContext, FhirContext theFhirContext, RestfulServer theRestfulServer) {
+		ApplicationContext theApplicationContext, FhirContext theFhirContext, RestfulServer theRestfulServer) {
 
 		var selector = new ProviderSelector(
-				theFhirContext,
-				Map.of(
-						FhirVersionEnum.R4,
-						Arrays.asList(
-								MeasureOperationsProvider.class,
-								SubmitDataProvider.class,
-								CareGapsOperationProvider.class,
-								CqlExecutionOperationProvider.class,
-								ActivityDefinitionApplyProvider.class,
-								PlanDefinitionApplyProvider.class,
-								QuestionnaireResponseExtractProvider.class,
-								QuestionnairePackageProvider.class,
-								PlanDefinitionPackageProvider.class,
-								QuestionnairePopulateProvider.class)));
+			theFhirContext,
+			Map.of(
+				FhirVersionEnum.R4,
+				Arrays.asList(
+					MeasureOperationsProvider.class,
+					SubmitDataProvider.class,
+					CareGapsOperationProvider.class,
+					CqlExecutionOperationProvider.class,
+					ActivityDefinitionApplyProvider.class,
+					PlanDefinitionApplyProvider.class,
+					QuestionnaireResponseExtractProvider.class,
+					QuestionnairePackageProvider.class,
+					PlanDefinitionPackageProvider.class,
+					QuestionnairePopulateProvider.class)));
 
 		return new ProviderLoader(theRestfulServer, theApplicationContext, selector);
 	}

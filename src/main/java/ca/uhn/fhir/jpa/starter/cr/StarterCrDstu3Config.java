@@ -15,6 +15,7 @@ import org.cqframework.cql.cql2elm.model.Model;
 import org.hl7.cql.model.ModelIdentifier;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.opencds.cqf.cql.engine.execution.CqlEngine;
+import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.fhir.cql.EvaluationSettings;
 import org.opencds.cqf.fhir.cr.measure.MeasureEvaluationOptions;
 import org.opencds.cqf.fhir.utility.ValidationProfile;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.*;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 	ApplyOperationConfig.class,
 	ExtractOperationConfig.class,
 	PackageOperationConfig.class,
-	PopulateOperationConfig.class})
+	PopulateOperationConfig.class, BaseCrConfig.class})
 public class StarterCrDstu3Config {
 	private static final Logger ourLogger = LoggerFactory.getLogger(StarterCrDstu3Config.class);
 
@@ -52,7 +54,8 @@ public class StarterCrDstu3Config {
 	public EvaluationSettings evaluationSettings(
 		AppProperties theAppProperties,
 		Map<VersionedIdentifier, CompiledLibrary> theGlobalLibraryCache,
-		Map<ModelIdentifier, Model> theGlobalModelCache) {
+		Map<ModelIdentifier, Model> theGlobalModelCache,
+		Map<String, List<Code>> theGlobalValueSetCache) {
 		var evaluationSettings = EvaluationSettings.getDefault();
 		var cqlOptions = evaluationSettings.getCqlOptions();
 
@@ -120,17 +123,8 @@ public class StarterCrDstu3Config {
 		cqlOptions.setCqlCompilerOptions(cqlCompilerOptions);
 		evaluationSettings.setLibraryCache(theGlobalLibraryCache);
 		evaluationSettings.setModelCache(theGlobalModelCache);
+		evaluationSettings.setValueSetCache(theGlobalValueSetCache);
 		return evaluationSettings;
-	}
-
-	@Bean
-	public Map<VersionedIdentifier, CompiledLibrary> globalLibraryCache() {
-		return new ConcurrentHashMap<>();
-	}
-
-	@Bean
-	public Map<ModelIdentifier, Model> globalModelCache() {
-		return new ConcurrentHashMap<>();
 	}
 
 	@Bean

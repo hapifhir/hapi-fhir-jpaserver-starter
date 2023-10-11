@@ -1,13 +1,9 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
-
-import ca.uhn.fhir.cr.repo.HapiFhirRepository;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.cr.common.CqlThreadFactory;
-import ca.uhn.fhir.cr.common.IRepositoryFactory;
-import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
@@ -15,6 +11,7 @@ import org.cqframework.cql.cql2elm.model.Model;
 import org.hl7.cql.model.ModelIdentifier;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.opencds.cqf.cql.engine.execution.CqlEngine;
+import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.fhir.cql.EvaluationSettings;
 import org.opencds.cqf.fhir.cr.measure.CareGapsProperties;
 import org.opencds.cqf.fhir.cr.measure.MeasureEvaluationOptions;
@@ -25,15 +22,15 @@ import org.springframework.context.annotation.*;
 import org.springframework.security.concurrent.DelegatingSecurityContextExecutorService;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Configuration
 @Conditional({ OnR4Condition.class, CrConfigCondition.class })
-@Import(CrR4Config.class)
+@Import({BaseCrConfig.class, CrR4Config.class})
 public class StarterCrR4Config {
 	private static final Logger ourLogger = LoggerFactory.getLogger(StarterCrR4Config.class);
 
@@ -72,7 +69,8 @@ public class StarterCrR4Config {
 	public EvaluationSettings evaluationSettings(
 		AppProperties theAppProperties,
 		Map<VersionedIdentifier, CompiledLibrary> theGlobalLibraryCache,
-		Map<ModelIdentifier, Model> theGlobalModelCache) {
+		Map<ModelIdentifier, Model> theGlobalModelCache,
+		Map<String, List<Code>> theGlobalValueSetCache) {
 		var evaluationSettings = EvaluationSettings.getDefault();
 		var cqlOptions = evaluationSettings.getCqlOptions();
 
@@ -140,17 +138,8 @@ public class StarterCrR4Config {
 		cqlOptions.setCqlCompilerOptions(cqlCompilerOptions);
 		evaluationSettings.setLibraryCache(theGlobalLibraryCache);
 		evaluationSettings.setModelCache(theGlobalModelCache);
+		evaluationSettings.setValueSetCache(theGlobalValueSetCache);
 		return evaluationSettings;
-	}
-
-	@Bean
-	public Map<VersionedIdentifier, CompiledLibrary> globalLibraryCache() {
-		return new ConcurrentHashMap<>();
-	}
-
-	@Bean
-	public Map<ModelIdentifier, Model> globalModelCache() {
-		return new ConcurrentHashMap<>();
 	}
 
 	@Bean
