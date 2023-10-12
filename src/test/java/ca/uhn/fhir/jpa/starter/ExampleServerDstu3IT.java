@@ -68,7 +68,7 @@ class ExampleServerDstu3IT implements IServerSupport {
   @LocalServerPort
   private int port;
 
-		@BeforeEach
+  @BeforeEach
   void beforeEach() {
     ourCtx = FhirContext.forDstu3();
     ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
