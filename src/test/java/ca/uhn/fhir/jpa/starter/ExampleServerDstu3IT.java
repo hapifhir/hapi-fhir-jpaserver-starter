@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.cr.config.RepositoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
@@ -38,7 +39,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties =
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+	classes = {
+		Application.class,
+		JpaStarterWebsocketDispatcherConfig.class,
+		RepositoryConfig.class
+	}, properties =
   {
      "spring.datasource.url=jdbc:h2:mem:dbr3",
      "hapi.fhir.cr_enabled=true",
@@ -61,7 +67,7 @@ class ExampleServerDstu3IT implements IServerSupport {
   @LocalServerPort
   private int port;
 
-  @BeforeEach
+		@BeforeEach
   void beforeEach() {
     ourCtx = FhirContext.forDstu3();
     ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
