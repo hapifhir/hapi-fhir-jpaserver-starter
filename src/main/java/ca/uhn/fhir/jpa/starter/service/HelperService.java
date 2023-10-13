@@ -1967,10 +1967,6 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 		try{
 //			cachingService.performCachingForMapDataIfRequired(allClinics, from, to);
 			List<MapCacheEntity> responseFromCache = notificationDataSource.getMapDataByOrgIdAndDateRange(allClinics, Date.valueOf(LocalDate.parse(from, DateTimeFormatter.ISO_DATE)) , Date.valueOf(LocalDate.parse(to, DateTimeFormatter.ISO_DATE)));
-			if(responseFromCache.isEmpty()){
-				cachingService.cacheMapData(allClinics, from, to);
-				responseFromCache = notificationDataSource.getMapDataByOrgIdAndDateRange(allClinics, Date.valueOf(LocalDate.parse(from, DateTimeFormatter.ISO_DATE)) , Date.valueOf(LocalDate.parse(to, DateTimeFormatter.ISO_DATE)));
-			}
 			LinkedHashMap<String, ArrayList<LocationData>> categoryWiseResponse = new LinkedHashMap<>();
 			for(MapCacheEntity entry: responseFromCache){
 				String categoryId = entry.getCategoryId();

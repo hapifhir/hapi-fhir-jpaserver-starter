@@ -607,15 +607,15 @@ public class CachingService {
 			if (item.getDateResponse().size() == 0){
 				continue;
 			}
-			Set<Map.Entry<String, LinkedHashMap<String, PositionData>>> dateResponseMap = item.getDateResponse().entrySet();
-			for (Map.Entry<String, LinkedHashMap<String, PositionData>> entry: dateResponseMap){
+			Set<Map.Entry<String, Map<String, PositionData>>> dateResponseMap = item.getDateResponse().entrySet();
+			for (Map.Entry<String, Map<String, PositionData>> entry: dateResponseMap){
 				String orgId = entry.getKey().substring(13);
 				for (Map.Entry<String, PositionData> positionDataEntry : entry.getValue().entrySet()) {
 					Double lat = positionDataEntry.getValue().getLat();
 					Double lng = positionDataEntry.getValue().getLng();
 					String plusCode = OpenLocationCode.encode(lat, lng);
 					String locId = positionDataEntry.getKey();
-					LinkedHashMap<String, Integer> categoryResponseMap = positionDataEntry.getValue().getCategoryResponse();
+					Map<String, Integer> categoryResponseMap = positionDataEntry.getValue().getCategoryResponse();
 					for (Map.Entry<String, Integer> categoryEntry: categoryResponseMap.entrySet()){
 						String categoryId = categoryEntry.getKey();
 						Integer weight = categoryEntry.getValue();
