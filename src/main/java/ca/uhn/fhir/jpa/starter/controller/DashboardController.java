@@ -96,6 +96,20 @@ public class DashboardController {
 		return ResponseEntity.ok(helperService.getAsyncData(categoryWithHashCodes));
 	}
 
+
+	@RequestMapping(method = RequestMethod.GET, value = "/lastSyncTime")
+	public ResponseEntity<?> getLastSyncTime(
+		@RequestHeader(name = "Authorization") String token,
+		@RequestParam("env") String env){
+
+		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
+		if (practitionerRoleId == null) {
+			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
+		}
+
+		return helperService.computeSyncTime(practitionerRoleId,env);
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/getTableData/{lastUpdated}")
 	public ResponseEntity<?> getTableData(@PathVariable Long lastUpdated){
 		return helperService.getTableData(lastUpdated);

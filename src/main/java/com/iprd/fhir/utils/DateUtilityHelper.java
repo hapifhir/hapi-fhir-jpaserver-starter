@@ -13,6 +13,8 @@ import java.util.List;
 
 public class DateUtilityHelper {
 
+	static long millisecondsInADay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+
 	public static Date getCurrentSqlDate() {
 		return new Date(System.currentTimeMillis());
 	}
@@ -143,5 +145,11 @@ public class DateUtilityHelper {
 		LocalDate current = getCurrentSqlDate().toLocalDate().minusDays(7);
 		LocalDate prev = current.minusDays(6);
 		return new Pair<>(Date.valueOf(prev),Date.valueOf(current));
+	}
+
+	public static long calculateMillisecondsRelativeToCurrentTime(long days) {
+		long currentMillis = System.currentTimeMillis(); // Current timestamp in milliseconds
+		long targetMillis = currentMillis - (days * millisecondsInADay);
+		return targetMillis;
 	}
 }

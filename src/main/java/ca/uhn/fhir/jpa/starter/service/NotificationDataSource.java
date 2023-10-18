@@ -1,5 +1,12 @@
 package ca.uhn.fhir.jpa.starter.service;
 
+import java.io.File;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import ca.uhn.fhir.jpa.starter.model.*;
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 import com.iprd.fhir.utils.PatientIdentifierStatus;
@@ -42,7 +49,10 @@ public class NotificationDataSource {
 	public void configure(String filePath) {
 		conf = new Configuration().configure(new File(filePath)).addAnnotatedClass(ComGenerator.class)
 				.addAnnotatedClass(CacheEntity.class).addAnnotatedClass(MapCacheEntity.class).addAnnotatedClass(ApiAsyncTaskEntity.class)
-				.addAnnotatedClass(EncounterIdEntity.class).addAnnotatedClass(PatientIdentifierEntity.class);
+				.addAnnotatedClass(EncounterIdEntity.class).addAnnotatedClass(PatientIdentifierEntity.class)
+				.addAnnotatedClass(CacheEntity.class).addAnnotatedClass(ApiAsyncTaskEntity.class)
+				.addAnnotatedClass(EncounterIdEntity.class).addAnnotatedClass(PatientIdentifierEntity.class)
+				.addAnnotatedClass(LastSyncEntity.class);
 		sf = conf.buildSessionFactory();
 	}
 
@@ -284,6 +294,31 @@ public class NotificationDataSource {
 		session.close();
 		return resultList;
 	}
+	public List<LastSyncEntity> getEntitiesByOrgEnvStatus(String orgId, String env, String status) {
+		Session session = sf.openSession();
+		Query query = session
+			.createQuery("FROM LastSyncEntity WHERE org_id=:param1 AND envs=:param2 AND status=:param3 ORDER BY start_date_time DESC");
+		query.setParameter("param1", orgId);
+		query.setParameter("param2", env);
+		query.setParameter("param3", status);
+		query.setMaxResults(1); // Limit the result to 1 row
+		List<LastSyncEntity> resultList = query.getResultList();
+		session.close();
+		return resultList;
+	}
+
+	public List<LastSyncEntity> fetchLastSyncEntitiesByOrgs(List<String> orgId, String env, String status, Timestamp startDateTime) {
+		Session session = sf.openSession();
+		Query query = session
+			.createQuery("FROM LastSyncEntity WHERE org_id IN (:param1) AND envs=:param2 AND status=:param3 AND start_date_time > :param4");
+		query.setParameter("param1", orgId);
+		query.setParameter("param2", env);
+		query.setParameter("param3", status);
+		query.setParameter("param4", startDateTime);
+		List<LastSyncEntity> resultList = query.getResultList();
+		session.close();
+		return resultList;
+	}
 
 	public List<CacheEntity> getCacheByDateIndicatorAndOrgId(Date date, String indicator, String orgId) {
 		Session session = sf.openSession();
@@ -451,6 +486,16 @@ public class NotificationDataSource {
 		Session session = sf.openSession();
 		Transaction transaction = session.beginTransaction();
 		Query query = session.createQuery("DELETE ApiAsyncTaskEntity");
+		query.executeUpdate();
+		transaction.commit();
+		session.close();
+	}
+
+	public void clearLastSyncStatusTable(Timestamp date) {
+		Session session = sf.openSession();
+		Transaction transaction = session.beginTransaction();
+		Query query = session.createQuery("DELETE LastSyncEntity WHERE start_date_time < :param1");
+		query.setParameter("param1", date);
 		query.executeUpdate();
 		transaction.commit();
 		session.close();

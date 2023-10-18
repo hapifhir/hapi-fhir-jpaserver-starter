@@ -11,8 +11,10 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.sql.Date;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 import java.time.LocalDate;
@@ -483,6 +485,50 @@ public class Utils {
 			return null;
 		}
 	}
+	public static StringBuilder formatTimeDifferenceToHumanReadableString(long days, long hours, long minutes, long seconds) {
+		StringBuilder lastSync = new StringBuilder();
+		if (days > 0) {
+			lastSync.append(days).append(" day").append(days > 1 ? "s" : "");
+			if(hours > 0){
+				lastSync.append(", ").append(hours).append(" hour").append(hours > 1 ? "s" : "");
+			}
+		}
+		else if (hours > 0) {
+			lastSync.append(hours).append(" hour").append(hours > 1 ? "s" : "");
+			if(minutes > 0){
+				lastSync.append(", ").append(minutes).append(" minute").append(minutes > 1 ? "s" : "");
+			}
+		} else if (minutes > 0) {
+			lastSync.append(minutes).append(" minute").append(minutes > 1 ? "s" : "");
+			if(seconds > 0){
+				lastSync.append(", ").append(seconds).append(" second").append(seconds > 1 ? "s" : "");
+			}
+		} else {
+			if(seconds > 0){
+				lastSync.append(seconds).append(" second").append(seconds > 1 ? "s" : "");
+			}
+		}
+		return lastSync.append(" ago");
+	}
+
+	public static String calculateAndFormatTimeDifference(Timestamp oldestTimestamp) {
+		Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+		// Calculate the time difference in milliseconds
+		long timeDifferenceMillis = currentTimestamp.getTime() - oldestTimestamp.getTime();
+
+		// Calculate the number of days, hours, minutes, and seconds
+		long days = TimeUnit.MILLISECONDS.toDays(timeDifferenceMillis);
+		long hours = TimeUnit.MILLISECONDS.toHours(timeDifferenceMillis) % 24;
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(timeDifferenceMillis) % 60;
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(timeDifferenceMillis) % 60;
+
+		// Format the result based on criteria
+		if (days > 0 || hours > 0 || minutes > 0 || seconds > 0) {
+			return (formatTimeDifferenceToHumanReadableString(days, hours, minutes, seconds).toString());
+		}
+		return "Not found";
+	}
+
 
 	public static boolean noneMatchDates(List<Date> dates, Date currentDate) {
 		LocalDate currentLocalDate = currentDate.toLocalDate();

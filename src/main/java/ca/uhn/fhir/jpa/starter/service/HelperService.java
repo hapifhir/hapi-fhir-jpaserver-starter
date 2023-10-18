@@ -20,11 +20,35 @@ import com.iprd.report.model.FilterItem;
 import com.iprd.report.model.FilterOptions;
 import com.iprd.report.model.data.*;
 import com.iprd.report.model.definition.*;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.sql.Clob;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import com.iprd.report.model.definition.BarComponent;
+import com.iprd.report.model.definition.LineChart;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.engine.jdbc.ClobProxy;
+import org.hibernate.HibernateException;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
@@ -49,24 +73,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.*;
-import java.nio.charset.StandardCharsets;
-import java.sql.Clob;
-import java.sql.Date;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.concurrent.Future;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.hibernate.search.util.common.impl.CollectionHelper.asList;
@@ -102,7 +111,7 @@ public class HelperService {
 	private static  String EXTENSION_PLUSCODE_URL = "http://iprdgroup.org/fhir/Extention/location-plus-code";
 	private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
 	private static String SMS_EXTENTION_URL = "http://iprdgroup.com/Extentions/sms-sent";
-
+	long millisecondsInADay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
 	NotificationDataSource notificationDataSource;
 	LinkedHashMap<String,Pair<List<String>, LinkedHashMap<String, List<String>>>> mapOfIdsAndOrgIdToChildrenMapPair;
 	LinkedHashMap<String,List<OrgItem>> mapOfOrgHierarchy;
@@ -562,6 +571,51 @@ public class HelperService {
 		return new ResponseEntity<List<PatientIdentifierEntity>>(patientInfoResourceEntities,HttpStatus.OK);
 	}
 
+	public ResponseEntity<String> computeSyncTime(String practitionerRoleId,String env){
+		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+		List<Timestamp> facilityWiseTimestamps = new ArrayList<>();
+		notificationDataSource = NotificationDataSource.getInstance();
+
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
+
+		// Get the current date and time
+		Timestamp fiveDaysAgoTimestamp = new Timestamp(DateUtilityHelper.calculateMillisecondsRelativeToCurrentTime(5));
+
+		List<LastSyncEntity> lastSyncData = notificationDataSource.fetchLastSyncEntitiesByOrgs(idsAndOrgIdToChildrenMapPair.first,env,ApiAsyncTaskEntity.Status.COMPLETED.name(),fiveDaysAgoTimestamp);
+
+		// Group the data by organization ID
+		Map<String, List<LastSyncEntity>> groupedData = lastSyncData.stream()
+			.collect(Collectors.groupingBy(LastSyncEntity::getOrgId));
+
+		// Sort each group by startDateTime
+		groupedData.values().forEach(list -> list.sort(Comparator.comparing(LastSyncEntity::getStartDateTime)));
+
+		// Loop through the grouped data
+		for (List<LastSyncEntity> entityList : groupedData.values()) {
+			if (!entityList.isEmpty()) {
+				// Get the last element in the list
+				LastSyncEntity lastEntity = entityList.get(entityList.size() - 1);
+
+				// Check if endDateTime is not null
+				if (lastEntity.getEndDateTime() != null) {
+					// Add it to facilityWiseTimestamps
+					facilityWiseTimestamps.add(lastEntity.getEndDateTime());
+				}
+			}
+		}
+
+		// Find the oldest timestamp
+		Timestamp oldestTimestamp = facilityWiseTimestamps.stream()
+			.min(Timestamp::compareTo)
+			.orElse(null);
+		if (oldestTimestamp != null) {
+			return ResponseEntity.ok(Utils.calculateAndFormatTimeDifference(oldestTimestamp));
+		}
+		return ResponseEntity.ok("Not found");
+	}
+
+
+
 	public List<GroupRepresentation> getGroupsByUser(String userId) {
 		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 		List<GroupRepresentation> groups = realmResource.users().get(userId).groups(0, appProperties.getKeycloak_max_group_count(), false);
@@ -651,6 +705,13 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		catch (Exception e) {
 			logger.warn("Caching task failed "+ExceptionUtils.getStackTrace(e));
 		}
+	}
+
+	@Scheduled(cron = "0 0 23 1 * ?")
+	public void cleanupLastSyncStatusTable() {
+		// Get the current date and time
+		notificationDataSource = NotificationDataSource.getInstance();
+		notificationDataSource.clearLastSyncStatusTable(new Timestamp(DateUtilityHelper.calculateMillisecondsRelativeToCurrentTime(30)));
 	}
 
 	public Bundle getEncountersBelowLocation(String locationId) {
@@ -1456,7 +1517,9 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 					for (String facilityId : facilityBatch) {
 						Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 						Date startDate = Date.valueOf(start);
-						cacheDashboardData(facilityId, startDate,endDate, indicators, barCharts, tabularItemList, lineCharts, pieChartDefinitions,countFinal,orgToTiming);
+						LastSyncEntity lastSyncEntity = new LastSyncEntity(facilityId, ApiAsyncTaskEntity.Status.PROCESSING.name(), env, new Timestamp(System.currentTimeMillis()), null);
+						datasource.insert(lastSyncEntity);
+						cacheDashboardData(facilityId, startDate,endDate, indicators, barCharts, tabularItemList, lineCharts, pieChartDefinitions,countFinal,orgToTiming,env);
 						}
 					}
 				};
@@ -1485,7 +1548,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 
 	
 
-	public void cacheDashboardData(String orgId, Date startDate, Date endDate, List<IndicatorItem> indicators, List<BarChartDefinition> barCharts, List<TabularItem> tabularItems, List<LineChart> lineCharts, List<PieChartDefinition> pieChartDefinitions,int count,HashMap <String,Pair<Long,Long>> orgToTiming ) {
+	public void cacheDashboardData(String orgId, Date startDate, Date endDate, List<IndicatorItem> indicators, List<BarChartDefinition> barCharts, List<TabularItem> tabularItems, List<LineChart> lineCharts, List<PieChartDefinition> pieChartDefinitions,int count,HashMap <String,Pair<Long,Long>> orgToTiming, String env ) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 		DashboardModel dashboard = ReportGeneratorFactory.INSTANCE.reportGenerator().getOverallDataToCache(
@@ -1516,6 +1579,18 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 					currentDate = Date.valueOf(currentDate.toLocalDate().plusDays(1));
 					Long end = System.nanoTime();
 					diff+= (end-start)/1000000000.0;
+				}
+		List<LastSyncEntity> lastSyncData = datasource.getEntitiesByOrgEnvStatus(orgId,env,ApiAsyncTaskEntity.Status.PROCESSING.name());
+
+		try {
+			if (!lastSyncData.isEmpty()) {
+				LastSyncEntity lastSyncRecord = (LastSyncEntity) lastSyncData.get(0);
+				lastSyncRecord.setEndDateTime(new Timestamp(System.currentTimeMillis()));
+				lastSyncRecord.setStatus(ApiAsyncTaskEntity.Status.COMPLETED.name());
+				datasource.update(lastSyncRecord);
+			}
+				} catch (HibernateException e) {
+					logger.warn(ExceptionUtils.getStackTrace(e));
 				}
 			   logger.warn("ALL Dates for org ****** "+orgId+" "+String.valueOf(diff));
 //			}
@@ -1836,6 +1911,7 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 								pluscodeExtension.setValue(pluscodeValue);
 								locationResource.addExtension(pluscodeExtension);
 							}
+
 						}catch (NumberFormatException e){
 							logger.warn("The provided updated latitude or longitude value is non-numeric");
 						}
