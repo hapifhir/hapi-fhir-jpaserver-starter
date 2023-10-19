@@ -5,7 +5,6 @@ import ca.uhn.fhir.cr.config.dstu3.CrDstu3Config;
 import ca.uhn.fhir.cr.config.dstu3.ExtractOperationConfig;
 import ca.uhn.fhir.cr.config.dstu3.PackageOperationConfig;
 import ca.uhn.fhir.cr.config.dstu3.PopulateOperationConfig;
-import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnDSTU3Condition;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
@@ -27,15 +26,17 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 @Conditional({ OnDSTU3Condition.class, CrConfigCondition.class })
-@Import({ CrDstu3Config.class,
+@Import({
+	BaseCrConfig.class,
+	CrDstu3Config.class,
 	ApplyOperationConfig.class,
 	ExtractOperationConfig.class,
 	PackageOperationConfig.class,
-	PopulateOperationConfig.class, BaseCrConfig.class})
+	PopulateOperationConfig.class
+})
 public class StarterCrDstu3Config {
 	private static final Logger ourLogger = LoggerFactory.getLogger(StarterCrDstu3Config.class);
 
@@ -52,7 +53,7 @@ public class StarterCrDstu3Config {
 
 	@Bean
 	public EvaluationSettings evaluationSettings(
-		AppProperties theAppProperties,
+		CrProperties theCrProperties,
 		Map<VersionedIdentifier, CompiledLibrary> theGlobalLibraryCache,
 		Map<ModelIdentifier, Model> theGlobalModelCache,
 		Map<String, List<Code>> theGlobalValueSetCache) {
@@ -61,10 +62,10 @@ public class StarterCrDstu3Config {
 
 		var cqlEngineOptions = cqlOptions.getCqlEngineOptions();
 		Set<CqlEngine.Options> options = EnumSet.noneOf(CqlEngine.Options.class);
-		if (theAppProperties.isCqlRuntimeEnableExpressionCaching()) {
+		if (theCrProperties.isCqlRuntimeEnableExpressionCaching()) {
 			options.add(CqlEngine.Options.EnableExpressionCaching);
 		}
-		if (theAppProperties.isCqlRuntimeEnableValidation()) {
+		if (theCrProperties.isCqlRuntimeEnableValidation()) {
 			options.add(CqlEngine.Options.EnableValidation);
 		}
 		cqlEngineOptions.setOptions(options);
@@ -72,53 +73,52 @@ public class StarterCrDstu3Config {
 
 		var cqlCompilerOptions = new CqlCompilerOptions();
 
-		if (theAppProperties.isEnableDateRangeOptimization()
-		) {
+		if (theCrProperties.isEnableDateRangeOptimization()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.EnableDateRangeOptimization);
 		}
-		if (theAppProperties.isEnableAnnotations()) {
+		if (theCrProperties.isEnableAnnotations()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.EnableAnnotations);
 		}
-		if (theAppProperties.isEnableLocators()) {
+		if (theCrProperties.isEnableLocators()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.EnableLocators);
 		}
-		if (theAppProperties.isEnableResultsType()) {
+		if (theCrProperties.isEnableResultsType()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.EnableResultTypes);
 		}
-		cqlCompilerOptions.setVerifyOnly(theAppProperties.isCqlCompilerVerifyOnly());
-		if (theAppProperties.isEnableDetailedErrors()) {
+		cqlCompilerOptions.setVerifyOnly(theCrProperties.isCqlCompilerVerifyOnly());
+		if (theCrProperties.isEnableDetailedErrors()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.EnableDetailedErrors);
 		}
-		cqlCompilerOptions.setErrorLevel(theAppProperties.getCqlCompilerErrorSeverityLevel());
-		if (theAppProperties.isDisableListTraversal()) {
+		cqlCompilerOptions.setErrorLevel(theCrProperties.getCqlCompilerErrorSeverityLevel());
+		if (theCrProperties.isDisableListTraversal()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.DisableListTraversal);
 		}
-		if (theAppProperties.isDisableListDemotion()) {
+		if (theCrProperties.isDisableListDemotion()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.DisableListDemotion);
 		}
-		if (theAppProperties.isDisableListPromotion()) {
+		if (theCrProperties.isDisableListPromotion()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.DisableListPromotion);
 		}
-		if (theAppProperties.isEnableIntervalDemotion()) {
+		if (theCrProperties.isEnableIntervalDemotion()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.EnableIntervalDemotion);
 		}
-		if (theAppProperties.isEnableIntervalPromotion()) {
+		if (theCrProperties.isEnableIntervalPromotion()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.EnableIntervalPromotion);
 		}
-		if (theAppProperties.isDisableMethodInvocation()) {
+		if (theCrProperties.isDisableMethodInvocation()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.DisableMethodInvocation);
 		}
-		if (theAppProperties.isRequireFromKeyword()) {
+		if (theCrProperties.isRequireFromKeyword()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.RequireFromKeyword);
 		}
-		cqlCompilerOptions.setValidateUnits(theAppProperties.isCqlCompilerValidateUnits());
-		if (theAppProperties.isDisableDefaultModelInfoLoad()) {
+		cqlCompilerOptions.setValidateUnits(theCrProperties.isCqlCompilerValidateUnits());
+		if (theCrProperties.isDisableDefaultModelInfoLoad()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.DisableDefaultModelInfoLoad);
 		}
-		cqlCompilerOptions.setSignatureLevel(theAppProperties.getCqlCompilerSignatureLevel());
-		cqlCompilerOptions.setCompatibilityLevel(theAppProperties.getCqlCompilerCompatibilityLevel());
-		cqlCompilerOptions.setAnalyzeDataRequirements(theAppProperties.isCqlCompilerAnalyzeDataRequirements());
-		cqlCompilerOptions.setCollapseDataRequirements(theAppProperties.isCqlCompilerCollapseDataRequirements());
+		cqlCompilerOptions.setSignatureLevel(theCrProperties.getCqlCompilerSignatureLevel());
+		cqlCompilerOptions.setCompatibilityLevel(theCrProperties.getCqlCompilerCompatibilityLevel());
+		cqlCompilerOptions.setAnalyzeDataRequirements(theCrProperties.isCqlCompilerAnalyzeDataRequirements());
+		cqlCompilerOptions.setCollapseDataRequirements(theCrProperties.isCqlCompilerCollapseDataRequirements());
 
 		cqlOptions.setCqlCompilerOptions(cqlCompilerOptions);
 		evaluationSettings.setLibraryCache(theGlobalLibraryCache);

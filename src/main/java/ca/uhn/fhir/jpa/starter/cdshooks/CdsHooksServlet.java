@@ -37,12 +37,18 @@ public class CdsHooksServlet extends HttpServlet {
 	@Autowired
 	private AppProperties appProperties;
 	@Autowired
+	private ProviderConfiguration providerConfiguration;
+	@Autowired
 	ICdsServiceRegistry cdsServiceRegistry;
 	@Autowired
 	RestfulServer restfulServer;
 	@Autowired
 	@Qualifier(CDS_HOOKS_OBJECT_MAPPER_FACTORY)
 	ObjectMapper objectMapper;
+
+	protected ProviderConfiguration getProviderConfiguration() {
+		return this.providerConfiguration;
+	}
 
 	// CORS Pre-flight
 	@Override
@@ -103,26 +109,12 @@ public class CdsHooksServlet extends HttpServlet {
 	private void logRequestInfo(CdsServiceRequestJson request, String jsonRequest) {
 		logger.info(jsonRequest);
 		logger.info("cds-hooks hook instance: {}", request.getHookInstance());
-		// logger.info("cds-hooks maxCodesPerQuery: {}", this.getProviderConfiguration().getMaxCodesPerQuery());
-		// logger.info("cds-hooks expandValueSets: {}", this.getProviderConfiguration().getExpandValueSets());
-		// logger.info("cds-hooks queryBatchThreshold: {}", this.getProviderConfiguration().getQueryBatchThreshold());
-		// logger.info("cds-hooks searchStyle: {}", this.getProviderConfiguration().getSearchStyle());
-		// logger.info("cds-hooks prefetch maxUriLength: {}", this.getProviderConfiguration().getMaxUriLength());
 		logger.info("cds-hooks local server address: {}", appProperties.getServer_address());
 		logger.info("cds-hooks fhir server address: {}", request.getFhirServer());
-		// logger.info("cds-hooks cql_logging_enabled: {}", this.getProviderConfiguration().getCqlLoggingEnabled());
+		logger.info("cds-hooks cql_logging_enabled: {}", this.getProviderConfiguration().getCqlLoggingEnabled());
 	}
 
 	private CdsServicesJson getServices() {
 		return cdsServiceRegistry.getCdsServicesJson();
 	}
-
-	// public DebugMap getDebugMap() {
-	// 	DebugMap debugMap = new DebugMap();
-	// 	if (cqlProperties.getCqlRuntimeOptions().isDebugLoggingEnabled()) {
-	// 		// getOptions().getCqlEngineOptions().isDebugLoggingEnabled()) {
-	// 		debugMap.setIsLoggingEnabled(true);
-	// 	}
-	// 	return debugMap;
-	// }
 }

@@ -96,8 +96,8 @@ public class Application extends SpringBootServletInitializer {
 
 	}
 
-	@Bean
-	IRepositoryFactory repositoryFactory(DaoRegistry theDaoRegistry, RestfulServer theRestfulServer) {
-		return rd -> new HapiFhirRepository(theDaoRegistry, rd, theRestfulServer);
-	}
+//	@Bean
+//	IRepositoryFactory repositoryFactory(DaoRegistry theDaoRegistry, RestfulServer theRestfulServer) {
+//		return rd -> new HapiFhirRepository(theDaoRegistry, rd, theRestfulServer);
+//	}
 }

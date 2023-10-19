@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.jpa.searchparam.config.NicknameServiceConfig;
+import ca.uhn.fhir.jpa.starter.cr.CrProperties;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
@@ -42,9 +43,9 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 		"hapi.fhir.fhir_version=r4",
 		//"hapi.fhir.subscription.websocket_enabled=true",
 		//"hapi.fhir.mdm_enabled=true",
-		"hapi.fhir.cr_enabled=true",
-		"hapi.fhir.caregaps_section_author=Organization/alphora-author",
-		"hapi.fhir.caregaps_reporter=Organization/alphora",
+		"hapi.fhir.cr.enabled=true",
+		"hapi.fhir.cr.caregaps_section_author=Organization/alphora-author",
+		"hapi.fhir.cr.caregaps_reporter=Organization/alphora",
 		"hapi.fhir.implementationguides.dk-core.name=hl7.fhir.dk.core",
 		"hapi.fhir.implementationguides.dk-core.version=1.1.0",
 		"hapi.fhir.auto_create_placeholder_reference_targets=true",
@@ -57,7 +58,7 @@ class ExampleServerR4IT implements IServerSupport{
 	private IGenericClient ourClient;
 	private FhirContext ourCtx;
 
-	@Autowired private AppProperties appProperties;
+	@Autowired private CrProperties crProperties;
 
 	@LocalServerPort
 	private int port;
@@ -253,8 +254,8 @@ class ExampleServerR4IT implements IServerSupport{
 	@Test
 	void testCareGaps() throws IOException {
 
-		var reporter = appProperties.getCareGapsReporter();
-		var author = appProperties.getCareGapsSectionAuthor();
+		var reporter = crProperties.getCareGapsReporter();
+		var author = crProperties.getCareGapsSectionAuthor();
 
 		assertTrue(reporter.equals("Organization/alphora"));
 		assertTrue(author.equals("Organization/alphora-author"));
