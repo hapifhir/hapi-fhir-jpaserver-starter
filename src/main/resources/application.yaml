@@ -54,10 +54,10 @@ logging:
    level:
       org:
          hibernate:
-            type: DEBUG
+            type: WARN
       com:
          zaxxer:
-            hikari: DEBUG 
+            hikari: WARN
 tus-server:
    file-directory: Images
    context-path: /api/upload
