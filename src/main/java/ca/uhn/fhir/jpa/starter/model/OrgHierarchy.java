@@ -11,18 +11,24 @@ public class OrgHierarchy {
 	@Id
 	@Column(name = "id",  columnDefinition = "VARCHAR(36)")
 	private String id;
+
 	@Column(name = "orgId", nullable = false, unique = true)
-	String orgId;
+	private String orgId;
+
 	@Column(name = "level", nullable = false)
-	String level;
+	private String level;
+
 	@Column(name = "countryParent", nullable = true)
-	String countryParent;
+	private String countryParent;
+
 	@Column(name = "stateParent", nullable = true)
-	String stateParent;
+	private String stateParent;
+
 	@Column(name = "lgaParent", nullable = true)
-	String lgaParent;
+	private String lgaParent;
+
 	@Column(name = "wardParent", nullable = true)
-	String wardParent;
+	private String wardParent;
 
 
 	public OrgHierarchy() {}

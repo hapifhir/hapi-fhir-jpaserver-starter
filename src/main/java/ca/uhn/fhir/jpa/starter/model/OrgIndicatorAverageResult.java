@@ -57,5 +57,4 @@ public class OrgIndicatorAverageResult {
 		this.averageValue = averageValue;
 	}
 
-	// Getters and setters (or just getters if the data is read-only)
 }
