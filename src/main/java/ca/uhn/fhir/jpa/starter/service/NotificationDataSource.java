@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import java.util.UUID;
 import ca.uhn.fhir.jpa.starter.model.*;
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 import com.iprd.fhir.utils.PatientIdentifierStatus;
@@ -48,9 +48,8 @@ public class NotificationDataSource {
 
 	public void configure(String filePath) {
 		conf = new Configuration().configure(new File(filePath)).addAnnotatedClass(ComGenerator.class)
+				.addAnnotatedClass(OrgHierarchy.class).addAnnotatedClass(OrgIndicatorAverageResult.class)
 				.addAnnotatedClass(CacheEntity.class).addAnnotatedClass(MapCacheEntity.class).addAnnotatedClass(ApiAsyncTaskEntity.class)
-				.addAnnotatedClass(EncounterIdEntity.class).addAnnotatedClass(PatientIdentifierEntity.class)
-				.addAnnotatedClass(CacheEntity.class).addAnnotatedClass(ApiAsyncTaskEntity.class)
 				.addAnnotatedClass(EncounterIdEntity.class).addAnnotatedClass(PatientIdentifierEntity.class)
 				.addAnnotatedClass(LastSyncEntity.class);
 		sf = conf.buildSessionFactory();
@@ -145,7 +144,42 @@ public class NotificationDataSource {
 			session.close();
 		}
 	}
-	
+
+	public void insertObjectsWithListNative(List<?> cacheEntities) {
+		StatelessSession session = sf.openStatelessSession();
+		Transaction transaction = session.beginTransaction();
+
+		try {
+			for (int i = 0; i < cacheEntities.size(); i++) {
+				Object entity = cacheEntities.get(i);
+
+				// Create a native SQL query
+				String sqlQuery = "INSERT IGNORE INTO organization_structure (id, orgId, level, countryParent, stateParent, lgaParent, wardParent) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+				// Use a native SQL query to insert the data
+				session.createSQLQuery(sqlQuery)
+					.setParameter(1, ((OrgHierarchy) entity).getId())
+					.setParameter(2, ((OrgHierarchy) entity).getOrgId()) // Assuming getOrgId() exists in your OrgHierarchy class
+					.setParameter(3, ((OrgHierarchy) entity).getLevel()) // Similarly, use the corresponding getter methods
+					.setParameter(4, ((OrgHierarchy) entity).getCountryParent())
+					.setParameter(5, ((OrgHierarchy) entity).getStateParent())
+					.setParameter(6, ((OrgHierarchy) entity).getLgaParent())
+					.setParameter(7, ((OrgHierarchy) entity).getWardParent())
+					.executeUpdate();
+			}
+
+			transaction.commit();
+		} catch (Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			transaction.rollback();
+			logger.warn("in notification");
+			// Rethrow the caught exception
+			throw e;
+		} finally {
+			session.close();
+		}
+	}
+
 	public void updateObjects(ArrayList<?> cacheEntities) {
 		StatelessSession session = sf.openStatelessSession();
 		Transaction transaction = session.beginTransaction();
@@ -154,7 +188,6 @@ public class NotificationDataSource {
 			for (int i = 0; i < cacheEntities.size(); i++) {
 				session.update(cacheEntities.get(i));
 			}
-
 			transaction.commit();
 		} catch (Exception e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
@@ -330,6 +363,77 @@ public class NotificationDataSource {
 		List<CacheEntity> resultList = query.getResultList();
 		session.close();
 		return resultList;
+	}
+
+	public OrgHierarchy getOrganizationalHierarchyItem(String orgId) {
+		try (Session session = sf.openSession()) {
+			Query query = session.createQuery("FROM OrgHierarchy WHERE orgId=:param1");
+			query.setParameter("param1", orgId);
+			OrgHierarchy result = (OrgHierarchy) query.uniqueResult();
+			return result;
+		} catch (Exception e) {
+			// Handle exceptions, log errors, and return a meaningful response
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			return null; // or throw an exception
+		}
+	}
+
+	public List<OrgHierarchy> getOrganizationalHierarchyList(String orgId) {
+		try (Session session = sf.openSession()) {
+			String sqlQuery =
+				"SELECT * FROM organization_structure WHERE orgId = :param1 " +
+					"UNION " +
+					"SELECT * FROM organization_structure WHERE countryParent = :param2 OR stateParent = :param3 OR lgaParent = :param4 OR wardParent = :param5";
+
+			List<OrgHierarchy> resultList = session
+				.createNativeQuery(sqlQuery, OrgHierarchy.class)
+				.setParameter("param1", orgId)
+				.setParameter("param2", orgId)
+				.setParameter("param3", orgId)
+				.setParameter("param4", orgId)
+				.setParameter("param5", orgId)
+				.list();
+
+			return resultList;
+		} catch (Exception e) {
+			// Handle exceptions, log errors, and return an empty list or throw an exception
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			return Collections.emptyList(); // or throw an exception
+		}
+	}
+
+	public List<OrgIndicatorAverageResult> getOrgIndicatorAverageResult(List<String> orgIds,List<String> indicators,Date startDate, Date endDate) {
+		Session session = sf.openSession();
+		Transaction transaction = session.beginTransaction();
+		List<OrgIndicatorAverageResult> orgIndicatorAverageResults = new ArrayList<>();
+
+		try {
+			Query query = session
+				.createQuery(
+					"SELECT new OrgIndicatorAverageResult(orgId, indicator, ROUND(AVG(value), 2) AS averageValue) " +
+						"FROM CacheEntity " +
+						"WHERE orgId IN :param1 " +
+						"AND indicator IN :param2 " +
+						"AND date >= :param3 " +
+						"AND date <= :param4 " +
+						"GROUP BY orgId, indicator");
+
+				query.setParameter("param1", orgIds)
+						.setParameter("param2", indicators)
+						.setParameter("param3", startDate)
+						.setParameter("param4", endDate);
+
+			orgIndicatorAverageResults = query.getResultList();
+			transaction.commit();
+		} catch (Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			transaction.rollback();
+		} finally {
+			session.close();
+		}
+
+		return orgIndicatorAverageResults;
+
 	}
 
 	public Double getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(Date from, Date to, String indicator,

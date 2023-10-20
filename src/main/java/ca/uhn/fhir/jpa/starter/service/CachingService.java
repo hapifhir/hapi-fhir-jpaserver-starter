@@ -322,7 +322,7 @@ public class CachingService {
 	}
 	
 	@Async("asyncTaskExecutor")
-	public void cacheData(String orgId, Date date, List<IndicatorItem> indicators,int count,String filterString) {
+	public void cacheData(String orgId, Date date, List<IndicatorItem> indicators,String filterString) {
 //		logger.warn("-- Caching started for Score card chart data batch number "+String.valueOf(count));
 		long startTime = System.nanoTime();
 

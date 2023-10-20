@@ -101,7 +101,7 @@ public class AppProperties {
 	private Integer search_coord_queue_capacity = 200;
 	private Boolean use_apache_address_strategy = false;
 	private Boolean use_apache_address_strategy_https = false;
-
+	private Integer facility_batch_size = 50;
 	private Integer bundle_batch_pool_size = 20;
 	private Integer bundle_batch_pool_max_size = 100;
 	private List<String> local_base_urls = new ArrayList<>();
@@ -141,6 +141,13 @@ public class AppProperties {
 		return envs_for_caching;
 	}
 
+	public Integer getFacility_batch_size() {
+		return facility_batch_size;
+	}
+
+	public void setFacility_batch_size(Integer facility_batch_size) {
+		this.facility_batch_size = facility_batch_size;
+	}
 	public void setEnvs_for_caching(List<String> envs_for_caching) {
 		this.envs_for_caching = envs_for_caching;
 	}

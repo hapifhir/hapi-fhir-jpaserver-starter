@@ -337,7 +337,7 @@ public class FhirResourceTemplateHelper {
 		return practitionerRole;
 	}
 	
-	private static String generateUUID() {
+	public static String generateUUID() {
 		return UUID.randomUUID().toString();
 	}
 	

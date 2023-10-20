@@ -35,7 +35,12 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.Future;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +54,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.engine.jdbc.ClobProxy;
 import org.hibernate.HibernateException;
+import org.hibernate.JDBCException;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
@@ -64,6 +70,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -77,7 +88,7 @@ import java.io.*;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
+import javax.persistence.PersistenceException;
 import static org.hibernate.search.util.common.impl.CollectionHelper.asList;
 import static org.keycloak.util.JsonSerialization.mapper;
 
@@ -111,7 +122,7 @@ public class HelperService {
 	private static  String EXTENSION_PLUSCODE_URL = "http://iprdgroup.org/fhir/Extention/location-plus-code";
 	private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
 	private static String SMS_EXTENTION_URL = "http://iprdgroup.com/Extentions/sms-sent";
-	long millisecondsInADay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+
 	NotificationDataSource notificationDataSource;
 	LinkedHashMap<String,Pair<List<String>, LinkedHashMap<String, List<String>>>> mapOfIdsAndOrgIdToChildrenMapPair;
 	LinkedHashMap<String,List<OrgItem>> mapOfOrgHierarchy;
@@ -225,6 +236,7 @@ public class HelperService {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		List<String> invalidClinics = new ArrayList<>();
+		Set<OrgHierarchy> uniqueOrgHierarchySet = new HashSet<>();
 
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 		String singleLine;
@@ -284,7 +296,7 @@ public class HelperService {
 					invalidClinics.add("Resource creation failed for state: " + facilityName + "," + countryName + "," + stateName + "," + lgaName + "," + wardName);
 					continue;
 				}
-
+				uniqueOrgHierarchySet.add(new OrgHierarchy(countryId,"country",null,null,null,null));
 				Organization state = FhirResourceTemplateHelper.state(stateName, countryName, countryId);
 				GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), countryGroupId,state.getIdElement().getIdPart());
 				stateGroupId = createKeycloakGroup(stateGroupRep);
@@ -297,6 +309,7 @@ public class HelperService {
 					invalidClinics.add("Resource creation failed for state: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
 					continue;
 				}
+				uniqueOrgHierarchySet.add(new OrgHierarchy(stateId,"state",countryId,null,null,null));
 				Organization lga = FhirResourceTemplateHelper.lga(lgaName, stateName, stateId);
 					GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lga.getIdElement().getIdPart());
 					lgaGroupId = createKeycloakGroup(lgaGroupRep);
@@ -309,7 +322,6 @@ public class HelperService {
 					invalidClinics.add("Resource creation failed for LGA: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
 					continue;
 				}
-
 				Organization ward = FhirResourceTemplateHelper.ward(stateName, lgaName, wardName, lgaId);
 					GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, ward.getIdElement().getIdPart());
 					wardGroupId = createKeycloakGroup(wardGroupRep);
@@ -322,7 +334,6 @@ public class HelperService {
 					invalidClinics.add("Resource creation failed for Ward: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
 					continue;
 				}
-
 				Organization clinicOrganization = FhirResourceTemplateHelper.clinic(facilityName, facilityUID, facilityCode, countryCode, phoneNumber, stateName, lgaName, wardName, wardId, csvData[10]);
 				Location clinicLocation = FhirResourceTemplateHelper.clinic(stateName, lgaName, wardName, facilityName, longitude, latitude, pluscode, clinicOrganization.getIdElement().getIdPart());
 				GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(
@@ -348,6 +359,23 @@ public class HelperService {
 				}
 			}
 		}
+		List<OrgHierarchy> orgHierarchyList = new ArrayList<>(uniqueOrgHierarchySet);
+
+		OrgHierarchy countryOrgHierarchy = orgHierarchyList.stream()
+			.filter(orgHierarchy -> "country".equals(orgHierarchy.getLevel()))
+			.findFirst()
+			.orElse(null);
+
+		List<OrgHierarchy> stateOrgHierarchies = orgHierarchyList.stream()
+			.filter(orgHierarchy -> !"country".equals(orgHierarchy.getLevel()))
+			.collect(Collectors.toList());
+
+		if (countryOrgHierarchy != null) {
+			for (OrgHierarchy state : stateOrgHierarchies) {
+				saveOrganizationStructure(state.getOrgId(), countryOrgHierarchy.getOrgId());
+			}
+		}
+
 		map.put("count", iteration);
 		if (invalidClinics.size() > 0) {
 			map.put("issues", invalidClinics);
@@ -1141,106 +1169,363 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		return ResponseEntity.ok(scoreCardItems);
 	}
 
-	public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters, String env) {
+	public Double calculateAverage(List<String> targetOrgIds,List<OrgIndicatorAverageResult> fromTable, String hashedId, String transformServer){
+		List<OrgIndicatorAverageResult> filteredList = fromTable.stream()
+			.filter(cacheEntity ->
+				targetOrgIds.contains(cacheEntity.getOrgId()) &&
+					hashedId.contains(cacheEntity.getIndicator()) &&
+					(!transformServer.equals("getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgId") || cacheEntity.getAverageValue() > 0.0)
+			)
+			.collect(Collectors.toList());
+
+		if (filteredList.isEmpty()) {
+			return 0.0;
+		}
+
+		// Calculate the sum of values
+		double sum = filteredList.stream()
+			.mapToDouble(OrgIndicatorAverageResult::getAverageValue)
+			.sum();
+
+		if (sum == 0.0) {
+			return 0.0;
+		}
+
+		// Calculate the average
+		double average = sum / filteredList.size();
+
+		return average;
+	}
+
+
+	public List<String> getFacilitiesForOrganization(OrgHierarchy targetItem,List<OrgHierarchy> orgHierarchyList){
+
+		List<String> facilityOrgIds = new ArrayList<>();
+
+			String targetLevel = targetItem.getLevel();
+
+			if("facility".equals(targetLevel)) {
+				facilityOrgIds.add(targetItem.getOrgId());
+			} else {
+				// Create a mapping of targetLevel to parent level field
+				Map<String, Function<OrgHierarchy, String>> parentLevelFieldMap = new HashMap<>();
+				parentLevelFieldMap.put("ward", OrgHierarchy::getWardParent);
+				parentLevelFieldMap.put("lga", OrgHierarchy::getLgaParent);
+				parentLevelFieldMap.put("state", OrgHierarchy::getStateParent);
+				parentLevelFieldMap.put("country", OrgHierarchy::getCountryParent);
+
+				Function<OrgHierarchy, String> targetFunction = parentLevelFieldMap.get(targetLevel);
+
+				if (targetFunction == null) {
+					return Collections.emptyList(); // Handle the case where targetFunction is null
+				}
+
+				String targetValue = targetItem.getOrgId();
+
+					facilityOrgIds.addAll(orgHierarchyList.stream()
+					.filter(orgHierarchy -> "facility".equals(orgHierarchy.getLevel()))
+					.filter(orgHierarchy -> Objects.equals(targetValue, targetFunction.apply(orgHierarchy)))
+					.map(OrgHierarchy::getOrgId)
+					.collect(Collectors.toList()));
+			}
+
+				return facilityOrgIds;
+	}
+
+	@Async("asyncTaskExecutor")
+	public void saveOrganizationStructure(String organizationId, String parentId){
+		List<OrgItem> orgItems = fetchOrgHierarchy(organizationId);
+		ArrayList<OrgHierarchy> orgHierarchyList = new ArrayList<>();
+		List<List<OrgHierarchy>> failedChunks = new ArrayList<>();
+		AtomicBoolean exceptionOccurred = new AtomicBoolean(false); // Flag to track exceptions
+		logger.warn("Data insertion into 'organization Hierarchy' table has started for parentId " + parentId + " organizationId " +organizationId);
+		if(orgItems.isEmpty()){
+			logger.warn("Organization Hierarchy is not found in FHIR server for this OrganizationId " + organizationId);
+			return;
+		}
+
+		// Start the recursive traversal from the top level
+		for (OrgItem orgItem : orgItems) {
+			OrgHierarchy parentOrgItem = datasource.getOrganizationalHierarchyItem(parentId);
+			if (parentOrgItem != null) {
+				String countryParent = parentOrgItem.getCountryParent();
+				String stateParent = parentOrgItem.getStateParent();
+				String lgaParent = parentOrgItem.getLgaParent();
+				String wardParent = parentOrgItem.getWardParent();
+
+				switch (parentOrgItem.getLevel()) {
+					case "country":
+						countryParent = parentOrgItem.getOrgId();
+						break;
+					case "state":
+						stateParent = parentOrgItem.getOrgId();
+						break;
+					case "lga":
+						lgaParent = parentOrgItem.getOrgId();
+						break;
+					case "ward":
+						wardParent = parentOrgItem.getOrgId();
+						break;
+					// Additional cases...
+					default:
+						logger.warn("Provided parentId " + parentId + "is not valid");
+						return;
+				}
+				Pair<Boolean, ArrayList<OrgHierarchy>> isValid = createOrgHierarchyRecursive(orgItem, countryParent, stateParent, lgaParent, wardParent, orgHierarchyList);
+				if (isValid.first) {
+						List<OrgHierarchy> dataToInsert = isValid.second;
+						int chunkSize = 100;
+					CountDownLatch latch = new CountDownLatch((int) Math.ceil((double) dataToInsert.size() / chunkSize));
+
+					ThreadPoolTaskExecutor executorDb =  asyncConf.asyncExecutor();
+					for (int i = 0; i < dataToInsert.size(); i += chunkSize) {
+						List<OrgHierarchy> chunk = dataToInsert.subList(i, Math.min(i + chunkSize, dataToInsert.size()));
+
+						executorDb.submit(() -> {
+							try {
+								datasource.insertObjectsWithListNative(chunk);
+							} catch (Exception e) {
+								// Handle exceptions in a separate method
+								handleException(e, chunk, failedChunks, exceptionOccurred);
+							} finally {
+								latch.countDown(); // Signal task completion
+							}
+						});
+					}
+
+					// Wait for all tasks to complete
+					try {
+						latch.await();
+					} catch (InterruptedException e) {
+						// Handle the interruption
+						e.printStackTrace();
+					}
+					if (exceptionOccurred.get()) {
+						for (List<OrgHierarchy> chunk : failedChunks) {
+							logger.warn("Failed to insert data into organization_structure table, chunk: " + chunk.toString()); // Convert the chunk to a string and log it
+						}
+						return;
+					}
+
+				} else {
+					logger.warn("Organization type is not valid for this Organization" +organizationId);
+					return;
+				}
+			} else {
+				logger.warn("Please provide valid Parent Organization Id" +parentId);
+				return ;
+			}
+		}
+		logger.warn("Successfully saved Organizations in organization_structure table for parentId " + parentId + "organizationId " +organizationId);
+	}
+
+	private void handleException(Exception e, List<OrgHierarchy> chunk, List<List<OrgHierarchy>> failedChunks, AtomicBoolean exceptionOccurred) {
+		if (e instanceof JDBCException || e instanceof DataAccessException || e instanceof PersistenceException) {
+			// Handle exceptions here, e.g., log the error
+			e.printStackTrace();
+			failedChunks.add(chunk);
+			exceptionOccurred.set(true);
+		}
+	}
+
+
+	private Pair<Boolean, ArrayList<OrgHierarchy>> createOrgHierarchyRecursive(
+		OrgItem orgItem,
+		String countryParent,
+		String stateParent,
+		String lgaParent,
+		String wardParent,
+		ArrayList<OrgHierarchy> orgHierarchyList) {
+		String orgId = orgItem.getId().toString();
+		OrgType orgType = orgItem.getType();
+
+		// Check orgType and return false if it's not valid
+		if (!isValidOrgType(orgType)) {
+			return Pair.create(false, orgHierarchyList);
+		}
+
+		// Create a separate list for the current level of hierarchy
+		ArrayList<OrgHierarchy> currentLevelList = new ArrayList<>();
+
+		// Process children based on orgType
+		for (OrgItem child : orgItem.getChildren()) {
+			if (OrgType.LGA.equals(child.getType())) {
+				Pair<Boolean, ArrayList<OrgHierarchy>> result = createOrgHierarchyRecursive(child, countryParent, orgId, lgaParent, wardParent, currentLevelList);
+				if (!result.first) {
+					return Pair.create(false, orgHierarchyList); // Return false if any child is not valid
+				}
+			} else if (OrgType.WARD.equals(child.getType())) {
+				Pair<Boolean, ArrayList<OrgHierarchy>> result = createOrgHierarchyRecursive(child, countryParent, stateParent, orgId, wardParent, currentLevelList);
+				if (!result.first) {
+					return Pair.create(false, orgHierarchyList); // Return false if any child is not valid
+				}
+			} else if (OrgType.FACILITY.equals(child.getType())) {
+				Pair<Boolean, ArrayList<OrgHierarchy>> result = createOrgHierarchyRecursive(child, countryParent, stateParent, lgaParent, orgId, currentLevelList);
+				if (!result.first) {
+					return Pair.create(false, orgHierarchyList); // Return false if any child is not valid
+				}
+			}
+		}
+
+		// Create an OrgHierarchy object and add it to the list
+		orgHierarchyList.add(new OrgHierarchy(orgId, orgType.toString().toLowerCase(), countryParent, stateParent, lgaParent, wardParent));
+		orgHierarchyList.addAll(currentLevelList);
+
+		// If we reach this point, it means the organization type is valid and all children are valid
+		return Pair.create(true, orgHierarchyList);
+	}
+
+
+	private boolean isValidOrgType(OrgType orgType) {
+		return OrgType.STATE.name().equals(orgType.name()) || OrgType.LGA.name().equals(orgType.name()) || OrgType.WARD.name().equals(orgType.name()) || OrgType.FACILITY.name().equals(orgType.name());
+	}
+
+	public ResponseEntity<?> getDataByPractitionerRoleId(List<String> categories,String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters, String env, int page, int pageSize) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<ScoreCardResponseItem> scoreCardResponseItems = new ArrayList<>();
+		List<String> facilities = new ArrayList<>();
 		List<ScoreCardIndicatorItem> scoreCardIndicatorItemsList = getIndicatorItemListFromFile(env);
+		List<ScoreCardIndicatorItem> filteredScoreCardIndicatorItemsList = scoreCardIndicatorItemsList.stream()
+			.filter(item -> categories.contains(item.getCategoryId()))
+			.collect(Collectors.toList());
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
+		Long start3 = System.nanoTime();
 		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
+		Long end3 = System.nanoTime();
+		Double diff3 = ((end3 - start3) / 1e9); // Convert nanoseconds to seconds
+		logger.warn("getDataByPractitionerRoleId_idsAndOrgIdToChildrenMapPair "+diff3);
 
 		Date start = Date.valueOf(startDate);
 		Date end = Date.valueOf(endDate);
 		List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
-
 		List<IndicatorItem> indicators = new ArrayList<>();
-		scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
+		filteredScoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
 
+		Long start1 = System.nanoTime();
 		performCachingIfNotPresent(indicators, idsAndOrgIdToChildrenMapPair.first, start, end, fhirSearchList);
+		Long end1 = System.nanoTime();
+		Double diff1 = ((end1 - start1) / 1e9); // Convert nanoseconds to seconds
+		logger.warn("getDataByPractitionerRoleId_performCachingIfNotPresent "+diff1);
 
-		scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> {
-			ScoreCardResponseItem scoreCardResponseItem = new ScoreCardResponseItem();
-			scoreCardResponseItem.setCategoryId(scoreCardIndicatorItem.getCategoryId());
-			List<ScoreCardItem> scoreCardItems = new ArrayList<>();
-			switch (type) {
-				case summary: {
-					LinkedHashMap<String, List<String>> mapOfIdToChildren = idsAndOrgIdToChildrenMapPair.second;
-					mapOfIdToChildren.forEach((id, children) -> {
-						children.add(id);
-						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
-							String key = indicator.getFhirPath().getExpression() + String.join(",", fhirSearchList);
-							Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(), start, end,
-									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), children);
-							scoreCardItems.add(new ScoreCardItem(id, indicator.getId(), cacheValueSum.toString(),
-								startDate, endDate));
-						}
-					});
-					break;
-				}
-				case quarterly: {
-					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates(start, end);
-					for (Pair<Date, Date> pair : quarterDatePairList) {
-						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
-							String key = indicator.getFhirPath().getExpression() + String.join(",", fhirSearchList);
-							Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(), pair.first, pair.second,
-									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
-						}
+		List<OrgHierarchy> orgHierarchyList = notificationDataSource.getOrganizationalHierarchyList(organizationId);
+		if (!orgHierarchyList.isEmpty()) {
+			Optional<OrgHierarchy> matchingOrg = orgHierarchyList.stream()
+				.filter(org -> org.getOrgId().equals(organizationId))
+				.findFirst();
+
+			if (matchingOrg.isPresent()) {
+				OrgHierarchy matchedOrgHierarchyItem = matchingOrg.get();
+				facilities.addAll(getFacilitiesForOrganization(matchedOrgHierarchyItem, orgHierarchyList));
+			}
+		}
+
+		if (!facilities.isEmpty()) {
+			List<String> indicatorIds = new ArrayList<>();
+
+			indicators.forEach(indicatorItem -> {
+				String keyBuilder = new StringBuilder()
+					.append(indicatorItem.getFhirPath().getExpression())
+					.append(String.join(",", fhirSearchList))
+					.toString();
+				indicatorIds.add(Utils.md5Bytes(keyBuilder.getBytes(StandardCharsets.UTF_8)));
+			});
+
+			List<OrgIndicatorAverageResult> fromTable = new ArrayList<>();
+			ThreadPoolTaskExecutor executor =  asyncConf.asyncExecutor();
+
+			List<Future<List<OrgIndicatorAverageResult>>> futures = new ArrayList<>();
+
+			Long start47 = System.nanoTime();
+			for (int i = 0; i < facilities.size(); i += appProperties.getFacility_batch_size()) {
+				List<String> chunk = facilities.subList(i, Math.min(i + appProperties.getFacility_batch_size(), facilities.size()));
+
+				// Submit each chunk for parallel processing using the existing thread pool
+				Future<List<OrgIndicatorAverageResult>> future = executor.submit(() -> {
+					try {
+						return notificationDataSource.getOrgIndicatorAverageResult(chunk, indicatorIds, start, end);
+					} catch (JDBCException | DataAccessException e) {
+						// Handle exceptions here, e.g., log the error
+						e.printStackTrace();
+						return new ArrayList<>();  // Return an empty list in case of exceptions
+					} catch (PersistenceException e) {
+						// Handle exceptions here, e.g., log the error
+						e.printStackTrace();
+						return new ArrayList<>();  // Return an empty list in case of exceptions
 					}
-					break;
-				}
-				case weekly: {
-					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-					List<Pair<Date, Date>> weeklyDatePairList = DateUtilityHelper.getWeeklyDates(start, end);
-					for (Pair<Date, Date> pair : weeklyDatePairList) {
-						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
-							String key = indicator.getFhirPath().getExpression() + String.join(",", fhirSearchList);
-							Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(), pair.first, pair.second,
-									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
-						}
-					}
-					break;
-				}
-				case monthly: {
-					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-					List<Pair<Date, Date>> monthlyDatePairList = DateUtilityHelper.getMonthlyDates(start, end);
-					for (Pair<Date, Date> pair : monthlyDatePairList) {
-						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
-							String key = indicator.getFhirPath().getExpression() + String.join(",", fhirSearchList);
-							Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(),pair.first, pair.second,
-									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
-						}
-					}
-					break;
-				}
-				case daily: {
-					List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-					List<Pair<Date, Date>> dailyDatePairList = DateUtilityHelper.getDailyDates(start, end);
-					for (Pair<Date, Date> pair : dailyDatePairList) {
-						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
-							String key = indicator.getFhirPath().getExpression() + String.join(",", fhirSearchList);
-							Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(), pair.first, pair.second,
-									Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-							scoreCardItems.add(new ScoreCardItem(organizationId, indicator.getId(),
-								cacheValueSum.toString(), pair.first.toString(), pair.second.toString()));
-						}
-					}
-					break;
+				});
+
+				futures.add(future);
+			}
+
+			// Shutdown the executor when you're done with it
+			executor.shutdown();
+
+			// Collect the results from the futures
+			for (Future<List<OrgIndicatorAverageResult>> future : futures) {
+				try {
+					fromTable.addAll(future.get());
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 
-			scoreCardResponseItem.setScoreCardItemList(scoreCardItems);
-			scoreCardResponseItems.add(scoreCardResponseItem);
-		});
+			Long end47 = System.nanoTime();
+			Double diff47 = ((end47 - start47) / 1e9); // Convert nanoseconds to seconds
+			logger.warn("getDataByPractitionerRoleId got results from db call " + diff47);
 
-		return ResponseEntity.ok(scoreCardResponseItems);
+			filteredScoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> {
+				ScoreCardResponseItem scoreCardResponseItem = new ScoreCardResponseItem();
+				scoreCardResponseItem.setCategoryId(scoreCardIndicatorItem.getCategoryId());
+				List<ScoreCardItem> scoreCardItems = new ArrayList<>();
+				switch (type) {
+					case summary: {
+						// other categories
+						orgHierarchyList.forEach(orgHierarchyItem -> {
+							// Call the other function with orgHierarchy as an argument
+							List<String> facility = getFacilitiesForOrganization(orgHierarchyItem, orgHierarchyList);
+							for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+								String keyBuilder = new StringBuilder()
+									.append(indicator.getFhirPath().getExpression())
+									.append(String.join(",", fhirSearchList))
+									.toString();
+								String hashedId = Utils.md5Bytes(keyBuilder.getBytes(StandardCharsets.UTF_8));
+								Double value = calculateAverage(facility,fromTable,hashedId,indicator.getFhirPath().getTransformServer());
+								scoreCardItems.add(new ScoreCardItem(orgHierarchyItem.getOrgId(), indicator.getId(), value.toString(),
+									startDate, endDate));
+							}
+						});
+					}
+				}
+				scoreCardResponseItem.setScoreCardItemList(scoreCardItems);
+				scoreCardResponseItems.add(scoreCardResponseItem);
+			});
+		}
+
+		// Perform pagination using 'page' and 'pageSize' parameters
+		Pageable pageable = PageRequest.of(page, pageSize);
+		Page<ScoreCardResponseItem> pagedScoreCardResponseItems = performPagination(scoreCardResponseItems, pageable);
+
+		return ResponseEntity.ok(pagedScoreCardResponseItems);
 	}
+
+	private Page<ScoreCardResponseItem> performPagination(List<ScoreCardResponseItem> data, Pageable pageable) {
+		int pageSize = pageable.getPageSize();
+		int currentPage = pageable.getPageNumber();
+		int startItem = currentPage * pageSize;
+
+		List<ScoreCardResponseItem> pagedList;
+
+		if (startItem >= data.size()) {
+			pagedList = Collections.emptyList();
+		} else {
+			int endItem = Math.min(startItem + pageSize, data.size());
+			pagedList = data.subList(startItem, endItem);
+		}
+
+		return new PageImpl<>(pagedList, pageable, data.size());
+	}
+
 
 public ResponseEntity<?> getBarChartData(String practitionerRoleId, String startDate, String endDate,LinkedHashMap<String,String> filters, String env) {
 	notificationDataSource = NotificationDataSource.getInstance();
@@ -1313,13 +1598,12 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 
 		for(int count=0; count<facilityIds.size();count++) {
 			String facilityId = facilityIds.get(count);
-			final int finalcount = count;
 			dates.forEach(date -> {
-				cachingService.cacheData(facilityId, date, indicators,finalcount,filterString);
+				cachingService.cacheData(facilityId, date, indicators,filterString);
 			});
 			//Always cache current date data if it lies between start and end date.
 			if (currentDateNotInDatesList && currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
-					cachingService.cacheData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators,0,filterString);
+					cachingService.cacheData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators,filterString);
 			}
 		}
 	}
@@ -1920,7 +2204,6 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 								pluscodeExtension.setValue(pluscodeValue);
 								locationResource.addExtension(pluscodeExtension);
 							}
-
 						}catch (NumberFormatException e){
 							logger.warn("The provided updated latitude or longitude value is non-numeric");
 						}

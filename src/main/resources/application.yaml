@@ -97,6 +97,7 @@ hapi:
         - "impact-health-v1"
         - "impact-health-v2"
       dev_user_role: dev
+      facility_batch_size: 70
       executor_core_pool_size: 4
       executor_max_pool_size: 6
       executor_queue_capacity: 50000

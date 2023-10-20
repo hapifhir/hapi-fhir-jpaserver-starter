@@ -164,13 +164,24 @@ public class DashboardController {
 		return helperService.getFilters(env);
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/organizationStructure")
+	public ResponseEntity<?> organizationStructure(
+		@RequestParam("orgId") String orgId,
+		@RequestParam("parentId") String parentId) {
+		helperService.saveOrganizationStructure(orgId, parentId);
+		return ResponseEntity.ok("Data insertion into 'organization structure' table has started");
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/data")
 	public ResponseEntity<?> data(
 		@RequestHeader(name = "Authorization") String token,
 		@RequestParam("env") String env,
-		@RequestParam Map<String, String> allFilters
+		@RequestParam List<String> categories,
+		@RequestParam Map<String, String> allFilters,
+		@RequestParam(defaultValue = "0") int page, // Default to page 0
+		@RequestParam(defaultValue = "6") int pageSize // Default to 10 items per page
 	) {
-		String startDate = allFilters.get("from");
+ 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
 		ReportType type = ReportType.valueOf(allFilters.get("type"));
 		allFilters.remove("from");
@@ -184,7 +195,7 @@ public class DashboardController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type,filters,env);
+		return helperService.getDataByPractitionerRoleId(categories, practitionerRoleId, startDate, endDate, type, filters, env, page, pageSize);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/linechart")
