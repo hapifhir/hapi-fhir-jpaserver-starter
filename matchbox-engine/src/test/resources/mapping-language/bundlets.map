@@ -1,0 +1,11 @@
+map "http://ahdis.ch/matchbox/fml/bundlets" = "bundlets"
+
+uses "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse" alias QuestionnaireResponse as source
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
+
+group qrtobundle(source src : QuestionnaireResponse, target tgt : Bundle) {
+    src.extension as ext where (url = 'urn:date') then {
+        ext.value as value -> tgt.timestamp = (value.toString()+'T00:00:00Z') "converts_date_as_partial_instant";
+    } "bundle";
+}
+

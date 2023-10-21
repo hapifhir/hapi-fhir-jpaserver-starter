@@ -30,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4.formats.XmlParser;
+import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.ExplanationOfBenefit;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
@@ -211,6 +212,20 @@ class FhirMappingLanguageTests {
 				"http://ahdis.ch/matchbox/fml/cast");
 		assertTrue(res != null);
 		assertEquals("Observation", res.getResourceType().name());
+	}
+
+	@Test
+	void testBundleTimestamp() throws FHIRException, IOException {
+		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
+		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/bundlets.map"));
+		assertTrue(sm != null);
+		engine.addCanonicalResource(sm);
+		Resource res = engine.transformToFhir(getFileAsStringFromResources("/qrext.json"), true,
+				"http://ahdis.ch/matchbox/fml/bundlets");
+		assertTrue(res != null);
+		assertEquals("Bundle", res.getResourceType().name());
+		Bundle bundle = (Bundle) res;
+		assertEquals("2023-10-21T00:00:00Z", bundle.getTimestampElement().getValueAsString());
 	}
 
 	@Test

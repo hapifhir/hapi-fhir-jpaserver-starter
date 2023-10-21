@@ -16,6 +16,10 @@
       {
         "url": "urn:positiveInt",
         "valuePositiveInt": "2147483647"
+      },
+      {
+        "url": "urn:date",
+        "valueDate": "2023-10-21"
       }
     ],
     "id": "qrpatientsexeresponse"
