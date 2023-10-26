@@ -61,37 +61,11 @@ public class DashboardController {
 		allFilters.remove("lga");
 		allFilters.remove("env");
 		allFilters.remove("type");
+		allFilters.remove("counter");
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
 
-		LocalDateTime dateTimeNow = LocalDateTime.now();
-		String[] extractedFromDateTimeNow = dateTimeNow.toString().split(":");
-		List<String> categories = new ArrayList<>(Collections.emptyList());
-		List<String> hashcodes = new ArrayList<>(Collections.emptyList());
-		Map<String,String> categoryWithHashCodes = new HashMap<>();
-		List<ANCDailySummaryConfig> ancDailySummaryConfig = helperService.getANCDailySummaryConfigFromFile(env);
+		Map<String,String> categoryWithHashCodes = helperService.processCategories(organizationId, startDate, endDate, env, filters,true);
 
-		for (ANCDailySummaryConfig singleCategory : ancDailySummaryConfig) {
-			categories.add(singleCategory.getCategoryId());
-		}
-		String hashOfFormattedId = "";
-		for (String category : categories) {
-			hashOfFormattedId = organizationId + startDate + endDate + category + extractedFromDateTimeNow[0];
-			categoryWithHashCodes.put(category,hashOfFormattedId);
-			ArrayList<ApiAsyncTaskEntity> fetchAsyncData = datasource.fetchStatus(hashOfFormattedId);
-			if (fetchAsyncData == null || fetchAsyncData.isEmpty()) {
-				try {
-					ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(hashOfFormattedId, ApiAsyncTaskEntity.Status.PROCESSING.name(), null, null);
-					datasource.insert(apiAsyncTaskEntity);
-				} catch (Exception e) {
-					logger.warn(ExceptionUtils.getStackTrace(e));
-				}
-				hashcodes.add(hashOfFormattedId);
-				if(categories.indexOf(category) == (categories.size()-1)) {
-					helperService.saveQueryResult(organizationId, startDate, endDate, filters, hashcodes,env,ancDailySummaryConfig);
-					return ResponseEntity.status(202).build();
-				}
-			}
-		}
 		if (helperService.getAsyncData(categoryWithHashCodes).getBody() == "Searching in Progress") return ResponseEntity.status(202).build();
 		return ResponseEntity.ok(helperService.getAsyncData(categoryWithHashCodes));
 	}

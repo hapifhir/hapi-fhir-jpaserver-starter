@@ -692,6 +692,60 @@ public class HelperService {
 		return writer.toString();
 	}
 
+	private List<String> getCategoriesFromAncDailySummaryConfig(String env) {
+		List<ANCDailySummaryConfig> ancDailySummaryConfig = getANCDailySummaryConfigFromFile(env);
+		return ancDailySummaryConfig.stream()
+			.map(ANCDailySummaryConfig::getCategoryId)
+			.collect(Collectors.toList());
+	}
+
+	public Map<String,String> processCategories(String organizationId, String startDate, String endDate, String env, LinkedHashMap<String, String> filters, boolean isApiRequest) {
+		Map<String,String> categoryWithHashCodes = new HashMap<>();
+		List<String> categories = getCategoriesFromAncDailySummaryConfig(env);
+		List<String> hashCodes = new ArrayList<>(Collections.emptyList());
+		String concatenatedFilterValues = filters.entrySet().stream()
+			.filter(entry -> entry.getKey().endsWith("Value"))
+			.map(Map.Entry::getValue)
+			.collect(Collectors.joining());
+
+		List<ANCDailySummaryConfig> ancDailySummaryConfig = getANCDailySummaryConfigFromFile(env);
+		String hashOfFormattedId = "";
+
+		for (String category : categories) {
+			hashOfFormattedId = organizationId + startDate + endDate + category + env + concatenatedFilterValues;
+			categoryWithHashCodes.put(category, hashOfFormattedId);
+			ArrayList<ApiAsyncTaskEntity> fetchAsyncData = datasource.fetchStatus(hashOfFormattedId);
+			hashCodes.add(hashOfFormattedId);
+
+			if (fetchAsyncData == null || fetchAsyncData.isEmpty()) {
+				try {
+					ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(hashOfFormattedId, ApiAsyncTaskEntity.Status.PROCESSING.name(), null, null);
+					datasource.insert(apiAsyncTaskEntity);
+				} catch (Exception e) {
+					logger.warn(ExceptionUtils.getStackTrace(e));
+				}
+				if(categories.indexOf(category) == (categories.size()-1)) {
+					saveQueryResultAndHandleException(organizationId, startDate, endDate, filters, hashCodes, env, ancDailySummaryConfig);
+				}
+			}
+			// Updates the record when start date is not part of current month but end date is part of current month
+			else if((Date.valueOf(endDate).toLocalDate().compareTo(LocalDate.now().withDayOfMonth(1)) >= 0 && Date.valueOf(startDate).toLocalDate().compareTo(LocalDate.now().withDayOfMonth(1)) < 0) | !isApiRequest){
+				saveQueryResultAndHandleException(organizationId, startDate, endDate, filters, hashCodes, env, ancDailySummaryConfig);
+			}
+		}
+		return categoryWithHashCodes;
+	}
+
+	private void saveQueryResultAndHandleException(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters, List<String> hashcodes, String env, List<ANCDailySummaryConfig> ancDailySummaryConfig) {
+		try {
+			saveQueryResult(organizationId, startDate, endDate, filters, hashcodes, env, ancDailySummaryConfig);
+		} catch (FileNotFoundException e) {
+			// Handle the exception, e.g., log it or take appropriate action.
+			e.printStackTrace();
+		}
+	}
+
+
 public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) throws SQLException, IOException {
 	List<DataResultJava> dataResult = new ArrayList<>();
 	for(Map.Entry<String,String> item : categoryWithHashCodes.entrySet()) {
@@ -734,6 +788,36 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			logger.warn("Caching task failed "+ExceptionUtils.getStackTrace(e));
 		}
 	}
+
+	@Scheduled(cron = "0 30 23 * * *")
+	public void refreshAsyncTaskStatusTable() {
+		try {
+			List<String> orgIdsForCaching = appProperties.getOrganization_ids_for_caching();
+			List<String> envsForCaching = appProperties.getEnvs_for_caching();
+			LinkedHashMap<String, String> emptyMap = new LinkedHashMap<>();
+			for(String orgId : orgIdsForCaching) {
+				for (String env : envsForCaching) {
+					logger.warn("Caching for details page started ");
+					Date start = Date.valueOf(Date.valueOf(LocalDate.now()).toLocalDate().minusYears(2));
+					Date end = Date.valueOf(LocalDate.now());
+					List<Pair<Date, Date>> quarterDatePairList = DateUtilityHelper.getQuarterlyDates(start, end);
+					// Remove the last pair which is current quarter pair
+					if (!quarterDatePairList.isEmpty()) {
+						quarterDatePairList.remove(quarterDatePairList.size() - 1);
+					}
+					for (Pair<Date, Date> pair : quarterDatePairList) {
+						processCategories(orgId, pair.first.toString(), pair.second.toString(), env, emptyMap, false);
+					}
+					logger.warn("refreshAsyncTaskStatusTable quarterDatePairList "+quarterDatePairList);
+				}
+			}
+			logger.warn("Caching for details page completed ");
+		}
+		catch (JDBCException e) {
+			logger.warn(" RefreshAsyncTaskStatusTable Caching task failed "+ExceptionUtils.getStackTrace(e));
+		}
+	}
+
 
 	@Scheduled(cron = "0 0 23 1 * ?")
 	public void cleanupLastSyncStatusTable() {
