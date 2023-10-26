@@ -177,9 +177,7 @@ public class DashboardController {
 		@RequestHeader(name = "Authorization") String token,
 		@RequestParam("env") String env,
 		@RequestParam List<String> categories,
-		@RequestParam Map<String, String> allFilters,
-		@RequestParam(defaultValue = "0") int page, // Default to page 0
-		@RequestParam(defaultValue = "6") int pageSize // Default to 10 items per page
+		@RequestParam Map<String, String> allFilters
 	) {
  		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
@@ -195,7 +193,7 @@ public class DashboardController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		return helperService.getDataByPractitionerRoleId(categories, practitionerRoleId, startDate, endDate, type, filters, env, page, pageSize);
+		return helperService.getDataByPractitionerRoleId(categories, practitionerRoleId, startDate, endDate, type, filters, env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/linechart")

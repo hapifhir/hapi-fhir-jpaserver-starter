@@ -1380,7 +1380,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		return OrgType.STATE.name().equals(orgType.name()) || OrgType.LGA.name().equals(orgType.name()) || OrgType.WARD.name().equals(orgType.name()) || OrgType.FACILITY.name().equals(orgType.name());
 	}
 
-	public ResponseEntity<?> getDataByPractitionerRoleId(List<String> categories,String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters, String env, int page, int pageSize) {
+	public ResponseEntity<?> getDataByPractitionerRoleId(List<String> categories,String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters, String env) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<ScoreCardResponseItem> scoreCardResponseItems = new ArrayList<>();
 		List<String> facilities = new ArrayList<>();
@@ -1503,7 +1503,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		}
 
 		// Perform pagination using 'page' and 'pageSize' parameters
-		Pageable pageable = PageRequest.of(page, pageSize);
+		Pageable pageable = PageRequest.of(0, categories.size());
 		Page<ScoreCardResponseItem> pagedScoreCardResponseItems = performPagination(scoreCardResponseItems, pageable);
 
 		return ResponseEntity.ok(pagedScoreCardResponseItems);
