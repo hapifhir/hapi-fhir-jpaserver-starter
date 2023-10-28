@@ -515,6 +515,32 @@ To add a custom operation, refer to the documentation in the core hapi-fhir libr
 
 Within `hapi-fhir-jpaserver-starter`, create a generic class (that does not extend or implement any classes or interfaces), add the `@Operation` as a method within the generic class, and then register the class as a provider using `RestfulServer.registerProvider()`.
 
+## Runtime package install
+
+It's possible to install a FHIR Implementation Guide package (`package.tgz`) either from a published package or from a local package with the `$install` operation, without having to restart the server. This is available for R4 and R5.
+
+This feature must be enabled in the application.yaml (or docker command line):
+
+```yaml
+hapi:
+  fhir:
+    ig_runtime_upload_enabled: true
+```
+
+The `$install` operation is triggered with a POST to `[server]/ImplementationGuide/$install`, with the payload below:
+
+```json
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "npmContent",
+      "valueBase64Binary": "[BASE64_ENCODED_NPM_PACKAGE_DATA]"
+    }
+  ]
+}
+```
+
 ## Enable OpenTelemetry auto-instrumentation
 
 The container image includes the [OpenTelemetry Java auto-instrumentation](https://github.com/open-telemetry/opentelemetry-java-instrumentation)
