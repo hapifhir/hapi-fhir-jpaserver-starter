@@ -10,18 +10,18 @@ dependencies:
     version: 12.5.6
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
-appVersion: 6.6.0
-version: 0.13.0
+appVersion: 6.8.3
+version: 0.14.0
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: added
-      description: allow specifying application properties via yaml config
+      description: updated starter image to 6.8.3
+    - kind: fixed
+      description: incorrect handling of existing secret database config
     - kind: added
-      description: allow setting resource limits and requests for the Helm test pods
-    - kind: changed
-      description: updated curl used by helm tests to version to v8.2.0
-    - kind: changed
-      description: allow disabling the liveness-, readiness-, and startup-probes entirely
+      description: support for using a non-admin user for the postgres database
+    - kind: added
+      description: ability to create a dedicated ServiceAccount
