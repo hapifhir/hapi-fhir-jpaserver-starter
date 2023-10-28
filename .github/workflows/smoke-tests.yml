@@ -21,10 +21,11 @@ jobs:
 
     steps:
     - name: Checkout project
-      uses: actions/checkout@v2
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
     - name: Set up JDK 17
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@0ab4596768b603586c0de567f2430c30f5b0d2b0 # v3
       with:
+        distribution: temurin
         java-version: 17
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Dmaven.test.skip=true
@@ -36,5 +37,3 @@ jobs:
         sleep 80
     - name: Execute smoke tests
       run: docker run --rm -v $PWD:/workdir --add-host host.docker.internal:host-gateway jetbrains/intellij-http-client -D src/test/smoketest/plain_server.http --env-file src/test/smoketest/http-client.env.json --env default
-
-    
