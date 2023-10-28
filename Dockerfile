@@ -1,4 +1,4 @@
-FROM docker.io/library/maven:3.9.4-eclipse-temurin-17 AS build-hapi
+FROM docker.io/library/maven:3.9.5-eclipse-temurin-17 AS build-hapi
 WORKDIR /tmp/hapi-fhir-jpaserver-starter
 
 ARG OPENTELEMETRY_JAVA_AGENT_VERSION=1.31.0
@@ -36,7 +36,7 @@ COPY --from=build-hapi --chown=1001:1001 /tmp/hapi-fhir-jpaserver-starter/opente
 ENV ALLOW_EMPTY_PASSWORD=yes
 
 ########### distroless brings focus on security and runs on plain spring boot - this is the default image
-FROM gcr.io/distroless/java17-debian11:nonroot AS default
+FROM gcr.io/distroless/java17-debian12:nonroot AS default
 # 65532 is the nonroot user's uid
 # used here instead of the name to allow Kubernetes to easily detect that the container
 # is running as a non-root (uid != 0) user.
