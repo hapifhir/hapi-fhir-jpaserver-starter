@@ -7,6 +7,8 @@ on:
     paths:
       - "charts/**"
 
+permissions: read-all
+
 jobs:
   lint:
     runs-on: ubuntu-22.04
@@ -27,7 +29,7 @@ jobs:
           git config --global --add safe.directory /__w/hapi-fhir-jpaserver-starter/hapi-fhir-jpaserver-starter
 
       - name: Checkout
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0
 
