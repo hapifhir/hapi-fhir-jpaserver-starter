@@ -1,0 +1,7 @@
+postgresql:
+  enabled: true
+  auth:
+    username: hapi_fhir_jpaserver_starter_user
+    database: hapi_fhir_jpaserver_starter
+    password: secret_user_password
+    postgresPassword: secret_postgres_password
