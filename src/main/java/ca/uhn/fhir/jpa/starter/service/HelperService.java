@@ -1586,10 +1586,29 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			});
 		}
 
-		return ResponseEntity.ok(scoreCardResponseItems);
+		// Perform pagination using 'page' and 'pageSize' parameters
+		Pageable pageable = PageRequest.of(0, categories.size());
+		Page<ScoreCardResponseItem> pagedScoreCardResponseItems = performPagination(scoreCardResponseItems, pageable);
+
+		return ResponseEntity.ok(pagedScoreCardResponseItems);
 	}
 
+	private Page<ScoreCardResponseItem> performPagination(List<ScoreCardResponseItem> data, Pageable pageable) {
+		int pageSize = pageable.getPageSize();
+		int currentPage = pageable.getPageNumber();
+		int startItem = currentPage * pageSize;
 
+		List<ScoreCardResponseItem> pagedList;
+
+		if (startItem >= data.size()) {
+			pagedList = Collections.emptyList();
+		} else {
+			int endItem = Math.min(startItem + pageSize, data.size());
+			pagedList = data.subList(startItem, endItem);
+		}
+
+		return new PageImpl<>(pagedList, pageable, data.size());
+	}
 
 
 public ResponseEntity<?> getBarChartData(String practitionerRoleId, String startDate, String endDate,LinkedHashMap<String,String> filters, String env) {
