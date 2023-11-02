@@ -139,6 +139,10 @@ public class DashboardController {
 	public ResponseEntity<?> categories(@RequestParam("env") String env) {
 		return helperService.getCategories(env);
 	}
+	@RequestMapping(method = RequestMethod.GET, value = "/environments")
+	public ResponseEntity<?> environments() {
+		return helperService.getEnvironmentOptions();
+	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/pieChartDefinition")
 	public ResponseEntity<?> pieChartDefinition(@RequestParam("env") String env){

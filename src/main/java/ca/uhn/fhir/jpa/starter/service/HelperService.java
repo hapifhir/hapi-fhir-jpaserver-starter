@@ -864,6 +864,15 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		}
 	}
 
+	public ResponseEntity<?> getEnvironmentOptions() {
+		try {
+			List<String> environmentOptions = new ArrayList<>(dashboardEnvToConfigMap.keySet());
+			return ResponseEntity.ok(environmentOptions);
+		} catch (NullPointerException e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			return ResponseEntity.ok("Error: Environment Config File Not Found");
+		}
+	}
 
 	public ResponseEntity<?> getBarChartDefinition(String env) {
 		try {
