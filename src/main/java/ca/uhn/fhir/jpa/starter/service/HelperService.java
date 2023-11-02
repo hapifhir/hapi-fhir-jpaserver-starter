@@ -1464,14 +1464,11 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		return OrgType.STATE.name().equals(orgType.name()) || OrgType.LGA.name().equals(orgType.name()) || OrgType.WARD.name().equals(orgType.name()) || OrgType.FACILITY.name().equals(orgType.name());
 	}
 
-	public ResponseEntity<?> getDataByPractitionerRoleId(List<String> categories,String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters, String env) {
+	public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters, String env) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<ScoreCardResponseItem> scoreCardResponseItems = new ArrayList<>();
 		List<String> facilities = new ArrayList<>();
 		List<ScoreCardIndicatorItem> scoreCardIndicatorItemsList = getIndicatorItemListFromFile(env);
-		List<ScoreCardIndicatorItem> filteredScoreCardIndicatorItemsList = scoreCardIndicatorItemsList.stream()
-			.filter(item -> categories.contains(item.getCategoryId()))
-			.collect(Collectors.toList());
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
 		Long start3 = System.nanoTime();
@@ -1484,7 +1481,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		Date end = Date.valueOf(endDate);
 		List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
 		List<IndicatorItem> indicators = new ArrayList<>();
-		filteredScoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
+		scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
 
 		Long start1 = System.nanoTime();
 		performCachingIfNotPresent(indicators, idsAndOrgIdToChildrenMapPair.first, start, end, fhirSearchList);
@@ -1558,7 +1555,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			Double diff47 = ((end47 - start47) / 1e9); // Convert nanoseconds to seconds
 			logger.warn("getDataByPractitionerRoleId got results from db call " + diff47);
 
-			filteredScoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> {
+			scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> {
 				ScoreCardResponseItem scoreCardResponseItem = new ScoreCardResponseItem();
 				scoreCardResponseItem.setCategoryId(scoreCardIndicatorItem.getCategoryId());
 				List<ScoreCardItem> scoreCardItems = new ArrayList<>();

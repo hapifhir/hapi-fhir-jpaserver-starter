@@ -150,7 +150,6 @@ public class DashboardController {
 	public ResponseEntity<?> data(
 		@RequestHeader(name = "Authorization") String token,
 		@RequestParam("env") String env,
-		@RequestParam List<String> categories,
 		@RequestParam Map<String, String> allFilters
 	) {
  		String startDate = allFilters.get("from");
@@ -167,7 +166,7 @@ public class DashboardController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		return helperService.getDataByPractitionerRoleId(categories, practitionerRoleId, startDate, endDate, type, filters, env);
+		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type, filters, env);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/linechart")
