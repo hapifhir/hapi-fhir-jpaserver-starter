@@ -457,7 +457,19 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
+  <!-- AWS SDK for Java Core -->
+	    <dependency>
+	        <groupId>com.amazonaws</groupId>
+	        <artifactId>aws-java-sdk-core</artifactId>
+	        <version>1.12.162</version> <!-- Use the latest version available -->
+	    </dependency>
+	    
+	    <!-- AWS SDK for Java S3 -->
+	    <dependency>
+	        <groupId>com.amazonaws</groupId>
+	        <artifactId>aws-java-sdk-s3</artifactId>
+	        <version>1.12.162</version> <!-- Use the same version as aws-java-sdk-core -->
+	    </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-searchparam</artifactId>

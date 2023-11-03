@@ -25,6 +25,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import ca.uhn.fhir.jpa.starter.service.FixNullReferenceInBundle;
+
 import java.util.Arrays;
 
 import static org.springframework.http.HttpMethod.*;
@@ -46,6 +48,10 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     @Autowired
     AppProperties appProperties;
+    
+	@Autowired
+	private FixNullReferenceInBundle fixNullReferenceInBundle;
+
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
@@ -75,7 +81,7 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
         http
-        .addFilter(new SignatureInterceptor(appProperties))
+        .addFilter(new SignatureInterceptor(appProperties,fixNullReferenceInBundle))
         .cors()
         .and()
         .authorizeRequests()

@@ -15,6 +15,30 @@ spring:
       multipart:
          max-file-size: 50MB
          max-request-size: 50MB
+   datasource:
+      url: 'jdbc:mysql://localhost:3306/hapi'
+      # url: jdbc:h2:mem:test_mem
+      username: admin
+      password: admin
+      driverClassName: com.mysql.cj.jdbc.Driver
+      hikari:
+      connectionTimeout: 2000
+      minimumIdle: 8
+      maximumPoolSize: 128
+      data-source-properties:
+         cachePrepStmts: true
+         prepStmtCacheSize: 250
+         prepStmtCacheSqlLimit: 2048
+         useServerPrepStmts: true
+         useLocalSessionState: true
+         rewriteBatchedStatements: true
+         cacheResultSetMetadata: true
+         cacheServerConfiguration: true
+         elideSetAutoCommits: true
+         maintainTimeStats: false
+      poolName: hapi
+      maxLifetime: 1000000
+
 # database connection pool size
    jpa:
       properties:
@@ -22,29 +46,11 @@ spring:
          hibernate.ddl-auto: none
          hibernate.naming.physical-strategy : org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
          hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
-         hibernate.connection.driver_class: com.mysql.cj.jdbc.Driver
-         hibernate.connection.provider_class: org.hibernate.hikaricp.internal.HikariCPConnectionProvider
-         hibernate.connection.url: 'jdbc:mysql://localhost:3306/hapi'
          hibernate.dialect.storage_engine: innodb
          hibernate.jdbc.batch_size: 20
-         hibernate.connection.username: admin
-         hibernate.connection.password: admin
-         hibernate.hikari.minimumIdle: 5
-         hibernate.hikari.maximumPoolSize: 10
-         hibernate.hikari.dataSource.cachePrepStmts: true
-         hibernate.hikari.dataSource.prepStmtCacheSize: 250
-         hibernate.hikari.dataSource.prepStmtCacheSqlLimit: 2048
-         hibernate.hikari.dataSource.useServerPrepStmts: true
-         hibernate.hikari.dataSource.useLocalSessionState: true
-         hibernate.hikari.dataSource.rewriteBatchedStatements: true
-         hibernate.hikari.dataSource.cacheResultSetMetadata: true
-         hibernate.hikari.dataSource.cacheServerConfiguration: true
-         hibernate.hikari.dataSource.elideSetAutoCommits: true
-         hibernate.hikari.dataSource.maintainTimeStats: false
          hibernate.javax.cache.missing_cache_strategy: create
          hibernate.cache.use_query_cache: true
          hibernate.cache.use_second_level_cache: true   
-         
 #      hibernate.hbm2ddl.auto: update
    batch:
 #      hibernate.jdbc.batch_size: 20
@@ -111,7 +117,9 @@ hapi:
       fhir_hapi_client_id: fhir-hapi-server
       fhir_hapi_client_secret: xyz
       keycloak_username: managegroup
-      keycloak_password: 12345
+      keycloak_password: 123456
+      aws_access_key:  
+      aws_secret_key: 
       sms_password: password
       fhir_user: kjois@iprdgroup.com
       fhir_password: 12345

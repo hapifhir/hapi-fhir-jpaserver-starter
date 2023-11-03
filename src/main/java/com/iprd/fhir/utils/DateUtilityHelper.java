@@ -5,7 +5,12 @@ import android.util.Pair;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -15,6 +20,37 @@ public class DateUtilityHelper {
 
 	static long millisecondsInADay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
 
+	public static long differenceInSeconds(String dateString1,String dateString2){
+		  // Create DateTimeFormatter for parsing the date-time strings
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+        // Parse the date-time strings into LocalDateTime objects
+        LocalDateTime dateTime1 = LocalDateTime.parse(dateString1, formatter);
+        LocalDateTime dateTime2 = LocalDateTime.parse(dateString2, formatter);
+
+        // Convert LocalDateTime objects to Instant objects
+        Instant instant1 = dateTime1.atZone(ZoneId.of("UTC")).toInstant();
+        Instant instant2 = dateTime2.atZone(ZoneId.of("UTC")).toInstant();
+
+        // Calculate the difference in seconds
+        Duration duration = Duration.between(instant2, instant1);
+        long secondsDifference = duration.getSeconds();
+        return secondsDifference;
+	}
+	
+	public static String addOneMinute(String inputDateTime) {
+		DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        OffsetDateTime originalDateTime = OffsetDateTime.parse(inputDateTime, formatter);
+
+        // Add one minute to the OffsetDateTime
+        OffsetDateTime updatedDateTime = originalDateTime.plusMinutes(1);
+
+        // Format the updated OffsetDateTime back into a string
+        String updatedDateTimeString = updatedDateTime.format(formatter);
+
+        return updatedDateTimeString;
+	}
+	
 	public static Date getCurrentSqlDate() {
 		return new Date(System.currentTimeMillis());
 	}
