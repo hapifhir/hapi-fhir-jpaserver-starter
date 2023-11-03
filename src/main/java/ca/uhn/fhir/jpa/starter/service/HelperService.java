@@ -1502,6 +1502,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		}
 
 		if (!facilities.isEmpty()) {
+			logger.warn("scorecard_numberOfFacilities "+facilities.size());
 			List<String> indicatorIds = new ArrayList<>();
 
 			indicators.forEach(indicatorItem -> {
@@ -1517,6 +1518,9 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 
 			List<Future<List<OrgIndicatorAverageResult>>> futures = new ArrayList<>();
 
+			// Create a CountDownLatch with the number of tasks
+				CountDownLatch latch = new CountDownLatch((int) Math.ceil((double) facilities.size() / appProperties.getFacility_batch_size()));
+
 			Long start47 = System.nanoTime();
 			for (int i = 0; i < facilities.size(); i += appProperties.getFacility_batch_size()) {
 				List<String> chunk = facilities.subList(i, Math.min(i + appProperties.getFacility_batch_size(), facilities.size()));
@@ -1524,7 +1528,8 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 				// Submit each chunk for parallel processing using the existing thread pool
 				Future<List<OrgIndicatorAverageResult>> future = executor.submit(() -> {
 					try {
-						return notificationDataSource.getOrgIndicatorAverageResult(chunk, indicatorIds, start, end);
+						List<OrgIndicatorAverageResult> result = notificationDataSource.getOrgIndicatorAverageResult(chunk, indicatorIds, start, end);
+						return result;
 					} catch (JDBCException | DataAccessException e) {
 						// Handle exceptions here, e.g., log the error
 						e.printStackTrace();
@@ -1534,13 +1539,20 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 						e.printStackTrace();
 						return new ArrayList<>();  // Return an empty list in case of exceptions
 					}
+					finally {
+						latch.countDown(); // Signal that this task is done
+					}
 				});
-
 				futures.add(future);
 			}
 
-			// Shutdown the executor when you're done with it
-			executor.shutdown();
+			try {
+				// Wait for all tasks to complete
+				latch.await();
+			} catch (InterruptedException e) {
+				// Handle the interruption, if needed
+				e.printStackTrace();
+			}
 
 			// Collect the results from the futures
 			for (Future<List<OrgIndicatorAverageResult>> future : futures) {
