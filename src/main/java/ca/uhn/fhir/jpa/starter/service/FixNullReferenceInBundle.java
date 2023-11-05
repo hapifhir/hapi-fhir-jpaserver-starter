@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter.service;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.zip.GZIPInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -68,14 +70,24 @@ public class FixNullReferenceInBundle {
 
 	public HttpServletRequest fixNullReference(HttpServletRequest request, String username) throws IOException {
 		InputStream inputStream = request.getInputStream();
-		InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-		BufferedReader bufferedReader = new BufferedReader(reader);
+        // Create a GZIPInputStream to decompress the data
+        GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
 
-		StringBuilder requestBody = new StringBuilder();
-		String line;
-		while ((line = bufferedReader.readLine()) != null) {
-			requestBody.append(line);
-		}
+        // Create a buffer to read the decompressed data
+        byte[] buffer = new byte[1024];
+        ByteArrayOutputStream decompressedData = new ByteArrayOutputStream();
+
+        int bytesRead;
+        while ((bytesRead = gzipInputStream.read(buffer)) != -1) {
+            decompressedData.write(buffer, 0, bytesRead);
+        }
+
+        // Close the input streams
+        gzipInputStream.close();
+        inputStream.close();
+
+        // Now, you can process the decompressed data as needed
+        String requestBody = new String(decompressedData.toByteArray(), "UTF-8");
 		logger.warn("Request body "+requestBody.toString());
 		Bundle fhirBundle = (Bundle) FhirContext.forCached(FhirVersionEnum.R4).newJsonParser()
 				.parseResource(requestBody.toString());
