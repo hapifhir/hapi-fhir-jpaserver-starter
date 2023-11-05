@@ -90,7 +90,7 @@ public class FixNullReferenceInBundle {
 
         // Now, you can process the decompressed data as needed
         String requestBody = new String(decompressedData.toByteArray(), "UTF-8");
-		logger.warn("Request body "+requestBody.toString());
+		logger.warn("Request body "+requestBody.toString()+" "+request.getHeader("Content-Encoding").replace("gzip", ""));
 		Bundle fhirBundle = (Bundle) FhirContext.forCached(FhirVersionEnum.R4).newJsonParser()
 				.parseResource(requestBody.toString());
 
@@ -128,7 +128,8 @@ public class FixNullReferenceInBundle {
 			}
 		}
 		Map<String, String> modifiedHeaders = new HashMap<>();
-		modifiedHeaders.put("Content-Encoding", request.getHeader("Content-Encoding").replace(",gzip", ""));
+		modifiedHeaders.put("Content-Encoding", request.getHeader("Content-Encoding").replace("gzip", ""));
+		
 		ModifiedBodyRequestWrapper modifiedRequest = new ModifiedBodyRequestWrapper(request, modifiedBody,modifiedHeaders);
 		return modifiedRequest;
 	}
