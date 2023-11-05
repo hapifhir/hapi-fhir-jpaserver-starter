@@ -12,6 +12,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import javax.servlet.http.HttpServletRequest;
@@ -125,8 +127,9 @@ public class FixNullReferenceInBundle {
 				}
 			}
 		}
-
-		ModifiedBodyRequestWrapper modifiedRequest = new ModifiedBodyRequestWrapper(request, modifiedBody);
+		Map<String, String> modifiedHeaders = new HashMap<>();
+		modifiedHeaders.put("Content-Encoding", request.getHeader("Content-Encoding").replace(",gzip", ""));
+		ModifiedBodyRequestWrapper modifiedRequest = new ModifiedBodyRequestWrapper(request, modifiedBody,modifiedHeaders);
 		return modifiedRequest;
 	}
 

@@ -5,15 +5,29 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.*;
+import java.util.Map;
 
 public class ModifiedBodyRequestWrapper extends HttpServletRequestWrapper {
     private final String modifiedBody;
-
-    public ModifiedBodyRequestWrapper(HttpServletRequest request, String modifiedBody) {
+    private final Map<String, String> modifiedHeaders;
+    
+    public ModifiedBodyRequestWrapper(HttpServletRequest request, String modifiedBody,Map<String, String> modifiedHeaders) {
         super(request);
         this.modifiedBody = modifiedBody;
+        this.modifiedHeaders = modifiedHeaders;
+        	
     }
 
+    @Override
+    public String getHeader(String name) {
+        // Check if the modified headers contain the specified header
+        if (modifiedHeaders.containsKey(name)) {
+            return modifiedHeaders.get(name);
+        } else {
+            // If the header is not found in the modified headers, delegate to the original request
+            return super.getHeader(name);
+        }
+    }
     @Override
     public ServletInputStream getInputStream() throws IOException {
         final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(modifiedBody.getBytes());
