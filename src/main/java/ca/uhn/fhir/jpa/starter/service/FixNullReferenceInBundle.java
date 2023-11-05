@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Observation;
 import org.joda.time.Instant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
@@ -50,6 +52,7 @@ public class FixNullReferenceInBundle {
 
 	@Autowired
 	FhirClientAuthenticatorService fhirClientAuthenticatorService;
+	private static final Logger logger = LoggerFactory.getLogger(FixNullReferenceInBundle.class);
 
 	public void uploadToS3Async(Bundle bundle, String userName) {
 		new Thread(new Runnable() {
@@ -73,7 +76,7 @@ public class FixNullReferenceInBundle {
 		while ((line = bufferedReader.readLine()) != null) {
 			requestBody.append(line);
 		}
-
+		logger.warn("Request body "+requestBody.toString());
 		Bundle fhirBundle = (Bundle) FhirContext.forCached(FhirVersionEnum.R4).newJsonParser()
 				.parseResource(requestBody.toString());
 
