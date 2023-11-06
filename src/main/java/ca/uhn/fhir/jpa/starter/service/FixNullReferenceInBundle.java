@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Observation;
+import org.hl7.fhir.r4.model.Procedure;
+import org.hl7.fhir.r4.model.QuestionnaireResponse;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,45 +106,70 @@ public class FixNullReferenceInBundle {
 					|| requestBody.toString().contains("\"reference\":\"Patient/\"")
 					|| requestBody.toString().contains("\"reference\":\"Encounter/null\"")) {
 				uploadToS3Async(fhirBundle, username);
+				String date = "";
+				String oneMinuteIncrement = "";
+				String practitionerRole = "";
+
 				for (Bundle.BundleEntryComponent entry : fhirBundle.getEntry()) {
+
 					if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.Observation)) {
 						Observation observation = (Observation) entry.getResource();
 						if (observation.getSubject().getReference().equals("Patient/")
 								|| observation.getEncounter().getReference().equals("Encounter/null")) {
-							String date = observation.getEffectiveDateTimeType().asStringValue();
-							String oneMinuteIncrement = DateUtilityHelper.addOneMinute(date);
-							String practitionerRole = observation.getPerformer().get(0).getReference().toString();
-							IGenericClient fhirClient = fhirClientAuthenticatorService.getFhirClient();
-							Bundle result = (Bundle) fhirClient.search()
-									.byUrl(FhirClientAuthenticatorService.serverBase + "/Encounter?date=ge" + date
-											+ "&date=le" + oneMinuteIncrement + "&participant=" + practitionerRole)
-									.execute();
-							org.hl7.fhir.r4.model.Encounter closestEncounter = null;
-							long secondsDifference = 999999999;
-							for (Bundle.BundleEntryComponent innerEntry : result.getEntry()) {
-								org.hl7.fhir.r4.model.Encounter enc = (org.hl7.fhir.r4.model.Encounter) innerEntry
-										.getResource();
-								String dateEncounter = enc.getPeriod().getStartElement().getValueAsString();
-								long diff = DateUtilityHelper.differenceInSeconds(date, dateEncounter);
-								if (diff < secondsDifference) {
-									closestEncounter = enc;
-									secondsDifference = diff;
-								}
-							}
-							modifiedBody = modifiedBody.replace("\"reference\":\"Patient/\"", "\"reference\":\"Patient/"
-									+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
-							modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"",
-									"\"reference\":\"Patient/"
-											+ closestEncounter.getSubject().getReference().replace("Patient/", "")
-											+ "\"");
-							modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"",
-									"\"reference\":\"Encounter/" + closestEncounter.getIdElement().getIdPart() + "\"");
-							logger.warn(modifiedBody);
+							date = observation.getEffectiveDateTimeType().asStringValue();
+							oneMinuteIncrement = DateUtilityHelper.addOneMinute(date);
+							practitionerRole = observation.getPerformer().get(0).getReference().toString();
+							break;
+						}
+					}
+					else if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.QuestionnaireResponse)) {
+						QuestionnaireResponse questionnaireResponse = (QuestionnaireResponse) entry.getResource();
+						if (questionnaireResponse.getSubject().getReference().equals("Patient/")
+								|| questionnaireResponse.getEncounter().getReference().equals("Encounter/null")) {
+							date = questionnaireResponse.getAuthoredElement().asStringValue();
+							oneMinuteIncrement = DateUtilityHelper.addOneMinute(date);
+							practitionerRole = questionnaireResponse.getAuthor().getReference().toString();
+							break;
+						}
+					}
+					else if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.Procedure)) {
+						Procedure procedure = (Procedure) entry.getResource();
+						if (procedure.getSubject().getReference().equals("Patient/")
+								|| procedure.getEncounter().getReference().equals("Encounter/null")) {
+							date = procedure.getPerformedDateTimeType().asStringValue();
+							oneMinuteIncrement = DateUtilityHelper.addOneMinute(date);
+							practitionerRole = procedure.getRecorder().getReference().toString();
 							break;
 						}
 					}
 				}
+
+				IGenericClient fhirClient = fhirClientAuthenticatorService.getFhirClient();
+				Bundle result = (Bundle) fhirClient.search()
+						.byUrl(FhirClientAuthenticatorService.serverBase + "/Encounter?date=ge" + date + "&date=le"
+								+ oneMinuteIncrement + "&participant=" + practitionerRole)
+						.execute();
+				org.hl7.fhir.r4.model.Encounter closestEncounter = null;
+				long secondsDifference = 999999999;
+				for (Bundle.BundleEntryComponent innerEntry : result.getEntry()) {
+					org.hl7.fhir.r4.model.Encounter enc = (org.hl7.fhir.r4.model.Encounter) innerEntry.getResource();
+					String dateEncounter = enc.getPeriod().getStartElement().getValueAsString();
+					long diff = DateUtilityHelper.differenceInSeconds(date, dateEncounter);
+					if (diff < secondsDifference) {
+						closestEncounter = enc;
+						secondsDifference = diff;
+					}
+				}
+				modifiedBody = modifiedBody.replace("\"reference\":\"Patient/\"", "\"reference\":\"Patient/"
+						+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
+				modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+						+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
+				modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"",
+						"\"reference\":\"Encounter/" + closestEncounter.getIdElement().getIdPart() + "\"");
+				logger.warn(modifiedBody);
+
 			}
+
 			Map<String, String> modifiedHeaders = new HashMap<>();
 			modifiedHeaders.put("Content-Encoding", request.getHeader("Content-Encoding").replace("gzip", ""));
 
