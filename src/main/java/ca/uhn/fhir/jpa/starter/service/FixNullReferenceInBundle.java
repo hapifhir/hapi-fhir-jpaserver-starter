@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter.service;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,78 +73,81 @@ public class FixNullReferenceInBundle {
 
 	public HttpServletRequest fixNullReference(HttpServletRequest request, String username) throws IOException {
 		InputStream inputStream = request.getInputStream();
-		// Create a GZIPInputStream to decompress the data
-		GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
+		try {
+			// Create a GZIPInputStream to decompress the data
+			GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
 
-		// Create a buffer to read the decompressed data
-		byte[] buffer = new byte[1024];
-		ByteArrayOutputStream decompressedData = new ByteArrayOutputStream();
+			// Create a buffer to read the decompressed data
+			byte[] buffer = new byte[1024];
+			ByteArrayOutputStream decompressedData = new ByteArrayOutputStream();
 
-		int bytesRead;
-		while ((bytesRead = gzipInputStream.read(buffer)) != -1) {
-			decompressedData.write(buffer, 0, bytesRead);
-		}
+			int bytesRead;
+			while ((bytesRead = gzipInputStream.read(buffer)) != -1) {
+				decompressedData.write(buffer, 0, bytesRead);
+			}
 
-		// Close the input streams
-		gzipInputStream.close();
-		inputStream.close();
+			// Close the input streams
+			gzipInputStream.close();
+			inputStream.close();
 
-		// Now, you can process the decompressed data as needed
-		String requestBody = new String(decompressedData.toByteArray(), "UTF-8");
-		logger.warn("Request body " + requestBody.toString() + " "
-				+ request.getHeader("Content-Encoding").replace("gzip", ""));
-		Bundle fhirBundle = (Bundle) FhirContext.forCached(FhirVersionEnum.R4).newJsonParser()
-				.parseResource(requestBody.toString());
+			// Now, you can process the decompressed data as needed
+			String requestBody = new String(decompressedData.toByteArray(), "UTF-8");
+			logger.warn("Request body " + requestBody.toString() + " "
+					+ request.getHeader("Content-Encoding").replace("gzip", ""));
+			Bundle fhirBundle = (Bundle) FhirContext.forCached(FhirVersionEnum.R4).newJsonParser()
+					.parseResource(requestBody.toString());
 
-		String modifiedBody = FhirContext.forCached(FhirVersionEnum.R4).newJsonParser()
-				.encodeResourceToString(fhirBundle);
+			String modifiedBody = FhirContext.forCached(FhirVersionEnum.R4).newJsonParser()
+					.encodeResourceToString(fhirBundle);
 
-		if (requestBody.toString().contains("\"reference\":\"Patient/null\"")
-				|| requestBody.toString().contains("\"reference\":\"Patient/\"")
-				|| requestBody.toString().contains("\"reference\":\"Encounter/null\"")) {
-			uploadToS3Async(fhirBundle, username);
-			for (Bundle.BundleEntryComponent entry : fhirBundle.getEntry()) {
-				if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.Observation)) {
-					Observation observation = (Observation) entry.getResource();
-					if (observation.getSubject().getReference().contains("null")) {
-						String date = observation.getEffectiveDateTimeType().asStringValue();
-						String oneMinuteIncrement = DateUtilityHelper.addOneMinute(date);
-						String practitionerRole = observation.getPerformer().get(0).getReference().toString();
-						IGenericClient fhirClient = fhirClientAuthenticatorService.getFhirClient();
-						Bundle result = (Bundle) fhirClient.search()
-								.byUrl(FhirClientAuthenticatorService.serverBase + "/Encounter?date=ge" + date
-										+ "&date=le" + oneMinuteIncrement + "&participant=" + practitionerRole)
-								.execute();
-						org.hl7.fhir.r4.model.Encounter closestEncounter = null;
-						long secondsDifference = 999999999;
-						for (Bundle.BundleEntryComponent innerEntry : result.getEntry()) {
-							org.hl7.fhir.r4.model.Encounter enc = (org.hl7.fhir.r4.model.Encounter) innerEntry
-									.getResource();
-							String dateEncounter = enc.getPeriod().getStartElement().getValueAsString();
-							long diff = DateUtilityHelper.differenceInSeconds(date, dateEncounter);
-							if (diff < secondsDifference) {
-								closestEncounter = enc;
-								secondsDifference = diff;
+			if (requestBody.toString().contains("\"reference\":\"Patient/null\"")
+					|| requestBody.toString().contains("\"reference\":\"Patient/\"")
+					|| requestBody.toString().contains("\"reference\":\"Encounter/null\"")) {
+				uploadToS3Async(fhirBundle, username);
+				for (Bundle.BundleEntryComponent entry : fhirBundle.getEntry()) {
+					if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.Observation)) {
+						Observation observation = (Observation) entry.getResource();
+						if (observation.getSubject().getReference().equals("Patient/")||observation.getEncounter().getReference().equals("Encounter/null")) {
+							String date = observation.getEffectiveDateTimeType().asStringValue();
+							String oneMinuteIncrement = DateUtilityHelper.addOneMinute(date);
+							String practitionerRole = observation.getPerformer().get(0).getReference().toString();
+							IGenericClient fhirClient = fhirClientAuthenticatorService.getFhirClient();
+							Bundle result = (Bundle) fhirClient.search()
+									.byUrl(FhirClientAuthenticatorService.serverBase + "/Encounter?date=ge" + date
+											+ "&date=le" + oneMinuteIncrement + "&participant=" + practitionerRole)
+									.execute();
+							org.hl7.fhir.r4.model.Encounter closestEncounter = null;
+							long secondsDifference = 999999999;
+							for (Bundle.BundleEntryComponent innerEntry : result.getEntry()) {
+								org.hl7.fhir.r4.model.Encounter enc = (org.hl7.fhir.r4.model.Encounter) innerEntry
+										.getResource();
+								String dateEncounter = enc.getPeriod().getStartElement().getValueAsString();
+								long diff = DateUtilityHelper.differenceInSeconds(date, dateEncounter);
+								if (diff < secondsDifference) {
+									closestEncounter = enc;
+									secondsDifference = diff;
+								}
 							}
+							modifiedBody = modifiedBody.replace("\"reference\":\"Patient/\"", "\"reference\":\"Patient/"
+									+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
+							modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+									+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
+							modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"",
+									"\"reference\":\"Encounter/" + closestEncounter.getIdElement().getIdPart() + "\"");
+							logger.warn(modifiedBody);
+							break;
 						}
-						modifiedBody = modifiedBody.replace("\"reference\":\"Patient/\"", "\"reference\":\"Patient/"
-								+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
-						modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
-								+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
-						modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"",
-								"\"reference\":\"Encounter/" + closestEncounter.getIdElement().getIdPart() + "\"");
-						logger.warn(modifiedBody);
-						break;
 					}
 				}
 			}
-		}
-		Map<String, String> modifiedHeaders = new HashMap<>();
-		modifiedHeaders.put("Content-Encoding", request.getHeader("Content-Encoding").replace("gzip", ""));
+			Map<String, String> modifiedHeaders = new HashMap<>();
+			modifiedHeaders.put("Content-Encoding", request.getHeader("Content-Encoding").replace("gzip", ""));
 
-		ModifiedBodyRequestWrapper modifiedRequest = new ModifiedBodyRequestWrapper(request, modifiedBody,
-				modifiedHeaders);
-		return modifiedRequest;
+			ModifiedBodyRequestWrapper modifiedRequest = new ModifiedBodyRequestWrapper(request, modifiedBody,
+					modifiedHeaders);
+			return modifiedRequest;
+		}catch(EOFException e) {
+		}
 	}
 
 	public static void uploadFileToS3(String accessKey, String secretKey, String bucketName, String folderName,
