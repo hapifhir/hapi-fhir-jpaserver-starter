@@ -107,7 +107,8 @@ public class FixNullReferenceInBundle {
 				for (Bundle.BundleEntryComponent entry : fhirBundle.getEntry()) {
 					if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.Observation)) {
 						Observation observation = (Observation) entry.getResource();
-						if (observation.getSubject().getReference().equals("Patient/")||observation.getEncounter().getReference().equals("Encounter/null")) {
+						if (observation.getSubject().getReference().equals("Patient/")
+								|| observation.getEncounter().getReference().equals("Encounter/null")) {
 							String date = observation.getEffectiveDateTimeType().asStringValue();
 							String oneMinuteIncrement = DateUtilityHelper.addOneMinute(date);
 							String practitionerRole = observation.getPerformer().get(0).getReference().toString();
@@ -130,8 +131,10 @@ public class FixNullReferenceInBundle {
 							}
 							modifiedBody = modifiedBody.replace("\"reference\":\"Patient/\"", "\"reference\":\"Patient/"
 									+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
-							modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
-									+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
+							modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"",
+									"\"reference\":\"Patient/"
+											+ closestEncounter.getSubject().getReference().replace("Patient/", "")
+											+ "\"");
 							modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"",
 									"\"reference\":\"Encounter/" + closestEncounter.getIdElement().getIdPart() + "\"");
 							logger.warn(modifiedBody);
@@ -146,7 +149,8 @@ public class FixNullReferenceInBundle {
 			ModifiedBodyRequestWrapper modifiedRequest = new ModifiedBodyRequestWrapper(request, modifiedBody,
 					modifiedHeaders);
 			return modifiedRequest;
-		}catch(EOFException e) {
+		} catch (EOFException e) {
+			return request;
 		}
 	}
 
