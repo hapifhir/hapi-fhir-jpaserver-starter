@@ -132,6 +132,7 @@ public class FixNullReferenceInBundle {
 								+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
 						modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"",
 								"\"reference\":\"Encounter/" + closestEncounter.getIdElement().getIdPart() + "\"");
+						logger.warn(modifiedBody);
 						break;
 					}
 				}
