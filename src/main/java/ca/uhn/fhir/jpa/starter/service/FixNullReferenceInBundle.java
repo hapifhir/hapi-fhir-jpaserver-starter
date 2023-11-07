@@ -183,6 +183,7 @@ public class FixNullReferenceInBundle {
 			return request;
 		}catch(Exception e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
+			return request;
 		}
 	}
 
