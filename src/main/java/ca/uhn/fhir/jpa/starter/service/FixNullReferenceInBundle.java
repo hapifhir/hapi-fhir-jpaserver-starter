@@ -19,6 +19,7 @@ import java.util.zip.GZIPInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Procedure;
@@ -43,6 +44,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.iprd.fhir.utils.DateUtilityHelper;
 import com.iprd.fhir.utils.ModifiedBodyRequestWrapper;
 
+import antlr.Utils;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.AppProperties;
@@ -167,7 +169,6 @@ public class FixNullReferenceInBundle {
 				modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"",
 						"\"reference\":\"Encounter/" + closestEncounter.getIdElement().getIdPart() + "\"");
 				logger.warn(modifiedBody);
-
 			}
 
 			Map<String, String> modifiedHeaders = new HashMap<>();
@@ -178,6 +179,10 @@ public class FixNullReferenceInBundle {
 			return modifiedRequest;
 		} catch (EOFException e) {
 			return request;
+		}catch(java.util.zip.ZipException e) {
+			return request;
+		}catch(Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 	}
 
