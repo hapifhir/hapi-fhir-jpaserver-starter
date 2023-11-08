@@ -51,6 +51,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Create the name of the service account to use
+*/}}
+{{- define "hapi-fhir-jpaserver.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "hapi-fhir-jpaserver.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{/*
 Create a default fully qualified postgresql name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
@@ -63,10 +74,12 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Get the Postgresql credentials secret name.
 */}}
 {{- define "hapi-fhir-jpaserver.postgresql.secretName" -}}
-{{- if and (.Values.postgresql.enabled) (not .Values.postgresql.auth.existingSecret) -}}
-    {{- printf "%s" (include "hapi-fhir-jpaserver.postgresql.fullname" .) -}}
-{{- else if and (.Values.postgresql.enabled) (.Values.postgresql.auth.existingSecret) -}}
-    {{- printf "%s" .Values.postgresql.auth.existingSecret -}}
+{{- if .Values.postgresql.enabled -}}
+    {{- if .Values.postgresql.auth.existingSecret -}}
+        {{- printf "%s" .Values.postgresql.auth.existingSecret -}}
+    {{- else -}}
+        {{- printf "%s" (include "hapi-fhir-jpaserver.postgresql.fullname" .) -}}
+    {{- end -}}
 {{- else }}
     {{- if .Values.externalDatabase.existingSecret -}}
         {{- printf "%s" .Values.externalDatabase.existingSecret -}}
@@ -80,10 +93,18 @@ Get the Postgresql credentials secret name.
 Get the Postgresql credentials secret key.
 */}}
 {{- define "hapi-fhir-jpaserver.postgresql.secretKey" -}}
-{{- if (.Values.externalDatabase.existingSecret) -}}
-    {{- printf "%s" .Values.externalDatabase.existingSecretKey -}}
+{{- if .Values.postgresql.enabled -}}
+    {{- if .Values.postgresql.auth.username -}}
+        {{- printf "%s" .Values.postgresql.auth.secretKeys.userPasswordKey -}}
+    {{- else -}}
+        {{- printf "%s" .Values.postgresql.auth.secretKeys.adminPasswordKey -}}
+    {{- end -}}
 {{- else }}
-    {{- printf "postgres-password" -}}
+    {{- if .Values.externalDatabase.existingSecret -}}
+        {{- printf "%s" .Values.externalDatabase.existingSecretKey -}}
+    {{- else -}}
+        {{- printf "postgres-password" -}}
+    {{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -98,7 +119,11 @@ Add environment variables to configure database values
 Add environment variables to configure database values
 */}}
 {{- define "hapi-fhir-jpaserver.database.user" -}}
-{{- ternary "postgres" .Values.externalDatabase.user .Values.postgresql.enabled -}}
+{{- if .Values.postgresql.enabled -}}
+    {{- printf "%s" .Values.postgresql.auth.username | default "postgres" -}}
+{{- else -}}
+    {{- printf "%s" .Values.externalDatabase.user -}}
+{{- end -}}
 {{- end -}}
 
 {{/*
