@@ -248,11 +248,11 @@ public class FhirResourceTemplateHelper {
 		contactPoint.setSystem(org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem.PHONE);
 		contactPoints.add(contactPoint);
 		practitioner.setTelecom(contactPoints);
-		if(gender == "M") {
+		if("M".equals(gender)) {
 			gender = "male";
 			practitioner.setGender(AdministrativeGender.fromCode(gender));
 		}
-		else if( gender == "F" || gender == "FM") {
+		else if("F".equals(gender) || "FM".equals(gender)) {
 			gender = "female";
 			practitioner.setGender(AdministrativeGender.fromCode(gender));
 		}

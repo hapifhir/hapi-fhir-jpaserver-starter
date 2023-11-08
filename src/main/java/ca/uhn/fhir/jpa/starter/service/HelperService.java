@@ -158,14 +158,14 @@ public class HelperService {
 		mapOfOrgHierarchy.put(orgId, ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, orgId));
 	}
 
-	private String getKeycloakGroupId(String groupName) {
+	private GroupRepresentation getKeycloakGroup(String groupName) {
 		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
 		try {
 			List<GroupRepresentation> groups = realmResource.groups().groups(groupName, 0, Integer.MAX_VALUE, false);
 			if (groups.size() == 0){
 				return null;
 			}
-			return groups.get(0).getId();
+			return groups.get(0);
 		}
 		catch (Exception e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
@@ -279,7 +279,11 @@ public class HelperService {
 				continue;
 			}
 
-			String group_id = getKeycloakGroupId(facilityUID);
+			String group_id = null; // Initializing to "no-value"
+			GroupRepresentation keycloakGroup = getKeycloakGroup(facilityUID);
+			if(null != keycloakGroup) {
+				group_id = keycloakGroup.getId();
+			}
 
 			if (null != group_id) {
 				updateKeycloakGroupAndResource(csvData, group_id, 0);
@@ -395,7 +399,7 @@ public class HelperService {
 		String practitionerId = "";
 		String organizationId = "";
 
-		while ((singleLine = bufferedReader.readLine()) != null) {
+		outer: while ((singleLine = bufferedReader.readLine()) != null) {
 			if (iteration == 0) { //Skip header of CSV
 				iteration++;
 				continue;
@@ -433,6 +437,90 @@ public class HelperService {
 				map.put("CSV length validation failed", s);
 				continue;
 			}
+
+			String givenState = state;
+			String givenLga = lga;
+			String givenWard = ward;
+			GroupRepresentation keycloakGroup;
+
+
+			Map<String, Integer> levelNameOccurrences = new HashMap<>();
+
+			Map<String, String> levels = new LinkedHashMap<>(); // Use a LinkedHashMap
+			levels.put("countryName", countryName);
+			levels.put("givenState", givenState);
+			levels.put("givenLga", givenLga);
+			levels.put("givenWard", givenWard);
+
+			// Count variable occurrences
+			for (String level : levels.values()) {
+				levelNameOccurrences.put(level, levelNameOccurrences.getOrDefault(level, 0) + 1);
+			}
+
+			List<String> repeatedLevelNames = new ArrayList<>();
+
+			for (Map.Entry<String, Integer> entry : levelNameOccurrences.entrySet()) {
+				if (entry.getValue() > 1) {
+					repeatedLevelNames.add(entry.getKey());
+				}
+			}
+			// Finding levels with same name
+			if (!repeatedLevelNames.isEmpty()) {
+				List<String> levelsWithSameName = new ArrayList<>();
+
+				for (String equalVariable : repeatedLevelNames) {
+					List<String> matchingKeys = new ArrayList<>();
+
+					for (Map.Entry<String, String> entry : levels.entrySet()) {
+						if (entry.getValue().equals(equalVariable)) {
+							matchingKeys.add(entry.getKey());
+						}
+					}
+					// Remove the first value from the list
+					if (!matchingKeys.isEmpty()) {
+						matchingKeys.remove(0);
+					}
+					levelsWithSameName.addAll(matchingKeys);
+				}
+
+				List<String> keysList = new ArrayList<>(levels.keySet());
+
+				//Append the parent level to the level which has same name as parent
+				for (String level : levelsWithSameName) {
+					switch (level) {
+						case "givenState" :
+							givenState = countryName + "_" + givenState;
+							keycloakGroup = getKeycloakGroup(givenState);
+							if(null != keycloakGroup && keycloakGroup.getAttributes().get("type").get(0).equals("state")) {
+								state = givenState;
+							} else {
+								map.put("State is not found", s);
+								continue outer;
+							}
+
+						case "givenLga" :
+							givenLga = givenState + "_" + givenLga;
+							keycloakGroup = getKeycloakGroup(givenLga);
+							if(null != keycloakGroup && keycloakGroup.getAttributes().get("type").get(0).equals("lga")) {
+								lga = givenLga;
+							} else {
+								map.put("Lga is not found", s);
+								continue outer;
+							}
+
+						case "givenWard" :
+							givenWard = givenLga + "_" + givenWard;
+							keycloakGroup = getKeycloakGroup(givenWard);
+							if(null != keycloakGroup && keycloakGroup.getAttributes().get("type").get(0).equals("ward")) {
+								ward = givenWard;
+							} else {
+								map.put("Ward is not found", s);
+								continue outer;
+							}
+					}
+				}
+			}
+
 			if (!(practitioners.contains(firstName) && practitioners.contains(lastName) && practitioners.contains(phoneNumber + countryCode))) {
 				Practitioner practitioner = FhirResourceTemplateHelper.hcw(firstName, lastName, phoneNumber, countryCode, gender, birthDate, state, lga, ward, facilityUID, role, qualification, stateIdentifier, argusoftIdentifier);
 //				practitionerId = createResource(hcw,
