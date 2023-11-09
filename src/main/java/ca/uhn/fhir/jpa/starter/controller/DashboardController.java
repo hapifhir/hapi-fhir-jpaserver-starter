@@ -173,6 +173,7 @@ public class DashboardController {
 	public ResponseEntity<?> lineChart(
 		@RequestHeader(name = "Authorization") String token,
 		@RequestParam("env") String env,
+		@RequestParam("lga") String lga,
 		@RequestParam Map<String, String> allFilters
 	) {
 		String startDate = allFilters.get("from");
@@ -189,13 +190,14 @@ public class DashboardController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		return helperService.getLineChartByPractitionerRoleId(practitionerRoleId, startDate, endDate, type,filters,env);
+		return helperService.getLineChartByPractitionerRoleId(startDate,endDate,type,filters,env,lga);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/pieChartData")
 	public ResponseEntity<?> pieChartData(
 		@RequestHeader(name = "Authorization") String token,
 		@RequestParam("env") String env,
+		@RequestParam("lga") String lga,
 		@RequestParam Map<String, String> allFilters
 	){
 		String startDate = allFilters.get("from");
@@ -209,13 +211,14 @@ public class DashboardController {
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
 
-		return helperService.getPieChartDataByPractitionerRoleId(practitionerRoleId, startDate, endDate,filters,env);
+		return helperService.getPieChartDataByPractitionerRoleId(startDate, endDate,filters,env,lga);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/tabularData")
 	public ResponseEntity<?> getTabularData(
 		@RequestHeader(name = "Authorization") String token,
 		@RequestParam("env") String env,
+		@RequestParam("lga") String lga,
 		@RequestParam Map<String, String> allFilters
 	) {
 		String startDate = allFilters.get("from");
@@ -230,7 +233,7 @@ public class DashboardController {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
-		return helperService.getTabularDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, filters,env);
+		return helperService.getTabularDataByPractitionerRoleId(startDate, endDate, filters,env,lga);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/refreshMapToOrgId")
@@ -246,6 +249,7 @@ public class DashboardController {
 	public ResponseEntity<?> getBarChartData(
 		@RequestHeader(name = "Authorization") String token,
 		@RequestParam("env") String env,
+		@RequestParam("lga") String lga,
 		@RequestParam Map<String, String> allFilters
 	) {
 		String startDate = allFilters.get("from");
@@ -261,7 +265,7 @@ public class DashboardController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		return helperService.getBarChartData(practitionerRoleId, startDate, endDate,filters,env);
+		return helperService.getBarChartData(startDate, endDate,filters,env,lga);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/analytics")

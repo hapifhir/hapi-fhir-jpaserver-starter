@@ -126,6 +126,7 @@ public class HelperService {
 	NotificationDataSource notificationDataSource;
 	LinkedHashMap<String,Pair<List<String>, LinkedHashMap<String, List<String>>>> mapOfIdsAndOrgIdToChildrenMapPair;
 	LinkedHashMap<String,List<OrgItem>> mapOfOrgHierarchy;
+	private String lga;
 
 	@PostConstruct
 	public void init() {
@@ -1143,11 +1144,11 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 	}
 
 
-	public ResponseEntity<?> getPieChartDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate,LinkedHashMap<String,String> filters, String env){
+	public ResponseEntity<?> getPieChartDataByPractitionerRoleId(String startDate, String endDate,LinkedHashMap<String,String> filters, String env, String lga){
 		notificationDataSource = NotificationDataSource.getInstance();
 
 		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
-		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+		String organizationId = lga;
 
 		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 		List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
@@ -1304,12 +1305,12 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		}
 
 	}
-	public ResponseEntity<?> getTabularDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, LinkedHashMap<String, String> filters,String env) {
+	public ResponseEntity<?> getTabularDataByPractitionerRoleId(String startDate, String endDate, LinkedHashMap<String, String> filters,String env, String lga) {
 		List<ScoreCardItem> scoreCardItems = new ArrayList<>();
 		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
 		List<String> fhirSearchList = getFhirSearchListByFilters(filters,env);
 
-		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+		String organizationId = lga;
 
 		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 		Date start = Date.valueOf(startDate);
@@ -1686,11 +1687,11 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		return ResponseEntity.ok(scoreCardResponseItems);
 	}
 
-public ResponseEntity<?> getBarChartData(String practitionerRoleId, String startDate, String endDate,LinkedHashMap<String,String> filters, String env) {
+public ResponseEntity<?> getBarChartData(String startDate, String endDate,LinkedHashMap<String,String> filters, String env, String lga) {
 	notificationDataSource = NotificationDataSource.getInstance();
 	List<BarChartItemDataCollection> barChartItems = new ArrayList<>();
 	List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
-	String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+	String organizationId = lga;
 
 	Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 	List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
@@ -1821,11 +1822,11 @@ public ResponseEntity<?> getBarChartData(String practitionerRoleId, String start
 			}
 		}
 	}
-	public ResponseEntity<?> getLineChartByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type,LinkedHashMap<String,String> filters, String env) {
+	public ResponseEntity<?> getLineChartByPractitionerRoleId(String startDate, String endDate, ReportType type, LinkedHashMap<String,String> filters, String env, String lga) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<LineChartItemCollection> lineChartItemCollections = new ArrayList<>();
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
-		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
+		String organizationId = lga;
 
 		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
 
