@@ -343,7 +343,7 @@ public class NotificationDataSource {
 	public List<LastSyncEntity> fetchLastSyncEntitiesByOrgs(List<String> orgId, String env, String status, Timestamp startDateTime) {
 		Session session = sf.openSession();
 		Query query = session
-			.createQuery("FROM LastSyncEntity WHERE org_id IN (:param1) AND envs=:param2 AND status=:param3 AND start_date_time > :param4");
+			.createQuery("FROM LastSyncEntity WHERE org_id IN (:param1) AND envs=:param2 AND status=:param3 AND start_date_time > :param4 AND end_date_time IS NOT NULL");
 		query.setParameter("param1", orgId);
 		query.setParameter("param2", env);
 		query.setParameter("param3", status);

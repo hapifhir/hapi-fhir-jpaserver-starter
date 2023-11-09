@@ -70,7 +70,6 @@ public class DashboardController {
 		return ResponseEntity.ok(helperService.getAsyncData(categoryWithHashCodes));
 	}
 
-
 	@RequestMapping(method = RequestMethod.GET, value = "/lastSyncTime")
 	public ResponseEntity<?> getLastSyncTime(
 		@RequestHeader(name = "Authorization") String token,
@@ -82,6 +81,12 @@ public class DashboardController {
 		}
 
 		return helperService.computeSyncTime(practitionerRoleId,env);
+	}
+	@RequestMapping(method = RequestMethod.GET, value = "/facilityLastSyncTime")
+	public ResponseEntity<?> getFacilityLastSyncTime(
+		@RequestParam("selectedOrganizationId") String selectedOrganizationId,
+		@RequestParam("env") String env) {
+		return helperService.computeFacilitySyncTime(env, selectedOrganizationId);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getTableData/{lastUpdated}")

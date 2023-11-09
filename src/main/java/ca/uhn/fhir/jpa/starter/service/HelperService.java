@@ -730,7 +730,25 @@ public class HelperService {
 		}
 		return ResponseEntity.ok("Not found");
 	}
+	public ResponseEntity<String> computeFacilitySyncTime(String env, String selectedOrganizationId) {
+		List<String> organizationIds = new ArrayList<>();
+		organizationIds.add(selectedOrganizationId);
 
+		// Get the current date and time
+		Timestamp fiveDaysAgoTimestamp = new Timestamp(DateUtilityHelper.calculateMillisecondsRelativeToCurrentTime(5));
+
+		List<LastSyncEntity> lastSyncData = notificationDataSource.fetchLastSyncEntitiesByOrgs(organizationIds, env, ApiAsyncTaskEntity.Status.COMPLETED.name(), fiveDaysAgoTimestamp);
+
+			// Sort by startDateTime
+			lastSyncData.sort(Comparator.comparing(LastSyncEntity::getStartDateTime));
+			if(!lastSyncData.isEmpty()) {
+			LastSyncEntity lastEntity = lastSyncData.get(lastSyncData.size() - 1);
+			if (lastEntity != null && lastEntity.getEndDateTime() != null) {
+				return ResponseEntity.ok(Utils.calculateAndFormatTimeDifference(lastEntity.getEndDateTime()));
+			}
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
+	}
 
 
 	public List<GroupRepresentation> getGroupsByUser(String userId) {
