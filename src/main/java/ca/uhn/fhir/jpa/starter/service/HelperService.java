@@ -872,10 +872,15 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 	public void saveQueryResult(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters, List<String> hashcodes,String env, List<ANCDailySummaryConfig> ancDailySummaryConfig) throws FileNotFoundException {
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 		List<String> fhirSearchList = getFhirSearchListByFilters(filters,env);
+		logger.warn("Calling details page function saveQueryResult. StartDate: {} EndDate: {}", startDate, endDate);
+		Long start3 = System.nanoTime();
 		List<DataResult> dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
 		for(String hashcode : hashcodes){
 			saveInAsyncTable(dataResult.get(hashcodes.indexOf(hashcode)), hashcode);
 		}
+		Long end3 = System.nanoTime();
+		Double diff3 = ((end3 - start3) / 1e9); // Convert nanoseconds to seconds
+		logger.warn("details page function saveQueryResult ended StartDate: {} EndDate: {} timetaken: {}", startDate, endDate, diff3 );
 	}
 
 	//@Scheduled(fixedDelay = 300000)
