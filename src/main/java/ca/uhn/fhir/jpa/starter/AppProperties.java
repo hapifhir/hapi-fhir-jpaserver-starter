@@ -67,6 +67,8 @@ public class AppProperties {
   private List<Bundle.BundleType> allowed_bundle_types = null;
   private Boolean narrative_enabled = true;
 
+  private Boolean ig_runtime_upload_enabled = false;
+
   private Validation validation = new Validation();
   private Map<String, Tester> tester = null;
   private Logger logger = new Logger();
@@ -591,6 +593,14 @@ public class AppProperties {
 
 	public Set<String> getLocal_base_urls() {
 		return local_base_urls;
+	}
+
+	public Boolean getIg_runtime_upload_enabled() {
+		return ig_runtime_upload_enabled;
+	}
+
+	public void setIg_runtime_upload_enabled(Boolean ig_runtime_upload_enabled) {
+		this.ig_runtime_upload_enabled = ig_runtime_upload_enabled;
 	}
 
 	public static class Cors {
