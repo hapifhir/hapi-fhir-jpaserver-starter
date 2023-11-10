@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter.model;
 import javax.persistence.Column;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 
 @Entity
@@ -31,12 +32,16 @@ public class ApiAsyncTaskEntity {
 	@Column(name = "dailyResult", nullable = true)
 	private java.sql.Clob dailyResult;
 
+	@Column(name = "lastUpdated", nullable = true)
+	private Date lastUpdated;
+
 	public ApiAsyncTaskEntity() {}
-	public ApiAsyncTaskEntity(String uuid, String status, java.sql.Clob  summaryResult,java.sql.Clob dailyResult) {
+	public ApiAsyncTaskEntity(String uuid, String status, java.sql.Clob  summaryResult,java.sql.Clob dailyResult, Date lastUpdated) {
 		this.uuid = uuid;
 		this.status = status;
 		this.summaryResult = summaryResult;
 		this.dailyResult = dailyResult;
+		this.lastUpdated = lastUpdated;
 	}
 	public Long getId() {
 		return id;
@@ -72,5 +77,13 @@ public class ApiAsyncTaskEntity {
 
 	public void setDailyResult(java.sql.Clob  dailyResult) {
 		this.dailyResult = dailyResult;
+	}
+
+	public Date getLastUpdated() {
+		return lastUpdated;
+	}
+
+	public void setLastUpdated(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
 	}
 }

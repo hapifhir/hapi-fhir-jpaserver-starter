@@ -327,6 +327,17 @@ public class NotificationDataSource {
 		session.close();
 		return resultList;
 	}
+
+	public ArrayList<ApiAsyncTaskEntity> fetchApiAsyncTaskEntityList(List<String> uuid) {
+		Session session = sf.openSession();
+		Query query = session.createQuery("FROM ApiAsyncTaskEntity WHERE uuid IN :param1");
+		query.setParameter("param1", uuid);
+		ArrayList<ApiAsyncTaskEntity> resultList = (ArrayList<ApiAsyncTaskEntity>) query.getResultList();
+		session.close();
+		return resultList;
+	}
+
+
 	public List<LastSyncEntity> getEntitiesByOrgEnvStatus(String orgId, String env, String status) {
 		Session session = sf.openSession();
 		Query query = session
