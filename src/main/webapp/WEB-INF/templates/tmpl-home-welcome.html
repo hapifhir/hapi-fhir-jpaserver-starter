@@ -16,10 +16,10 @@
 				xhr.send();
 			}
 
-			// Replace content if replacement.txt exists
-			fileExists("static/welcome.html", function(exists) {
+			// Replace content if static/welcome.html exists
+			fileExists("content/custom/welcome.html", function(exists) {
 				if (exists) {
-					loadFile("static/welcome.html", function(content) {
+					loadFile("content/custom/welcome.html", function(content) {
 						var replacementContainer = document.getElementById("replacementWelcome");
 						replacementContainer.innerHTML = content;
 					});

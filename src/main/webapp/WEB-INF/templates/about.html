@@ -74,9 +74,9 @@
     }
 
     // Replace content if replacement.txt exists
-    fileExists("static/about.html", function(exists) {
+    fileExists("content/custom/about.html", function(exists) {
         if (exists) {
-            loadFile("static/about.html", function(content) {
+            loadFile("content/custom//about.html", function(content) {
                 var replacementContainer = document.getElementById("replacementAbout");
                 replacementContainer.innerHTML = content;
             });
