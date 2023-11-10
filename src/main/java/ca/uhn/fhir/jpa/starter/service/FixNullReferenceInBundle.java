@@ -43,8 +43,8 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.iprd.fhir.utils.DateUtilityHelper;
 import com.iprd.fhir.utils.ModifiedBodyRequestWrapper;
+import com.iprd.fhir.utils.Utils;
 
-import antlr.Utils;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.starter.AppProperties;
@@ -77,25 +77,35 @@ public class FixNullReferenceInBundle {
 
 	public HttpServletRequest fixNullReference(HttpServletRequest request, String username) throws IOException {
 		InputStream inputStream = request.getInputStream();
+		boolean specialTreatment = false;
 		try {
-			// Create a GZIPInputStream to decompress the data
-			GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
+			String requestBody ="";
+			if(request.getHeader("Content-Encoding").contains("gzip")) {
+				// Create a GZIPInputStream to decompress the data
+				GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
 
-			// Create a buffer to read the decompressed data
-			byte[] buffer = new byte[1024];
-			ByteArrayOutputStream decompressedData = new ByteArrayOutputStream();
+				// Create a buffer to read the decompressed data
+				byte[] buffer = new byte[1024];
+				ByteArrayOutputStream decompressedData = new ByteArrayOutputStream();
 
-			int bytesRead;
-			while ((bytesRead = gzipInputStream.read(buffer)) != -1) {
-				decompressedData.write(buffer, 0, bytesRead);
+				int bytesRead;
+				while ((bytesRead = gzipInputStream.read(buffer)) != -1) {
+					decompressedData.write(buffer, 0, bytesRead);
+				}
+
+				// Close the input streams
+				gzipInputStream.close();
+				inputStream.close();
+
+				// Now, you can process the decompressed data as needed
+				requestBody = new String(decompressedData.toByteArray(), "UTF-8");
+	
+			}else {
+				// Now, you can process the decompressed data as needed
+				requestBody = Utils.getBody(request);
 			}
-
-			// Close the input streams
-			gzipInputStream.close();
-			inputStream.close();
-
-			// Now, you can process the decompressed data as needed
-			String requestBody = new String(decompressedData.toByteArray(), "UTF-8");
+						
+			
 			logger.warn("Request body " + requestBody.toString() + " "
 					+ request.getHeader("Content-Encoding").replace("gzip", ""));
 			Bundle fhirBundle = (Bundle) FhirContext.forCached(FhirVersionEnum.R4).newJsonParser()
@@ -113,8 +123,32 @@ public class FixNullReferenceInBundle {
 				String practitionerRole = "";
 
 				for (Bundle.BundleEntryComponent entry : fhirBundle.getEntry()) {
-
-					if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.Observation)) {
+					//patient 4390fdf6-ea03-4e5b-9c79-a27af6fe587a
+					//encounter ebdac583-55d7-4643-8a19-0ab8e699d6b8
+					
+					//patient 5286c163-6e69-40e2-8299-3ebe9b39e023
+					//encounter b1731736-9f4a-4782-82a2-61c18c288d0d
+					if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.Encounter)) {
+						org.hl7.fhir.r4.model.Encounter encounter = (org.hl7.fhir.r4.model.Encounter) entry.getResource();
+						if (encounter.getSubject().getReference().equals("Patient/null")) {
+							String encounterId = encounter.getIdElement().getIdPart();
+							switch (encounterId) {
+							case "ebdac583-55d7-4643-8a19-0ab8e699d6b8":
+								modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "4390fdf6-ea03-4e5b-9c79-a27af6fe587a" + "\"");
+								specialTreatment = true;
+								break;
+							case "b1731736-9f4a-4782-82a2-61c18c288d0d":
+								modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "5286c163-6e69-40e2-8299-3ebe9b39e023" + "\"");
+								specialTreatment = true;
+								break;	
+							default:
+								break;
+							}
+						}
+					}
+					else if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.Observation)) {
 						Observation observation = (Observation) entry.getResource();
 						if (observation.getSubject().getReference().equals("Patient/")
 								|| observation.getEncounter().getReference().equals("Encounter/null")) {
@@ -146,29 +180,31 @@ public class FixNullReferenceInBundle {
 					}
 				}
 
-				IGenericClient fhirClient = fhirClientAuthenticatorService.getFhirClient();
-				Bundle result = (Bundle) fhirClient.search()
-						.byUrl(FhirClientAuthenticatorService.serverBase + "/Encounter?date=ge" + date + "&date=le"
-								+ oneMinuteIncrement + "&participant=" + practitionerRole)
-						.execute();
-				org.hl7.fhir.r4.model.Encounter closestEncounter = null;
-				long secondsDifference = 999999999;
-				for (Bundle.BundleEntryComponent innerEntry : result.getEntry()) {
-					org.hl7.fhir.r4.model.Encounter enc = (org.hl7.fhir.r4.model.Encounter) innerEntry.getResource();
-					String dateEncounter = enc.getPeriod().getStartElement().getValueAsString();
-					long diff = DateUtilityHelper.differenceInSeconds(date, dateEncounter);
-					if (diff < secondsDifference) {
-						closestEncounter = enc;
-						secondsDifference = diff;
+				if(!specialTreatment) {
+					IGenericClient fhirClient = fhirClientAuthenticatorService.getFhirClient();
+					Bundle result = (Bundle) fhirClient.search()
+							.byUrl(FhirClientAuthenticatorService.serverBase + "/Encounter?date=ge" + date + "&date=le"
+									+ oneMinuteIncrement + "&participant=" + practitionerRole)
+							.execute();
+					org.hl7.fhir.r4.model.Encounter closestEncounter = null;
+					long secondsDifference = 999999999;
+					for (Bundle.BundleEntryComponent innerEntry : result.getEntry()) {
+						org.hl7.fhir.r4.model.Encounter enc = (org.hl7.fhir.r4.model.Encounter) innerEntry.getResource();
+						String dateEncounter = enc.getPeriod().getStartElement().getValueAsString();
+						long diff = DateUtilityHelper.differenceInSeconds(date, dateEncounter);
+						if (diff < secondsDifference) {
+							closestEncounter = enc;
+							secondsDifference = diff;
+						}
 					}
+					modifiedBody = modifiedBody.replace("\"reference\":\"Patient/\"", "\"reference\":\"Patient/"
+							+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
+					modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+							+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
+					modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"",
+							"\"reference\":\"Encounter/" + closestEncounter.getIdElement().getIdPart() + "\"");
+					logger.warn(modifiedBody);	
 				}
-				modifiedBody = modifiedBody.replace("\"reference\":\"Patient/\"", "\"reference\":\"Patient/"
-						+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
-				modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
-						+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
-				modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"",
-						"\"reference\":\"Encounter/" + closestEncounter.getIdElement().getIdPart() + "\"");
-				logger.warn(modifiedBody);
 			}
 
 			Map<String, String> modifiedHeaders = new HashMap<>();
