@@ -821,6 +821,7 @@ public class HelperService {
 			asyncRecord.setStatus(ApiAsyncTaskEntity.Status.COMPLETED.name());
 			asyncRecord.setDailyResult(ClobProxy.generateProxy(dailyResultJsonString));
 			asyncRecord.setSummaryResult(ClobProxy.generateProxy(base64SummaryResult));
+			asyncRecord.setLastUpdated(Date.valueOf(LocalDate.now()));
 			datasource.update(asyncRecord);
 		} catch (Exception e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
@@ -845,8 +846,11 @@ public class HelperService {
 		Map<String, String> categoryWithHashCodes = new HashMap<>();
 		List<String> categories = getCategoriesFromAncDailySummaryConfig(env);
 		List<String> hashCodes = new ArrayList<>(Collections.emptyList());
-		String concatenatedFilterValues = filters.entrySet().stream().filter(entry -> entry.getKey().endsWith("Value"))
-				.map(Map.Entry::getValue).collect(Collectors.joining());
+		List<String> hashCodesToBeProcessed = new ArrayList<>(Collections.emptyList());
+		String concatenatedFilterValues = filters.entrySet().stream()
+			.filter(entry -> entry.getKey().endsWith("Value"))
+			.map(Map.Entry::getValue)
+			.collect(Collectors.joining());
 
 		List<ANCDailySummaryConfig> ancDailySummaryConfig = getANCDailySummaryConfigFromFile(env);
 		String hashOfFormattedId = "";
@@ -859,60 +863,67 @@ public class HelperService {
 
 			if (fetchAsyncData == null || fetchAsyncData.isEmpty()) {
 				try {
-					ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(hashOfFormattedId,
-							ApiAsyncTaskEntity.Status.PROCESSING.name(), null, null);
+					ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(hashOfFormattedId, ApiAsyncTaskEntity.Status.PROCESSING.name(), null, null, Date.valueOf(LocalDate.now()));
 					datasource.insert(apiAsyncTaskEntity);
+					// Add the hash code upon successful insertion
+					hashCodesToBeProcessed.add(hashOfFormattedId);
 				} catch (Exception e) {
 					logger.warn(ExceptionUtils.getStackTrace(e));
 				}
-				if (categories.indexOf(category) == (categories.size() - 1)) {
-					saveQueryResultAndHandleException(organizationId, startDate, endDate, filters, hashCodes, env,
-							ancDailySummaryConfig);
+			}
+
+			if(categories.indexOf(category) == (categories.size()-1)) {
+				if(!isApiRequest || !hashCodesToBeProcessed.isEmpty()){
+					saveQueryResultAndHandleException(organizationId, startDate, endDate, filters, hashCodes, env, ancDailySummaryConfig);
+				}
+				else {
+					if(hashCodesToBeProcessed.isEmpty() && fetchAsyncData != null && !fetchAsyncData.isEmpty()){
+							Date lastUpdated = fetchAsyncData.get(0).getLastUpdated();
+							Date currentDate = Date.valueOf(LocalDate.now());
+							// Updates the record when start date is not part of current month but end date is part of current month
+							if(Date.valueOf(endDate).toLocalDate().compareTo(LocalDate.now().withDayOfMonth(1)) >= 0 && Date.valueOf(startDate).toLocalDate().compareTo(LocalDate.now().withDayOfMonth(1)) < 0 && !lastUpdated.equals(currentDate)){
+								ArrayList<ApiAsyncTaskEntity> entitiesToUpdate = datasource.fetchApiAsyncTaskEntityList(hashCodes);
+								for (ApiAsyncTaskEntity asyncRecord : entitiesToUpdate) {
+									asyncRecord.setStatus(ApiAsyncTaskEntity.Status.PROCESSING.name());
+								}
+								datasource.updateObjects(entitiesToUpdate);
+								saveQueryResultAndHandleException(organizationId, startDate, endDate, filters, hashCodes, env, ancDailySummaryConfig);
+							}
+						}
+					}
 				}
 			}
-			// Updates the record when start date is not part of current month but end date
-			// is part of current month
-			else if ((Date.valueOf(endDate).toLocalDate().compareTo(LocalDate.now().withDayOfMonth(1)) >= 0
-					&& Date.valueOf(startDate).toLocalDate().compareTo(LocalDate.now().withDayOfMonth(1)) < 0)
-					| !isApiRequest) {
-				saveQueryResultAndHandleException(organizationId, startDate, endDate, filters, hashCodes, env,
-						ancDailySummaryConfig);
-			}
-		}
 		return categoryWithHashCodes;
 	}
 
 	private void saveQueryResultAndHandleException(String organizationId, String startDate, String endDate,
 			LinkedHashMap<String, String> filters, List<String> hashcodes, String env,
 			List<ANCDailySummaryConfig> ancDailySummaryConfig) {
-		try {
-			saveQueryResult(organizationId, startDate, endDate, filters, hashcodes, env, ancDailySummaryConfig);
-		} catch (FileNotFoundException e) {
-			// Handle the exception, e.g., log it or take appropriate action.
-			e.printStackTrace();
+		ThreadPoolTaskExecutor executor =  asyncConf.asyncExecutor();
+		executor.submit(() -> {
+			try {
+				saveQueryResult(organizationId, startDate, endDate, filters, hashcodes, env, ancDailySummaryConfig);
+			} catch (FileNotFoundException e) {
+				// Handle the exception, e.g., log it or take appropriate action.
+				e.printStackTrace();
+			}
+		});
 		}
+
+
+public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) throws SQLException, IOException {
+	List<DataResultJava> dataResult = new ArrayList<>();
+	for(Map.Entry<String,String> item : categoryWithHashCodes.entrySet()) {
+		ArrayList<ApiAsyncTaskEntity> asyncData = datasource.fetchStatus(item.getValue());
+		if (asyncData == null) return ResponseEntity.ok("Searching in Progress");
+		ApiAsyncTaskEntity asyncRecord = asyncData.get(0);
+		if (asyncRecord.getSummaryResult() == null || asyncRecord.getStatus() == ApiAsyncTaskEntity.Status.PROCESSING.name()) return ResponseEntity.ok("Searching in Progress");
+		String dailyResultInString = convertClobToString(asyncRecord.getDailyResult());
+		String summaryResultInString = convertClobToString(asyncRecord.getSummaryResult());
+		List<Map<String, String>> dailyResult= mapper.readValue(dailyResultInString, new TypeReference<List<Map<String, String>>>() {});
+		dataResult.add(new DataResultJava(item.getKey(),summaryResultInString, dailyResult));
 	}
 
-	public ResponseEntity<?> getAsyncData(Map<String, String> categoryWithHashCodes) throws SQLException, IOException {
-		List<DataResultJava> dataResult = new ArrayList<>();
-		for (Map.Entry<String, String> item : categoryWithHashCodes.entrySet()) {
-			ArrayList<ApiAsyncTaskEntity> asyncData = datasource.fetchStatus(item.getValue());
-			if (asyncData == null)
-				return ResponseEntity.ok("Searching in Progress");
-			ApiAsyncTaskEntity asyncRecord = asyncData.get(0);
-			if (asyncRecord.getSummaryResult() == null)
-				return ResponseEntity.ok("Searching in Progress");
-			String dailyResultInString = convertClobToString(asyncRecord.getDailyResult());
-			String summaryResultInString = convertClobToString(asyncRecord.getSummaryResult());
-			List<Map<String, String>> dailyResult = mapper.readValue(dailyResultInString,
-					new TypeReference<List<Map<String, String>>>() {
-					});
-			dataResult.add(new DataResultJava(item.getKey(), summaryResultInString, dailyResult));
-		}
-		return ResponseEntity.ok(dataResult);
-	}
-
-	@Async("asyncTaskExecutor")
 	public void saveQueryResult(String organizationId, String startDate, String endDate,
 			LinkedHashMap<String, String> filters, List<String> hashcodes, String env,
 			List<ANCDailySummaryConfig> ancDailySummaryConfig) throws FileNotFoundException {
