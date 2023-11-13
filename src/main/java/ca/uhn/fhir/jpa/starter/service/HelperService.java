@@ -911,17 +911,19 @@ public class HelperService {
 		}
 
 
-public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) throws SQLException, IOException {
-	List<DataResultJava> dataResult = new ArrayList<>();
-	for(Map.Entry<String,String> item : categoryWithHashCodes.entrySet()) {
-		ArrayList<ApiAsyncTaskEntity> asyncData = datasource.fetchStatus(item.getValue());
-		if (asyncData == null) return ResponseEntity.ok("Searching in Progress");
-		ApiAsyncTaskEntity asyncRecord = asyncData.get(0);
-		if (asyncRecord.getSummaryResult() == null || asyncRecord.getStatus() == ApiAsyncTaskEntity.Status.PROCESSING.name()) return ResponseEntity.ok("Searching in Progress");
-		String dailyResultInString = convertClobToString(asyncRecord.getDailyResult());
-		String summaryResultInString = convertClobToString(asyncRecord.getSummaryResult());
-		List<Map<String, String>> dailyResult= mapper.readValue(dailyResultInString, new TypeReference<List<Map<String, String>>>() {});
-		dataResult.add(new DataResultJava(item.getKey(),summaryResultInString, dailyResult));
+	public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) throws SQLException, IOException {
+		List<DataResultJava> dataResult = new ArrayList<>();
+		for(Map.Entry<String,String> item : categoryWithHashCodes.entrySet()) {
+			ArrayList<ApiAsyncTaskEntity> asyncData = datasource.fetchStatus(item.getValue());
+			if (asyncData == null) return ResponseEntity.ok("Searching in Progress");
+			ApiAsyncTaskEntity asyncRecord = asyncData.get(0);
+			if (asyncRecord.getSummaryResult() == null || asyncRecord.getStatus() == ApiAsyncTaskEntity.Status.PROCESSING.name()) return ResponseEntity.ok("Searching in Progress");
+			String dailyResultInString = convertClobToString(asyncRecord.getDailyResult());
+			String summaryResultInString = convertClobToString(asyncRecord.getSummaryResult());
+			List<Map<String, String>> dailyResult= mapper.readValue(dailyResultInString, new TypeReference<List<Map<String, String>>>() {});
+			dataResult.add(new DataResultJava(item.getKey(),summaryResultInString, dailyResult));
+		}
+		return  ResponseEntity.ok(dataResult);
 	}
 
 	public void saveQueryResult(String organizationId, String startDate, String endDate,
@@ -2217,6 +2219,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		return dashboardEnvToConfigMap.get(env).getCategoryItem();
 	}
 
+	
 	List<BarChartDefinition> getBarChartItemListFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getBarChartDefinitions();
 	}
