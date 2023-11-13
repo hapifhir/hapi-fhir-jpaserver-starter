@@ -48,11 +48,11 @@ import ca.uhn.fhir.jpa.starter.service.FixNullReferenceInBundle;
 @Component
 public class SignatureInterceptor extends FilterSecurityInterceptor {
 
-	private final FixNullReferenceInBundle fixNullReferenceInBundle;	
+	private final FixNullReferenceInBundle fixNullReferenceInBundle;
 	private final AppProperties appProperties;
 	private Map<String, byte[]> publicKeyCache = new HashMap<>(); // Local cache to store public keys
 
-	public SignatureInterceptor(AppProperties appProperties,FixNullReferenceInBundle fixNullReferenceInBundle) {
+	public SignatureInterceptor(AppProperties appProperties, FixNullReferenceInBundle fixNullReferenceInBundle) {
 		this.appProperties = appProperties;
 		this.fixNullReferenceInBundle = fixNullReferenceInBundle;
 	}
@@ -128,8 +128,9 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 			return;
 		}
 
-		if (httpServletRequest.getMethod().equals("POST")) {
-			HttpServletRequest modifiedRequest = fixNullReferenceInBundle.fixNullReference(httpServletRequest, tokenPayload.getPreferred_username());
+		if (httpServletRequest.getMethod().equals("POST") && !httpServletRequest.getRequestURI().contains("iprd")) {
+			HttpServletRequest modifiedRequest = fixNullReferenceInBundle.fixNullReference(httpServletRequest,
+					tokenPayload.getPreferred_username());
 			chain.doFilter(modifiedRequest, response);
 		} else {
 			chain.doFilter(request, response);
