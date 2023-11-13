@@ -109,7 +109,7 @@ public class HelperService {
 	AsyncConfiguration asyncConf;
 	@Autowired
 	FhirClientAuthenticatorService fhirClientAuthenticatorService;
-	Map <String,DashboardConfigContainer> dashboardEnvToConfigMap = new HashMap<>();
+	Map<String, DashboardConfigContainer> dashboardEnvToConfigMap = new HashMap<>();
 
 	private static final Logger logger = LoggerFactory.getLogger(HelperService.class);
 	private static final long INITIAL_DELAY = 5 * 30000L;
@@ -118,66 +118,73 @@ public class HelperService {
 	private static final long AUTH_INITIAL_DELAY = 25 * 60000L;
 	private static final long AUTH_FIXED_DELAY = 50 * 60000L;
 	private static final long DELAY = 2 * 60000;
-	// todo - change the URLs below once resources are updated as per Implementation Guide
-	private static  String EXTENSION_PLUSCODE_URL = "http://iprdgroup.org/fhir/Extention/location-plus-code";
+	// todo - change the URLs below once resources are updated as per Implementation
+	// Guide
+	private static String EXTENSION_PLUSCODE_URL = "http://iprdgroup.org/fhir/Extention/location-plus-code";
 	private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
 	private static String SMS_EXTENTION_URL = "http://iprdgroup.com/Extentions/sms-sent";
 
 	NotificationDataSource notificationDataSource;
-	LinkedHashMap<String,Pair<List<String>, LinkedHashMap<String, List<String>>>> mapOfIdsAndOrgIdToChildrenMapPair;
-	LinkedHashMap<String,List<OrgItem>> mapOfOrgHierarchy;
+	LinkedHashMap<String, Pair<List<String>, LinkedHashMap<String, List<String>>>> mapOfIdsAndOrgIdToChildrenMapPair;
+	LinkedHashMap<String, List<OrgItem>> mapOfOrgHierarchy;
 	private String lga;
 
 	@PostConstruct
 	public void init() {
 		dashboardEnvToConfigMap = dashboardEnvironmentConfig.getDashboardEnvToConfigMap();
-		mapOfIdsAndOrgIdToChildrenMapPair = new LinkedHashMap<String,Pair<List<String>, LinkedHashMap<String, List<String>>>>();
-		mapOfOrgHierarchy = new LinkedHashMap<String,List<OrgItem>>();
+		mapOfIdsAndOrgIdToChildrenMapPair = new LinkedHashMap<String, Pair<List<String>, LinkedHashMap<String, List<String>>>>();
+		mapOfOrgHierarchy = new LinkedHashMap<String, List<OrgItem>>();
 	}
-	
-	public Pair<List<String>,LinkedHashMap<String,List<String>>> fetchIdsAndOrgIdToChildrenMapPair(String orgId) {
-		if(!mapOfIdsAndOrgIdToChildrenMapPair.containsKey(orgId))
-		{
+
+	public Pair<List<String>, LinkedHashMap<String, List<String>>> fetchIdsAndOrgIdToChildrenMapPair(String orgId) {
+		if (!mapOfIdsAndOrgIdToChildrenMapPair.containsKey(orgId)) {
 			mapOfIdsAndOrgIdToChildrenMapPair.put(orgId, getFacilityIdsAndOrgIdToChildrenMapPair(orgId));
 		}
 		return mapOfIdsAndOrgIdToChildrenMapPair.get(orgId);
 	}
-	
-	private List<OrgItem> fetchOrgHierarchy(String orgId) {
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 
-		if(!mapOfOrgHierarchy.containsKey(orgId))
-		{
-			mapOfOrgHierarchy.put(orgId, ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, orgId));
+	private List<OrgItem> fetchOrgHierarchy(String orgId) {
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl(
+				(GenericClient) fhirClientAuthenticatorService.getFhirClient());
+
+		if (!mapOfOrgHierarchy.containsKey(orgId)) {
+			mapOfOrgHierarchy.put(orgId, ReportGeneratorFactory.INSTANCE.reportGenerator()
+					.getOrganizationHierarchy(fhirClientProvider, orgId));
 		}
 		return mapOfOrgHierarchy.get(orgId);
 	}
-	
+
 	public void refreshMapForOrgId(String orgId) {
 		mapOfIdsAndOrgIdToChildrenMapPair.put(orgId, getFacilityIdsAndOrgIdToChildrenMapPair(orgId));
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
-		mapOfOrgHierarchy.put(orgId, ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, orgId));
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl(
+				(GenericClient) fhirClientAuthenticatorService.getFhirClient());
+		mapOfOrgHierarchy.put(orgId,
+				ReportGeneratorFactory.INSTANCE.reportGenerator().getOrganizationHierarchy(fhirClientProvider, orgId));
 	}
 
 	private GroupRepresentation getKeycloakGroup(String groupName) {
-		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak()
+				.realm(appProperties.getKeycloak_Client_Realm());
 		try {
-			List<GroupRepresentation> groups = realmResource.groups().groups(groupName, 0, Integer.MAX_VALUE, false);
-			if (groups.size() == 0){
+			List<GroupRepresentation> groups = realmResource.groups().groups(groupName, true, 0, 1, false);
+			if (groups.size() == 0) {
 				return null;
 			}
-			return groups.get(0);
-		}
-		catch (Exception e) {
+			return groups.get(0).getName().equals(groupName) ? groups.get(0) : null;
+		} catch (Exception e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 		return null;
 	}
 
-	//Recursive function below. Therefore, keeping counter to identify the depth of hierarchy and update the corresponding group type. 0->facility, 1->ward, 2->lga, 3->state, 4->country
+	// Recursive function below. Therefore, keeping counter to identify the depth of
+	// hierarchy and update the corresponding group type. 0->facility, 1->ward,
+	// 2->lga, 3->state, 4->country
 	private String updateKeycloakGroupAndResource(String[] updatedDetails, String groupId, int counter) {
 
-		//State(0), LGA(1), Ward(2), FacilityUID(3), FacilityCode(4), CountryCode(5), PhoneNumber(6), FacilityName(7), FacilityLevel(8), Ownership(9), Argusoft Identifier(10), Longitude(11), Latitude(12), Pluscode(13)
+		// State(0), LGA(1), Ward(2), FacilityUID(3), FacilityCode(4), CountryCode(5),
+		// PhoneNumber(6), FacilityName(7), FacilityLevel(8), Ownership(9), Argusoft
+		// Identifier(10), Longitude(11), Latitude(12), Pluscode(13)
 		String stateName = updatedDetails[0];
 		String lgaName = updatedDetails[1];
 		String wardName = updatedDetails[2];
@@ -194,44 +201,50 @@ public class HelperService {
 		String pluscode = updatedDetails[13];
 		String country = updatedDetails[14];
 
-		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak()
+				.realm(appProperties.getKeycloak_Client_Realm());
 		try {
 			GroupResource groupResource = realmResource.groups().group(groupId);
 			GroupRepresentation group = groupResource.toRepresentation();
 			Map<String, List<String>> attributes = group.getAttributes();
 			String type = attributes.get("type").get(0);
 			String orgId = attributes.get("organization_id").get(0);
-			String locId = attributes.containsKey("location_id") ? attributes.get("location_id").get(0): null;
+			String locId = attributes.containsKey("location_id") ? attributes.get("location_id").get(0) : null;
 			String parentId = attributes.containsKey("parent") ? attributes.get("parent").get(0) : null;
-			if(type.equals("facility")){
-				updateKeycloakGroupAndResource(updatedDetails, parentId,counter + 1);
+			if (type.equals("facility")) {
+				updateKeycloakGroupAndResource(updatedDetails, parentId, counter + 1);
 				String oldName = attributes.get("facility_name").get(0);
 				String oldOwnership = attributes.get("ownership").get(0);
 				String oldLevel = attributes.get("facility_level").get(0);
-				if(!oldName.equals(facilityName)) attributes.put("facility_name", Arrays.asList(facilityName));
-				if(!oldOwnership.equals(ownership)) attributes.put("ownership", Arrays.asList(ownership));
-				if(!oldLevel.equals(level)) attributes.put("facility_level", Arrays.asList(level));
+				if (!oldName.equals(facilityName))
+					attributes.put("facility_name", Arrays.asList(facilityName));
+				if (!oldOwnership.equals(ownership))
+					attributes.put("ownership", Arrays.asList(ownership));
+				if (!oldLevel.equals(level))
+					attributes.put("facility_level", Arrays.asList(level));
 				groupResource.update(group);
 				updateResource(orgId, Organization.class, updatedDetails, counter);
 				updateResource(locId, Location.class, updatedDetails, counter);
-			}else {
-				if (type.equals("country")) return null;
+			} else {
+				if (type.equals("country"))
+					return null;
 				updateKeycloakGroupAndResource(updatedDetails, parentId, counter + 1);
 				String oldName = group.getName();
-				if (type.equals("state") && oldName.contentEquals(stateName)) return null;
-				if (type.equals("lga") && oldName.contentEquals(lgaName)) return null;
-				if (type.equals("ward") && oldName.contentEquals(wardName)) return null;
+				if (type.equals("state") && oldName.contentEquals(stateName))
+					return null;
+				if (type.equals("lga") && oldName.contentEquals(lgaName))
+					return null;
+				if (type.equals("ward") && oldName.contentEquals(wardName))
+					return null;
 				group.setName(counter == 3 ? stateName : counter == 1 ? wardName : lgaName);
 				groupResource.update(group);
 				updateResource(orgId, Organization.class, updatedDetails, counter);
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 		return null;
 	}
-
 
 	public ResponseEntity<LinkedHashMap<String, Object>> createGroups(MultipartFile file) throws IOException {
 
@@ -242,10 +255,11 @@ public class HelperService {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 		String singleLine;
 		int iteration = 0;
-		String countryId = "", stateId = "", lgaId = "", wardId = "", facilityOrganizationId = "", facilityLocationId = "";
+		String countryId = "", stateId = "", lgaId = "", wardId = "", facilityOrganizationId = "",
+				facilityLocationId = "";
 		String countryGroupId = "", stateGroupId = "", lgaGroupId = "", wardGroupId = "", facilityGroupId = "";
 		while ((singleLine = bufferedReader.readLine()) != null) {
-			if (iteration == 0) { //skip header of CSV file
+			if (iteration == 0) { // skip header of CSV file
 				iteration++;
 				continue;
 			}
@@ -258,7 +272,9 @@ public class HelperService {
 				continue;
 			}
 
-			//State(0), LGA(1), Ward(2), FacilityUID(3), FacilityCode(4), CountryCode(5), PhoneNumber(6), FacilityName(7), FacilityLevel(8), Ownership(9), Argusoft Identifier(10), Longitude(11), Latitude(12), Pluscode(13), Country(14)
+			// State(0), LGA(1), Ward(2), FacilityUID(3), FacilityCode(4), CountryCode(5),
+			// PhoneNumber(6), FacilityName(7), FacilityLevel(8), Ownership(9), Argusoft
+			// Identifier(10), Longitude(11), Latitude(12), Pluscode(13), Country(14)
 			String stateName = csvData[0];
 			String lgaName = csvData[1];
 			String wardName = csvData[2];
@@ -276,13 +292,14 @@ public class HelperService {
 			String countryName = csvData[14];
 
 			if (facilityUID.isEmpty()) {
-				invalidClinics.add("Invalid facilityUID: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+				invalidClinics
+						.add("Invalid facilityUID: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
 				continue;
 			}
 
 			String group_id = null; // Initializing to "no-value"
 			GroupRepresentation keycloakGroup = getKeycloakGroup(facilityUID);
-			if(null != keycloakGroup) {
+			if (null != keycloakGroup) {
 				group_id = keycloakGroup.getId();
 			}
 
@@ -290,90 +307,104 @@ public class HelperService {
 				updateKeycloakGroupAndResource(csvData, group_id, 0);
 			} else {
 				Organization country = FhirResourceTemplateHelper.country(countryName);
-				GroupRepresentation countryGroupRep = KeycloakTemplateHelper.countryGroup(country.getName(), country.getIdElement().getIdPart());
+				GroupRepresentation countryGroupRep = KeycloakTemplateHelper.countryGroup(country.getName(),
+						country.getIdElement().getIdPart());
 				countryGroupId = createKeycloakGroup(countryGroupRep);
 				if (countryGroupId == null) {
-					invalidClinics.add("Group creation failed for state: " + facilityName + "," + countryName + "," + stateName + "," + lgaName + "," + wardName);
+					invalidClinics.add("Group creation failed for state: " + facilityName + "," + countryName + ","
+							+ stateName + "," + lgaName + "," + wardName);
 					continue;
 				}
 				countryId = createResource(countryGroupId, country, Organization.class);
 				if (countryId == null) {
-					invalidClinics.add("Resource creation failed for state: " + facilityName + "," + countryName + "," + stateName + "," + lgaName + "," + wardName);
+					invalidClinics.add("Resource creation failed for state: " + facilityName + "," + countryName + ","
+							+ stateName + "," + lgaName + "," + wardName);
 					continue;
 				}
-				uniqueOrgHierarchySet.add(new OrgHierarchy(countryId,"country",null,null,null,null));
+				uniqueOrgHierarchySet.add(new OrgHierarchy(countryId, "country", null, null, null, null));
 				Organization state = FhirResourceTemplateHelper.state(stateName, countryName, countryId);
-				GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), countryGroupId,state.getIdElement().getIdPart());
+				GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), countryGroupId,
+						state.getIdElement().getIdPart());
 				stateGroupId = createKeycloakGroup(stateGroupRep);
 				if (stateGroupId == null) {
-					invalidClinics.add("Group creation failed for state: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+					invalidClinics.add("Group creation failed for state: " + facilityName + "," + stateName + ","
+							+ lgaName + "," + wardName);
 					continue;
 				}
 				stateId = createResource(stateGroupId, state, Organization.class);
 				if (stateId == null) {
-					invalidClinics.add("Resource creation failed for state: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+					invalidClinics.add("Resource creation failed for state: " + facilityName + "," + stateName + ","
+							+ lgaName + "," + wardName);
 					continue;
 				}
-				uniqueOrgHierarchySet.add(new OrgHierarchy(stateId,"state",countryId,null,null,null));
+				uniqueOrgHierarchySet.add(new OrgHierarchy(stateId, "state", countryId, null, null, null));
 				Organization lga = FhirResourceTemplateHelper.lga(lgaName, stateName, stateId);
-					GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lga.getIdElement().getIdPart());
-					lgaGroupId = createKeycloakGroup(lgaGroupRep);
-					if (lgaGroupId == null) {
-						invalidClinics.add("Group creation failed for LGA: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
-						continue;
-					}
-					lgaId = createResource(lgaGroupId, lga, Organization.class);
-				if (lgaId == null) {
-					invalidClinics.add("Resource creation failed for LGA: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+				GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId,
+						lga.getIdElement().getIdPart());
+				lgaGroupId = createKeycloakGroup(lgaGroupRep);
+				if (lgaGroupId == null) {
+					invalidClinics.add("Group creation failed for LGA: " + facilityName + "," + stateName + ","
+							+ lgaName + "," + wardName);
 					continue;
 				}
-				Organization ward = FhirResourceTemplateHelper.ward(stateName, lgaName, wardName, lgaId);
-					GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, ward.getIdElement().getIdPart());
+				lgaId = createResource(lgaGroupId, lga, Organization.class);
+				if (lgaId == null) {
+					invalidClinics.add("Resource creation failed for LGA: " + facilityName + "," + stateName + ","
+							+ lgaName + "," + wardName);
+					continue;
+				}
+				if (!wardName.isEmpty()) {
+					Organization ward = FhirResourceTemplateHelper.ward(stateName, lgaName, wardName, lgaId);
+					GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId,
+							ward.getIdElement().getIdPart());
 					wardGroupId = createKeycloakGroup(wardGroupRep);
 					if (wardGroupId == null) {
-						invalidClinics.add("Group creation failed for Ward: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+						invalidClinics.add("Group creation failed for Ward: " + facilityName + "," + stateName + ","
+								+ lgaName + "," + wardName);
 						continue;
 					}
-				wardId = createResource(wardGroupId, ward, Organization.class);
-				if (wardId == null) {
-					invalidClinics.add("Resource creation failed for Ward: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+					wardId = createResource(wardGroupId, ward, Organization.class);
+					if (wardId == null) {
+						invalidClinics.add("Resource creation failed for Ward: " + facilityName + "," + stateName + ","
+								+ lgaName + "," + wardName);
+						continue;
+					}
+
+				} else {
+					// Handle Clinics that are at a LGA level eg: mobile clinics
+					wardGroupId = lgaGroupId;
+					wardId = lgaId;
+				}
+				Organization clinicOrganization = FhirResourceTemplateHelper.clinic(facilityName, facilityUID,
+						facilityCode, countryCode, phoneNumber, stateName, lgaName, wardName, type, wardId,
+						csvData[10]);
+				Location clinicLocation = FhirResourceTemplateHelper.clinic(stateName, lgaName, wardName, facilityName,
+						longitude, latitude, pluscode, clinicOrganization.getIdElement().getIdPart());
+				GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(
+						clinicOrganization.getName(), wardGroupId, clinicOrganization.getIdElement().getIdPart(),
+						clinicLocation.getIdElement().getIdPart(), type, ownership, facilityUID, facilityCode,
+						argusoftIdentifier);
+				facilityGroupId = createKeycloakGroup(facilityGroupRep);
+				if (facilityGroupId == null) {
+					invalidClinics.add("Group creation failed for facility: " + facilityName + "," + stateName + ","
+							+ lgaName + "," + wardName);
 					continue;
 				}
-				Organization clinicOrganization = FhirResourceTemplateHelper.clinic(facilityName, facilityUID, facilityCode, countryCode, phoneNumber, stateName, lgaName, wardName, wardId, csvData[10]);
-				Location clinicLocation = FhirResourceTemplateHelper.clinic(stateName, lgaName, wardName, facilityName, longitude, latitude, pluscode, clinicOrganization.getIdElement().getIdPart());
-				GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(
-						clinicOrganization.getName(),
-						wardGroupId,
-						clinicOrganization.getIdElement().getIdPart(),
-						clinicLocation.getIdElement().getIdPart(),
-						type,
-						ownership,
-						facilityUID,
-						facilityCode,
-						argusoftIdentifier
-					);
-					facilityGroupId = createKeycloakGroup(facilityGroupRep);
-					if (facilityGroupId == null) {
-						invalidClinics.add("Group creation failed for facility: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
-						continue;
-					}
 				facilityOrganizationId = createResource(facilityGroupId, clinicOrganization, Organization.class);
 				facilityLocationId = createResource(facilityGroupId, clinicLocation, Location.class);
 				if (facilityOrganizationId == null || facilityLocationId == null) {
-					invalidClinics.add("Resource creation failed for Facility: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+					invalidClinics.add("Resource creation failed for Facility: " + facilityName + "," + stateName + ","
+							+ lgaName + "," + wardName);
 				}
 			}
 		}
 		List<OrgHierarchy> orgHierarchyList = new ArrayList<>(uniqueOrgHierarchySet);
 
 		OrgHierarchy countryOrgHierarchy = orgHierarchyList.stream()
-			.filter(orgHierarchy -> "country".equals(orgHierarchy.getLevel()))
-			.findFirst()
-			.orElse(null);
+				.filter(orgHierarchy -> "country".equals(orgHierarchy.getLevel())).findFirst().orElse(null);
 
 		List<OrgHierarchy> stateOrgHierarchies = orgHierarchyList.stream()
-			.filter(orgHierarchy -> !"country".equals(orgHierarchy.getLevel()))
-			.collect(Collectors.toList());
+				.filter(orgHierarchy -> !"country".equals(orgHierarchy.getLevel())).collect(Collectors.toList());
 
 		if (countryOrgHierarchy != null) {
 			for (OrgHierarchy state : stateOrgHierarchies) {
@@ -389,7 +420,8 @@ public class HelperService {
 		return new ResponseEntity<LinkedHashMap<String, Object>>(map, HttpStatus.OK);
 	}
 
-	public ResponseEntity<LinkedHashMap<String, Object>> createUsers(@RequestParam("file") MultipartFile file) throws Exception {
+	public ResponseEntity<LinkedHashMap<String, Object>> createUsers(@RequestParam("file") MultipartFile file)
+			throws Exception {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		List<String> practitioners = new ArrayList<>();
 		List<String> invalidUsers = new ArrayList<>();
@@ -401,13 +433,14 @@ public class HelperService {
 		String organizationId = "";
 
 		outer: while ((singleLine = bufferedReader.readLine()) != null) {
-			if (iteration == 0) { //Skip header of CSV
+			if (iteration == 0) { // Skip header of CSV
 				iteration++;
 				continue;
 			}
 			String hcwData[] = singleLine.split(",");
-			//firstName(0),lastName(1),email(2),countryCode(3),phoneNumber(4),gender(5),birthDate(6),keycloakUserName(7),
-			// initialPassword(8),state(9),lga(10),ward(11),facilityUID(12),role(13),qualification(14),stateIdentifier(15), Argusoft Identifier(16), Country(17)
+			// firstName(0),lastName(1),email(2),countryCode(3),phoneNumber(4),gender(5),birthDate(6),keycloakUserName(7),
+			// initialPassword(8),state(9),lga(10),ward(11),facilityUID(12),role(13),qualification(14),stateIdentifier(15),
+			// Argusoft Identifier(16), Country(17)
 			String firstName = hcwData[0];
 			String lastName = hcwData[1];
 			String email = hcwData[2];
@@ -444,15 +477,16 @@ public class HelperService {
 			String givenWard = ward;
 			GroupRepresentation keycloakGroup;
 
-
 			Map<String, Integer> levelNameOccurrences = new HashMap<>();
 
 			Map<String, String> levels = new LinkedHashMap<>(); // Use a LinkedHashMap
 			levels.put("countryName", countryName);
 			levels.put("givenState", givenState);
 			levels.put("givenLga", givenLga);
-			levels.put("givenWard", givenWard);
-
+			
+			if (!givenWard.isEmpty()) {
+				levels.put("givenWard", givenWard);
+			}
 			// Count variable occurrences
 			for (String level : levels.values()) {
 				levelNameOccurrences.put(level, levelNameOccurrences.getOrDefault(level, 0) + 1);
@@ -486,44 +520,47 @@ public class HelperService {
 
 				List<String> keysList = new ArrayList<>(levels.keySet());
 
-				//Append the parent level to the level which has same name as parent
+				// Append the parent level to the level which has same name as parent
 				for (String level : levelsWithSameName) {
 					switch (level) {
-						case "givenState" :
-							givenState = countryName + "_" + givenState;
-							keycloakGroup = getKeycloakGroup(givenState);
-							if(null != keycloakGroup && keycloakGroup.getAttributes().get("type").get(0).equals("state")) {
-								state = givenState;
-							} else {
-								map.put("State is not found", s);
-								continue outer;
-							}
+					case "givenState":
+						givenState = countryName + "_" + givenState;
+						keycloakGroup = getKeycloakGroup(givenState);
+						if (null != keycloakGroup && keycloakGroup.getAttributes().get("type").get(0).equals("state")) {
+							state = givenState;
+						} else {
+							map.put("State is not found", s);
+							continue outer;
+						}
 
-						case "givenLga" :
-							givenLga = givenState + "_" + givenLga;
-							keycloakGroup = getKeycloakGroup(givenLga);
-							if(null != keycloakGroup && keycloakGroup.getAttributes().get("type").get(0).equals("lga")) {
-								lga = givenLga;
-							} else {
-								map.put("Lga is not found", s);
-								continue outer;
-							}
+					case "givenLga":
+						givenLga = givenState + "_" + givenLga;
+						keycloakGroup = getKeycloakGroup(givenLga);
+						if (null != keycloakGroup && keycloakGroup.getAttributes().get("type").get(0).equals("lga")) {
+							lga = givenLga;
+						} else {
+							map.put("Lga is not found", s);
+							continue outer;
+						}
 
-						case "givenWard" :
-							givenWard = givenLga + "_" + givenWard;
-							keycloakGroup = getKeycloakGroup(givenWard);
-							if(null != keycloakGroup && keycloakGroup.getAttributes().get("type").get(0).equals("ward")) {
-								ward = givenWard;
-							} else {
-								map.put("Ward is not found", s);
-								continue outer;
-							}
+					case "givenWard":
+						givenWard = givenLga + "_" + givenWard;
+						keycloakGroup = getKeycloakGroup(givenWard);
+						if (null != keycloakGroup && keycloakGroup.getAttributes().get("type").get(0).equals("ward")) {
+							ward = givenWard;
+						} else {
+							map.put("Ward is not found", s);
+							continue outer;
+						}
 					}
 				}
 			}
 
-			if (!(practitioners.contains(firstName) && practitioners.contains(lastName) && practitioners.contains(phoneNumber + countryCode))) {
-				Practitioner practitioner = FhirResourceTemplateHelper.hcw(firstName, lastName, phoneNumber, countryCode, gender, birthDate, state, lga, ward, facilityUID, role, qualification, stateIdentifier, argusoftIdentifier);
+			if (!(practitioners.contains(firstName) && practitioners.contains(lastName)
+					&& practitioners.contains(phoneNumber + countryCode))) {
+				Practitioner practitioner = FhirResourceTemplateHelper.hcw(firstName, lastName, phoneNumber,
+						countryCode, gender, birthDate, state, lga, ward, facilityUID, role, qualification,
+						stateIdentifier, argusoftIdentifier);
 //				practitionerId = createResource(hcw,
 //					Practitioner.class,
 //					Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
@@ -533,9 +570,13 @@ public class HelperService {
 				practitioners.add(practitioner.getName().get(0).getFamily());
 				practitioners.add(practitioner.getName().get(0).getGivenAsSingleString());
 				practitioners.add(practitioner.getTelecom().get(0).getValue());
-				PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(role, qualification, practitioner.getIdElement().getIdPart(), organizationId);
+				PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(role, qualification,
+						practitioner.getIdElement().getIdPart(), organizationId);
 //				practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
-				UserRepresentation user = KeycloakTemplateHelper.user(firstName, lastName, email, keycloakUserName, initialPassword, phoneNumber, countryCode, practitioner.getIdElement().getIdPart(), practitionerRole.getIdElement().getIdPart(), role, state, lga, ward, facilityUID, argusoftIdentifier, countryName);
+				UserRepresentation user = KeycloakTemplateHelper.user(firstName, lastName, email, keycloakUserName,
+						initialPassword, phoneNumber, countryCode, practitioner.getIdElement().getIdPart(),
+						practitionerRole.getIdElement().getIdPart(), role, state, lga, ward, facilityUID,
+						argusoftIdentifier, countryName);
 				String keycloakUserId = createKeycloakUser(user);
 				if (keycloakUserId == null) {
 					map.put("User not created", s);
@@ -543,19 +584,19 @@ public class HelperService {
 					RoleRepresentation KeycloakRoleRepresentation = KeycloakTemplateHelper.role(role);
 					createRoleIfNotExists(KeycloakRoleRepresentation);
 					assignRole(keycloakUserId, KeycloakRoleRepresentation.getName());
-					practitionerId = createResource(
-						keycloakUserId,
-						practitioner,
-						Practitioner.class,
-						Practitioner.GIVEN.matchesExactly().value(practitioner.getName().get(0).getGivenAsSingleString()),
-						Practitioner.FAMILY.matchesExactly().value(practitioner.getName().get(0).getFamily()),
-						Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(), Arrays.asList(countryCode + phoneNumber))
-					);
+					practitionerId = createResource(keycloakUserId, practitioner, Practitioner.class,
+							Practitioner.GIVEN.matchesExactly()
+									.value(practitioner.getName().get(0).getGivenAsSingleString()),
+							Practitioner.FAMILY.matchesExactly().value(practitioner.getName().get(0).getFamily()),
+							Practitioner.TELECOM.exactly().systemAndValues(
+									ContactPoint.ContactPointSystem.PHONE.toCode(),
+									Arrays.asList(countryCode + phoneNumber)));
 					if (practitionerId == null) {
 						invalidUsers.add("Resource creation failed for user: " + s);
 						continue;
 					}
-					practitionerRoleId = createResource(keycloakUserId, practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId("Practitioner/"+practitionerId));
+					practitionerRoleId = createResource(keycloakUserId, practitionerRole, PractitionerRole.class,
+							PractitionerRole.PRACTITIONER.hasId("Practitioner/" + practitionerId));
 					if (practitionerRoleId == null) {
 						invalidUsers.add("Resource creation failed for user: " + s);
 					}
@@ -566,7 +607,8 @@ public class HelperService {
 		return new ResponseEntity<LinkedHashMap<String, Object>>(map, HttpStatus.OK);
 	}
 
-	public ResponseEntity<LinkedHashMap<String, Object>> createDashboardUsers(@RequestParam("file") MultipartFile file) throws Exception {
+	public ResponseEntity<LinkedHashMap<String, Object>> createDashboardUsers(@RequestParam("file") MultipartFile file)
+			throws Exception {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		List<String> practitioners = new ArrayList<>();
 		List<String> invalidUsers = new ArrayList<>();
@@ -615,31 +657,24 @@ public class HelperService {
 				continue;
 			}
 
-			if (practitioners.contains(firstName) && practitioners.contains(lastName) && practitioners.contains(email)) {
-				invalidUsers.add("Practitioner already exists: " + firstName + "," + lastName + "," + userName + "," + email );
+			if (practitioners.contains(firstName) && practitioners.contains(lastName)
+					&& practitioners.contains(email)) {
+				invalidUsers.add(
+						"Practitioner already exists: " + firstName + "," + lastName + "," + userName + "," + email);
 				continue;
 			}
-			Practitioner practitioner = FhirResourceTemplateHelper.user(firstName, lastName, phoneNumber, countryCode, gender, birthDate, organizationName, facilityUID, type.toLowerCase());
+			Practitioner practitioner = FhirResourceTemplateHelper.user(firstName, lastName, phoneNumber, countryCode,
+					gender, birthDate, organizationName, facilityUID, type.toLowerCase());
 			practitioners.add(practitioner.getName().get(0).getFamily());
 			practitioners.add(practitioner.getName().get(0).getGivenAsSingleString());
 			practitioners.add(email);
-			PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(role, "NA", practitioner.getIdElement().getIdPart(), organizationId);
+			PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(role, "NA",
+					practitioner.getIdElement().getIdPart(), organizationId);
 
-			UserRepresentation user = KeycloakTemplateHelper.dashboardUser(
-				firstName,
-				lastName,
-				email,
-				userName,
-				initialPassword,
-				phoneNumber,
-				countryCode,
-				practitioner.getIdElement().getIdPart(),
-				practitionerRole.getIdElement().getIdPart(),
-				facilityUID,
-				role,
-				organizationName,
-				type.toLowerCase()
-			);
+			UserRepresentation user = KeycloakTemplateHelper.dashboardUser(firstName, lastName, email, userName,
+					initialPassword, phoneNumber, countryCode, practitioner.getIdElement().getIdPart(),
+					practitionerRole.getIdElement().getIdPart(), facilityUID, role, organizationName,
+					type.toLowerCase());
 			String keycloakUserId = createKeycloakUser(user);
 			if (keycloakUserId == null) {
 				invalidUsers.add("Failed to create user: " + firstName + " " + lastName + "," + userName + "," + email);
@@ -648,31 +683,27 @@ public class HelperService {
 			RoleRepresentation KeycloakRoleRepresentation = KeycloakTemplateHelper.role(role);
 			createRoleIfNotExists(KeycloakRoleRepresentation);
 			assignRole(keycloakUserId, KeycloakRoleRepresentation.getName());
-			practitionerId = createResource(
-				keycloakUserId,
-				practitioner,
-				Practitioner.class,
-				Practitioner.GIVEN.matchesExactly().value(practitioner.getName().get(0).getGivenAsSingleString()),
-				Practitioner.FAMILY.matchesExactly().value(practitioner.getName().get(0).getFamily()),
-				Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(), Arrays.asList(countryCode + phoneNumber))
-			);
+			practitionerId = createResource(keycloakUserId, practitioner, Practitioner.class,
+					Practitioner.GIVEN.matchesExactly().value(practitioner.getName().get(0).getGivenAsSingleString()),
+					Practitioner.FAMILY.matchesExactly().value(practitioner.getName().get(0).getFamily()),
+					Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),
+							Arrays.asList(countryCode + phoneNumber)));
 			if (practitionerId == null) {
-				invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName + "," + email);
+				invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName
+						+ "," + email);
 				continue;
 			}
 			if (!practitionerId.equals(practitioner.getIdElement().getIdPart())) {
 				// If the practitioner already exists we need to change the reference.
-				// Because in while creating PractitionerRole old previous practitioner id used as reference.
+				// Because in while creating PractitionerRole old previous practitioner id used
+				// as reference.
 				practitionerRole.setId(new IdType("Practitioner", practitionerId));
 			}
-			practitionerRoleId = createResource(
-				keycloakUserId,
-				practitionerRole,
-				PractitionerRole.class,
-				PractitionerRole.PRACTITIONER.hasId("Practitioner/"+practitionerId)
-			);
+			practitionerRoleId = createResource(keycloakUserId, practitionerRole, PractitionerRole.class,
+					PractitionerRole.PRACTITIONER.hasId("Practitioner/" + practitionerId));
 			if (practitionerRoleId == null) {
-				invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName + "," + email);
+				invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName
+						+ "," + email);
 			}
 		}
 		if (invalidUsers.size() > 0) {
@@ -682,27 +713,31 @@ public class HelperService {
 		return new ResponseEntity<LinkedHashMap<String, Object>>(map, HttpStatus.OK);
 	}
 
-	public ResponseEntity<?> getTableData(Long lastUpdated){
+	public ResponseEntity<?> getTableData(Long lastUpdated) {
 		notificationDataSource = NotificationDataSource.getInstance();
-		List<PatientIdentifierEntity> patientInfoResourceEntities = notificationDataSource.getPatientInfoResourceEntityDataBeyondLastUpdated(lastUpdated);
-		return new ResponseEntity<List<PatientIdentifierEntity>>(patientInfoResourceEntities,HttpStatus.OK);
+		List<PatientIdentifierEntity> patientInfoResourceEntities = notificationDataSource
+				.getPatientInfoResourceEntityDataBeyondLastUpdated(lastUpdated);
+		return new ResponseEntity<List<PatientIdentifierEntity>>(patientInfoResourceEntities, HttpStatus.OK);
 	}
 
-	public ResponseEntity<String> computeSyncTime(String practitionerRoleId,String env){
+	public ResponseEntity<String> computeSyncTime(String practitionerRoleId, String env) {
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 		List<Timestamp> facilityWiseTimestamps = new ArrayList<>();
 		notificationDataSource = NotificationDataSource.getInstance();
 
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(
+				organizationId);
 
 		// Get the current date and time
 		Timestamp fiveDaysAgoTimestamp = new Timestamp(DateUtilityHelper.calculateMillisecondsRelativeToCurrentTime(5));
 
-		List<LastSyncEntity> lastSyncData = notificationDataSource.fetchLastSyncEntitiesByOrgs(idsAndOrgIdToChildrenMapPair.first,env,ApiAsyncTaskEntity.Status.COMPLETED.name(),fiveDaysAgoTimestamp);
+		List<LastSyncEntity> lastSyncData = notificationDataSource.fetchLastSyncEntitiesByOrgs(
+				idsAndOrgIdToChildrenMapPair.first, env, ApiAsyncTaskEntity.Status.COMPLETED.name(),
+				fiveDaysAgoTimestamp);
 
 		// Group the data by organization ID
 		Map<String, List<LastSyncEntity>> groupedData = lastSyncData.stream()
-			.collect(Collectors.groupingBy(LastSyncEntity::getOrgId));
+				.collect(Collectors.groupingBy(LastSyncEntity::getOrgId));
 
 		// Sort each group by startDateTime
 		groupedData.values().forEach(list -> list.sort(Comparator.comparing(LastSyncEntity::getStartDateTime)));
@@ -722,14 +757,13 @@ public class HelperService {
 		}
 
 		// Find the oldest timestamp
-		Timestamp oldestTimestamp = facilityWiseTimestamps.stream()
-			.min(Timestamp::compareTo)
-			.orElse(null);
+		Timestamp oldestTimestamp = facilityWiseTimestamps.stream().min(Timestamp::compareTo).orElse(null);
 		if (oldestTimestamp != null) {
 			return ResponseEntity.ok(Utils.calculateAndFormatTimeDifference(oldestTimestamp));
 		}
 		return ResponseEntity.ok("Not found");
 	}
+
 	public ResponseEntity<String> computeFacilitySyncTime(String env, String selectedOrganizationId) {
 		List<String> organizationIds = new ArrayList<>();
 		organizationIds.add(selectedOrganizationId);
@@ -737,11 +771,12 @@ public class HelperService {
 		// Get the current date and time
 		Timestamp fiveDaysAgoTimestamp = new Timestamp(DateUtilityHelper.calculateMillisecondsRelativeToCurrentTime(5));
 
-		List<LastSyncEntity> lastSyncData = notificationDataSource.fetchLastSyncEntitiesByOrgs(organizationIds, env, ApiAsyncTaskEntity.Status.COMPLETED.name(), fiveDaysAgoTimestamp);
+		List<LastSyncEntity> lastSyncData = notificationDataSource.fetchLastSyncEntitiesByOrgs(organizationIds, env,
+				ApiAsyncTaskEntity.Status.COMPLETED.name(), fiveDaysAgoTimestamp);
 
-			// Sort by startDateTime
-			lastSyncData.sort(Comparator.comparing(LastSyncEntity::getStartDateTime));
-			if(!lastSyncData.isEmpty()) {
+		// Sort by startDateTime
+		lastSyncData.sort(Comparator.comparing(LastSyncEntity::getStartDateTime));
+		if (!lastSyncData.isEmpty()) {
 			LastSyncEntity lastEntity = lastSyncData.get(lastSyncData.size() - 1);
 			if (lastEntity != null && lastEntity.getEndDateTime() != null) {
 				return ResponseEntity.ok(Utils.calculateAndFormatTimeDifference(lastEntity.getEndDateTime()));
@@ -750,10 +785,11 @@ public class HelperService {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found");
 	}
 
-
 	public List<GroupRepresentation> getGroupsByUser(String userId) {
-		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
-		List<GroupRepresentation> groups = realmResource.users().get(userId).groups(0, appProperties.getKeycloak_max_group_count(), false);
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak()
+				.realm(appProperties.getKeycloak_Client_Realm());
+		List<GroupRepresentation> groups = realmResource.users().get(userId).groups(0,
+				appProperties.getKeycloak_max_group_count(), false);
 		return groups;
 	}
 
@@ -776,7 +812,8 @@ public class HelperService {
 		byte[] summaryResult = dataResult.getSummaryResult();
 		List<Map<String, String>> dailyResult = dataResult.getDailyResult();
 		String base64SummaryResult = Base64.getEncoder().encodeToString(summaryResult);
-		String dailyResultJsonString = new Gson().toJson(dailyResult); // SPlit into two , one arraylist and one base64Encoded string.
+		String dailyResultJsonString = new Gson().toJson(dailyResult); // SPlit into two , one arraylist and one
+																		// base64Encoded string.
 
 		try {
 			ArrayList asyncData = datasource.fetchStatus(id);
@@ -791,8 +828,7 @@ public class HelperService {
 
 	}
 
-
-	public String convertClobToString (Clob input) throws  IOException, SQLException{
+	public String convertClobToString(Clob input) throws IOException, SQLException {
 		Reader reader = input.getCharacterStream();
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(reader, writer);
@@ -801,19 +837,16 @@ public class HelperService {
 
 	private List<String> getCategoriesFromAncDailySummaryConfig(String env) {
 		List<ANCDailySummaryConfig> ancDailySummaryConfig = getANCDailySummaryConfigFromFile(env);
-		return ancDailySummaryConfig.stream()
-			.map(ANCDailySummaryConfig::getCategoryId)
-			.collect(Collectors.toList());
+		return ancDailySummaryConfig.stream().map(ANCDailySummaryConfig::getCategoryId).collect(Collectors.toList());
 	}
 
-	public Map<String,String> processCategories(String organizationId, String startDate, String endDate, String env, LinkedHashMap<String, String> filters, boolean isApiRequest) {
-		Map<String,String> categoryWithHashCodes = new HashMap<>();
+	public Map<String, String> processCategories(String organizationId, String startDate, String endDate, String env,
+			LinkedHashMap<String, String> filters, boolean isApiRequest) {
+		Map<String, String> categoryWithHashCodes = new HashMap<>();
 		List<String> categories = getCategoriesFromAncDailySummaryConfig(env);
 		List<String> hashCodes = new ArrayList<>(Collections.emptyList());
-		String concatenatedFilterValues = filters.entrySet().stream()
-			.filter(entry -> entry.getKey().endsWith("Value"))
-			.map(Map.Entry::getValue)
-			.collect(Collectors.joining());
+		String concatenatedFilterValues = filters.entrySet().stream().filter(entry -> entry.getKey().endsWith("Value"))
+				.map(Map.Entry::getValue).collect(Collectors.joining());
 
 		List<ANCDailySummaryConfig> ancDailySummaryConfig = getANCDailySummaryConfigFromFile(env);
 		String hashOfFormattedId = "";
@@ -826,24 +859,32 @@ public class HelperService {
 
 			if (fetchAsyncData == null || fetchAsyncData.isEmpty()) {
 				try {
-					ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(hashOfFormattedId, ApiAsyncTaskEntity.Status.PROCESSING.name(), null, null);
+					ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(hashOfFormattedId,
+							ApiAsyncTaskEntity.Status.PROCESSING.name(), null, null);
 					datasource.insert(apiAsyncTaskEntity);
 				} catch (Exception e) {
 					logger.warn(ExceptionUtils.getStackTrace(e));
 				}
-				if(categories.indexOf(category) == (categories.size()-1)) {
-					saveQueryResultAndHandleException(organizationId, startDate, endDate, filters, hashCodes, env, ancDailySummaryConfig);
+				if (categories.indexOf(category) == (categories.size() - 1)) {
+					saveQueryResultAndHandleException(organizationId, startDate, endDate, filters, hashCodes, env,
+							ancDailySummaryConfig);
 				}
 			}
-			// Updates the record when start date is not part of current month but end date is part of current month
-			else if((Date.valueOf(endDate).toLocalDate().compareTo(LocalDate.now().withDayOfMonth(1)) >= 0 && Date.valueOf(startDate).toLocalDate().compareTo(LocalDate.now().withDayOfMonth(1)) < 0) | !isApiRequest){
-				saveQueryResultAndHandleException(organizationId, startDate, endDate, filters, hashCodes, env, ancDailySummaryConfig);
+			// Updates the record when start date is not part of current month but end date
+			// is part of current month
+			else if ((Date.valueOf(endDate).toLocalDate().compareTo(LocalDate.now().withDayOfMonth(1)) >= 0
+					&& Date.valueOf(startDate).toLocalDate().compareTo(LocalDate.now().withDayOfMonth(1)) < 0)
+					| !isApiRequest) {
+				saveQueryResultAndHandleException(organizationId, startDate, endDate, filters, hashCodes, env,
+						ancDailySummaryConfig);
 			}
 		}
 		return categoryWithHashCodes;
 	}
 
-	private void saveQueryResultAndHandleException(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters, List<String> hashcodes, String env, List<ANCDailySummaryConfig> ancDailySummaryConfig) {
+	private void saveQueryResultAndHandleException(String organizationId, String startDate, String endDate,
+			LinkedHashMap<String, String> filters, List<String> hashcodes, String env,
+			List<ANCDailySummaryConfig> ancDailySummaryConfig) {
 		try {
 			saveQueryResult(organizationId, startDate, endDate, filters, hashcodes, env, ancDailySummaryConfig);
 		} catch (FileNotFoundException e) {
@@ -852,52 +893,62 @@ public class HelperService {
 		}
 	}
 
-
-public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) throws SQLException, IOException {
-	List<DataResultJava> dataResult = new ArrayList<>();
-	for(Map.Entry<String,String> item : categoryWithHashCodes.entrySet()) {
-		ArrayList<ApiAsyncTaskEntity> asyncData = datasource.fetchStatus(item.getValue());
-		if (asyncData == null) return ResponseEntity.ok("Searching in Progress");
-		ApiAsyncTaskEntity asyncRecord = asyncData.get(0);
-		if (asyncRecord.getSummaryResult() == null) return ResponseEntity.ok("Searching in Progress");
-		String dailyResultInString = convertClobToString(asyncRecord.getDailyResult());
-		String summaryResultInString = convertClobToString(asyncRecord.getSummaryResult());
-		List<Map<String, String>> dailyResult= mapper.readValue(dailyResultInString, new TypeReference<List<Map<String, String>>>() {});
-		dataResult.add(new DataResultJava(item.getKey(),summaryResultInString, dailyResult));
+	public ResponseEntity<?> getAsyncData(Map<String, String> categoryWithHashCodes) throws SQLException, IOException {
+		List<DataResultJava> dataResult = new ArrayList<>();
+		for (Map.Entry<String, String> item : categoryWithHashCodes.entrySet()) {
+			ArrayList<ApiAsyncTaskEntity> asyncData = datasource.fetchStatus(item.getValue());
+			if (asyncData == null)
+				return ResponseEntity.ok("Searching in Progress");
+			ApiAsyncTaskEntity asyncRecord = asyncData.get(0);
+			if (asyncRecord.getSummaryResult() == null)
+				return ResponseEntity.ok("Searching in Progress");
+			String dailyResultInString = convertClobToString(asyncRecord.getDailyResult());
+			String summaryResultInString = convertClobToString(asyncRecord.getSummaryResult());
+			List<Map<String, String>> dailyResult = mapper.readValue(dailyResultInString,
+					new TypeReference<List<Map<String, String>>>() {
+					});
+			dataResult.add(new DataResultJava(item.getKey(), summaryResultInString, dailyResult));
+		}
+		return ResponseEntity.ok(dataResult);
 	}
-	return  ResponseEntity.ok(dataResult);
-}
 
 	@Async("asyncTaskExecutor")
-	public void saveQueryResult(String organizationId, String startDate, String endDate, LinkedHashMap<String, String> filters, List<String> hashcodes,String env, List<ANCDailySummaryConfig> ancDailySummaryConfig) throws FileNotFoundException {
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
-		List<String> fhirSearchList = getFhirSearchListByFilters(filters,env);
+	public void saveQueryResult(String organizationId, String startDate, String endDate,
+			LinkedHashMap<String, String> filters, List<String> hashcodes, String env,
+			List<ANCDailySummaryConfig> ancDailySummaryConfig) throws FileNotFoundException {
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl(
+				(GenericClient) fhirClientAuthenticatorService.getFhirClient());
+		List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
 		logger.warn("Calling details page function saveQueryResult. StartDate: {} EndDate: {}", startDate, endDate);
 		Long start3 = System.nanoTime();
-		List<DataResult> dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig, fhirSearchList);
-		for(String hashcode : hashcodes){
+		List<DataResult> dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(
+				fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig,
+				fhirSearchList);
+		for (String hashcode : hashcodes) {
 			saveInAsyncTable(dataResult.get(hashcodes.indexOf(hashcode)), hashcode);
 		}
 		Long end3 = System.nanoTime();
 		Double diff3 = ((end3 - start3) / 1e9); // Convert nanoseconds to seconds
-		logger.warn("details page function saveQueryResult ended StartDate: {} EndDate: {} timetaken: {}", startDate, endDate, diff3 );
+		logger.warn("details page function saveQueryResult ended StartDate: {} EndDate: {} timetaken: {}", startDate,
+				endDate, diff3);
 	}
 
-	//@Scheduled(fixedDelay = 300000)
+	// @Scheduled(fixedDelay = 300000)
 	@Scheduled(cron = "0 0 23 * * *")
 	public void refreshSyncForCurrentMonth() {
 		try {
 			List<String> orgIdsForCaching = appProperties.getOrganization_ids_for_caching();
 			List<String> envsForCaching = appProperties.getEnvs_for_caching();
-			for(String orgId : orgIdsForCaching) {
+			for (String orgId : orgIdsForCaching) {
 				for (String envs : envsForCaching) {
-					Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(orgId);
-					cacheDashboardData(idsAndOrgIdToChildrenMapPair.first, String.valueOf(LocalDate.now().minusDays(31)), String.valueOf(LocalDate.now()), envs);
+					Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(
+							orgId);
+					cacheDashboardData(idsAndOrgIdToChildrenMapPair.first,
+							String.valueOf(LocalDate.now().minusDays(31)), String.valueOf(LocalDate.now()), envs);
 				}
 			}
-		}
-		catch (Exception e) {
-			logger.warn("Caching task failed "+ExceptionUtils.getStackTrace(e));
+		} catch (Exception e) {
+			logger.warn("Caching task failed " + ExceptionUtils.getStackTrace(e));
 		}
 	}
 
@@ -907,7 +958,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			List<String> orgIdsForCaching = appProperties.getOrganization_ids_for_caching();
 			List<String> envsForCaching = appProperties.getEnvs_for_caching();
 			LinkedHashMap<String, String> emptyMap = new LinkedHashMap<>();
-			for(String orgId : orgIdsForCaching) {
+			for (String orgId : orgIdsForCaching) {
 				for (String env : envsForCaching) {
 					logger.warn("Caching for details page started ");
 					Date start = Date.valueOf(Date.valueOf(LocalDate.now()).toLocalDate().minusYears(2));
@@ -920,22 +971,21 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 					for (Pair<Date, Date> pair : quarterDatePairList) {
 						processCategories(orgId, pair.first.toString(), pair.second.toString(), env, emptyMap, false);
 					}
-					logger.warn("refreshAsyncTaskStatusTable quarterDatePairList "+quarterDatePairList);
+					logger.warn("refreshAsyncTaskStatusTable quarterDatePairList " + quarterDatePairList);
 				}
 			}
 			logger.warn("Caching for details page completed ");
-		}
-		catch (JDBCException e) {
-			logger.warn(" RefreshAsyncTaskStatusTable Caching task failed "+ExceptionUtils.getStackTrace(e));
+		} catch (JDBCException e) {
+			logger.warn(" RefreshAsyncTaskStatusTable Caching task failed " + ExceptionUtils.getStackTrace(e));
 		}
 	}
-
 
 	@Scheduled(cron = "0 0 23 1 * ?")
 	public void cleanupLastSyncStatusTable() {
 		// Get the current date and time
 		notificationDataSource = NotificationDataSource.getInstance();
-		notificationDataSource.clearLastSyncStatusTable(new Timestamp(DateUtilityHelper.calculateMillisecondsRelativeToCurrentTime(30)));
+		notificationDataSource.clearLastSyncStatusTable(
+				new Timestamp(DateUtilityHelper.calculateMillisecondsRelativeToCurrentTime(30)));
 	}
 
 	public Bundle getEncountersBelowLocation(String locationId) {
@@ -945,18 +995,21 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 
 		while (locationIdIterator.hasNext()) {
 			List<String> tempList = new ArrayList<>();
-			getOrganizationsPartOf(tempList, FhirClientAuthenticatorService.serverBase + "/Location?partof=Location/" + locationIdIterator.next() + "&_elements=id");
+			getOrganizationsPartOf(tempList, FhirClientAuthenticatorService.serverBase + "/Location?partof=Location/"
+					+ locationIdIterator.next() + "&_elements=id");
 			tempList.forEach(item -> {
 				locationIdIterator.add(item);
 				locationIdIterator.previous();
 			});
 		}
 		Bundle batchBundle = generateBatchBundle("/Encounter?location=" + String.join(",", locationIdsList));
-		Bundle responseBundle = fhirClientAuthenticatorService.getFhirClient().transaction().withBundle(batchBundle).prettyPrint().encodedJson().execute();
+		Bundle responseBundle = fhirClientAuthenticatorService.getFhirClient().transaction().withBundle(batchBundle)
+				.prettyPrint().encodedJson().execute();
 		return responseBundle;
 	}
 
-	private Pair<List<String>, LinkedHashMap<String, List<String>>> getFacilityIdsAndOrgIdToChildrenMapPair(String orgId) {
+	private Pair<List<String>, LinkedHashMap<String, List<String>>> getFacilityIdsAndOrgIdToChildrenMapPair(
+			String orgId) {
 		List<String> facilityOrgIdList = new ArrayList<>();
 		List<String> orgIdList = new ArrayList<>();
 		orgIdList.add(orgId);
@@ -967,7 +1020,8 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		while (orgIdIterator.hasNext()) {
 			String tempOrgId = orgIdIterator.next();
 			List<String> childrenList = new ArrayList<>();
-			getOrganizationsPartOf(childrenList, FhirClientAuthenticatorService.serverBase + "/Organization?partof=Organization/" + tempOrgId + "&_elements=id");
+			getOrganizationsPartOf(childrenList, FhirClientAuthenticatorService.serverBase
+					+ "/Organization?partof=Organization/" + tempOrgId + "&_elements=id");
 			childrenList.forEach(item -> {
 				orgIdIterator.add(item);
 				orgIdIterator.previous();
@@ -1000,7 +1054,8 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		while (orgIdIterator.hasNext()) {
 			String tempOrgId = orgIdIterator.next();
 			List<String> childrenList = new ArrayList<>();
-			getOrganizationsPartOf(childrenList, FhirClientAuthenticatorService.serverBase + "/Organization?partof=Organization/" + tempOrgId + "&_elements=id");
+			getOrganizationsPartOf(childrenList, FhirClientAuthenticatorService.serverBase
+					+ "/Organization?partof=Organization/" + tempOrgId + "&_elements=id");
 			childrenList.forEach(item -> {
 				orgIdIterator.add(item);
 				orgIdIterator.previous();
@@ -1022,7 +1077,8 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		while (orgIdIterator.hasNext()) {
 			String tempOrgId = orgIdIterator.next();
 			List<String> childrenList = new ArrayList<>();
-			getOrganizationsPartOf(childrenList, FhirClientAuthenticatorService.serverBase + "/Organization?partof=Organization/" + tempOrgId + "&_elements=id");
+			getOrganizationsPartOf(childrenList, FhirClientAuthenticatorService.serverBase
+					+ "/Organization?partof=Organization/" + tempOrgId + "&_elements=id");
 			childrenList.forEach(item -> {
 				orgIdIterator.add(item);
 				orgIdIterator.previous();
@@ -1043,11 +1099,10 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 	}
 
 	public void getOrganizationsPartOf(List<String> idsList, String url) {
-		Bundle searchBundle = fhirClientAuthenticatorService.getFhirClient().search()
-			.byUrl(url)
-			.returnBundle(Bundle.class)
-			.execute();
-		idsList.addAll(searchBundle.getEntry().stream().map(r -> r.getResource().getIdElement().getIdPart()).collect(Collectors.toList()));
+		Bundle searchBundle = fhirClientAuthenticatorService.getFhirClient().search().byUrl(url)
+				.returnBundle(Bundle.class).execute();
+		idsList.addAll(searchBundle.getEntry().stream().map(r -> r.getResource().getIdElement().getIdPart())
+				.collect(Collectors.toList()));
 		if (searchBundle.hasLink() && bundleContainsNext(searchBundle)) {
 			getOrganizationsPartOf(idsList, getNextUrl(searchBundle.getLink()));
 		}
@@ -1107,6 +1162,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			return ResponseEntity.ok("Error :Bar Config File Not Found");
 		}
 	}
+
 	public ResponseEntity<?> getLineChartDefinitions(String env) {
 		try {
 			List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
@@ -1116,6 +1172,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			return ResponseEntity.ok("Error :Line Config File Not Found");
 		}
 	}
+
 	public ResponseEntity<?> getTabularIndicators(String env) {
 		try {
 			List<TabularItem> indicators = getTabularItemListFromFile(env);
@@ -1130,7 +1187,7 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		try {
 			List<PieChartDefinition> pieChartIndicators = getPieChartItemDefinitionFromFile(env);
 			return ResponseEntity.ok(pieChartIndicators);
-		} catch (NullPointerException e){
+		} catch (NullPointerException e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
 			return ResponseEntity.ok("Error :Pie Chart Config File Not Found");
 		}
@@ -1140,15 +1197,14 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 		int patientCount = 0;
 
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(
+				organizationId);
 		for (String orgId : idsAndOrgIdToChildrenMapPair.first) {
 			patientCount += fhirClientAuthenticatorService.getFhirClient().search()
-				.byUrl("Patient?_has:Encounter:patient:service-provider=" + orgId + "&_count=0")
-				.returnBundle(Bundle.class)
-				.execute()
-				.getTotal();
+					.byUrl("Patient?_has:Encounter:patient:service-provider=" + orgId + "&_count=0")
+					.returnBundle(Bundle.class).execute().getTotal();
 		}
-		return new AnalyticItem("Total number of Patients",String.valueOf(patientCount),null);
+		return new AnalyticItem("Total number of Patients", String.valueOf(patientCount), null);
 	}
 
 	public ResponseEntity<?> getFilters(String env) {
@@ -1166,63 +1222,82 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		return fetchOrgHierarchy(organizationId);
 	}
 
-
-	public ResponseEntity<?> getPieChartDataByPractitionerRoleId(String startDate, String endDate,LinkedHashMap<String,String> filters, String env, String lga){
+	public ResponseEntity<?> getPieChartDataByPractitionerRoleId(String startDate, String endDate,
+			LinkedHashMap<String, String> filters, String env, String lga) {
 		notificationDataSource = NotificationDataSource.getInstance();
 
 		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
 		String organizationId = lga;
 
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(
+				organizationId);
 		List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
 		Date start = Date.valueOf(startDate);
 		Date end = Date.valueOf(endDate);
-		performCachingForPieChartData(pieChartDefinitions, idsAndOrgIdToChildrenMapPair.first, start, end,fhirSearchList);
+		performCachingForPieChartData(pieChartDefinitions, idsAndOrgIdToChildrenMapPair.first, start, end,
+				fhirSearchList);
 		List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
-		logger.warn("leng: facility ids "+facilityIds.size());
+		logger.warn("leng: facility ids " + facilityIds.size());
 		List<PieChartItemDataCollection> pieChartItemDataCollection = new ArrayList<>();
 		for (PieChartDefinition pieChartDefinition : pieChartDefinitions) {
 			List<PieChartItem> pieChartItems = new ArrayList<>();
 			for (PieChartCategoryDefinition pieChartItem : pieChartDefinition.getItem()) {
-				String key = pieChartItem.getFhirPath().getExpression() + String.join(",", fhirSearchList) + pieChartDefinition.getCategoryId();
-				Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(pieChartItem.getFhirPath().getTransformServer(), start, end,
+				String key = pieChartItem.getFhirPath().getExpression() + String.join(",", fhirSearchList)
+						+ pieChartDefinition.getCategoryId();
+				Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(
+						pieChartItem.getFhirPath().getTransformServer(), start, end,
 						Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), facilityIds);
-				pieChartItems.add(new PieChartItem(pieChartItem.getId(), organizationId, pieChartItem.getHeader(), pieChartItem.getName(), String.valueOf(cacheValueSum), pieChartItem.getChartId(), pieChartItem.getColorHex()));
+				pieChartItems.add(new PieChartItem(pieChartItem.getId(), organizationId, pieChartItem.getHeader(),
+						pieChartItem.getName(), String.valueOf(cacheValueSum), pieChartItem.getChartId(),
+						pieChartItem.getColorHex()));
 			}
-			pieChartItemDataCollection.add(new PieChartItemDataCollection(pieChartDefinition.getCategoryId(), pieChartItems));
+			pieChartItemDataCollection
+					.add(new PieChartItemDataCollection(pieChartDefinition.getCategoryId(), pieChartItems));
 		}
 		return ResponseEntity.ok(pieChartItemDataCollection);
 	}
 
-
-	public List<AnalyticItem> getMaternalAnalytics(String organizationId,String env) {
+	public List<AnalyticItem> getMaternalAnalytics(String organizationId, String env) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<AnalyticItem> analyticItems = new ArrayList<>();
 		List<IndicatorItem> analyticsItemListFromFile = getAnalyticsItemListFromFile(env);
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(
+				organizationId);
 
 		Pair<Date, Date> currentWeek = DateUtilityHelper.getCurrentWeekDates();
 		Pair<Date, Date> prevWeek = DateUtilityHelper.getPrevWeekDates();
 
-		performCachingIfNotPresent(analyticsItemListFromFile, idsAndOrgIdToChildrenMapPair.first, prevWeek.first, currentWeek.second, new ArrayList<String>());
+		performCachingIfNotPresent(analyticsItemListFromFile, idsAndOrgIdToChildrenMapPair.first, prevWeek.first,
+				currentWeek.second, new ArrayList<String>());
 		for (IndicatorItem indicator : analyticsItemListFromFile) {
-			Double currentWeekCacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(), currentWeek.first, currentWeek.second,
-				Utils.md5Bytes(indicator.getFhirPath().getExpression().getBytes(StandardCharsets.UTF_8)), idsAndOrgIdToChildrenMapPair.first);
+			Double currentWeekCacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(
+					indicator.getFhirPath().getTransformServer(), currentWeek.first, currentWeek.second,
+					Utils.md5Bytes(indicator.getFhirPath().getExpression().getBytes(StandardCharsets.UTF_8)),
+					idsAndOrgIdToChildrenMapPair.first);
 
-			Double prevWeekCacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(indicator.getFhirPath().getTransformServer(), prevWeek.first, prevWeek.second,
-						Utils.md5Bytes(indicator.getFhirPath().getExpression().getBytes(StandardCharsets.UTF_8)), idsAndOrgIdToChildrenMapPair.first);
+			Double prevWeekCacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(
+					indicator.getFhirPath().getTransformServer(), prevWeek.first, prevWeek.second,
+					Utils.md5Bytes(indicator.getFhirPath().getExpression().getBytes(StandardCharsets.UTF_8)),
+					idsAndOrgIdToChildrenMapPair.first);
 
-			AnalyticComparison comparisonValue = (currentWeekCacheValueSum > prevWeekCacheValueSum) ? AnalyticComparison.POSITIVE_UP : AnalyticComparison.NEGATIVE_DOWN;
+			AnalyticComparison comparisonValue = (currentWeekCacheValueSum > prevWeekCacheValueSum)
+					? AnalyticComparison.POSITIVE_UP
+					: AnalyticComparison.NEGATIVE_DOWN;
 
-			analyticItems.add(new AnalyticItem(indicator.getDescription(), String.valueOf(currentWeekCacheValueSum.intValue()), comparisonValue));
+			analyticItems.add(new AnalyticItem(indicator.getDescription(),
+					String.valueOf(currentWeekCacheValueSum.intValue()), comparisonValue));
 		}
 		return analyticItems;
 	}
 
-	private void performCachingForTabularData(List<TabularItem> indicators, List<String> facilityIds, Date startDate, Date endDate,List<String> fhirSearchList) {
+	private void performCachingForTabularData(List<TabularItem> indicators, List<String> facilityIds, Date startDate,
+			Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
 		notificationDataSource = NotificationDataSource.getInstance();
-		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.md5Bytes((indicatorItem.getFhirPath().getExpression()+filterString).getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
+		List<String> currentIndicatorMD5List = indicators.stream()
+				.map(indicatorItem -> Utils.md5Bytes(
+						(indicatorItem.getFhirPath().getExpression() + filterString).getBytes(StandardCharsets.UTF_8)))
+				.collect(Collectors.toList());
 
 		List<Date> dates = new ArrayList<>();
 		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
@@ -1237,7 +1312,8 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 				nonExistingIndicators.add(indicator);
 			}
 		}
-		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate, nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
+		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate,
+				nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
 		Date start = startDate;
 		Date end = Date.valueOf(endDate.toLocalDate().plusDays(1));
 		while (!start.equals(end)) {
@@ -1246,37 +1322,37 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 			}
 			start = Date.valueOf(start.toLocalDate().plusDays(1));
 		}
-		logger.warn(
-				"Tabular Cache present days: "+presentDates.toString()
-				+"Cache existing indicators: "+existingIndicators.toString()
-				+"Cache missing days: "+dates.toString()
-				+"Cache missing indicators days: "+nonExistingIndicators.toString()
-				);
+		logger.warn("Tabular Cache present days: " + presentDates.toString() + "Cache existing indicators: "
+				+ existingIndicators.toString() + "Cache missing days: " + dates.toString()
+				+ "Cache missing indicators days: " + nonExistingIndicators.toString());
 
 		Date currentDate = new Date(System.currentTimeMillis());
-		boolean currentDateNotInDatesList = Utils.noneMatchDates(dates,currentDate);
+		boolean currentDateNotInDatesList = Utils.noneMatchDates(dates, currentDate);
 
-		for(int count=0; count<facilityIds.size();count++) {
+		for (int count = 0; count < facilityIds.size(); count++) {
 			String facilityId = facilityIds.get(count);
 			final int finalcount = count;
 			dates.forEach(date -> {
-				cachingService.cacheTabularData(facilityId, date, indicators,finalcount,filterString);
+				cachingService.cacheTabularData(facilityId, date, indicators, finalcount, filterString);
 			});
 
-			//Always cache current date data if it lies between start and end date.
-			if (currentDateNotInDatesList && currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
-					cachingService.cacheTabularData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators,0,filterString);
+			// Always cache current date data if it lies between start and end date.
+			if (currentDateNotInDatesList && currentDate.getTime() >= startDate.getTime()
+					&& currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+				cachingService.cacheTabularData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators, 0,
+						filterString);
 			}
 		}
 	}
 
-	private void performCachingForPieChartData(List<PieChartDefinition> pieChartDefinitions, List<String> facilityIds, Date startDate, Date endDate, List<String> fhirSearchList){
+	private void performCachingForPieChartData(List<PieChartDefinition> pieChartDefinitions, List<String> facilityIds,
+			Date startDate, Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
 		List<String> currentIndicatorMd5List = pieChartDefinitions.stream().flatMap(pieChartDefinitionCategory -> {
 			if (pieChartDefinitionCategory != null) {
-				return pieChartDefinitionCategory.getItem().stream().map(pieChartDefinitionItem ->
-					Utils.md5Bytes((pieChartDefinitionItem.getFhirPath().getExpression() + filterString + pieChartDefinitionCategory.getCategoryId()).getBytes(StandardCharsets.UTF_8))
-				);
+				return pieChartDefinitionCategory.getItem().stream().map(pieChartDefinitionItem -> Utils
+						.md5Bytes((pieChartDefinitionItem.getFhirPath().getExpression() + filterString
+								+ pieChartDefinitionCategory.getCategoryId()).getBytes(StandardCharsets.UTF_8)));
 			} else {
 				return Stream.empty();
 			}
@@ -1287,101 +1363,101 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		List<String> existingIndicators = new ArrayList<>();
 		List<String> nonExistingIndicators = new ArrayList<>();
 
-		for (String indicator: currentIndicatorMd5List){
-			if(presentIndicators.contains(indicator)){
+		for (String indicator : currentIndicatorMd5List) {
+			if (presentIndicators.contains(indicator)) {
 				existingIndicators.add(indicator);
 			} else {
 				nonExistingIndicators.add(indicator);
 			}
 		}
-		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate, nonExistingIndicators.isEmpty() ? existingIndicators: nonExistingIndicators, facilityIds);
+		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate,
+				nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
 
 		Date start = startDate;
 		Date end = Date.valueOf(endDate.toLocalDate().plusDays(1));
-		while (!start.equals(end)){
-			if(!presentDates.contains(start)){
+		while (!start.equals(end)) {
+			if (!presentDates.contains(start)) {
 				dates.add(start);
 			}
 			start = Date.valueOf(start.toLocalDate().plusDays(1));
 		}
-		logger.warn(
-			"Pie Cache present days: "+presentDates.toString()
-				+"Cache existing indicators: "+existingIndicators.toString()
-				+"Cache missing days: "+dates.toString()
-				+"Cache missing indicators days: "+nonExistingIndicators.toString()
-		);
+		logger.warn("Pie Cache present days: " + presentDates.toString() + "Cache existing indicators: "
+				+ existingIndicators.toString() + "Cache missing days: " + dates.toString()
+				+ "Cache missing indicators days: " + nonExistingIndicators.toString());
 
 		Date currentDate = new Date(System.currentTimeMillis());
-		boolean currentDateNotInDatesList = Utils.noneMatchDates(dates,currentDate);
+		boolean currentDateNotInDatesList = Utils.noneMatchDates(dates, currentDate);
 
-		for(int count=0; count<facilityIds.size();count++) {
+		for (int count = 0; count < facilityIds.size(); count++) {
 			String facilityId = facilityIds.get(count);
 			final int finalcount = count;
 			dates.forEach(date -> {
-				cachingService.cachePieChartData(facilityId, date, pieChartDefinitions,finalcount,filterString);
+				cachingService.cachePieChartData(facilityId, date, pieChartDefinitions, finalcount, filterString);
 			});
 
-			//Always cache current date data if it lies between start and end date.
-			if (currentDateNotInDatesList && currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
-					cachingService.cachePieChartData(facilityId, DateUtilityHelper.getCurrentSqlDate(), pieChartDefinitions,0,filterString);
+			// Always cache current date data if it lies between start and end date.
+			if (currentDateNotInDatesList && currentDate.getTime() >= startDate.getTime()
+					&& currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+				cachingService.cachePieChartData(facilityId, DateUtilityHelper.getCurrentSqlDate(), pieChartDefinitions,
+						0, filterString);
 			}
 		}
 
 	}
-	public ResponseEntity<?> getTabularDataByPractitionerRoleId(String startDate, String endDate, LinkedHashMap<String, String> filters,String env, String lga) {
+
+	public ResponseEntity<?> getTabularDataByPractitionerRoleId(String startDate, String endDate,
+			LinkedHashMap<String, String> filters, String env, String lga) {
 		List<ScoreCardItem> scoreCardItems = new ArrayList<>();
 		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
-		List<String> fhirSearchList = getFhirSearchListByFilters(filters,env);
+		List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
 
 		String organizationId = lga;
 
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(
+				organizationId);
 		Date start = Date.valueOf(startDate);
 		Date end = Date.valueOf(endDate);
 		notificationDataSource = NotificationDataSource.getInstance();
-		performCachingForTabularData(tabularItemList, idsAndOrgIdToChildrenMapPair.first, start, end,fhirSearchList);
+		performCachingForTabularData(tabularItemList, idsAndOrgIdToChildrenMapPair.first, start, end, fhirSearchList);
 		for (String orgId : idsAndOrgIdToChildrenMapPair.first) {
 			for (TabularItem indicator : tabularItemList) {
-				String key = indicator.getFhirPath().getExpression() +String.join(",", fhirSearchList);
+				String key = indicator.getFhirPath().getExpression() + String.join(",", fhirSearchList);
 				Double cacheValue = 0.0;
-				if(indicator.getFhirPath().getTransformServer() == null) {
-					cacheValue = notificationDataSource
-						.getCacheValueSumByDateRangeIndicatorAndOrgId(start, end,
+				if (indicator.getFhirPath().getTransformServer() == null) {
+					cacheValue = notificationDataSource.getCacheValueSumByDateRangeIndicatorAndOrgId(start, end,
 							Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), orgId);
 				} else {
 					try {
-						cacheValue = (Double) notificationDataSource
-							.getClass()
-							.getMethod(indicator.getFhirPath().getTransformServer(), Date.class, Date.class, String.class, String.class)
-							.invoke(notificationDataSource, start, end, Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), orgId);
+						cacheValue = (Double) notificationDataSource.getClass()
+								.getMethod(indicator.getFhirPath().getTransformServer(), Date.class, Date.class,
+										String.class, String.class)
+								.invoke(notificationDataSource, start, end,
+										Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)), orgId);
 					} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 						logger.warn(ExceptionUtils.getStackTrace(e));
 					}
 				}
-				scoreCardItems.add(new ScoreCardItem(orgId, indicator.getId(),
-					cacheValue.toString(), startDate, endDate));
+				scoreCardItems
+						.add(new ScoreCardItem(orgId, indicator.getId(), cacheValue.toString(), startDate, endDate));
 			}
-		}			
+		}
 		return ResponseEntity.ok(scoreCardItems);
 	}
 
-	public Double calculateAverage(List<String> targetOrgIds,List<OrgIndicatorAverageResult> fromTable, String hashedId, String transformServer){
-		List<OrgIndicatorAverageResult> filteredList = fromTable.stream()
-			.filter(cacheEntity ->
-				targetOrgIds.contains(cacheEntity.getOrgId()) &&
-					hashedId.contains(cacheEntity.getIndicator()) &&
-					(!transformServer.equals("getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgId") || cacheEntity.getAverageValue() > 0.0)
-			)
-			.collect(Collectors.toList());
+	public Double calculateAverage(List<String> targetOrgIds, List<OrgIndicatorAverageResult> fromTable,
+			String hashedId, String transformServer) {
+		List<OrgIndicatorAverageResult> filteredList = fromTable.stream().filter(cacheEntity -> targetOrgIds
+				.contains(cacheEntity.getOrgId()) && hashedId.contains(cacheEntity.getIndicator())
+				&& (!transformServer.equals("getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgId")
+						|| cacheEntity.getAverageValue() > 0.0))
+				.collect(Collectors.toList());
 
 		if (filteredList.isEmpty()) {
 			return 0.0;
 		}
 
 		// Calculate the sum of values
-		double sum = filteredList.stream()
-			.mapToDouble(OrgIndicatorAverageResult::getAverageValue)
-			.sum();
+		double sum = filteredList.stream().mapToDouble(OrgIndicatorAverageResult::getAverageValue).sum();
 
 		if (sum == 0.0) {
 			return 0.0;
@@ -1393,49 +1469,48 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		return average;
 	}
 
-
-	public List<String> getFacilitiesForOrganization(OrgHierarchy targetItem,List<OrgHierarchy> orgHierarchyList){
+	public List<String> getFacilitiesForOrganization(OrgHierarchy targetItem, List<OrgHierarchy> orgHierarchyList) {
 
 		List<String> facilityOrgIds = new ArrayList<>();
 
-			String targetLevel = targetItem.getLevel();
+		String targetLevel = targetItem.getLevel();
 
-			if("facility".equals(targetLevel)) {
-				facilityOrgIds.add(targetItem.getOrgId());
-			} else {
-				// Create a mapping of targetLevel to parent level field
-				Map<String, Function<OrgHierarchy, String>> parentLevelFieldMap = new HashMap<>();
-				parentLevelFieldMap.put("ward", OrgHierarchy::getWardParent);
-				parentLevelFieldMap.put("lga", OrgHierarchy::getLgaParent);
-				parentLevelFieldMap.put("state", OrgHierarchy::getStateParent);
-				parentLevelFieldMap.put("country", OrgHierarchy::getCountryParent);
+		if ("facility".equals(targetLevel)) {
+			facilityOrgIds.add(targetItem.getOrgId());
+		} else {
+			// Create a mapping of targetLevel to parent level field
+			Map<String, Function<OrgHierarchy, String>> parentLevelFieldMap = new HashMap<>();
+			parentLevelFieldMap.put("ward", OrgHierarchy::getWardParent);
+			parentLevelFieldMap.put("lga", OrgHierarchy::getLgaParent);
+			parentLevelFieldMap.put("state", OrgHierarchy::getStateParent);
+			parentLevelFieldMap.put("country", OrgHierarchy::getCountryParent);
 
-				Function<OrgHierarchy, String> targetFunction = parentLevelFieldMap.get(targetLevel);
+			Function<OrgHierarchy, String> targetFunction = parentLevelFieldMap.get(targetLevel);
 
-				if (targetFunction == null) {
-					return Collections.emptyList(); // Handle the case where targetFunction is null
-				}
-
-				String targetValue = targetItem.getOrgId();
-
-					facilityOrgIds.addAll(orgHierarchyList.stream()
-					.filter(orgHierarchy -> "facility".equals(orgHierarchy.getLevel()))
-					.filter(orgHierarchy -> Objects.equals(targetValue, targetFunction.apply(orgHierarchy)))
-					.map(OrgHierarchy::getOrgId)
-					.collect(Collectors.toList()));
+			if (targetFunction == null) {
+				return Collections.emptyList(); // Handle the case where targetFunction is null
 			}
 
-				return facilityOrgIds;
+			String targetValue = targetItem.getOrgId();
+
+			facilityOrgIds
+					.addAll(orgHierarchyList.stream().filter(orgHierarchy -> "facility".equals(orgHierarchy.getLevel()))
+							.filter(orgHierarchy -> Objects.equals(targetValue, targetFunction.apply(orgHierarchy)))
+							.map(OrgHierarchy::getOrgId).collect(Collectors.toList()));
+		}
+
+		return facilityOrgIds;
 	}
 
 	@Async("asyncTaskExecutor")
-	public void saveOrganizationStructure(String organizationId, String parentId){
+	public void saveOrganizationStructure(String organizationId, String parentId) {
 		List<OrgItem> orgItems = fetchOrgHierarchy(organizationId);
 		ArrayList<OrgHierarchy> orgHierarchyList = new ArrayList<>();
 		List<List<OrgHierarchy>> failedChunks = new ArrayList<>();
 		AtomicBoolean exceptionOccurred = new AtomicBoolean(false); // Flag to track exceptions
-		logger.warn("Data insertion into 'organization Hierarchy' table has started for parentId " + parentId + " organizationId " +organizationId);
-		if(orgItems.isEmpty()){
+		logger.warn("Data insertion into 'organization Hierarchy' table has started for parentId " + parentId
+				+ " organizationId " + organizationId);
+		if (orgItems.isEmpty()) {
 			logger.warn("Organization Hierarchy is not found in FHIR server for this OrganizationId " + organizationId);
 			return;
 		}
@@ -1450,32 +1525,35 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 				String wardParent = parentOrgItem.getWardParent();
 
 				switch (parentOrgItem.getLevel()) {
-					case "country":
-						countryParent = parentOrgItem.getOrgId();
-						break;
-					case "state":
-						stateParent = parentOrgItem.getOrgId();
-						break;
-					case "lga":
-						lgaParent = parentOrgItem.getOrgId();
-						break;
-					case "ward":
-						wardParent = parentOrgItem.getOrgId();
-						break;
-					// Additional cases...
-					default:
-						logger.warn("Provided parentId " + parentId + "is not valid");
-						return;
+				case "country":
+					countryParent = parentOrgItem.getOrgId();
+					break;
+				case "state":
+					stateParent = parentOrgItem.getOrgId();
+					break;
+				case "lga":
+					lgaParent = parentOrgItem.getOrgId();
+					break;
+				case "ward":
+					wardParent = parentOrgItem.getOrgId();
+					break;
+				// Additional cases...
+				default:
+					logger.warn("Provided parentId " + parentId + "is not valid");
+					return;
 				}
-				Pair<Boolean, ArrayList<OrgHierarchy>> isValid = createOrgHierarchyRecursive(orgItem, countryParent, stateParent, lgaParent, wardParent, orgHierarchyList);
+				Pair<Boolean, ArrayList<OrgHierarchy>> isValid = createOrgHierarchyRecursive(orgItem, countryParent,
+						stateParent, lgaParent, wardParent, orgHierarchyList);
 				if (isValid.first) {
-						List<OrgHierarchy> dataToInsert = isValid.second;
-						int chunkSize = 100;
-					CountDownLatch latch = new CountDownLatch((int) Math.ceil((double) dataToInsert.size() / chunkSize));
+					List<OrgHierarchy> dataToInsert = isValid.second;
+					int chunkSize = 100;
+					CountDownLatch latch = new CountDownLatch(
+							(int) Math.ceil((double) dataToInsert.size() / chunkSize));
 
-					ThreadPoolTaskExecutor executorDb =  asyncConf.asyncExecutor();
+					ThreadPoolTaskExecutor executorDb = asyncConf.asyncExecutor();
 					for (int i = 0; i < dataToInsert.size(); i += chunkSize) {
-						List<OrgHierarchy> chunk = dataToInsert.subList(i, Math.min(i + chunkSize, dataToInsert.size()));
+						List<OrgHierarchy> chunk = dataToInsert.subList(i,
+								Math.min(i + chunkSize, dataToInsert.size()));
 
 						executorDb.submit(() -> {
 							try {
@@ -1498,24 +1576,27 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 					}
 					if (exceptionOccurred.get()) {
 						for (List<OrgHierarchy> chunk : failedChunks) {
-							logger.warn("Failed to insert data into organization_structure table, chunk: " + chunk.toString()); // Convert the chunk to a string and log it
+							logger.warn("Failed to insert data into organization_structure table, chunk: "
+									+ chunk.toString()); // Convert the chunk to a string and log it
 						}
 						return;
 					}
 
 				} else {
-					logger.warn("Organization type is not valid for this Organization" +organizationId);
+					logger.warn("Organization type is not valid for this Organization" + organizationId);
 					return;
 				}
 			} else {
-				logger.warn("Please provide valid Parent Organization Id" +parentId);
-				return ;
+				logger.warn("Please provide valid Parent Organization Id" + parentId);
+				return;
 			}
 		}
-		logger.warn("Successfully saved Organizations in organization_structure table for parentId " + parentId + "organizationId " +organizationId);
+		logger.warn("Successfully saved Organizations in organization_structure table for parentId " + parentId
+				+ "organizationId " + organizationId);
 	}
 
-	private void handleException(Exception e, List<OrgHierarchy> chunk, List<List<OrgHierarchy>> failedChunks, AtomicBoolean exceptionOccurred) {
+	private void handleException(Exception e, List<OrgHierarchy> chunk, List<List<OrgHierarchy>> failedChunks,
+			AtomicBoolean exceptionOccurred) {
 		if (e instanceof JDBCException || e instanceof DataAccessException || e instanceof PersistenceException) {
 			// Handle exceptions here, e.g., log the error
 			e.printStackTrace();
@@ -1524,14 +1605,8 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		}
 	}
 
-
-	private Pair<Boolean, ArrayList<OrgHierarchy>> createOrgHierarchyRecursive(
-		OrgItem orgItem,
-		String countryParent,
-		String stateParent,
-		String lgaParent,
-		String wardParent,
-		ArrayList<OrgHierarchy> orgHierarchyList) {
+	private Pair<Boolean, ArrayList<OrgHierarchy>> createOrgHierarchyRecursive(OrgItem orgItem, String countryParent,
+			String stateParent, String lgaParent, String wardParent, ArrayList<OrgHierarchy> orgHierarchyList) {
 		String orgId = orgItem.getId().toString();
 		OrgType orgType = orgItem.getType();
 
@@ -1546,17 +1621,20 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		// Process children based on orgType
 		for (OrgItem child : orgItem.getChildren()) {
 			if (OrgType.LGA.equals(child.getType())) {
-				Pair<Boolean, ArrayList<OrgHierarchy>> result = createOrgHierarchyRecursive(child, countryParent, orgId, lgaParent, wardParent, currentLevelList);
+				Pair<Boolean, ArrayList<OrgHierarchy>> result = createOrgHierarchyRecursive(child, countryParent, orgId,
+						lgaParent, wardParent, currentLevelList);
 				if (!result.first) {
 					return Pair.create(false, orgHierarchyList); // Return false if any child is not valid
 				}
 			} else if (OrgType.WARD.equals(child.getType())) {
-				Pair<Boolean, ArrayList<OrgHierarchy>> result = createOrgHierarchyRecursive(child, countryParent, stateParent, orgId, wardParent, currentLevelList);
+				Pair<Boolean, ArrayList<OrgHierarchy>> result = createOrgHierarchyRecursive(child, countryParent,
+						stateParent, orgId, wardParent, currentLevelList);
 				if (!result.first) {
 					return Pair.create(false, orgHierarchyList); // Return false if any child is not valid
 				}
 			} else if (OrgType.FACILITY.equals(child.getType())) {
-				Pair<Boolean, ArrayList<OrgHierarchy>> result = createOrgHierarchyRecursive(child, countryParent, stateParent, lgaParent, orgId, currentLevelList);
+				Pair<Boolean, ArrayList<OrgHierarchy>> result = createOrgHierarchyRecursive(child, countryParent,
+						stateParent, lgaParent, orgId, currentLevelList);
 				if (!result.first) {
 					return Pair.create(false, orgHierarchyList); // Return false if any child is not valid
 				}
@@ -1564,19 +1642,22 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		}
 
 		// Create an OrgHierarchy object and add it to the list
-		orgHierarchyList.add(new OrgHierarchy(orgId, orgType.toString().toLowerCase(), countryParent, stateParent, lgaParent, wardParent));
+		orgHierarchyList.add(new OrgHierarchy(orgId, orgType.toString().toLowerCase(), countryParent, stateParent,
+				lgaParent, wardParent));
 		orgHierarchyList.addAll(currentLevelList);
 
-		// If we reach this point, it means the organization type is valid and all children are valid
+		// If we reach this point, it means the organization type is valid and all
+		// children are valid
 		return Pair.create(true, orgHierarchyList);
 	}
 
-
 	private boolean isValidOrgType(OrgType orgType) {
-		return OrgType.STATE.name().equals(orgType.name()) || OrgType.LGA.name().equals(orgType.name()) || OrgType.WARD.name().equals(orgType.name()) || OrgType.FACILITY.name().equals(orgType.name());
+		return OrgType.STATE.name().equals(orgType.name()) || OrgType.LGA.name().equals(orgType.name())
+				|| OrgType.WARD.name().equals(orgType.name()) || OrgType.FACILITY.name().equals(orgType.name());
 	}
 
-	public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate, ReportType type, LinkedHashMap<String, String> filters, String env) {
+	public ResponseEntity<?> getDataByPractitionerRoleId(String practitionerRoleId, String startDate, String endDate,
+			ReportType type, LinkedHashMap<String, String> filters, String env) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<ScoreCardResponseItem> scoreCardResponseItems = new ArrayList<>();
 		List<String> facilities = new ArrayList<>();
@@ -1584,28 +1665,29 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 
 		Long start3 = System.nanoTime();
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(
+				organizationId);
 		Long end3 = System.nanoTime();
 		Double diff3 = ((end3 - start3) / 1e9); // Convert nanoseconds to seconds
-		logger.warn("getDataByPractitionerRoleId_idsAndOrgIdToChildrenMapPair "+diff3);
+		logger.warn("getDataByPractitionerRoleId_idsAndOrgIdToChildrenMapPair " + diff3);
 
 		Date start = Date.valueOf(startDate);
 		Date end = Date.valueOf(endDate);
 		List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
 		List<IndicatorItem> indicators = new ArrayList<>();
-		scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
+		scoreCardIndicatorItemsList
+				.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
 
 		Long start1 = System.nanoTime();
 		performCachingIfNotPresent(indicators, idsAndOrgIdToChildrenMapPair.first, start, end, fhirSearchList);
 		Long end1 = System.nanoTime();
 		Double diff1 = ((end1 - start1) / 1e9); // Convert nanoseconds to seconds
-		logger.warn("getDataByPractitionerRoleId_performCachingIfNotPresent "+diff1);
+		logger.warn("getDataByPractitionerRoleId_performCachingIfNotPresent " + diff1);
 
 		List<OrgHierarchy> orgHierarchyList = notificationDataSource.getOrganizationalHierarchyList(organizationId);
 		if (!orgHierarchyList.isEmpty()) {
 			Optional<OrgHierarchy> matchingOrg = orgHierarchyList.stream()
-				.filter(org -> org.getOrgId().equals(organizationId))
-				.findFirst();
+					.filter(org -> org.getOrgId().equals(organizationId)).findFirst();
 
 			if (matchingOrg.isPresent()) {
 				OrgHierarchy matchedOrgHierarchyItem = matchingOrg.get();
@@ -1614,44 +1696,44 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		}
 
 		if (!facilities.isEmpty()) {
-			logger.warn("scorecard_numberOfFacilities "+facilities.size());
+			logger.warn("scorecard_numberOfFacilities " + facilities.size());
 			List<String> indicatorIds = new ArrayList<>();
 
 			indicators.forEach(indicatorItem -> {
-				String keyBuilder = new StringBuilder()
-					.append(indicatorItem.getFhirPath().getExpression())
-					.append(String.join(",", fhirSearchList))
-					.toString();
+				String keyBuilder = new StringBuilder().append(indicatorItem.getFhirPath().getExpression())
+						.append(String.join(",", fhirSearchList)).toString();
 				indicatorIds.add(Utils.md5Bytes(keyBuilder.getBytes(StandardCharsets.UTF_8)));
 			});
 
 			List<OrgIndicatorAverageResult> fromTable = new ArrayList<>();
-			ThreadPoolTaskExecutor executor =  asyncConf.asyncExecutor();
+			ThreadPoolTaskExecutor executor = asyncConf.asyncExecutor();
 
 			List<Future<List<OrgIndicatorAverageResult>>> futures = new ArrayList<>();
 
 			// Create a CountDownLatch with the number of tasks
-				CountDownLatch latch = new CountDownLatch((int) Math.ceil((double) facilities.size() / appProperties.getFacility_batch_size()));
+			CountDownLatch latch = new CountDownLatch(
+					(int) Math.ceil((double) facilities.size() / appProperties.getFacility_batch_size()));
 
 			Long start47 = System.nanoTime();
 			for (int i = 0; i < facilities.size(); i += appProperties.getFacility_batch_size()) {
-				List<String> chunk = facilities.subList(i, Math.min(i + appProperties.getFacility_batch_size(), facilities.size()));
+				List<String> chunk = facilities.subList(i,
+						Math.min(i + appProperties.getFacility_batch_size(), facilities.size()));
 
 				// Submit each chunk for parallel processing using the existing thread pool
 				Future<List<OrgIndicatorAverageResult>> future = executor.submit(() -> {
 					try {
-						List<OrgIndicatorAverageResult> result = notificationDataSource.getOrgIndicatorAverageResult(chunk, indicatorIds, start, end);
+						List<OrgIndicatorAverageResult> result = notificationDataSource
+								.getOrgIndicatorAverageResult(chunk, indicatorIds, start, end);
 						return result;
 					} catch (JDBCException | DataAccessException e) {
 						// Handle exceptions here, e.g., log the error
 						e.printStackTrace();
-						return new ArrayList<>();  // Return an empty list in case of exceptions
+						return new ArrayList<>(); // Return an empty list in case of exceptions
 					} catch (PersistenceException e) {
 						// Handle exceptions here, e.g., log the error
 						e.printStackTrace();
-						return new ArrayList<>();  // Return an empty list in case of exceptions
-					}
-					finally {
+						return new ArrayList<>(); // Return an empty list in case of exceptions
+					} finally {
 						latch.countDown(); // Signal that this task is done
 					}
 				});
@@ -1684,23 +1766,22 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 				scoreCardResponseItem.setCategoryId(scoreCardIndicatorItem.getCategoryId());
 				List<ScoreCardItem> scoreCardItems = new ArrayList<>();
 				switch (type) {
-					case summary: {
-						// other categories
-						orgHierarchyList.forEach(orgHierarchyItem -> {
-							// Call the other function with orgHierarchy as an argument
-							List<String> facility = getFacilitiesForOrganization(orgHierarchyItem, orgHierarchyList);
-							for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
-								String keyBuilder = new StringBuilder()
-									.append(indicator.getFhirPath().getExpression())
-									.append(String.join(",", fhirSearchList))
-									.toString();
-								String hashedId = Utils.md5Bytes(keyBuilder.getBytes(StandardCharsets.UTF_8));
-								Double value = calculateAverage(facility,fromTable,hashedId,indicator.getFhirPath().getTransformServer());
-								scoreCardItems.add(new ScoreCardItem(orgHierarchyItem.getOrgId(), indicator.getId(), value.toString(),
-									startDate, endDate));
-							}
-						});
-					}
+				case summary: {
+					// other categories
+					orgHierarchyList.forEach(orgHierarchyItem -> {
+						// Call the other function with orgHierarchy as an argument
+						List<String> facility = getFacilitiesForOrganization(orgHierarchyItem, orgHierarchyList);
+						for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+							String keyBuilder = new StringBuilder().append(indicator.getFhirPath().getExpression())
+									.append(String.join(",", fhirSearchList)).toString();
+							String hashedId = Utils.md5Bytes(keyBuilder.getBytes(StandardCharsets.UTF_8));
+							Double value = calculateAverage(facility, fromTable, hashedId,
+									indicator.getFhirPath().getTransformServer());
+							scoreCardItems.add(new ScoreCardItem(orgHierarchyItem.getOrgId(), indicator.getId(),
+									value.toString(), startDate, endDate));
+						}
+					});
+				}
 				}
 				scoreCardResponseItem.setScoreCardItemList(scoreCardItems);
 				scoreCardResponseItems.add(scoreCardResponseItem);
@@ -1710,41 +1791,51 @@ public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) 
 		return ResponseEntity.ok(scoreCardResponseItems);
 	}
 
-public ResponseEntity<?> getBarChartData(String startDate, String endDate,LinkedHashMap<String,String> filters, String env, String lga) {
-	notificationDataSource = NotificationDataSource.getInstance();
-	List<BarChartItemDataCollection> barChartItems = new ArrayList<>();
-	List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
-	String organizationId = lga;
+	public ResponseEntity<?> getBarChartData(String startDate, String endDate, LinkedHashMap<String, String> filters,
+			String env, String lga) {
+		notificationDataSource = NotificationDataSource.getInstance();
+		List<BarChartItemDataCollection> barChartItems = new ArrayList<>();
+		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
+		String organizationId = lga;
 
-	Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
-	List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(
+				organizationId);
+		List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
 
-	Date start = Date.valueOf(startDate);
-	Date end = Date.valueOf(endDate);
-	List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
-	performCachingIfNotPresentForBarChart(barCharts, idsAndOrgIdToChildrenMapPair.first, start, end,fhirSearchList);
-	for (BarChartDefinition barChart : barCharts) {
-		List<BarComponentCategory> barComponentCategory = new ArrayList<>();
-		for(BarChartItemDefinition barChartItem : barChart.getBarChartItemDefinitions() ) {
-			ArrayList<BarComponentData> barComponents = new ArrayList<BarComponentData>();
-			for(BarComponent barComponent: barChartItem.getBarComponentList()) {
-				String key = barComponent.getFhirPath().getExpression() + String.join(",",fhirSearchList);
-				String md5 = Utils.getMd5KeyForLineCacheMd5WithCategory(key, barComponent.getBarChartItemId(), barChartItem.getChartId(),barChart.getCategoryId());
-				Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(barComponent.getFhirPath().getTransformServer(), start, end,
-						md5, facilityIds);
-				barComponents.add(new BarComponentData(barComponent.getId(), barComponent.getBarChartItemId(),
-					cacheValueSum.toString()));
+		Date start = Date.valueOf(startDate);
+		Date end = Date.valueOf(endDate);
+		List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
+		performCachingIfNotPresentForBarChart(barCharts, idsAndOrgIdToChildrenMapPair.first, start, end,
+				fhirSearchList);
+		for (BarChartDefinition barChart : barCharts) {
+			List<BarComponentCategory> barComponentCategory = new ArrayList<>();
+			for (BarChartItemDefinition barChartItem : barChart.getBarChartItemDefinitions()) {
+				ArrayList<BarComponentData> barComponents = new ArrayList<BarComponentData>();
+				for (BarComponent barComponent : barChartItem.getBarComponentList()) {
+					String key = barComponent.getFhirPath().getExpression() + String.join(",", fhirSearchList);
+					String md5 = Utils.getMd5KeyForLineCacheMd5WithCategory(key, barComponent.getBarChartItemId(),
+							barChartItem.getChartId(), barChart.getCategoryId());
+					Double cacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(
+							barComponent.getFhirPath().getTransformServer(), start, end, md5, facilityIds);
+					barComponents.add(new BarComponentData(barComponent.getId(), barComponent.getBarChartItemId(),
+							cacheValueSum.toString()));
+				}
+				barComponentCategory.add(new BarComponentCategory(barChartItem.getId(), barComponents));
 			}
-			barComponentCategory.add(new BarComponentCategory(barChartItem.getId(), barComponents));
+			barChartItems.add(
+					new BarChartItemDataCollection(barChart.getId(), barChart.getCategoryId(), barComponentCategory));
 		}
-		barChartItems.add(new BarChartItemDataCollection(barChart.getId(),barChart.getCategoryId(),barComponentCategory));
+		return ResponseEntity.ok(barChartItems);
 	}
-	return ResponseEntity.ok(barChartItems);
-}
-	private void performCachingIfNotPresent(List<IndicatorItem> indicators, List<String> facilityIds, Date startDate, Date endDate, List<String> fhirSearchList) {
+
+	private void performCachingIfNotPresent(List<IndicatorItem> indicators, List<String> facilityIds, Date startDate,
+			Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
-		logger.warn("**** "+filterString);
-		List<String> currentIndicatorMD5List = indicators.stream().map(indicatorItem -> Utils.md5Bytes((indicatorItem.getFhirPath().getExpression() +filterString).getBytes(StandardCharsets.UTF_8))).collect(Collectors.toList());
+		logger.warn("**** " + filterString);
+		List<String> currentIndicatorMD5List = indicators.stream()
+				.map(indicatorItem -> Utils.md5Bytes(
+						(indicatorItem.getFhirPath().getExpression() + filterString).getBytes(StandardCharsets.UTF_8)))
+				.collect(Collectors.toList());
 
 		List<Date> dates = new ArrayList<>();
 		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
@@ -1759,7 +1850,8 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 				nonExistingIndicators.add(indicator);
 			}
 		}
-		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate, nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
+		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate,
+				nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
 
 		Date start = startDate;
 		Date end = Date.valueOf(endDate.toLocalDate().plusDays(1));
@@ -1769,37 +1861,37 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 			}
 			start = Date.valueOf(start.toLocalDate().plusDays(1));
 		}
-		logger.warn(
-				"Data Score card Cache present days: "+presentDates.toString()
-				+"Cache existing indicators: "+existingIndicators.toString()
-				+"Cache missing days: "+dates.toString()
-				+"Cache missing indicators days: "+nonExistingIndicators.toString()
-				);
+		logger.warn("Data Score card Cache present days: " + presentDates.toString() + "Cache existing indicators: "
+				+ existingIndicators.toString() + "Cache missing days: " + dates.toString()
+				+ "Cache missing indicators days: " + nonExistingIndicators.toString());
 
 		Date currentDate = new Date(System.currentTimeMillis());
-		boolean currentDateNotInDatesList = Utils.noneMatchDates(dates,currentDate);
+		boolean currentDateNotInDatesList = Utils.noneMatchDates(dates, currentDate);
 
-		for(int count=0; count<facilityIds.size();count++) {
+		for (int count = 0; count < facilityIds.size(); count++) {
 			String facilityId = facilityIds.get(count);
 			dates.forEach(date -> {
-				cachingService.cacheData(facilityId, date, indicators,filterString);
+				cachingService.cacheData(facilityId, date, indicators, filterString);
 			});
-			//Always cache current date data if it lies between start and end date.
-			if (currentDateNotInDatesList && currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
-					cachingService.cacheData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators,filterString);
+			// Always cache current date data if it lies between start and end date.
+			if (currentDateNotInDatesList && currentDate.getTime() >= startDate.getTime()
+					&& currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+				cachingService.cacheData(facilityId, DateUtilityHelper.getCurrentSqlDate(), indicators, filterString);
 			}
 		}
 	}
 
-	private void performCachingIfNotPresentForBarChart(List<BarChartDefinition> barCharts, List<String> facilityIds, Date startDate, Date endDate, List<String> fhirSearchList) {
+	private void performCachingIfNotPresentForBarChart(List<BarChartDefinition> barCharts, List<String> facilityIds,
+			Date startDate, Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
-		List<String> currentIndicatorMD5List = barCharts.stream().flatMap(barChart ->
-			barChart.getBarChartItemDefinitions().stream().flatMap(barItemDefinition ->
-				barItemDefinition.getBarComponentList().stream().map( barComponent ->
-					Utils.getMd5KeyForLineCacheMd5WithCategory(barComponent.getFhirPath().getExpression() +filterString, barComponent.getBarChartItemId(), barItemDefinition.getChartId(),barChart.getCategoryId())
-				)
-			)
-		).collect(Collectors.toList());
+		List<String> currentIndicatorMD5List = barCharts.stream()
+				.flatMap(barChart -> barChart.getBarChartItemDefinitions().stream()
+						.flatMap(barItemDefinition -> barItemDefinition.getBarComponentList().stream()
+								.map(barComponent -> Utils.getMd5KeyForLineCacheMd5WithCategory(
+										barComponent.getFhirPath().getExpression() + filterString,
+										barComponent.getBarChartItemId(), barItemDefinition.getChartId(),
+										barChart.getCategoryId()))))
+				.collect(Collectors.toList());
 
 		List<Date> dates = new ArrayList<>();
 		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
@@ -1813,7 +1905,8 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 				nonExistingIndicators.add(indicator);
 			}
 		}
-		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate, nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
+		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate,
+				nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
 
 		Date start = startDate;
 		Date end = Date.valueOf(endDate.toLocalDate().plusDays(1));
@@ -1823,90 +1916,98 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 			}
 			start = Date.valueOf(start.toLocalDate().plusDays(1));
 		}
-		logger.warn(
-			"Bar Chart Cache Cache present days: "+presentDates.toString()
-				+"Cache existing indicators: "+existingIndicators.toString()
-				+"Cache missing days: "+dates.toString()
-				+"Cache missing indicators days: "+nonExistingIndicators.toString()
-		);
+		logger.warn("Bar Chart Cache Cache present days: " + presentDates.toString() + "Cache existing indicators: "
+				+ existingIndicators.toString() + "Cache missing days: " + dates.toString()
+				+ "Cache missing indicators days: " + nonExistingIndicators.toString());
 
 		Date currentDate = new Date(System.currentTimeMillis());
-		boolean currentDateNotInDatesList = Utils.noneMatchDates(dates,currentDate);
+		boolean currentDateNotInDatesList = Utils.noneMatchDates(dates, currentDate);
 
-		for(int count=0; count<facilityIds.size();count++) {
+		for (int count = 0; count < facilityIds.size(); count++) {
 			String facilityId = facilityIds.get(count);
 			final int finalcount = count;
 			dates.forEach(date -> {
-				cachingService.cacheDataForBarChart(facilityId, date, barCharts,finalcount,filterString);
+				cachingService.cacheDataForBarChart(facilityId, date, barCharts, finalcount, filterString);
 			});
-			//Always cache current date data if it lies between start and end date.
-			if (currentDateNotInDatesList && currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
-				cachingService.cacheDataForBarChart(facilityId, DateUtilityHelper.getCurrentSqlDate(), barCharts,0,filterString);
+			// Always cache current date data if it lies between start and end date.
+			if (currentDateNotInDatesList && currentDate.getTime() >= startDate.getTime()
+					&& currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+				cachingService.cacheDataForBarChart(facilityId, DateUtilityHelper.getCurrentSqlDate(), barCharts, 0,
+						filterString);
 			}
 		}
 	}
-	public ResponseEntity<?> getLineChartByPractitionerRoleId(String startDate, String endDate, ReportType type, LinkedHashMap<String,String> filters, String env, String lga) {
+
+	public ResponseEntity<?> getLineChartByPractitionerRoleId(String startDate, String endDate, ReportType type,
+			LinkedHashMap<String, String> filters, String env, String lga) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<LineChartItemCollection> lineChartItemCollections = new ArrayList<>();
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
 		String organizationId = lga;
 
-		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(organizationId);
+		Pair<List<String>, LinkedHashMap<String, List<String>>> idsAndOrgIdToChildrenMapPair = fetchIdsAndOrgIdToChildrenMapPair(
+				organizationId);
 
 		Date start = Date.valueOf(startDate);
 		Date end = Date.valueOf(endDate);
 		List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
 
-		performCachingForLineChartIfNotPresent(lineCharts, idsAndOrgIdToChildrenMapPair.first, start, end,fhirSearchList);
+		performCachingForLineChartIfNotPresent(lineCharts, idsAndOrgIdToChildrenMapPair.first, start, end,
+				fhirSearchList);
 		List<String> facilityIds = idsAndOrgIdToChildrenMapPair.first;
 		List<Pair<Date, Date>> datePairList = DateUtilityHelper.getDailyDates(start, end);
 		switch (type) {
-			case quarterly: {
-				datePairList = DateUtilityHelper.getQuarterlyDates(start, end);
-				break;
-			}
-			case weekly: {
-				datePairList = DateUtilityHelper.getWeeklyDates(start, end);		
-				break;
-			}
-			case monthly: {
-				datePairList = DateUtilityHelper.getMonthlyDates(start, end);
-				break;
-			}
-			case daily: {
-				datePairList = DateUtilityHelper.getDailyDates(start, end);
-				break;
-			}
+		case quarterly: {
+			datePairList = DateUtilityHelper.getQuarterlyDates(start, end);
+			break;
+		}
+		case weekly: {
+			datePairList = DateUtilityHelper.getWeeklyDates(start, end);
+			break;
+		}
+		case monthly: {
+			datePairList = DateUtilityHelper.getMonthlyDates(start, end);
+			break;
+		}
+		case daily: {
+			datePairList = DateUtilityHelper.getDailyDates(start, end);
+			break;
+		}
 		default:
 			break;
 		}
-		
+
 		for (LineChart lineChart : lineCharts) {
 			ArrayList<LineChartItem> lineChartItems = new ArrayList<LineChartItem>();
 			for (Pair<Date, Date> weekDayPair : datePairList) {
-				for(LineChartItemDefinition lineChartDefinition : lineChart.getLineChartItemDefinitions()) {
-					String key =lineChartDefinition.getFhirPath().getExpression() +String.join(",",fhirSearchList);
-					Double cacheValue = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(lineChartDefinition.getFhirPath().getTransformServer(),weekDayPair.first, weekDayPair.second,
-						Utils.getMd5KeyForLineCacheMd5WithCategory(key, lineChartDefinition.getId(), lineChart.getId(), lineChart.getCategoryId()), facilityIds);
-					lineChartItems.add(new LineChartItem(lineChartDefinition.getId(),String.valueOf(cacheValue), weekDayPair.first.toString(), weekDayPair.second.toString()));
+				for (LineChartItemDefinition lineChartDefinition : lineChart.getLineChartItemDefinitions()) {
+					String key = lineChartDefinition.getFhirPath().getExpression() + String.join(",", fhirSearchList);
+					Double cacheValue = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(
+							lineChartDefinition.getFhirPath().getTransformServer(), weekDayPair.first,
+							weekDayPair.second, Utils.getMd5KeyForLineCacheMd5WithCategory(key,
+									lineChartDefinition.getId(), lineChart.getId(), lineChart.getCategoryId()),
+							facilityIds);
+					lineChartItems.add(new LineChartItem(lineChartDefinition.getId(), String.valueOf(cacheValue),
+							weekDayPair.first.toString(), weekDayPair.second.toString()));
 				}
 			}
-			lineChartItemCollections.add(new LineChartItemCollection(lineChart.getId(),lineChart.getCategoryId(), lineChartItems));
+			lineChartItemCollections
+					.add(new LineChartItemCollection(lineChart.getId(), lineChart.getCategoryId(), lineChartItems));
 		}
 		return ResponseEntity.ok(lineChartItemCollections);
 	}
 
-	private Double getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(String transform, Date start, Date end, String indicator, List<String> orgIds) {
+	private Double getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(String transform, Date start,
+			Date end, String indicator, List<String> orgIds) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		if (transform == null) {
-			return notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end, indicator, orgIds);
-		}
-		else {
+			return notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end, indicator,
+					orgIds);
+		} else {
 			try {
-				return (Double) notificationDataSource
-					.getClass()
-					.getMethod(transform, Date.class, Date.class, String.class, List.class)
-					.invoke(notificationDataSource, start, end, indicator, orgIds);
+				return (Double) notificationDataSource.getClass()
+						.getMethod(transform, Date.class, Date.class, String.class, List.class)
+						.invoke(notificationDataSource, start, end, indicator, orgIds);
 			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 				logger.warn(ExceptionUtils.getStackTrace(e));
 				return 0.0;
@@ -1914,13 +2015,15 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 		}
 	}
 
-	private void performCachingForLineChartIfNotPresent(List<LineChart> lineCharts, List<String> facilityIds, Date startDate, Date endDate, List<String> fhirSearchList) {
+	private void performCachingForLineChartIfNotPresent(List<LineChart> lineCharts, List<String> facilityIds,
+			Date startDate, Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
-		List<String> currentIndicatorMD5List = lineCharts.stream().flatMap(lineChart ->
-				lineChart.getLineChartItemDefinitions().stream().map(lineDefinition->
-						Utils.getMd5KeyForLineCacheMd5WithCategory(lineDefinition.getFhirPath().getExpression() +filterString, lineDefinition.getId(), lineChart.getId(),lineChart.getCategoryId())
-					)
-				).collect(Collectors.toList());
+		List<String> currentIndicatorMD5List = lineCharts.stream()
+				.flatMap(lineChart -> lineChart.getLineChartItemDefinitions().stream()
+						.map(lineDefinition -> Utils.getMd5KeyForLineCacheMd5WithCategory(
+								lineDefinition.getFhirPath().getExpression() + filterString, lineDefinition.getId(),
+								lineChart.getId(), lineChart.getCategoryId())))
+				.collect(Collectors.toList());
 
 		List<Date> dates = new ArrayList<>();
 		List<String> presentIndicators = notificationDataSource.getIndicatorsPresent(startDate, endDate);
@@ -1935,7 +2038,8 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 				nonExistingIndicators.add(indicator);
 			}
 		}
-		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate, nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
+		List<Date> presentDates = notificationDataSource.getDatesPresent(startDate, endDate,
+				nonExistingIndicators.isEmpty() ? existingIndicators : nonExistingIndicators, facilityIds);
 		Date start = startDate;
 		Date end = Date.valueOf(endDate.toLocalDate().plusDays(1));
 		while (!start.equals(end)) {
@@ -1944,25 +2048,24 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 			}
 			start = Date.valueOf(start.toLocalDate().plusDays(1));
 		}
-		logger.warn(
-				"Line Chart Cache present days: "+presentDates.toString()+" "
-				+"Cache existing indicators: "+existingIndicators.toString()+" "
-				+"Cache missing days: "+dates.toString()+" "
-				+"Cache missing indicators days: "+nonExistingIndicators.toString()
-				);
+		logger.warn("Line Chart Cache present days: " + presentDates.toString() + " " + "Cache existing indicators: "
+				+ existingIndicators.toString() + " " + "Cache missing days: " + dates.toString() + " "
+				+ "Cache missing indicators days: " + nonExistingIndicators.toString());
 
 		Date currentDate = new Date(System.currentTimeMillis());
-		boolean currentDateNotInDatesList = Utils.noneMatchDates(dates,currentDate);
+		boolean currentDateNotInDatesList = Utils.noneMatchDates(dates, currentDate);
 
-		for(int count=0; count<facilityIds.size();count++) {
+		for (int count = 0; count < facilityIds.size(); count++) {
 			String facilityId = facilityIds.get(count);
 			final int finalcount = count;
 			dates.forEach(date -> {
-				cachingService.cacheDataLineChart(facilityId, date, lineCharts,finalcount,filterString);
+				cachingService.cacheDataLineChart(facilityId, date, lineCharts, finalcount, filterString);
 			});
-			//Always cache current date data if it lies between start and end date.
-			if (currentDateNotInDatesList && currentDate.getTime() >= startDate.getTime() && currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
-				cachingService.cacheDataLineChart(facilityId, DateUtilityHelper.getCurrentSqlDate(), lineCharts,0,filterString);
+			// Always cache current date data if it lies between start and end date.
+			if (currentDateNotInDatesList && currentDate.getTime() >= startDate.getTime()
+					&& currentDate.getTime() <= Date.valueOf(endDate.toLocalDate().plusDays(1)).getTime()) {
+				cachingService.cacheDataLineChart(facilityId, DateUtilityHelper.getCurrentSqlDate(), lineCharts, 0,
+						filterString);
 			}
 		}
 	}
@@ -1971,49 +2074,55 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 		List<ScoreCardIndicatorItem> scoreCardIndicatorItemsList = getIndicatorItemListFromFile(env);
 		List<IndicatorItem> analyticsItemListFromFile = getAnalyticsItemListFromFile(env);
 		List<IndicatorItem> indicators = new ArrayList<>();
-		scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
+		scoreCardIndicatorItemsList
+				.forEach(scoreCardIndicatorItem -> indicators.addAll(scoreCardIndicatorItem.getIndicators()));
 		indicators.addAll(analyticsItemListFromFile);
 		List<PieChartDefinition> pieChartDefinitions = getPieChartItemDefinitionFromFile(env);
 		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
 		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
-		ThreadPoolTaskExecutor executor =  asyncConf.asyncExecutor();
-		HashMap <String,Pair<Long,Long>> orgToTiming = new HashMap();
+		ThreadPoolTaskExecutor executor = asyncConf.asyncExecutor();
+		HashMap<String, Pair<Long, Long>> orgToTiming = new HashMap();
 		cachingService.cacheMapData(facilities, start, end);
-		List<List<String>> facilityBatches = Utils.partitionFacilities(facilities, appProperties.getExecutor_max_pool_size());
+		List<List<String>> facilityBatches = Utils.partitionFacilities(facilities,
+				appProperties.getExecutor_max_pool_size());
 		int count = 0;
 		long startTime = System.nanoTime();
 		List<Future<?>> futures = new ArrayList<Future<?>>();
 		for (List<String> facilityBatch : facilityBatches) {
-			count+=1;
+			count += 1;
 			final int countFinal = count;
-			 Runnable worker = new Runnable() {
-					@Override
-					public void run() {
+			Runnable worker = new Runnable() {
+				@Override
+				public void run() {
 					for (String facilityId : facilityBatch) {
 						Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 						Date startDate = Date.valueOf(start);
-						LastSyncEntity lastSyncEntity = new LastSyncEntity(facilityId, ApiAsyncTaskEntity.Status.PROCESSING.name(), env, new Timestamp(System.currentTimeMillis()), null);
+						LastSyncEntity lastSyncEntity = new LastSyncEntity(facilityId,
+								ApiAsyncTaskEntity.Status.PROCESSING.name(), env,
+								new Timestamp(System.currentTimeMillis()), null);
 						datasource.insert(lastSyncEntity);
-						cacheDashboardData(facilityId, startDate,endDate, indicators, barCharts, tabularItemList, lineCharts, pieChartDefinitions,countFinal,orgToTiming,env);
-						}
+						cacheDashboardData(facilityId, startDate, endDate, indicators, barCharts, tabularItemList,
+								lineCharts, pieChartDefinitions, countFinal, orgToTiming, env);
 					}
-				};
-			 executor.submit(worker);
+				}
+			};
+			executor.submit(worker);
 		}
 	}
 
-	
-	List<String> getFhirSearchListByFilters(LinkedHashMap<String, String> filters,String env) {
+	List<String> getFhirSearchListByFilters(LinkedHashMap<String, String> filters, String env) {
 		List<String> fhirSearchList = new ArrayList<>();
 		List<FilterItem> filterItemList = getFilterItemListFromFile(env);
 		for (int i = 0; i <= filters.size() - 2; i += 2) {
 			int keyIndex = i / 2;
 			String id = filters.get("filter" + String.valueOf(keyIndex + 1) + "Id");
 			String value = filters.get("filter" + String.valueOf(keyIndex + 1) + "Value");
-			FilterItem filterItem = filterItemList.stream().filter(item -> item.getId().equals(id)).findFirst().orElse(null);
+			FilterItem filterItem = filterItemList.stream().filter(item -> item.getId().equals(id)).findFirst()
+					.orElse(null);
 			if (filterItem != null) {
-				FilterOptions filterOption = filterItem.getOptions().stream().filter(option -> option.getId().equals(value)).findFirst().orElse(null);
+				FilterOptions filterOption = filterItem.getOptions().stream()
+						.filter(option -> option.getId().equals(value)).findFirst().orElse(null);
 				if (filterOption != null) {
 					fhirSearchList.add(filterOption.getFhirSearch());
 				}
@@ -2022,41 +2131,40 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 		return fhirSearchList;
 	}
 
-	
-
-	public void cacheDashboardData(String orgId, Date startDate, Date endDate, List<IndicatorItem> indicators, List<BarChartDefinition> barCharts, List<TabularItem> tabularItems, List<LineChart> lineCharts, List<PieChartDefinition> pieChartDefinitions,int count,HashMap <String,Pair<Long,Long>> orgToTiming, String env ) {
+	public void cacheDashboardData(String orgId, Date startDate, Date endDate, List<IndicatorItem> indicators,
+			List<BarChartDefinition> barCharts, List<TabularItem> tabularItems, List<LineChart> lineCharts,
+			List<PieChartDefinition> pieChartDefinitions, int count, HashMap<String, Pair<Long, Long>> orgToTiming,
+			String env) {
 		notificationDataSource = NotificationDataSource.getInstance();
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl(
+				(GenericClient) fhirClientAuthenticatorService.getFhirClient());
 		DashboardModel dashboard = ReportGeneratorFactory.INSTANCE.reportGenerator().getOverallDataToCache(
-			fhirClientProvider,
-			orgId,
-			new DateRange(startDate.toString(), endDate.toString()),
-			indicators,
-			lineCharts,
-			barCharts,
-			tabularItems,
-			pieChartDefinitions,
-			Collections.emptyList()
-		);
+				fhirClientProvider, orgId, new DateRange(startDate.toString(), endDate.toString()), indicators,
+				lineCharts, barCharts, tabularItems, pieChartDefinitions, Collections.emptyList());
 //		ThreadPoolTaskExecutor cacheExecutor =  asyncConf.cacheExecutor();
 
 //		Runnable worker = new Runnable() {
 //			@Override
 //			public void run() {
-				Date currentDate = startDate;
-				Double diff = 0.0;
-				while(!currentDate.equals(endDate)) {
-					Long start = System.nanoTime();
-					cachingService.cacheData(orgId, currentDate, indicators,count,dashboard.getScoreCardItemList(),"");
-					cachingService.cacheDataForBarChart(orgId, currentDate, barCharts,count,dashboard.getBarChartItemCollectionList(),"");
-					cachingService.cacheDataLineChart(orgId, currentDate, lineCharts,count,dashboard.getLineChartItemCollections(),"");
-					cachingService.cachePieChartData(orgId, currentDate, pieChartDefinitions,count,dashboard.getPieChartItemList(),"");
-					cachingService.cacheTabularData(orgId, currentDate, tabularItems,count,dashboard.getTabularItemList(),"");
-					currentDate = Date.valueOf(currentDate.toLocalDate().plusDays(1));
-					Long end = System.nanoTime();
-					diff+= (end-start)/1000000000.0;
-				}
-		List<LastSyncEntity> lastSyncData = datasource.getEntitiesByOrgEnvStatus(orgId,env,ApiAsyncTaskEntity.Status.PROCESSING.name());
+		Date currentDate = startDate;
+		Double diff = 0.0;
+		while (!currentDate.equals(endDate)) {
+			Long start = System.nanoTime();
+			cachingService.cacheData(orgId, currentDate, indicators, count, dashboard.getScoreCardItemList(), "");
+			cachingService.cacheDataForBarChart(orgId, currentDate, barCharts, count,
+					dashboard.getBarChartItemCollectionList(), "");
+			cachingService.cacheDataLineChart(orgId, currentDate, lineCharts, count,
+					dashboard.getLineChartItemCollections(), "");
+			cachingService.cachePieChartData(orgId, currentDate, pieChartDefinitions, count,
+					dashboard.getPieChartItemList(), "");
+			cachingService.cacheTabularData(orgId, currentDate, tabularItems, count, dashboard.getTabularItemList(),
+					"");
+			currentDate = Date.valueOf(currentDate.toLocalDate().plusDays(1));
+			Long end = System.nanoTime();
+			diff += (end - start) / 1000000000.0;
+		}
+		List<LastSyncEntity> lastSyncData = datasource.getEntitiesByOrgEnvStatus(orgId, env,
+				ApiAsyncTaskEntity.Status.PROCESSING.name());
 
 		try {
 			if (!lastSyncData.isEmpty()) {
@@ -2065,17 +2173,15 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 				lastSyncRecord.setStatus(ApiAsyncTaskEntity.Status.COMPLETED.name());
 				datasource.update(lastSyncRecord);
 			}
-				} catch (HibernateException e) {
-					logger.warn(ExceptionUtils.getStackTrace(e));
-				}
-			   logger.warn("ALL Dates for org ****** "+orgId+" "+String.valueOf(diff));
+		} catch (HibernateException e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+		}
+		logger.warn("ALL Dates for org ****** " + orgId + " " + String.valueOf(diff));
 //			}
 //		};
 //		cacheExecutor.submit(worker);
 	}
 
-	
-	
 //	@Scheduled(fixedDelay = 24 * DELAY, initialDelay = DELAY)
 //	protected void cacheDailyData() {
 //		Map<String, DashboardConfigContainer> dashboardEnvToConfigMap = dashboardEnvironmentConfig.getDashboardEnvToConfigMap();
@@ -2092,44 +2198,46 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 		return dashboardEnvToConfigMap.get(env).getFilterItems();
 	}
 
-	List<ScoreCardIndicatorItem> getIndicatorItemListFromFile(String env) throws NullPointerException{
+	List<ScoreCardIndicatorItem> getIndicatorItemListFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getScoreCardIndicatorItems();
 	}
 
-	CategoryItem getCategoriesFromFile(String env) throws NullPointerException{
+	CategoryItem getCategoriesFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getCategoryItem();
 	}
 
-	List<BarChartDefinition> getBarChartItemListFromFile(String env) throws NullPointerException{
+	List<BarChartDefinition> getBarChartItemListFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getBarChartDefinitions();
 	}
 
-	List<PieChartDefinition> getPieChartItemDefinitionFromFile(String env) throws NullPointerException{
+	List<PieChartDefinition> getPieChartItemDefinitionFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getPieChartDefinitions();
 	}
 
-	List<LineChart> getLineChartDefinitionsItemListFromFile(String env) throws NullPointerException{
+	List<LineChart> getLineChartDefinitionsItemListFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getLineCharts();
 	}
-	
-	List<TabularItem> getTabularItemListFromFile(String env) throws NullPointerException{
+
+	List<TabularItem> getTabularItemListFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getTabularItems();
 	}
 
-	List<IndicatorItem> getAnalyticsItemListFromFile(String env) throws NullPointerException{
+	List<IndicatorItem> getAnalyticsItemListFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getAnalyticsIndicatorItems();
 	}
 
-	public List<ANCDailySummaryConfig> getANCDailySummaryConfigFromFile(String env) throws NullPointerException{
+	public List<ANCDailySummaryConfig> getANCDailySummaryConfigFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getAncDailySummaryConfig();
 	}
-	
+
 	public List<OrgItem> getOrganizationHierarchy(String organizationId) {
 		return fetchOrgHierarchy(organizationId);
 	}
 
 	public String getOrganizationIdByPractitionerRoleId(String practitionerRoleId) {
-		Bundle bundle = fhirClientAuthenticatorService.getFhirClient().search().forResource(PractitionerRole.class).where(PractitionerRole.RES_ID.exactly().identifier(practitionerRoleId)).returnBundle(Bundle.class).execute();
+		Bundle bundle = fhirClientAuthenticatorService.getFhirClient().search().forResource(PractitionerRole.class)
+				.where(PractitionerRole.RES_ID.exactly().identifier(practitionerRoleId)).returnBundle(Bundle.class)
+				.execute();
 		if (!bundle.hasEntry()) {
 			return null;
 		}
@@ -2139,8 +2247,10 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 
 	public Organization getOrganizationResourceByPractitionerRoleId(String practitionerRoleId) {
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
-		if (organizationId == null) return null;
-		Bundle bundle = fhirClientAuthenticatorService.getFhirClient().search().forResource(Organization.class).where(Organization.RES_ID.exactly().identifier(organizationId)).returnBundle(Bundle.class).execute();
+		if (organizationId == null)
+			return null;
+		Bundle bundle = fhirClientAuthenticatorService.getFhirClient().search().forResource(Organization.class)
+				.where(Organization.RES_ID.exactly().identifier(organizationId)).returnBundle(Bundle.class).execute();
 		if (!bundle.hasEntry()) {
 			return null;
 		}
@@ -2152,7 +2262,7 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 		Bundle organizationBundle = new Bundle();
 		String queryPath = "/Organization?";
 		queryPath += "identifier=" + facilityUID + "";
-		fhirUtils.getBundleBySearchUrl(organizationBundle, queryPath,fhirClientAuthenticatorService.getFhirClient());
+		fhirUtils.getBundleBySearchUrl(organizationBundle, queryPath, fhirClientAuthenticatorService.getFhirClient());
 		if (organizationBundle.hasEntry() && organizationBundle.getEntry().size() > 0) {
 			Organization organization = (Organization) organizationBundle.getEntry().get(0).getResource();
 			return organization.getIdElement().getIdPart();
@@ -2162,13 +2272,11 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 
 	public String getOrganizationIdByOrganizationNameAndType(String name, String type) {
 
-		Bundle organizationBundle = fhirClientAuthenticatorService.getFhirClient()
-			.search()
-			.forResource(Organization.class)
-			.where(Organization.NAME.matchesExactly().value(name))
-			.and(new TokenClientParam("_tag").exactly().systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", type))
-			.returnBundle(Bundle.class)
-			.execute();
+		Bundle organizationBundle = fhirClientAuthenticatorService.getFhirClient().search()
+				.forResource(Organization.class).where(Organization.NAME.matchesExactly().value(name))
+				.and(new TokenClientParam("_tag").exactly()
+						.systemAndCode("https://www.iprdgroup.com/ValueSet/OrganizationType/tags", type))
+				.returnBundle(Bundle.class).execute();
 
 		if (organizationBundle.hasEntry() && organizationBundle.getEntry().size() > 0) {
 			return organizationBundle.getEntry().get(0).getResource().getIdElement().getIdPart();
@@ -2182,7 +2290,8 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 			URL url = new URL(URLDecoder.decode(invalidURLString, StandardCharsets.UTF_8.toString()));
 
 			// Use the methods of the URL class to achieve a generic solution
-			URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+			URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(),
+					url.getQuery(), url.getRef());
 			// return String or
 			// uri.toURL() to return URL object
 			return uri.toString();
@@ -2192,11 +2301,14 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 	}
 
 	private String createKeycloakGroup(GroupRepresentation groupRep) {
-		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
-		List<GroupRepresentation> groups = realmResource.groups().groups(groupRep.getName(), 0, Integer.MAX_VALUE, false);
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak()
+				.realm(appProperties.getKeycloak_Client_Realm());
+		List<GroupRepresentation> groups = realmResource.groups().groups(groupRep.getName(), 0, Integer.MAX_VALUE,
+				false);
 //
 		for (GroupRepresentation group : groups) {
-			if (group.getName().equals(groupRep.getName()) && (groupRep.getAttributes().get("parent") == null || group.getAttributes().containsValue(groupRep.getAttributes().get("parent")))) {
+			if (group.getName().equals(groupRep.getName()) && (groupRep.getAttributes().get("parent") == null
+					|| group.getAttributes().containsValue(groupRep.getAttributes().get("parent")))) {
 				return group.getId();
 			}
 		}
@@ -2205,7 +2317,8 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 			return CreatedResponseUtil.getCreatedId(response);
 		} catch (WebApplicationException ex) {
 			logger.warn("Group with identical name found. Appending the parent group name to existing name.");
-			GroupResource parentGroupResource = realmResource.groups().group(groupRep.getAttributes().get("parent").get(0));
+			GroupResource parentGroupResource = realmResource.groups()
+					.group(groupRep.getAttributes().get("parent").get(0));
 			GroupRepresentation parentGroup = parentGroupResource.toRepresentation();
 			String parentName = parentGroup.getName();
 			groupRep.setName(parentName + "_" + groupRep.getName());
@@ -2226,8 +2339,10 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 //		return bundle.getEntry().get(0).getFullUrl().split("/")[5];
 //	}
 
-	private <R extends IBaseResource> String createResource(String keycloakId, IBaseResource resource, Class<R> resourceClass, ICriterion<?>... theCriterion) {
-		IQuery<IBaseBundle> query = fhirClientAuthenticatorService.getFhirClient().search().forResource(resourceClass).where(theCriterion[0]);
+	private <R extends IBaseResource> String createResource(String keycloakId, IBaseResource resource,
+			Class<R> resourceClass, ICriterion<?>... theCriterion) {
+		IQuery<IBaseBundle> query = fhirClientAuthenticatorService.getFhirClient().search().forResource(resourceClass)
+				.where(theCriterion[0]);
 		for (int i = 1; i < theCriterion.length; i++)
 			query = query.and(theCriterion[i]);
 		try {
@@ -2237,7 +2352,8 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 				Method getIdentifier = resource.getClass().getMethod("getIdentifier");
 				List<Identifier> identifierList = (List<Identifier>) getIdentifier.invoke(existingResource);
 				for (Identifier identifier : identifierList) {
-					if (identifier.getSystem().equals(IDENTIFIER_SYSTEM + "/KeycloakId") && identifier.getValue().equals(keycloakId)) {
+					if (identifier.getSystem().equals(IDENTIFIER_SYSTEM + "/KeycloakId")
+							&& identifier.getValue().equals(keycloakId)) {
 						return existingResource.getIdElement().getIdPart();
 					}
 				}
@@ -2246,7 +2362,8 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 			Identifier obj = (Identifier) addIdentifier.invoke(resource);
 			obj.setSystem(IDENTIFIER_SYSTEM + "/KeycloakId");
 			obj.setValue(keycloakId);
-			MethodOutcome outcome = fhirClientAuthenticatorService.getFhirClient().update().resource(resource).execute();
+			MethodOutcome outcome = fhirClientAuthenticatorService.getFhirClient().update().resource(resource)
+					.execute();
 			return outcome.getId().getIdPart();
 		} catch (SecurityException | NoSuchMethodException | InvocationTargetException e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
@@ -2256,42 +2373,47 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 		return null;
 	}
 
-	private <R extends IBaseResource> String createResource(String keycloakId, IBaseResource resource, Class<R> resourceClass) {
+	private <R extends IBaseResource> String createResource(String keycloakId, IBaseResource resource,
+			Class<R> resourceClass) {
 
-		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak()
+				.realm(appProperties.getKeycloak_Client_Realm());
 		R existingResource = null;
 		GroupResource groupResource = null;
 		GroupRepresentation group = null;
 		try {
-			if (resourceClass.equals(Organization.class)){
+			if (resourceClass.equals(Organization.class)) {
 				groupResource = realmResource.groups().group(keycloakId);
 				group = groupResource.toRepresentation();
 				String orgId = group.getAttributes().get("organization_id").get(0);
-				existingResource = fhirClientAuthenticatorService.getFhirClient().read().resource(resourceClass).withId(orgId).execute();
+				existingResource = fhirClientAuthenticatorService.getFhirClient().read().resource(resourceClass)
+						.withId(orgId).execute();
 			} else if (resourceClass.equals(Location.class)) {
 				groupResource = realmResource.groups().group(keycloakId);
 				group = groupResource.toRepresentation();
 				String locId = group.getAttributes().get("location_id").get(0);
-				existingResource = fhirClientAuthenticatorService.getFhirClient().read().resource(resourceClass).withId(locId).execute();
+				existingResource = fhirClientAuthenticatorService.getFhirClient().read().resource(resourceClass)
+						.withId(locId).execute();
 			}
 		} catch (ResourceNotFoundException e) {
 			logger.warn("RESOURCE NOT FOUND");
 		}
 		try {
 			if (existingResource == null) {
-			Method addIdentifier = resource.getClass().getMethod("addIdentifier");
-			Identifier obj = (Identifier) addIdentifier.invoke(resource);
-			obj.setSystem(IDENTIFIER_SYSTEM + "/KeycloakId");
-			obj.setValue(keycloakId);
-			MethodOutcome outcome = fhirClientAuthenticatorService.getFhirClient().update().resource(resource).execute();
-			if (outcome.getCreated() || outcome.getOperationOutcome() == null) {
-				return outcome.getId().getIdPart();
-			} else {
-				return null;
-			}
+				Method addIdentifier = resource.getClass().getMethod("addIdentifier");
+				Identifier obj = (Identifier) addIdentifier.invoke(resource);
+				obj.setSystem(IDENTIFIER_SYSTEM + "/KeycloakId");
+				obj.setValue(keycloakId);
+				MethodOutcome outcome = fhirClientAuthenticatorService.getFhirClient().update().resource(resource)
+						.execute();
+				if (outcome.getCreated() || outcome.getOperationOutcome() == null) {
+					return outcome.getId().getIdPart();
+				} else {
+					return null;
+				}
 			}
 			return existingResource.getIdElement().getIdPart();
-		}catch (SecurityException | NoSuchMethodException | InvocationTargetException e) {
+		} catch (SecurityException | NoSuchMethodException | InvocationTargetException e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
 		} catch (IllegalAccessException e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
@@ -2299,8 +2421,11 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 		return null;
 	}
 
-	private <R extends IBaseResource> void updateResource(String resourceId, Class<R> resourceClass,  String[] updatedDetails, int counter) {
-		//State(0), LGA(1), Ward(2), FacilityUID(3), FacilityCode(4), CountryCode(5), PhoneNumber(6), FacilityName(7), FacilityLevel(8), Ownership(9), Argusoft Identifier(10), Longitude(11), Latitude(12), Pluscode(13)
+	private <R extends IBaseResource> void updateResource(String resourceId, Class<R> resourceClass,
+			String[] updatedDetails, int counter) {
+		// State(0), LGA(1), Ward(2), FacilityUID(3), FacilityCode(4), CountryCode(5),
+		// PhoneNumber(6), FacilityName(7), FacilityLevel(8), Ownership(9), Argusoft
+		// Identifier(10), Longitude(11), Latitude(12), Pluscode(13)
 		String stateName = updatedDetails[0];
 		String lgaName = updatedDetails[1];
 		String wardName = updatedDetails[2];
@@ -2311,139 +2436,150 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 		String latitude = updatedDetails[12];
 		String pluscode = updatedDetails[13];
 		String countryName = updatedDetails[14];
-		Organization organizationResource = resourceClass.equals(Organization.class) ? fhirClientAuthenticatorService.getFhirClient().read().resource(Organization.class).withId(resourceId).execute() : null;
-		Location locationResource = resourceClass.equals(Location.class) ? fhirClientAuthenticatorService.getFhirClient().read().resource(Location.class).withId(resourceId).execute() : null;
+		Organization organizationResource = resourceClass.equals(Organization.class)
+				? fhirClientAuthenticatorService.getFhirClient().read().resource(Organization.class).withId(resourceId)
+						.execute()
+				: null;
+		Location locationResource = resourceClass.equals(Location.class)
+				? fhirClientAuthenticatorService.getFhirClient().read().resource(Location.class).withId(resourceId)
+						.execute()
+				: null;
 		try {
-			switch (counter){
-				case 0:
-					if(resourceClass.equals(Organization.class)){
-						if(!organizationResource.getName().equals(facilityName)) {
-							organizationResource.addAlias(organizationResource.getName());
-							organizationResource.setName(facilityName);
+			switch (counter) {
+			case 0:
+				if (resourceClass.equals(Organization.class)) {
+					if (!organizationResource.getName().equals(facilityName)) {
+						organizationResource.addAlias(organizationResource.getName());
+						organizationResource.setName(facilityName);
+					}
+					List<Address> addresses = new ArrayList<>();
+					Address address = new Address();
+					address.setState(stateName);
+					address.setDistrict(lgaName);
+					address.setCity(wardName);
+					addresses.add(address);
+					organizationResource.setAddress(addresses);
+					ContactPoint contactPoint = new ContactPoint();
+					contactPoint.setValue(countryCode + "-" + phoneNumber);
+					List<ContactPoint> listOfContacts = organizationResource.getTelecom();
+					boolean contactExists = false;
+					for (ContactPoint existinContact : listOfContacts) {
+						if (existinContact.getValue().equals(contactPoint.getValue())) {
+							contactExists = true;
+							break;
 						}
-						List<Address> addresses = new ArrayList<>();
-						Address address = new Address();
-						address.setState(stateName);
-						address.setDistrict(lgaName);
-						address.setCity(wardName);
-						addresses.add(address);
-						organizationResource.setAddress(addresses);
-						ContactPoint contactPoint = new ContactPoint();
-						contactPoint.setValue(countryCode+"-"+phoneNumber);
-						List <ContactPoint> listOfContacts = organizationResource.getTelecom();
-						boolean contactExists = false;
-						for (ContactPoint existinContact : listOfContacts) {
-							if (existinContact.getValue().equals(contactPoint.getValue())) {
-								contactExists = true;
-								break;
-							}
-						}
-						if (!contactExists) {
-							List <ContactPoint> distinctListOfContacts = listOfContacts.stream().collect(Collectors.toMap(ContactPoint::getValue, Function.identity(), (existing, replacement) -> existing)).values().stream().collect(Collectors.toList());
-							distinctListOfContacts.add(contactPoint);
-							organizationResource.setTelecom(distinctListOfContacts);
-						}
-					}else{
-						locationResource.setName(facilityName);
-						Address address = new Address();
-						address.setState(stateName);
-						address.setDistrict(lgaName);
-						address.setCity(wardName);
-						locationResource.setAddress(address);
-						boolean positionPresent = locationResource.hasPosition();
-						try{
-							if(positionPresent) {
-								LocationPositionComponent oldPosition = locationResource.getPosition();
-								LocationPositionComponent newPosition = new LocationPositionComponent();
-								newPosition.setLongitude(Double.parseDouble(longitude));
-								newPosition.setLatitude(Double.parseDouble(latitude));
-								if (!(oldPosition.getLatitudeElement().equals(newPosition.getLatitudeElement()) && !oldPosition.getLongitudeElement().equals(newPosition.getLongitudeElement()))) {
-									locationResource.setPosition(newPosition);
-									Extension pluscodeExtension = new Extension();
-									pluscodeExtension.setUrl(EXTENSION_PLUSCODE_URL);
-									StringType pluscodeValue = new StringType(pluscode);
-									pluscodeExtension.setValue(pluscodeValue);
-									List<Extension> listOfExtension = locationResource.getExtension();
-									boolean extensionExists = false;
-									for (Extension existingExtension : listOfExtension) {
-										if (existingExtension.getUrl().equals(pluscodeExtension.getUrl())) {
-											existingExtension.setValue(pluscodeValue);
-											extensionExists = true;
-											break;
-										}
-									}
-									if (!extensionExists) {
-										locationResource.addExtension(pluscodeExtension);
-									}
-								}
-							}else{
-								LocationPositionComponent position = new LocationPositionComponent();
-								position.setLongitude(Double.parseDouble(longitude));
-								position.setLatitude(Double.parseDouble(latitude));
-								locationResource.setPosition(position);
+					}
+					if (!contactExists) {
+						List<ContactPoint> distinctListOfContacts = listOfContacts.stream()
+								.collect(Collectors.toMap(ContactPoint::getValue, Function.identity(),
+										(existing, replacement) -> existing))
+								.values().stream().collect(Collectors.toList());
+						distinctListOfContacts.add(contactPoint);
+						organizationResource.setTelecom(distinctListOfContacts);
+					}
+				} else {
+					locationResource.setName(facilityName);
+					Address address = new Address();
+					address.setState(stateName);
+					address.setDistrict(lgaName);
+					address.setCity(wardName);
+					locationResource.setAddress(address);
+					boolean positionPresent = locationResource.hasPosition();
+					try {
+						if (positionPresent) {
+							LocationPositionComponent oldPosition = locationResource.getPosition();
+							LocationPositionComponent newPosition = new LocationPositionComponent();
+							newPosition.setLongitude(Double.parseDouble(longitude));
+							newPosition.setLatitude(Double.parseDouble(latitude));
+							if (!(oldPosition.getLatitudeElement().equals(newPosition.getLatitudeElement())
+									&& !oldPosition.getLongitudeElement().equals(newPosition.getLongitudeElement()))) {
+								locationResource.setPosition(newPosition);
 								Extension pluscodeExtension = new Extension();
 								pluscodeExtension.setUrl(EXTENSION_PLUSCODE_URL);
 								StringType pluscodeValue = new StringType(pluscode);
 								pluscodeExtension.setValue(pluscodeValue);
-								locationResource.addExtension(pluscodeExtension);
+								List<Extension> listOfExtension = locationResource.getExtension();
+								boolean extensionExists = false;
+								for (Extension existingExtension : listOfExtension) {
+									if (existingExtension.getUrl().equals(pluscodeExtension.getUrl())) {
+										existingExtension.setValue(pluscodeValue);
+										extensionExists = true;
+										break;
+									}
+								}
+								if (!extensionExists) {
+									locationResource.addExtension(pluscodeExtension);
+								}
 							}
-						}catch (NumberFormatException e){
-							logger.warn("The provided updated latitude or longitude value is non-numeric");
+						} else {
+							LocationPositionComponent position = new LocationPositionComponent();
+							position.setLongitude(Double.parseDouble(longitude));
+							position.setLatitude(Double.parseDouble(latitude));
+							locationResource.setPosition(position);
+							Extension pluscodeExtension = new Extension();
+							pluscodeExtension.setUrl(EXTENSION_PLUSCODE_URL);
+							StringType pluscodeValue = new StringType(pluscode);
+							pluscodeExtension.setValue(pluscodeValue);
+							locationResource.addExtension(pluscodeExtension);
 						}
+					} catch (NumberFormatException e) {
+						logger.warn("The provided updated latitude or longitude value is non-numeric");
 					}
-					break;
-				case 1:
-					if(resourceClass.equals(Organization.class)){
-						organizationResource.addAlias(organizationResource.getName());
-						organizationResource.setName(wardName);
-						List<Address> addresses = new ArrayList<>();
-						Address address = new Address();
-						address.setState(stateName);
-						address.setDistrict(lgaName);
-						address.setCity(wardName);
-						addresses.add(address);
-						organizationResource.setAddress(addresses);
-					}
-					break;
-				case 2:
-					if(resourceClass.equals(Organization.class)){
-						organizationResource.addAlias(organizationResource.getName());
-						organizationResource.setName(lgaName);
-						List<Address> addresses = new ArrayList<>();
-						Address address = new Address();
-						address.setState(stateName);
-						address.setDistrict(lgaName);
-						addresses.add(address);
-						organizationResource.setAddress(addresses);
-					}
-					break;
-				case 3:
-					if(resourceClass.equals(Organization.class)){
-						organizationResource.addAlias(organizationResource.getName());
-						organizationResource.setName(stateName);
-						List<Address> addresses = new ArrayList<>();
-						Address address = new Address();
-						address.setState(stateName);
-						addresses.add(address);
-						organizationResource.setAddress(addresses);
-					}
+				}
+				break;
+			case 1:
+				if (resourceClass.equals(Organization.class)) {
+					organizationResource.addAlias(organizationResource.getName());
+					organizationResource.setName(wardName);
+					List<Address> addresses = new ArrayList<>();
+					Address address = new Address();
+					address.setState(stateName);
+					address.setDistrict(lgaName);
+					address.setCity(wardName);
+					addresses.add(address);
+					organizationResource.setAddress(addresses);
+				}
+				break;
+			case 2:
+				if (resourceClass.equals(Organization.class)) {
+					organizationResource.addAlias(organizationResource.getName());
+					organizationResource.setName(lgaName);
+					List<Address> addresses = new ArrayList<>();
+					Address address = new Address();
+					address.setState(stateName);
+					address.setDistrict(lgaName);
+					addresses.add(address);
+					organizationResource.setAddress(addresses);
+				}
+				break;
+			case 3:
+				if (resourceClass.equals(Organization.class)) {
+					organizationResource.addAlias(organizationResource.getName());
+					organizationResource.setName(stateName);
+					List<Address> addresses = new ArrayList<>();
+					Address address = new Address();
+					address.setState(stateName);
+					addresses.add(address);
+					organizationResource.setAddress(addresses);
+				}
 			}
-			if(null == organizationResource){
+			if (null == organizationResource) {
 				fhirClientAuthenticatorService.getFhirClient().update().resource(locationResource).execute();
-			}else{
+			} else {
 				fhirClientAuthenticatorService.getFhirClient().update().resource(organizationResource).execute();
 			}
-		} catch (SecurityException  e) {
+		} catch (SecurityException e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 	}
 
 	private String createKeycloakUser(UserRepresentation userRep) {
-		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak()
+				.realm(appProperties.getKeycloak_Client_Realm());
 		List<UserRepresentation> users = realmResource.users().search(userRep.getUsername(), 0, Integer.MAX_VALUE);
-		//if not empty, return id
+		// if not empty, return id
 
-		for (UserRepresentation user: users) {
+		for (UserRepresentation user : users) {
 			if (Objects.equals(user.getUsername(), userRep.getUsername())) {
 				return user.getId();
 			}
@@ -2461,7 +2597,8 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 	}
 
 	private void createRoleIfNotExists(RoleRepresentation roleRepresentation) {
-		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak()
+				.realm(appProperties.getKeycloak_Client_Realm());
 		String clientId = realmResource.clients().findByClientId(appProperties.getFhir_hapi_client_id()).get(0).getId();
 		if (roleWithNameExists(clientId, roleRepresentation.getName())) {
 			return;
@@ -2474,7 +2611,8 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 	}
 
 	public Boolean roleWithNameExists(String clientId, String roleName) {
-		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak()
+				.realm(appProperties.getKeycloak_Client_Realm());
 		for (RoleRepresentation roleRepresentation : realmResource.clients().get(clientId).roles().list()) {
 			if (roleRepresentation.getName().equals(roleName)) {
 				return true;
@@ -2483,11 +2621,15 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 		return false;
 
 	}
+
 	private void assignRole(String userId, String roleName) {
 		try {
-			RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak().realm(appProperties.getKeycloak_Client_Realm());
-			String clientId = realmResource.clients().findByClientId(appProperties.getFhir_hapi_client_id()).get(0).getId();
-			RoleRepresentation saveRoleRepresentation = realmResource.clients().get(clientId).roles().get(roleName).toRepresentation();
+			RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak()
+					.realm(appProperties.getKeycloak_Client_Realm());
+			String clientId = realmResource.clients().findByClientId(appProperties.getFhir_hapi_client_id()).get(0)
+					.getId();
+			RoleRepresentation saveRoleRepresentation = realmResource.clients().get(clientId).roles().get(roleName)
+					.toRepresentation();
 			realmResource.users().get(userId).roles().clientLevel(clientId).add(asList(saveRoleRepresentation));
 		} catch (WebApplicationException e) {
 			logger.error("Cannot assign role " + roleName + " to user " + userId);
@@ -2511,23 +2653,26 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 		return null;
 	}
 
-	public List<MapResponse> getEncounterForMap(String orgId, String from, String to){
+	public List<MapResponse> getEncounterForMap(String orgId, String from, String to) {
 		Gson gson = new Gson();
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<String> allClinics = fetchIdsAndOrgIdToChildrenMapPair(orgId).first;
-		try{
+		try {
 //			cachingService.performCachingForMapDataIfRequired(allClinics, from, to);
-			List<MapCacheEntity> responseFromCache = notificationDataSource.getMapDataByOrgIdAndDateRange(allClinics, Date.valueOf(LocalDate.parse(from, DateTimeFormatter.ISO_DATE)) , Date.valueOf(LocalDate.parse(to, DateTimeFormatter.ISO_DATE)));
+			List<MapCacheEntity> responseFromCache = notificationDataSource.getMapDataByOrgIdAndDateRange(allClinics,
+					Date.valueOf(LocalDate.parse(from, DateTimeFormatter.ISO_DATE)),
+					Date.valueOf(LocalDate.parse(to, DateTimeFormatter.ISO_DATE)));
 			LinkedHashMap<String, ArrayList<LocationData>> categoryWiseResponse = new LinkedHashMap<>();
-			for(MapCacheEntity entry: responseFromCache){
+			for (MapCacheEntity entry : responseFromCache) {
 				String categoryId = entry.getCategoryId();
-				if(categoryWiseResponse.containsKey(categoryId)){
+				if (categoryWiseResponse.containsKey(categoryId)) {
 					ArrayList<LocationData> locationDataList = categoryWiseResponse.get(categoryId);
-					LocationData lastAddLocationData = locationDataList.get(locationDataList.size()-1);
-					if(lastAddLocationData.getLat().equals(entry.getLat()) && lastAddLocationData.getLng().equals(entry.getLng())){
+					LocationData lastAddLocationData = locationDataList.get(locationDataList.size() - 1);
+					if (lastAddLocationData.getLat().equals(entry.getLat())
+							&& lastAddLocationData.getLng().equals(entry.getLng())) {
 						lastAddLocationData.setWeight(lastAddLocationData.getWeight() + entry.getWeight());
-						locationDataList.set(locationDataList.size()-1, lastAddLocationData);
-					}else{
+						locationDataList.set(locationDataList.size() - 1, lastAddLocationData);
+					} else {
 						LocationData newLocationData = new LocationData();
 						newLocationData.setLat(entry.getLat());
 						newLocationData.setLng(entry.getLng());
@@ -2535,8 +2680,7 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 						locationDataList.add(newLocationData);
 					}
 					categoryWiseResponse.put(categoryId, locationDataList);
-				}
-				else {
+				} else {
 					LocationData newLocationData = new LocationData();
 					newLocationData.setLat(entry.getLat());
 					newLocationData.setLng(entry.getLng());
@@ -2547,14 +2691,14 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 				}
 			}
 			List<MapResponse> mapResponse = new ArrayList<>();
-			for(Map.Entry<String, ArrayList<LocationData>> categoryWiseEntry: categoryWiseResponse.entrySet()){
+			for (Map.Entry<String, ArrayList<LocationData>> categoryWiseEntry : categoryWiseResponse.entrySet()) {
 				MapResponse response = new MapResponse();
 				response.setCategoryId(categoryWiseEntry.getKey());
 				response.setCategoryResult(categoryWiseEntry.getValue());
 				mapResponse.add(response);
 			}
 			return mapResponse;
-		}catch (Exception e){
+		} catch (Exception e) {
 			logger.warn(e.toString());
 		}
 		return null;
@@ -2562,7 +2706,7 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 
 	@Getter
 	@Setter
-	public class LocationData{
+	public class LocationData {
 		private Double lat;
 		private Double lng;
 		private int weight;
@@ -2570,7 +2714,7 @@ public ResponseEntity<?> getBarChartData(String startDate, String endDate,Linked
 
 	@Getter
 	@Setter
-	public class MapResponse{
+	public class MapResponse {
 		private String categoryId;
 		private ArrayList<LocationData> categoryResult;
 	}

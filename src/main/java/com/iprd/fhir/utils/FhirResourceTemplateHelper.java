@@ -28,26 +28,29 @@ public class FhirResourceTemplateHelper {
 	private static String CODE_GOVT = "govt";
 	private static String DISPLAY_GOVERNMENT = "Government";
 	private static String SYSTEM_ORGANIZATION_PHYSICAL_TYPE = "	http://hl7.org/fhir/ValueSet/organization-type";
-	// todo - change the URLs below once resources are updated as per Implementation Guide
+	// todo - change the URLs below once resources are updated as per Implementation
+	// Guide
 	private static String SYSTEM_HCW = "https://www.iprdgroup.com/nigeria/oyo/ValueSet/Roles";
 	private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
 	private static String SYSTEM_ORG_TYPE = "https://www.iprdgroup.com/ValueSet/OrganizationType/tags";
-	private static  String EXTENSION_PLUSCODE_URL = "http://iprdgroup.org/fhir/Extention/location-plus-code";
-
+	private static String EXTENSION_PLUSCODE_URL = "http://iprdgroup.org/fhir/Extention/location-plus-code";
 
 	private static final Logger logger = LoggerFactory.getLogger(FhirResourceTemplateHelper.class);
-	
-	public static Organization country(String name)
-	{
+	 
+	/**
+     * Creates an Organization resource representing a country.
+     *
+     * @param name the name of the country
+     * @return Organization object representing the country
+     */
+	public static Organization country(String name) {
 		Organization country = new Organization();
 		country.setMeta(getMetaByOrgType(OrgType.COUNTRY));
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		CodeableConcept countryPhysicalType = new CodeableConcept();
 		Coding physicalTypeCoding = new Coding();
-		physicalTypeCoding
-		.setCode(CODE_GOVT)
-		.setDisplay(DISPLAY_GOVERNMENT)
-		.setSystem(SYSTEM_ORGANIZATION_PHYSICAL_TYPE);
+		physicalTypeCoding.setCode(CODE_GOVT).setDisplay(DISPLAY_GOVERNMENT)
+				.setSystem(SYSTEM_ORGANIZATION_PHYSICAL_TYPE);
 		countryPhysicalType.addCoding(physicalTypeCoding);
 		countryPhysicalType.setText(DISPLAY_GOVERNMENT);
 		codeableConcepts.add(countryPhysicalType);
@@ -56,8 +59,16 @@ public class FhirResourceTemplateHelper {
 		country.setId(new IdType("Organization", generateUUID()));
 		return country;
 	}
-	public static Organization state(String name, String country, String countryId)
-	{
+	
+    /**
+     * Creates an Organization resource representing a state.
+     *
+     * @param name      the name of the state
+     * @param country   the name of the country the state belongs to
+     * @param countryId the identifier of the country
+     * @return Organization object representing the state
+     */
+	public static Organization state(String name, String country, String countryId) {
 		Organization state = new Organization();
 		state.setMeta(getMetaByOrgType(OrgType.STATE));
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
@@ -68,10 +79,8 @@ public class FhirResourceTemplateHelper {
 		state.setAddress(addresses);
 		CodeableConcept statePhysicalType = new CodeableConcept();
 		Coding physicalTypeCoding = new Coding();
-		physicalTypeCoding
-		.setCode(CODE_GOVT)
-		.setDisplay(DISPLAY_GOVERNMENT)
-		.setSystem(SYSTEM_ORGANIZATION_PHYSICAL_TYPE);
+		physicalTypeCoding.setCode(CODE_GOVT).setDisplay(DISPLAY_GOVERNMENT)
+				.setSystem(SYSTEM_ORGANIZATION_PHYSICAL_TYPE);
 		statePhysicalType.addCoding(physicalTypeCoding);
 		statePhysicalType.setText(DISPLAY_GOVERNMENT);
 		codeableConcepts.add(statePhysicalType);
@@ -81,7 +90,16 @@ public class FhirResourceTemplateHelper {
 		state.setPartOf(new Reference("Organization/" + countryId));
 		return state;
 	}
-	
+
+
+    /**
+     * Creates an Organization resource representing a local government area (LGA).
+     *
+     * @param nameOfLga the name of the LGA
+     * @param state     the name of the state the LGA belongs to
+     * @param stateId   the identifier of the state
+     * @return Organization object representing the LGA
+     */
 	public static Organization lga(String nameOfLga, String state, String stateId) {
 		Organization lga = new Organization();
 		lga.setMeta(getMetaByOrgType(OrgType.LGA));
@@ -94,10 +112,8 @@ public class FhirResourceTemplateHelper {
 		lga.setAddress(addresses);
 		CodeableConcept lgaPhysicalType = new CodeableConcept();
 		Coding physicalTypeCoding = new Coding();
-		physicalTypeCoding
-		.setCode(CODE_GOVT)
-		.setDisplay(DISPLAY_GOVERNMENT)
-		.setSystem(SYSTEM_ORGANIZATION_PHYSICAL_TYPE);
+		physicalTypeCoding.setCode(CODE_GOVT).setDisplay(DISPLAY_GOVERNMENT)
+				.setSystem(SYSTEM_ORGANIZATION_PHYSICAL_TYPE);
 		lgaPhysicalType.addCoding(physicalTypeCoding);
 		lgaPhysicalType.setText(DISPLAY_GOVERNMENT);
 		codeableConcepts.add(lgaPhysicalType);
@@ -108,6 +124,15 @@ public class FhirResourceTemplateHelper {
 		return lga;
 	}
 	
+    /**
+     * Creates an Organization resource representing a ward.
+     *
+     * @param state   the name of the state the ward belongs to
+     * @param district the district where the ward is located
+     * @param city    the city where the ward is located
+     * @param lgaId   the identifier of the local government area (LGA)
+     * @return Organization object representing the ward
+     */
 	public static Organization ward(String state, String district, String city, String lgaId) {
 		Organization ward = new Organization();
 		ward.setMeta(getMetaByOrgType(OrgType.WARD));
@@ -121,10 +146,8 @@ public class FhirResourceTemplateHelper {
 		ward.setAddress(addresses);
 		CodeableConcept wardPhysicalType = new CodeableConcept();
 		Coding physicalTypeCoding = new Coding();
-		physicalTypeCoding
-			.setCode(CODE_GOVT)
-			.setDisplay(DISPLAY_GOVERNMENT)
-			.setSystem(SYSTEM_ORGANIZATION_PHYSICAL_TYPE);
+		physicalTypeCoding.setCode(CODE_GOVT).setDisplay(DISPLAY_GOVERNMENT)
+				.setSystem(SYSTEM_ORGANIZATION_PHYSICAL_TYPE);
 		wardPhysicalType.addCoding(physicalTypeCoding);
 		wardPhysicalType.setText(DISPLAY_GOVERNMENT);
 		codeableConcepts.add(wardPhysicalType);
@@ -135,15 +158,26 @@ public class FhirResourceTemplateHelper {
 		return ward;
 	}
 	
-	public static Location clinic(String state, String district, String city, String clinic,String longitude, String latitude, String pluscode, String organizationReference) {
+    /**
+     * Creates a Location resource representing a clinic.
+     *
+     * @param state        the state where the clinic is located
+     * @param district     the district where the clinic is located
+     * @param city         the city where the clinic is located
+     * @param clinic       the name of the clinic
+     * @param longitude    the longitude coordinate of the clinic
+     * @param latitude     the latitude coordinate of the clinic
+     * @param pluscode     the plus code location identifier of the clinic
+     * @param organizationReference reference to the managing organization
+     * @return Location object representing the clinic
+     */
+	public static Location clinic(String state, String district, String city, String clinic, String longitude,
+			String latitude, String pluscode, String organizationReference) {
 		Location facility = new Location();
 		Address facilityAddress = new Address();
 		CodeableConcept facilityPhysicalType = new CodeableConcept();
 		Coding physicalTypeCoding = new Coding();
-		physicalTypeCoding
-		.setCode(CODE_BU)
-		.setDisplay(DISPLAY_BUILDING)
-		.setSystem(SYSTEM_LOCATION_PHYSICAL_TYPE);
+		physicalTypeCoding.setCode(CODE_BU).setDisplay(DISPLAY_BUILDING).setSystem(SYSTEM_LOCATION_PHYSICAL_TYPE);
 		facilityPhysicalType.addCoding(physicalTypeCoding);
 		facilityAddress.setState(state);
 		facilityAddress.setCity(city);
@@ -155,9 +189,9 @@ public class FhirResourceTemplateHelper {
 		facility.setMode(LocationMode.INSTANCE);
 		facility.setPhysicalType(facilityPhysicalType);
 		Reference organizationRef = new Reference();
-		organizationRef.setReference("Organization/"+organizationReference);
+		organizationRef.setReference("Organization/" + organizationReference);
 		facility.setManagingOrganization(organizationRef);
-		try{
+		try {
 			Location.LocationPositionComponent position = new Location.LocationPositionComponent();
 			position.setLongitude(Double.parseDouble(longitude));
 			position.setLatitude(Double.parseDouble(latitude));
@@ -167,13 +201,31 @@ public class FhirResourceTemplateHelper {
 			StringType pluscodeValue = new StringType(pluscode);
 			pluscodeExtension.setValue(pluscodeValue);
 			facility.addExtension(pluscodeExtension);
-		}catch (NumberFormatException e){
-			logger.warn("The provided latitude or longitude value is non-numeric. Clinic Details - ", clinic, district, city, state);
+		} catch (NumberFormatException e) {
+			logger.warn("The provided latitude or longitude value is non-numeric. Clinic Details - ", clinic, district,
+					city, state);
 		}
 		return facility;
 	}
 	
-	public static Organization clinic(String nameOfClinic,String facilityUID,String facilityCode ,String countryCode, String contact, String state, String district, String city, String wardId, String argusoftId) {
+    /**
+     * Creates an Organization resource representing a clinic.
+     *
+     * @param nameOfClinic     the name of the clinic
+     * @param facilityUID      the unique identifier of the facility
+     * @param facilityCode     the code of the facility
+     * @param countryCode      the country code
+     * @param contact          the contact information
+     * @param state            the state where the clinic is located
+     * @param district         the district where the clinic is located
+     * @param city             the city where the clinic is located
+     * @param facilityLevel    the level of the facility
+     * @param parent           the id of the parent
+     * @param argusoftId       the Argusoft identifier
+     * @return Organization object representing the clinic
+     */
+	public static Organization clinic(String nameOfClinic, String facilityUID, String facilityCode, String countryCode,
+			String contact, String state, String district, String city,String facilityLevel, String parent, String argusoftId) {
 		Organization clinic = new Organization();
 		clinic.setMeta(getMetaByOrgType(OrgType.FACILITY));
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
@@ -185,22 +237,31 @@ public class FhirResourceTemplateHelper {
 		addresses.add(address);
 		clinic.setAddress(addresses);
 		List<Identifier> identifiers = new ArrayList<>();
+		
 		Identifier facilityUIDIdentifier = new Identifier();
 		Identifier facilityCodeIdentifier = new Identifier();
 		Identifier argusoftIdentifier = new Identifier();
-		facilityUIDIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityCode");
+		Identifier facilityLevelIdentifier = new Identifier();
+
+		facilityUIDIdentifier.setSystem(IDENTIFIER_SYSTEM + "/facilityCode");
 		facilityUIDIdentifier.setValue(facilityCode);
-		facilityCodeIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
+		facilityCodeIdentifier.setSystem(IDENTIFIER_SYSTEM + "/facilityUID");
 		facilityCodeIdentifier.setValue(facilityUID);
-		argusoftIdentifier.setSystem(IDENTIFIER_SYSTEM+"/argusoft_identifier");
+		argusoftIdentifier.setSystem(IDENTIFIER_SYSTEM + "/argusoft_identifier");
 		argusoftIdentifier.setValue(argusoftId);
+		
+		facilityLevelIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityLevel");
+		facilityLevelIdentifier.setValue(facilityLevel);
+		
 		identifiers.add(facilityUIDIdentifier);
 		identifiers.add(facilityCodeIdentifier);
 		identifiers.add(argusoftIdentifier);
+		identifiers.add(facilityLevelIdentifier);
+		
 		clinic.setIdentifier(identifiers);
 		List<ContactPoint> contactPoints = new ArrayList<>();
 		ContactPoint contactPoint = new ContactPoint();
-		contactPoint.setValue(countryCode+contact);
+		contactPoint.setValue(countryCode + contact);
 		contactPoints.add(contactPoint);
 		clinic.setTelecom(contactPoints);
 		CodeableConcept codeableConcept = new CodeableConcept();
@@ -214,21 +275,43 @@ public class FhirResourceTemplateHelper {
 		clinic.setType(codeableConcepts);
 		clinic.setName(nameOfClinic);
 		clinic.setId(new IdType("Organization", generateUUID()));
-		clinic.setPartOf(new Reference("Organization/"+ wardId));
+		clinic.setPartOf(new Reference("Organization/" + parent));
 		return clinic;
 	}
-	
-	public static Practitioner hcw(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String lga, String ward, String facilityUID, String role, String qualification, String stateIdentifierString, String argusoftId) throws Exception {
+
+    /**
+     * Creates a Practitioner resource for a healthcare worker.
+     *
+     * @param firstName             the first name of the healthcare worker
+     * @param lastName              the last name of the healthcare worker
+     * @param telecom               the telephone contact
+     * @param countryCode           the country code
+     * @param gender                the gender of the healthcare worker
+     * @param dob                   the date of birth of the healthcare worker
+     * @param state                 the state where the healthcare worker is located
+     * @param lga                   the local government area of the healthcare worker
+     * @param ward                  the ward of the healthcare worker
+     * @param facilityUID           the facility UID
+     * @param role                  the role of the healthcare worker
+     * @param qualification         the qualification of the healthcare worker
+     * @param stateIdentifierString the state identifier string
+     * @param argusoftId            the Argusoft identifier
+     * @return Practitioner object representing the healthcare worker
+     * @throws Exception if there is an error in parsing the date of birth
+     */
+	public static Practitioner hcw(String firstName, String lastName, String telecom, String countryCode, String gender,
+			String dob, String state, String lga, String ward, String facilityUID, String role, String qualification,
+			String stateIdentifierString, String argusoftId) throws Exception {
 		Practitioner practitioner = new Practitioner();
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier clinicIdentifier = new Identifier();
 		Identifier argusoftIdentifier = new Identifier();
-		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
+		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM + "/facilityUID");
 		clinicIdentifier.setValue(facilityUID);
 		Identifier stateIdentifier = new Identifier();
-		stateIdentifier.setSystem(IDENTIFIER_SYSTEM+"/stateIdentifier");
+		stateIdentifier.setSystem(IDENTIFIER_SYSTEM + "/stateIdentifier");
 		stateIdentifier.setValue(stateIdentifierString);
-		argusoftIdentifier.setSystem(IDENTIFIER_SYSTEM+"/argusoft_identifier");
+		argusoftIdentifier.setSystem(IDENTIFIER_SYSTEM + "/argusoft_identifier");
 		argusoftIdentifier.setValue(argusoftId);
 		identifiers.add(clinicIdentifier);
 		identifiers.add(stateIdentifier);
@@ -244,15 +327,14 @@ public class FhirResourceTemplateHelper {
 		practitioner.setName(hcwName);
 		List<ContactPoint> contactPoints = new ArrayList<>();
 		ContactPoint contactPoint = new ContactPoint();
-		contactPoint.setValue(countryCode+telecom);
+		contactPoint.setValue(countryCode + telecom);
 		contactPoint.setSystem(org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem.PHONE);
 		contactPoints.add(contactPoint);
 		practitioner.setTelecom(contactPoints);
-		if("M".equals(gender)) {
+		if ("M".equals(gender)) {
 			gender = "male";
 			practitioner.setGender(AdministrativeGender.fromCode(gender));
-		}
-		else if("F".equals(gender) || "FM".equals(gender)) {
+		} else if ("F".equals(gender) || "FM".equals(gender)) {
 			gender = "female";
 			practitioner.setGender(AdministrativeGender.fromCode(gender));
 		}
@@ -270,18 +352,19 @@ public class FhirResourceTemplateHelper {
 		try {
 			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
 			practitioner.setBirthDate(dateOfBirth);
-		}catch(ParseException exception) {
+		} catch (ParseException exception) {
 			logger.warn(ExceptionUtils.getStackTrace(exception));
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;
 	}
 
-	public static Practitioner user(String firstName,String lastName, String telecom, String countryCode, String gender, String dob, String state, String facilityUID, String type){
+	public static Practitioner user(String firstName, String lastName, String telecom, String countryCode,
+			String gender, String dob, String state, String facilityUID, String type) {
 		Practitioner practitioner = new Practitioner();
 		List<Identifier> identifiers = new ArrayList<>();
 		Identifier clinicIdentifier = new Identifier();
-		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM+"/facilityUID");
+		clinicIdentifier.setSystem(IDENTIFIER_SYSTEM + "/facilityUID");
 		clinicIdentifier.setSystem(facilityUID);
 		identifiers.add(clinicIdentifier);
 		practitioner.setIdentifier(identifiers);
@@ -295,33 +378,32 @@ public class FhirResourceTemplateHelper {
 		practitioner.setName(hcwName);
 		List<ContactPoint> contactPoints = new ArrayList<>();
 		ContactPoint contactPoint = new ContactPoint();
-		contactPoint.setValue(countryCode+telecom);
+		contactPoint.setValue(countryCode + telecom);
 		contactPoint.setSystem(org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem.PHONE);
 		contactPoints.add(contactPoint);
 		practitioner.setTelecom(contactPoints);
-		if(gender == "M") {
+		if (gender == "M") {
 			gender = "male";
 			practitioner.setGender(AdministrativeGender.fromCode(gender));
-		}
-		else if( gender == "F" || gender == "FM") {
+		} else if (gender == "F" || gender == "FM") {
 			gender = "female";
 			practitioner.setGender(AdministrativeGender.fromCode(gender));
 		}
 		try {
 			Date dateOfBirth = new SimpleDateFormat("dd/MM/yyyy").parse(dob);
 			practitioner.setBirthDate(dateOfBirth);
-		}catch(ParseException exception) {
+		} catch (ParseException exception) {
 			logger.warn(ExceptionUtils.getStackTrace(exception));
 		}
 		practitioner.setId(new IdType("Practitioner", generateUUID()));
 		return practitioner;
 	}
-	
-	public static PractitionerRole practitionerRole(String role, String qualification, String practitionerId, String organizationId)
-	{
+
+	public static PractitionerRole practitionerRole(String role, String qualification, String practitionerId,
+			String organizationId) {
 		PractitionerRole practitionerRole = new PractitionerRole();
-		Reference PractitionerReference = new  Reference("Practitioner/"+practitionerId);
-		Reference organizatioReference = new Reference("Organization/"+organizationId);
+		Reference PractitionerReference = new Reference("Practitioner/" + practitionerId);
+		Reference organizatioReference = new Reference("Organization/" + organizationId);
 		List<CodeableConcept> codeableConcepts = new ArrayList<>();
 		CodeableConcept roleCoding = new CodeableConcept();
 		Coding coding2 = new Coding();
@@ -336,11 +418,11 @@ public class FhirResourceTemplateHelper {
 		practitionerRole.setId(new IdType("PractitionerRole", generateUUID()));
 		return practitionerRole;
 	}
-	
+
 	public static String generateUUID() {
 		return UUID.randomUUID().toString();
 	}
-	
+
 	public static Meta getMetaByOrgType(OrgType orgType) {
 		Meta meta = new Meta();
 		Coding coding = new Coding();

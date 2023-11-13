@@ -8,13 +8,13 @@ import org.keycloak.representations.idm.UserRepresentation;
 import java.util.Arrays;
 
 public class KeycloakTemplateHelper {
-	
+
 	private static String COUNTRY = "country";
 	private static String STATE = "state";
 	private static String LGA = "lga";
 	private static String WARD = "ward";
 	private static String FACILITY = "facility";
-	
+
 	public static GroupRepresentation countryGroup(String name, String fhirResourceId) {
 		GroupRepresentation stateGroupRep = new GroupRepresentation();
 		stateGroupRep.setName(name);
@@ -22,6 +22,7 @@ public class KeycloakTemplateHelper {
 		stateGroupRep.singleAttribute("organization_id", fhirResourceId);
 		return stateGroupRep;
 	}
+
 	public static GroupRepresentation stateGroup(String name, String parentId, String fhirResourceId) {
 		GroupRepresentation stateGroupRep = new GroupRepresentation();
 		stateGroupRep.setName(name);
@@ -30,26 +31,28 @@ public class KeycloakTemplateHelper {
 		stateGroupRep.singleAttribute("organization_id", fhirResourceId);
 		return stateGroupRep;
 	}
-	
+
 	public static GroupRepresentation lgaGroup(String name, String parentId, String fhirResourceId) {
 		GroupRepresentation lgaGroupRep = new GroupRepresentation();
 		lgaGroupRep.setName(name);
 		lgaGroupRep.singleAttribute("type", LGA);
 		lgaGroupRep.singleAttribute("parent", parentId);
-		lgaGroupRep.singleAttribute("organization_id",fhirResourceId);
+		lgaGroupRep.singleAttribute("organization_id", fhirResourceId);
 		return lgaGroupRep;
 	}
-	
+
 	public static GroupRepresentation wardGroup(String name, String parentId, String fhirResourceId) {
 		GroupRepresentation wardGroupRep = new GroupRepresentation();
 		wardGroupRep.setName(name);
 		wardGroupRep.singleAttribute("type", WARD);
 		wardGroupRep.singleAttribute("parent", parentId);
-		wardGroupRep.singleAttribute("organization_id",fhirResourceId);
+		wardGroupRep.singleAttribute("organization_id", fhirResourceId);
 		return wardGroupRep;
 	}
 
-	public static GroupRepresentation facilityGroup(String name, String parentId, String fhirOrganizationId, String fhirLocationId, String facilityLevel, String ownership, String facilityUID, String facilityCode, String argusoftId) {
+	public static GroupRepresentation facilityGroup(String name, String parentId, String fhirOrganizationId,
+			String fhirLocationId, String facilityLevel, String ownership, String facilityUID, String facilityCode,
+			String argusoftId) {
 		GroupRepresentation facilityGroupRep = new GroupRepresentation();
 		facilityGroupRep.setName(facilityUID);
 		facilityGroupRep.singleAttribute("type", FACILITY);
@@ -64,33 +67,42 @@ public class KeycloakTemplateHelper {
 		facilityGroupRep.singleAttribute("argusoft_identifier", argusoftId);
 		return facilityGroupRep;
 	}
-	
-	public static UserRepresentation user(String firstName,String lastName,String email,String userName,String password,String phoneNumber,String countryCode, String practitionerId, String practitionerRoleId,String role, String stateGroup, String lgaGroup, String wardGroup, String facilityGroup, String argusoftId, String countryGroup) {
+
+	public static UserRepresentation user(String firstName, String lastName, String email, String userName,
+			String password, String phoneNumber, String countryCode, String practitionerId, String practitionerRoleId,
+			String role, String stateGroup, String lgaGroup, String wardGroup, String facilityGroup, String argusoftId,
+			String countryGroup) {
 		UserRepresentation user = new UserRepresentation();
 		CredentialRepresentation credential = new CredentialRepresentation();
 		credential.setType(CredentialRepresentation.PASSWORD);
 		credential.setValue(password);
 		credential.setTemporary(true);
 		user.setCredentials(Arrays.asList(credential));
-		user.setGroups(Arrays.asList(countryGroup, stateGroup, lgaGroup, wardGroup, facilityGroup));
+		if (!wardGroup.isEmpty()) {
+			user.setGroups(Arrays.asList(countryGroup, stateGroup, lgaGroup, wardGroup, facilityGroup));
+		}else {
+			user.setGroups(Arrays.asList(countryGroup, stateGroup, lgaGroup, facilityGroup));
+		}
 		user.setUsername(userName);
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
-		if(email.equals("null")) {
-			user.setEmail(userName+"@test.org");
-		}else {
-			user.setEmail(email);	
+		if (email.equals("null")) {
+			user.setEmail(userName + "@test.org");
+		} else {
+			user.setEmail(email);
 		}
-		user.singleAttribute("phoneNumber", countryCode+"-"+phoneNumber);
-		user.singleAttribute("type",role);
+		user.singleAttribute("phoneNumber", countryCode + "-" + phoneNumber);
+		user.singleAttribute("type", role);
 		user.singleAttribute("practitioner_id", practitionerId);
 		user.singleAttribute("practitioner_role_id", practitionerRoleId);
 		user.singleAttribute("argusoft_id", argusoftId);
 		user.setEnabled(true);
 		return user;
 	}
-	
-	public static UserRepresentation dashboardUser(String firstName, String lastName, String email, String userName, String password, String phoneNumber, String countryCode, String practitionerId, String practitionerRoleId, String facilityUID,String role, String organization, String type) {
+
+	public static UserRepresentation dashboardUser(String firstName, String lastName, String email, String userName,
+			String password, String phoneNumber, String countryCode, String practitionerId, String practitionerRoleId,
+			String facilityUID, String role, String organization, String type) {
 		UserRepresentation user = new UserRepresentation();
 		CredentialRepresentation credential = new CredentialRepresentation();
 		credential.setType(CredentialRepresentation.PASSWORD);
@@ -101,12 +113,12 @@ public class KeycloakTemplateHelper {
 		user.setUsername(userName);
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
-		if(email.equals(null)) {
-			user.setEmail(userName+"@test.org");
-		}else {
+		if (email.equals(null)) {
+			user.setEmail(userName + "@test.org");
+		} else {
 			user.setEmail(email);
 		}
-		user.singleAttribute("phoneNumber", countryCode+"-"+phoneNumber);
+		user.singleAttribute("phoneNumber", countryCode + "-" + phoneNumber);
 		user.singleAttribute("type", role);
 		user.singleAttribute("practitioner_id", practitionerId);
 		user.singleAttribute("practitioner_role_id", practitionerRoleId);
