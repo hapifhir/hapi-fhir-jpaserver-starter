@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
@@ -44,15 +45,42 @@ public class TusService {
 		}
 	}
 
+	public void getAudioFileAndSave(TusFileUploadService tusFileUploadService, String uploadUrl) throws TusException, IOException, UnsupportedAudioFileException {
+		transferAudioRecordingsToFinalStorage(uploadUrl);
+	}
+
 	@Scheduled(initialDelay = INITIAl_DELAY, fixedDelay = FIXED_DELAY)
-	private void transferImageToFinalStorageScheduler() throws TusException, IOException{
+	private void transferImageToFinalStorageScheduler() throws TusException, IOException, UnsupportedAudioFileException {
 		List<String> subDirectories = getSubDirectories(appProperties.getImage_path() + File.separator + "uploads");
 		if(!subDirectories.isEmpty()){
 			for (String subDirectory: subDirectories){
 				String uploadUrl = tusServerProperties.getContextPath() + "/" + subDirectory;
-				transferImagesToFinalStorage(uploadUrl);
+				String fileName = new String(Base64.decodeBase64(tusFileUploadService.getUploadInfo(uploadUrl).getEncodedMetadata().split(" ")[1]), Charsets.UTF_8);
+				if (fileName.contains(".jpeg") || fileName.contains(".jpg"))
+					transferImagesToFinalStorage(uploadUrl);
+				else if (fileName.contains(".mav"))
+					transferAudioRecordingsToFinalStorage(uploadUrl);
+				else
+					logger.warn("Wrong File format for the file:" + fileName);
 			}
 		}
+	}
+
+	private void transferAudioRecordingsToFinalStorage(String uploadUrl) throws TusException, IOException, UnsupportedAudioFileException {
+			InputStream inputStream = tusFileUploadService.getUploadedBytes(uploadUrl);
+			String fileName = new String(Base64.decodeBase64(tusFileUploadService.getUploadInfo(uploadUrl).getEncodedMetadata().split(" ")[1]), Charsets.UTF_8);
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			byte[] buffer = new byte[1024];
+			int bytesRead;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				byteArrayOutputStream.write(buffer, 0, bytesRead);
+			}
+			inputStream.close();
+			byteArrayOutputStream.close();
+			byte[] completeByteArray = byteArrayOutputStream.toByteArray();
+			boolean isAudioFileSaved = saveAudioToFile(tusFileUploadService, completeByteArray, appProperties.getAudio_recordings_path(), fileName, uploadUrl);
+			if (isAudioFileSaved)
+				tusFileUploadService.deleteUpload(uploadUrl);
 	}
 
 	private void transferImagesToFinalStorage(String uploadUrl) throws TusException, IOException{
@@ -125,4 +153,19 @@ public class TusService {
 		return false;
 	}
 
+	private static boolean saveAudioToFile(TusFileUploadService tusFileUploadService, byte[] byteArrayData, String folderPath, String fileName, String uploadUrl) throws IOException, TusException, UnsupportedAudioFileException {
+		Path outputPath = Paths.get(folderPath, fileName);
+		File outputFile = outputPath.toFile();
+		Files.createDirectories(outputPath.getParent());
+		if (outputFile.exists()){
+			tusFileUploadService.deleteUpload(uploadUrl);
+			logger.warn("File already exists with the name" + fileName);
+		} else{
+			try(FileOutputStream fos = new FileOutputStream(outputFile)){
+				fos.write(byteArrayData);
+			}
+			return true;
+		}
+		return false;
+	}
 }

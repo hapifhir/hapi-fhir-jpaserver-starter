@@ -107,6 +107,7 @@ public class AppProperties {
 	private Integer bundle_batch_pool_max_size = 100;
 	private List<String> local_base_urls = new ArrayList<>();
 	private String image_path = null;
+	private String audio_recordings_path = null;
 	private String notification_datasource_config_path = null;
 	private String gcp_credential_file_path = null;
 	private String sql_screen_time_file_path = null;
@@ -399,6 +400,12 @@ public class AppProperties {
 
 	public String getHapi_Server_address() {
 		return hapi_server_address;
+	}
+
+	public String getAudio_recordings_path(){ return audio_recordings_path; }
+
+	public void setAudio_recordings_path(String audio_recordings_path) {
+		this.audio_recordings_path = audio_recordings_path;
 	}
 
 	public String getImage_path() {

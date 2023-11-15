@@ -169,7 +169,7 @@ public class ServerInterceptor {
 	}
 
 	private void processMedia(Media media) throws IOException {
-		if (media.getContent().hasData()) {
+		if(media.getContent().hasData() && media.getType().getCodingFirstRep().getCode().equals("image")) {
 			byte[] bitmapdata = media.getContent().getDataElement().getValue();
 			byte[] base64 = Base64.decode(bitmapdata, Base64.DEFAULT);
 			String md5Hash = md5Bytes(base64);
