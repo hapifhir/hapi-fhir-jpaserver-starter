@@ -366,7 +366,7 @@ export class FHIRServerStack extends Stack {
       this,
       `${dbClusterName}VolumeReadIOPsAlarm`,
       {
-        threshold: 60_000, // IOPs per second
+        threshold: 300_000, // IOPS
         evaluationPeriods: 1,
         treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
       }
@@ -379,7 +379,7 @@ export class FHIRServerStack extends Stack {
       this,
       `${dbClusterName}VolumeWriteIOPsAlarm`,
       {
-        threshold: 100_000, // IOPs per second
+        threshold: 300_000, // IOPS
         evaluationPeriods: 1,
         treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
       }
