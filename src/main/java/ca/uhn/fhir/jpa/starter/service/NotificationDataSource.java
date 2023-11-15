@@ -16,6 +16,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,7 +135,12 @@ public class NotificationDataSource {
 		try {
 
 			for (int i = 0; i < cacheEntities.size(); i++) {
-				session.insert(cacheEntities.get(i));
+				try {
+					session.insert(cacheEntities.get(i));	
+				}catch (ConstraintViolationException e) {
+					logger.debug(ExceptionUtils.getStackTrace(e));
+				}
+				
 			}
 			transaction.commit();
 		} catch (Exception e) {
