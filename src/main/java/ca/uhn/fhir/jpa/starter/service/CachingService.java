@@ -590,43 +590,30 @@ public class CachingService {
 		}
 	}
 
-	@Async("asyncTaskExecutor")
-	public void cacheMapData(List<String> orgIdList, String startDate, String endDate){
-		notificationDataSource = NotificationDataSource.getInstance();
-		List<List<String>> orgIDListBatch = Lists.partition(orgIdList, 50);
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
-		ArrayList<MapCacheEntity> resultToCache = new ArrayList<>();
-		ArrayList<MapCacheEntity> resultToUpdateCache = new ArrayList<>();
-		List<DateWiseMapData> dateWiseMapDataList = new ArrayList<DateWiseMapData>();
-		for (List<String> orgIds: orgIDListBatch){
-			dateWiseMapDataList.addAll(ReportGeneratorFactory.INSTANCE.reportGenerator().getMapData(fhirClientProvider, String.join(",", orgIds), new DateRange(startDate, endDate)));
-		}
-		logger.warn("-- Adding items to insert or update data for Map Cache");
-		for(DateWiseMapData item: dateWiseMapDataList){
-			Date date = Date.valueOf(LocalDate.parse(item.getDateKey(), DateTimeFormatter.ISO_DATE));
-			if (item.getDateResponse().size() == 0){
-				continue;
-			}
-			Set<Map.Entry<String, Map<String, PositionData>>> dateResponseMap = item.getDateResponse().entrySet();
-			for (Map.Entry<String, Map<String, PositionData>> entry: dateResponseMap){
-				String orgId = entry.getKey().substring(13);
-				for (Map.Entry<String, PositionData> positionDataEntry : entry.getValue().entrySet()) {
-					Double lat = positionDataEntry.getValue().getLat();
-					Double lng = positionDataEntry.getValue().getLng();
-					String plusCode = OpenLocationCode.encode(lat, lng);
-					String locId = positionDataEntry.getKey();
-					Map<String, Integer> categoryResponseMap = positionDataEntry.getValue().getCategoryResponse();
-					for (Map.Entry<String, Integer> categoryEntry: categoryResponseMap.entrySet()){
-						String categoryId = categoryEntry.getKey();
-						Integer weight = categoryEntry.getValue();
-						String idForMapCache = date.toString() + orgId + locId + categoryId;
-						List<MapCacheEntity> existingMapCache = notificationDataSource.getMapCacheByDateOrgIdAndCategory(date, orgId, categoryId);
-						if(existingMapCache.isEmpty()){
-							MapCacheEntity mapCache = new MapCacheEntity(idForMapCache, orgId, date, categoryId, lat, lng, plusCode, weight, Date.valueOf(LocalDate.now()));
+	public  void cacheMapData (Date date, Set<Map.Entry<String, Map<String, PositionData>>> dateResponseMap, ArrayList<MapCacheEntity> resultToCache, ArrayList<MapCacheEntity> resultToUpdateCache) {
+		logger.warn("-- Adding items to insert or update map cache for "+date);
+		for (Map.Entry<String, Map<String, PositionData>> entry: dateResponseMap){
+			String orgId = entry.getKey().substring(13);
+			for (Map.Entry<String, PositionData> positionDataEntry : entry.getValue().entrySet()) {
+				Double lat = positionDataEntry.getValue().getLat();
+				Double lng = positionDataEntry.getValue().getLng();
+				String plusCode = OpenLocationCode.encode(lat, lng);
+				String locId = positionDataEntry.getKey();
+				Map<String, Integer> categoryResponseMap = positionDataEntry.getValue().getCategoryResponse();
+				for (Map.Entry<String, Integer> categoryEntry: categoryResponseMap.entrySet()){
+					String categoryId = categoryEntry.getKey();
+					Integer weight = categoryEntry.getValue();
+					String idForMapCache = date.toString() + orgId + locId + categoryId;
+					List<MapCacheEntity> existingMapCache = notificationDataSource.getMapCacheByKeyId(idForMapCache);
+					if(existingMapCache.isEmpty()){
+						MapCacheEntity mapCache = new MapCacheEntity(idForMapCache, orgId, date, categoryId, lat, lng, plusCode, weight, Date.valueOf(LocalDate.now()));
+						if(!resultToCache.contains(mapCache)){
 							resultToCache.add(mapCache);
-						}else{
-							MapCacheEntity existingMapCacheEntity =  existingMapCache.get(0);
-							existingMapCacheEntity.setWeight(weight);
+						}
+					}else{
+						MapCacheEntity existingMapCacheEntity =  existingMapCache.get(0);
+						existingMapCacheEntity.setWeight(weight);
+						if(!resultToUpdateCache.contains(existingMapCacheEntity)){
 							resultToUpdateCache.add(existingMapCacheEntity);
 						}
 					}
@@ -636,6 +623,24 @@ public class CachingService {
 		logger.warn("-- Caching started for Map Data");
 		notificationDataSource.insertObjects(resultToCache);
 		notificationDataSource.updateObjects(resultToUpdateCache);
+	}
+
+	@Async("asyncTaskExecutor")
+	public void processMapDataForCache(List<String> orgIdList, String startDate, String endDate, ArrayList<MapCacheEntity> resultToCache, ArrayList<MapCacheEntity> resultToUpdateCache){
+		notificationDataSource = NotificationDataSource.getInstance();
+		List<List<String>> orgIDListBatch = Lists.partition(orgIdList, 50);
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
+		List<DateWiseMapData> dateWiseMapDataList = new ArrayList<DateWiseMapData>();
+		for (List<String> orgIds: orgIDListBatch){
+			dateWiseMapDataList.addAll(ReportGeneratorFactory.INSTANCE.reportGenerator().getMapData(fhirClientProvider, String.join(",", orgIds), new DateRange(startDate, endDate)));
+		}
+		for(DateWiseMapData item: dateWiseMapDataList){
+			Date date = Date.valueOf(LocalDate.parse(item.getDateKey(), DateTimeFormatter.ISO_DATE));
+			if (item.getDateResponse().size() != 0){
+				Set<Map.Entry<String, Map<String, PositionData>>> dateResponseMap = item.getDateResponse().entrySet();
+				cacheMapData(date, dateResponseMap, resultToCache, resultToUpdateCache);
+			}
+		}
 	}
 
 	//Don't remove this function. This may be utilised later
