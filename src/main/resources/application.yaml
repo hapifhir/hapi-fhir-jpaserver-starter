@@ -159,6 +159,7 @@ hapi:
       user_role: ${OAUTH_USER_ROLE}
       admin_role: ${OAUTH_ADMIN_ROLE}
       jwks_url: ${OAUTH_JWKS_URL}
+      authorize_url: ${OAUTH_AUTHORIZE_URL}
       token_url: ${OAUTH_TOKEN_URL}
       manage_url: ${OAUTH_MANAGE_URL}
 

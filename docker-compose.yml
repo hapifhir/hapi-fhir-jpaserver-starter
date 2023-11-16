@@ -24,6 +24,7 @@ services:
       OAUTH_USER_ROLE: fhir4-user
       OAUTH_ADMIN_ROLE: fhir4-admin
       OAUTH_JWKS_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/certs
+      OAUTH_AUTHORIZE_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/auth
       OAUTH_TOKEN_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/token
       OAUTH_MANAGE_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/account
       SMART_ISSUER: https://auth-internal.elimuinformatics.com/auth/realms/product

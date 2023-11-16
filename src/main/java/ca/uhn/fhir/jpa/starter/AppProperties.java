@@ -658,6 +658,7 @@ public class AppProperties {
   public static class Oauth {
     private Boolean enabled = false;
     private String jwks_url;
+    private String authorize_url;
     private String token_url;
     private String manage_url;
     private String client_id;
@@ -678,6 +679,14 @@ public class AppProperties {
 
     public void setJwks_url(String jwks_url) {
       this.jwks_url = jwks_url;
+    }
+
+    public String getAuthorize_url() {
+      return authorize_url;
+    }
+
+    public void setAuthorize_url(String authorize_url) {
+      this.authorize_url = authorize_url;
     }
 
     public String getToken_url() {
