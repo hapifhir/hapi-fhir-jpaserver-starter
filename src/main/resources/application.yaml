@@ -74,8 +74,8 @@ hapi:
       openapi_enabled: true
       fhir_version: R4
 #      hibernate.cache.use_minimal_puts: false
-      image_path: Images
-      audio_recordings_path: audio-recordings
+      image_path: image
+      audio_recordings_path: audio
       country_org_id: nigeria
 ###    These settings will enable fulltext search with lucene
 #      hibernate.search.enabled: true
