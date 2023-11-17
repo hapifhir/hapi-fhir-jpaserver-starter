@@ -58,7 +58,7 @@ public class TusService {
 				String fileName = new String(Base64.decodeBase64(tusFileUploadService.getUploadInfo(uploadUrl).getEncodedMetadata().split(" ")[1]), Charsets.UTF_8);
 				if (fileName.contains(".jpeg") || fileName.contains(".jpg"))
 					transferImagesToFinalStorage(uploadUrl);
-				else if (fileName.contains(".mav"))
+				else if (fileName.contains(".wav"))
 					transferAudioRecordingsToFinalStorage(uploadUrl);
 				else
 					logger.warn("Wrong File format for the file:" + fileName);
