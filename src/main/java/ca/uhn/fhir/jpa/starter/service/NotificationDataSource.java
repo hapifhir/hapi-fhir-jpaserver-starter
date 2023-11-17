@@ -138,7 +138,7 @@ public class NotificationDataSource {
 				try {
 					session.insert(cacheEntities.get(i));	
 				}catch (ConstraintViolationException e) {
-					logger.debug(ExceptionUtils.getStackTrace(e));
+					//do nothing
 				}
 				
 			}

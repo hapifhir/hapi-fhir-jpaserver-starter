@@ -80,34 +80,39 @@ public class FixNullReferenceInBundle {
 		boolean specialTreatment = false;
 		try {
 			String requestBody ="";
-			if(request.getHeader("Content-Encoding").contains("gzip")) {
-				// Create a GZIPInputStream to decompress the data
-				GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
+			if(null!=request.getHeader("Content-Encoding")) {
+				if(request.getHeader("Content-Encoding").contains("gzip")) {
+					// Create a GZIPInputStream to decompress the data
+					GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
 
-				// Create a buffer to read the decompressed data
-				byte[] buffer = new byte[1024];
-				ByteArrayOutputStream decompressedData = new ByteArrayOutputStream();
+					// Create a buffer to read the decompressed data
+					byte[] buffer = new byte[1024];
+					ByteArrayOutputStream decompressedData = new ByteArrayOutputStream();
 
-				int bytesRead;
-				while ((bytesRead = gzipInputStream.read(buffer)) != -1) {
-					decompressedData.write(buffer, 0, bytesRead);
+					int bytesRead;
+					while ((bytesRead = gzipInputStream.read(buffer)) != -1) {
+						decompressedData.write(buffer, 0, bytesRead);
+					}
+
+					// Close the input streams
+					gzipInputStream.close();
+					inputStream.close();
+
+					// Now, you can process the decompressed data as needed
+					requestBody = new String(decompressedData.toByteArray(), "UTF-8");
+		
+				}else {
+					// Now, you can process the decompressed data as needed
+					requestBody = Utils.getBody(request);
 				}
-
-				// Close the input streams
-				gzipInputStream.close();
-				inputStream.close();
-
-				// Now, you can process the decompressed data as needed
-				requestBody = new String(decompressedData.toByteArray(), "UTF-8");
-	
-			}else {
+			}
+			else {
 				// Now, you can process the decompressed data as needed
 				requestBody = Utils.getBody(request);
 			}
 						
-			
-			logger.warn("Request body " + requestBody.toString() + " "
-					+ request.getHeader("Content-Encoding").replace("gzip", ""));
+
+			logger.warn("Request body " + requestBody.toString());
 			Bundle fhirBundle = (Bundle) FhirContext.forCached(FhirVersionEnum.R4).newJsonParser()
 					.parseResource(requestBody.toString());
 
@@ -218,7 +223,6 @@ public class FixNullReferenceInBundle {
 		}catch(java.util.zip.ZipException e) {
 			return request;
 		}catch(Exception e) {
-			logger.warn(ExceptionUtils.getStackTrace(e));
 			return request;
 		}
 	}
