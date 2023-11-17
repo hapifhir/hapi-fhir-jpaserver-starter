@@ -2159,9 +2159,6 @@ public class HelperService {
 		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
 		ThreadPoolTaskExecutor executor =  asyncConf.asyncExecutor();
 		HashMap <String,Pair<Long,Long>> orgToTiming = new HashMap();
-		ArrayList<MapCacheEntity> resultToAddInMapCache = new ArrayList<>();
-		ArrayList<MapCacheEntity> resultToUpdateinMapCache = new ArrayList<>();
-		cachingService.processMapDataForCache(facilities, start, end, resultToAddInMapCache, resultToUpdateinMapCache);
 		List<List<String>> facilityBatches = Utils.partitionFacilities(facilities, appProperties.getExecutor_max_pool_size());
 		int count = 0;
 		long startTime = System.nanoTime();
@@ -2172,6 +2169,9 @@ public class HelperService {
 			Runnable worker = new Runnable() {
 				@Override
 				public void run() {
+					ArrayList<MapCacheEntity> resultToAddInMapCache = new ArrayList<>();
+					ArrayList<MapCacheEntity> resultToUpdateinMapCache = new ArrayList<>();
+					cachingService.processMapDataForCache(facilityBatch, start, end, resultToAddInMapCache, resultToUpdateinMapCache);
 					for (String facilityId : facilityBatch) {
 						Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 						Date startDate = Date.valueOf(start);
@@ -2181,6 +2181,7 @@ public class HelperService {
 						datasource.insert(lastSyncEntity);
 						cacheDashboardData(facilityId, startDate, endDate, indicators, barCharts, tabularItemList,
 								lineCharts, pieChartDefinitions, countFinal, orgToTiming, env);
+						
 					}
 				}
 			};

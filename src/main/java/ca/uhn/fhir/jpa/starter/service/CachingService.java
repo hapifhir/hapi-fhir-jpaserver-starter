@@ -590,7 +590,7 @@ public class CachingService {
 		}
 	}
 
-	public  void cacheMapData (Date date, Set<Map.Entry<String, Map<String, PositionData>>> dateResponseMap, ArrayList<MapCacheEntity> resultToCache, ArrayList<MapCacheEntity> resultToUpdateCache) {
+	public void cacheMapData (Date date, Set<Map.Entry<String, Map<String, PositionData>>> dateResponseMap, ArrayList<MapCacheEntity> resultToCache, ArrayList<MapCacheEntity> resultToUpdateCache) {
 		logger.warn("-- Adding items to insert or update map cache for "+date);
 		for (Map.Entry<String, Map<String, PositionData>> entry: dateResponseMap){
 			String orgId = entry.getKey().substring(13);
@@ -625,7 +625,6 @@ public class CachingService {
 		notificationDataSource.updateObjects(resultToUpdateCache);
 	}
 
-	@Async("asyncTaskExecutor")
 	public void processMapDataForCache(List<String> orgIdList, String startDate, String endDate, ArrayList<MapCacheEntity> resultToCache, ArrayList<MapCacheEntity> resultToUpdateCache){
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<List<String>> orgIDListBatch = Lists.partition(orgIdList, 50);
