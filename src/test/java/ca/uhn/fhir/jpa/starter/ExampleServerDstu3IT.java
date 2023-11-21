@@ -42,8 +42,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties =
   {
      "spring.datasource.url=jdbc:h2:mem:dbr3",
-     "hapi.fhir.cr_enabled=true",
      "hapi.fhir.fhir_version=dstu3",
+	  "hapi.fhir.cr_enabled=true",
      "hapi.fhir.subscription.websocket_enabled=true",
      "hapi.fhir.allow_external_references=true",
      "hapi.fhir.allow_placeholder_references=true",

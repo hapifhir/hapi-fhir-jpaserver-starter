@@ -1,10 +1,16 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
+import ca.uhn.fhir.cr.common.CodeCacheResourceChangeListener;
+import ca.uhn.fhir.cr.common.ElmCacheResourceChangeListener;
 import ca.uhn.fhir.cr.config.dstu3.ApplyOperationConfig;
 import ca.uhn.fhir.cr.config.dstu3.CrDstu3Config;
 import ca.uhn.fhir.cr.config.dstu3.ExtractOperationConfig;
 import ca.uhn.fhir.cr.config.dstu3.PackageOperationConfig;
 import ca.uhn.fhir.cr.config.dstu3.PopulateOperationConfig;
+import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
+import ca.uhn.fhir.jpa.cache.IResourceChangeListenerRegistry;
+import ca.uhn.fhir.jpa.cache.ResourceChangeListenerRegistryInterceptor;
+import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.jpa.starter.annotations.OnDSTU3Condition;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
@@ -26,11 +32,12 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 @Conditional({ OnDSTU3Condition.class, CrConfigCondition.class })
 @Import({
-	BaseCrConfig.class,
+	//BaseCrConfig.class,
 	CrDstu3Config.class,
 	ApplyOperationConfig.class,
 	ExtractOperationConfig.class,
@@ -132,4 +139,54 @@ public class StarterCrDstu3Config {
 																					 ResourceProviderFactory theResourceProviderFactory) {
 		return new PostInitProviderRegisterer(theRestfulServer, theResourceProviderFactory);}
 
+	@Bean
+	public CrProperties crProperties() {
+		return new CrProperties();
+	}
+
+	@Bean
+	public Map<VersionedIdentifier, CompiledLibrary> globalLibraryCache() {
+		return new ConcurrentHashMap<>();
+	}
+
+	@Bean
+	public Map<ModelIdentifier, Model> globalModelCache() {
+		return new ConcurrentHashMap<>();
+	}
+
+	@Bean
+	public Map<String, List<Code>> globalValueSetCache() {
+		return new ConcurrentHashMap<>();
+	}
+
+	@Bean
+	public ElmCacheResourceChangeListener elmCacheResourceChangeListener(
+		IResourceChangeListenerRegistry theResourceChangeListenerRegistry,
+		DaoRegistry theDaoRegistry,
+		EvaluationSettings theEvaluationSettings) {
+		ElmCacheResourceChangeListener listener =
+			new ElmCacheResourceChangeListener(theDaoRegistry, theEvaluationSettings.getLibraryCache());
+		theResourceChangeListenerRegistry.registerResourceResourceChangeListener(
+			"Library", SearchParameterMap.newSynchronous(), listener, 1000);
+		return listener;
+	}
+
+	@Bean
+	public CodeCacheResourceChangeListener codeCacheResourceChangeListener(
+		IResourceChangeListenerRegistry theResourceChangeListenerRegistry,
+		EvaluationSettings theEvaluationSettings,
+		DaoRegistry theDaoRegistry) {
+
+		CodeCacheResourceChangeListener listener = new CodeCacheResourceChangeListener(theDaoRegistry, theEvaluationSettings.getValueSetCache());
+		//registry
+		theResourceChangeListenerRegistry.registerResourceResourceChangeListener(
+			"ValueSet", SearchParameterMap.newSynchronous(), listener,1000);
+
+		return listener;
+	}
+
+	@Bean
+	public ResourceChangeListenerRegistryInterceptor resourceChangeListenerRegistryInterceptor() {
+		return new ResourceChangeListenerRegistryInterceptor();
+	}
 }
