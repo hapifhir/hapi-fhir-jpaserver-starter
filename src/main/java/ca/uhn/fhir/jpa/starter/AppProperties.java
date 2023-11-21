@@ -74,7 +74,6 @@ public class AppProperties {
   private Cors cors = null;
   private Partitioning partitioning = null;
   private Boolean install_transitive_ig_dependencies = true;
-  private Boolean reload_existing_implementationguides = false;
   private Map<String, PackageInstallationSpec> implementationGuides = null;
 
 	private String staticLocation = null;
@@ -565,14 +564,6 @@ public class AppProperties {
 		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
 	}
 	
-	public boolean getReload_existing_implementationguides() {
-		return reload_existing_implementationguides;
-	}
-	
-	public void setReload_existing_implementationguides(boolean reload_existing_implementationguides) {
-		this.reload_existing_implementationguides = reload_existing_implementationguides;
-	}
-
 	public Integer getBundle_batch_pool_size() {
 		return this.bundle_batch_pool_size;
 	}
