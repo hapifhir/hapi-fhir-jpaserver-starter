@@ -193,14 +193,15 @@ public class ServerInterceptor {
 	private void processPatientInsert(IBaseResource theResource) {
 		Patient patient = (Patient) theResource;
 		String patientId = patient.getIdElement().getIdPart();
-		Triple<String, String, String> patientOclId = FhirUtils.getOclIdFromIdentifier(patient.getIdentifier());
-		String patientTelecom = patient.getTelecomFirstRep().getValue();
-		String patientCardNumber = FhirUtils.getPatientCardNumber(patient.getIdentifier());
-		Long currentEpochTime = System.currentTimeMillis();
 
 		if (FhirUtils.isOclPatient(patient.getIdentifier())) {
 			return;
 		}
+
+		Triple<String, String, String> patientOclId = FhirUtils.getOclIdFromIdentifier(patient.getIdentifier());
+		String patientTelecom = patient.getTelecomFirstRep().getValue();
+		String patientCardNumber = FhirUtils.getPatientCardNumber(patient.getIdentifier());
+		Long currentEpochTime = System.currentTimeMillis();
 
 		if (patientOclId != null && patientOclId.getFirst() != null) {
 			PatientIdentifierEntity patientIdentifierEntityOcl = new PatientIdentifierEntity(patientId,

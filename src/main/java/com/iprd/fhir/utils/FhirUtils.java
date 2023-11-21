@@ -92,9 +92,10 @@ public class FhirUtils {
 		Map<String, String> map = new HashMap<String, String>();
 
 		for (String param : params) {
-			String name = param.split("=")[0];
-			String value = param.split("=")[1];
-			map.put(name, value);
+			String[] paramList = param.split("=");
+			if (paramList.length > 1) {
+				map.put(paramList[0], paramList[1]);
+			}
 		}
 		return map;
 	}
