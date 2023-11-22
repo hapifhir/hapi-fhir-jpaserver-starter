@@ -86,7 +86,7 @@ public class CdsHooksServlet extends HttpServlet {
 			String service = request.getPathInfo().replace("/", "");
 
 			String requestJson = request.getReader().lines().collect(Collectors.joining());
-			CdsServiceRequestJson cdsHooksRequest = objectMapper.readValue(requestJson, CdsServiceRequestJson.class);
+			CdsHooksRequest cdsHooksRequest = objectMapper.readValue(requestJson, CdsHooksRequest.class);
 			logRequestInfo(cdsHooksRequest, requestJson);
 
 			CdsServiceResponseJson serviceResponseJson = cdsServiceRegistry.callService(service, cdsHooksRequest);
