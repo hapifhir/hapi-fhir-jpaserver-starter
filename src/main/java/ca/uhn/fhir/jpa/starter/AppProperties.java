@@ -6,9 +6,6 @@ import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.rest.api.EncodingEnum;
-import org.cqframework.cql.cql2elm.CqlCompilerException;
-import org.cqframework.cql.cql2elm.CqlTranslator;
-import org.cqframework.cql.cql2elm.LibraryBuilder;
 import org.hl7.fhir.r4.model.Bundle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -25,7 +22,7 @@ import java.util.Set;
 @Configuration
 @EnableConfigurationProperties
 public class AppProperties {
-
+	
 	private Boolean ips_enabled = false;
 	private Boolean openapi_enabled = false;
 	private Boolean mdm_enabled = false;
@@ -68,7 +65,6 @@ public class AppProperties {
 	private List<String> supported_resource_types = new ArrayList<>();
 	private List<Bundle.BundleType> allowed_bundle_types = null;
 	private Boolean narrative_enabled = true;
-
 	private Validation validation = new Validation();
 	private Map<String, Tester> tester = null;
 	private Logger logger = new Logger();
@@ -78,22 +74,17 @@ public class AppProperties {
 	private Boolean install_transitive_ig_dependencies = true;
 	private Boolean reload_existing_implementationguides = false;
 	private Map<String, PackageInstallationSpec> implementationGuides = null;
-
+	private Boolean cr_enabled = false;
 	private String staticLocation = null;
-
 	private String staticLocationPrefix = "/static";
-
 	private Boolean lastn_enabled = false;
 	private boolean store_resource_in_lucene_index_enabled = false;
 	private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
-
 	private Boolean use_apache_address_strategy = false;
 	private Boolean use_apache_address_strategy_https = false;
-
 	private Integer bundle_batch_pool_size = 20;
 	private Integer bundle_batch_pool_max_size = 100;
 	private final Set<String> local_base_urls = new HashSet<>();
-
 	private final List<String> custom_interceptor_classes = new ArrayList<>();
 
 	public String getStaticLocationPrefix() {
