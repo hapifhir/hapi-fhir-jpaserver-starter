@@ -132,6 +132,7 @@ hapi:
     #    local_base_urls:
     #      - https://hapi.fhir.org/baseR4
     mdm_enabled: false
+    mdm_rules_json_location: "mdm-rules.json"
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
