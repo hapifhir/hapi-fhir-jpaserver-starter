@@ -75,8 +75,6 @@ hapi:
     #    server_address: http://hapi.fhir.org/baseR4
     #    defer_indexing_for_codesystems_of_size: 101
     #    install_transitive_ig_dependencies: true
-    ### tells the server whether to attempt to load IG resources that are already present
-    #    reload_existing_implementationGuides : false
     #implementationguides:
     ###    example from registry (packages.fhir.org)
     #  swiss:
