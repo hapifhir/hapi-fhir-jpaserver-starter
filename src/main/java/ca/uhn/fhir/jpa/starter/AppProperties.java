@@ -76,6 +76,18 @@ public class AppProperties {
 	private Boolean reload_existing_implementationguides = false;
 	private Map<String, PackageInstallationSpec> implementationGuides = null;
 	private Boolean cr_enabled = false;
+
+  private Boolean ig_runtime_upload_enabled = false;
+
+  private Validation validation = new Validation();
+  private Map<String, Tester> tester = null;
+  private Logger logger = new Logger();
+  private Subscription subscription = new Subscription();
+  private Cors cors = null;
+  private Partitioning partitioning = null;
+  private Boolean install_transitive_ig_dependencies = true;
+  private Map<String, PackageInstallationSpec> implementationGuides = null;
+
 	private String staticLocation = null;
 	private String staticLocationPrefix = "/static";
 	private Boolean lastn_enabled = false;
@@ -577,6 +589,14 @@ public class AppProperties {
 
 	public Set<String> getLocal_base_urls() {
 		return local_base_urls;
+	}
+
+	public Boolean getIg_runtime_upload_enabled() {
+		return ig_runtime_upload_enabled;
+	}
+
+	public void setIg_runtime_upload_enabled(Boolean ig_runtime_upload_enabled) {
+		this.ig_runtime_upload_enabled = ig_runtime_upload_enabled;
 	}
 
 	public static class Cors {
