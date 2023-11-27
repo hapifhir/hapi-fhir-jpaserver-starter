@@ -76,18 +76,7 @@ public class AppProperties {
 	private Boolean reload_existing_implementationguides = false;
 	private Map<String, PackageInstallationSpec> implementationGuides = null;
 	private Boolean cr_enabled = false;
-
   private Boolean ig_runtime_upload_enabled = false;
-
-  private Validation validation = new Validation();
-  private Map<String, Tester> tester = null;
-  private Logger logger = new Logger();
-  private Subscription subscription = new Subscription();
-  private Cors cors = null;
-  private Partitioning partitioning = null;
-  private Boolean install_transitive_ig_dependencies = true;
-  private Map<String, PackageInstallationSpec> implementationGuides = null;
-
 	private String staticLocation = null;
 	private String staticLocationPrefix = "/static";
 	private Boolean lastn_enabled = false;
