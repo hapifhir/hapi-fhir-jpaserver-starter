@@ -336,12 +336,12 @@ NOTE: MS SQL Server by default uses a case-insensitive codepage. This will cause
 It is recommended to deploy a case-sensitive database prior to running HAPI FHIR when using MS SQL Server to avoid these and potentially other issues.
 
 ## Adding custom interceptors
-Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server. 
-Interceptors will be discovered in one of two ways: 
+Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server.
+Interceptors will be discovered in one of two ways:
 
 1) discovered from the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
 
-or 
+or
 
 2) classes will be instantiated via reflection if no matching Bean is found
 

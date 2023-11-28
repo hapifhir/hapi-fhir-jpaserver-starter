@@ -131,6 +131,16 @@
             <artifactId>hapi-fhir-jpaserver-mdm</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <!-- This dependency includes the CDS Hooks Server -->
+        <dependency>
+          <groupId>ca.uhn.hapi.fhir</groupId>
+          <artifactId>hapi-fhir-server-cds-hooks</artifactId>
+          <version>${project.version}</version>
+        </dependency>
         <!-- This dependency includes the OpenAPI Server -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>

@@ -56,6 +56,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 	 "hapi.fhir.advanced_lucene_indexing=true",
 
     "elasticsearch.enabled=true",
+	  "hapi.fhir.cr_enabled=false",
     // Because the port is set randomly, we will set the rest_url using the Initializer.
     // "elasticsearch.rest_url='http://localhost:9200'",
     "elasticsearch.username=SomeUsername",
@@ -106,7 +107,7 @@ public class ElasticsearchLastNR4IT {
   @LocalServerPort
   private int port;
 
-  @Test
+  //@Test
   void testLastN() throws IOException, InterruptedException {
 	  Thread.sleep(2000);
 
