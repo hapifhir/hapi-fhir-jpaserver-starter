@@ -1,6 +1,5 @@
 package ca.uhn.fhir.jpa.starter;
 
-
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
@@ -84,7 +83,8 @@ public class AppProperties {
 
 	private Boolean lastn_enabled = false;
 	private boolean store_resource_in_lucene_index_enabled = false;
-	private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
+	private NormalizedQuantitySearchLevel normalized_quantity_search_level =
+			NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
 
 	private Boolean use_apache_address_strategy = false;
 	private Boolean use_apache_address_strategy_https = false;
@@ -103,11 +103,9 @@ public class AppProperties {
 		this.staticLocationPrefix = staticLocationPrefix;
 	}
 
-
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
 	}
-
 
 	public String getStaticLocation() {
 		return staticLocation;
@@ -116,7 +114,6 @@ public class AppProperties {
 	public void setStaticLocation(String staticLocation) {
 		this.staticLocation = staticLocation;
 	}
-
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
@@ -181,7 +178,6 @@ public class AppProperties {
 	public void setIps_enabled(Boolean ips_enabled) {
 		this.ips_enabled = ips_enabled;
 	}
-
 
 	public Boolean getMdm_enabled() {
 		return mdm_enabled;
@@ -259,8 +255,7 @@ public class AppProperties {
 		return client_id_strategy;
 	}
 
-	public void setClient_id_strategy(
-		ClientIdStrategyEnum client_id_strategy) {
+	public void setClient_id_strategy(ClientIdStrategyEnum client_id_strategy) {
 		this.client_id_strategy = client_id_strategy;
 	}
 
@@ -308,8 +303,7 @@ public class AppProperties {
 		return allow_override_default_search_params;
 	}
 
-	public void setAllow_override_default_search_params(
-		Boolean allow_override_default_search_params) {
+	public void setAllow_override_default_search_params(Boolean allow_override_default_search_params) {
 		this.allow_override_default_search_params = allow_override_default_search_params;
 	}
 
@@ -317,8 +311,7 @@ public class AppProperties {
 		return auto_create_placeholder_reference_targets;
 	}
 
-	public void setAuto_create_placeholder_reference_targets(
-		Boolean auto_create_placeholder_reference_targets) {
+	public void setAuto_create_placeholder_reference_targets(Boolean auto_create_placeholder_reference_targets) {
 		this.auto_create_placeholder_reference_targets = auto_create_placeholder_reference_targets;
 	}
 
@@ -378,8 +371,7 @@ public class AppProperties {
 		return enforce_referential_integrity_on_delete;
 	}
 
-	public void setEnforce_referential_integrity_on_delete(
-		Boolean enforce_referential_integrity_on_delete) {
+	public void setEnforce_referential_integrity_on_delete(Boolean enforce_referential_integrity_on_delete) {
 		this.enforce_referential_integrity_on_delete = enforce_referential_integrity_on_delete;
 	}
 
@@ -387,8 +379,7 @@ public class AppProperties {
 		return enforce_referential_integrity_on_write;
 	}
 
-	public void setEnforce_referential_integrity_on_write(
-		Boolean enforce_referential_integrity_on_write) {
+	public void setEnforce_referential_integrity_on_write(Boolean enforce_referential_integrity_on_write) {
 		this.enforce_referential_integrity_on_write = enforce_referential_integrity_on_write;
 	}
 
@@ -524,13 +515,11 @@ public class AppProperties {
 		this.tester = tester;
 	}
 
-	public Boolean getNarrative_enabled()
-	{
+	public Boolean getNarrative_enabled() {
 		return narrative_enabled;
 	}
 
-	public void setNarrative_enabled(Boolean narrative_enabled)
-	{
+	public void setNarrative_enabled(Boolean narrative_enabled) {
 		this.narrative_enabled = narrative_enabled;
 	}
 
@@ -613,15 +602,14 @@ public class AppProperties {
 		public void setAllow_Credentials(Boolean allow_Credentials) {
 			this.allow_Credentials = allow_Credentials;
 		}
-
-
 	}
 
 	public static class Logger {
 
 		private String name = "fhirtest.access";
 		private String error_format = "ERROR - ${requestVerb} ${requestUrl}";
-		private String format = "Path[${servletPath}] Source[${requestHeader.x-forwarded-for}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}]";
+		private String format =
+				"Path[${servletPath}] Source[${requestHeader.x-forwarded-for}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}] Operation[${operationType} ${operationName} ${idOrResourceName}] UA[${requestHeader.user-agent}] Params[${requestParameters}] ResponseEncoding[${responseEncodingNoDefault}]";
 		private Boolean log_exceptions = true;
 
 		public String getName() {
@@ -656,7 +644,6 @@ public class AppProperties {
 			this.log_exceptions = log_exceptions;
 		}
 	}
-
 
 	public static class Tester {
 
@@ -698,7 +685,6 @@ public class AppProperties {
 		}
 	}
 
-
 	public static class Validation {
 
 		private Boolean requests_enabled = false;
@@ -733,6 +719,7 @@ public class AppProperties {
 		public void setPartitioning_include_in_search_hashes(Boolean partitioning_include_in_search_hashes) {
 			this.partitioning_include_in_search_hashes = partitioning_include_in_search_hashes;
 		}
+
 		public Boolean getAllow_references_across_partitions() {
 			return allow_references_across_partitions;
 		}
@@ -771,7 +758,6 @@ public class AppProperties {
 		public void setEmail(Email email) {
 			this.email = email;
 		}
-
 
 		public static class Email {
 			public String getFrom() {
