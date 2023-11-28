@@ -22,15 +22,15 @@ public class ImplementationGuideR5OperationProvider {
 	}
 
 	@Operation(name = "$install", typeName = "ImplementationGuide")
-	public Parameters install(@OperationParam(name = "npmContent", min = 1, max = 1) Base64BinaryType implementationGuide) {
+	public Parameters install(
+			@OperationParam(name = "npmContent", min = 1, max = 1) Base64BinaryType implementationGuide) {
 		try {
 
-			packageInstallerSvc.install(IImplementationGuideOperationProvider.toPackageInstallationSpec(implementationGuide.getValue()));
+			packageInstallerSvc.install(
+					IImplementationGuideOperationProvider.toPackageInstallationSpec(implementationGuide.getValue()));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		return new Parameters();
 	}
-
-
 }

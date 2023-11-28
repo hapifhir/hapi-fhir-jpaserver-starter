@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "hapi.fhir.cr")
 public class CrProperties {
 	private Boolean enabled;
-	//cql settings
+	// cql settings
 	private Boolean cql_use_embedded_libraries = true;
 	private Boolean cql_runtime_debug_logging_enabled = false;
 	private Boolean cql_runtime_enable_validation = false;
@@ -37,7 +37,7 @@ public class CrProperties {
 	// Care-gaps Settings
 	private String caregaps_reporter = "default";
 	private String caregaps_section_author = "default";
-	
+
 	public Boolean getEnabled() {
 		return enabled;
 	}

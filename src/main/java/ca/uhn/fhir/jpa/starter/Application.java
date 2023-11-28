@@ -1,9 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
-import ca.uhn.fhir.cr.common.IRepositoryFactory;
-import ca.uhn.fhir.cr.repo.HapiFhirRepository;
-import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import ca.uhn.fhir.jpa.starter.cdshooks.StarterCdsHooksConfig;
@@ -32,19 +29,19 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-@ServletComponentScan(basePackageClasses = { RestfulServer.class })
-@SpringBootApplication(exclude = { ElasticsearchRestClientAutoConfiguration.class, ThymeleafAutoConfiguration.class })
+@ServletComponentScan(basePackageClasses = {RestfulServer.class})
+@SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class, ThymeleafAutoConfiguration.class})
 @Import({
-		StarterCrR4Config.class,
-		StarterCrDstu3Config.class,
-		StarterCdsHooksConfig.class,
-		SubscriptionSubmitterConfig.class,
-		SubscriptionProcessorConfig.class,
-		SubscriptionChannelConfig.class,
-		WebsocketDispatcherConfig.class,
-		MdmConfig.class,
-		JpaBatch2Config.class,
-		Batch2JobsConfig.class
+	StarterCrR4Config.class,
+	StarterCrDstu3Config.class,
+	StarterCdsHooksConfig.class,
+	SubscriptionSubmitterConfig.class,
+	SubscriptionProcessorConfig.class,
+	SubscriptionChannelConfig.class,
+	WebsocketDispatcherConfig.class,
+	MdmConfig.class,
+	JpaBatch2Config.class,
+	Batch2JobsConfig.class
 })
 public class Application extends SpringBootServletInitializer {
 
@@ -57,8 +54,7 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 	@Override
-	protected SpringApplicationBuilder configure(
-			SpringApplicationBuilder builder) {
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(Application.class);
 	}
 
@@ -80,11 +76,11 @@ public class Application extends SpringBootServletInitializer {
 	@Bean
 	public ServletRegistrationBean overlayRegistrationBean() {
 
-		AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
+		AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext =
+				new AnnotationConfigWebApplicationContext();
 		annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
 
-		DispatcherServlet dispatcherServlet = new DispatcherServlet(
-				annotationConfigWebApplicationContext);
+		DispatcherServlet dispatcherServlet = new DispatcherServlet(annotationConfigWebApplicationContext);
 		dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
 		dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
 
@@ -93,11 +89,10 @@ public class Application extends SpringBootServletInitializer {
 		registrationBean.addUrlMappings("/*");
 		registrationBean.setLoadOnStartup(1);
 		return registrationBean;
-
 	}
 
-//	@Bean
-//	IRepositoryFactory repositoryFactory(DaoRegistry theDaoRegistry, RestfulServer theRestfulServer) {
-//		return rd -> new HapiFhirRepository(theDaoRegistry, rd, theRestfulServer);
-//	}
+	//	@Bean
+	//	IRepositoryFactory repositoryFactory(DaoRegistry theDaoRegistry, RestfulServer theRestfulServer) {
+	//		return rd -> new HapiFhirRepository(theDaoRegistry, rd, theRestfulServer);
+	//	}
 }

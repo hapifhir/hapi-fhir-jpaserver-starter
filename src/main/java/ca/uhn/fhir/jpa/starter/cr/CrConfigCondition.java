@@ -10,5 +10,5 @@ public class CrConfigCondition implements Condition {
 	public boolean matches(ConditionContext theConditionContext, AnnotatedTypeMetadata theAnnotatedTypeMetadata) {
 		String property = theConditionContext.getEnvironment().getProperty("hapi.fhir.cr.enabled");
 		return Boolean.parseBoolean(property);
-  }
+	}
 }

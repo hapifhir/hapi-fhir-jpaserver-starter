@@ -35,9 +35,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
-@Conditional({ OnDSTU3Condition.class, CrConfigCondition.class })
+@Conditional({OnDSTU3Condition.class, CrConfigCondition.class})
 @Import({
-	//BaseCrConfig.class,
+	// BaseCrConfig.class,
 	CrDstu3Config.class,
 	ApplyOperationConfig.class,
 	ExtractOperationConfig.class,
@@ -48,11 +48,12 @@ public class StarterCrDstu3Config {
 	private static final Logger ourLogger = LoggerFactory.getLogger(StarterCrDstu3Config.class);
 
 	@Bean
-	MeasureEvaluationOptions measureEvaluationOptions(EvaluationSettings theEvaluationSettings, Map<String, ValidationProfile> theValidationProfiles){
+	MeasureEvaluationOptions measureEvaluationOptions(
+			EvaluationSettings theEvaluationSettings, Map<String, ValidationProfile> theValidationProfiles) {
 		MeasureEvaluationOptions measureEvalOptions = new MeasureEvaluationOptions();
 		measureEvalOptions.setEvaluationSettings(theEvaluationSettings);
 
-		if(measureEvalOptions.isValidationEnabled()) {
+		if (measureEvalOptions.isValidationEnabled()) {
 			measureEvalOptions.setValidationProfiles(theValidationProfiles);
 		}
 		return measureEvalOptions;
@@ -60,10 +61,10 @@ public class StarterCrDstu3Config {
 
 	@Bean
 	public EvaluationSettings evaluationSettings(
-		CrProperties theCrProperties,
-		Map<VersionedIdentifier, CompiledLibrary> theGlobalLibraryCache,
-		Map<ModelIdentifier, Model> theGlobalModelCache,
-		Map<String, List<Code>> theGlobalValueSetCache) {
+			CrProperties theCrProperties,
+			Map<VersionedIdentifier, CompiledLibrary> theGlobalLibraryCache,
+			Map<ModelIdentifier, Model> theGlobalModelCache,
+			Map<String, List<Code>> theGlobalValueSetCache) {
 		var evaluationSettings = EvaluationSettings.getDefault();
 		var cqlOptions = evaluationSettings.getCqlOptions();
 
@@ -135,9 +136,10 @@ public class StarterCrDstu3Config {
 	}
 
 	@Bean
-	public PostInitProviderRegisterer postInitProviderRegisterer(RestfulServer theRestfulServer,
-																					 ResourceProviderFactory theResourceProviderFactory) {
-		return new PostInitProviderRegisterer(theRestfulServer, theResourceProviderFactory);}
+	public PostInitProviderRegisterer postInitProviderRegisterer(
+			RestfulServer theRestfulServer, ResourceProviderFactory theResourceProviderFactory) {
+		return new PostInitProviderRegisterer(theRestfulServer, theResourceProviderFactory);
+	}
 
 	@Bean
 	public CrProperties crProperties() {
@@ -161,26 +163,27 @@ public class StarterCrDstu3Config {
 
 	@Bean
 	public ElmCacheResourceChangeListener elmCacheResourceChangeListener(
-		IResourceChangeListenerRegistry theResourceChangeListenerRegistry,
-		DaoRegistry theDaoRegistry,
-		EvaluationSettings theEvaluationSettings) {
+			IResourceChangeListenerRegistry theResourceChangeListenerRegistry,
+			DaoRegistry theDaoRegistry,
+			EvaluationSettings theEvaluationSettings) {
 		ElmCacheResourceChangeListener listener =
-			new ElmCacheResourceChangeListener(theDaoRegistry, theEvaluationSettings.getLibraryCache());
+				new ElmCacheResourceChangeListener(theDaoRegistry, theEvaluationSettings.getLibraryCache());
 		theResourceChangeListenerRegistry.registerResourceResourceChangeListener(
-			"Library", SearchParameterMap.newSynchronous(), listener, 1000);
+				"Library", SearchParameterMap.newSynchronous(), listener, 1000);
 		return listener;
 	}
 
 	@Bean
 	public CodeCacheResourceChangeListener codeCacheResourceChangeListener(
-		IResourceChangeListenerRegistry theResourceChangeListenerRegistry,
-		EvaluationSettings theEvaluationSettings,
-		DaoRegistry theDaoRegistry) {
+			IResourceChangeListenerRegistry theResourceChangeListenerRegistry,
+			EvaluationSettings theEvaluationSettings,
+			DaoRegistry theDaoRegistry) {
 
-		CodeCacheResourceChangeListener listener = new CodeCacheResourceChangeListener(theDaoRegistry, theEvaluationSettings.getValueSetCache());
-		//registry
+		CodeCacheResourceChangeListener listener =
+				new CodeCacheResourceChangeListener(theDaoRegistry, theEvaluationSettings.getValueSetCache());
+		// registry
 		theResourceChangeListenerRegistry.registerResourceResourceChangeListener(
-			"ValueSet", SearchParameterMap.newSynchronous(), listener,1000);
+				"ValueSet", SearchParameterMap.newSynchronous(), listener, 1000);
 
 		return listener;
 	}

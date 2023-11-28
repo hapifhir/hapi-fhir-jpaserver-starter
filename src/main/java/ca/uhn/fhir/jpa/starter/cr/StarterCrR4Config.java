@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
 import ca.uhn.fhir.cr.common.CodeCacheResourceChangeListener;
+import ca.uhn.fhir.cr.common.CqlThreadFactory;
 import ca.uhn.fhir.cr.common.ElmCacheResourceChangeListener;
 import ca.uhn.fhir.cr.config.r4.ApplyOperationConfig;
 import ca.uhn.fhir.cr.config.r4.CrR4Config;
@@ -14,8 +15,6 @@ import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
-import ca.uhn.fhir.cr.common.CqlThreadFactory;
-
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.cql2elm.model.Model;
@@ -45,7 +44,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Configuration
-@Conditional({ OnR4Condition.class, CrConfigCondition.class })
+@Conditional({OnR4Condition.class, CrConfigCondition.class})
 @Import({
 	CrR4Config.class,
 	ApplyOperationConfig.class,
@@ -60,16 +59,14 @@ public class StarterCrR4Config {
 	@Bean
 	public ExecutorService cqlExecutor() {
 		CqlThreadFactory factory = new CqlThreadFactory();
-		ExecutorService executor = Executors.
-			newFixedThreadPool(2
-				,  factory);
+		ExecutorService executor = Executors.newFixedThreadPool(2, factory);
 		executor = new DelegatingSecurityContextExecutorService(executor);
 
 		return executor;
 	}
 
 	@Bean
-	CareGapsProperties careGapsProperties(CrProperties theCrProperties)  {
+	CareGapsProperties careGapsProperties(CrProperties theCrProperties) {
 		var careGapsProperties = new CareGapsProperties();
 		careGapsProperties.setThreadedCareGapsEnabled(false);
 		careGapsProperties.setCareGapsReporter(theCrProperties.getCareGapsReporter());
@@ -78,10 +75,11 @@ public class StarterCrR4Config {
 	}
 
 	@Bean
-	MeasureEvaluationOptions measureEvaluationOptions(EvaluationSettings theEvaluationSettings, Map<String, ValidationProfile> theValidationProfiles){
+	MeasureEvaluationOptions measureEvaluationOptions(
+			EvaluationSettings theEvaluationSettings, Map<String, ValidationProfile> theValidationProfiles) {
 		MeasureEvaluationOptions measureEvalOptions = new MeasureEvaluationOptions();
 		measureEvalOptions.setEvaluationSettings(theEvaluationSettings);
-		if(measureEvalOptions.isValidationEnabled()) {
+		if (measureEvalOptions.isValidationEnabled()) {
 			measureEvalOptions.setValidationProfiles(theValidationProfiles);
 		}
 		return measureEvalOptions;
@@ -89,10 +87,10 @@ public class StarterCrR4Config {
 
 	@Bean
 	public EvaluationSettings evaluationSettings(
-		CrProperties theCrProperties,
-		Map<VersionedIdentifier, CompiledLibrary> theGlobalLibraryCache,
-		Map<ModelIdentifier, Model> theGlobalModelCache,
-		Map<String, List<Code>> theGlobalValueSetCache) {
+			CrProperties theCrProperties,
+			Map<VersionedIdentifier, CompiledLibrary> theGlobalLibraryCache,
+			Map<ModelIdentifier, Model> theGlobalModelCache,
+			Map<String, List<Code>> theGlobalValueSetCache) {
 		var evaluationSettings = EvaluationSettings.getDefault();
 		var cqlOptions = evaluationSettings.getCqlOptions();
 
@@ -164,8 +162,8 @@ public class StarterCrR4Config {
 	}
 
 	@Bean
-	public PostInitProviderRegisterer postInitProviderRegisterer(RestfulServer theRestfulServer,
-																					 ResourceProviderFactory theResourceProviderFactory) {
+	public PostInitProviderRegisterer postInitProviderRegisterer(
+			RestfulServer theRestfulServer, ResourceProviderFactory theResourceProviderFactory) {
 		return new PostInitProviderRegisterer(theRestfulServer, theResourceProviderFactory);
 	}
 
@@ -191,26 +189,27 @@ public class StarterCrR4Config {
 
 	@Bean
 	public ElmCacheResourceChangeListener elmCacheResourceChangeListener(
-		IResourceChangeListenerRegistry theResourceChangeListenerRegistry,
-		DaoRegistry theDaoRegistry,
-		EvaluationSettings theEvaluationSettings) {
+			IResourceChangeListenerRegistry theResourceChangeListenerRegistry,
+			DaoRegistry theDaoRegistry,
+			EvaluationSettings theEvaluationSettings) {
 		ElmCacheResourceChangeListener listener =
-			new ElmCacheResourceChangeListener(theDaoRegistry, theEvaluationSettings.getLibraryCache());
+				new ElmCacheResourceChangeListener(theDaoRegistry, theEvaluationSettings.getLibraryCache());
 		theResourceChangeListenerRegistry.registerResourceResourceChangeListener(
-			"Library", SearchParameterMap.newSynchronous(), listener, 1000);
+				"Library", SearchParameterMap.newSynchronous(), listener, 1000);
 		return listener;
 	}
 
 	@Bean
 	public CodeCacheResourceChangeListener codeCacheResourceChangeListener(
-		IResourceChangeListenerRegistry theResourceChangeListenerRegistry,
-		EvaluationSettings theEvaluationSettings,
-		DaoRegistry theDaoRegistry) {
+			IResourceChangeListenerRegistry theResourceChangeListenerRegistry,
+			EvaluationSettings theEvaluationSettings,
+			DaoRegistry theDaoRegistry) {
 
-		CodeCacheResourceChangeListener listener = new CodeCacheResourceChangeListener(theDaoRegistry, theEvaluationSettings.getValueSetCache());
-		//registry
+		CodeCacheResourceChangeListener listener =
+				new CodeCacheResourceChangeListener(theDaoRegistry, theEvaluationSettings.getValueSetCache());
+		// registry
 		theResourceChangeListenerRegistry.registerResourceResourceChangeListener(
-			"ValueSet", SearchParameterMap.newSynchronous(), listener,1000);
+				"ValueSet", SearchParameterMap.newSynchronous(), listener, 1000);
 
 		return listener;
 	}
@@ -219,5 +218,4 @@ public class StarterCrR4Config {
 	public ResourceChangeListenerRegistryInterceptor resourceChangeListenerRegistryInterceptor() {
 		return new ResourceChangeListenerRegistryInterceptor();
 	}
-
 }

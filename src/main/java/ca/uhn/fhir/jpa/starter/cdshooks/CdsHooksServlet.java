@@ -1,24 +1,5 @@
 package ca.uhn.fhir.jpa.starter.cdshooks;
 
-import java.io.IOException;
-import java.util.stream.Collectors;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.http.entity.ContentType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.annotation.Qualifier;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
-
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
@@ -26,6 +7,22 @@ import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
 import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceRequestJson;
 import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceResponseJson;
 import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServicesJson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
+import org.apache.http.entity.ContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.io.IOException;
+import java.util.stream.Collectors;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static ca.uhn.hapi.fhir.cdshooks.config.CdsHooksConfig.CDS_HOOKS_OBJECT_MAPPER_FACTORY;
 
@@ -36,12 +33,16 @@ public class CdsHooksServlet extends HttpServlet {
 
 	@Autowired
 	private AppProperties appProperties;
+
 	@Autowired
 	private ProviderConfiguration providerConfiguration;
+
 	@Autowired
 	ICdsServiceRegistry cdsServiceRegistry;
+
 	@Autowired
 	RestfulServer restfulServer;
+
 	@Autowired
 	@Qualifier(CDS_HOOKS_OBJECT_MAPPER_FACTORY)
 	ObjectMapper objectMapper;
@@ -70,8 +71,11 @@ public class CdsHooksServlet extends HttpServlet {
 		}
 		ErrorHandling.setAccessControlHeaders(response, appProperties);
 		response.setHeader("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
-		response.getWriter().println(new GsonBuilder().setPrettyPrinting().create().toJson(
-			JsonParser.parseString(objectMapper.writeValueAsString(getServices()))));
+		response.getWriter()
+				.println(new GsonBuilder()
+						.setPrettyPrinting()
+						.create()
+						.toJson(JsonParser.parseString(objectMapper.writeValueAsString(getServices()))));
 	}
 
 	@Override
@@ -79,8 +83,8 @@ public class CdsHooksServlet extends HttpServlet {
 			throws ServletException, IOException {
 		try {
 			if (request.getContentType() == null || !request.getContentType().startsWith("application/json")) {
-				throw new ServletException(String.format("Invalid content type %s. Please use application/json.",
-						request.getContentType()));
+				throw new ServletException(String.format(
+						"Invalid content type %s. Please use application/json.", request.getContentType()));
 			}
 			logger.info(request.getRequestURI());
 			String service = request.getPathInfo().replace("/", "");
@@ -92,7 +96,10 @@ public class CdsHooksServlet extends HttpServlet {
 			CdsServiceResponseJson serviceResponseJson = cdsServiceRegistry.callService(service, cdsHooksRequest);
 
 			// Using GSON pretty print format as Jackson's is ugly
-			String jsonResponse = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create()
+			String jsonResponse = new GsonBuilder()
+					.disableHtmlEscaping()
+					.setPrettyPrinting()
+					.create()
 					.toJson(JsonParser.parseString(objectMapper.writeValueAsString(serviceResponseJson)));
 			logger.info(jsonResponse);
 			response.setContentType("text/json;charset=UTF-8");
@@ -111,7 +118,9 @@ public class CdsHooksServlet extends HttpServlet {
 		logger.info("cds-hooks hook instance: {}", request.getHookInstance());
 		logger.info("cds-hooks local server address: {}", appProperties.getServer_address());
 		logger.info("cds-hooks fhir server address: {}", request.getFhirServer());
-		logger.info("cds-hooks cql_logging_enabled: {}", this.getProviderConfiguration().getCqlLoggingEnabled());
+		logger.info(
+				"cds-hooks cql_logging_enabled: {}",
+				this.getProviderConfiguration().getCqlLoggingEnabled());
 	}
 
 	private CdsServicesJson getServices() {

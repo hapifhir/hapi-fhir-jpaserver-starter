@@ -4,7 +4,8 @@ import ca.uhn.fhir.jpa.starter.cr.CrProperties;
 
 public class ProviderConfiguration {
 
-	public static final ProviderConfiguration DEFAULT_PROVIDER_CONFIGURATION = new ProviderConfiguration(false, "client_id");
+	public static final ProviderConfiguration DEFAULT_PROVIDER_CONFIGURATION =
+			new ProviderConfiguration(false, "client_id");
 
 	private final String clientIdHeaderName;
 	private final boolean cqlLoggingEnabled;

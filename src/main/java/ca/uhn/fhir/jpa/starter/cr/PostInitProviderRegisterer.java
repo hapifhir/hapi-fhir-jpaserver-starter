@@ -1,14 +1,13 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
-import java.util.function.Supplier;
-
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.provider.IResourceProviderFactoryObserver;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 
+import java.util.function.Supplier;
+
 public class PostInitProviderRegisterer {
-	public PostInitProviderRegisterer(RestfulServer restfulServer,
-												 ResourceProviderFactory resourceProviderFactory) {
+	public PostInitProviderRegisterer(RestfulServer restfulServer, ResourceProviderFactory resourceProviderFactory) {
 		resourceProviderFactory.attach(new Observer(restfulServer));
 	}
 
@@ -30,7 +29,6 @@ public class PostInitProviderRegisterer {
 			}
 
 			this.restfulServer.registerProvider(provider);
-
 		}
 
 		public void remove(Supplier<Object> theSupplier) {
@@ -45,7 +43,5 @@ public class PostInitProviderRegisterer {
 
 			this.restfulServer.unregisterProvider(provider);
 		}
-
 	}
-
 }
