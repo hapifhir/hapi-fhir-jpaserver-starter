@@ -1,6 +1,6 @@
 # HAPI FHIR JPA Server Starter Helm Chart
 
-![Version: 0.10.1](https://img.shields.io/badge/Version-0.10.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v6.x](https://img.shields.io/badge/AppVersion-v6.x-informational?style=flat-square)
+![Version: 0.14.0](https://img.shields.io/badge/Version-0.14.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.8.3](https://img.shields.io/badge/AppVersion-6.8.3-informational?style=flat-square)
 
 This helm chart will help you install the HAPI FHIR JPA Server in a Kubernetes environment.
 
@@ -8,11 +8,14 @@ This helm chart will help you install the HAPI FHIR JPA Server in a Kubernetes e
 
 ```sh
 helm repo add hapifhir https://hapifhir.github.io/hapi-fhir-jpaserver-starter/
-helm install --render-subchart-notes hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
+helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 ```
 
-> ⚠ By default, the included [PostgreSQL Helm chart](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#upgrading)
-> auto-generates a random password for the database which may cause problems when upgrading the chart (see [here for details](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#upgrading)).
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| oci://registry-1.docker.io/bitnamicharts | postgresql | 12.5.6 |
 
 ## Values
 
@@ -27,12 +30,13 @@ helm install --render-subchart-notes hapi-fhir-jpaserver hapifhir/hapi-fhir-jpas
 | externalDatabase.password | string | `""` | database password |
 | externalDatabase.port | int | `5432` | database port number |
 | externalDatabase.user | string | `"fhir"` | username for the external database |
+| extraConfig | string | `""` | additional Spring Boot application config. Mounted as a file and automatically loaded by the application. |
 | extraEnv | list | `[]` | extra environment variables to set on the server container |
 | fullnameOverride | string | `""` | override the chart fullname |
 | image.pullPolicy | string | `"IfNotPresent"` | image pullPolicy to use |
 | image.registry | string | `"docker.io"` | registry where the HAPI FHIR server image is hosted |
 | image.repository | string | `"hapiproject/hapi"` | the path inside the repository |
-| image.tag | string | `"v6.1.0@sha256:253f87bb1f5b7627f8e25f76a4b0aa7a83f31968c6e111ad74d3cc4ad9ae812e"` | the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image. |
+| image.tag | string | `"v6.8.3@sha256:6195f1116ebabfb0a608addde043b3e524c456c4d4f35b3d25025afd7dcd2e27"` | the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image. |
 | imagePullSecrets | list | `[]` | image pull secrets to use when pulling the image |
 | ingress.annotations | object | `{}` | provide any additional annotations which may be required. Evaluated as a template. |
 | ingress.enabled | bool | `false` | whether to create an Ingress to expose the FHIR server HTTP endpoint |
@@ -40,11 +44,6 @@ helm install --render-subchart-notes hapi-fhir-jpaserver hapifhir/hapi-fhir-jpas
 | ingress.hosts[0].pathType | string | `"ImplementationSpecific"` |  |
 | ingress.hosts[0].paths[0] | string | `"/"` |  |
 | ingress.tls | list | `[]` | ingress TLS config |
-| livenessProbe.failureThreshold | int | `5` |  |
-| livenessProbe.initialDelaySeconds | int | `30` |  |
-| livenessProbe.periodSeconds | int | `20` |  |
-| livenessProbe.successThreshold | int | `1` |  |
-| livenessProbe.timeoutSeconds | int | `30` |  |
 | metrics.service.port | int | `8081` |  |
 | metrics.serviceMonitor.additionalLabels | object | `{}` | additional labels to apply to the ServiceMonitor object, e.g. `release: prometheus` |
 | metrics.serviceMonitor.enabled | bool | `false` | if enabled, creates a ServiceMonitor instance for Prometheus Operator-based monitoring |
@@ -62,11 +61,6 @@ helm install --render-subchart-notes hapi-fhir-jpaserver hapifhir/hapi-fhir-jpas
 | postgresql.primary.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | postgresql.primary.containerSecurityContext.runAsNonRoot | bool | `true` |  |
 | postgresql.primary.containerSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
-| readinessProbe.failureThreshold | int | `5` |  |
-| readinessProbe.initialDelaySeconds | int | `30` |  |
-| readinessProbe.periodSeconds | int | `20` |  |
-| readinessProbe.successThreshold | int | `1` |  |
-| readinessProbe.timeoutSeconds | int | `20` |  |
 | replicaCount | int | `1` | number of replicas to deploy |
 | resources | object | `{}` | configure the FHIR server's resource requests and limits |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
@@ -79,18 +73,18 @@ helm install --render-subchart-notes hapi-fhir-jpaserver hapifhir/hapi-fhir-jpas
 | securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | service.port | int | `8080` | port where the server will be exposed at |
 | service.type | string | `"ClusterIP"` | service type |
-| startupProbe.failureThreshold | int | `10` |  |
-| startupProbe.initialDelaySeconds | int | `60` |  |
-| startupProbe.periodSeconds | int | `30` |  |
-| startupProbe.successThreshold | int | `1` |  |
-| startupProbe.timeoutSeconds | int | `30` |  |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
+| serviceAccount.create | bool | `false` | Specifies whether a service account should be created. |
+| serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
+| tests.resources | object | `{}` | configure the test pods resource requests and limits |
 | tolerations | list | `[]` | pod tolerations |
 | topologySpreadConstraints | list | `[]` | pod topology spread configuration see: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#api |
 
 ## Development
 
 To update the Helm chart when a new version of the `hapiproject/hapi` image is released, [values.yaml](values.yaml) `image.tag` and the [Chart.yaml](Chart.yaml)'s
-`version` and optionally the `appVersion` field on major releases need to be updated. Afterwards, re-generate the [README.md](README.md)
+`version` and optionally the `appVersion` field need to be updated. Afterwards, re-generate the [README.md](README.md)
 by running:
 
 ```sh
@@ -149,4 +143,4 @@ kubectl port-forward -n observability service/simplest-query 16686:16686
 and opening <http://localhost:16686/> in your browser.
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0)
+Autogenerated from chart metadata using [helm-docs v1.11.3](https://github.com/norwoodj/helm-docs/releases/v1.11.3)

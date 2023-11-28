@@ -2,26 +2,29 @@ package ca.uhn.fhir.jpa.starter;
 
 
 import ca.uhn.fhir.context.FhirVersionEnum;
-import ca.uhn.fhir.jpa.api.config.DaoConfig.ClientIdStrategyEnum;
+import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
+import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.rest.api.EncodingEnum;
-import com.google.common.collect.ImmutableList;
 import org.hl7.fhir.r4.model.Bundle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
 @EnableConfigurationProperties
 public class AppProperties {
 
-  private Boolean cql_enabled = false;
+  private Boolean cr_enabled = false;
+  private Boolean ips_enabled = false;
   private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
   private boolean advanced_lucene_indexing = false;
@@ -32,6 +35,7 @@ public class AppProperties {
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
+  private final Set<String> auto_version_reference_at_paths = new HashSet<>();
   private Boolean dao_scheduling_enabled = true;
   private Boolean delete_expunge_enabled = false;
   private Boolean enable_index_missing_fields = false;
@@ -63,6 +67,8 @@ public class AppProperties {
   private List<Bundle.BundleType> allowed_bundle_types = null;
   private Boolean narrative_enabled = true;
 
+  private Boolean ig_runtime_upload_enabled = false;
+
   private Validation validation = new Validation();
   private Map<String, Tester> tester = null;
   private Logger logger = new Logger();
@@ -70,7 +76,11 @@ public class AppProperties {
   private Cors cors = null;
   private Partitioning partitioning = null;
   private Boolean install_transitive_ig_dependencies = true;
-  private Map<String, ImplementationGuide> implementationGuides = null;
+  private Map<String, PackageInstallationSpec> implementationGuides = null;
+
+	private String staticLocation = null;
+
+	private String staticLocationPrefix = "/static";
 
   private Boolean lastn_enabled = false;
   private boolean store_resource_in_lucene_index_enabled = false;
@@ -81,7 +91,32 @@ public class AppProperties {
 
   private Integer bundle_batch_pool_size = 20;
   private Integer bundle_batch_pool_max_size = 100;
-  private final List<String> local_base_urls = new ArrayList<>();
+  private final Set<String> local_base_urls = new HashSet<>();
+  
+  private final List<String> custom_interceptor_classes = new ArrayList<>();
+
+	public String getStaticLocationPrefix() {
+		return staticLocationPrefix;
+	}
+
+	public void setStaticLocationPrefix(String staticLocationPrefix) {
+		this.staticLocationPrefix = staticLocationPrefix;
+	}
+
+
+	public List<String> getCustomInterceptorClasses() {
+    return custom_interceptor_classes;
+  }
+
+
+	public String getStaticLocation() {
+		return staticLocation;
+	}
+
+	public void setStaticLocation(String staticLocation) {
+		this.staticLocation = staticLocation;
+	}
+
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
@@ -115,11 +150,11 @@ public class AppProperties {
     this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
   }
 
-  public Map<String, ImplementationGuide> getImplementationGuides() {
+  public Map<String, PackageInstallationSpec> getImplementationGuides() {
     return implementationGuides;
   }
 
-  public void setImplementationGuides(Map<String, ImplementationGuide> implementationGuides) {
+  public void setImplementationGuides(Map<String, PackageInstallationSpec> implementationGuides) {
     this.implementationGuides = implementationGuides;
   }
 
@@ -131,13 +166,22 @@ public class AppProperties {
     this.partitioning = partitioning;
   }
 
-  public Boolean getCql_enabled() {
-    return cql_enabled;
+  public Boolean getCr_enabled() {
+    return cr_enabled;
   }
 
-  public void setCql_enabled(Boolean cql_enabled) {
-    this.cql_enabled = cql_enabled;
+  public void setCr_enabled(Boolean cr_enabled) {
+    this.cr_enabled = cr_enabled;
   }
+
+  public Boolean getIps_enabled() {
+	return ips_enabled;
+ }
+
+ public void setIps_enabled(Boolean ips_enabled) {
+	this.ips_enabled = ips_enabled;
+ }
+
 
   public Boolean getMdm_enabled() {
     return mdm_enabled;
@@ -276,6 +320,10 @@ public class AppProperties {
   public void setAuto_create_placeholder_reference_targets(
     Boolean auto_create_placeholder_reference_targets) {
     this.auto_create_placeholder_reference_targets = auto_create_placeholder_reference_targets;
+  }
+
+  public Set<String> getAuto_version_reference_at_paths() {
+    return auto_version_reference_at_paths;
   }
 
   public Integer getDefault_page_size() {
@@ -513,11 +561,11 @@ public class AppProperties {
 	public boolean getInstall_transitive_ig_dependencies() {
 		return install_transitive_ig_dependencies;
 	}
-
+	
 	public void setInstall_transitive_ig_dependencies(boolean install_transitive_ig_dependencies) {
 		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
 	}
-
+	
 	public Integer getBundle_batch_pool_size() {
 		return this.bundle_batch_pool_size;
 	}
@@ -534,13 +582,21 @@ public class AppProperties {
 		this.bundle_batch_pool_max_size = bundle_batch_pool_max_size;
 	}
 
-	public List<String> getLocal_base_urls() {
+	public Set<String> getLocal_base_urls() {
 		return local_base_urls;
+	}
+
+	public Boolean getIg_runtime_upload_enabled() {
+		return ig_runtime_upload_enabled;
+	}
+
+	public void setIg_runtime_upload_enabled(Boolean ig_runtime_upload_enabled) {
+		this.ig_runtime_upload_enabled = ig_runtime_upload_enabled;
 	}
 
 	public static class Cors {
     private Boolean allow_Credentials = true;
-    private List<String> allowed_origin = ImmutableList.of("*");
+    private List<String> allowed_origin = List.of("*");
 
     public List<String> getAllowed_origin() {
       return allowed_origin;
@@ -642,36 +698,6 @@ public class AppProperties {
     }
   }
 
-  public static class ImplementationGuide
-  {
-    private String url;
-    private String name;
-    private String version;
-
-    public String getUrl() {
-      return url;
-    }
-
-    public void setUrl(String url) {
-      this.url = url;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
-    }
-
-    public String getVersion() {
-      return version;
-    }
-
-    public void setVersion(String version) {
-      this.version = version;
-    }
-  }
 
   public static class Validation {
 

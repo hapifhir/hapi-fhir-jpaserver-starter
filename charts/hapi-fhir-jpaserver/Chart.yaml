@@ -7,17 +7,21 @@ sources:
   - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
 dependencies:
   - name: postgresql
-    version: 11.8.1
-    repository: https://charts.bitnami.com/bitnami
+    version: 12.5.6
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
-appVersion: v6.x
-version: 0.10.1
+appVersion: 6.8.3
+version: 0.14.0
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
-    - kind: changed
-      description: updated image version to v6.1.0
-    - kind: changed
-      description: added section on configuring the chart for distributed tracing to the README.md
+    - kind: added
+      description: updated starter image to 6.8.3
+    - kind: fixed
+      description: incorrect handling of existing secret database config
+    - kind: added
+      description: support for using a non-admin user for the postgres database
+    - kind: added
+      description: ability to create a dedicated ServiceAccount

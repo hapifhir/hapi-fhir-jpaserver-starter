@@ -16,13 +16,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties =
   {
-     "spring.batch.job.enabled=false",
      "hapi.fhir.fhir_version=dstu2",
      "spring.datasource.url=jdbc:h2:mem:dbr2",
   })
-public class ExampleServerDstu2IT {
+class ExampleServerDstu2IT {
 
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
 	private IGenericClient ourClient;

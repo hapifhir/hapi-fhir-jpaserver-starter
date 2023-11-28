@@ -18,16 +18,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class, properties =
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties =
   {
-    "spring.batch.job.enabled=false",
     "spring.datasource.url=jdbc:h2:mem:dbr4-mt",
     "hapi.fhir.fhir_version=r4",
     "hapi.fhir.subscription.websocket_enabled=true",
     "hapi.fhir.partitioning.partitioning_include_in_search_hashes=false",
 
   })
-public class MultitenantServerR4IT {
+class MultitenantServerR4IT {
 
 
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
@@ -41,7 +40,7 @@ public class MultitenantServerR4IT {
 
 
   @Test
-  public void testCreateAndReadInTenantA() {
+  void testCreateAndReadInTenantA() {
 
 
     // Create tenant A
@@ -67,7 +66,7 @@ public class MultitenantServerR4IT {
   }
 
   @Test
-  public void testCreateAndReadInTenantB() {
+  void testCreateAndReadInTenantB() {
 
 
     // Create tenant A

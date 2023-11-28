@@ -1,14 +1,14 @@
-package ca.uhn.fhir.jpa.starter.cql;
+package ca.uhn.fhir.jpa.starter.ips;
 
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
-public class CqlConfigCondition implements Condition {
+public class IpsConfigCondition implements Condition {
 
-  @Override
+	@Override
   public boolean matches(ConditionContext theConditionContext, AnnotatedTypeMetadata theAnnotatedTypeMetadata) {
-    String property = theConditionContext.getEnvironment().getProperty("hapi.fhir.cql_enabled");
+    String property = theConditionContext.getEnvironment().getProperty("hapi.fhir.ips_enabled");
 	  return Boolean.parseBoolean(property);
   }
 }

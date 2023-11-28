@@ -28,10 +28,10 @@ spring:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
+
       #Hibernate dialect is automatically detected except Postgres and H2.
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
-
       hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
@@ -39,40 +39,54 @@ spring:
   #      hibernate.cache.use_second_level_cache: false
   #      hibernate.cache.use_structured_entries: false
   #      hibernate.cache.use_minimal_puts: false
-  ###    These settings will enable fulltext search with lucene
-      hibernate.search.enabled: false
-  #      hibernate.search.backend.type: lucene
-  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
-  #      hibernate.search.backend.directory.type: local-filesystem
-  #      hibernate.search.backend.directory.root: target/lucenefiles
-  #      hibernate.search.backend.lucene_version: lucene_current
-  batch:
-    job:
-      enabled: false
+
+  ###    These settings will enable fulltext search with lucene or elastic
+      hibernate.search.enabled: true
+  ### lucene parameters
+#      hibernate.search.backend.type: lucene
+#      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
+#      hibernate.search.backend.directory.type: local-filesystem
+#      hibernate.search.backend.directory.root: target/lucenefiles
+#      hibernate.search.backend.lucene_version: lucene_current
+  ### elastic parameters ===> see also elasticsearch section below <===
+#      hibernate.search.backend.type: elasticsearch
+#      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
 hapi:
   fhir:
+
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
     openapi_enabled: true
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
+    ### Flag is false by default. This flag enables runtime installation of IG's.
+    ig_runtime_upload_enabled: false
+    ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
+    ### Flag is false by default, can be passed as command line argument to override.
+    cr_enabled: "${CR_ENABLED: false}"
     ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
     ### to determine the FHIR server address
     #   use_apache_address_strategy: false
     ### forces the use of the https:// protocol for the returned server address.
     ### alternatively, it may be set using the X-Forwarded-Proto header.
     #   use_apache_address_strategy_https: false
+    ### enables the server to host content like HTML, css, etc. under the url pattern of eg. /static/**
+    # staticLocationPrefix: /static
+    ### the deepest folder level will be used. E.g. - if you put file:/foo/bar/bazz as value then the files are resolved under /static/bazz/**
+    #staticLocation: file:/foo/bar/bazz
     ### enable to set the Server URL
     #    server_address: http://hapi.fhir.org/baseR4
     #    defer_indexing_for_codesystems_of_size: 101
     #    install_transitive_ig_dependencies: true
-    #    implementationguides:
+    #implementationguides:
     ###    example from registry (packages.fhir.org)
-    #      swiss:
-    #        name: swiss.mednet.fhir
-    #        version: 0.8.0
+    #  swiss:
+    #    name: swiss.mednet.fhir
+    #    version: 0.8.0
+    #    reloadExisting: false
+    #    installMode: STORE_AND_INSTALL
     #      example not from registry
     #      ips_1_0_0:
-    #        url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
+    #        packageUrl: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
     #        name: hl7.fhir.uv.ips
     #        version: 1.0.0
     #    supported_resource_types:
@@ -88,7 +102,10 @@ hapi:
     #    allow_multiple_delete: true
     #    allow_override_default_search_params: true
     #    auto_create_placeholder_reference_targets: false
-    #    cql_enabled: true
+    ### tells the server to automatically append the current version of the target resource to references at these paths
+    #    auto_version_reference_at_paths: Device.patient, Device.location, Device.parent, DeviceMetric.parent, DeviceMetric.source, Observation.device, Observation.subject
+    #    cr_enabled: true
+    #    ips_enabled: false
     #    default_encoding: JSON
     #    default_pretty_print: true
     #    default_page_size: 20
@@ -112,7 +129,7 @@ hapi:
     #    fhirpath_interceptor_enabled: false
     #    filter_search_enabled: true
     #    graphql_enabled: true
-    #    narrative_enabled: true
+    narrative_enabled: false
     #    mdm_enabled: true
     #    local_base_urls:
     #      - https://hapi.fhir.org/baseR4
@@ -130,6 +147,14 @@ hapi:
     search-coord-core-pool-size: 20
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
+
+    # comma-separated package names, will be @ComponentScan'ed by Spring to allow for creating custom Spring beans
+    #custom-bean-packages:
+
+    # comma-separated list of fully qualified interceptor classes.
+    # classes listed here will be fetched from the Spring context when combined with 'custom-bean-packages',
+    # or will be instantiated via reflection using an no-arg contructor; then registered with the server
+    #custom-interceptor-classes:
 
     # Threadpool size for BATCH'ed GETs in a bundle.
     #    bundle_batch_pool_size: 10
@@ -180,7 +205,7 @@ hapi:
 #        quitWait:
 #    lastn_enabled: true
 #    store_resource_in_lucene_index_enabled: true
-###  This is configuration for normalized quantity serach level default is 0
+###  This is configuration for normalized quantity search level default is 0
 ###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
 ###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED
 ###   2: NORMALIZED_QUANTITY_SEARCH_SUPPORTED
