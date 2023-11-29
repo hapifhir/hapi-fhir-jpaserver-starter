@@ -139,7 +139,7 @@ class R4ValidationTests {
 	 */
 	private MatchboxEngine getEngine() throws IOException, URISyntaxException {
 		MatchboxEngine.MatchboxEngineBuilder builder = new MatchboxEngine.MatchboxEngineBuilder();
-		builder.setTxServer("http://localhost:18002/eprik-fhir/camel/tx/r4");
+		builder.setTxServer("http://tx.fhir.org/r4");
 		return builder.getEngineR4();
 	}
 

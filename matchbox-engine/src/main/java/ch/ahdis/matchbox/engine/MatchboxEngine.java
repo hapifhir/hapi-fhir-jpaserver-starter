@@ -50,6 +50,7 @@ import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
+import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.utilities.json.model.JsonObject;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
@@ -245,8 +246,8 @@ public class MatchboxEngine extends ValidationEngine {
 	public String transform(String input, boolean inputJson, String mapUri, boolean outputJson)
 			throws FHIRException, IOException {
 		log.info("Start transform: " + mapUri);
-		Element transformed = transform(input.getBytes("UTF-8"), (inputJson ? FhirFormat.JSON : FhirFormat.XML),
-				mapUri);
+		Element transformed = transform(ByteProvider.forBytes(input.getBytes("UTF-8")), (inputJson ? FhirFormat.JSON : FhirFormat.XML),
+												  mapUri);
 		ByteArrayOutputStream boas = new ByteArrayOutputStream();
 		if (outputJson)
 			new org.hl7.fhir.r5.elementmodel.JsonParser(getContext()).compose(transformed, boas,
@@ -266,10 +267,10 @@ public class MatchboxEngine extends ValidationEngine {
 	 * Adapted transform operation from Validation Engine to use patched
 	 * MatchboxStructureMapUtilities
 	 */
-	public org.hl7.fhir.r5.elementmodel.Element transform(byte[] source, FhirFormat cntType, String mapUri)
+	public org.hl7.fhir.r5.elementmodel.Element transform(ByteProvider source, FhirFormat cntType, String mapUri)
 			throws FHIRException, IOException {
 		SimpleWorkerContext context = this.getContext();
-		org.hl7.fhir.r5.elementmodel.Element src = Manager.parseSingle(context, new ByteArrayInputStream(source),
+		org.hl7.fhir.r5.elementmodel.Element src = Manager.parseSingle(context, new ByteArrayInputStream(source.getBytes()),
 				cntType);
 		return transform(src, mapUri);
 	}

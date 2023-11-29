@@ -39,8 +39,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
-        <fhir.core.version>6.1.14</fhir.core.version>
-        <hapi.fhir.version>6.8.3</hapi.fhir.version>
+        <fhir.core.version>6.1.16</fhir.core.version>
+        <hapi.fhir.version>6.10.0</hapi.fhir.version>
 
         <!-- Dependency Versions -->
         <activation_api_version>1.2.0</activation_api_version>
@@ -65,11 +65,11 @@
         <jaxb_api_version>2.3.1</jaxb_api_version>
         <jaxb_core_version>2.3.0.1</jaxb_core_version>
         <jaxb_runtime_version>3.0.0</jaxb_runtime_version>
-        <jena_version>4.8.0</jena_version>
+        <jena_version>4.9.0</jena_version>
         <jersey_version>3.0.3</jersey_version>
         <jsr305_version>3.0.2</jsr305_version>
         <junit_version>5.9.1</junit_version>
-        <flexmark_version>0.50.40</flexmark_version>
+        <flexmark_version>0.64.8</flexmark_version>
         <flyway_version>9.4.0</flyway_version>
         <hibernate_version>5.6.15.Final</hibernate_version>
         <hibernate_search_version>6.1.6.Final</hibernate_search_version>
@@ -79,7 +79,7 @@
         <hibernate_validator_version>6.1.5.Final</hibernate_validator_version>
         <httpcore_version>4.4.13</httpcore_version>
         <httpclient_version>4.5.13</httpclient_version>
-        <jackson_version>2.15.2</jackson_version>
+        <jackson_version>2.15.3</jackson_version>
         <maven_assembly_plugin_version>3.3.0</maven_assembly_plugin_version>
         <maven_license_plugin_version>1.8</maven_license_plugin_version>
         <maven_surefire_version>3.0.0</maven_surefire_version>
@@ -89,7 +89,7 @@
         <resteasy_version>5.0.2.Final</resteasy_version>
         <ph_schematron_version>5.6.5</ph_schematron_version>
         <ph_commons_version>9.5.5</ph_commons_version>
-        <plexus_compiler_api_version>2.9.0</plexus_compiler_api_version>
+        <plexus_compiler_api_version>2.9.11</plexus_compiler_api_version>
         <servicemix_saxon_version>9.8.0-15</servicemix_saxon_version>
         <servicemix_xmlresolver_version>1.2_5</servicemix_xmlresolver_version>
         <swagger_version>2.1.12</swagger_version>
@@ -102,7 +102,7 @@
         <spring_retry_version>1.2.2.RELEASE</spring_retry_version>
         <stax2_api_version>3.1.4</stax2_api_version>
         <testcontainers_version>1.17.1</testcontainers_version>
-        <thymeleaf-version>3.0.14.RELEASE</thymeleaf-version>
+        <thymeleaf-version>3.1.2.RELEASE</thymeleaf-version>
         <woodstox_core_asl_version>4.4.1</woodstox_core_asl_version>
         <jacoco_version>0.8.7</jacoco_version>
         <info_cqframework_version>1.5.1</info_cqframework_version>

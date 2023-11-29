@@ -37,6 +37,7 @@ import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.StructureMap.StructureMapStructureComponent;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
+import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,7 +148,7 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
       responseContentType = Constants.CT_FHIR_JSON_NEW;
     }
 
-    org.hl7.fhir.r5.elementmodel.Element r = matchboxEngine.transform(theServletRequest.getInputStream().readAllBytes(), contentType.contains("xml") ? FhirFormat.XML : FhirFormat.JSON, map.getUrl());
+    org.hl7.fhir.r5.elementmodel.Element r = matchboxEngine.transform(ByteProvider.forBytes(theServletRequest.getInputStream().readAllBytes()), contentType.contains("xml") ? FhirFormat.XML : FhirFormat.JSON, map.getUrl());
     
     theServletResponse.setContentType(responseContentType);
     theServletResponse.setCharacterEncoding("UTF-8");
