@@ -75,6 +75,19 @@ class R4ValidationTests {
 		assertEquals(OperationOutcome.IssueType.CODEINVALID, errors.get(0).getCode());
 		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') is not in the value set 'PublicationStatus'"));
 	}
+	
+	/**
+	 * Test the validation of a code from a value set that expands urn:ietf:bcp:13.
+	 *
+	 * http://hl7.org/fhir/R4/binary.html
+	 * http://hl7.org/fhir/R4/valueset-mimetypes.html
+	 */
+	@Test
+//	@Disabled(value = "No offline expansion yet")
+	void testCodeCorrect() throws Exception {
+		final String validBinary = this.loadSample("code-correct.xml");
+		this.expectValid(validBinary, Manager.FhirFormat.XML, "http://hl7.org/fhir/StructureDefinition/Basic");
+	}
 
 	/**
 	 * Test the validation of a code from a value set that expands urn:ietf:bcp:13.
@@ -83,7 +96,7 @@ class R4ValidationTests {
 	 * http://hl7.org/fhir/R4/valueset-mimetypes.html
 	 */
 	@Test
-	@Disabled(value = "No offline expansion yet")
+//	@Disabled(value = "No offline expansion yet")
 	void testValueSetWithIetfBcp13Expansion() throws Exception {
 		final String binaryRaw = this.loadSample("binary.xml");
 
@@ -95,7 +108,7 @@ class R4ValidationTests {
 	 * Test the validation of a UCUM code.
 	 */
 	@Test
-	@Disabled(value = "No offline expansion yet")
+//	@Disabled(value = "No offline expansion yet")
 	void testValueSetWithUcumCodes() throws Exception {
 		final String observationRaw = this.loadSample("observation.xml");
 
@@ -122,10 +135,12 @@ class R4ValidationTests {
 	}
 
 	/**
-	 * Initialize a R4 matchbox engine with no terminology server.
+	 * Initialize a R4 matchbox engine for the tests
 	 */
 	private MatchboxEngine getEngine() throws IOException, URISyntaxException {
-		return new MatchboxEngine.MatchboxEngineBuilder().getEngineR4();
+		MatchboxEngine.MatchboxEngineBuilder builder = new MatchboxEngine.MatchboxEngineBuilder();
+		builder.setTxServer("http://localhost:18002/eprik-fhir/camel/tx/r4");
+		return builder.getEngineR4();
 	}
 
 	private void expectValid(final String resource,

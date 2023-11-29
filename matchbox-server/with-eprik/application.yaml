@@ -3,7 +3,8 @@ server:
     context-path: /matchboxv3
 hapi:
   fhir:
-    server_address: http://localhost:8080/matchboxv3/fhir
+#    server_address: http://localhost:8080/matchboxv3/fhir
+    server_address: http://localhost:18002/eprik-fhir/camel/matchbox/matchboxv3/fhir
     implementationguides:
       fhir_r4_core:
         name: hl7.fhir.r4.core
@@ -20,26 +21,28 @@ hapi:
       hl7_fhir_uv_ips:
         name: hl7.fhir.uv.ips
         version: current
-        url: file:/Users/oegger/Documents/github/matchbox-ch-elm/src/hl7.fhir.uv.ips-current.tgz
+        url: file:/Users/oegger/Documents/github/fhir-ips/output/package.tgz
       fhir_eu_lab:
         name: hl7.fhir.eu.laboratory
         version: current
-        url: file:/Users/oegger/Documents/github/matchbox-ch-elm/src/hl7.fhir.eu.laboratory-current.tgz
+        url: file:/Users/oegger/Documents/github/laboratory-1/output/package.tgz
       ch_core:
         name: ch.fhir.ig.ch-core
         version: current
-        url: file:/Users/oegger/Documents/github/matchbox-ch-elm/src/ch.fhir.ig.ch-core-current.tgz
+        url: file:/Users/oegger/Documents/github/ch-core/output/package.tgz
       fhir_ch_lab:
         name: ch.fhir.ig.ch-lab-report
         version: current
-        url: file:/Users/oegger/Documents/github/matchbox-ch-elm/src/ch.fhir.ig.ch-lab-report-current.tgz
+        url: file:/Users/oegger/Documents/github/ch-lab-report/output/package.tgz
       ch_elm:
         name: ch.fhir.ig.ch-elm
-        version: 1.0.0
-        url: file:/Users/oegger/Documents/github/matchbox-ch-elm/src/ch.fhir.ig.ch-elm-1.0.0.tgz
+        version: 1.0.0-ci-build
+        url: file:/Users/oegger/Documents/github/ch-elm/output/package.tgz
     staticLocation: file:/apps/
 matchbox:
   fhir:
     context:
       fhirVersion: 4.0.1
-      txServer: http://tx.fhir.org
+#      txServer: http://tx.fhir.org
+      txServer: http://localhost:18002/eprik-fhir/camel/tx/r4/
+      onlyOneEngine: true

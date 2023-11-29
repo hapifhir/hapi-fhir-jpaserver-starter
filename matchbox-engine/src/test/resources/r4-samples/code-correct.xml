@@ -1,0 +1,10 @@
+<Basic xmlns="http://hl7.org/fhir">
+  <code>
+    <coding>
+      <system value="http://snomed.info/sct"/>
+      <version value="http://snomed.info/sct/731000124108/version/20210201"/>
+      <code value="132037003"/>
+      <display value="Pineywoods pig breed"/>
+    </coding>
+  </code>
+</Basic>

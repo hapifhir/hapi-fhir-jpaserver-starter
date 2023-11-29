@@ -4,24 +4,20 @@
 @host = http://localhost:18002/eprik-fhir/camel/matchbox/matchboxv3/fhir
 
 ## No issues detected during validation
-POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/DiagnosticReport HTTP/1.1
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Basic HTTP/1.1
 Accept: application/fhir+json
-Content-Type: application/fhir+json
+Content-Type: application/fhir+xml
 
-{
-    "resourceType" : "DiagnosticReport",
-    "extension" : [{
-    "url" : "http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition",
-    "valueReference" : {
-        "reference" : "urn:uuid:da065461-34df-4e2e-b69f-4181908575d0",
-        "type" : "Composition"
-    }
-    }],
-    "status" : "final",
-    "code" : {
-    "text" : "test"
-    }
-}
+<Basic xmlns="http://hl7.org/fhir">
+  <code>
+    <coding>
+      <system value="http://snomed.info/sct"/>
+      <version value="http://snomed.info/sct/731000124108/version/20210201"/>
+      <code value="132037003"/>
+      <display value="Pineywoods pig breed"/>
+    </coding>
+  </code>
+</Basic>
 
 ### No issues detected during validation
 POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-elm/StructureDefinition/ch-elm-observation-results-laboratory HTTP/1.1

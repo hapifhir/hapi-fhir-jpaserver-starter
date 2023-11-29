@@ -12,7 +12,8 @@ public class EngineLoggingService implements IWorkerContext.ILoggingService {
   private final boolean debug;
 
   public EngineLoggingService() {
-    this(false);
+	  debug = false;
+//    this(false);
   }
 
   @Override

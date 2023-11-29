@@ -174,7 +174,7 @@ public class MatchboxEngineSupport {
 			log.info(" - Version " + txver);
 
 			validator.setDebug(cliContext.isDoDebug());
-			validator.getContext().setLogger(new EngineLoggingService(cliContext.isDoDebug()));
+			validator.getContext().setLogger(new EngineLoggingService());
 
 			IgLoaderFromJpaPackageCache igLoader = new IgLoaderFromJpaPackageCache(validator.getPcm(), validator.getContext(), validator.getVersion(),
 			validator.isDebug(), myPackageCacheManager, myNpmPackageVersionDao, myDaoRegistry, myBinaryStorageSvc, myTxManager);

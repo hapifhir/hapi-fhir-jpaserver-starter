@@ -58,6 +58,32 @@
     },
     {
       "type": "java",
+      "name": "Launch Matchbox-Server (ch-elm) & eprik",
+      "request": "launch",
+      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+      "projectName": "matchbox-server",
+      "vmArgs": "-Dspring.config.additional-location=file:with-eprik/application.yaml",
+      "cwd": "${workspaceFolder}/matchbox-server"
+    },
+    {
+      "type": "java",
+      "name": "Launch Matchbox-Server (it)",
+      "request": "launch",
+      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+      "projectName": "matchbox-server",
+      "vmArgs": "-Dspring.config.additional-location=file:with-it/application.yaml",
+      "cwd": "${workspaceFolder}/matchbox-server"
+    },
+    {
+      "type": "java",
+      "name": "Launch Matchbox-Server (who)",
+      "request": "launch",
+      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+      "projectName": "matchbox-server",
+      "vmArgs": "-Dspring.config.additional-location=file:with-who/application.yaml",
+      "cwd": "${workspaceFolder}/matchbox-server"
+    },    {
+      "type": "java",
       "name": "Launch Matchbox-Server",
       "request": "launch",
       "mainClass": "ca.uhn.fhir.jpa.starter.Application",
