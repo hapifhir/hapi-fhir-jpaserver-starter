@@ -10,7 +10,9 @@ public class OnCorsPresent implements Condition {
 	@Override
 	public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata metadata) {
 
-		AppProperties config = Binder.get(conditionContext.getEnvironment()).bind("hapi.fhir", AppProperties.class).orElse(null);
+		AppProperties config = Binder.get(conditionContext.getEnvironment())
+				.bind("hapi.fhir", AppProperties.class)
+				.orElse(null);
 		if (config == null) return false;
 		if (config.getCors() == null) return false;
 		return true;

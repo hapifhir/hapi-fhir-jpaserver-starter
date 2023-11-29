@@ -4,11 +4,10 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.to.FhirTesterMvcConfig;
 import ca.uhn.fhir.to.TesterConfig;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-//@formatter:off
+// @formatter:off
 /**
  * This spring config file configures the web testing module. It serves two
  * purposes:
@@ -19,7 +18,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(FhirTesterMvcConfig.class)
-@Conditional(FhirTesterConfigCondition.class)
+// @Conditional(FhirTesterConfigCondition.class)
 public class FhirTesterConfig {
 
 	/**
@@ -36,22 +35,18 @@ public class FhirTesterConfig {
 	 * deploying your server to a place with a fully qualified domain name,
 	 * you might want to use that instead of using the variable.
 	 */
-  @Bean
-  public TesterConfig testerConfig(AppProperties appProperties) {
-    TesterConfig retVal = new TesterConfig();
-    appProperties.getTester().forEach((key, value) -> {
-		 retVal
-			 .addServer()
-			 .withId(key)
-			 .withFhirVersion(value.getFhir_version())
-			 .withBaseUrl(value.getServer_address())
-			 .withName(value.getName());
-		 retVal.setRefuseToFetchThirdPartyUrls(
-			 value.getRefuse_to_fetch_third_party_urls());
-
-	 });
-    return retVal;
-  }
-
+	@Bean
+	public TesterConfig testerConfig(AppProperties appProperties) {
+		TesterConfig retVal = new TesterConfig();
+		appProperties.getTester().forEach((key, value) -> {
+			retVal.addServer()
+					.withId(key)
+					.withFhirVersion(value.getFhir_version())
+					.withBaseUrl(value.getServer_address())
+					.withName(value.getName());
+			retVal.setRefuseToFetchThirdPartyUrls(value.getRefuse_to_fetch_third_party_urls());
+		});
+		return retVal;
+	}
 }
-//@formatter:on
+// @formatter:on

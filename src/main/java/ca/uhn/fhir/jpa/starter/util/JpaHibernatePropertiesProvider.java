@@ -7,27 +7,26 @@ import org.hibernate.engine.jdbc.dialect.internal.StandardDialectResolver;
 import org.hibernate.engine.jdbc.dialect.spi.DatabaseMetaDataDialectResolutionInfoAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
-import javax.sql.DataSource;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+import javax.sql.DataSource;
 
 public class JpaHibernatePropertiesProvider extends HibernatePropertiesProvider {
 
-  private final Dialect dialect;
+	private final Dialect dialect;
 
-  public JpaHibernatePropertiesProvider(LocalContainerEntityManagerFactoryBean myEntityManagerFactory) {
-    DataSource connection = myEntityManagerFactory.getDataSource();
-    try ( Connection dbConnection = connection.getConnection()){
-      dialect = new StandardDialectResolver()
-        .resolveDialect(new DatabaseMetaDataDialectResolutionInfoAdapter(dbConnection.getMetaData()));
-    } catch (SQLException sqlException) {
-      throw new ConfigurationException(sqlException.getMessage(), sqlException);
-    }
-  }
+	public JpaHibernatePropertiesProvider(LocalContainerEntityManagerFactoryBean myEntityManagerFactory) {
+		DataSource connection = myEntityManagerFactory.getDataSource();
+		try (Connection dbConnection = connection.getConnection()) {
+			dialect = new StandardDialectResolver()
+					.resolveDialect(new DatabaseMetaDataDialectResolutionInfoAdapter(dbConnection.getMetaData()));
+		} catch (SQLException sqlException) {
+			throw new ConfigurationException(sqlException.getMessage(), sqlException);
+		}
+	}
 
-  @Override
-  public Dialect getDialect() {
-    return dialect;
-  }
+	@Override
+	public Dialect getDialect() {
+		return dialect;
+	}
 }
