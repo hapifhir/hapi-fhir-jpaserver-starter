@@ -8,6 +8,9 @@ import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
 import ca.uhn.fhir.jpa.starter.model.AnalyticComparison;
 import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
 import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
+import ca.uhn.fhir.jpa.starter.model.BulkUploadClinicDetails;
+import ca.uhn.fhir.jpa.starter.model.BulkUploadDashboardUserDetails;
+import ca.uhn.fhir.jpa.starter.model.BulkUploadUserDetails;
 import ca.uhn.fhir.jpa.starter.model.CategoryItem;
 import ca.uhn.fhir.jpa.starter.model.LastSyncEntity;
 import ca.uhn.fhir.jpa.starter.model.MapCacheEntity;
@@ -243,26 +246,13 @@ public class HelperService {
 	// Recursive function below. Therefore, keeping counter to identify the depth of
 	// hierarchy and update the corresponding group type. 0->facility, 1->ward,
 	// 2->lga, 3->state, 4->country
-	private String updateKeycloakGroupAndResource(String[] updatedDetails, String groupId, int counter) {
-
-		// State(0), LGA(1), Ward(2), FacilityUID(3), FacilityCode(4), CountryCode(5),
-		// PhoneNumber(6), FacilityName(7), FacilityLevel(8), Ownership(9), Argusoft
-		// Identifier(10), Longitude(11), Latitude(12), Pluscode(13)
-		String stateName = updatedDetails[0];
-		String lgaName = updatedDetails[1];
-		String wardName = updatedDetails[2];
-		String facilityUID = updatedDetails[3];
-		String facilityCode = updatedDetails[4];
-		String countryCode = updatedDetails[5];
-		String phoneNumber = updatedDetails[6];
-		String facilityName = updatedDetails[7];
-		String level = updatedDetails[8];
-		String ownership = updatedDetails[9];
-		String argusoftIdentifier = updatedDetails[10];
-		String longitude = updatedDetails[11];
-		String latitude = updatedDetails[12];
-		String pluscode = updatedDetails[13];
-		String country = updatedDetails[14];
+	private String updateKeycloakGroupAndResource(BulkUploadClinicDetails updatedDetails, String groupId, int counter) {
+		String stateName = updatedDetails.getStateName();
+		String lgaName = updatedDetails.getLgaName();
+		String wardName = updatedDetails.getWardName();
+		String facilityName = updatedDetails.getFacilityName();
+		String level = updatedDetails.getType();
+		String ownership = updatedDetails.getOwnership();
 
 		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak()
 				.realm(appProperties.getKeycloak_Client_Realm());
@@ -327,6 +317,7 @@ public class HelperService {
 				continue;
 			}
 			String[] csvData = singleLine.split(",");
+			// State(0), LGA(1), Ward(2), FacilityUID(3), FacilityCode(4), CountryCode(5), PhoneNumber(6), FacilityName(7), FacilityLevel(8), Ownership(9), Argusoft Identifier(10), Longitude(11), Latitude(12), Pluscode(13)
 			iteration++;
 
 			if (!Validation.validateClinicAndStateCsvLine(csvData)) {
@@ -335,24 +326,23 @@ public class HelperService {
 				continue;
 			}
 
-			// State(0), LGA(1), Ward(2), FacilityUID(3), FacilityCode(4), CountryCode(5),
-			// PhoneNumber(6), FacilityName(7), FacilityLevel(8), Ownership(9), Argusoft
-			// Identifier(10), Longitude(11), Latitude(12), Pluscode(13), Country(14)
-			String stateName = csvData[0];
-			String lgaName = csvData[1];
-			String wardName = csvData[2];
-			String facilityUID = csvData[3];
-			String facilityCode = csvData[4];
-			String countryCode = csvData[5];
-			String phoneNumber = csvData[6];
-			String facilityName = csvData[7];
-			String type = csvData[8];
-			String ownership = csvData[9];
-			String argusoftIdentifier = csvData[10];
-			String longitude = csvData[11];
-			String latitude = csvData[12];
-			String pluscode = csvData[13];
-			String countryName = csvData[14];
+			BulkUploadClinicDetails clinicData = new BulkUploadClinicDetails(csvData);
+
+			String stateName = clinicData.getStateName();
+			String lgaName = clinicData.getLgaName();
+			String wardName = clinicData.getWardName();
+			String facilityUID = clinicData.getFacilityUID();
+			String facilityCode = clinicData.getFacilityCode();
+			String countryCode = clinicData.getCountryCode();
+			String phoneNumber = clinicData.getPhoneNumber();
+			String facilityName = clinicData.getFacilityName();
+			String type = clinicData.getType();
+			String ownership = clinicData.getOwnership();
+			String argusoftIdentifier = clinicData.getArgusoftIdentifier();
+			String longitude = clinicData.getLongitude();
+			String latitude = clinicData.getLatitude();
+			String pluscode = clinicData.getPluscode();
+			String countryName = clinicData.getCountryName();
 
 			if (facilityUID.isEmpty()) {
 				invalidClinics
@@ -367,7 +357,7 @@ public class HelperService {
 			}
 
 			if (null != group_id) {
-				updateKeycloakGroupAndResource(csvData, group_id, 0);
+				updateKeycloakGroupAndResource(clinicData, group_id, 0);
 			} else {
 				Organization country = FhirResourceTemplateHelper.country(countryName);
 				GroupRepresentation countryGroupRep = KeycloakTemplateHelper.countryGroup(country.getName(),
@@ -501,27 +491,29 @@ public class HelperService {
 				continue;
 			}
 			String hcwData[] = singleLine.split(",");
-			// firstName(0),lastName(1),email(2),countryCode(3),phoneNumber(4),gender(5),birthDate(6),keycloakUserName(7),
-			// initialPassword(8),state(9),lga(10),ward(11),facilityUID(12),role(13),qualification(14),stateIdentifier(15),
-			// Argusoft Identifier(16), Country(17)
-			String firstName = hcwData[0];
-			String lastName = hcwData[1];
-			String email = hcwData[2];
-			String countryCode = hcwData[3];
-			String phoneNumber = hcwData[4];
-			String gender = hcwData[5];
-			String birthDate = hcwData[6];
-			String keycloakUserName = hcwData[7];
-			String initialPassword = hcwData[8];
-			String state = hcwData[9];
-			String lga = hcwData[10];
-			String ward = hcwData[11];
-			String facilityUID = hcwData[12];
-			String role = hcwData[13];
-			String qualification = hcwData[14];
-			String stateIdentifier = hcwData[15];
-			String argusoftIdentifier = hcwData[16];
-			String countryName = hcwData[17];
+			// firstName(0),lastName(1),email(2),countryCode(3),phoneNumber(4),gender(5),birthDate(6),keycloakUserName(7), initialPassword(8),state(9),lga(10),ward(11),facilityUID(12),role(13),qualification(14),stateIdentifier(15), Argusoft Identifier(16), Country(17)
+
+			BulkUploadUserDetails userDetails = new BulkUploadUserDetails(hcwData);
+
+			String firstName = userDetails.getFirstName();
+			String lastName = userDetails.getLastName();
+			String email = userDetails.getEmail();
+			String countryCode = userDetails.getCountryCode();
+			String phoneNumber = userDetails.getPhoneNumber();
+			String gender = userDetails.getGender();
+			String birthDate = userDetails.getBirthDate();
+			String keycloakUserName = userDetails.getKeycloakUserName();
+			String initialPassword = userDetails.getInitialPassword();
+			String state = userDetails.getState();
+			String lga = userDetails.getLga();
+			String ward = userDetails.getWard();
+			String facilityUID = userDetails.getFacilityUID();
+			String role = userDetails.getRole();
+			String qualification = userDetails.getQualification();
+			String stateIdentifier = userDetails.getStateIdentifier();
+			String argusoftIdentifier = userDetails.getArgusoftIdentifier();
+			String countryName = userDetails.getCountryName();
+
 			organizationId = getOrganizationIdByFacilityUID(facilityUID);
 
 			String s = firstName + "," + lastName + "," + state + "," + lga + "," + ward + "," + facilityUID;
@@ -695,19 +687,22 @@ public class HelperService {
 				continue;
 			}
 
-			String firstName = hcwData[0];
-			String lastName = hcwData[1];
-			String email = hcwData[2];
-			String phoneNumber = hcwData[3];
-			String countryCode = hcwData[4];
-			String gender = hcwData[5];
-			String birthDate = hcwData[6];
-			String userName = hcwData[7];
-			String initialPassword = hcwData[8];
-			String facilityUID = hcwData[9];
-			String role = hcwData[10];
-			String organizationName = hcwData[11];
-			String type = hcwData[12];
+			BulkUploadDashboardUserDetails dashboardUserDetails = new BulkUploadDashboardUserDetails(hcwData);
+
+			String firstName = dashboardUserDetails.getFirstName();
+			String lastName = dashboardUserDetails.getLastName();
+			String email = dashboardUserDetails.getEmail();
+			String phoneNumber = dashboardUserDetails.getPhoneNumber();
+			String countryCode = dashboardUserDetails.getCountryCode();
+			String gender = dashboardUserDetails.getGender();
+			String birthDate = dashboardUserDetails.getBirthDate();
+			String userName = dashboardUserDetails.getUserName();
+			String initialPassword = dashboardUserDetails.getInitialPassword();
+			String facilityUID = dashboardUserDetails.getFacilityUID();
+			String role = dashboardUserDetails.getRole();
+			String organizationName = dashboardUserDetails.getOrganizationName();
+			String type = dashboardUserDetails.getType();
+
 
 			if (organizationName.isEmpty()) {
 				map.put("Can not create user", firstName + " " + lastName + "," + organizationName);
@@ -2501,20 +2496,16 @@ public class HelperService {
 	}
 
 	private <R extends IBaseResource> void updateResource(String resourceId, Class<R> resourceClass,
-			String[] updatedDetails, int counter) {
-		// State(0), LGA(1), Ward(2), FacilityUID(3), FacilityCode(4), CountryCode(5),
-		// PhoneNumber(6), FacilityName(7), FacilityLevel(8), Ownership(9), Argusoft
-		// Identifier(10), Longitude(11), Latitude(12), Pluscode(13)
-		String stateName = updatedDetails[0];
-		String lgaName = updatedDetails[1];
-		String wardName = updatedDetails[2];
-		String countryCode = updatedDetails[5];
-		String phoneNumber = updatedDetails[6];
-		String facilityName = updatedDetails[7];
-		String longitude = updatedDetails[11];
-		String latitude = updatedDetails[12];
-		String pluscode = updatedDetails[13];
-		String countryName = updatedDetails[14];
+			BulkUploadClinicDetails updatedDetails, int counter) {
+		String stateName = updatedDetails.getStateName();
+		String lgaName = updatedDetails.getLgaName();
+		String wardName = updatedDetails.getWardName();
+		String countryCode = updatedDetails.getCountryCode();
+		String phoneNumber = updatedDetails.getPhoneNumber();
+		String facilityName = updatedDetails.getFacilityName();
+		String longitude = updatedDetails.getLongitude();
+		String latitude = updatedDetails.getLatitude();
+		String pluscode = updatedDetails.getPluscode();
 		Organization organizationResource = resourceClass.equals(Organization.class)
 				? fhirClientAuthenticatorService.getFhirClient().read().resource(Organization.class).withId(resourceId)
 						.execute()
