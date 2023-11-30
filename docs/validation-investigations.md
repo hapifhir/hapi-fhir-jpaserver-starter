@@ -109,6 +109,73 @@ POST http://host.docker.internal:18002/eprik-cara/camel/tx/r4/ValueSet/$validate
 `valueSetMode` is sometimes set to `NO_MEMBERSHIP_CHECK`, other times to `CHECK_MEMERSHIP_ONLY`. It is linked to 
 enum `ValidationOptions.ValueSetMode`: `ALL_CHECKS, CHECK_MEMERSHIP_ONLY, NO_MEMBERSHIP_CHECK`.
 
+The response contains the code if it is valid, and an OperationOutcome otherwise:
+```json
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "code",
+      "valueCode": "10828004"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20230901"
+    },
+    {
+      "name": "display",
+      "valueString": "Positive"
+    }
+  ]
+}
+```
+
+```json
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "2.74"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "The provided code 'http://loinc.org#697-3' is not in the value set 'http://fhir.ch/ig/ch-elm/ValueSet/ch-elm-expecting-specimen-specification--0|1.0.0'"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "The provided code 'http://loinc.org#697-3' is not in the value set 'http://fhir.ch/ig/ch-elm/ValueSet/ch-elm-expecting-specimen-specification--0|1.0.0'"
+            },
+            "location": [
+              "Coding"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
 ---
 
 The request contains both the code to be checked, and the value set to check it against, as well as some parameters.
@@ -156,6 +223,8 @@ POST http://host.docker.internal:18002/eprik-cara/camel/tx/r4/CodeSystem/$valida
   ]
 }
 ```
+
+The response is similar to the previous one.
 
 The responsible code for these parts is `BaseWorkerContext.validateOnServer()`.
 
