@@ -12,6 +12,9 @@ import ca.uhn.fhir.jpa.dao.tx.IHapiTransactionService;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR4;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR5;
+import ch.ahdis.matchbox.interceptor.TerminologyCapabilitiesInterceptor;
+import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
+import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +137,12 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Autowired(required = false)
 	private ImplementationGuideProviderR5 implementationGuideResourceProviderR5;
 
+	@Autowired
+	private CodeSystemCodeValidationProvider codeSystemCodeValidationProvider;
+
+	@Autowired
+	private ValueSetCodeValidationProvider valueSetCodeValidationProvider;
+
 
 	// removed GraphQlProvider
 	// removed IVAldiationSupport
@@ -159,8 +168,11 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		fhirServer.registerInterceptor(new MappingLanguageInterceptor(matchboxEngineSupport));
 		fhirServer.registerInterceptor(new ImplementationGuidePackageInterceptor(myPackageCacheManager, myFhirContext));
 		fhirServer.registerInterceptor(new MatchboxValidationInterceptor(this.myFhirContext,structureDefinitionProvider));
+		fhirServer.registerInterceptor(new TerminologyCapabilitiesInterceptor());
 		fhirServer.registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider,
-				assembleProvider, conceptMapProvider, codeSystemProvider, valueSetProvider, structureDefinitionProvider, structureMapTransformProvider);
+				assembleProvider, conceptMapProvider, codeSystemProvider, valueSetProvider, structureDefinitionProvider,
+											  structureMapTransformProvider, codeSystemCodeValidationProvider,
+											  valueSetCodeValidationProvider);
 
 
 		ScheduledJobDefinition jobDefinition = new ScheduledJobDefinition();

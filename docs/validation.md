@@ -71,3 +71,33 @@ matchbox:
 | txServer             | 0..1  | txServer to use, n/a if none (default)                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | igsPreloaded         | 0..\* | For each mentioned ImplementationGuide (comma separated) an engine will be created, which will be cached in memory as long the application is running. Other IG's will created on demand and will be cached for an hour for subsequent calls. Tradeoff between memory consumption and first response time (creating of engine might have duration of half a minute). Default no igs are preloaded.                                                                                  |
 | onlyOneEngine        | 0..1  | Implementation Guides can have multiple versions with different dependencies. Matchbox creates for transformation and validation an own engine for each Implementation Guide and its dependencies (default setting). You can switch this behavior, e.g. if you are using it in development and want to create and update resources or transform maps. Set the setting for onlyOneEngine to true. The changes are however not persisted and will be lost if matchbox is restarted. |
+
+## Terminology server
+
+A terminology server may be used to validate resources.
+It is useful for the following reasons:
+
+- to validate that a code/coding/codeableConcept is within a complex ValueSet (see under for examples of complex 
+  ValueSets);
+- to validate that a code/coding/codeableConcept exists in its code system, when the code system is not locally 
+  defined (e.g. SNOMED CT, LOINC, ISOs, etc.).
+
+A complex value set (in that context) is a value set that uses filters to define its content instead of declaring 
+each code. All [value set filters](http://build.fhir.org/valueset-filter-operator.html) would make a value set too 
+complex for the validation client to process the value set expansion by itself.
+
+Matchbox-server comes with a fake terminology server.
+It simply returns success to all validation requests. 
+To use it, you can set the terminology server URL to the one of the matchbox-server instance, e.g. 
+http://localhost:8080/fhir.
+
+Please be aware that by using the fake terminology server, the validation may be incomplete.
+Its use case is simple:
+
+- you use an IG that has only simple value sets, where all codes have been verified to exist in their code system;
+- in your resources, all important code/coding/codeableConcept are bound to a simple value set, with 'required' 
+  strength.
+
+Please be aware that if you have unbound code/coding/codeableConcepts, or the binding is not 'required', the 
+code/coding/codeableConcept will be considered valid if the code system is not defined locally (e.g. SNOMED CT, 
+LOINC, etc).

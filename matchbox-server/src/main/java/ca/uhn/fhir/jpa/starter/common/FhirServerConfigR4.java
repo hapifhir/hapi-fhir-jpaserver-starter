@@ -1,6 +1,8 @@
 package ca.uhn.fhir.jpa.starter.common;
 
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR4;
+import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
+import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -165,6 +167,14 @@ public class FhirServerConfigR4 {
     return new MatchboxPackageInstallerImpl();
   }
   
+	@Bean
+	public CodeSystemCodeValidationProvider codeSystemCodeValidationProvider() {
+		return new CodeSystemCodeValidationProvider();
+	}
 
+	@Bean
+	public ValueSetCodeValidationProvider valueSetCodeValidationProvider() {
+		return new ValueSetCodeValidationProvider();
+	}
 
 }
