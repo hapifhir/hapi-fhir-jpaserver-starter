@@ -14,12 +14,11 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import javax.annotation.PreDestroy;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.json.JsonData;
+import jakarta.annotation.PreDestroy;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.indices.PutIndexTemplateRequest;
-import org.elasticsearch.common.settings.Settings;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DateTimeType;
@@ -30,13 +29,11 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.StringType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -83,19 +80,20 @@ public class ElasticsearchLastNR4IT {
   @BeforeAll
   public static void beforeClass() throws IOException {
 	  //Given
-	  RestHighLevelClient elasticsearchHighLevelRestClient = ElasticsearchRestClientFactory.createElasticsearchHighLevelRestClient(
+	  ElasticsearchClient elasticsearchHighLevelRestClient = ElasticsearchRestClientFactory.createElasticsearchHighLevelRestClient(
 		  "http", embeddedElastic.getHost() + ":" + embeddedElastic.getMappedPort(9200), "", "");
 
 	  /* As of 2023-08-10, HAPI FHIR sets SubscriptionConstants.MAX_SUBSCRIPTION_RESULTS to 50000
 	  		which is in excess of elastic's default max_result_window. If MAX_SUBSCRIPTION_RESULTS is changed
 	  		to a value <= 10000, the following will no longer be necessary. - dotasek
 	  */
-	  PutIndexTemplateRequest putIndexTemplateRequest = new PutIndexTemplateRequest("hapi_fhir_template");
-	  putIndexTemplateRequest.patterns(List.of("*"));
-	  Settings settings = Settings.builder().put("index.max_result_window", 50000).build();
-	  putIndexTemplateRequest.settings(settings);
-	  elasticsearchHighLevelRestClient.indices().putTemplate(putIndexTemplateRequest, RequestOptions.DEFAULT);
 
+	  elasticsearchHighLevelRestClient.indices().putTemplate(t->{
+		  t.name("hapi_fhir_template");
+		  t.indexPatterns("*");
+		  t.settings("index.max_result_window", JsonData.of(50000));
+		  return t;
+	  });
 
   }
 
