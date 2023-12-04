@@ -36,7 +36,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
   {
      "spring.datasource.url=jdbc:h2:mem:dbr5",
      "hapi.fhir.fhir_version=r5",
-     "hapi.fhir.subscription.websocket_enabled=true",
+	  "hapi.fhir.cr_enabled=false",
 	  "hapi.fhir.subscription.websocket_enabled=true"
   })
 public class ExampleServerR5IT {

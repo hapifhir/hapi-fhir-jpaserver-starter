@@ -6,14 +6,13 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 public class OnDSTU2Condition implements Condition {
-  @Override
-  public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata metadata) {
-    FhirVersionEnum version = FhirVersionEnum.forVersionString(conditionContext.
-      getEnvironment()
-      .getProperty("hapi.fhir.fhir_version")
-      .toUpperCase());
+	@Override
+	public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata metadata) {
+		FhirVersionEnum version = FhirVersionEnum.forVersionString(conditionContext
+				.getEnvironment()
+				.getProperty("hapi.fhir.fhir_version")
+				.toUpperCase());
 
-    return version == FhirVersionEnum.DSTU2;
-
-  }
+		return version == FhirVersionEnum.DSTU2;
+	}
 }
