@@ -180,6 +180,13 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
 		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());
 
+		if (appProperties.getMdm_enabled()) {
+			// MDM requires the subscription of type message
+			ourLog.info("Enabling message subscriptions");
+			jpaStorageSettings.addSupportedSubscriptionType(
+					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.MESSAGE);
+		}
+
 		storageSettings(appProperties, jpaStorageSettings);
 		return jpaStorageSettings;
 	}

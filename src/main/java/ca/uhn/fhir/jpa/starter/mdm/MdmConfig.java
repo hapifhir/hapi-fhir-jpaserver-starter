@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter.mdm;
 
 import ca.uhn.fhir.jpa.mdm.config.MdmConsumerConfig;
 import ca.uhn.fhir.jpa.mdm.config.MdmSubmitterConfig;
+import ca.uhn.fhir.jpa.searchparam.config.NicknameServiceConfig;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.mdm.api.IMdmSettings;
 import ca.uhn.fhir.mdm.rules.config.MdmRuleValidator;
@@ -20,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 
 @Configuration
 @Conditional(MdmConfigCondition.class)
-@Import({MdmConsumerConfig.class, MdmSubmitterConfig.class})
+@Import({MdmConsumerConfig.class, MdmSubmitterConfig.class, NicknameServiceConfig.class})
 public class MdmConfig {
 
 	@Bean
