@@ -402,7 +402,12 @@
             <artifactId>logback-core</artifactId>
             <version>${logback-classic.version}</version>
         </dependency>
-
+        <!-- valentin -->
+        <dependency>
+            <groupId>org.smartregister</groupId>
+            <artifactId>hapi-fhir-keycloak</artifactId>
+            <version>0.0.7-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
