@@ -19,33 +19,32 @@ public class ExtraStaticFilesConfigurer implements WebMvcConfigurer {
 	public ExtraStaticFilesConfigurer(AppProperties appProperties) {
 
 		rootContextPath = appProperties.getStaticLocationPrefix();
-		if(rootContextPath.endsWith("/"))
+		if (rootContextPath.endsWith("/"))
 			rootContextPath = rootContextPath.substring(0, rootContextPath.lastIndexOf('/'));
 
 		staticLocation = appProperties.getStaticLocation();
-		if(staticLocation.endsWith("/"))
-			staticLocation = staticLocation.substring(0, staticLocation.lastIndexOf('/'));
-
+		if (staticLocation.endsWith("/")) staticLocation = staticLocation.substring(0, staticLocation.lastIndexOf('/'));
 	}
 
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry theRegistry) {
+		theRegistry.addResourceHandler(rootContextPath + "/**").addResourceLocations(staticLocation);
+	}
 
 	@Override
-    public void addResourceHandlers(ResourceHandlerRegistry theRegistry) {
-        theRegistry.addResourceHandler(rootContextPath + "/**").addResourceLocations(staticLocation);
-    }
+	public void addViewControllers(ViewControllerRegistry registry) {
+		String path = URI.create(staticLocation).getPath();
+		String lastSegment = path.substring(path.lastIndexOf('/') + 1);
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        String path = URI.create(staticLocation).getPath();
-        String lastSegment = path.substring(path.lastIndexOf('/') + 1);
+		registry.addViewController(rootContextPath)
+				.setViewName("redirect:" + rootContextPath + "/" + lastSegment + "/index.html");
 
-        registry.addViewController(rootContextPath).setViewName("redirect:" + rootContextPath + "/" + lastSegment + "/index.html");
+		registry.addViewController(rootContextPath + "/*")
+				.setViewName("redirect:" + rootContextPath + "/" + lastSegment + "/index.html");
 
-        registry.addViewController(rootContextPath + "/*").setViewName("redirect:" + rootContextPath + "/" + lastSegment + "/index.html");
+		registry.addViewController(rootContextPath + "/" + lastSegment + "/")
+				.setViewName("redirect:" + rootContextPath + "/" + lastSegment + "/index.html");
 
-        registry.addViewController(rootContextPath + "/" + lastSegment + "/").setViewName("redirect:" + rootContextPath + "/" + lastSegment + "/index.html");
-
-        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-    }
-
+		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+	}
 }

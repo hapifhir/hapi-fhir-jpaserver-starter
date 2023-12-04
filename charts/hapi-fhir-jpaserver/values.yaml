@@ -7,7 +7,7 @@ image:
   # -- the path inside the repository
   repository: hapiproject/hapi
   # -- the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image.
-  tag: "v6.6.0@sha256:c00367865ae5dad4e171cbb68bfc1c39818854079d1565bee4c86a45e78335d0"
+  tag: "v6.8.3@sha256:6195f1116ebabfb0a608addde043b3e524c456c4d4f35b3d25025afd7dcd2e27"
   # -- image pullPolicy to use
   pullPolicy: IfNotPresent
 
@@ -198,6 +198,17 @@ podDisruptionBudget:
   # -- maximum unavailable instances
   maxUnavailable: ""
 
+serviceAccount:
+  # -- Specifies whether a service account should be created.
+  create: false
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automount: true
+
 metrics:
   serviceMonitor:
     # -- if enabled, creates a ServiceMonitor instance for Prometheus Operator-based monitoring
@@ -229,7 +240,7 @@ curl:
   image:
     registry: docker.io
     repository: curlimages/curl
-    tag: 8.2.0@sha256:daf3f46a2639c1613b25e85c9ee4193af8a1d538f92483d67f9a3d7f21721827
+    tag: 8.4.0@sha256:4a3396ae573c44932d06ba33f8696db4429c419da87cbdc82965ee96a37dd0af
 
 tests:
   # -- configure the test pods resource requests and limits
@@ -242,7 +253,8 @@ tests:
   #   memory: 128Mi
 
 # -- additional Spring Boot application config. Mounted as a file and automatically loaded by the application.
-extraConfig: ""
+extraConfig:
+  ""
   # # For example:
   # |
   # hapi:
