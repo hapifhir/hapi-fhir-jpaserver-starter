@@ -112,7 +112,7 @@ hapi:
     #      partitioning_include_in_search_hashes: false
     #cors:
     #  allow_Credentials: true
-      # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
+    # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
     #  allowed_origin:
     #    - '*'
 
@@ -141,7 +141,7 @@ hapi:
     tester:
       home:
         name: Local Tester
-        server_address: 'http://localhost:8080/fhir'
+        server_address: "https://hapi.cloud-doctor.eu/fhir"
         refuse_to_fetch_third_party_urls: false
         fhir_version: R4
       global:

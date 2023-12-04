@@ -181,7 +181,7 @@ hapi:
     tester:
       home:
         name: Local Tester
-        server_address: "http://localhost:8080/fhir"
+        server_address: "https://hapi.cloud-doctor.eu/fhir"
         refuse_to_fetch_third_party_urls: false
         fhir_version: R4
       global:
