@@ -137,6 +137,7 @@ hapi:
     #    graphql_enabled: true
     narrative_enabled: false
     mdm_enabled: false
+    mdm_rules_json_location: "mdm-rules.json"
     #    local_base_urls:
     #      - https://hapi.fhir.org/baseR4
     #    partitioning:
