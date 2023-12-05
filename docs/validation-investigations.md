@@ -6,9 +6,9 @@ To build matchbox and matchbox-ch-elm:
 ```bash
 cd matchbox
 mvn --batch-mode --update-snapshots package -DskipTests -P release
-docker build --tag "matchbox:3.4.5.1" --platform=linux/amd64 -f matchbox-server/Dockerfile matchbox-server
+docker build --tag "matchbox:3.4.5.2" --platform=linux/amd64 --progress=plain --no-cache -f matchbox-server/Dockerfile matchbox-server
 cd ../matchbox-ch-elm
-docker build --tag "matchbox-ch-elm:3.4.5.1" --platform=linux/amd64 -f ./Dockerfile .
+docker build --tag "matchbox-ch-elm:3.4.5.1" --platform=linux/amd64 --progress=plain --no-cache -f ./Dockerfile .
 ```
 
 matchbox-ch-elm is configured with `txServer: http://host.docker.internal:18002/eprik-cara/camel/tx/r4/`.

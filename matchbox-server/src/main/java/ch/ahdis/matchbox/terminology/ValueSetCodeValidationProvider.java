@@ -3,9 +3,12 @@ package ch.ahdis.matchbox.terminology;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.ResourceParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
+import org.apache.jena.sparql.function.library.leviathan.log;
 import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Quentin Ligier
  **/
 public class ValueSetCodeValidationProvider implements IResourceProvider {
+	private static final Logger log = LoggerFactory.getLogger(ValueSetCodeValidationProvider.class);
 
 	/**
 	 *
@@ -23,6 +27,15 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 	public IAnyResource validateCode(@ResourceParam final Parameters request,
 												final HttpServletResponse servletResponse) {
 		if (request.hasParameter("coding") && request.getParameterValue("coding") instanceof final Coding coding) {
+			if(log.isDebugEnabled()) {
+				String url = null;
+				if (request.hasParameter("url")) {
+					url = request.getParameterValue("url").toString();
+				} else if (request.hasParameter("valueSet")) {
+					url = ((ValueSet) request.getParameter("valueSet").getResource()).getUrl();
+				}
+				log.debug("Validating code in VS: {}|{} in {}", coding.getCode(), coding.getSystem(), url);
+			}
 			return TerminologyUtils.mapCodingToSuccessfulParameters(coding);
 		}
 

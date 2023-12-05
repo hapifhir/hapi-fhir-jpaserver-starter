@@ -183,7 +183,7 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 				NpmPackage npmPackage = null;
 				try {
 					npmPackage = myPackageCacheManager.installPackage(theInstallationSpec);
-				} catch (InvalidRequestException e) {
+				} catch (Exception e) {
 					ourLog.error("Error installing package: " +theInstallationSpec.getName() + "#" + theInstallationSpec.getVersion(), e);
 					throw e;
 				}

@@ -80,6 +80,7 @@ public class MatchboxEngine extends ValidationEngine {
 		super(other);
 		// Create a new IgLoader, otherwise the context is desynchronized between it and the engine
 		this.setIgLoader(new IgLoader(this.getPcm(), this.getContext(), this.getVersion(), this.isDebug()));
+		//this.getContext().setCachingAllowed(false); // Uncomment to improve debugging HAPI by disabling caching
 	}
 
 	/**
