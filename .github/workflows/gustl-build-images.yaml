@@ -11,7 +11,7 @@ on:
       - "charts/**"
 env:
   IMAGES: docker.io/aseno/hapi-fhir
-  TAG: cdp-v2
+  TAG: cdp-v3
   PLATFORMS: linux/amd64,linux/arm64/v8
 
 jobs:
