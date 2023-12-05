@@ -12,6 +12,7 @@ import ca.uhn.fhir.jpa.dao.tx.IHapiTransactionService;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR4;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR5;
+import ch.ahdis.matchbox.interceptor.HttpReadOnlyInterceptor;
 import ch.ahdis.matchbox.interceptor.TerminologyCapabilitiesInterceptor;
 import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
 import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
@@ -165,6 +166,9 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 				null, null, null, null, null,
 				partitionManagementProvider,  null, packageInstallerSvc, theThreadSafeResourceDeleterSvc);
 
+		if (this.getCliContext().isHttpReadOnly()) {
+			fhirServer.registerInterceptor(new HttpReadOnlyInterceptor());
+		}
 		fhirServer.registerInterceptor(new MappingLanguageInterceptor(matchboxEngineSupport));
 		fhirServer.registerInterceptor(new ImplementationGuidePackageInterceptor(myPackageCacheManager, myFhirContext));
 		fhirServer.registerInterceptor(new MatchboxValidationInterceptor(this.myFhirContext,structureDefinitionProvider));

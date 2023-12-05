@@ -157,6 +157,12 @@ public class CliContext {
     return this.onlyOneEngine;
   }
 
+  private boolean httpReadOnly = false;
+
+	public boolean isHttpReadOnly() {
+	  return this.httpReadOnly;
+  }
+
   @Autowired
   public CliContext(Environment environment) {
     		// get al list of all JsonProperty of cliContext with return values property name and property type
@@ -181,6 +187,7 @@ public class CliContext {
     // get properties array from the environment?
     this.igsPreloaded = environment.getProperty("matchbox.fhir.context.igsPreloaded", String[].class);
     this.onlyOneEngine = environment.getProperty("matchbox.fhir.context.onlyOneEngine", Boolean.class, false);
+    this.httpReadOnly = environment.getProperty("matchbox.fhir.context.httpReadOnly", Boolean.class, false);
   }
 
   public CliContext(CliContext other) {
@@ -199,6 +206,7 @@ public class CliContext {
 		}
     this.igsPreloaded = other.igsPreloaded;
     this.onlyOneEngine = other.onlyOneEngine;
+	 this.httpReadOnly = other.httpReadOnly;
   }
 
   @JsonProperty("ig")
@@ -535,86 +543,125 @@ public class CliContext {
     this.jurisdiction = jurisdiction;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    CliContext that = (CliContext) o;
-    return doNative == that.doNative &&
-      hintAboutNonMustSupport == that.hintAboutNonMustSupport &&
-      recursive == that.recursive &&
-      doDebug == that.doDebug &&
-      assumeValidRestReferences == that.assumeValidRestReferences &&
-      canDoNative == that.canDoNative &&
-//      noInternalCaching == that.noInternalCaching &&
-      noExtensibleBindingMessages == that.noExtensibleBindingMessages &&
-      noUnicodeBiDiControlChars == that.noUnicodeBiDiControlChars &&
-      noInvariants == that.noInvariants &&
-      displayIssuesAreWarnings == that.displayIssuesAreWarnings &&
-      wantInvariantsInMessages == that.wantInvariantsInMessages &&
-      Objects.equals(txServer, that.txServer) &&
-      Objects.equals(lang, that.lang) &&
-      Objects.equals(snomedCT, that.snomedCT) &&
-      Objects.equals(fhirVersion, that.fhirVersion) &&
-      Objects.equals(ig, that.ig) &&
-      Objects.equals(questionnaireMode, that.questionnaireMode) &&
-      Objects.equals(level, that.level) &&
-      Objects.equals(crumbTrails, that.crumbTrails) &&
-      Objects.equals(forPublication, that.forPublication) &&
-      Objects.equals(allowExampleUrls, that.allowExampleUrls) &&
-      mode == that.mode &&
-      Objects.equals(locale, that.locale) &&
-      Objects.equals(jurisdiction, that.jurisdiction) &&
-      Objects.equals(locations, that.locations);
-  }
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+		if (!(o instanceof final CliContext that)) return false;
+		return doNative == that.doNative
+			&& hintAboutNonMustSupport == that.hintAboutNonMustSupport
+			&& recursive == that.recursive
+			&& showMessagesFromReferences == that.showMessagesFromReferences
+			&& doDebug == that.doDebug
+			&& assumeValidRestReferences == that.assumeValidRestReferences
+			&& canDoNative == that.canDoNative
+			&& noExtensibleBindingMessages == that.noExtensibleBindingMessages
+			&& noUnicodeBiDiControlChars == that.noUnicodeBiDiControlChars
+			&& noInvariants == that.noInvariants
+			&& displayIssuesAreWarnings == that.displayIssuesAreWarnings
+			&& wantInvariantsInMessages == that.wantInvariantsInMessages
+			&& doImplicitFHIRPathStringConversion == that.doImplicitFHIRPathStringConversion
+			&& securityChecks == that.securityChecks
+			&& crumbTrails == that.crumbTrails
+			&& forPublication == that.forPublication
+			&& allowExampleUrls == that.allowExampleUrls
+			&& onlyOneEngine == that.onlyOneEngine
+			&& httpReadOnly == that.httpReadOnly
+			&& htmlInMarkdownCheck == that.htmlInMarkdownCheck
+			&& Objects.equals(txServer, that.txServer)
+			&& Objects.equals(lang, that.lang)
+			&& Objects.equals(snomedCT, that.snomedCT)
+			&& Objects.equals(fhirVersion, that.fhirVersion)
+			&& Objects.equals(ig, that.ig)
+			&& questionnaireMode == that.questionnaireMode
+			&& level == that.level
+			&& mode == that.mode
+			&& Objects.equals(locale, that.locale)
+			&& Objects.equals(locations, that.locations)
+			&& Objects.equals(jurisdiction, that.jurisdiction)
+			&& Arrays.equals(igsPreloaded, that.igsPreloaded);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(doNative,  hintAboutNonMustSupport, recursive, doDebug, assumeValidRestReferences, canDoNative, 
-            noExtensibleBindingMessages, noInvariants, displayIssuesAreWarnings, wantInvariantsInMessages, txServer, lang, snomedCT,
-            fhirVersion, ig, questionnaireMode, level, mode, locale, locations, crumbTrails, forPublication, allowExampleUrls, jurisdiction, noUnicodeBiDiControlChars);
-  }
+	@Override
+	public int hashCode() {
+		int result = Objects.hash(doNative,
+										  hintAboutNonMustSupport,
+										  recursive,
+										  showMessagesFromReferences,
+										  doDebug,
+										  assumeValidRestReferences,
+										  canDoNative,
+										  noExtensibleBindingMessages,
+										  noUnicodeBiDiControlChars,
+										  noInvariants,
+										  displayIssuesAreWarnings,
+										  wantInvariantsInMessages,
+										  doImplicitFHIRPathStringConversion,
+										  htmlInMarkdownCheck,
+										  txServer,
+										  lang,
+										  snomedCT,
+										  fhirVersion,
+										  ig,
+										  questionnaireMode,
+										  level,
+										  mode,
+										  securityChecks,
+										  crumbTrails,
+										  forPublication,
+										  allowExampleUrls,
+										  locale,
+										  locations,
+										  jurisdiction,
+										  onlyOneEngine,
+										  httpReadOnly);
+		result = 31 * result + Arrays.hashCode(igsPreloaded);
+		return result;
+	}
 
-  @Override
-  public String toString() {
-    return "Parameters {" +
-      "doNative=" + doNative +
-      ", hintAboutNonMustSupport=" + hintAboutNonMustSupport +
-      ", recursive=" + recursive +
-      ", doDebug=" + doDebug +
-      ", assumeValidRestReferences=" + assumeValidRestReferences +
-      ", canDoNative=" + canDoNative +
-      ", noExtensibleBindingMessages=" + noExtensibleBindingMessages +
-      ", noUnicodeBiDiControlChars=" + noUnicodeBiDiControlChars +
-      ", noInvariants=" + noInvariants +
-      ", displayIssuesAreWarnings=" + displayIssuesAreWarnings +
-      ", wantInvariantsInMessages=" + wantInvariantsInMessages +
-      ", txServer='" + txServer + '\'' +
-      ", lang='" + lang + '\'' +
-      ", snomedCT='" + snomedCT + '\'' +
-      ", fhirVersion='" + fhirVersion + '\'' +
-      ", ig=" + ig +
-      ", questionnaireMode=" + questionnaireMode +
-      ", level=" + level +
-      ", mode=" + mode +
-      ", securityChecks=" + securityChecks +
-      ", crumbTrails=" + crumbTrails +
-      ", forPublication=" + forPublication +
-      ", jurisdiction=" + jurisdiction +
-      ", allowExampleUrls=" + allowExampleUrls +
-      ", locale='" + locale + '\'' +
-      ", locations=" + locations +
-      '}';
-  }
+	@Override
+	public String toString() {
+		return "CliContext{" +
+			"doNative=" + doNative +
+			", hintAboutNonMustSupport=" + hintAboutNonMustSupport +
+			", recursive=" + recursive +
+			", showMessagesFromReferences=" + showMessagesFromReferences +
+			", doDebug=" + doDebug +
+			", assumeValidRestReferences=" + assumeValidRestReferences +
+			", canDoNative=" + canDoNative +
+			", noExtensibleBindingMessages=" + noExtensibleBindingMessages +
+			", noUnicodeBiDiControlChars=" + noUnicodeBiDiControlChars +
+			", noInvariants=" + noInvariants +
+			", displayIssuesAreWarnings=" + displayIssuesAreWarnings +
+			", wantInvariantsInMessages=" + wantInvariantsInMessages +
+			", doImplicitFHIRPathStringConversion=" + doImplicitFHIRPathStringConversion +
+			", htmlInMarkdownCheck=" + htmlInMarkdownCheck +
+			", txServer='" + txServer + '\'' +
+			", lang='" + lang + '\'' +
+			", snomedCT='" + snomedCT + '\'' +
+			", fhirVersion='" + fhirVersion + '\'' +
+			", ig='" + ig + '\'' +
+			", questionnaireMode=" + questionnaireMode +
+			", level=" + level +
+			", mode=" + mode +
+			", securityChecks=" + securityChecks +
+			", crumbTrails=" + crumbTrails +
+			", forPublication=" + forPublication +
+			", allowExampleUrls=" + allowExampleUrls +
+			", locale='" + locale + '\'' +
+			", locations=" + locations +
+			", jurisdiction='" + jurisdiction + '\'' +
+			", igsPreloaded=" + Arrays.toString(igsPreloaded) +
+			", onlyOneEngine=" + onlyOneEngine +
+			", httpReadOnly=" + httpReadOnly +
+			'}';
+	}
 
-
-  public List<Field> getValidateEngineParameters() {
+	public List<Field> getValidateEngineParameters() {
 		List<Field> cliContextProperties = Arrays.asList(this.getClass().getDeclaredFields()).stream()
-				.filter(f -> f.isAnnotationPresent(JsonProperty.class))
-				.filter(f -> f.getName() != "profile")
-				.filter(f -> f.getType() == String.class || f.getType() == boolean.class)
-				.collect(Collectors.toList());
+			.filter(f -> f.isAnnotationPresent(JsonProperty.class))
+			.filter(f -> f.getName() != "profile")
+			.filter(f -> f.getType() == String.class || f.getType() == boolean.class)
+			.collect(Collectors.toList());
 		return cliContextProperties;
-	}	
-
+	}
 }
