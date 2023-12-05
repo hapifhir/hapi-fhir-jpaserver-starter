@@ -174,6 +174,9 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 						ourLog.info("Remove Package {}#{} because it is a package based on an external url",
 								theInstallationSpec.getName(), theInstallationSpec.getVersion());
 						myPackageCacheManager.uninstallPackage(theInstallationSpec.getName(), theInstallationSpec.getVersion());
+					} else {
+						// Abort loading, the package is already installed
+						return retVal;
 					}
 				}
 
