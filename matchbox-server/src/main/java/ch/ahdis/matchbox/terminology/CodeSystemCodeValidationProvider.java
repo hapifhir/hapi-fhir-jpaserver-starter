@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 
+import static ch.ahdis.matchbox.terminology.TerminologyUtils.mapErrorToOperationOutcome;
+
 /**
  * The HAPI FHIR provider for the CodeSystem/$validate-code operation.
  *
@@ -31,14 +33,9 @@ public class CodeSystemCodeValidationProvider implements IResourceProvider {
 		}
 
 		servletResponse.setStatus(422);
-		final var oo = new OperationOutcome();
-		oo.addIssue()
-			.setSeverity(OperationOutcome.IssueSeverity.ERROR)
-			.setCode(OperationOutcome.IssueType.NOTFOUND)
-			.setDetails(new CodeableConcept().setText("Unable to find code to validate (looked for coding)"));
 		// Original error message is:
 		// Unable to find code to validate (looked for coding | codeableConcept | code)
-		return oo;
+		return mapErrorToOperationOutcome("Unable to find code to validate (looked for coding)");
 	}
 
 	@Override
