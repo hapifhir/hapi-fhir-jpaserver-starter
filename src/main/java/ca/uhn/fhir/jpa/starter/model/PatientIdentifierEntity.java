@@ -40,6 +40,9 @@ public class PatientIdentifierEntity {
 	@Column(name = "updatedTime", nullable = false)
 	private long updatedTime;
 
+	@Column(name = "orgId", nullable = true)
+	private String orgId;
+
 	public long getId() {
 		return id;
 	}
@@ -112,10 +115,19 @@ public class PatientIdentifierEntity {
 		this.updatedTime = updatedTime;
 	}
 
+	public String getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+
+
 	public PatientIdentifierEntity() {
 	}
 
-	public PatientIdentifierEntity(String patientId, String patientIdentifier, String identifierType, String oclVersionId, String oclGuid, String status, long createdAt, long updatedAt) {
+	public PatientIdentifierEntity(String patientId, String patientIdentifier, String identifierType, String oclVersionId, String oclGuid, String status, long createdAt, long updatedAt, String orgId) {
 		this.patientId = patientId;
 		this.patientIdentifier = patientIdentifier;
 		this.identifierType = identifierType;
@@ -124,10 +136,11 @@ public class PatientIdentifierEntity {
 		this.status = status;
 		this.cratedTime = createdAt;
 		this.updatedTime = updatedAt;
+		this.orgId = orgId;
 	}
 
 	@Override
 	public String toString() {
-		return "PatientInfoResourceEntity[id=" + id + ",patientId=" + patientId + ",patientIdentifier=" + patientIdentifier + ",identifierType=" + identifierType + ",oclVersionId=" + oclVersionId + ",oclGuid=" + oclGuid + ",status=" + status + ",createdAt=" + cratedTime + ",updatedAt=" + updatedTime + "]";
+		return "PatientInfoResourceEntity[id=" + id + ",patientId=" + patientId + ",patientIdentifier=" + patientIdentifier + ",identifierType=" + identifierType + ",oclVersionId=" + oclVersionId + ",oclGuid=" + oclGuid + ",status=" + status + ",createdAt=" + cratedTime + ",updatedAt=" + updatedTime + ",orgId=" +orgId + "]";
 	}
 }

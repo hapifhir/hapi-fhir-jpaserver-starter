@@ -1,12 +1,7 @@
 package ca.uhn.fhir.jpa.starter.service;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
@@ -16,35 +11,26 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
 
 import android.util.Base64;
 import autovalue.shaded.kotlin.Triple;
 import ca.uhn.fhir.jpa.starter.model.*;
-import ca.uhn.fhir.rest.client.api.IHttpClient;
-import ca.uhn.fhir.rest.client.api.IHttpRequest;
 
 import com.iprd.fhir.utils.FhirUtils;
 import com.iprd.fhir.utils.PatientIdentifierStatus;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.hibernate.HibernateException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 import com.iprd.fhir.utils.DateUtilityHelper;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.interceptor.api.Hook;
 import ca.uhn.fhir.interceptor.api.Interceptor;
 import ca.uhn.fhir.interceptor.api.Pointcut;
@@ -62,10 +48,12 @@ public class ServerInterceptor {
 
 	private static final String ENCOUNTER_MIGRATED_SYSTEM = "https://iprdgroup.com/identifier";
 	private static final String ENCOUNTER_MIGRATED_VALUE = "argusoft-migrated";
-
 	public ServerInterceptor(String path) {
 		imagePath = path;
 	}
+
+	@Autowired
+	FhirClientAuthenticatorService fhirClientAuthenticatorService;
 
 	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_CREATED)
 	public void insert(IBaseResource theResource) throws IOException {
@@ -74,6 +62,21 @@ public class ServerInterceptor {
 			processMedia((Media) theResource);
 		} else if (theResource.fhirType().equals("Encounter")) {
 			Encounter encounter = (Encounter) theResource;
+			if(encounter.getMeta().hasTag() && encounter.getMeta().getTag().get(0).getCode().equals("patient-registration")){
+				String serviceProviderId = encounter.getServiceProvider().getReferenceElement().getIdPart();
+				String patientId = encounter.getSubject().getReferenceElement().getIdPart();
+				try {
+					List<PatientIdentifierEntity> getExistingRowsToUpdateOrgId = notificationDataSource.getExistingEntriesWithPatientId(patientId);
+					ArrayList<PatientIdentifierEntity> PatientIdentifierEntitiesToUpdate = new ArrayList<PatientIdentifierEntity>();
+					for (PatientIdentifierEntity item : getExistingRowsToUpdateOrgId) {
+						item.setOrgId(serviceProviderId);
+						PatientIdentifierEntitiesToUpdate.add(item);
+					}
+					notificationDataSource.updateObjects(PatientIdentifierEntitiesToUpdate);
+				} catch (HibernateException e) {
+					logger.warn(ExceptionUtils.getStackTrace(e));
+				}
+			}
 			String encounterId = encounter.getIdElement().getIdPart();
 			String patientId = encounter.getSubject().getReferenceElement().getIdPart();
 			Date currentDate = DateUtilityHelper.getCurrentSqlDate();
@@ -193,13 +196,11 @@ public class ServerInterceptor {
 	private void processPatientInsert(IBaseResource theResource) {
 		Patient patient = (Patient) theResource;
 		String patientId = patient.getIdElement().getIdPart();
-
 		if (FhirUtils.isOclPatient(patient.getIdentifier())) {
 			return;
 		}
 
 		Triple<String, String, String> patientOclId = FhirUtils.getOclIdFromIdentifier(patient.getIdentifier());
-		String patientTelecom = patient.getTelecomFirstRep().getValue();
 		String patientCardNumber = FhirUtils.getPatientCardNumber(patient.getIdentifier());
 		Long currentEpochTime = System.currentTimeMillis();
 
@@ -210,7 +211,7 @@ public class ServerInterceptor {
 					(notificationDataSource.getPatientIdWithIdentifier(patientId, patientOclId.getFirst()).size() >= 1)
 							? PatientIdentifierStatus.DUPLICATE.name()
 							: PatientIdentifierStatus.OK.name(),
-					currentEpochTime, currentEpochTime);
+					currentEpochTime, currentEpochTime, null);
 			notificationDataSource.persist(patientIdentifierEntityOcl);
 		}
 
@@ -221,26 +222,15 @@ public class ServerInterceptor {
 					(notificationDataSource.getPatientIdWithIdentifier(patientId, patientCardNumber).size() >= 1)
 							? PatientIdentifierStatus.DUPLICATE.name()
 							: PatientIdentifierStatus.OK.name(),
-					currentEpochTime, currentEpochTime);
+					currentEpochTime, currentEpochTime, null);
 			notificationDataSource.persist(patientIdentifierEntityCardNumber);
 		}
-
-		if (patientTelecom != null) {
-			PatientIdentifierEntity patientIdentifierEntityPhoneNumber = new PatientIdentifierEntity(patientId,
-					patientTelecom, PatientIdentifierEntity.PatientIdentifierType.PHONE_NUM.name(), null, null,
-					(notificationDataSource.getPatientIdWithIdentifier(patientId, patientTelecom).size() >= 1)
-							? PatientIdentifierStatus.DUPLICATE.name()
-							: PatientIdentifierStatus.OK.name(),
-					currentEpochTime, currentEpochTime);
-			notificationDataSource.persist(patientIdentifierEntityPhoneNumber);
-		}
-
 	}
 
 	private void processPatientUpdate(IBaseResource theOldResource, IBaseResource theResource) {
 		Patient oldPatient = (Patient) theOldResource;
 		Patient updatedPatient = (Patient) theResource;
-
+		String organizationId = null;
 		if (FhirUtils.isOclPatient(oldPatient.getIdentifier())
 				&& !FhirUtils.isOclPatient(updatedPatient.getIdentifier())) {
 			// If the use updates the temporary patient from the mobile, the identifier will
@@ -255,15 +245,24 @@ public class ServerInterceptor {
 
 		String patientId = updatedPatient.getIdElement().getIdPart();
 
+		Bundle searchBundle = fhirClientAuthenticatorService.getFhirClient().search()
+			.byUrl("Encounter?subject=" +patientId )
+			.returnBundle(Bundle.class)
+			.execute();
+		List<Bundle.BundleEntryComponent> entries = searchBundle.getEntry();
+		if (entries != null && !entries.isEmpty()) {
+			Encounter encounterResource = (Encounter) entries.get(0).getResource();
+			if (encounterResource != null) {
+				organizationId = encounterResource.getServiceProvider().getReferenceElement().getIdPart();
+			}
+		}
+
 		Triple<String, String, String> oldPatientOclId = FhirUtils.getOclIdFromIdentifier(oldPatient.getIdentifier());
 		Triple<String, String, String> updatedPatientOclId = FhirUtils
 				.getOclIdFromIdentifier(updatedPatient.getIdentifier());
 
 		String oldPatientCardNumber = FhirUtils.getPatientCardNumber(oldPatient.getIdentifier());
 		String updatedPatientCardNumber = FhirUtils.getPatientCardNumber(updatedPatient.getIdentifier());
-
-		String oldTelecom = oldPatient.getTelecomFirstRep().getValue();
-		String updatedTelecom = updatedPatient.getTelecomFirstRep().getValue();
 
 		if (!Objects.equals(oldPatientOclId, updatedPatientOclId)) {
 			List<PatientIdentifierEntity> patientIdentifierEntityList = (oldPatientOclId == null) ? new ArrayList()
@@ -296,7 +295,7 @@ public class ServerInterceptor {
 				PatientIdentifierEntity newPatientIdentifierEntity = new PatientIdentifierEntity(patientId,
 						updatedPatientOclId.getFirst(), PatientIdentifierEntity.PatientIdentifierType.OCL_ID.name(),
 						updatedPatientOclId.getSecond(), updatedPatientOclId.getThird(),
-						PatientIdentifierStatus.OK.name(), currentTime, currentTime);
+						PatientIdentifierStatus.OK.name(), currentTime, currentTime, organizationId);
 				notificationDataSource.persist(newPatientIdentifierEntity);
 			}
 		}
@@ -328,41 +327,7 @@ public class ServerInterceptor {
 
 				PatientIdentifierEntity newPatientIdentifierEntity = new PatientIdentifierEntity(patientId,
 						updatedPatientCardNumber, PatientIdentifierEntity.PatientIdentifierType.PATIENT_CARD_NUM.name(),
-						null, null, PatientIdentifierStatus.OK.name(), currentTime, currentTime);
-				notificationDataSource.persist(newPatientIdentifierEntity);
-			}
-		}
-
-		if (!Objects.equals(oldTelecom, updatedTelecom)) {
-			List<PatientIdentifierEntity> patientIdentifierEntityList = notificationDataSource
-					.getPatientIdentifierEntityByPatientIdAndIdentifier(patientId, oldTelecom);
-			PatientIdentifierEntity patientIdentifierEntity = (!patientIdentifierEntityList.isEmpty())
-					? patientIdentifierEntityList.get(0)
-					: null;
-
-			if (patientIdentifierEntity != null) {
-				patientIdentifierEntity.setStatus(PatientIdentifierStatus.DELETE.name());
-				patientIdentifierEntity.setUpdatedTime(System.currentTimeMillis());
-				notificationDataSource.update(patientIdentifierEntity);
-
-				if (PatientIdentifierStatus.OK.name().equals(patientIdentifierEntity.getStatus())) {
-					PatientIdentifierEntity entryWithDuplicateStatus = notificationDataSource
-							.getPatientIdentifierEntityWithDuplicateStatus(patientId, oldTelecom);
-
-					if (!patientIdentifierEntityList.isEmpty()) {
-						entryWithDuplicateStatus.setStatus(PatientIdentifierStatus.OK.name());
-						entryWithDuplicateStatus.setUpdatedTime(System.currentTimeMillis());
-						notificationDataSource.update(entryWithDuplicateStatus);
-					}
-				}
-			}
-
-			if (updatedTelecom != null) {
-				long currentTime = System.currentTimeMillis();
-
-				PatientIdentifierEntity newPatientIdentifierEntity = new PatientIdentifierEntity(patientId,
-						updatedTelecom, PatientIdentifierEntity.PatientIdentifierType.PHONE_NUM.name(), null, null,
-						PatientIdentifierStatus.OK.name(), currentTime, currentTime);
+						null, null, PatientIdentifierStatus.OK.name(), currentTime, currentTime, organizationId);
 				notificationDataSource.persist(newPatientIdentifierEntity);
 			}
 		}

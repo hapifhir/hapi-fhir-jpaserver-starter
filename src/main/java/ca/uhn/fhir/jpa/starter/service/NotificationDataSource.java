@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
+
 import ca.uhn.fhir.jpa.starter.model.*;
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 import com.iprd.fhir.utils.PatientIdentifierStatus;
@@ -22,11 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.PersistenceException;
-import java.io.File;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class NotificationDataSource {
 
@@ -284,6 +279,17 @@ public class NotificationDataSource {
 		Query query = session.createQuery("SELECT p FROM PatientIdentifierEntity p WHERE p.patientId=:param1 AND p.patientIdentifier=:param2", PatientIdentifierEntity.class);
 		query.setParameter("param1", patientId);
 		query.setParameter("param2", patientIdentifier);
+		List<PatientIdentifierEntity> result = query.getResultList();
+		if(result.isEmpty()){
+			return Collections.emptyList();
+		}
+		return result;
+	}
+
+	public List<PatientIdentifierEntity> getExistingEntriesWithPatientId(String patientId){
+		Session session = sf.openSession();
+		Query query = session.createQuery("SELECT p FROM PatientIdentifierEntity p WHERE p.patientId=:param1 AND p.orgId IS NULL", PatientIdentifierEntity.class);
+		query.setParameter("param1", patientId);
 		List<PatientIdentifierEntity> result = query.getResultList();
 		if(result.isEmpty()){
 			return Collections.emptyList();
