@@ -28,7 +28,7 @@ public class TerminologyCapabilitiesInterceptor {
 	public boolean customize(final RequestDetails theRequestDetails,
 								 final ResponseDetails theResponseDetails) {
 		if (theRequestDetails.getParameters().containsKey("mode") && "terminology".equals(theRequestDetails.getParameters().get("mode")[0])) {
-			log.info("Generating a TerminologyCapabilities");
+			log.debug("Generating a TerminologyCapabilities");
 			final var cs = (CapabilityStatement) theResponseDetails.getResponseResource();
 			theResponseDetails.setResponseResource(this.getTerminologyCapabilities(cs));
 		}

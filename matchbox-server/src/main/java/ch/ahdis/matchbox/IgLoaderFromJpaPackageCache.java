@@ -161,23 +161,23 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 	public void loadIg(List<ImplementationGuide> igs, Map<String, ByteProvider> binaries, String src, boolean recursive)
 			throws IOException, FHIRException {
 		if (src.startsWith("hl7.terminology")) {
-			log.info("Package ignored (use hl7.terminology#5.3.0) " + src);
+			log.debug("Package ignored (use hl7.terminology#5.3.0) " + src);
 			return;
 		}
 		if (src.equals("hl7.fhir.cda#dev")) {
 			String replace = "hl7.cda.uv.core#2.1.0-draft2-mb";
-			log.info("Replacing hl7.fhir.cda#dev with " + replace);
+			log.debug("Replacing hl7.fhir.cda#dev with " + replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;
 		}
 		if (src.equals("ch.fhir.ig.ch-epr-term#current")) {
 			String replace  = "ch.fhir.ig.ch-epr-term#2.0.x";
-			log.info("ch.fhir.ig.ch-epr-term#current with " + replace);
+			log.debug("ch.fhir.ig.ch-epr-term#current with " + replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;
 		}
 		if (getContext().getLoadedPackages().contains(src)) {
-			log.info("Package already in context " + src);
+			log.debug("Package already in context " + src);
 			return;
 		}
 		new TransactionTemplate(myTxManager).execute(tx -> {
@@ -189,17 +189,17 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			}
 			NpmPackage npm = ((JpaPackageCache) myPackageCacheManager).loadPackageFromCacheOnly(id, version);
 			if (npm == null) {
-				log.error("package not found: " + id +" "+version ); 
+				log.error("Package not found: " + id +" "+version );
 				return null;
 			}
 			for (String dependency : npm.dependencies()) {
-				log.info("Loading depending package " + dependency + " for "+src);
+				log.debug("Loading depending package " + dependency + " for "+src);
 				try {
 					loadIg(igs, binaries, dependency, recursive);
 				} catch (FHIRException | IOException e) {
 					throw new RuntimeException(Msg.code(1305) + "Failed to load dependency " + dependency);
 				}
-				log.info("Finished loading depending package " + dependency + " for "+ src);
+				log.debug("Finished loading depending package " + dependency + " for "+ src);
 			}
 			// use above version because of potential .x version we resolve in the cache
 			version = npm.version();
@@ -226,11 +226,11 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 						}
 					}
 				} catch (IOException e) {
-					log.error("error reading package", e);
+					log.error("Error reading package", e);
 					return null;
 				}
 
-				log.info("Finished loading " + count + " conformance resources for package " + pi.name() + "#" + pi.version());
+				log.debug("Finished loading " + count + " conformance resources for package " + pi.name() + "#" + pi.version());
 
 				// with hsql or psql this slow around 7 seconds per 100 resources (oe dev)
 				// machine)

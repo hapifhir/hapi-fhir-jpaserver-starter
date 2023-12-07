@@ -1,7 +1,6 @@
 package ch.ahdis.matchbox.terminology;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.support.ConceptValidationOptions;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.context.support.ValidationSupportContext;
 import ca.uhn.fhir.context.support.ValueSetExpansionOptions;
@@ -30,6 +29,8 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * The HAPI FHIR provider for the ValueSet/$validate-code operation.
+ * <p>
+ * It currently only supports FHIR R4 value sets.
  *
  * @author Quentin Ligier
  **/
@@ -46,14 +47,12 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 		new PassiveExpiringMap<>(5, TimeUnit.MINUTES);
 
 	private final ValueSetExpansionOptions expansionOptions = new ValueSetExpansionOptions();
-	private final ConceptValidationOptions validationOptions = new ConceptValidationOptions();
 
 	private final ValidationSupportContext validationSupportContext =
 		new ValidationSupportContext(new DummyValidationSupport(FhirContext.forR4Cached()));
 
 	public ValueSetCodeValidationProvider() {
 		this.expansionOptions.setFailOnMissingCodeSystem(false);
-		this.validationOptions.setValidateDisplay(false);
 	}
 
 	/**
@@ -149,7 +148,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 	}
 
 	private boolean validateCodeInValueSet(final Coding coding,
-													 final ValueSet valueSet) {
+														final ValueSet valueSet) {
 		for (final var item : valueSet.getExpansion().getContains()) {
 			if (item.getSystem().equals(coding.getSystem()) && item.getCode().equals(coding.getCode())) {
 				return true;

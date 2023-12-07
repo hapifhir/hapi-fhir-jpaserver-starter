@@ -154,12 +154,12 @@ public class MatchboxEngineSupport {
 	}
 
 	private  MatchboxEngine createMatchboxEngine(MatchboxEngine engine, String ig, CliContext cliContext) {
-		log.info("creating new validate engine for "+(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContext.hashCode());
+		log.info("creating new validate engine "+(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContext.hashCode());
 		try {
 			MatchboxEngine matchboxEngine = new MatchboxEngine(engine);
 			MatchboxEngine validator = matchboxEngine;
 
-			log.info("  Terminology server " + cliContext.getTxServer());
+			log.info("Terminology server " + cliContext.getTxServer());
 			String txServer = cliContext.getTxServer();
 			if ("n/a".equals(cliContext.getTxServer())) {
 				txServer = null;
@@ -171,7 +171,7 @@ public class MatchboxEngineSupport {
 				validator.getContext().setNoTerminologyServer(false);
 			}
 			String txver = validator.setTerminologyServer(txServer, null, FhirPublication.R4);
-			log.info(" - Version " + txver);
+			log.info("Version of the terminology server: " + txver);
 
 			validator.setDebug(cliContext.isDoDebug());
 			validator.getContext().setLogger(new EngineLoggingService());
@@ -183,7 +183,7 @@ public class MatchboxEngineSupport {
 				validator.getIgLoader().loadIg(validator.getIgs(), validator.getBinaries(), ig, true);
 			}
 
-			log.info("  Package Summary: "+validator.getContext().loadedPackageSummary());
+			log.info("Package Summary: "+validator.getContext().loadedPackageSummary());
 
 			validator.setQuestionnaireMode(cliContext.getQuestionnaireMode());
 			validator.setLevel(cliContext.getLevel());
