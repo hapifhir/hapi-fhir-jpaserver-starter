@@ -160,7 +160,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 	@Override
 	public void loadIg(List<ImplementationGuide> igs, Map<String, ByteProvider> binaries, String src, boolean recursive)
 			throws IOException, FHIRException {
-		if (src.startsWith("hl7.terminology.r4") || src.startsWith("hl7.terminology.r5")) {
+		if (src.startsWith("hl7.terminology")) {
 			log.info("Package ignored (use hl7.terminology#5.3.0) " + src);
 			return;
 		}
