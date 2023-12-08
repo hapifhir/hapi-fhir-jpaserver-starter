@@ -2119,7 +2119,7 @@ public class StructureMapUtilities {
 	 * @param appInfo
 	 * @param map
 	 * @return
-	 * @throws Exception
+	 * @throws FHIRException
 	 */
 	public StructureMapAnalysis analyse(Object appInfo, StructureMap map) throws FHIRException {
 		ids.clear();
