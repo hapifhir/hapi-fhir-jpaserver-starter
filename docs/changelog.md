@@ -1,3 +1,11 @@
+2023/12/08 Release 3.5.0
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.0`
+- Upgraded to HAPI FHIR 6.10.0 and Core 6.1.16
+- Implemented an HTTP read-only mode [#158](https://github.com/ahdis/matchbox/issues/158)
+- Implemented a simple terminology server for offline validation [#152](https://github.com/ahdis/matchbox/issues/152)
+- Upgraded logback to fix CVE-2023-6378
+- Fixed a bug in package loading on Windows filesystem
+
 2023/10/05 Release 3.4.5
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.5`
 - CDA Logical Model update for xsi-type ST [#145](https://github.com/ahdis/matchbox/issues/145)

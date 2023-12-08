@@ -86,12 +86,12 @@ A complex value set (in that context) is a value set that uses filters to define
 each code. All [value set filters](http://build.fhir.org/valueset-filter-operator.html) would make a value set too 
 complex for the validation client to process the value set expansion by itself.
 
-Matchbox-server comes with a fake terminology server.
-It simply returns success to all validation requests. 
+Matchbox-server comes with an internal terminology server.
+It tries to expand the value sets if possible, or simply returns success to validation requests. 
 To use it, you can set the terminology server URL to the one of the matchbox-server instance, e.g. 
 http://localhost:8080/fhir.
 
-Please be aware that by using the fake terminology server, the validation may be incomplete.
+Please be aware that by using the internal terminology server, the validation may be incomplete.
 Its use case is simple:
 
 - you use an IG that has only simple value sets, where all codes have been verified to exist in their code system;
