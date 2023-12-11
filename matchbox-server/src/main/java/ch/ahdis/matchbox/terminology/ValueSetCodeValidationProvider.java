@@ -114,11 +114,19 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 
 			// Now we have an expanded value set, we can properly validate the code
 			if (this.validateCodeInValueSet(coding, valueSet)) {
-				log.debug("OK - present in expanded value set");
+				log.debug("OK - present in expanded value set (expansion contains {} codes)",
+							 valueSet.getExpansion().getContains().size());
 				return mapCodingToSuccessfulParameters(coding);
 			}
-			log.debug("FAIL - not present in expanded value set");
-			return mapCodeErrorToParameters("The code " + coding.getCode() + " is not in the value set " + url);
+			log.debug("FAIL - not present in expanded value set (expansion contains {} codes)",
+						 valueSet.getExpansion().getContains().size());
+			return mapCodeErrorToParameters(
+				"The code '%s' is not in the value set '%s' (expansion contains %d codes)".formatted(
+					coding.getCode(),
+					url,
+					valueSet.getExpansion().getContains().size()
+				)
+			);
 		}
 
 		servletResponse.setStatus(422);
