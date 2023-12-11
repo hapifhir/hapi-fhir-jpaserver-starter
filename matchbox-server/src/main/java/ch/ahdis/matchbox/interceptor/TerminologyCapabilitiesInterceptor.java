@@ -58,7 +58,11 @@ public class TerminologyCapabilitiesInterceptor {
 	private List<String> getCodeSystems() {
 		return List.of(SNOMED_SCT_CODESYSTEM_URL, RXNORM_CODESYSTEM_URL, LOINC_CODESYSTEM_URL, UCUM_CODESYSTEM_URL,
 							HL7_TERMINOLOGY_CODESYSTEM_BASE_URL, HL7_SID_CODESYSTEM_BASE_URL, HL7_FHIR_CODESYSTEM_BASE_URL,
-							ISO_CODESYSTEM_URN, LANG_CODESYSTEM_URN, MIMETYPES_CODESYSTEM_URN, _11073_CODESYSTEM_URN,
-							DICOM_CODESYSTEM_URL);
+							LANG_CODESYSTEM_URN, MIMETYPES_CODESYSTEM_URN, _11073_CODESYSTEM_URN,
+							DICOM_CODESYSTEM_URL,
+							"http://fdasis.nlm.nih.gov", "http://hl7.org/fhir/sid/ndc",
+							"http://unstats.un.org/unsd/methods/m49/m49.htm", "http://varnomen.hgvs.org",
+							"https://www.usps.com/", "urn:ietf:rfc:3986", "urn:iso:std:iso:3166",
+							"urn:iso:std:iso:4217", "urn:oid:1.2.36.1.2001.1005.17");
 	}
 }

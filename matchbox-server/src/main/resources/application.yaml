@@ -72,3 +72,10 @@ matchbox:
       txServer: n/a
 #      onlyOneEngine: true
 #      igsPreloaded: ch.fhir.ig.ch-core#4.0.0-ballot
+logging:
+  level:
+    root: INFO
+    #ch.ahdis.matchbox: DEBUG
+    ca.uhn.fhir.jpa.packages.JpaPackageCache: ERROR
+    fhirtest.access: ERROR
+    fhirtest.request: ERROR
