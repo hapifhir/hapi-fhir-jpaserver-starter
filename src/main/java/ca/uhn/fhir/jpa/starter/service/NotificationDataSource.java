@@ -182,10 +182,27 @@ public class NotificationDataSource {
 	}
 
 	public void updateObjects(ArrayList<?> cacheEntities) {
-		StatelessSession session = sf.openStatelessSession();
-		Transaction transaction = session.beginTransaction();
+		StatelessSession statelessSession = sf.openStatelessSession();
+		Transaction transaction = statelessSession.beginTransaction();
 		try {
 
+			for (int i = 0; i < cacheEntities.size(); i++) {
+				statelessSession.update(cacheEntities.get(i));
+			}
+			transaction.commit();
+		} catch (Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			transaction.rollback();
+		} finally {
+			statelessSession.close();
+		}
+	}
+
+
+	public void updateObjectsWithSession(ArrayList<?> cacheEntities) {
+		Session session = sf.openSession();
+		Transaction transaction = session.beginTransaction();
+		try {
 			for (int i = 0; i < cacheEntities.size(); i++) {
 				session.update(cacheEntities.get(i));
 			}
@@ -197,7 +214,7 @@ public class NotificationDataSource {
 			session.close();
 		}
 	}
-	
+
 //	public void updateObjects(ArrayList<CacheEntity> cacheEntities) {
 //	    Session session = sf.openSession();
 //	    Transaction transaction = session.beginTransaction();
@@ -343,6 +360,17 @@ public class NotificationDataSource {
 				.createQuery("FROM ComGenerator WHERE communicationStatus=:param1 AND scheduledDate=:param2");
 		query.setParameter("param1", status.name());
 		query.setParameter("param2", date);
+		List<ComGenerator> resultList = query.getResultList();
+		session.close();
+		return resultList;
+	}
+
+	public List<ComGenerator> fetchRecordsByResourceId(String resourceId, MessageStatus status) {
+		Session session = sf.openSession();
+		Query query = session
+			.createQuery("FROM ComGenerator WHERE communicationStatus=:param1 AND resource_id=:param2");
+		query.setParameter("param1", status.name());
+		query.setParameter("param2", resourceId);
 		List<ComGenerator> resultList = query.getResultList();
 		session.close();
 		return resultList;

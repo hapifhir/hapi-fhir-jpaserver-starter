@@ -24,6 +24,7 @@ public class ComGenerator {
 		PENDING,
 		SENT,
 		FAILED,
+		DELETED
 	}
 
 	@Id

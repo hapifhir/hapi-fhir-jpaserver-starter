@@ -96,33 +96,7 @@ public class ServerInterceptor {
 				}
 			}
 		} else if (theResource.fhirType().equals("Appointment")) {
-			Appointment appointment = (Appointment) theResource;
-			String appointmentId = appointment.getIdElement().getIdPart();
-			String patientId = appointment.getParticipant().get(0).getActor().getReferenceElement().getIdPart();
-			Timestamp appointmentScheduledDateTime = DateUtilityHelper.utilDateToTimestamp(appointment.getStart());
-
-			Date currentDate = DateUtilityHelper.getCurrentSqlDate();
-			Date previousDate = DateUtilityHelper.getPreviousDay(appointmentScheduledDateTime);
-			Date appointmentDate = DateUtilityHelper.timeStampToDate(appointmentScheduledDateTime);
-
-			String messageStatus = ComGenerator.MessageStatus.PENDING.name();
-
-			ComGenerator comGen = new ComGenerator("Appointment", appointmentId, currentDate, messageStatus, patientId,
-					appointmentScheduledDateTime);
-
-			ComGenerator firstReminder = new ComGenerator("Appointment", appointmentId, previousDate, messageStatus,
-					patientId, appointmentScheduledDateTime);
-
-			ComGenerator secondReminder = new ComGenerator("Appointment", appointmentId, appointmentDate, messageStatus,
-					patientId, appointmentScheduledDateTime);
-
-			notificationDataSource.insert(comGen);
-			if (currentDate != previousDate) {
-				notificationDataSource.insert(firstReminder);
-			}
-			if (currentDate != appointmentDate) {
-				notificationDataSource.insert(secondReminder);
-			}
+			generateAndInsertAppointmentNotifications((Appointment) theResource);
 		} else if (theResource.fhirType().equals("QuestionnaireResponse")) {
 			processQuestionnaireResponse((QuestionnaireResponse) theResource);
 		} else if (theResource.fhirType().equals("Patient")) {
@@ -130,6 +104,34 @@ public class ServerInterceptor {
 		}
 	}
 
+	public void generateAndInsertAppointmentNotifications(Appointment appointment){
+		String appointmentId = appointment.getIdElement().getIdPart();
+		String patientId = appointment.getParticipant().get(0).getActor().getReferenceElement().getIdPart();
+		Timestamp appointmentScheduledDateTime = DateUtilityHelper.utilDateToTimestamp(appointment.getStart());
+
+		Date currentDate = DateUtilityHelper.getCurrentSqlDate();
+		Date previousDate = DateUtilityHelper.getPreviousDay(appointmentScheduledDateTime);
+		Date appointmentDate = DateUtilityHelper.timeStampToDate(appointmentScheduledDateTime);
+
+		String messageStatus = ComGenerator.MessageStatus.PENDING.name();
+
+		ComGenerator comGen = new ComGenerator("Appointment", appointmentId, currentDate, messageStatus, patientId,
+			appointmentScheduledDateTime);
+
+		ComGenerator firstReminder = new ComGenerator("Appointment", appointmentId, previousDate, messageStatus,
+			patientId, appointmentScheduledDateTime);
+
+		ComGenerator secondReminder = new ComGenerator("Appointment", appointmentId, appointmentDate, messageStatus,
+			patientId, appointmentScheduledDateTime);
+
+		notificationDataSource.insert(comGen);
+		if (currentDate != previousDate) {
+			notificationDataSource.insert(firstReminder);
+		}
+		if (currentDate != appointmentDate) {
+			notificationDataSource.insert(secondReminder);
+		}
+	}
 	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_UPDATED)
 	public void update(IBaseResource theOldResource, IBaseResource theResource) throws IOException {
 		notificationDataSource = NotificationDataSource.getInstance();
@@ -144,6 +146,27 @@ public class ServerInterceptor {
 				// Using persist to add entry only if it is not exists
 				notificationDataSource.persist(encounterIdEntity);
 			}
+		} else if (theResource.fhirType().equals("Appointment")) {
+			Appointment oldAppointment = (Appointment) theOldResource;
+			Appointment updatedAppointment = (Appointment) theResource;
+			if(!oldAppointment.getStart().equals(updatedAppointment.getStart())){
+				String oldAppointmentId = oldAppointment.getIdElement().getIdPart();
+				try {
+					List<ComGenerator> records = notificationDataSource.fetchRecordsByResourceId(oldAppointmentId, ComGenerator.MessageStatus.PENDING);
+					ArrayList<ComGenerator> comGeneratorEntitiesToUpdate = new ArrayList<ComGenerator>();
+					for (ComGenerator record: records) {
+						record.setCommunicationStatus(ComGenerator.MessageStatus.DELETED.name());
+						comGeneratorEntitiesToUpdate.add(record);
+					}
+					if (!comGeneratorEntitiesToUpdate.isEmpty()) {
+						notificationDataSource.updateObjectsWithSession(comGeneratorEntitiesToUpdate);
+					}
+				} catch (HibernateException e) {
+					logger.warn(ExceptionUtils.getStackTrace(e));
+				}
+				generateAndInsertAppointmentNotifications(updatedAppointment);
+			}
+
 		} else if (theResource.fhirType().equals("QuestionnaireResponse")) {
 			processQuestionnaireResponse((QuestionnaireResponse) theResource);
 		} else if (theResource.fhirType().equals("Patient")) {
