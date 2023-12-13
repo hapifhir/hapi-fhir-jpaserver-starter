@@ -248,7 +248,32 @@ public class NotificationDataSource {
 		}
 		return resultList;
 	}
-	
+
+	public List<String> getRecordsByDistinctPatientId() {
+		Session session = sf.openSession();
+		Query query = session.createQuery("SELECT DISTINCT patientId FROM PatientIdentifierEntity");
+		List<String> resultList = query.getResultList();
+		session.close();
+		if(resultList.isEmpty()) {
+			return Collections.emptyList();
+		}
+		return resultList;
+	}
+
+	public void updateRecordsByPatientId(String orgId, String patientId) {
+		try (Session session = sf.openSession()) {
+			Transaction transaction = session.beginTransaction();
+
+			Query query = session.createQuery("UPDATE PatientIdentifierEntity SET orgId=:param1 WHERE patientId=:param2");
+			query.setParameter("param1", orgId);
+			query.setParameter("param2", patientId);
+			query.executeUpdate();
+			transaction.commit();
+		} catch (Exception e) {
+			// Handle exceptions, log errors, and return a meaningful response
+			logger.warn(ExceptionUtils.getStackTrace(e));
+		}
+	}
 
 	public List<PatientIdentifierEntity> getPatientIdentifierEntityByPatientIdAndIdentifier(String patientId, String identifier) {
 		Session session = sf.openSession();

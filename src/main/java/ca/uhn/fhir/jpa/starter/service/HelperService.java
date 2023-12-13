@@ -84,6 +84,8 @@ import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Location.LocationPositionComponent;
 import org.hl7.fhir.r4.model.Organization;
+import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.Resource;
@@ -218,6 +220,36 @@ public class HelperService {
 					.getOrganizationHierarchy(fhirClientProvider, orgId));
 		}
 		return mapOfOrgHierarchy.get(orgId);
+	}
+
+	public void updatePatientIdentifierEntityTable() {
+		notificationDataSource = NotificationDataSource.getInstance();
+		try {
+			List<String> patientIdentifierEntities = notificationDataSource.getRecordsByDistinctPatientId();
+			for (String entity : patientIdentifierEntities) {
+				Bundle patientBundle = fhirClientAuthenticatorService.getFhirClient().search()
+					.forResource(Patient.class)
+					.where(new TokenClientParam("_id").exactly().code(entity))
+					.returnBundle(Bundle.class)
+					.execute();
+
+				if (patientBundle.hasEntry() && patientBundle.getEntry().size() == 1) {
+					Bundle bundle = fhirClientAuthenticatorService.getFhirClient().search()
+						.forResource(Encounter.class)
+						.where(Encounter.SUBJECT.hasId(entity))
+						.returnBundle(Bundle.class)
+						.execute();
+					if (bundle.hasEntry() && bundle.getEntry().size() > 0) {
+						Encounter encounter = (Encounter) bundle.getEntry().get(0).getResource();
+						String serviceProviderId = encounter.getServiceProvider().getReferenceElement().getIdPart();
+						notificationDataSource.updateRecordsByPatientId(serviceProviderId, entity);
+						logger.warn("Updated rows: patientId " + entity + "orgId" + serviceProviderId);
+					}
+				}
+			}
+		} catch (HibernateException | DataAccessException e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+		}
 	}
 
 	public void refreshMapForOrgId(String orgId) {

@@ -123,7 +123,14 @@ public class UserAndGroupManagementController {
 		helperService.refreshMapForOrgId(orgId);
 		return ResponseEntity.ok("Refresh done");
 	}
-	
+
+	@RequestMapping(method = RequestMethod.POST, value = "/addOrgIdToTable")
+	public ResponseEntity<?> addOrgIdToTable(
+	) {
+		helperService.updatePatientIdentifierEntityTable();
+		return ResponseEntity.ok("Updated patientIdentifierEntity table");
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/oclQr")
 	public ResponseEntity<OCLQrResponse> oclQr(@RequestParam(name = "baseUrl", defaultValue = "") String baseUrl,
 															 @RequestParam(name = "campaignGuid", defaultValue = "") String campaignGuid,
