@@ -1272,7 +1272,7 @@ public class HelperService {
 				organizationId);
 		for (String orgId : idsAndOrgIdToChildrenMapPair.first) {
 			patientCount += fhirClientAuthenticatorService.getFhirClient().search()
-					.byUrl("Patient?_has:Encounter:patient:service-provider=" + orgId + "&_count=0")
+				.byUrl("QuestionnaireResponse?questionnaire=patient-registration&encounter.service-provider=" + orgId + "&_count=0")
 					.returnBundle(Bundle.class).execute().getTotal();
 		}
 		return new AnalyticItem("Total number of Patients", String.valueOf(patientCount), null);
