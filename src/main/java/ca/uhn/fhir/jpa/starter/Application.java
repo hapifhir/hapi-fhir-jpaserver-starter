@@ -20,10 +20,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -55,10 +53,6 @@ public class Application extends SpringBootServletInitializer {
 		// UI is now accessible at http://localhost:8080/
 	}
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		return builder.sources(Application.class);
-	}
 
 	@Autowired
 	AutowireCapableBeanFactory beanFactory;
@@ -75,31 +69,4 @@ public class Application extends SpringBootServletInitializer {
 		return servletRegistrationBean;
 	}
 
-	@Bean
-	public ServletRegistrationBean overlayRegistrationBean() {
-
-		AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext =
-				new AnnotationConfigWebApplicationContext();
-		annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
-
-		DispatcherServlet dispatcherServlet = new DispatcherServlet(annotationConfigWebApplicationContext);
-		dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
-		dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
-
-		ServletRegistrationBean registrationBean = new ServletRegistrationBean();
-		registrationBean.setServlet(dispatcherServlet);
-		registrationBean.addUrlMappings("/*");
-		registrationBean.setLoadOnStartup(1);
-		return registrationBean;
-	}
-
-	@Bean
-	public ServletWebServerFactory servletWebServerFactory() {
-		return new JettyServletWebServerFactory();
-	}
-
-	//	@Bean
-	//	IRepositoryFactory repositoryFactory(DaoRegistry theDaoRegistry, RestfulServer theRestfulServer) {
-	//		return rd -> new HapiFhirRepository(theDaoRegistry, rd, theRestfulServer);
-	//	}
 }

@@ -644,6 +644,9 @@
         <!-- Use the boot profile for development and debugging options when using your IDE -->
         <profile>
             <id>boot</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <dependencies>
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
