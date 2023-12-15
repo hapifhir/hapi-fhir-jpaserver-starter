@@ -193,14 +193,14 @@ The easiest way to run this server entirely depends on your environment requirem
 
 ### Using jetty
 ```bash
-mvn jetty:run
+mvn -Pjetty jetty:run
 ```
 
 
 If you need to run this server on a different port (using Maven), you can change the port in the run command as follows:
 
 ```bash
-mvn -Djetty.port=8888 jetty:run
+mvn -Pjetty -Djetty.port=8888 jetty:run
 ```
 
 Server will then be accessible at http://localhost:8888/ and eg. http://localhost:8888/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.

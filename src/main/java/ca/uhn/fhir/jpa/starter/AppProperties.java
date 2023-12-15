@@ -27,6 +27,7 @@ public class AppProperties {
   private Boolean ips_enabled = false;
   private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
+  private String mdm_rules_json_location = "mdm-rules.json";
   private boolean advanced_lucene_indexing = false;
   private boolean enable_index_of_type = false;
   private Boolean allow_cascading_deletes = false;
@@ -191,7 +192,15 @@ public class AppProperties {
     this.mdm_enabled = mdm_enabled;
   }
 
-  public Cors getCors() {
+  public String getMdm_rules_json_location() {
+	return mdm_rules_json_location;
+}
+
+public void setMdm_rules_json_location(String mdm_rules_json_location) {
+	this.mdm_rules_json_location = mdm_rules_json_location;
+}
+
+public Cors getCors() {
     return cors;
   }
 

@@ -55,10 +55,6 @@ public class Application extends SpringBootServletInitializer {
 		// UI is now accessible at http://localhost:8080/
 	}
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		return builder.sources(Application.class);
-	}
 
 	@Autowired
 	AutowireCapableBeanFactory beanFactory;
@@ -76,30 +72,8 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 	@Bean
-	public ServletRegistrationBean overlayRegistrationBean() {
-
-		AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext =
-				new AnnotationConfigWebApplicationContext();
-		annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
-
-		DispatcherServlet dispatcherServlet = new DispatcherServlet(annotationConfigWebApplicationContext);
-		dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
-		dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
-
-		ServletRegistrationBean registrationBean = new ServletRegistrationBean();
-		registrationBean.setServlet(dispatcherServlet);
-		registrationBean.addUrlMappings("/*");
-		registrationBean.setLoadOnStartup(1);
-		return registrationBean;
-	}
-
-	@Bean
 	public ServletWebServerFactory servletWebServerFactory() {
 		return new JettyServletWebServerFactory();
 	}
 
-	//	@Bean
-	//	IRepositoryFactory repositoryFactory(DaoRegistry theDaoRegistry, RestfulServer theRestfulServer) {
-	//		return rd -> new HapiFhirRepository(theDaoRegistry, rd, theRestfulServer);
-	//	}
 }
