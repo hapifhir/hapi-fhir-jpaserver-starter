@@ -153,92 +153,25 @@ public class MatchboxEngineSupport {
 		return null;
 	}
 
-	private  MatchboxEngine createMatchboxEngine(MatchboxEngine engine, String ig, CliContext cliContext) {
+	private MatchboxEngine createMatchboxEngine(MatchboxEngine engine, String ig, CliContext cliContext) {
 		log.info("creating new validate engine "+(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContext.hashCode());
 		try {
-			MatchboxEngine matchboxEngine = new MatchboxEngine(engine);
-			MatchboxEngine validator = matchboxEngine;
-
-			log.info("Terminology server " + cliContext.getTxServer());
-			String txServer = cliContext.getTxServer();
-			if ("n/a".equals(cliContext.getTxServer())) {
-				txServer = null;
-				validator.getContext().setCanRunWithoutTerminology(true);
-				validator.getContext().setNoTerminologyServer(true);
-			} else {
-				// we need really to do it explicitly
-				validator.getContext().setCanRunWithoutTerminology(false);
-				validator.getContext().setNoTerminologyServer(false);
-			}
-			String txver = validator.setTerminologyServer(txServer, null, FhirPublication.R4);
-			log.info("Version of the terminology server: " + txver);
-
-			validator.setDebug(cliContext.isDoDebug());
-			validator.getContext().setLogger(new EngineLoggingService());
-
-			IgLoaderFromJpaPackageCache igLoader = new IgLoaderFromJpaPackageCache(validator.getPcm(), validator.getContext(), validator.getVersion(),
+			final var validator = new MatchboxEngine(engine);
+			final var igLoader = new IgLoaderFromJpaPackageCache(validator.getPcm(),
+																				  validator.getContext(),
+																				  validator.getVersion(),
 			validator.isDebug(), myPackageCacheManager, myNpmPackageVersionDao, myDaoRegistry, myBinaryStorageSvc, myTxManager);
 			validator.setIgLoader(igLoader);
-			if (ig!=null) {	
+			if (ig != null) {
 				validator.getIgLoader().loadIg(validator.getIgs(), validator.getBinaries(), ig, true);
 			}
-
 			log.info("Package Summary: "+validator.getContext().loadedPackageSummary());
 
-			validator.setQuestionnaireMode(cliContext.getQuestionnaireMode());
-			validator.setLevel(cliContext.getLevel());
-			validator.setDoNative(cliContext.isDoNative());
-			validator.setHintAboutNonMustSupport(cliContext.isHintAboutNonMustSupport());
-//			for (String s : cliContext.getExtensions()) {
-//			if ("any".equals(s)) {
-				validator.setAnyExtensionsAllowed(true);
-//			} else {          
-//				validator.getExtensionDomains().add(s);
-//			}
-//			}
-			validator.setLanguage(cliContext.getLang());
-			validator.setLocale(Locale.forLanguageTag(cliContext.getLocale()));
-			if (cliContext.getSnomedCT() != null) {
-				validator.setSnomedExtension(cliContext.getSnomedCT());
-			}
-			validator.setDisplayWarnings(cliContext.isDisplayIssuesAreWarnings());
-			validator.setAssumeValidRestReferences(cliContext.isAssumeValidRestReferences());
-			validator.setShowMessagesFromReferences(cliContext.isShowMessagesFromReferences());
-			validator.setDoImplicitFHIRPathStringConversion(cliContext.isDoImplicitFHIRPathStringConversion());
-			validator.setHtmlInMarkdownCheck(cliContext.getHtmlInMarkdownCheck());
-			validator.setNoExtensibleBindingMessages(cliContext.isNoExtensibleBindingMessages());
-			validator.setNoUnicodeBiDiControlChars(cliContext.isNoUnicodeBiDiControlChars());
-			validator.setNoInvariantChecks(cliContext.isNoInvariants());
-			validator.setWantInvariantInMessage(cliContext.isWantInvariantsInMessages());
-			validator.setSecurityChecks(cliContext.isSecurityChecks());
-			validator.setCrumbTrails(cliContext.isCrumbTrails());
-			validator.setForPublication(cliContext.isForPublication());
-			validator.setShowTimes(true);
-			validator.setAllowExampleUrls(cliContext.isAllowExampleUrls());
-			StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(validator.getPcm(), validator.getContext(), new IPackageInstaller()  {
-				// https://github.com/ahdis/matchbox/issues/67
-				@Override
-				public boolean packageExists(String id, String ver) throws IOException, FHIRException {
-				  return false;
-				}
-		
-				@Override
-				public void loadPackage(String id, String ver) throws IOException, FHIRException {
-				}}
-			  );
-			validator.setFetcher(fetcher);
-			validator.getContext().setLocator(fetcher);
-//			validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());
-			validator.setJurisdiction(CodeSystemUtilities.readCoding(cliContext.getJurisdiction()));
-//			TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());
-            log.info("finished creating new validate engine for "+(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContext.hashCode());
+			this.configureValidationEngine(validator, cliContext);
+			log.info("finished creating new validate engine for "+(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContext.hashCode());
 
 			return validator;
-		} catch (FHIRException e) {
-			log.error("Error loading validator: "+e.getMessage(), e);
-		} catch (IOException e) {
-			log.error("Error loading validator: "+e.getMessage(), e);
-		} catch (URISyntaxException e) {
+		} catch (final Exception e) {
 			log.error("Error loading validator: "+e.getMessage(), e);
 		}
 		return null;
@@ -350,7 +283,7 @@ public class MatchboxEngineSupport {
 						log.error("could not load  R5 Specials");
 					}
 
-					//this.configureValidationEngine(engine, cliContext);
+					this.configureValidationEngine(engine, cliContext);
 				}
 				cliContext.setIg(this.getIgPackage(cliContext));
 			} catch (FHIRException | IOException | URISyntaxException e) {
@@ -468,6 +401,85 @@ public class MatchboxEngineSupport {
 	public void setInitialized(boolean initialized) {
 		this.initialized = initialized;
 	}
-	
 
+
+	/**
+	 * Configures the validation engine with the cliContext parameters.
+	 *
+	 * @param validator Thr validation engine.
+	 * @param cli       The cliContext parameters.
+	 * @throws URISyntaxException if the terminology server URL is not valid.
+	 * @throws IOException        if the terminology server cannot be reached, or the PCM cannot be created.
+	 */
+	private void configureValidationEngine(final MatchboxEngine validator,
+														final CliContext cli) throws URISyntaxException, IOException {
+		log.info("Terminology server {}", cli.getTxServer());
+		String txServer = cli.getTxServer();
+		if ("n/a".equals(cli.getTxServer())) {
+			txServer = null;
+			validator.getContext().setCanRunWithoutTerminology(true);
+			validator.getContext().setNoTerminologyServer(true);
+		} else {
+			// we need really to do it explicitly
+			validator.getContext().setCanRunWithoutTerminology(false);
+			validator.getContext().setNoTerminologyServer(false);
+		}
+		String txver = validator.setTerminologyServer(txServer, null, FhirPublication.R4);
+		log.info("Version of the terminology server: {}", txver);
+
+		validator.setDebug(cli.isDoDebug());
+		validator.getContext().setLogger(new EngineLoggingService());
+
+		validator.setQuestionnaireMode(cli.getQuestionnaireMode());
+		validator.setLevel(cli.getLevel());
+		validator.setDoNative(cli.isDoNative());
+		validator.setHintAboutNonMustSupport(cli.isHintAboutNonMustSupport());
+//			for (String s : cliContext.getExtensions()) {
+//			if ("any".equals(s)) {
+		validator.setAnyExtensionsAllowed(true);
+//			} else {
+//				validator.getExtensionDomains().add(s);
+//			}
+//			}
+		validator.setLanguage(cli.getLang());
+		validator.setLocale(Locale.forLanguageTag(cli.getLocale()));
+		if (cli.getSnomedCT() != null) {
+			validator.setSnomedExtension(cli.getSnomedCT());
+		}
+		validator.setDisplayWarnings(cli.isDisplayIssuesAreWarnings());
+		validator.setAssumeValidRestReferences(cli.isAssumeValidRestReferences());
+		validator.setShowMessagesFromReferences(cli.isShowMessagesFromReferences());
+		validator.setDoImplicitFHIRPathStringConversion(cli.isDoImplicitFHIRPathStringConversion());
+		validator.setHtmlInMarkdownCheck(cli.getHtmlInMarkdownCheck());
+		validator.setNoExtensibleBindingMessages(cli.isNoExtensibleBindingMessages());
+		validator.setNoUnicodeBiDiControlChars(cli.isNoUnicodeBiDiControlChars());
+		validator.setNoInvariantChecks(cli.isNoInvariants());
+		validator.setWantInvariantInMessage(cli.isWantInvariantsInMessages());
+		validator.setSecurityChecks(cli.isSecurityChecks());
+		validator.setCrumbTrails(cli.isCrumbTrails());
+		validator.setForPublication(cli.isForPublication());
+		validator.setShowTimes(true);
+		validator.setAllowExampleUrls(cli.isAllowExampleUrls());
+
+		final var fetcher = new StandAloneValidatorFetcher(
+			validator.getPcm(),
+			validator.getContext(),
+			new IPackageInstaller() {
+				// https://github.com/ahdis/matchbox/issues/67
+				@Override
+				public boolean packageExists(String id, String ver) throws IOException, FHIRException {
+					return false;
+				}
+
+				@Override
+				public void loadPackage(String id, String ver) throws IOException, FHIRException {
+				}
+			});
+		validator.setFetcher(fetcher);
+		validator.getContext().setLocator(fetcher);
+
+		// validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());
+		validator.setJurisdiction(CodeSystemUtilities.readCoding(cli.getJurisdiction()));
+		// TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());
+	}
 }
