@@ -274,9 +274,30 @@ public class MatchboxEngineSupport {
 			} catch (InterruptedException e) {
 				log.error("error waiting for initialization", e);
 			}
-		}		
+		}
+
+		return this.getMatchboxEngineNotSynchronized(canonical, cliContext, create, reload);
+	}
+
+	/**
+	 * returns a matchbox-engine for the specified canonical with cliClontext parameters. This method is not
+	 * synchronized and does not wait for the 'initialized' flag. It should be used only for internal calls from the
+	 * IG Provider load-all method.
+	 *
+	 * @param canonical  URL to validate
+	 * @param cliContext cliContext parameters
+	 * @param create     if true, create a new engine
+	 * @param reload     if true, reload the engine
+	 * @return matchbox-engine
+	 */
+	public MatchboxEngine getMatchboxEngineNotSynchronized(String canonical,
+																			 CliContext cliContext,
+																			 boolean create,
+																			 boolean reload) {
+
 		if (reload) {
 			engine = null;
+			log.info("setInitialized(false) from reload");
 			this.setInitialized(false);
 		}
 		if (engine == null) {
@@ -295,9 +316,15 @@ public class MatchboxEngineSupport {
 			}
 			IgLoader igLoader = null;
 			try {
-				igLoader = new IgLoaderFromJpaPackageCache(engine.getPcm(), engine.getContext(), engine.getVersion(),
-						engine.isDebug(), myPackageCacheManager, myNpmPackageVersionDao, myDaoRegistry,
-						myBinaryStorageSvc, myTxManager);
+				igLoader = new IgLoaderFromJpaPackageCache(engine.getPcm(),
+																		 engine.getContext(),
+																		 engine.getVersion(),
+																		 engine.isDebug(),
+																		 myPackageCacheManager,
+																		 myNpmPackageVersionDao,
+																		 myDaoRegistry,
+																		 myBinaryStorageSvc,
+																		 myTxManager);
 
 			} catch (IOException e) {
 				log.error("error generating matchbox engine, loader could not be created", e);
@@ -313,22 +340,28 @@ public class MatchboxEngineSupport {
 					R5ExtensionsLoader r5e = new R5ExtensionsLoader(engine.getPcm(), engine.getContext());
 					r5e.load();
 					log.info("Load R5 Specials done");
-					r5e.loadR5SpecialTypes(Collections.unmodifiableList(Arrays.asList("ActorDefinition", "Requirements", "SubscriptionTopic", "TestPlan")));
+					r5e.loadR5SpecialTypes(Collections.unmodifiableList(Arrays.asList("ActorDefinition",
+																											"Requirements",
+																											"SubscriptionTopic",
+																											"TestPlan")));
 					log.info("Load R5 Specials types");
-					if (engine.getCanonicalResource("http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition")==null) {
+					if (engine.getCanonicalResource(
+						"http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition") == null) {
 						log.error("could not load  R5 Specials");
 					}
+
+					//this.configureValidationEngine(engine, cliContext);
 				}
 				cliContext.setIg(this.getIgPackage(cliContext));
-			} catch (FHIRException | IOException e) {
+			} catch (FHIRException | IOException | URISyntaxException e) {
 				log.error("error connecting to terminology server ");
 				return null;
 			}
-			log.info("cached default engine forever" +(cliContext.getIg()!=null ? "for "+cliContext.getIg() : "" ) +" with parameters "+cliContext.hashCode());
-			sessionCache.cacheSessionForEver(""+cliContext.hashCode(), engine);
+			log.info("cached default engine forever" + (cliContext.getIg() != null ? "for " + cliContext.getIg() : "") + " with parameters " + cliContext.hashCode());
+			sessionCache.cacheSessionForEver("" + cliContext.hashCode(), engine);
 			cliContext.setIg(null); // otherwise we get for reloads the pacakge name instead a new one later  set ahdis/matchbox #144
 
-			if (cliContext.getIgsPreloaded()!=null && cliContext.getIgsPreloaded().length>0) {
+			if (cliContext.getIgsPreloaded() != null && cliContext.getIgsPreloaded().length > 0) {
 				for (String ig : cliContext.getIgsPreloaded()) {
 					if (cliContext.getOnlyOneEngine()) {
 						try {
@@ -338,19 +371,20 @@ public class MatchboxEngineSupport {
 						}
 					} else {
 						CliContext cliContextCp = new CliContext(this.cliContext);
-						cliContextCp.setIg(ig); // set the ig in the cliContext that hashCode will be 
-						if (this.sessionCache.fetchSessionValidatorEngine(""+cliContextCp.hashCode()) == null ) {
+						cliContextCp.setIg(ig); // set the ig in the cliContext that hashCode will be
+						if (this.sessionCache.fetchSessionValidatorEngine("" + cliContextCp.hashCode()) == null) {
 							MatchboxEngine created = this.createMatchboxEngine(engine, ig, cliContextCp);
-							sessionCache.cacheSessionForEver(""+cliContextCp.hashCode(), created);
-							log.info("cached validate engine forever" +(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContextCp.hashCode());
+							sessionCache.cacheSessionForEver("" + cliContextCp.hashCode(), created);
+							log.info("cached validate engine forever" + (ig != null ? "for " + ig : "") + " with parameters " + cliContextCp.hashCode());
 						}
 					}
 				}
 			}
 
 			if (cliContext.getOnlyOneEngine()) {
-				log.info("Only one engine will be provided with the preloaded ig's mentioned in application.yaml, cannot handle multiple versions of ig's, DEVELOPMENT ONLY MODE");
-			} 
+				log.info(
+					"Only one engine will be provided with the preloaded ig's mentioned in application.yaml, cannot handle multiple versions of ig's, DEVELOPMENT ONLY MODE");
+			}
 		}
 
 		if (cliContext == null) {
@@ -358,22 +392,24 @@ public class MatchboxEngineSupport {
 		}
 
 		if (cliContext.getIg() == null) {
-			if ("default".equals(canonical) || canonical == null || engine.getCanonicalResource(canonical)!=null) {
+			if ("default".equals(canonical) || canonical == null || engine.getCanonicalResource(canonical) != null) {
 				cliContext.setIg(this.getIgPackage(cliContext));
 			} else {
-				NpmPackageVersionResourceEntity  npm = loadPackageAssetByUrl(canonical, FhirVersionEnum.forVersionString(cliContext.getFhirVersion()));
-				if (npm==null) {
-					npm = loadPackageAssetByLikeCanonicalCurrent(canonical, FhirVersionEnum.forVersionString(cliContext.getFhirVersion()));
+				NpmPackageVersionResourceEntity npm = loadPackageAssetByUrl(canonical,
+																								FhirVersionEnum.forVersionString(cliContext.getFhirVersion()));
+				if (npm == null) {
+					npm = loadPackageAssetByLikeCanonicalCurrent(canonical,
+																				FhirVersionEnum.forVersionString(cliContext.getFhirVersion()));
 				}
 				if (npm != null) {
-					String ig = npm.getPackageVersion().getPackageId()+"#"+npm.getPackageVersion().getVersionId();
-					log.info("using ig "+ig+" for canonical url "+canonical);
+					String ig = npm.getPackageVersion().getPackageId() + "#" + npm.getPackageVersion().getVersionId();
+					log.info("using ig " + ig + " for canonical url " + canonical);
 					cliContext.setIg(ig); // set the ig in the cliContext that hashCode will be set
 				} else {
-					// lets try to find a package that contains the canonical with a different FHIR version (e.g. for mapping between versions) 
+					// lets try to find a package that contains the canonical with a different FHIR version (e.g. for mapping between versions)
 					npm = loadPackageAssetByUrl(canonical);
 					if (npm != null) {
-						String ig = npm.getPackageVersion().getPackageId()+"#"+npm.getPackageVersion().getVersionId();
+						String ig = npm.getPackageVersion().getPackageId() + "#" + npm.getPackageVersion().getVersionId();
 						cliContext.setFhirVersion(npm.getFhirVersion().getFhirVersionString());
 						cliContext.setIg(ig); // set the ig in the cliContext that hashCode will be set
 					}
@@ -382,11 +418,12 @@ public class MatchboxEngineSupport {
 		}
 
 		if (reload) {
+			log.info("setInitialized(true) from reload");
 			this.setInitialized(true);
 		}
 
 		if (cliContext.getOnlyOneEngine()) {
-			if (create && cliContext.getIg()!=null) {
+			if (create && cliContext.getIg() != null) {
 				try {
 					engine.getIgLoader().loadIg(engine.getIgs(), engine.getBinaries(), cliContext.getIg(), true);
 				} catch (FHIRException | IOException e) {
@@ -397,34 +434,28 @@ public class MatchboxEngineSupport {
 		}
 
 		// check if we have already a validator in cache for that
-		MatchboxEngine matchboxEngine = (MatchboxEngine) this.sessionCache.fetchSessionValidatorEngine(""+cliContext.hashCode());
-		if ((matchboxEngine!=null && reload == false)) {
-			log.info("using cached validate engine" +(cliContext.getIg()!=null ? "for "+cliContext.getIg() : "" ) +" with parameters "+cliContext.hashCode());
+		MatchboxEngine matchboxEngine = (MatchboxEngine) this.sessionCache.fetchSessionValidatorEngine("" + cliContext.hashCode());
+		if ((matchboxEngine != null && reload == false)) {
+			log.info("using cached validate engine" + (cliContext.getIg() != null ? "for " + cliContext.getIg() : "") + " with parameters " + cliContext.hashCode());
 			return matchboxEngine;
 		}
-		
+
 		// create a new validator and cache it temporarly
-		if (create && cliContext.getIg()!=null) {
-			log.info("creating new cached validate engine " +(cliContext.getIg()!=null ? "for "+cliContext.getIg() : "" ) +" with parameters "+cliContext.hashCode());
+		if (create && cliContext.getIg() != null) {
+			log.info("creating new cached validate engine " + (cliContext.getIg() != null ? "for " + cliContext.getIg() : "") + " with parameters " + cliContext.hashCode());
 			MatchboxEngine baseEngine = engine;
 			if (!cliContext.getFhirVersion().equals(baseEngine.getVersion())) {
-				log.info("creating base engine for" +(cliContext.getIg()!=null ? "for "+cliContext.getIg() : "" ) +" with parameters and fhir Version "+cliContext.getFhirVersion());
+				log.info("creating base engine for" + (cliContext.getIg() != null ? "for " + cliContext.getIg() : "") + " with parameters and fhir Version " + cliContext.getFhirVersion());
 				try {
 					baseEngine = new MatchboxEngineBuilder().getEngine();
 					baseEngine.setVersion(cliContext.getFhirVersion());
-				} catch (FHIRException e) {
-					log.error("error generating matchbox engine", e);
-					return null;
-				} catch (IOException e) {
-					log.error("error generating matchbox engine", e);
-					return null;
-				} catch (URISyntaxException e) {
+				} catch (final Exception e) {
 					log.error("error generating matchbox engine", e);
 					return null;
 				}
 			}
-			MatchboxEngine created =  this.createMatchboxEngine(baseEngine, cliContext.getIg(), cliContext);
-			sessionCache.cacheSession(""+cliContext.hashCode(), created);
+			MatchboxEngine created = this.createMatchboxEngine(baseEngine, cliContext.getIg(), cliContext);
+			sessionCache.cacheSession("" + cliContext.hashCode(), created);
 			return created;
 		}
 		return null;

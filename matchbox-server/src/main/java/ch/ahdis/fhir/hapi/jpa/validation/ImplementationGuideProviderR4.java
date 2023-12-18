@@ -229,10 +229,11 @@ public class ImplementationGuideProviderR4 extends ca.uhn.fhir.jpa.rp.r4.Impleme
 				}
 			}
 		}
-		matchboxEngineSupport.setInitialized(true);
 		log.info("Initializing packages finished " + VersionUtil.getMemory());
 		log.info("Creating cached engines during startup  " + VersionUtil.getMemory());
-		MatchboxEngine engine = matchboxEngineSupport.getMatchboxEngine(null,this.cliContext, false, true);
+		// The matchboxEngineSupport will set the initialize flag after having reloaded
+		MatchboxEngine engine = matchboxEngineSupport.getMatchboxEngineNotSynchronized(null, this.cliContext, false,
+																												 true);
 		if (cliContext!=null && cliContext.getOnlyOneEngine()) {
 			List<NpmPackageVersionEntity> packages = myPackageVersionDao
 					.findAll(org.springframework.data.domain.Sort.by(Direction.ASC, "myPackageId", "myVersionId"));

@@ -193,10 +193,10 @@ public class ImplementationGuideProviderR5 extends ImplementationGuideResourcePr
 				}
 			}
 		}
-		matchboxEngineSupport.setInitialized(true);
 		log.info("Initializing packages finished " + VersionUtil.getMemory());
 		log.info("Creating cached engines during startup  " + VersionUtil.getMemory());
-		matchboxEngineSupport.getMatchboxEngine(null,null, false, false);
+		// The matchboxEngineSupport will set the initialized flag to true when it has finished reloading
+		matchboxEngineSupport.getMatchboxEngineNotSynchronized(null, null, false, false);
 		log.info("Finished engines during startup  " + VersionUtil.getMemory());
 		return installOutcome;
 	}
