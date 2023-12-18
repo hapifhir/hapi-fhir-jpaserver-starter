@@ -318,74 +318,73 @@ export class FHIRServerStack extends Stack {
     dbClusterName: string,
     alarmAction?: SnsAction
   ) {
-    const memoryMetric = dbCluster.metricFreeableMemory();
-    const memoryAlarm = memoryMetric.createAlarm(
-      this,
-      `${dbClusterName}FreeableMemoryAlarm`,
-      {
-        threshold: mbToBytes(150),
-        evaluationPeriods: 1,
-        comparisonOperator:
-          cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
-        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
-      }
-    );
-    alarmAction && memoryAlarm.addAlarmAction(alarmAction);
-    alarmAction && memoryAlarm.addOkAction(alarmAction);
+    const createAlarm = ({
+      name,
+      metric,
+      threshold,
+      evaluationPeriods,
+      comparisonOperator,
+      treatMissingData,
+    }: {
+      name: string;
+      metric: cloudwatch.Metric;
+      threshold: number;
+      evaluationPeriods: number;
+      comparisonOperator?: cloudwatch.ComparisonOperator;
+      treatMissingData?: cloudwatch.TreatMissingData;
+    }) => {
+      const alarm = metric.createAlarm(this, `${dbClusterName}${name}`, {
+        threshold,
+        evaluationPeriods,
+        comparisonOperator,
+        treatMissingData,
+      });
+      alarmAction && alarm.addAlarmAction(alarmAction);
+      alarmAction && alarm.addOkAction(alarmAction);
+      return alarm;
+    };
 
-    const storageMetric = dbCluster.metricFreeLocalStorage();
-    const storageAlarm = storageMetric.createAlarm(
-      this,
-      `${dbClusterName}FreeLocalStorageAlarm`,
-      {
-        threshold: mbToBytes(250),
-        evaluationPeriods: 1,
-        comparisonOperator:
-          cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
-        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
-      }
-    );
-    alarmAction && storageAlarm.addAlarmAction(alarmAction);
-    alarmAction && storageAlarm.addOkAction(alarmAction);
+    createAlarm({
+      metric: dbCluster.metricFreeableMemory(),
+      name: "FreeableMemoryAlarm",
+      threshold: mbToBytes(150),
+      evaluationPeriods: 1,
+      comparisonOperator:
+        cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+    });
 
-    const cpuMetric = dbCluster.metricCPUUtilization();
-    const cpuAlarm = cpuMetric.createAlarm(
-      this,
-      `${dbClusterName}CPUUtilizationAlarm`,
-      {
-        threshold: 90, // percentage
-        evaluationPeriods: 1,
-        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
-      }
-    );
-    alarmAction && cpuAlarm.addAlarmAction(alarmAction);
-    alarmAction && cpuAlarm.addOkAction(alarmAction);
+    createAlarm({
+      metric: dbCluster.metricCPUUtilization(),
+      name: "CPUUtilizationAlarm",
+      threshold: 90, // percentage
+      evaluationPeriods: 1,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+    });
 
-    const readIOPsMetric = dbCluster.metricVolumeReadIOPs();
-    const readAlarm = readIOPsMetric.createAlarm(
-      this,
-      `${dbClusterName}VolumeReadIOPsAlarm`,
-      {
-        threshold: 300_000, // IOPS
-        evaluationPeriods: 1,
-        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
-      }
-    );
-    alarmAction && readAlarm.addAlarmAction(alarmAction);
-    alarmAction && readAlarm.addOkAction(alarmAction);
+    createAlarm({
+      metric: dbCluster.metricVolumeReadIOPs(),
+      name: "VolumeReadIOPsAlarm",
+      threshold: 300_000, // IOPS
+      evaluationPeriods: 1,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+    });
 
-    const writeIOPsMetric = dbCluster.metricVolumeWriteIOPs();
-    const writeAlarm = writeIOPsMetric.createAlarm(
-      this,
-      `${dbClusterName}VolumeWriteIOPsAlarm`,
-      {
-        threshold: 300_000, // IOPS
-        evaluationPeriods: 1,
-        treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
-      }
-    );
-    alarmAction && writeAlarm.addAlarmAction(alarmAction);
-    alarmAction && writeAlarm.addOkAction(alarmAction);
+    createAlarm({
+      metric: dbCluster.metricVolumeWriteIOPs(),
+      name: "VolumeWriteIOPsAlarm",
+      threshold: 300_000, // IOPS
+      evaluationPeriods: 1,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+    });
+
+    createAlarm({
+      metric: dbCluster.metricACUUtilization(),
+      name: "ACUUtilizationAlarm",
+      threshold: 80, // pct
+      evaluationPeriods: 1,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+    });
   }
 }
 
