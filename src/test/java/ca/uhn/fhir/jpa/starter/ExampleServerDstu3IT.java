@@ -164,7 +164,6 @@ class ExampleServerDstu3IT implements IServerSupport {
   }
 
   @Test
-  @Disabled
   void testWebsocketSubscription() throws Exception {
     /*
      * Create subscription

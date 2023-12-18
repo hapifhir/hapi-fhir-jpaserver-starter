@@ -20,8 +20,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -67,6 +69,11 @@ public class Application extends SpringBootServletInitializer {
 		servletRegistrationBean.setLoadOnStartup(1);
 
 		return servletRegistrationBean;
+	}
+
+	@Bean
+	public ServletWebServerFactory servletWebServerFactory() {
+		return new JettyServletWebServerFactory();
 	}
 
 }

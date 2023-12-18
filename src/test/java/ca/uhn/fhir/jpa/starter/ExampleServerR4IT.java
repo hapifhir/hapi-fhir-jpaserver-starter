@@ -217,7 +217,6 @@ class ExampleServerR4IT implements IServerSupport {
 		ourClient.transaction().withBundle(bundle).execute();
 	}
 
-	@Disabled
 	@Test
 	@Order(1)
 	void testWebsocketSubscription() throws Exception {
