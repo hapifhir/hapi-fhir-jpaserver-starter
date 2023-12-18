@@ -28,6 +28,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
@@ -72,6 +73,7 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 	@Bean
+    @Lazy
 	public ServletWebServerFactory servletWebServerFactory() {
 		return new JettyServletWebServerFactory();
 	}
