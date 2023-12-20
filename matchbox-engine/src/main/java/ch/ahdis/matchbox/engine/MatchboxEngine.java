@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 import ch.ahdis.matchbox.engine.exception.IgLoadException;
 import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
 import ch.ahdis.matchbox.engine.exception.TerminologyServerUnreachableException;
-import net.sourceforge.plantuml.Run;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
@@ -81,7 +80,8 @@ public class MatchboxEngine extends ValidationEngine {
 
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxEngine.class);
 
-	public MatchboxEngine(ValidationEngine other) throws FHIRException, IOException {
+	protected final List<String> suppressedWarningPatterns = new ArrayList<>();
+
 	public MatchboxEngine(final @NonNull ValidationEngine other) throws FHIRException, IOException {
 		super(other);
 		// Create a new IgLoader, otherwise the context is desynchronized between the loader and the engine
@@ -463,7 +463,7 @@ public class MatchboxEngine extends ValidationEngine {
 		}
 
 		org.hl7.fhir.r5.model.OperationOutcome outcome = super.validate(format, stream, profiles);
-		return (OperationOutcome) (VersionConvertorFactory_40_50.convertResource(outcome));
+		return this.filterValidationOutcome((OperationOutcome) (VersionConvertorFactory_40_50.convertResource(outcome)));
 	}
 
 	/**
@@ -743,8 +743,59 @@ public class MatchboxEngine extends ValidationEngine {
 		this.getIgLoader().loadPackage(npmPackage, true);
 	}
 
-	protected void txLog(String msg) {
-		log.info("tx ", msg);
+	/**
+	 * Copies the given OperationOutcome, removes issues if they are warning and match a list of ignored messages.
+	 *
+	 * @param oooriginal The original OperationOutcome.
+	 * @return A copy of the OperationOutcome, without issues that have to be filtered.
+	 */
+	public OperationOutcome filterValidationOutcome(final @NonNull OperationOutcome oooriginal) {
+		final var copy = Objects.requireNonNull(oooriginal).copy();
+		final List<Pattern> ignoredPatterns = this.compileSuppressedWarningPatterns();
+
+		copy.setIssue(copy.getIssue().stream()
+							  .filter(issue -> {
+								  if (issue.getSeverity() != OperationOutcome.IssueSeverity.WARNING) {
+									  // We keep everything that is not a warning
+									  return true;
+								  }
+								  // We keep the warning only if it matches no
+								  return ignoredPatterns.parallelStream().noneMatch(pattern -> pattern.matcher(issue.getDetails().getText()).find());
+							  })
+							  .collect(Collectors.toList()));
+		return copy;
 	}
 
+	/**
+	 * Adds a text to the list of suppressed validation warnings.
+	 *
+	 * @param text The text to add.
+	 * @implNote The text is Regex-escaped before being added to the list.
+	 */
+	public void addSuppressedWarning(final @NonNull String text) {
+		this.suppressedWarningPatterns.add(Pattern.quote(Objects.requireNonNull(text)));
+	}
+
+	/**
+	 * Adds a Regex pattern to the list of suppressed validation warnings.
+	 *
+	 * @param pattern The Regex pattern to add.
+	 */
+	public void addSuppressedWarningPattern(final @NonNull String pattern) {
+		this.suppressedWarningPatterns.add(Objects.requireNonNull(pattern));
+	}
+
+	/**
+	 * Returns the list of suppressed validation warnings.
+	 */
+	public List<String> getSuppressedWarningPatterns() {
+		return this.suppressedWarningPatterns;
+	}
+
+	/**
+	 * Compiles the list of suppressed validation warnings into a list of {@link Pattern}.
+	 */
+	protected List<Pattern> compileSuppressedWarningPatterns() {
+		return this.suppressedWarningPatterns.stream().map(Pattern::compile).collect(Collectors.toList());
+	}
 }
