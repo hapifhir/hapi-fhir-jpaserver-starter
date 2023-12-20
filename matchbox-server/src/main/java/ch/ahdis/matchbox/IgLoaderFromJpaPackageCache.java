@@ -164,6 +164,12 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			log.debug("Ignoring package '{}': use 'hl7.terminology#5.3.0'", src);
 			return;
 		}
+		if (src.startsWith("hl7.terminology#") && !"hl7.terminology#5.3.0".equals(src)) {
+			final var replace = "hl7.terminology#5.3.0";
+			log.debug("Replacing '{}' with '{}'", src, replace);
+			loadIg(igs, binaries, replace, recursive);
+			return;
+		}
 		if (src.equals("hl7.fhir.cda#dev")) {
 			final var replace = "hl7.cda.uv.core#2.1.0-draft2-mb";
 			log.debug("Replacing 'hl7.fhir.cda#dev' with '{}'", replace);
