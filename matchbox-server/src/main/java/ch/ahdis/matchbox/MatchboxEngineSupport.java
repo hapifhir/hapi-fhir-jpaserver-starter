@@ -2,8 +2,7 @@ package ch.ahdis.matchbox;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 import ch.ahdis.matchbox.engine.exception.IgLoadException;
@@ -16,8 +15,6 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.conformance.R5ExtensionsLoader;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
 import org.hl7.fhir.utilities.FhirPublication;
-import org.hl7.fhir.utilities.VersionUtilities;
-import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.cli.services.IPackageInstaller;
 import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +39,7 @@ public class MatchboxEngineSupport {
 	
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxEngineSupport.class);
 
-	private static MatchboxEngine engine = null;
+	private static MatchboxEngine mainEngine = null;
 	private EngineSessionCache sessionCache;
 	
 	private boolean initialized = false;
@@ -147,10 +144,10 @@ public class MatchboxEngineSupport {
 	 * @param id
 	 * @return
 	 */
-	public IBaseResource getCachedResource(String resource, String id) {
-		for (String sessionId : sessionCache.getSessionIds()) {
-			MatchboxEngine engine = (MatchboxEngine) sessionCache.fetchSessionValidatorEngine(sessionId);
-			IBaseResource res = engine.getCanonicalResourceById(resource, id);
+	public IBaseResource getCachedResource(final String resource, final @NonNull String id) {
+		for (final String sessionId : this.sessionCache.getSessionIds()) {
+			final var engine = (MatchboxEngine) this.sessionCache.fetchSessionValidatorEngine(sessionId);
+			final IBaseResource res = engine.getCanonicalResourceById(resource, id);
 			if (res != null) {
 				return res;
 			}
@@ -182,36 +179,42 @@ public class MatchboxEngineSupport {
 			} catch (final IOException e){
 				throw new IgLoadException(e);
 			}
-			log.info("Package Summary: "+validator.getContext().loadedPackageSummary());
 		}
+		log.debug("Package Summary: {}", validator.getContext().loadedPackageSummary());
 
-			this.configureValidationEngine(validator, cliContext);
-			log.info("finished creating new validate engine for "+(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContext.hashCode());
+		this.configureValidationEngine(validator, cliContext);
+		log.debug("Finished creating new validate engine for {} with parameters {}", forIg, cliContext.hashCode());
 
 		return validator;
 	}
 
-	public String getIgPackage(CliContext cliContext) {
-		String ig = null;
+	/**
+	 * Returns the FHIR core package for the specified FHIR version in the cliContext, or {@code null} if the FHIR
+	 * version is not supported.
+	 */
+	public @Nullable String getFhirCorePackage(final @NonNull CliContext cliContext) {
 		if (cliContext.getFhirVersion().startsWith("4.0")) {
-			ig = "hl7.fhir.r4.core#4.0.1";
+			return "hl7.fhir.r4.core#4.0.1";
 		}
 		if (cliContext.getFhirVersion().startsWith("4.3")) {
-			ig = "hl7.fhir.r4b.core#4.3.0";
+			return "hl7.fhir.r4b.core#4.3.0";
 		}
 		if (cliContext.getFhirVersion().startsWith("5.0")) {
-			ig = "hl7.fhir.core#5.0.0";
+			return "hl7.fhir.core#5.0.0";
 		}
-		return ig;
+		return null;
 	}
 			
 	/**
-	 * returns a matchbox-engine for the specified canonical with cliClontext parameters
-	 * @param canonical URL to validate
+	 * Returns a Matchbox engine for the specified canonical with cliClontext parameters. It is synchronized and waits
+	 * for the 'initialized' flag.
+	 *
+	 * @param canonical  URL to validate
 	 * @param cliContext cliContext parameters
-	 * @param create if true, create a new engine
-	 * @param reload if true, reload the engine
-	 * @return matchbox-engine
+	 * @param create     if true, create a new engine
+	 * @param reload     if true, reload the engine
+	 * @return a Matchbox engine.
+	 * @throws MatchboxEngineCreationException if the engine cannot be created.
 	 */
 	public synchronized MatchboxEngine getMatchboxEngine(final @Nullable String canonical,
 																		  @Nullable CliContext cliContext,
@@ -220,8 +223,8 @@ public class MatchboxEngineSupport {
 		while (!this.isInitialized()) {
 			log.info("ValidationEngine is not yet initialized, waiting for initialization of packages");
 			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
+				Thread.sleep(2000);
+			} catch (final InterruptedException e) {
 				log.error("error waiting for initialization", e);
 			}
 		}
@@ -230,7 +233,7 @@ public class MatchboxEngineSupport {
 	}
 
 	/**
-	 * returns a matchbox-engine for the specified canonical with cliClontext parameters. This method is not
+	 * Returns a Matchbox engine for the specified canonical with cliClontext parameters. This method is not
 	 * synchronized and does not wait for the 'initialized' flag. It should be used only for internal calls from the
 	 * IG Provider load-all method.
 	 *
@@ -247,11 +250,11 @@ public class MatchboxEngineSupport {
 																			 final boolean reload) throws MatchboxEngineCreationException {
 
 		if (reload) {
-			engine = null;
+			mainEngine = null;
 			log.info("setInitialized(false) from reload");
 			this.setInitialized(false);
 		}
-		if (engine == null) {
+		if (mainEngine == null) {
 			cliContext = new CliContext(this.cliContext);
 			mainEngine = new MatchboxEngineBuilder().getEngine();
 			mainEngine.setIgLoader(new IgLoaderFromJpaPackageCache(mainEngine.getPcm(),
@@ -296,28 +299,30 @@ public class MatchboxEngineSupport {
 			sessionCache.cacheSessionForEver("" + cliContext.hashCode(), mainEngine);
 			cliContext.setIg(null); // otherwise we get for reloads the pacakge name instead a new one later  set ahdis/matchbox #144
 
-			if (cliContext.getIgsPreloaded() != null && cliContext.getIgsPreloaded().length > 0) {
-				for (String ig : cliContext.getIgsPreloaded()) {
+			if (cliContext.getIgsPreloaded() != null) {
+				for (final String ig : cliContext.getIgsPreloaded()) {
 					if (cliContext.getOnlyOneEngine()) {
 						try {
-							igLoader.loadIg(engine.getIgs(), engine.getBinaries(), ig, true);
+							mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), ig, true);
 						} catch (FHIRException | IOException e) {
-							log.error("error generating matchbox engine due to igLoader", e);
+							log.error("Error generating matchbox engine due to igLoader", e);
 						}
 					} else {
 						CliContext cliContextCp = new CliContext(this.cliContext);
 						cliContextCp.setIg(ig); // set the ig in the cliContext that hashCode will be
 						if (this.sessionCache.fetchSessionValidatorEngine("" + cliContextCp.hashCode()) == null) {
-							MatchboxEngine created = this.createMatchboxEngine(engine, ig, cliContextCp);
-							sessionCache.cacheSessionForEver("" + cliContextCp.hashCode(), created);
-							log.info("cached validate engine forever" + (ig != null ? "for " + ig : "") + " with parameters " + cliContextCp.hashCode());
+							MatchboxEngine created = this.createMatchboxEngine(mainEngine, ig, cliContextCp);
+							this.sessionCache.cacheSessionForEver("" + cliContextCp.hashCode(), created);
+							log.info("Cached validate engine forever {} with parameters {}",
+										(ig != null ? "for " + ig : ""),
+										cliContextCp.hashCode());
 						}
 					}
 				}
 			}
 
 			if (cliContext.getOnlyOneEngine()) {
-				log.info(
+				log.warn(
 					"Only one engine will be provided with the preloaded ig's mentioned in application.yaml, cannot handle multiple versions of ig's, DEVELOPMENT ONLY MODE");
 			}
 		}
@@ -327,8 +332,8 @@ public class MatchboxEngineSupport {
 		}
 
 		if (cliContext.getIg() == null) {
-			if ("default".equals(canonical) || canonical == null || engine.getCanonicalResource(canonical) != null) {
-				cliContext.setIg(this.getIgPackage(cliContext));
+			if ("default".equals(canonical) || canonical == null || mainEngine.getCanonicalResource(canonical) != null) {
+				cliContext.setIg(this.getFhirCorePackage(cliContext));
 			} else {
 				NpmPackageVersionResourceEntity npm = loadPackageAssetByUrl(canonical,
 																								FhirVersionEnum.forVersionString(cliContext.getFhirVersion()));
@@ -338,7 +343,7 @@ public class MatchboxEngineSupport {
 				}
 				if (npm != null) {
 					String ig = npm.getPackageVersion().getPackageId() + "#" + npm.getPackageVersion().getVersionId();
-					log.info("using ig " + ig + " for canonical url " + canonical);
+					log.debug("Using ig {} for canonical url {}", ig, canonical);
 					cliContext.setIg(ig); // set the ig in the cliContext that hashCode will be set
 				} else {
 					// lets try to find a package that contains the canonical with a different FHIR version (e.g. for mapping between versions)
@@ -353,43 +358,49 @@ public class MatchboxEngineSupport {
 		}
 
 		if (reload) {
-			log.info("setInitialized(true) from reload");
 			this.setInitialized(true);
 		}
 
 		if (cliContext.getOnlyOneEngine()) {
 			if (create && cliContext.getIg() != null) {
 				try {
-					engine.getIgLoader().loadIg(engine.getIgs(), engine.getBinaries(), cliContext.getIg(), true);
+					mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), cliContext.getIg(), true);
 				} catch (FHIRException | IOException e) {
-					log.error("error generating matchbox engine due to igLoader", e);
+					log.error("Error generating matchbox engine due to igLoader", e);
 				}
 			}
-			return engine;
+			return mainEngine;
 		}
 
 		// check if we have already a validator in cache for that
-		MatchboxEngine matchboxEngine = (MatchboxEngine) this.sessionCache.fetchSessionValidatorEngine("" + cliContext.hashCode());
-		if ((matchboxEngine != null && reload == false)) {
-			log.info("using cached validate engine" + (cliContext.getIg() != null ? "for " + cliContext.getIg() : "") + " with parameters " + cliContext.hashCode());
+		final var matchboxEngine =
+			(MatchboxEngine) this.sessionCache.fetchSessionValidatorEngine("" + cliContext.hashCode());
+		if (matchboxEngine != null && !reload) {
+			log.debug("Using cached validate engine {} with parameters {}",
+						(cliContext.getIg() != null ? "for " + cliContext.getIg() : ""),
+						cliContext.hashCode());
 			return matchboxEngine;
 		}
 
 		// create a new validator and cache it temporarly
 		if (create && cliContext.getIg() != null) {
-			log.info("creating new cached validate engine " + (cliContext.getIg() != null ? "for " + cliContext.getIg() : "") + " with parameters " + cliContext.hashCode());
-			MatchboxEngine baseEngine = engine;
+			log.debug("Creating new cached validate engine {} with parameters {}",
+						 (cliContext.getIg() != null ? "for " + cliContext.getIg() : ""),
+						 cliContext.hashCode());
+			MatchboxEngine baseEngine = mainEngine;
 			if (!cliContext.getFhirVersion().equals(baseEngine.getVersion())) {
-				log.info("creating base engine for" + (cliContext.getIg() != null ? "for " + cliContext.getIg() : "") + " with parameters and fhir Version " + cliContext.getFhirVersion());
+				log.debug("Creating base engine for {} with parameters and fhir Version {}",
+							 (cliContext.getIg() != null ? "for " + cliContext.getIg() : ""),
+							 cliContext.getFhirVersion());
 				try {
 					baseEngine = new MatchboxEngineBuilder().getEngine();
 					baseEngine.setVersion(cliContext.getFhirVersion());
 				} catch (final Exception e) {
-					log.error("error generating matchbox engine", e);
+					log.error("Error generating matchbox engine", e);
 					return null;
 				}
 			}
-			MatchboxEngine created = this.createMatchboxEngine(baseEngine, cliContext.getIg(), cliContext);
+			final var created = this.createMatchboxEngine(baseEngine, cliContext.getIg(), cliContext);
 			sessionCache.cacheSession("" + cliContext.hashCode(), created);
 			return created;
 		}

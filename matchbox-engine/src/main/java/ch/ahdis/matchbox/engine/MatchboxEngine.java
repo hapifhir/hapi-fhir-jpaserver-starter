@@ -24,9 +24,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import ch.ahdis.matchbox.engine.exception.IgLoadException;
 import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
@@ -48,7 +49,6 @@ import org.hl7.fhir.r5.formats.IParser;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.ExpressionNode;
 import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
-import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureMap;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
@@ -82,8 +82,9 @@ public class MatchboxEngine extends ValidationEngine {
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxEngine.class);
 
 	public MatchboxEngine(ValidationEngine other) throws FHIRException, IOException {
+	public MatchboxEngine(final @NonNull ValidationEngine other) throws FHIRException, IOException {
 		super(other);
-		// Create a new IgLoader, otherwise the context is desynchronized between it and the engine
+		// Create a new IgLoader, otherwise the context is desynchronized between the loader and the engine
 		this.setIgLoader(new IgLoader(this.getPcm(), this.getContext(), this.getVersion(), this.isDebug()));
 		try {
 			this.setPcm(new FilesystemPackageCacheManager(FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER));
@@ -633,7 +634,7 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @param id   resource id
 	 * @return
 	 */
-	public IBaseResource getCanonicalResourceById(String type, String id) {
+	public IBaseResource getCanonicalResourceById(final String type, final @NonNull String id) {
 		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResourceById(type, id);
 		if (fetched != null) {
 			if ("5.0.0".equals(this.getVersion())) {
@@ -714,10 +715,12 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @throws FHIRException FHIR Exception
 	 * @throws IOException   IO Exception
 	 */
-	public String evaluateFhirPath(String input, boolean inputJson, String expression)
+	public String evaluateFhirPath(final @NonNull String input,
+											 final boolean inputJson,
+											 final @NonNull String expression)
 			throws FHIRException, IOException {
 		FHIRPathEngine fpe = this.getValidator(null).getFHIRPathEngine();
-		Element e = Manager.parseSingle(this.getContext(), new ByteArrayInputStream(input.getBytes("UTF-8")),
+		Element e = Manager.parseSingle(this.getContext(), new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)),
 				(inputJson ? FhirFormat.JSON : FhirFormat.XML));
 		ExpressionNode exp = fpe.parse(expression);
 		return fpe.evaluateToString(e, expression);
@@ -727,12 +730,12 @@ public class MatchboxEngine extends ValidationEngine {
 	/**
 	 * Loads an IG in the engine from its NPM package as an {@link InputStream}, its ID and version. The
 	 * {@link InputStream} will be closed by {@link org.hl7.fhir.utilities.npm.NpmPackage#readStream}.
-	 *
+	 * <p>
 	 * The package dependencies shall be added manually, no recursive loading will be performed.
 	 *
 	 * @param inputStream The NPM package input stream. It will be closed.
 	 */
-	public void loadPackage(final InputStream inputStream) throws IOException {
+	public void loadPackage(final @NonNull InputStream inputStream) throws IOException {
 		final NpmPackage npmPackage = NpmPackage.fromPackage(Objects.requireNonNull(inputStream));
 
 		// Remove the dependencies to disable recursive loading
