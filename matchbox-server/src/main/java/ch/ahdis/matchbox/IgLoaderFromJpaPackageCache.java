@@ -160,24 +160,24 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 	@Override
 	public void loadIg(List<ImplementationGuide> igs, Map<String, ByteProvider> binaries, String src, boolean recursive)
 			throws IOException, FHIRException {
-			log.debug("Package ignored (use hl7.terminology#5.3.0) " + src);
 		if (src.startsWith("hl7.terminology.")) {
+			log.debug("Ignoring package '{}': use 'hl7.terminology#5.3.0'", src);
 			return;
 		}
 		if (src.equals("hl7.fhir.cda#dev")) {
-			String replace = "hl7.cda.uv.core#2.1.0-draft2-mb";
-			log.debug("Replacing hl7.fhir.cda#dev with " + replace);
+			final var replace = "hl7.cda.uv.core#2.1.0-draft2-mb";
+			log.debug("Replacing 'hl7.fhir.cda#dev' with '{}'", replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;
 		}
 		if (src.equals("ch.fhir.ig.ch-epr-term#current")) {
-			String replace  = "ch.fhir.ig.ch-epr-term#2.0.x";
-			log.debug("ch.fhir.ig.ch-epr-term#current with " + replace);
+			final var replace = "ch.fhir.ig.ch-epr-term#2.0.x";
+			log.debug("Replacing 'ch.fhir.ig.ch-epr-term#current' with '{}'", replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;
 		}
 		if (getContext().getLoadedPackages().contains(src)) {
-			log.debug("Package already in context " + src);
+			log.debug("Package '{}' already in context", src);
 			return;
 		}
 		new TransactionTemplate(myTxManager).execute(tx -> {
