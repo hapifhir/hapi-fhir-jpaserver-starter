@@ -722,7 +722,7 @@ public class MatchboxEngine extends ValidationEngine {
 		FHIRPathEngine fpe = this.getValidator(null).getFHIRPathEngine();
 		Element e = Manager.parseSingle(this.getContext(), new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)),
 				(inputJson ? FhirFormat.JSON : FhirFormat.XML));
-		ExpressionNode exp = fpe.parse(expression);
+		//ExpressionNode exp = fpe.parse(expression);
 		return fpe.evaluateToString(e, expression);
 		//return fpe.evaluateToString(new ValidatorHostContext(this.getContext(), e), e, e, e, exp);
 	}
