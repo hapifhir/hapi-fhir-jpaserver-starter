@@ -28,6 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import ch.ahdis.matchbox.engine.exception.IgLoadException;
+import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
+import ch.ahdis.matchbox.engine.exception.TerminologyServerUnreachableException;
+import net.sourceforge.plantuml.Run;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.exceptions.FHIRException;
@@ -166,21 +171,31 @@ public class MatchboxEngine extends ValidationEngine {
 		 * @throws IOException
 		 * @throws URISyntaxException
 		 */
-		public MatchboxEngine getEngineR4() throws FHIRException, IOException, URISyntaxException {
+		public MatchboxEngine getEngineR4() throws MatchboxEngineCreationException {
 			log.info("Initializing Matchbox Engine (FHIR R4 with terminology provided in classpath)");
 			log.info(VersionUtil.getPoweredBy());
-			MatchboxEngine engine = new MatchboxEngine(super.fromNothing());
+			final MatchboxEngine engine;
+			try { engine = new MatchboxEngine(this.fromNothing()); }
+			catch (final IOException e) { throw new MatchboxEngineCreationException(e); }
 			engine.setVersion(this.fhirVersion.toCode());
-			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
-			engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.3.0.tgz"));
-			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
+			try {
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.3.0.tgz"));
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
+			} catch (final IOException e) {
+				throw new IgLoadException(e);
+			}
 			if (this.txServer == null) {
 				engine.getContext().setCanRunWithoutTerminology(true);
 				engine.getContext().setNoTerminologyServer(true);
 			} else {
 				engine.getContext().setCanRunWithoutTerminology(false);
 				engine.getContext().setNoTerminologyServer(false);
-				engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
+				try {
+					engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
+				} catch (final Exception e) {
+					throw new TerminologyServerUnreachableException(e);
+				}
 			}
 			engine.getContext().setPackageTracker(engine);
 			engine.setPcm(this.getFilesystemPackageCacheManager());
@@ -195,10 +210,12 @@ public class MatchboxEngine extends ValidationEngine {
 		 * @throws IOException
 		 * @throws URISyntaxException
 		 */
-		public MatchboxEngine getEngine() throws FHIRException, IOException, URISyntaxException {
+		public MatchboxEngine getEngine() throws MatchboxEngineCreationException {
 			log.info("Initializing Matchbox Engine");
 			log.info(VersionUtil.getPoweredBy());
-			MatchboxEngine engine = new MatchboxEngine(super.fromNothing());
+			final MatchboxEngine engine;
+			try { engine = new MatchboxEngine(this.fromNothing()); }
+			catch (final IOException e) { throw new MatchboxEngineCreationException(e); }
 			engine.setVersion(this.fhirVersion.toCode());
 			if (this.txServer == null) {
 				engine.getContext().setCanRunWithoutTerminology(true);
@@ -206,18 +223,35 @@ public class MatchboxEngine extends ValidationEngine {
 			} else {
 				engine.getContext().setCanRunWithoutTerminology(false);
 				engine.getContext().setNoTerminologyServer(false);
-				engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
+				try {
+					engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
+				} catch (final Exception e) {
+					throw new TerminologyServerUnreachableException(e);
+				}
 			}
 			engine.getContext().setPackageTracker(engine);
 			engine.setPcm(this.getFilesystemPackageCacheManager());
 			return engine;
 		}
 
-		private FilesystemPackageCacheManager getFilesystemPackageCacheManager() throws IOException {
-			if (this.packageCacheMode == FilesystemPackageCacheManager.FilesystemPackageCacheMode.CUSTOM) {
-				return new FilesystemPackageCacheManager(this.packageCachePath);
-			} else {
-				return new FilesystemPackageCacheManager(this.packageCacheMode);
+		@Override
+		public ValidationEngine fromNothing() throws MatchboxEngineCreationException {
+			try {
+				return super.fromNothing();
+			} catch (final IOException e) {
+				throw new MatchboxEngineCreationException(e);
+			}
+		}
+
+		private FilesystemPackageCacheManager getFilesystemPackageCacheManager() throws MatchboxEngineCreationException {
+			try {
+				if (this.packageCacheMode == FilesystemPackageCacheManager.FilesystemPackageCacheMode.CUSTOM) {
+					return new FilesystemPackageCacheManager(this.packageCachePath);
+				} else {
+					return new FilesystemPackageCacheManager(this.packageCacheMode);
+				}
+			} catch (final IOException e) {
+				throw new MatchboxEngineCreationException(e);
 			}
 		}
 	}

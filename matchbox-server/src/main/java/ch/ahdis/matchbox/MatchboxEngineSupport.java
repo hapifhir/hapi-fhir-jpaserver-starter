@@ -6,6 +6,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
 
+import ch.ahdis.matchbox.engine.exception.IgLoadException;
+import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
+import ch.ahdis.matchbox.engine.exception.TerminologyServerUnreachableException;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.conformance.R5ExtensionsLoader;
@@ -153,28 +158,37 @@ public class MatchboxEngineSupport {
 		return null;
 	}
 
-	private MatchboxEngine createMatchboxEngine(MatchboxEngine engine, String ig, CliContext cliContext) {
-		log.info("creating new validate engine "+(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContext.hashCode());
-		try {
-			final var validator = new MatchboxEngine(engine);
-			final var igLoader = new IgLoaderFromJpaPackageCache(validator.getPcm(),
-																				  validator.getContext(),
-																				  validator.getVersion(),
-			validator.isDebug(), myPackageCacheManager, myNpmPackageVersionDao, myDaoRegistry, myBinaryStorageSvc, myTxManager);
-			validator.setIgLoader(igLoader);
-			if (ig != null) {
+	private MatchboxEngine createMatchboxEngine(final @NonNull MatchboxEngine engine,
+															  final @Nullable String ig,
+															  final @NonNull CliContext cliContext) throws MatchboxEngineCreationException {
+		final String forIg = (ig != null) ? "for " + ig : "";
+		log.info("Creating new validate engine {} with parameters {}", forIg, cliContext.hashCode());
+
+		final MatchboxEngine validator;
+		try { validator = new MatchboxEngine(engine); }
+		catch (final IOException e) { throw new MatchboxEngineCreationException(e); }
+		validator.setIgLoader(new IgLoaderFromJpaPackageCache(validator.getPcm(),
+																				validator.getContext(),
+																				validator.getVersion(),
+																				validator.isDebug(),
+																				this.myPackageCacheManager,
+																				this.myNpmPackageVersionDao,
+																				this.myDaoRegistry,
+																				this.myBinaryStorageSvc,
+																				this.myTxManager));
+		if (ig != null) {
+			try {
 				validator.getIgLoader().loadIg(validator.getIgs(), validator.getBinaries(), ig, true);
+			} catch (final IOException e){
+				throw new IgLoadException(e);
 			}
 			log.info("Package Summary: "+validator.getContext().loadedPackageSummary());
+		}
 
 			this.configureValidationEngine(validator, cliContext);
 			log.info("finished creating new validate engine for "+(ig!=null ? "for "+ig : "" ) +" with parameters "+cliContext.hashCode());
 
-			return validator;
-		} catch (final Exception e) {
-			log.error("Error loading validator: "+e.getMessage(), e);
-		}
-		return null;
+		return validator;
 	}
 
 	public String getIgPackage(CliContext cliContext) {
@@ -199,7 +213,10 @@ public class MatchboxEngineSupport {
 	 * @param reload if true, reload the engine
 	 * @return matchbox-engine
 	 */
-	public synchronized MatchboxEngine getMatchboxEngine(String canonical, CliContext cliContext, boolean create, boolean reload) {
+	public synchronized MatchboxEngine getMatchboxEngine(final @Nullable String canonical,
+																		  @Nullable CliContext cliContext,
+																		  final boolean create,
+																		  final boolean reload) throws MatchboxEngineCreationException {
 		while (!this.isInitialized()) {
 			log.info("ValidationEngine is not yet initialized, waiting for initialization of packages");
 			try {
@@ -221,12 +238,13 @@ public class MatchboxEngineSupport {
 	 * @param cliContext cliContext parameters
 	 * @param create     if true, create a new engine
 	 * @param reload     if true, reload the engine
-	 * @return matchbox-engine
+	 * @return a Matchbox engine.
+	 * @throws MatchboxEngineCreationException if the engine cannot be created.
 	 */
-	public MatchboxEngine getMatchboxEngineNotSynchronized(String canonical,
-																			 CliContext cliContext,
-																			 boolean create,
-																			 boolean reload) {
+	public MatchboxEngine getMatchboxEngineNotSynchronized(final @Nullable String canonical,
+																			 @Nullable CliContext cliContext,
+																			 final boolean create,
+																			 final boolean reload) throws MatchboxEngineCreationException {
 
 		if (reload) {
 			engine = null;
@@ -235,63 +253,47 @@ public class MatchboxEngineSupport {
 		}
 		if (engine == null) {
 			cliContext = new CliContext(this.cliContext);
-			try {
-				engine = new MatchboxEngineBuilder().getEngine();
-			} catch (FHIRException e) {
-				log.error("error generating matchbox engine", e);
-				return null;
-			} catch (IOException e) {
-				log.error("error generating matchbox engine", e);
-				return null;
-			} catch (URISyntaxException e) {
-				log.error("error generating matchbox engine", e);
-				return null;
-			}
-			IgLoader igLoader = null;
-			try {
-				igLoader = new IgLoaderFromJpaPackageCache(engine.getPcm(),
-																		 engine.getContext(),
-																		 engine.getVersion(),
-																		 engine.isDebug(),
-																		 myPackageCacheManager,
-																		 myNpmPackageVersionDao,
-																		 myDaoRegistry,
-																		 myBinaryStorageSvc,
-																		 myTxManager);
-
-			} catch (IOException e) {
-				log.error("error generating matchbox engine, loader could not be created", e);
-				return null;
-			}
-			engine.setIgLoader(igLoader);
-			try {
-				if (cliContext.getFhirVersion().equals("4.0.1")) {
-					log.info("Preconfigure FHIR R4");
-					engine.loadPackage("hl7.terminology", "5.3.0");
-					engine.loadPackage("hl7.fhir.r4.core", "4.0.1");
-					log.info("Load R5 Specials");
-					R5ExtensionsLoader r5e = new R5ExtensionsLoader(engine.getPcm(), engine.getContext());
+			mainEngine = new MatchboxEngineBuilder().getEngine();
+			mainEngine.setIgLoader(new IgLoaderFromJpaPackageCache(mainEngine.getPcm(),
+																		 mainEngine.getContext(),
+																		 mainEngine.getVersion(),
+																		 mainEngine.isDebug(),
+																		 this.myPackageCacheManager,
+																		 this.myNpmPackageVersionDao,
+																		 this.myDaoRegistry,
+																		 this.myBinaryStorageSvc,
+																		 this.myTxManager));
+			if (cliContext.getFhirVersion().equals("4.0.1")) {
+				log.debug("Preconfigure FHIR R4");
+				try {
+					mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), "hl7.terminology#5.3.0", true);
+					mainEngine.loadPackage("hl7.terminology", "5.3.0");
+					mainEngine.loadPackage("hl7.fhir.r4.core", "4.0.1");
+					log.debug("Load R5 Specials");
+					final var r5e = new R5ExtensionsLoader(mainEngine.getPcm(), mainEngine.getContext());
 					r5e.load();
-					log.info("Load R5 Specials done");
-					r5e.loadR5SpecialTypes(Collections.unmodifiableList(Arrays.asList("ActorDefinition",
-																											"Requirements",
-																											"SubscriptionTopic",
-																											"TestPlan")));
-					log.info("Load R5 Specials types");
-					if (engine.getCanonicalResource(
-						"http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition") == null) {
-						log.error("could not load  R5 Specials");
-					}
-
-					this.configureValidationEngine(engine, cliContext);
+					log.debug("Load R5 Specials done");
+					r5e.loadR5SpecialTypes(List.of("ActorDefinition",
+															 "Requirements",
+															 "SubscriptionTopic",
+															 "TestPlan"));
+				} catch (final IOException e) {
+					throw new IgLoadException("Failed to load R5 specials", e);
 				}
-				cliContext.setIg(this.getIgPackage(cliContext));
-			} catch (FHIRException | IOException | URISyntaxException e) {
-				log.error("error connecting to terminology server ");
-				return null;
+				log.debug("Load R5 Specials types");
+				if (mainEngine.getCanonicalResource(
+					"http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition") == null) {
+					log.error("Could not load R5 Specials");
+				}
+
+				this.configureValidationEngine(mainEngine, cliContext);
 			}
-			log.info("cached default engine forever" + (cliContext.getIg() != null ? "for " + cliContext.getIg() : "") + " with parameters " + cliContext.hashCode());
-			sessionCache.cacheSessionForEver("" + cliContext.hashCode(), engine);
+			cliContext.setIg(this.getFhirCorePackage(cliContext));
+
+			log.info("Cached default engine forever {} with parameters {}",
+						(cliContext.getIg() != null ? "for " + cliContext.getIg() : ""),
+						cliContext.hashCode());
+			sessionCache.cacheSessionForEver("" + cliContext.hashCode(), mainEngine);
 			cliContext.setIg(null); // otherwise we get for reloads the pacakge name instead a new one later  set ahdis/matchbox #144
 
 			if (cliContext.getIgsPreloaded() != null && cliContext.getIgsPreloaded().length > 0) {
@@ -408,11 +410,10 @@ public class MatchboxEngineSupport {
 	 *
 	 * @param validator Thr validation engine.
 	 * @param cli       The cliContext parameters.
-	 * @throws URISyntaxException if the terminology server URL is not valid.
-	 * @throws IOException        if the terminology server cannot be reached, or the PCM cannot be created.
+	 * @throws MatchboxEngineCreationException if the engine cannot be configured.
 	 */
 	private void configureValidationEngine(final MatchboxEngine validator,
-														final CliContext cli) throws URISyntaxException, IOException {
+														final CliContext cli) throws MatchboxEngineCreationException {
 		log.info("Terminology server {}", cli.getTxServer());
 		String txServer = cli.getTxServer();
 		if ("n/a".equals(cli.getTxServer())) {
@@ -424,8 +425,12 @@ public class MatchboxEngineSupport {
 			validator.getContext().setCanRunWithoutTerminology(false);
 			validator.getContext().setNoTerminologyServer(false);
 		}
-		String txver = validator.setTerminologyServer(txServer, null, FhirPublication.R4);
-		log.info("Version of the terminology server: {}", txver);
+		try {
+			final String txver = validator.setTerminologyServer(txServer, null, FhirPublication.R4);
+			log.info("Version of the terminology server: {}", txver);
+		} catch (final IOException | URISyntaxException e) {
+			throw new TerminologyServerUnreachableException(e);
+		}
 
 		validator.setDebug(cli.isDoDebug());
 		validator.getContext().setLogger(new EngineLoggingService());
