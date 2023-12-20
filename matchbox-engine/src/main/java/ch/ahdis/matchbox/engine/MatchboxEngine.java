@@ -80,6 +80,12 @@ public class MatchboxEngine extends ValidationEngine {
 		super(other);
 		// Create a new IgLoader, otherwise the context is desynchronized between it and the engine
 		this.setIgLoader(new IgLoader(this.getPcm(), this.getContext(), this.getVersion(), this.isDebug()));
+		try {
+			this.setPcm(new FilesystemPackageCacheManager(FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER));
+		} catch (final IOException e) {
+			throw new MatchboxEngineCreationException(e);
+		}
+
 		//this.getContext().setCachingAllowed(false); // Uncomment to improve debugging HAPI by disabling caching
 	}
 
@@ -213,6 +219,19 @@ public class MatchboxEngine extends ValidationEngine {
 			} else {
 				return new FilesystemPackageCacheManager(this.packageCacheMode);
 			}
+		}
+	}
+
+	/**
+	 * A safe getter for the PCM. It has been created in the constructor, so it should be safe to access.
+	 */
+	@Override
+	public FilesystemPackageCacheManager getPcm() {
+		try {
+			return super.getPcm();
+		} catch (final IOException e) {
+			// This should not happen, we initialize the package cache manager in the constructor
+			throw new RuntimeException(e);
 		}
 	}
 
