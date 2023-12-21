@@ -72,10 +72,4 @@ public class Application extends SpringBootServletInitializer {
 		return servletRegistrationBean;
 	}
 
-	@Bean
-    @Lazy
-	public ServletWebServerFactory servletWebServerFactory() {
-		return new JettyServletWebServerFactory();
-	}
-
 }
