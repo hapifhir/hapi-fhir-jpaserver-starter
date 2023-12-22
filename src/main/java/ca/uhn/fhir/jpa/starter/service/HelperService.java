@@ -861,7 +861,7 @@ public class HelperService {
 		// Get the current date and time
 		Timestamp fiveDaysAgoTimestamp = new Timestamp(DateUtilityHelper.calculateMillisecondsRelativeToCurrentTime(5));
 
-		List<LastSyncEntity> lastSyncData = notificationDataSource.fetchLastSyncEntitiesByOrgs(organizationIds, env,
+		List<LastSyncEntity> lastSyncData = datasource.fetchLastSyncEntitiesByOrgs(organizationIds, env,
 				ApiAsyncTaskEntity.Status.COMPLETED.name(), fiveDaysAgoTimestamp);
 
 		// Sort by startDateTime
@@ -1111,7 +1111,7 @@ public class HelperService {
 		return responseBundle;
 	}
 
-	private Pair<List<String>, LinkedHashMap<String, List<String>>> getFacilityIdsAndOrgIdToChildrenMapPair(
+	public Pair<List<String>, LinkedHashMap<String, List<String>>> getFacilityIdsAndOrgIdToChildrenMapPair(
 			String orgId) {
 		List<String> facilityOrgIdList = new ArrayList<>();
 		List<String> orgIdList = new ArrayList<>();
@@ -1202,8 +1202,7 @@ public class HelperService {
 	}
 
 	public void getOrganizationsPartOf(List<String> idsList, String url) {
-		Bundle searchBundle = fhirClientAuthenticatorService.getFhirClient().search().byUrl(url)
-				.returnBundle(Bundle.class).execute();
+		Bundle searchBundle = performFhirSearch(null,null,url);
 		idsList.addAll(searchBundle.getEntry().stream().map(r -> r.getResource().getIdElement().getIdPart())
 				.collect(Collectors.toList()));
 		if (searchBundle.hasLink() && bundleContainsNext(searchBundle)) {
@@ -2303,7 +2302,7 @@ public class HelperService {
 		return dashboardEnvToConfigMap.get(env).getFilterItems();
 	}
 
-	List<ScoreCardIndicatorItem> getIndicatorItemListFromFile(String env) throws NullPointerException {
+	public List<ScoreCardIndicatorItem> getIndicatorItemListFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getScoreCardIndicatorItems();
 	}
 
@@ -2341,9 +2340,11 @@ public class HelperService {
 	}
 
 	public String getOrganizationIdByPractitionerRoleId(String practitionerRoleId) {
-		Bundle bundle = fhirClientAuthenticatorService.getFhirClient().search().forResource(PractitionerRole.class)
-				.where(PractitionerRole.RES_ID.exactly().identifier(practitionerRoleId)).returnBundle(Bundle.class)
-				.execute();
+		Map<String, List<String>> searchParameters = new HashMap<>();
+		searchParameters.put(PractitionerRole.RES_ID.getParamName(), Collections.singletonList(practitionerRoleId));
+
+		Bundle bundle = performFhirSearch(PractitionerRole.class, searchParameters, null);
+
 		if (!bundle.hasEntry()) {
 			return null;
 		}
@@ -2351,12 +2352,31 @@ public class HelperService {
 		return practitionerRole.getOrganization().getReferenceElement().getIdPart();
 	}
 
+	public Bundle performFhirSearch(Class<? extends Resource> resourceClass, Map<String, List<String>> searchParameters, String url) {
+		IQuery<IBaseBundle> query;
+		if (url != null) {
+			// If URL is provided, use it for the search
+			query = fhirClientAuthenticatorService.getFhirClient().search().byUrl(url);
+		} else {
+			query = fhirClientAuthenticatorService.getFhirClient().search().forResource(resourceClass);
+
+			for (Map.Entry<String, List<String>> entry : searchParameters.entrySet()) {
+				String param = entry.getKey();
+				List<String> values = entry.getValue();
+				query = query.where(new TokenClientParam(param).exactly().codes(values));
+			}
+		}
+		return query.returnBundle(Bundle.class).execute();
+	}
+
 	public Organization getOrganizationResourceByPractitionerRoleId(String practitionerRoleId) {
 		String organizationId = getOrganizationIdByPractitionerRoleId(practitionerRoleId);
 		if (organizationId == null)
 			return null;
-		Bundle bundle = fhirClientAuthenticatorService.getFhirClient().search().forResource(Organization.class)
-				.where(Organization.RES_ID.exactly().identifier(organizationId)).returnBundle(Bundle.class).execute();
+		Map<String, List<String>> searchParameters = new HashMap<>();
+		searchParameters.put(Organization.RES_ID.getParamName(), Collections.singletonList(organizationId));
+
+		Bundle bundle = performFhirSearch(Organization.class, searchParameters, null);
 		if (!bundle.hasEntry()) {
 			return null;
 		}
