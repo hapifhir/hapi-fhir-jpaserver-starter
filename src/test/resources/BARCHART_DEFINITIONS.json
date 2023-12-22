@@ -1,0 +1,874 @@
+[
+	{
+		"id": 1,
+		"title": "IPTp Administration",
+		"categoryId": "antenatal",
+		"description": "IPTp Bar Chart",
+		"barChartItemDefinitions": [
+			{
+				"id": 1,
+				"chartId": 1,
+				"name": "IPTp 1",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 1,
+						"legendText": "IPTp given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.code='ANC.B10.DE245').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 2,
+				"chartId": 1,
+				"name": "IPTp 2",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 2,
+						"legendText": "IPTp given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('IPTp-SP dose 2')).count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 3,
+				"chartId": 1,
+				"name": "IPTp 3",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 3,
+						"legendText": "IPTp given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('IPTp-SP dose 3')).count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 4,
+				"chartId": 1,
+				"name": "IPTp 4",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 4,
+						"legendText": "IPTp given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('IPTp-SP dose 4')).count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 5,
+				"chartId": 1,
+				"name": "IPTp 5",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 5,
+						"legendText": "IPTp given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.code='IPRD.DE46').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 6,
+				"chartId": 1,
+				"name": "IPTp 6",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 6,
+						"legendText": "IPTp given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('IPTp-SP dose 6')).count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 7,
+				"chartId": 1,
+				"name": "IPTp 7",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 7,
+						"legendText": "IPTp given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('IPTp-SP dose 7')).count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 8,
+				"chartId": 1,
+				"name": "IPTp 8",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 8,
+						"legendText": "IPTp given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('IPTp-SP dose 8')).count()"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 2,
+		"title": "Child Birth",
+		"categoryId": "labour-and-delivery",
+		"description": "Child Birth Bar Chart",
+		"barChartItemDefinitions": [
+			{
+				"id": 1,
+				"chartId": 2,
+				"name": "Child Birth",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 1,
+						"legendText": "Birth",
+						"legendColorHex": "#FF9933",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/delivery').count()"
+						}
+					},
+					{
+						"id": 2,
+						"barChartItemId": 1,
+						"legendText": "SBA",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/delivery').item.where(linkId='11.0').item.where(linkId='11.1').answer.where(value.code='trained-staff').count()"
+						}
+					},
+					{
+						"id": 3,
+						"barChartItemId": 1,
+						"legendText": "Partograph",
+						"legendColorHex": "#808080",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code='IPRD.DE31').where(value=true).count()"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 3,
+		"title": "Tetnus Toxoid Administration",
+		"categoryId": "antenatal",
+		"description": "Tetnus Toxoid Bar Chart",
+		"barChartItemDefinitions": [
+			{
+				"id": 1,
+				"chartId": 3,
+				"name": "Tetnus Toxoid 1",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 1,
+						"legendText": "Tetnus Toxoid given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.code='ANC.B10.DE165').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 2,
+				"chartId": 3,
+				"name": "Tetnus Toxoid 2",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 2,
+						"legendText": "Tetnus Toxoid given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.code='ANC.B10.DE167').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 3,
+				"chartId": 3,
+				"name": "Tetnus Toxoid 3",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 3,
+						"legendText": "Tetnus Toxoid given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.code='ANC.B10.DE169').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 4,
+				"chartId": 3,
+				"name": "Tetnus Toxoid 4",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 4,
+						"legendText": "Tetnus Toxoid given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('Tetanus toxoid (TT) 4')).count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 5,
+				"chartId": 3,
+				"name": "Tetnus Toxoid 5",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 5,
+						"legendText": "Tetnus Toxoid given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('Tetanus toxoid (TT) 5')).count()"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 4,
+		"title": "Family Planning Method",
+		"categoryId": "fp",
+		"description": "Distribution of Family Planning Methods Selected",
+		"barChartItemDefinitions": [
+			{
+				"id": 1,
+				"chartId": 4,
+				"name": "Emergency Contraception",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 1,
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27921-8').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 2,
+				"chartId": 4,
+				"name": "Combined oral contraceptive pills",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 2,
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27908-5').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 3,
+				"chartId": 4,
+				"name": "Injectables",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 3,
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27907-7').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 4,
+				"chartId": 4,
+				"name": "IUD copper",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 4,
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27903-6').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 5,
+				"chartId": 4,
+				"name": "IUD with Progestin",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 5,
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27902-8').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 6,
+				"chartId": 4,
+				"name": "Male Condom",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 6,
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27912-7').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 7,
+				"chartId": 4,
+				"name": "Female Condom",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 7,
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27914-3').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 8,
+				"chartId": 4,
+				"name": "Implantable Rod",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 8,
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27901-0').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 9,
+				"chartId": 4,
+				"name": "Female Sterilization",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 9,
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27905-1').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 10,
+				"chartId": 4,
+				"name": "Cycle Beads",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 10,
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'IPRD.DE95').count()"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 5,
+		"title": "Tetanus Diphtheria Administration",
+		"categoryId": "tetanus-diphtheria",
+		"description": "Tetanus Diphtheria Bar Chart",
+		"barChartItemDefinitions": [
+			{
+				"id": 1,
+				"chartId": 5,
+				"name": "Tetanus Diphtheria 1",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 1,
+						"legendText": "Tetanus Diphtheria given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.1.1').answer.value.where(code='IPRD.DE120').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 2,
+				"chartId": 5,
+				"name": "Tetanus Diphtheria 2",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 2,
+						"legendText": "Tetanus Diphtheria given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.2.1').answer.value.where(code='IPRD.DE121').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 3,
+				"chartId": 5,
+				"name": "Tetanus Diphtheria 3",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 3,
+						"legendText": "Tetanus Diphtheria given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.3.1').answer.value.where(code='IPRD.DE122').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 4,
+				"chartId": 5,
+				"name": "Tetanus Diphtheria 4",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 4,
+						"legendText": "Tetanus Diphtheria given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.4.1').answer.value.where(code='IPRD.DE123').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 5,
+				"chartId": 5,
+				"name": "Tetanus Diphtheria 5",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 5,
+						"legendText": "Tetanus Diphtheria given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.5.1').answer.value.where(code='IPRD.DE124').count()"
+						}
+					}
+				]
+			}
+		]
+	},
+	{
+		"id": 6,
+		"title": "Child Immunization",
+		"categoryId": "child-immunization",
+		"description": "Child Immunization Administration Bar Chart",
+		"barChartItemDefinitions": [
+			{
+				"id": 1,
+				"chartId": 6,
+				"name": "Hep B 0 (Birth)",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 1,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE153').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 2,
+				"chartId": 6,
+				"name": "OPV 0 (Birth)",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 2,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE138').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 3,
+				"chartId": 6,
+				"name": "OPV 1",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 3,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE139').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 4,
+				"chartId": 6,
+				"name": "Penta 1",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 4,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/child-immunization').repeat(item).where(linkId='3.1').answer.where(value.code='penta-1').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 5,
+				"chartId": 6,
+				"name": "PCV 1",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 5,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE146').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 6,
+				"chartId": 6,
+				"name": "Rota 1",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 6,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE149').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 7,
+				"chartId": 6,
+				"name": "OPV 2",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 7,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE140').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 8,
+				"chartId": 6,
+				"name": "Penta 2",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 8,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE144').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 9,
+				"chartId": 6,
+				"name": "PCV 2",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 9,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE147').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 10,
+				"chartId": 6,
+				"name": "Rota 2",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 10,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE150').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 11,
+				"chartId": 6,
+				"name": "OPV 3",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 11,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE141').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 12,
+				"chartId": 6,
+				"name": "Penta 3",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 12,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE145').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 13,
+				"chartId": 6,
+				"name": "PCV 3",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 13,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE148').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 14,
+				"chartId": 6,
+				"name": "Rota 3",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 14,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE151').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 15,
+				"chartId": 6,
+				"name": "IPV",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 15,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE142').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 16,
+				"chartId": 6,
+				"name": "BCG",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 16,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE152').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 17,
+				"chartId": 6,
+				"name": "Vitamin A1",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 17,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE136').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 18,
+				"chartId": 6,
+				"name": "MEASLES 1",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 18,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE132').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 19,
+				"chartId": 6,
+				"name": "Yellow Fever",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 19,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE135').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 20,
+				"chartId": 6,
+				"name": "Men A",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 22,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE134').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 21,
+				"chartId": 6,
+				"name": "MEASLES 2",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 21,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE133').count()"
+						}
+					}
+				]
+			},
+			{
+				"id": 22,
+				"chartId": 6,
+				"name": "HPV",
+				"barComponentList": [
+					{
+						"id": 1,
+						"barChartItemId": 22,
+						"legendText": "Child Immunization given",
+						"legendColorHex": "#488AC7",
+						"fhirPath": {
+							"expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE131').count()"
+						}
+					}
+				]
+			}
+		]
+	}
+]

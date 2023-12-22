@@ -1,0 +1,98 @@
+[
+    {
+        "categoryId": "antenatal",
+        "description": "Drug Administration Pie Chart",
+        "item": [
+            {
+                "id": 0,
+                "chartId": 1,
+                "name": "IpTp Doses",
+                "header": "Drug Administration",
+                "description": "IpTp Doses occurred",
+                "colorHex": "#05f6d5",
+                "numberFormat": "percent",
+                "fhirPath": {
+                    "expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('IPTp-SP dose')).count()"
+                }
+            },
+            {
+                "id": 1,
+                "chartId": 1,
+                "name": "Td Doses",
+                "header": "Drug Administration",
+                "description": "Td Doses given",
+                "colorHex": "#663d80",
+                "numberFormat": "percent",
+                "fhirPath": {
+                    "expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('Tetanus')).count()"
+                }
+            },
+            {
+                "id": 2,
+                "chartId": 1,
+                "name": "Calcium Tablets",
+                "header": "Drug Administration",
+                "description": "Calcium Tablets given",
+                "colorHex": "#443380",
+                "numberFormat": "percent",
+                "fhirPath": {
+                    "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code = 'calcium-tablet-given').count()"
+                }
+            },
+            {
+                "id": 3,
+                "chartId": 1,
+                "name": "Iron and Folic Supplements",
+                "header": "Drug Administration",
+                "description": "Iron and Folic Supplements given",
+                "colorHex": "#a0c0e0",
+                "numberFormat": "percent",
+                "fhirPath": {
+                    "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code = 'ANC.B10.DE92').count()"
+                }
+            }
+        ]
+    },
+    {
+        "categoryId": "child-growth-monitoring",
+        "description": "Child Growth Monitoring Pie Chart",
+        "item": [
+            {
+                "id": 0,
+                "chartId": 2,
+                "name": "Vitamin A",
+                "header": "Child Growth Monitoring",
+                "description": "Vitamin A Suppliment provided",
+                "colorHex": "#05f6d5",
+                "numberFormat": "percent",
+                "fhirPath": {
+                    "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').where(item.where(linkId='14.0').item.where(linkId='14.1').answer.value=true).count()"
+                }
+            },
+            {
+                "id": 1,
+                "chartId": 2,
+                "name": "Deworming Tablet",
+                "header": "Child Growth Monitoring",
+                "description": "Deworming Tablet provided",
+                "colorHex": "#663d80",
+                "numberFormat": "percent",
+                "fhirPath": {
+                    "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').where(item.where(linkId='15.0').item.where(linkId='15.1').answer.value=true).count()"
+                }
+            },
+            {
+                "id": 2,
+                "chartId": 2,
+                "name": "Micronutrient Powder",
+                "header": "Child Growth Monitoring",
+                "description": "Micronutrient Powder provided",
+                "colorHex": "#443380",
+                "numberFormat": "percent",
+                "fhirPath": {
+                    "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').where(item.where(linkId='16.0').item.where(linkId='16.1').answer.value=true).count()"
+                }
+            }
+        ]
+    }
+]

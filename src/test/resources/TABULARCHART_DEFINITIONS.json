@@ -1,0 +1,101 @@
+[
+  {
+    "id": 0,
+    "categoryId": "postnatal",
+    "name": "Postnatal Mother Care",
+    "description": "Time interval after birth mother returning for visit",
+    "redYellow": "1",
+    "yellowGreen": "5",
+    "fhirPath": {
+      "expression":  "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/post-natal-mother').encounter.distinct().count()"
+    }
+  },
+  {
+    "id": 1,
+    "categoryId": "postnatal",
+    "name": "Postnatal Baby Care",
+    "description": "Time interval after birth mother bringing child for visit",
+    "redYellow": "1",
+    "yellowGreen": "5",
+    "fhirPath": {
+      "expression":  "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/post-natal-baby').encounter.distinct().count()"
+    }
+  },
+  {
+    "id": 2,
+    "categoryId": "antenatal",
+    "name": "Antenatal Care",
+    "description": "Antenatal care is taken",
+    "redYellow": "2",
+    "yellowGreen": "2",
+    "fhirPath": {
+      "expression":  "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/anc-visit').encounter.distinct().count() + Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/anc-visit-v1').encounter.distinct().count() + Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/vitals').encounter.distinct().count()"
+    }
+  },
+  {
+    "id": 3,
+    "categoryId": "labour-and-delivery",
+    "name": "Newborn Registered",
+    "description": "Newborn babies registered",
+    "redYellow": "5",
+    "yellowGreen": "8",
+    "fhirPath": {
+      "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/delivery').item.where(linkId='1.0').answer.where(value.code='live-birth').count()"
+    }
+  },
+  {
+    "id": 4,
+    "categoryId": "labour-and-delivery",
+    "name": "Newborn Deaths",
+    "description": "Newborn babies death",
+    "redYellow": "!1",
+    "yellowGreen": "!0",
+    "fhirPath": {
+      "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code = 'IPRD.DE67').where(value=true).count()"
+    }
+  },
+  {
+    "id": 5,
+    "categoryId": "antenatal",
+    "name": "Malaria Tests Done",
+    "description": "No. of Malaria test done",
+    "redYellow": "2",
+    "yellowGreen": "5",
+    "fhirPath": {
+      "expression":  "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'B54').where(value = 'positive' or value.coding.code = 'positive').count() + Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'B54').where(value = 'negative' or value.coding.code = 'negative').count() + Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'B54').where(value = 'invalid' or value.coding.code = 'invalid').count()"
+    }
+  },
+  {
+    "id": 6,
+    "categoryId": "antenatal",
+    "name": "Malaria Tests Positive",
+    "description": "No. of Malaria test positive",
+    "redYellow": "2",
+    "yellowGreen": "5",
+    "fhirPath": {
+      "expression":  "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'B54').where(value = 'positive' or value.coding.code = 'positive').count()"
+    }
+  },
+  {
+    "id": 7,
+    "categoryId": "child-growth-monitoring",
+    "name": "Number of Children",
+    "description": "No. of Child growth monitored",
+    "redYellow": "2",
+    "yellowGreen": "5",
+    "fhirPath": {
+      "expression":  "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE155').count()"
+    }
+  },
+  {
+    "id": 8,
+    "categoryId": "out-patient",
+    "name": "Number of Out Patients",
+    "description": "No. of out patient monitored",
+    "redYellow": "2",
+    "yellowGreen": "5",
+    "fhirPath": {
+      "expression":  "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B8.DE4').distinct().count()"
+    }
+  }
+]

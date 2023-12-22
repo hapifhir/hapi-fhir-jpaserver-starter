@@ -1,0 +1,24 @@
+[
+  {
+    "id": 7,
+    "name": "ANC Registration",
+    "description": "No. of new ANC Registration this week",
+    "redYellow": "1",
+    "yellowGreen": "2",
+    "numberFormat": "none",
+    "fhirPath": {
+      "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/anc-registration').encounter.distinct().count()"
+    }
+  },
+  {
+    "id": 8,
+    "name": "ANC Visits",
+    "description": "Total No. of ANC Visits this week",
+    "redYellow": "1",
+    "yellowGreen": "5",
+    "numberFormat": "none",
+    "fhirPath": {
+      "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/anc-visit').encounter.distinct().count() + Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/vitals').encounter.distinct().count()"
+    }
+  }
+]

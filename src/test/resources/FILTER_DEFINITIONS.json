@@ -1,0 +1,33 @@
+[
+  {
+    "id": "age",
+    "name": "Age Groups",
+    "options": [
+      {
+        "id": "age-1",
+        "name": "10-14",
+        "fhirSearch": "subject:Patient.birthdate=geSTART(14)&subject:Patient.birthdate=leEND(10)"
+      },
+      {
+        "id": "age-2",
+        "name": "15-19",
+        "fhirSearch": "subject:Patient.birthdate=geSTART(19)&subject:Patient.birthdate=leEND(15)"
+      },
+      {
+        "id": "age-3",
+        "name": "20-35",
+        "fhirSearch": "subject:Patient.birthdate=geSTART(35)&subject:Patient.birthdate=leEND(20)"
+      },
+      {
+        "id": "age-4",
+        "name": "36-49",
+        "fhirSearch": "subject:Patient.birthdate=geSTART(49)&subject:Patient.birthdate=leEND(36)"
+      },
+      {
+        "id": "age-5",
+        "name": "Above 50",
+        "fhirSearch": "subject:Patient.birthdate=geSTART(120)&subject:Patient.birthdate=leEND(50)"
+      }
+    ]
+  }
+]

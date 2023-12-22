@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "title": "ANC Trend",
+    "categoryId": "antenatal",
+    "description": "ANC Trend Line Chart",
+    "lineChartItemDefinitions": [
+      {
+        "id": 1,
+        "chartId": 1,
+        "legendColorHex": "#488AC7",
+        "legendTitle": "ANC 1",
+        "name": "ANC 1 visits",
+        "description": "ANC 1 Visits Occurred",
+        "numberFormat": "none",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='vitals').item.where(linkId='no-of-anc-visits').answer.where(value>=1).count()"
+        }
+      },
+      {
+        "id": 2,
+        "chartId": 1,
+        "legendColorHex": "#FF9933",
+        "legendTitle": "ANC 4",
+        "name": "ANC 4 visits",
+        "description": "ANC 4 Visits Occurred",
+        "numberFormat": "none",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='vitals').item.where(linkId='no-of-anc-visits').answer.where(value>=4).count()"
+        }
+      },
+      {
+        "id": 3,
+        "chartId": 1,
+        "legendColorHex": "#808080",
+        "legendTitle": "ANC 4/1",
+        "name": "ANC 4/1 Visits",
+        "description": "ANC 4/1",
+        "numberFormat": "none",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='vitals').item.where(linkId='no-of-anc-visits').answer.where(value>3).count() / Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='vitals').item.where(linkId='no-of-anc-visits').answer.where(value>=1).count()",
+          "transformServer": "getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Birth Register",
+    "categoryId": "birth-register",
+    "description": "Birth Register Line Chart",
+    "lineChartItemDefinitions": [
+      {
+        "id": 1,
+        "chartId": 2,
+        "legendColorHex": "#488AC7",
+        "legendTitle": "Male",
+        "name": "Male",
+        "description": "Male child",
+        "numberFormat": "none",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/childBirth-registration').item.where(linkId ='child-patient-details').item.where(linkId = 'gender').answer.value.where(display='Male').count()"
+        }
+      },
+      {
+        "id": 2,
+        "chartId": 2,
+        "legendColorHex": "#FF9933",
+        "legendTitle": "Female",
+        "name": "Female",
+        "description": "Female child",
+        "numberFormat": "none",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/childBirth-registration').item.where(linkId ='child-patient-details').item.where(linkId = 'gender').answer.value.where(display='Female').count()"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,50 @@
+{
+  "id": "category",
+  "name": "Categories",
+  "options": [
+    {
+      "id": "antenatal",
+      "name": "Antenatal"
+    },
+    {
+      "id": "labour-and-delivery",
+      "name": "Labour & Delivery"
+    },
+    {
+      "id": "postnatal",
+      "name": "Postnatal"
+    },
+    {
+      "id": "birth-register",
+      "name": "Birth Register"
+    },
+    {
+      "id": "child-immunization",
+      "name": "Child Immunization"
+    },
+    {
+      "id": "fp",
+      "name": "Family Planning"
+    },
+    {
+      "id": "tetanus-diphtheria",
+      "name": "Tetanus Diphtheria"
+    },
+    {
+      "id": "child-growth-monitoring",
+      "name": "Child Growth Monitoring"
+    },
+    {
+      "id": "in-patient",
+      "name": "In Patient"
+    },
+    {
+      "id": "community-immunization",
+      "name": "Community Immunization"
+    },
+    {
+      "id": "out-patient",
+      "name": "Out Patient"
+    }
+  ]
+}

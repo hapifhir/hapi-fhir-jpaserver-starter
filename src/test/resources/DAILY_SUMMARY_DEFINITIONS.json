@@ -1,0 +1,2938 @@
+[
+  {
+    "categoryId": "patient-bio-data",
+    "daily": [
+      [
+        {
+          "columnName": "Name",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Patient).where(birthDate <= @2013-01-01).exists(),Bundle.entry.resource.ofType(Patient).where(birthDate <= @2013-01-01).name,Bundle.entry.resource.ofType(Patient).name)"
+          }
+        },
+        {
+          "columnName": "Card Number",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Patient).where(birthDate <= @2013-01-01).identifier.where(system='http://iprdgroup.com/identifiers/patient-card').exists(),Bundle.entry.resource.ofType(Patient).where(birthDate <= @2013-01-01).identifier.where(system='http://iprdgroup.com/identifiers/patient-card').value,Bundle.entry.resource.ofType(Patient).identifier.where(system='http://iprdgroup.com/identifiers/patient-card').value)"
+          }
+        },
+        {
+          "columnName": "Date",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Encounter).where(meta.tag.empty() or meta.tag.code = 'patient-registration' or meta.tag.code = 'childBirth-registration').period.end.distinct()"
+          }
+        },
+        {
+          "columnName": "Date of Birth",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Patient).where(birthDate <= @2013-01-01).exists(),Bundle.entry.resource.ofType(Patient).where(birthDate <= @2013-01-01).birthDate,Bundle.entry.resource.ofType(Patient).birthDate)"
+          }
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "noOfCols": 7,
+        "items": [
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Maternal Health(Ante-Natal Care)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Total",
+            "bold": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryId": "antenatal",
+    "daily": [
+      [
+        {
+          "columnName": "ANC Attendance",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/anc-registration').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Parity",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE12').value"
+          }
+        },
+        {
+          "columnName": "LMP",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B6.DE14').value"
+          }
+        },
+        {
+          "columnName": "Gestational Age (Weeks)",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B6.DE14').value"
+          }
+        },
+        {
+          "columnName": "Weight",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code = 'ANC.B8.DE3' and (meta.tag.code='anc-visit' or meta.tag.code='vitals')).value"
+          }
+        },
+        {
+          "columnName": "Height",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code = 'ANC.B8.DE1' and (meta.tag.code='anc-visit' or meta.tag.code='vitals')).value"
+          }
+        },
+        {
+          "columnName": "Systolic BP",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B8.DE17' and (meta.tag.code='anc-visit' or meta.tag.code='vitals')).value"
+          }
+        },
+        {
+          "columnName": "Diastolic BP",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B8.DE19' and (meta.tag.code='anc-visit' or meta.tag.code='vitals')).value"
+          }
+        },
+        {
+          "columnName": "ANC Visits till date",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/vitals').repeat(item).where(linkId = 'no-of-anc-visits').answer.valueInteger"
+          }
+        },
+        {
+          "columnName": "Counselling of HIV Testing Services",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE14').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Counselling of Female Genital Mutilation(FGM)",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE1').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Counselling of Family Planning",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE2').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Counselling of Maternal Nutrition",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE3').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Counselling of Early Initiation of Breastfeeding",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code= 'ANC.B10.DE164').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Counselling of Exclusive Breastfeeding",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code= 'IPRD.DE13').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Syphilis Testing Not Done",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='ANC.B9.DE96').where(status='not-done').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Syphilis Testing Positive",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.B9.DE108').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Syphilis Testing Negative",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.B9.DE109').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Syphilis Testing Treated",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='ANC.B10.DE82').where(status='completed').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Hepatitis B Testing Not Done",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='ANC.B9.DE60').where(status='not-done').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Hepatitis B Positive",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.B9.DE72').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Hepatitis B Negative",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.B9.DE73').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Hepatitis B Treated",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='ANC.B10.DE79').where(status='completed').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Hepatitis C Testing Not Done",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='ANC.B9.DE78').where(status='not-done').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Hepatitis C Positive",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.B9.DE75').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Hepatitis C Negative",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.B9.DE76').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Hepatitis C Treated",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='ANC.B10.DE80').where(status='completed').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Hematology Blood Test HB",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B9.DE186').value"
+          }
+        },
+        {
+          "columnName": "Hematology Blood Test PCV",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'blood-pcv').value"
+          }
+        },
+        {
+          "columnName": "Sugar (Gestational Diabetes)",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B9.DE168').value"
+          }
+        },
+        {
+          "columnName": "Urinalys Sugar",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B9.DE150').value"
+          }
+        },
+        {
+          "columnName": "Sugar Proteins",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B9.DE144').value"
+          }
+        },
+        {
+          "columnName": "LLIN given",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'llin-given').value"
+          }
+        },
+        {
+          "columnName": "Doses of IPT given",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('IPTp-SP dose')).vaccineCode"
+          }
+        },
+        {
+          "columnName": "Hemanitic (Iron and Folic Acid Supplement) given",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B10.DE92').value"
+          }
+        },
+        {
+          "columnName": "Td Dose given",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('Tetanus toxoid')).vaccineCode"
+          }
+        },
+        {
+          "columnName": "Associated Problems",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE8').value"
+          }
+        },
+        {
+          "columnName": "Outcome of Visit",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'outcome-of-visit').value"
+          }
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "noOfCols": 7,
+        "items": [
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Maternal Health(Ante-Natal Care)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Total",
+            "bold": true
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 1,
+            "content": "Antenatal Attendance by Pregnant Women"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "10-14 yrs",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "15-19 yrs",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "20-35 yrs",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "35-49 yrs",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": ">= 50 yrs",
+            "bold": true
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Patient).birthDate",
+              "transformReport": "verifyGreaterThanEqualToOnFhirPathValue(31556952)"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Patient).birthDate",
+              "transformReport": "verifyGreaterThanEqualToAndLessThanEqualToOnFhirPathValue(31556952,441797328)"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Patient).birthDate",
+              "transformReport": "verifyGreaterThanEqualToAndLessThanEqualToOnFhirPathValue(441797328,599582088)"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Patient).birthDate",
+              "transformReport": "verifyGreaterThanEqualToAndLessThanEqualToOnFhirPathValue(599582088,1104493320)"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Patient).birthDate",
+              "transformReport": "verifyGreaterThanEqualToAndLessThanEqualToOnFhirPathValue(1104493320,1546290648)"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Patient).birthDate",
+              "transformReport": "verifyGreaterThanEqualToOnFhirPathValue(1546290648)"
+            }
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 1,
+            "content": "Antenatal Attendance First Visit"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 3,
+            "content": "Gestation Age before 20 Weeks(GA < 20Wks)",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "content": "Gestation Age 20 Weeks or later(GA >= 20Wks)",
+            "bold": true
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='menstrual-pregnancy-details').item.where(linkId='menstrual-period-details').item.where(linkId='last-menstrual-period').answer[0].value",
+              "transformReport": "verifyGreaterThanEqualToOnFhirPathValueForDateTimeType(0)"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 3,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='menstrual-pregnancy-details').item.where(linkId='menstrual-period-details').item.where(linkId='last-menstrual-period').answer[0].value",
+              "transformReport": "verifyGreaterThanEqualToAndLessThanOnFhirPathValueForDateTimeType(0,12096000)"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 3,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='menstrual-pregnancy-details').item.where(linkId='menstrual-period-details').item.where(linkId='last-menstrual-period').answer[0].value",
+              "transformReport": "verifyGreaterThanEqualToOnFhirPathValueForDateTimeType(12096000)"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Pregnant Women that attended Antenatal Clinic for 4th Visit"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='vitals').item.where(linkId='no-of-anc-visits').answer.where(value=4).count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Pregnant Women that attended Antenatal Clinic for 8th Visit"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='vitals').item.where(linkId='no-of-anc-visits').answer.where(value=8).count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Pregnant Women counselled on Female Genital Mutilation(FGM)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE1').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Pregnant Women counselled on Family Planning(FP)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE2').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Pregnant Women counselled on Maternal Nutrition during ANC"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE3').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "ANC Syphilis Test Done"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Procedure).where(code.coding.code='ANC.B9.DE96').where(status='completed').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "ANC Syphilis Test Positive"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.B9.DE108').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "ANC Syphilis Case Treated"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Procedure).where(code.coding.code='ANC.B10.DE82').where(status='completed').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "ANC Hepatitis B Test Done"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Procedure).where(code.coding.code='ANC.B9.DE60').where(status='completed').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "ANC Hepatitis B Test Positive"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.B9.DE72').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "ANC Hepatitis B case referred"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Procedure).where(code.coding.code='ANC.B10.DE79').where(status='completed').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "ANC Hepatitis C Test Done"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Procedure).where(code.coding.code='ANC.B9.DE78').where(status='completed').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "ANC Hepatitis C Test Positive"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.B9.DE75').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "ANC Hepatitis C Case referred"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Procedure).where(code.coding.code='ANC.B10.DE80').where(status='completed').count()"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryId": "labour-and-delivery",
+    "daily": [
+      [
+        {
+          "columnName": "Time of Client",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE39').value"
+          }
+        },
+        {
+          "columnName": "Decision in seeking care",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE42').value"
+          }
+        },
+        {
+          "columnName": "Transportation",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE47').value"
+          }
+        },
+        {
+          "columnName": "Date of Delivery",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.End.12').value"
+          }
+        },
+        {
+          "columnName": "Mode of Delivery",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.End.18').value"
+          }
+        },
+        {
+          "columnName": "Partograph used?",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/labour').repeat(item).where(linkId='8.1').answer.value"
+          }
+        },
+        {
+          "columnName": "Received Oxytoxin - Administered?",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE32').value"
+          }
+        },
+        {
+          "columnName": "Received Misoprotol - Administered?",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE33').value"
+          }
+        },
+        {
+          "columnName": "Maternal complications",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.End.25').value"
+          }
+        },
+        {
+          "columnName": "Pregnant women admitted with Eclampsia who received MgSO4",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE50').value"
+          }
+        },
+        {
+          "columnName": "Who took delivery of child?",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/delivery').repeat(item).where(linkId='11.1').answer.value.display"
+          }
+        },
+        {
+          "columnName": "Name of the Person who took delivery",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/delivery').repeat(item).where(linkId='11.2').answer.value"
+          }
+        },
+        {
+          "columnName": "Time of Delivery",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.End.12').value"
+          }
+        },
+        {
+          "columnName": "Preterm Birth",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.End.17').value"
+          }
+        },
+        {
+          "columnName": "Parity - labour-and-delivery",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B6.DE32').value"
+          }
+        },
+        {
+          "columnName": "Not Breathing/Crying at Birth",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE61').value"
+          }
+        },
+        {
+          "columnName": "Resuscitated with Bag & Mask Code",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE62').value"
+          }
+        },
+        {
+          "columnName": "Birth Weight",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.End.23').value"
+          }
+        },
+        {
+          "columnName": "StillBirth Type",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE63').value"
+          }
+        },
+        {
+          "columnName": "Is Baby Dead?",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE67').value"
+          }
+        },
+        {
+          "columnName": "Sex of Baby",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/delivery').item.where(linkId='2.0').item.where(linkId='2.3').answer.value"
+          }
+        },
+        {
+          "columnName": "Time Cord was Clamped",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE68').value"
+          }
+        },
+        {
+          "columnName": "Chlorhexidine (CHX) Gel Application",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE71').value"
+          }
+        },
+        {
+          "columnName": "Initiation of Breastfeeding and Thermal Care",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE74').value"
+          }
+        },
+        {
+          "columnName": "Body Temperature at 1 Hour",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE77').value"
+          }
+        },
+        {
+          "columnName": "Exclusive Breast Feeding - Mother was Councelled or Not?",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE78').value"
+          }
+        },
+        {
+          "columnName": "Postpartum Family Planning",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B10.DE144').value"
+          }
+        },
+        {
+          "columnName": "Pregnancy Outcome",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/labour').repeat(item).where(linkId='12.1.1').answer.value"
+          }
+        },
+        {
+          "columnName": "Is MDA conducted?",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/labour').repeat(item).where(linkId='12.2.1').answer.value"
+          }
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "noOfCols": 7,
+        "items": [
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Labour & Delivery"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Total",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Decision in Seeking Care < 24 hours"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE43').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Transportation in:"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE48').count() + Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE49').count()"
+            }
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 1,
+            "content": "Deliveries:"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "content": "Spontaneous Vaginal Delivery (SVD)",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Assisted",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "content": "Caesarean Section:",
+            "bold": true
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.End.19').count() + Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE30').count() + Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.End.22').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.End.19').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE30').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='ANC.End.22').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Preterm Birth"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code='ANC.End.17').where(value=true).count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Deliveries with Complications"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code='ANC.End.25').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Deliveries Monitored Using a Partograph"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/labour').repeat(item).where(linkId='8.1').answer.value.count()"
+            }
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 1,
+            "content": "Uterotonics"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 3,
+            "content": "Oxytocin",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "content": "Misoprostol",
+            "bold": true
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 2,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE32').where(value=true).count() + Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE33').where(value=true).count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 3,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE32').where(value=true).count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE33').where(value=true).count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Women Admitted with Eclampsia Who Received Magnesium Sulphate MgS04: "
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code='IPRD.DE50').where(value=true).count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Abortions"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE54').count() + Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE55').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Deliveries taken by skilled birth attendants (SBA)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/delivery').repeat(item).where(linkId='11.1').answer.where(value.code='trained-staff').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Women admitted for complications of unsafe abortion"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.End.25').count()"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryId": "postnatal",
+    "daily": [
+      [
+        {
+          "columnName": "Postnatal Clinic Attendance",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE90').value"
+          }
+        },
+        {
+          "columnName": "Parity - postnatal",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE12').value"
+          }
+        },
+        {
+          "columnName": "Associated Problems",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Condition).where(category.coding.code= 'problem-list-item').code"
+          }
+        },
+        {
+          "columnName": "Delivery Day from today",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE101').value"
+          }
+        },
+        {
+          "columnName": "Birth Day from today",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE108').value"
+          }
+        },
+        {
+          "columnName": "Maternal Care Counselling - Maternal Nutrition",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE3').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Maternal Care Counselling - Exclusive Breast Feeding",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE13').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Maternal Care Counselling - Complementary Feeding",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE106').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Maternal Care Counselling - Postpartum Family Planning",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE144').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Maternal Care Counselling - Female Genital Mutilation",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE1').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Maternal Care Counselling - Infection Prevention",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Procedure).where(code.coding.code='IPRD.DE107').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Vaginal Examination",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Procedure).where(code.coding.code= 'IPRD.DE119').status"
+          }
+        },
+        {
+          "columnName": "HB/PCV",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= '20570-8').value"
+          }
+        },
+        {
+          "columnName": "Urinalys - Sugar",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B9.DE150').value"
+          }
+        },
+        {
+          "columnName": "Urinalys - Proteins",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B9.DE144').value"
+          }
+        },
+        {
+          "columnName": "TD given",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('TD')).vaccineCode"
+          }
+        },
+        {
+          "columnName": "Newborn with Danger Signs",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Condition).where(code.coding.code = 'IPRD.DE109' or code.coding.code = 'IPRD.DE110' or code.coding.code = 'IPRD.DE111' or code.coding.code = 'IPRD.DE112' or code.coding.code = 'IPRD.DE113' or code.coding.code = 'IPRD.DE114' or code.coding.code = 'IPRD.DE115').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Neonatal Tetanus",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Condition).where(code.coding.code= 'IPRD.DE114').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Neonatal Jaundice",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Condition).where(code.coding.code= 'IPRD.DE115').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "KMC Status Admitted",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Observation).value.where(coding.code= 'IPRD.DE117').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "KMC Status Discharged",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE118').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Outcome of Visit - Postnatal",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'outcome-of-visit').value"
+          }
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "noOfCols": 7,
+        "items": [
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Postnatal"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Total",
+            "bold": true
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 1,
+            "content": "Postnatal Clinic Visits"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "content": "Postnatal Clinic Visits within 1 day of delivery",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Postnatal Clinic Visits within 2-3 day of delivery",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Postnatal Clinic Visits within 4-7 day of delivery",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Postnatal Clinic Visits >7 days of delivery:",
+            "bold": true
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE102').count() + Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE103').count() + Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE104').count()  + Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE105').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE102').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE103').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE104').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.where(coding.code='IPRD.DE105').count()"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryId": "fp",
+    "daily": [
+      [
+        {
+          "columnName": "Systolic BP - Family Planning",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B8.DE17' and meta.tag.code='family-planning').value"
+          }
+        },
+        {
+          "columnName": "Diastolic Bp - Family Planning",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B8.DE19' and meta.tag.code='family-planning').value"
+          }
+        },
+        {
+          "columnName": "First Time Modern FP User",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE96').value"
+          }
+        },
+        {
+          "columnName": "Type of FP Client",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE97').value"
+          }
+        },
+        {
+          "columnName": "Sub-type of FP Client",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/family-planning').item.where(linkId='9.0').answer.value.display"
+          }
+        },
+        {
+          "columnName": "Family Planning Method Selected",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B10.DE145').value"
+          }
+        },
+        {
+          "columnName": "Outcome of Family Planning Visit to Health Facility",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE160').value"
+          }
+        },
+        {
+          "columnName": "Counselled on Family Planning",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE85').value"
+          }
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "noOfCols": 7,
+        "items": [
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Family Planning"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Total",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Family Planning (FP) clients counselled"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/family-planning').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "New family planning acceptors"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/family-planning').item.where(linkId = '9.0').answer.value.where(code = 'na').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Females using modern contraception"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/family-planning').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Client given oral pills"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code='IPRD.DE161').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Client given Injectables"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code='IPRD.DE162').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "IUD Inserted"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code='IPRD.DE164').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Implants inserted"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code='IPRD.DE163').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Voluntary Sterilization"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code='IPRD.DE165').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Individual referred for FP services from PMTCT (HIV + Pregnant Women)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE97').count()"
+            }
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 2,
+            "content": "Condoms distributed (by type)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "content": "Male Condom",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "content": "Female Condom",
+            "bold": true
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27912-7').count() + Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27914-3').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27912-7').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 2,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).value.coding.where(code = 'LA27914-3').count()"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryId": "birth-register",
+    "daily": [
+      [
+        {
+          "columnName": "Mother’s Hospital Card No",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Patient).where(birthDate <= @2013-01-01).identifier.where(system='http://iprdgroup.com/identifiers/patient-card').value"
+          }
+        },
+        {
+          "columnName": "Date of Child’s Registration",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Encounter).where(meta.tag.empty() or meta.tag.code = 'delivery').period.end.distinct()"
+          }
+        },
+        {
+          "columnName": "Date of Birth - Baby",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Patient).where(birthDate >= @2013-01-01).birthDate"
+          }
+        },
+        {
+          "columnName": "Gender",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/childBirth-registration').item.where(linkId ='child-patient-details').item.where(linkId = 'gender').answer.value.display"
+          }
+        },
+        {
+          "columnName": "Birth Place",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/childBirth-registration').item.where(linkId ='basic-child-information').item.where(linkId = 'birth-place').answer.value"
+          }
+        },
+        {
+          "columnName": "Child’s Name",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Patient).where(birthDate >= @2013-01-01).name"
+          }
+        },
+        {
+          "columnName": "Father Name",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/childBirth-registration').item.where(linkId ='father-details').item.where(linkId = 'fathers-full-name').answer.value"
+          }
+        },
+        {
+          "columnName": "Mother Name",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/childBirth-registration').item.where(linkId = 'mother-patient-details').item.where(linkId = 'mother-name').item.where((linkId = 'first-name') or (linkId = 'middle-name') or (linkId = 'last-name')).answer.value"
+          }
+        },
+        {
+          "columnName": "Father State of Origin",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/childBirth-registration').item.where(linkId ='father-details').item.where(linkId = 'fathers-state-of-origin').answer.value"
+          }
+        },
+        {
+          "columnName": "Residential Address of mother/father/guardians",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Patient).where(birthDate <= @2013-01-01).address"
+          }
+        },
+        {
+          "columnName": "Birth Certificate Issued Date",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code = 'IPRD.DE186').value"
+          }
+        },
+        {
+          "columnName": "Birth Certificate Number",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/childBirth-registration').item.where(linkId ='identifier-details').item.where(linkId='birth-certificate-details').item.where(linkId='birth-certificate-number').answer.value"
+          }
+        },
+        {
+          "columnName": "Birth Certificate Collected Date",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code = 'IPRD.DE187').value"
+          }
+        },
+        {
+          "columnName": "Person who collected the Certificate",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/childBirth-registration').item.where(linkId ='other-information').item.where(linkId = '12.0').answer.value"
+          }
+        },
+        {
+          "columnName": "Responsible Officer",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/childBirth-registration').item.where(linkId ='other-information').item.where(linkId = '13.0').answer.value"
+          }
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "noOfCols": 7,
+        "items": [
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Birth Register"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Total",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Children under 1 year registered"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/childBirth-registration').item.where(linkId ='child-patient-details').item.where(linkId = 'gender').answer.value.count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Birth certificate issued"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code = 'IPRD.DE186').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Birth certificate collected"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code = 'IPRD.DE187').count()"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryId": "child-immunization",
+    "daily": [
+      [
+        {
+          "columnName": "Date of child’s visit",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Encounter).where(meta.tag.code = 'delivery' or meta.tag.empty()).period.end.distinct()"
+          }
+        },
+        {
+          "columnName": "Child’s Name",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Patient).where(birthDate >= @2013-01-01).name"
+          }
+        },
+        {
+          "columnName": "Child’s Card No",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Patient).where(birthDate >= @2013-01-01).identifier.where(system='http://iprdgroup.com/identifiers/patient-card').value"
+          }
+        },
+        {
+          "columnName": "Child’s Gender",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Patient).where(birthDate >= @2013-01-01).gender"
+          }
+        },
+        {
+          "columnName": "Child’s date of birth",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Patient).where(birthDate >= @2013-01-01).birthDate"
+          }
+        },
+        {
+          "columnName": "Hep B 0 (birth)",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE153').occurrence"
+          }
+        },
+        {
+          "columnName": "OPV 0 (Birth)",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE138').occurrence"
+          }
+        },
+        {
+          "columnName": "BCG",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE152').occurrence"
+          }
+        },
+        {
+          "columnName": "OPV 1",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE139').occurrence"
+          }
+        },
+        {
+          "columnName": "Penta 1",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE143').occurrence"
+          }
+        },
+        {
+          "columnName": "PCV 1",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE146').occurrence"
+          }
+        },
+        {
+          "columnName": "Rota 1",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE149').occurrence"
+          }
+        },
+        {
+          "columnName": "OPV 2",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE140').occurrence"
+          }
+        },
+        {
+          "columnName": "Penta 2",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE144').occurrence"
+          }
+        },
+        {
+          "columnName": "PCV 2",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE147').occurrence"
+          }
+        },
+        {
+          "columnName": "Rota 2",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE150').occurrence"
+          }
+        },
+        {
+          "columnName": "OPV 3",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE141').occurrence"
+          }
+        },
+        {
+          "columnName": "Penta 3",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE145').occurrence"
+          }
+        },
+        {
+          "columnName": "PCV 3",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE148').occurrence"
+          }
+        },
+        {
+          "columnName": "Rota 3",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE151').occurrence"
+          }
+        },
+        {
+          "columnName": "IPV",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE142').occurrence"
+          }
+        },
+        {
+          "columnName": "Vitamin A1",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE136').occurrence"
+          }
+        },
+        {
+          "columnName": "Vitamin A2",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE137').occurrence"
+          }
+        },
+        {
+          "columnName": "MEASLES 1",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE132').occurrence"
+          }
+        },
+        {
+          "columnName": "Yellow Fever",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE135').occurrence"
+          }
+        },
+        {
+          "columnName": "Men A",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE134').occurrence"
+          }
+        },
+        {
+          "columnName": "MEASLES 2",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE133').occurrence"
+          }
+        },
+        {
+          "columnName": "HPV",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE131').occurrence"
+          }
+        },
+        {
+          "columnName": "LLIN Given",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE20').occurrence"
+          }
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "noOfCols": 7,
+        "items": [
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Child Immunization"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Total",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "OPV 0 (Birth)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE138').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Hep B 0 (birth)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE153').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "BCG"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE152').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "OPV 1"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE139').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Penta 1"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE143').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "PCV 1"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE146').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Rota 1"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE149').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "OPV 2"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE140').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Penta 2"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE144').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "PCV 2"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE147').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Rota 2"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE150').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "OPV 3"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE141').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Penta 3"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE145').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "PCV 3 "
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE148').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Rota 3"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE151').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "IPV"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE142').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Vitamin A1"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE136').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "MEASLES 1"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE132').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Yellow Fever"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE135').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "MEASLES 2"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE133').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Men A"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE134').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "HPV"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Immunization).where(meta.tag.code = 'child-immunization').where(vaccineCode.coding.code='IPRD.DE131').count()"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryId": "tetanus-diphtheria",
+    "daily": [
+      [
+        {
+          "columnName": "TD1",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.1.1').answer.value.where(code='IPRD.DE120').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "TD2",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.2.1').answer.value.where(code='IPRD.DE121').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "TD3",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.3.1').answer.value.where(code='IPRD.DE122').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "TD4",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.4.1').answer.value.where(code='IPRD.DE123').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "TD5",
+          "fhirPath": {
+            "expression": "iif(Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.5.1').answer.value.where(code='IPRD.DE124').exists(),true,'')"
+          }
+        },
+        {
+          "columnName": "Session Type",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').item.where(linkId = '2.0').answer.value.display"
+          }
+        },
+        {
+          "columnName": "Outreach or Mobile Site name",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').item.where(linkId = '3.0').answer.value.display"
+          }
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "noOfCols": 7,
+        "items": [
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Tetanus Diphtheria"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Total",
+            "bold": true
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 1,
+            "content": "Non-Pregnant given Tetanus Diphtheria(TD) vaccine"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "TD1",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "TD2",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "TD3",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "TD4",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "TD5",
+            "bold": true
+          },
+          {
+            "rowSpan": 2,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.1.1').answer.value.where(code='IPRD.DE120').count() + Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.2.1').answer.value.where(code='IPRD.DE121').count() + Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.3.1').answer.value.where(code='IPRD.DE122').count() + Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.4.1').answer.value.where(code='IPRD.DE123').count() + Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.5.1').answer.value.where(code='IPRD.DE124').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.1.1').answer.value.where(code='IPRD.DE120').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.2.1').answer.value.where(code='IPRD.DE121').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.3.1').answer.value.where(code='IPRD.DE122').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.4.1').answer.value.where(code='IPRD.DE123').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/tetanus-diphtheria').repeat(item).where(linkId='1.2.5.1').answer.value.where(code='IPRD.DE124').count()"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryId": "child-growth-monitoring",
+    "daily": [
+      [
+        {
+          "columnName": "Sex of Baby - child growth monitor",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Patient).where(birthDate >= @2013-01-01).gender"
+          }
+        },
+        {
+          "columnName": "Baby/Child Age",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').item.where(linkId='6.0').answer.value.display"
+          }
+        },
+        {
+          "columnName": "Type of Visit",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE155').value"
+          }
+        },
+        {
+          "columnName": "Infant Feeding",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE168').value"
+          }
+        },
+        {
+          "columnName": "Complementary Feeding",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE106').value"
+          }
+        },
+        {
+          "columnName": "Height of Baby",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(meta.tag.code = 'child-growth-monitoring').where(code.coding.code= 'ANC.B8.DE1').value"
+          }
+        },
+        {
+          "columnName": "Weight of Baby",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(meta.tag.code = 'child-growth-monitoring').where(code.coding.code= 'ANC.End.23' or code.coding.code= 'ANC.B8.DE3').value"
+          }
+        },
+        {
+          "columnName": "Bilateral Pitting Oedema",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE174').value"
+          }
+        },
+        {
+          "columnName": "MUAC Value",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE154').value"
+          }
+        },
+        {
+          "columnName": "Vitamin A Suppliment Provided",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').item.where(linkId='14.0').item.where(linkId='14.1').answer.value"
+          }
+        },
+        {
+          "columnName": "Deworming Tablet Provided",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').item.where(linkId='15.0').item.where(linkId='15.1').answer.value"
+          }
+        },
+        {
+          "columnName": "Micronutrient Powder",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').item.where(linkId='16.0').item.where(linkId='16.1').answer.value"
+          }
+        },
+        {
+          "columnName": "Sources of referral(OTP)",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').item.where(linkId='17.0').item.where(linkId='17.1').answer.value.display"
+          }
+        },
+        {
+          "columnName": "Eligibility for OTP Admission",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').item.where(linkId='17.0').item.where(linkId='17.2').answer.value.display"
+          }
+        },
+        {
+          "columnName": "Outcome of Treatment",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').item.where(linkId='17.0').item.where(linkId='17.3').answer.value.display"
+          }
+        },
+        {
+          "columnName": "Sources of referral(OTP)",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').item.where(linkId='17.0').item.where(linkId='17.1').answer.value.display"
+          }
+        },
+        {
+          "columnName": "Eligibility for OTP admission",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').item.where(linkId='17.0').item.where(linkId='17.2').answer.value.display"
+          }
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "noOfCols": 7,
+        "items": [
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Child Growth Monitoring"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Total",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Clients counselled on Infant and Young Child Nutrition (IYCN)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE168').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Children 0-5 months receiving exclusive breast feeding (EBF))"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/child-growth-monitoring').where(item.where(linkId='6.0').answer.value.code='0-5months').item.where(linkId='7.0').item.where(linkId='7.1').answer.value.where(code='IPRD.DE13').display.count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Children 6-23 months who received Micronutrient Powder (MNP)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/child-growth-monitoring').where(item.where(linkId='6.0').answer.value.code = '6-23months').where(item.where(linkId='16.0').item.where(linkId='16.1').answer.value = true).count()"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryId": "community-immunization",
+    "daily": [
+      [
+        {
+          "columnName": "Community Name",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId='1.1').answer.value"
+          }
+        },
+        {
+          "columnName": "Hep B 0(Birth)",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.2.1.1').answer.value.where(code = 'IPRD.DE153').display"
+          }
+        },
+        {
+          "columnName": "OPV 0 (birth)",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.3.1.1').answer.value.where(code = 'IPRD.DE138').display"
+          }
+        },
+        {
+          "columnName": "OPV 1",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.4.1.1').answer.value.where(code = 'IPRD.DE139').display"
+          }
+        },
+        {
+          "columnName": "Penta 1",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.5.1.1').answer.value.where(code = 'IPRD.DE143').display"
+          }
+        },
+        {
+          "columnName": "PCV 1",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.6.1.1').answer.value.where(code = 'IPRD.DE146').display"
+          }
+        },
+        {
+          "columnName": "Rota 1",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.7.1.1').answer.value.where(code = 'IPRD.DE149').display"
+          }
+        },
+        {
+          "columnName": "OPV 2",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.8.1.1').answer.value.where(code = 'IPRD.DE140').display"
+          }
+        },
+        {
+          "columnName": "Penta 2",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.9.1.1').answer.value.where(code = 'IPRD.DE144').display"
+          }
+        },
+        {
+          "columnName": "PCV 2",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.10.1.1').answer.value.where(code = 'IPRD.DE147').display"
+          }
+        },
+        {
+          "columnName": "Rota 2",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.11.1.1').answer.value.where(code = 'IPRD.DE150').display"
+          }
+        },
+        {
+          "columnName": "OPV 3",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.12.1.1').answer.value.where(code = 'IPRD.DE141').display"
+          }
+        },
+        {
+          "columnName": "Penta 3",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.13.1.1').answer.value.where(code = 'IPRD.DE145').display"
+          }
+        },
+        {
+          "columnName": "PCV 3",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.14.1.1').answer.value.where(code = 'IPRD.DE148').display"
+          }
+        },
+        {
+          "columnName": "Rota 3",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.15.1.1').answer.value.where(code = 'IPRD.DE151').display"
+          }
+        },
+        {
+          "columnName": "IPV",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.16.1.1').answer.value.where(code = 'IPRD.DE142').display"
+          }
+        },
+        {
+          "columnName": "BCG",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.17.1.1').answer.value.where(code = 'IPRD.DE152').display"
+          }
+        },
+        {
+          "columnName": "Vitamin A1",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.18.1.1').answer.value.where(code = 'IPRD.DE136').display"
+          }
+        },
+        {
+          "columnName": "Measles 1",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.19.1.1').answer.value.where(code = 'IPRD.DE132').display"
+          }
+        },
+        {
+          "columnName": "Vitamin A2",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.23.1.1').answer.value.where(code = 'IPRD.DE137').display"
+          }
+        },
+        {
+          "columnName": "Human Papilloma Virus",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.24.1.1').answer.value.where(code = 'IPRD.DE131').display"
+          }
+        },
+        {
+          "columnName": "Long-lasting Insecticidal Nets (LLINs)",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.25.1.1').answer.value.where(code = 'IPRD.DE20').display"
+          }
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "noOfCols": 7,
+        "items": [
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Community Immunization"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Total",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Hep B 0(Birth)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.2.1.1').answer.value.where(code = 'IPRD.DE153').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "OPV 0 (birth)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.3.1.1').answer.value.where(code = 'IPRD.DE138').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "OPV 1"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.4.1.1').answer.value.where(code = 'IPRD.DE139').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Penta 1"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.5.1.1').answer.value.where(code = 'IPRD.DE143').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "PCV 1"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.6.1.1').answer.value.where(code = 'IPRD.DE146').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Rota 1"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.7.1.1').answer.value.where(code = 'IPRD.DE149').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "OPV 2"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.8.1.1').answer.value.where(code = 'IPRD.DE140').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Penta 2"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.9.1.1').answer.value.where(code = 'IPRD.DE144').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "PCV 2"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.10.1.1').answer.value.where(code = 'IPRD.DE147').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Rota 2"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.11.1.1').answer.value.where(code = 'IPRD.DE150').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "OPV 3"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.12.1.1').answer.value.where(code = 'IPRD.DE141').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Penta 3"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.13.1.1').answer.value.where(code = 'IPRD.DE145').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "PCV 3"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.14.1.1').answer.value.where(code = 'IPRD.DE148').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Rota 3"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.15.1.1').answer.value.where(code = 'IPRD.DE151').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "IPV"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.16.1.1').answer.value.where(code = 'IPRD.DE142').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "BCG"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.17.1.1').answer.value.where(code = 'IPRD.DE152').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Vitamin A1"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.18.1.1').answer.value.where(code = 'IPRD.DE136').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Measles 1"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.19.1.1').answer.value.where(code = 'IPRD.DE132').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Vitamin A2"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.23.1.1').answer.value.where(code = 'IPRD.DE137').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Human Papilloma Virus"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.24.1.1').answer.value.where(code = 'IPRD.DE131').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Long-lasting Insecticidal Nets (LLINs)"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/community-immunization').repeat(item).where(linkId = '3.25.1.1').answer.value.where(code = 'IPRD.DE20').count()"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryId": "in-patient",
+    "daily": [
+      [
+        {
+          "columnName": "Diagnosis",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/in-patient').repeat(item).where(linkId='3.1').answer.value.display"
+          }
+        },
+        {
+          "columnName": "Admission Outcome",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE188').value"
+          }
+        },
+        {
+          "columnName": "Laboratory test",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/in-patient').repeat(item).where(linkId='4.1').answer.value.display"
+          }
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "noOfCols": 7,
+        "items": [
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "In Patient"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Total",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Laboratory tests ordered"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/in-patient').repeat(item).where(linkId='4.1').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Admission outcome"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE188').code.count()"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "categoryId": "out-patient",
+    "daily": [
+      [
+        {
+          "columnName": "Sex(F/M)",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE66').value"
+          }
+        },
+        {
+          "columnName": "Diagnosis",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/out-patient').repeat(item).where(linkId='9.1').answer.value.display"
+          }
+        },
+        {
+          "columnName": "Outcome of visit",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE125').value"
+          }
+        },
+        {
+          "columnName": "Severe Malaria",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'B54').value"
+          }
+        },
+        {
+          "columnName": "Tuberculosis section",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/out-patient').repeat(item).where(linkId = '9.1').answer.value.where(code = 'IPRD.DE222').display"
+          }
+        },
+        {
+          "columnName": "Hepatitis B Screening",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B9.DE66').value"
+          }
+        },
+        {
+          "columnName": "Hepatitis C Screening",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B9.DE89').value"
+          }
+        },
+        {
+          "columnName": "Gender Based Violence",
+          "fhirPath": {
+            "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE193').value"
+          }
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "noOfCols": 7,
+        "items": [
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Out Patient"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "content": "Total",
+            "bold": true
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Persons Screened for TB"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/out-patient').repeat(item).where(linkId = '9.1').answer.value.where(code = 'IPRD.DE222').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Persons tested for Hepatitis B"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B9.DE66').count()"
+            }
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 6,
+            "content": "Persons tested for Hepatitis C"
+          },
+          {
+            "rowSpan": 1,
+            "colSpan": 1,
+            "fhirPath": {
+              "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.B9.DE89').count()"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

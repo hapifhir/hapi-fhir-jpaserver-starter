@@ -1,0 +1,193 @@
+[
+  {
+    "categoryId" : "antenatal",
+    "indicators": [
+      {
+        "id": 0,
+        "name": "ANC Visits 4/1",
+        "description": "Antenatal 4th Visits/ Antental 1st Visits * 100",
+        "redYellow": "0.5",
+        "yellowGreen": "0.8",
+        "numberFormat": "percent",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='vitals').item.where(linkId='no-of-anc-visits').answer.where(value>3).count() / Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='vitals').item.where(linkId='no-of-anc-visits').answer.where(value>=1).count()",
+          "transformServer" : "getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      },
+      {
+        "id": 1,
+        "name": "IpTp2/ANC1",
+        "description": "IPT2p Second Dose / Antenatal 1st Visits *100",
+        "redYellow": "0.7",
+        "yellowGreen": "0.8",
+        "numberFormat": "percent",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(Immunization).where(vaccineCode.coding.display.contains('IPTp-SP dose 2')).count() /  Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='vitals').item.where(linkId='no-of-anc-visits').answer.where(value>=1).count()",
+          "transformServer" : "getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      },
+      {
+        "id": 2,
+        "name": "LLIN/ANC1",
+        "description": "LLIN given in ANC/ Antenatal 1st Visits *100",
+        "redYellow": "0.7",
+        "yellowGreen": "0.8",
+        "numberFormat": "percent",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire='Questionnaire/anc-visit').item.where(linkId='llin-and-ipt-test').item.where(linkId='16.1.0').item.where(linkId='16.1.1').answer.where(value=true).count() /  Bundle.entry.resource.ofType(QuestionnaireResponse).item.where(linkId='vitals').item.where(linkId='no-of-anc-visits').answer.where(value>=1).count()",
+          "transformServer" : "getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      }
+    ]
+  },
+  {
+    "categoryId" : "labour-and-delivery",
+    "indicators": [
+      {
+        "id": 3,
+        "name": "SBA/ Deliveries ",
+        "description": "(Delivery by Skilled birth Attendant / Reported Facility Deliveries) *100",
+        "redYellow": "0.5",
+        "yellowGreen": "0.8",
+        "numberFormat": "percent",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/delivery').item.where(linkId='11.0').item.where(linkId='11.1').answer.where(value.code ='trained-staff').count() / Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.End.18').count()",
+          "transformServer" : "getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      },
+      {
+        "id": 4,
+        "name": "Partograph/Deliveries",
+        "description": "Use of a Partograph in Facility Deliveries",
+        "redYellow": "0.2",
+        "yellowGreen": "0.5",
+        "numberFormat": "percent",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code='IPRD.DE31').where(value=false).count() / Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.End.18').count()",
+          "transformServer" : "getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      }
+    ]
+  },
+  {
+    "categoryId" : "postnatal",
+    "indicators": [
+      {
+        "id": 5,
+        "name": "KMC Admitted/ LBW ",
+        "description": "Kangaroo Mother Care for Newborns with Low Births Weight *100",
+        "redYellow": "0.1",
+        "yellowGreen": "0.2",
+        "numberFormat": "percent",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(Observation).where(value.coding.code= 'IPRD.DE117').count() / Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.End.23').value.where(value<2.5).count()",
+          "transformServer" : "getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      },
+      {
+        "id": 6,
+        "name": "Chlorhexidine/ Live births",
+        "description": "Chlorhexidine Used on Cord / Reported Live Births *100",
+        "redYellow": "0.7",
+        "yellowGreen": "0.8",
+        "numberFormat": "percent",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE71').count() / Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/delivery').item.where(linkId='1.0').answer.value.code.contains('live-birth').count()",
+          "transformServer" : "getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      }
+    ]
+  },
+  {
+    "categoryId" : "birth-register",
+    "indicators": [
+      {
+        "id": 9,
+        "name": "Birth certificate issued/ Registered children",
+        "description": "Birth certificate issues among children registered *100",
+        "redYellow": "0.1",
+        "yellowGreen": "0.2",
+        "numberFormat": "percent",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code = 'IPRD.DE186').count() / Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/childBirth-registration').item.where(linkId ='child-patient-details').item.where(linkId = 'gender').answer.value.count()",
+          "transformServer" : "getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      }
+    ]
+  },
+  {
+    "categoryId": "fp",
+    "indicators": [
+      {
+        "id": 10,
+        "name": "Women using contraceptives/ WRA",
+        "description": "Women registered as contraceptive users/ Women of reproductive age *100",
+        "redYellow": "0.1",
+        "yellowGreen": "0.2",
+        "numberFormat": "percent",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/family-planning').count() / Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/family-planning').count()",
+          "transformServer": "getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      }
+    ]
+  },
+  {
+    "categoryId": "child-growth-monitoring",
+    "indicators": [
+      {
+        "id": 11,
+        "name": "Vitamin A/ 6- 59 month children",
+        "description": "Vitamin A in past quarter/Children 6-59 months *100",
+        "redYellow": "0.1",
+        "yellowGreen": "0.2",
+        "numberFormat": "number",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/child-growth-monitoring').item.where(linkId='14.0').item.where(linkId='14.1').answer.value.count()",
+          "transformServer": "getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      },
+      {
+        "id": 12,
+        "name": "Exclusive BF 0-6 months",
+        "description": "Exclusive breatfeeding/Expected infants 0-6 months *100",
+        "redYellow": "0.7",
+        "yellowGreen": "0.8",
+        "numberFormat": "number",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'IPRD.DE13').count()",
+          "transformServer" : "getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      }
+    ]
+  },
+  {
+    "categoryId": "out-patient",
+    "indicators": [
+      {
+        "id": 13,
+        "name": "Gender based violence cases care received",
+        "description": "Gender based violence cases receiving care among those seen *100",
+        "redYellow": "0.1",
+        "yellowGreen": "0.2",
+        "numberFormat": "percent",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(Procedure).where(category.coding.code='IPRD.DE255').count()",
+          "transformServer": "getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      },
+      {
+        "id": 14,
+        "name": "Screening rate for TB/ 1000",
+        "description": "Persons screened for TB per 1,000 popualtion-year",
+        "redYellow": "0.1",
+        "yellowGreen": "0.2",
+        "numberFormat": "percent",
+        "fhirPath": {
+          "expression": "Bundle.entry.resource.ofType(QuestionnaireResponse).where(questionnaire = 'Questionnaire/out-patient').repeat(item).where(linkId = '9.1').answer.value.where(code = 'IPRD.DE222').count()",
+          "transformServer": "getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgId"
+        }
+      }
+    ]
+  }
+]
