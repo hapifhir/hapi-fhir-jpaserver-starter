@@ -132,10 +132,13 @@ export class OperationOutcomeComponent implements AfterViewInit, OnInit {
   }
 
   getLineNo(issue: fhir.r4.OperationOutcomeIssue): number {
-    if (issue.extension?.length > 0) {
-      return issue.extension[0].valueInteger;
-    }
-    return 0;
+    const line = this.getExtensionIntValue(issue, 'http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line');
+    return line ?? 0;
+  }
+
+  getColNo(issue: fhir.r4.OperationOutcomeIssue): number {
+    const col = this.getExtensionIntValue(issue, 'http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col');
+    return col ?? 0;
   }
 
   hasSliceInfo(issue: fhir.r4.OperationOutcomeIssue): boolean {
@@ -150,16 +153,9 @@ export class OperationOutcomeComponent implements AfterViewInit, OnInit {
     return slice.split(regexp);
   }
 
-  getLineFromExtension(issue: fhir.r4.OperationOutcomeIssue): string {
-    if (issue.extension?.length > 0) {
-      return 'L' + issue.extension[0].valueInteger;
-    }
-    return '';
-  }
-
   getLocation(issue: fhir.r4.OperationOutcomeIssue): string {
-    if (issue.location?.length > 0) {
-      return issue.location[0];
+    if (issue.expression && issue.expression.length > 0) {
+      return issue.expression[0];
     }
     return '';
   }
@@ -170,5 +166,17 @@ export class OperationOutcomeComponent implements AfterViewInit, OnInit {
       line = 0;
     }
     this.aceEditor.scrollToLine(line, false, true, null);
+  }
+
+  getExtensionIntValue(issue: fhir.r4.OperationOutcomeIssue, url: string): number | undefined {
+    if (!issue.extension) {
+      return undefined;
+    }
+    for (const ext of issue.extension) {
+      if (ext.url === url) {
+        return ext.valueInteger;
+      }
+    }
+    return undefined;
   }
 }

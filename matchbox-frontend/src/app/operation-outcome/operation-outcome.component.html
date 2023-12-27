@@ -6,7 +6,7 @@
     <div *ngIf="outcome">
       <div *ngFor="let issue of outcome.issue" class="issue">
         <a class="{{ issue.severity }}" (click)="scroll(getLineNo(issue))"
-          >{{ getLineFromExtension(issue) }}: {{ getLocation(issue) }}</a
+          >Line {{ getLineNo(issue) }}, column {{ getColNo(issue) }}: {{ getLocation(issue) }}</a
         >:<br />
         <ng-container *ngIf="hasSliceInfo(issue) == false">
           {{ issue.diagnostics }}
