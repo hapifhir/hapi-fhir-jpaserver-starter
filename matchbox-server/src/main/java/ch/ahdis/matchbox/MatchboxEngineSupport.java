@@ -166,7 +166,7 @@ public class MatchboxEngineSupport {
 
 		final MatchboxEngine validator;
 		try { validator = new MatchboxEngine(engine); }
-		catch (final IOException e) { throw new MatchboxEngineCreationException(e); }
+		catch (final Exception e) { throw new MatchboxEngineCreationException(e); }
 		validator.setIgLoader(new IgLoaderFromJpaPackageCache(validator.getPcm(),
 																				validator.getContext(),
 																				validator.getVersion(),
@@ -179,7 +179,7 @@ public class MatchboxEngineSupport {
 		if (ig != null) {
 			try {
 				validator.getIgLoader().loadIg(validator.getIgs(), validator.getBinaries(), ig, true);
-			} catch (final IOException e){
+			} catch (final Exception e){
 				throw new IgLoadException(e);
 			}
 		}
@@ -282,7 +282,7 @@ public class MatchboxEngineSupport {
 															 "Requirements",
 															 "SubscriptionTopic",
 															 "TestPlan"));
-				} catch (final IOException e) {
+				} catch (final Exception e) {
 					throw new IgLoadException("Failed to load R5 specials", e);
 				}
 				log.debug("Load R5 Specials types");
@@ -306,7 +306,7 @@ public class MatchboxEngineSupport {
 					if (cliContext.getOnlyOneEngine()) {
 						try {
 							mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), ig, true);
-						} catch (FHIRException | IOException e) {
+						} catch (final Exception e) {
 							log.error("Error generating matchbox engine due to igLoader", e);
 						}
 					} else {
@@ -367,7 +367,7 @@ public class MatchboxEngineSupport {
 			if (create && cliContext.getIg() != null) {
 				try {
 					mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), cliContext.getIg(), true);
-				} catch (FHIRException | IOException e) {
+				} catch (final Exception e) {
 					log.error("Error generating matchbox engine due to igLoader", e);
 				}
 			}
@@ -439,7 +439,7 @@ public class MatchboxEngineSupport {
 			try {
 				final String txver = validator.setTerminologyServer(cli.getTxServer(), null, FhirPublication.R4);
 				log.info("Version of the terminology server: {}", txver);
-			} catch (final IOException | URISyntaxException e) {
+			} catch (final Exception e) {
 				throw new TerminologyServerUnreachableException(e);
 			}
 		}

@@ -25,6 +25,7 @@ import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
+import ca.uhn.fhir.util.OperationOutcomeUtil;
 import ca.uhn.fhir.util.StopWatch;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
@@ -36,13 +37,17 @@ import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.OperationOutcome;
-import org.hl7.fhir.r4.model.OperationOutcome.IssueSeverity;
-import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
+import org.hl7.fhir.r5.model.OperationOutcome;
+import org.hl7.fhir.r5.model.StringType;
+import org.hl7.fhir.r5.utils.EOperationOutcome;
+import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
+import org.hl7.fhir.r5.utils.ToolingExtensions;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -97,15 +102,11 @@ public class ValidationProvider {
 	@Operation(name = "$validate", manualRequest = true, idempotent = true, returnParameters = {
 		@OperationParam(name = "return", type = IBase.class, min = 1, max = 1)})
 	public IBaseResource validate(final HttpServletRequest theRequest) {
-
-		log.info("$validate");
+		log.debug("$validate");
 		final ArrayList<SingleValidationMessage> addedValidationMessages = new ArrayList<>();
 
 		final StopWatch sw = new StopWatch();
 		sw.startTask("Total");
-
-		String profile = null;
-		boolean reload = false;
 
 		// we extract here all config
 		final CliContext cliContext = new CliContext(this.cliContext);
@@ -114,124 +115,84 @@ public class ValidationProvider {
 		List<Field> cliContextProperties = cliContext.getValidateEngineParameters();
 
 		// check for each cliContextProperties if it is in the request parameter
-		for (Field field : cliContextProperties) {
-			String cliContextProperty = field.getName();
+		for (final Field field : cliContextProperties) {
+			final String cliContextProperty = field.getName();
 			if (theRequest.getParameter(cliContextProperty) != null) {
 				try {
-					String value = theRequest.getParameter(cliContextProperty);
+					final String value = theRequest.getParameter(cliContextProperty);
 					// currently only handles boolean or String
 					if (field.getType() == boolean.class) {
 						BeanUtils.setProperty(cliContext, cliContextProperty, Boolean.parseBoolean(value));
 					} else {
 						BeanUtils.setProperty(cliContext, cliContextProperty, value);
 					}
-				} catch (IllegalAccessException | InvocationTargetException e) {
+				} catch (final IllegalAccessException | InvocationTargetException e) {
 					log.error("error setting property " + cliContextProperty + " to " + theRequest.getParameter(
 						cliContextProperty));
 				}
 			}
 		}
 
-		if (theRequest.getParameter("profile") != null) {
-			profile = theRequest.getParameter("profile");
+		if (theRequest.getParameter("profile") == null) {
+			return this.getOoForError("The 'profile' parameter must be provided");
 		}
+		final String profile = theRequest.getParameter("profile");
 
+		boolean reload = false;
 		if (theRequest.getParameter("reload") != null) {
 			reload = theRequest.getParameter("reload").equals("true");
 		}
 
-		MatchboxEngine engine = matchboxEngineSupport.getMatchboxEngine(profile, cliContext, true, reload);
-		if (engine == null) {
-			return getValidationMessageProfileNotSupported(profile);
-		}
-
-		if (engine.getStructureDefinition(profile) == null) {
-			return getValidationMessageProfileNotSupported(profile);
-		}
-
-		if (!matchboxEngineSupport.isInitialized()) {
-			OperationOutcomeIssueComponent a = new OperationOutcomeIssueComponent().setDiagnostics(
-				"validation engine not initialized, please try again").setSeverity(IssueSeverity.ERROR);
-			return new OperationOutcome().addIssue(a);
-		}
-
-		StructureDefinition structDef = engine.getStructureDefinition(profile);
-		String contentString = getContentString(theRequest, addedValidationMessages);
-
-		if (contentString.length() == 0) {
-			SingleValidationMessage m = new SingleValidationMessage();
-			m.setSeverity(ResultSeverityEnum.ERROR);
-			m.setMessage("No content provided in http body");
-			m.setLocationCol(0);
-			m.setLocationLine(0);
-			addedValidationMessages.add(m);
-			return new ValidationResultWithExtensions(this.myContext, addedValidationMessages).toOperationOutcome();
+		final String contentString = this.getContentString(theRequest, addedValidationMessages);
+		if (contentString.isEmpty()) {
+			return this.getOoForError("No content provided in HTTP body");
 		} else {
-			log.info(contentString);
+			log.trace(contentString);
 		}
 
-		String sha3Hex = new DigestUtils("SHA3-256").digestAsHex(contentString + (profile != null ? profile : ""));
+		final MatchboxEngine engine;
+		try {
+			engine = this.matchboxEngineSupport.getMatchboxEngine(profile, cliContext, true, reload);
+		} catch (final Exception e) {
+			log.error("Error while initializing the validation engine", e);
+			return this.getOoForError("Error while initializing the validation engine: %s".formatted(e.getMessage()));
+		}
+		if (engine == null || engine.getStructureDefinition(profile) == null) {
+			return this.getOoForError(
+				"Validation for profile '%s' not supported by this server, but additional ig's could be configured.".formatted(
+					profile));
+		}
+		if (!this.matchboxEngineSupport.isInitialized()) {
+			return this.getOoForError("Validation engine not initialized, please try again");
+		}
+
+		final String sha3Hex = new DigestUtils("SHA3-256").digestAsHex(contentString + profile);
 
 		EncodingEnum encoding = EncodingEnum.forContentType(theRequest.getContentType());
 		if (encoding == null) {
 			encoding = EncodingEnum.detectEncoding(contentString);
 		}
 
-		final ValidationResult result = validateWithResult(engine, contentString, encoding, profile);
-		return getOperationOutcome(sha3Hex, addedValidationMessages, sw, structDef, result, engine, cliContext);
-	}
-
-	private ValidationResult validateWithResult(final MatchboxEngine engine,
-															  final String contentString,
-															  final EncodingEnum encoding,
-															  final String profile) {
+		final List<ValidationMessage> messages;
 		try {
-			final ArrayList<SingleValidationMessage> hapiMessages = new ArrayList<>();
-			final List<ValidationMessage> messages = engine.validate(
-				(encoding == EncodingEnum.XML ? FhirFormat.XML : FhirFormat.JSON),
-				new ByteArrayInputStream(contentString.getBytes(StandardCharsets.UTF_8)), profile);
+			final var format = encoding == EncodingEnum.XML ? FhirFormat.XML : FhirFormat.JSON;
+			final var stream = new ByteArrayInputStream(contentString.getBytes(StandardCharsets.UTF_8));
+			messages = engine.validate(format, stream, profile);
 
-			for (final ValidationMessage riMessage : messages) {
-				SingleValidationMessage hapiMessage = new SingleValidationMessage();
-				if (riMessage.getCol() != -1) {
-					hapiMessage.setLocationCol(riMessage.getCol());
-				}
-				if (riMessage.getLine() != -1) {
-					hapiMessage.setLocationLine(riMessage.getLine());
-				}
-				hapiMessage.setLocationString(riMessage.getLocation());
-				hapiMessage.setMessage(riMessage.getMessage());
-
-				// MATCHBOX added
-				String message = riMessage.getMessage();
-				if (riMessage.sliceText != null) {
-					message += " Slice info:";
-					for (int i = 0; i < riMessage.sliceText.length; ++i) {
-						String s = riMessage.sliceText[i];
-						message += " " + (i + 1) + ".) " + s;
-					}
-				}
-				hapiMessage.setMessage(message);
-				if (riMessage.getLevel() != null) {
-					hapiMessage.setSeverity(ResultSeverityEnum.fromCode(riMessage.getLevel().toCode()));
-				}
-				if (riMessage.getMessageId() != null) {
-					hapiMessage.setMessageId(riMessage.getMessageId());
-				}
-				// theCtx.addValidationMessage(hapiMessage);
-				hapiMessages.add(hapiMessage);
-			}
-			return new ValidationResult(this.myContext, hapiMessages);
-		} catch (final Exception e) {
-			log.error(e.getMessage(), e);
+		} catch (final IOException | EOperationOutcome e) {
+			sw.endCurrentTask();
+			log.debug("Validation time: {}", sw);
+			log.error("Error during validation", e);
+			return this.getOoForError("Error during validation: %s".formatted(e.getMessage()));
 		}
-		return null;
-	}
 
-//
+		sw.endCurrentTask();
+		log.debug("Validation time: {}", sw);
+		return this.getOperationOutcome(sha3Hex, messages, profile, engine, sw.formatTaskDurations(), cliContext);
+	}
 
 	private String getContentString(final HttpServletRequest theRequest,
-											  final ArrayList<SingleValidationMessage> addedValidationMessages) {
+											  final List<SingleValidationMessage> addedValidationMessages) {
 		byte[] bytes = null;
 		String contentString = "";
 		try {
@@ -241,7 +202,7 @@ public class ValidationProvider {
 				System.arraycopy(bytes, 3, dest, 0, bytes.length - 3);
 				bytes = dest;
 				if (addedValidationMessages != null) {
-					SingleValidationMessage m = new SingleValidationMessage();
+					final var m = new SingleValidationMessage();
 					m.setSeverity(ResultSeverityEnum.WARNING);
 					m.setMessage(
 						"Resource content has a UTF-8 BOM marking, skipping BOM, see https://en.wikipedia.org/wiki/Byte_order_mark");
@@ -258,61 +219,83 @@ public class ValidationProvider {
 	}
 
 	private IBaseResource getOperationOutcome(final String id,
-															final ArrayList<SingleValidationMessage> addedValidationMessages,
-															final StopWatch sw,
-															final StructureDefinition profile,
-															final ValidationResult result,
+															final List<ValidationMessage> messages,
+															final String profile,
 															final MatchboxEngine engine,
-															final CliContext cli) {
-		sw.endCurrentTask();
+															final String taskDuration,
+															final CliContext cliContext) {
+		final var oo = new OperationOutcome();
+		oo.setId(id);
 
-		log.info("Validation time: " + sw);
+		{
+			// Add an information message about the validation
+			final var issue = oo.addIssue();
+			issue.setSeverity(OperationOutcome.IssueSeverity.INFORMATION);
+			issue.setCode(OperationOutcome.IssueType.INFORMATIONAL);
 
-		String packages = "with packages: ";
-		List<String> pkgs = engine.getContext().getLoadedPackages();
-		for (int i = 0; i < pkgs.size(); ++i) {
-			if (i > 0) {
-				packages += ", ";
-			}
-			packages += pkgs.get(i);
+			final StructureDefinition structDef = engine.getStructureDefinition(profile);
+			final var profileDate = (structDef.getDateElement() != null)
+				? " (%s)".formatted(structDef.getDateElement().asStringValue())
+				: " ";
+
+			issue.setDiagnostics(
+				"Validation for profile %s|%s%s. Loaded packages: %s. Duration: %s. %s. Validation parameters: %s".formatted(
+					structDef.getUrl(),
+					structDef.getVersion(),
+					profileDate,
+					String.join(", ", engine.getContext().getLoadedPackages()),
+					taskDuration,
+					VersionUtil.getPoweredBy(),
+					cliContext.toString()
+				));
 		}
 
-		SingleValidationMessage m = new SingleValidationMessage();
-		m.setSeverity(ResultSeverityEnum.INFORMATION);
-		m.setMessage("Validation "
-							 + (profile != null
-			? "for profile " + profile.getUrl() + "|" + profile.getVersion() + " "
-			+ (profile.getDateElement() != null ? "(" + profile.getDateElement().asStringValue() + ") " : " ")
-			: "") + packages + " "
-							 + (result.getMessages().size() == 0 ? "No Issues detected. " : "") + sw.formatTaskDurations() + " "
-							 + VersionUtil.getPoweredBy()
-							 + " validation parameters " + cli.toString());
+		// Map the SingleValidationMessages to OperationOutcomeIssue
+		for (final ValidationMessage message : messages) {
+			final var issue = OperationOutcomeUtilities.convertToIssue(message, oo);
 
-		m.setLocationCol(0);
-		m.setLocationLine(0);
-		addedValidationMessages.add(m);
+			// Note: the message is mapped to details.text by HAPI, but we still need it in diagnostics for the EVSClient,
+			//       so we move it. This could be changed in the future.
+			issue.setDiagnostics(message.getMessage());
+			issue.setDetails(null);
 
-		addedValidationMessages.addAll(result.getMessages());
+			// Add slice info to diagnostics
+			if (message.sliceText != null) {
+				final var newDiagnostics = new StringBuilder();
+				newDiagnostics.append(issue.getDiagnostics());
+				newDiagnostics.append(" Slice info:");
+				for (int i = 0; i < message.sliceText.length; ++i) {
+					newDiagnostics.append(" ");
+					newDiagnostics.append(i + 1);
+					newDiagnostics.append(".) ");
+					newDiagnostics.append(message.sliceText[i]);
+				}
+				issue.setDiagnostics(newDiagnostics.toString());
+			}
 
-		IBaseResource operationOutcome = new ValidationResultWithExtensions(this.myContext, addedValidationMessages)
-			.toOperationOutcome();
-		operationOutcome.setId(id);
+			oo.addIssue(issue);
+		}
 
-		log.info(this.myContext.newXmlParser().encodeResourceToString(operationOutcome));
+		// Add an information message about success, if needed
+		if (messages.stream().noneMatch(m -> m.getLevel() == ValidationMessage.IssueSeverity.FATAL || m.getLevel() == ValidationMessage.IssueSeverity.ERROR)) {
+			final var issue = oo.addIssue();
+			issue.setSeverity(OperationOutcome.IssueSeverity.INFORMATION);
+			issue.setCode(OperationOutcome.IssueType.INFORMATIONAL);
+			issue.setDiagnostics("No fatal or error issues detected, the validation has passed");
+		}
 
-		return operationOutcome;
+		final var ooR4 = VersionConvertorFactory_40_50.convertResource(oo);
+		log.trace(this.myContext.newXmlParser().encodeResourceToString(ooR4));
+		return ooR4;
 	}
 
-	private IBaseResource getValidationMessageProfileNotSupported(final String profile) {
-		SingleValidationMessage m = new SingleValidationMessage();
-		m.setSeverity(ResultSeverityEnum.ERROR);
-		m.setMessage("Validation for profile " + profile
-							 + " not supported by this server, but additional ig's could be configured.");
-		m.setLocationCol(0);
-		m.setLocationLine(0);
-		final ArrayList<SingleValidationMessage> newValidationMessages = new ArrayList<>(1);
-		newValidationMessages.add(m);
-		return (new ValidationResult(this.myContext, newValidationMessages)).toOperationOutcome();
+	private IBaseResource getOoForError(final @NonNull String message) {
+		final var oo = new OperationOutcome();
+		final var issue = oo.addIssue();
+		issue.setSeverity(OperationOutcome.IssueSeverity.ERROR);
+		issue.setCode(OperationOutcome.IssueType.EXCEPTION);
+		issue.setDiagnostics(message);
+		issue.addExtension().setUrl(ToolingExtensions.EXT_ISSUE_SOURCE).setValue(new StringType("ValidationProvider"));
+		return VersionConvertorFactory_40_50.convertResource(oo);
 	}
-
 }
