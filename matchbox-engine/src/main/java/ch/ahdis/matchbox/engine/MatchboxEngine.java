@@ -80,7 +80,7 @@ public class MatchboxEngine extends ValidationEngine {
 
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxEngine.class);
 
-	protected final List<String> suppressedWarningPatterns = new ArrayList<>();
+	protected final List<String> suppressedWarnInfoPatterns = new ArrayList<>();
 
 	public MatchboxEngine(final @NonNull ValidationEngine other) throws FHIRException, IOException {
 		super(other);
@@ -744,58 +744,70 @@ public class MatchboxEngine extends ValidationEngine {
 	}
 
 	/**
-	 * Copies the given OperationOutcome, removes issues if they are warning and match a list of ignored messages.
+	 * Copies the given list, removes messages if they are warning and match a list of ignored messages.
 	 *
-	 * @param oooriginal The original OperationOutcome.
-	 * @return A copy of the OperationOutcome, without issues that have to be filtered.
+	 * @param messages The original list of validation messages.
+	 * @return A copy of the message list, without issues that have to be filtered.
 	 */
-	public OperationOutcome filterValidationOutcome(final @NonNull OperationOutcome oooriginal) {
-		final var copy = Objects.requireNonNull(oooriginal).copy();
-		final List<Pattern> ignoredPatterns = this.compileSuppressedWarningPatterns();
-
-		copy.setIssue(copy.getIssue().stream()
-							  .filter(issue -> {
-								  if (issue.getSeverity() != OperationOutcome.IssueSeverity.WARNING) {
-									  // We keep everything that is not a warning
-									  return true;
-								  }
-								  // We keep the warning only if it matches no
-								  return ignoredPatterns.parallelStream().noneMatch(pattern -> pattern.matcher(issue.getDetails().getText()).find());
-							  })
-							  .collect(Collectors.toList()));
-		return copy;
+	public List<ValidationMessage> filterValidationMessages(final @NonNull List<ValidationMessage> messages) {
+		final List<Pattern> ignoredPatterns = this.compileSuppressedWarnInfoPatterns();
+		return messages.stream()
+			.filter(message -> {
+				if (message.getLevel() != ValidationMessage.IssueSeverity.WARNING && message.getLevel() != ValidationMessage.IssueSeverity.INFORMATION) {
+					// We keep everything that is not a warning or an information
+					return true;
+				}
+				// We keep the warning only if it matches no
+				return ignoredPatterns.parallelStream().noneMatch(pattern -> pattern.matcher(message.getMessage()).find());
+			})
+			.collect(Collectors.toList());
 	}
 
 	/**
-	 * Adds a text to the list of suppressed validation warnings.
+	 * Adds a text to the list of suppressed validation warning/information-level issues.
 	 *
 	 * @param text The text to add.
 	 * @implNote The text is Regex-escaped before being added to the list.
 	 */
-	public void addSuppressedWarning(final @NonNull String text) {
-		this.suppressedWarningPatterns.add(Pattern.quote(Objects.requireNonNull(text)));
+	public void addSuppressedWarnInfo(final @NonNull String text) {
+		this.suppressedWarnInfoPatterns.add(Pattern.quote(Objects.requireNonNull(text)));
 	}
 
 	/**
-	 * Adds a Regex pattern to the list of suppressed validation warnings.
+	 * Adds a Regex pattern to the list of suppressed validation warning/information-level issues.
 	 *
 	 * @param pattern The Regex pattern to add.
 	 */
-	public void addSuppressedWarningPattern(final @NonNull String pattern) {
-		this.suppressedWarningPatterns.add(Objects.requireNonNull(pattern));
+	public void addSuppressedWarnInfoPattern(final @NonNull String pattern) {
+		this.suppressedWarnInfoPatterns.add(Objects.requireNonNull(pattern));
 	}
 
 	/**
-	 * Returns the list of suppressed validation warnings.
+	 * Returns the list of suppressed validation warning/information-level issues.
 	 */
-	public List<String> getSuppressedWarningPatterns() {
-		return this.suppressedWarningPatterns;
+	public List<String> getSuppressedWarnInfoPatterns() {
+		return this.suppressedWarnInfoPatterns;
 	}
 
 	/**
-	 * Compiles the list of suppressed validation warnings into a list of {@link Pattern}.
+	 * Compiles the list of suppressed validation warning/information-level issues into a list of {@link Pattern}.
 	 */
-	protected List<Pattern> compileSuppressedWarningPatterns() {
-		return this.suppressedWarningPatterns.stream().map(Pattern::compile).collect(Collectors.toList());
+	protected List<Pattern> compileSuppressedWarnInfoPatterns() {
+		return this.suppressedWarnInfoPatterns.stream().map(Pattern::compile).collect(Collectors.toList());
+	}
+
+	/**
+	 * Maps a list of {@link ValidationMessage} to an R4 {@link OperationOutcome}.
+	 */
+	protected OperationOutcome messagesToOutcome(final @NonNull List<ValidationMessage> messages,
+																final @NonNull SimpleWorkerContext context)
+		throws IOException, FHIRException, EOperationOutcome {
+		final var op = new org.hl7.fhir.r5.model.OperationOutcome();
+		messages.stream().map(vm -> OperationOutcomeUtilities.convertToIssue(vm, op))
+			.forEach(op.getIssue()::add);
+		final var rc = new RenderingContext(context, null, null, "http://hl7.org/fhir", "", null,
+											 RenderingContext.ResourceRendererMode.END_USER, RenderingContext.GenerationRules.VALID_RESOURCE);
+		RendererFactory.factory(op, rc).render(op);
+		return (OperationOutcome) (VersionConvertorFactory_40_50.convertResource(op));
 	}
 }

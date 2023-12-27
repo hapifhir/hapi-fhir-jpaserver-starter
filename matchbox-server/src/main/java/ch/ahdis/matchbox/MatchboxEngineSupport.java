@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Locale;
 
+import ch.ahdis.matchbox.config.MatchboxFhirContextProperties;
 import ch.ahdis.matchbox.engine.exception.IgLoadException;
 import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
 import ch.ahdis.matchbox.engine.exception.TerminologyServerUnreachableException;
@@ -66,8 +67,11 @@ public class MatchboxEngineSupport {
 	@Autowired
 	private CliContext cliContext;
 
-	public MatchboxEngineSupport() {
+	private final MatchboxFhirContextProperties matchboxFhirContextProperties;
+
+	public MatchboxEngineSupport(final MatchboxFhirContextProperties matchboxFhirContextProperties) {
 		this.sessionCache = new EngineSessionCache();
+		this.matchboxFhirContextProperties = Objects.requireNonNull(matchboxFhirContextProperties);
 	}
 
 	public NpmPackageVersionResourceEntity loadPackageAssetByUrl(String theCanonicalUrl) {
@@ -497,5 +501,38 @@ public class MatchboxEngineSupport {
 		// validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());
 		validator.setJurisdiction(CodeSystemUtilities.readCoding(cli.getJurisdiction()));
 		// TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());
+
+		// Configure which warnings will be suppressed in the validation results
+		final Map<String, List<String>> suppressedWarnings =
+			Objects.requireNonNullElseGet(this.matchboxFhirContextProperties.getSuppressWarnInfo(),
+													HashMap::new);
+		if (cli.getOnlyOneEngine()) {
+			// If we only have one engine, then ignore all warnings that are defined in the configuration file
+			suppressedWarnings.values().stream()
+				.flatMap(List::stream)
+				.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
+		} else {
+			// Otherwise, only ignore the warnings that are defined for the IGs that have been loaded in the engine
+			// Note: we remove the hash in the package, because the hash is also removed when reading the YAML
+			//       configuration file.
+			validator.getContext().getLoadedPackages().stream()
+				.map(pkg -> pkg.replace("#", ""))
+				.forEach(ig -> {
+					suppressedWarnings.getOrDefault(ig, Collections.emptyList())
+						.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
+				});
+		}
+		log.debug("Added {} suppressed warnings for these IGs", validator.getSuppressedWarnInfoPatterns().size());
+	}
+
+	private void addSuppressedWarnInfoToEngine(final @NonNull String pattern,
+															 final @NonNull MatchboxEngine engine) {
+		if (pattern.startsWith("regex:")) {
+			// If it starts with "regex:", then remove the prefix and add it as a regex pattern
+			engine.addSuppressedWarnInfoPattern(pattern.substring(6));
+			return;
+		}
+		// Otherwise, add it as a simple string pattern
+		engine.addSuppressedWarnInfo(pattern);
 	}
 }

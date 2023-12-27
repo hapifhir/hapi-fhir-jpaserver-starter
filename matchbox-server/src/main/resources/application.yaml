@@ -72,6 +72,9 @@ matchbox:
       txServer: n/a
 #      onlyOneEngine: true
 #      igsPreloaded: ch.fhir.ig.ch-core#4.0.0-ballot
+      suppressWarnInfo:
+        hl7.fhir.r4.core#4.0.1:
+          #- "Constraint failed: dom-6:"
 logging:
   level:
     root: INFO

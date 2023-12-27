@@ -13,19 +13,19 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * A test bench for the 'suppressed warning' feature.
+ * A test bench for the 'suppressed warning/information-level issues' feature.
  *
  * @author Quentin Ligier
  **/
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class SuppressedWarningTests {
+class SuppressedWarnInfoTests {
 	private final MatchboxEngine engine;
 	private final byte[] resource;
 
 	private final static String WARN1 = "A measure should contain at least one group";
 	private final static String WARN2 = "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)";
 
-	public SuppressedWarningTests() throws IOException {
+	public SuppressedWarnInfoTests() throws IOException {
 		this.engine = this.getEngine();
 
 		this.resource = this.loadSample("measure.xml")
@@ -35,7 +35,7 @@ class SuppressedWarningTests {
 
 	@Test
 	void testNoSuppressedWarning() throws Exception {
-		this.engine.getSuppressedWarningPatterns().clear();
+		this.engine.getSuppressedWarnInfoPatterns().clear();
 		final var oo = this.engine.validate(new ByteArrayInputStream(this.resource),
 														Manager.FhirFormat.XML,
 														"http://hl7.org/fhir/StructureDefinition/Measure");
@@ -47,8 +47,8 @@ class SuppressedWarningTests {
 
 	@Test
 	void testSuppressedWarningFull() throws Exception {
-		this.engine.getSuppressedWarningPatterns().clear();
-		this.engine.addSuppressedWarning(WARN1);
+		this.engine.getSuppressedWarnInfoPatterns().clear();
+		this.engine.addSuppressedWarnInfo(WARN1);
 		final var oo = this.engine.validate(new ByteArrayInputStream(this.resource),
 														Manager.FhirFormat.XML,
 														"http://hl7.org/fhir/StructureDefinition/Measure");
@@ -60,8 +60,8 @@ class SuppressedWarningTests {
 
 	@Test
 	void testSuppressedWarningRegex() throws Exception {
-		this.engine.getSuppressedWarningPatterns().clear();
-		this.engine.addSuppressedWarningPattern("Constraint failed: dom-6");
+		this.engine.getSuppressedWarnInfoPatterns().clear();
+		this.engine.addSuppressedWarnInfoPattern("Constraint failed: dom-6");
 		final var oo = this.engine.validate(new ByteArrayInputStream(this.resource),
 														Manager.FhirFormat.XML,
 														"http://hl7.org/fhir/StructureDefinition/Measure");
@@ -73,8 +73,8 @@ class SuppressedWarningTests {
 
 	@Test
 	void testSuppressAllWarning() throws Exception {
-		this.engine.getSuppressedWarningPatterns().clear();
-		this.engine.addSuppressedWarningPattern(".+");
+		this.engine.getSuppressedWarnInfoPatterns().clear();
+		this.engine.addSuppressedWarnInfoPattern(".+");
 		final var oo = this.engine.validate(new ByteArrayInputStream(this.resource),
 														Manager.FhirFormat.XML,
 														"http://hl7.org/fhir/StructureDefinition/Measure");

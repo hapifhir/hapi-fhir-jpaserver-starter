@@ -1,9 +1,6 @@
 package ch.ahdis.matchbox;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
@@ -12,6 +9,7 @@ import ca.uhn.fhir.jpa.dao.tx.IHapiTransactionService;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR4;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR5;
+import ch.ahdis.matchbox.config.MatchboxFhirContextProperties;
 import ch.ahdis.matchbox.interceptor.HttpReadOnlyInterceptor;
 import ch.ahdis.matchbox.interceptor.TerminologyCapabilitiesInterceptor;
 import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
@@ -20,6 +18,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -83,6 +82,7 @@ import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 
 @Configuration
 @Import(ThreadPoolFactoryConfig.class)
+@EnableConfigurationProperties(MatchboxFhirContextProperties.class)
 public class MatchboxJpaConfig extends StarterJpaConfig {	
 
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(MatchboxJpaConfig.class);
@@ -222,8 +222,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	}
 	
 	@Bean
-	public MatchboxEngineSupport getMatchboxEngineSupport() {
-		return new MatchboxEngineSupport();
+	public MatchboxEngineSupport getMatchboxEngineSupport(final MatchboxFhirContextProperties matchboxFhirContextProperties) {
+		return new MatchboxEngineSupport(matchboxFhirContextProperties);
 	}
 
 	@Bean
