@@ -286,11 +286,6 @@ public class MatchboxEngineSupport {
 					throw new IgLoadException("Failed to load R5 specials", e);
 				}
 				log.debug("Load R5 Specials types");
-				if (mainEngine.getCanonicalResource(
-					"http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition") == null) {
-					log.error("Could not load R5 Specials");
-				}
-
 				this.configureValidationEngine(mainEngine, cliContext);
 			}
 			cliContext.setIg(this.getFhirCorePackage(cliContext));
