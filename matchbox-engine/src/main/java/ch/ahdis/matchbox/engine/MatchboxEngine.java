@@ -33,6 +33,7 @@ import ch.ahdis.matchbox.engine.exception.IgLoadException;
 import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
 import ch.ahdis.matchbox.engine.exception.TerminologyServerUnreachableException;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.exceptions.FHIRException;
@@ -46,12 +47,14 @@ import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.formats.IParser;
 import org.hl7.fhir.r5.model.Base;
-import org.hl7.fhir.r5.model.ExpressionNode;
 import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureMap;
+import org.hl7.fhir.r5.renderers.RendererFactory;
+import org.hl7.fhir.r5.renderers.utils.RenderingContext;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.utils.FHIRPathEngine;
+import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
 import org.hl7.fhir.utilities.ByteProvider;
@@ -92,7 +95,7 @@ public class MatchboxEngine extends ValidationEngine {
 			throw new MatchboxEngineCreationException(e);
 		}
 
-		//this.getContext().setCachingAllowed(false); // Uncomment to improve debugging HAPI by disabling caching
+		this.getContext().setCachingAllowed(false); // Uncomment to improve debugging HAPI by disabling caching
 	}
 
 	/**
@@ -435,10 +438,9 @@ public class MatchboxEngine extends ValidationEngine {
 		getContext().cacheResource(resource);
 	}
 
-
 	/**
 	 * validates a FHIR resources and provides OperationOutcome as output
-	 * 
+	 *
 	 * @param stream     resource to validate as input stream
 	 * @param format     format of resource
 	 * @param profileUrl profile to validate against
@@ -447,23 +449,11 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @throws IOException       IO Exception
 	 * @throws EOperationOutcome Exception OperationOutcome
 	 */
-	public OperationOutcome validate(InputStream stream, FhirFormat format, String profileUrl)
+	public OperationOutcome validate(final @NonNull InputStream stream,
+												final @NonNull FhirFormat format,
+												final @Nullable String profileUrl)
 			throws FHIRException, IOException, EOperationOutcome {
-		List<String> profiles = null;
-		if (profileUrl != null) {
-			profiles = new ArrayList<String>();
-			profiles.add(profileUrl);
-			List<StructureDefinition> sds = asSdList(profiles);
-			for (StructureDefinition sd : sds) {
-				log.info("Using profile for validation " + sd.getUrl() + "|" + sd.getVersion() + " "
-						+ (sd.getDateElement() != null ? "(" + sd.getDateElement().asStringValue() + ")" : ""));
-			}
-		} else {
-			log.info("validation on resource, no profile used");
-		}
-
-		org.hl7.fhir.r5.model.OperationOutcome outcome = super.validate(format, stream, profiles);
-		return this.filterValidationOutcome((OperationOutcome) (VersionConvertorFactory_40_50.convertResource(outcome)));
+		return this.messagesToOutcome(this.validate(format, stream, profileUrl), this.getContext());
 	}
 
 	/**
@@ -475,34 +465,35 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @return result as Operation Outcome
 	 * @throws FHIRException     FHIR Exception
 	 * @throws IOException       IO Exception
-	 * @throws EOperationOutcome Exception OperationOutcome
 	 */
-	public OperationOutcome validate(Resource resource, String profileUrl)
+	public OperationOutcome validate(final @NonNull Resource resource, final @Nullable String profileUrl)
 			throws FHIRException, IOException, EOperationOutcome {
-		String result = new org.hl7.fhir.r4.formats.JsonParser().composeString(resource);
-		return validate(new ByteArrayInputStream(result.getBytes("UTF-8")), FhirFormat.JSON, profileUrl);
+		final var result = new org.hl7.fhir.r4.formats.JsonParser().composeBytes(resource);
+		return this.validate(new ByteArrayInputStream(result), FhirFormat.JSON, profileUrl);
 	}
 
 	// testing entry point
-	public List<ValidationMessage> validate(FhirFormat format, InputStream stream, String profileUrl)
+	public List<ValidationMessage> validate(final @NonNull FhirFormat format,
+														 final @NonNull InputStream stream,
+														 final @Nullable String profileUrl)
 			throws FHIRException, IOException, EOperationOutcome {
-		List<String> profiles = null;
+		final List<StructureDefinition> structureDefinitions;
 		if (profileUrl != null) {
-			profiles = new ArrayList<String>();
-			profiles.add(profileUrl);
-			List<StructureDefinition> sds = asSdList(profiles);
-			for (StructureDefinition sd : sds) {
+			structureDefinitions = asSdList(List.of(profileUrl));
+			for (StructureDefinition sd : structureDefinitions) {
 				log.info("Using profile for validation " + sd.getUrl() + "|" + sd.getVersion() + " "
 						+ (sd.getDateElement() != null ? "(" + sd.getDateElement().asStringValue() + ")" : ""));
 			}
+		} else {
+			structureDefinitions = null;
 		}
-		List<ValidationMessage> messages = new ArrayList<>();
+		final List<ValidationMessage> messages = new ArrayList<>();
 //		this.getContext().getTxCache().clear();
-		InstanceValidator validator = getValidator(format);
+		final InstanceValidator validator = getValidator(format);
 		//validator.getBaseOptions().setCheckValueSetOnly();
 		//validator.getBaseOptions().setNoServer(true);
-		validator.validate(null, messages, stream, format, asSdList(profiles));
-		return messages;
+		validator.validate(null, messages, stream, format, structureDefinitions);
+		return this.filterValidationMessages(messages);
 	}
 
 	/**
@@ -512,11 +503,12 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @return StructureDefintions
 	 * @throws Error if profile cannot be resolved
 	 */
-	public List<StructureDefinition> asSdList(List<String> profiles) throws Error {
-		List<StructureDefinition> list = new ArrayList<>();
+	@Override
+	public List<StructureDefinition> asSdList(final @Nullable List<String> profiles) throws Error {
+		final List<StructureDefinition> list = new ArrayList<>();
 		if (profiles != null) {
-			for (String p : profiles) {
-				StructureDefinition sd = this.getContext().fetchResource(StructureDefinition.class, p);
+			for (final String p : profiles) {
+				final StructureDefinition sd = this.getContext().fetchResource(StructureDefinition.class, p);
 				if (sd == null) {
 					log.error("Unable to resolve profile " + p);
 					throw new Error("Unable to resolve profile " + p);

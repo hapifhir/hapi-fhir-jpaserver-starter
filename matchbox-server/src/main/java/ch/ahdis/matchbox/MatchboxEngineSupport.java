@@ -2,8 +2,7 @@ package ch.ahdis.matchbox;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import ch.ahdis.matchbox.config.MatchboxFhirContextProperties;
 import ch.ahdis.matchbox.engine.exception.IgLoadException;
@@ -255,7 +254,6 @@ public class MatchboxEngineSupport {
 
 		if (reload) {
 			mainEngine = null;
-			log.info("setInitialized(false) from reload");
 			this.setInitialized(false);
 		}
 		if (mainEngine == null) {
@@ -300,7 +298,7 @@ public class MatchboxEngineSupport {
 			log.info("Cached default engine forever {} with parameters {}",
 						(cliContext.getIg() != null ? "for " + cliContext.getIg() : ""),
 						cliContext.hashCode());
-			sessionCache.cacheSessionForEver("" + cliContext.hashCode(), mainEngine);
+			this.sessionCache.cacheSessionForEver("" + cliContext.hashCode(), mainEngine);
 			cliContext.setIg(null); // otherwise we get for reloads the pacakge name instead a new one later  set ahdis/matchbox #144
 
 			if (cliContext.getIgsPreloaded() != null) {
@@ -430,21 +428,20 @@ public class MatchboxEngineSupport {
 	private void configureValidationEngine(final MatchboxEngine validator,
 														final CliContext cli) throws MatchboxEngineCreationException {
 		log.info("Terminology server {}", cli.getTxServer());
-		String txServer = cli.getTxServer();
 		if ("n/a".equals(cli.getTxServer())) {
-			txServer = null;
 			validator.getContext().setCanRunWithoutTerminology(true);
 			validator.getContext().setNoTerminologyServer(true);
 		} else {
 			// we need really to do it explicitly
 			validator.getContext().setCanRunWithoutTerminology(false);
 			validator.getContext().setNoTerminologyServer(false);
-		}
-		try {
-			final String txver = validator.setTerminologyServer(txServer, null, FhirPublication.R4);
-			log.info("Version of the terminology server: {}", txver);
-		} catch (final IOException | URISyntaxException e) {
-			throw new TerminologyServerUnreachableException(e);
+
+			try {
+				final String txver = validator.setTerminologyServer(cli.getTxServer(), null, FhirPublication.R4);
+				log.info("Version of the terminology server: {}", txver);
+			} catch (final IOException | URISyntaxException e) {
+				throw new TerminologyServerUnreachableException(e);
+			}
 		}
 
 		validator.setDebug(cli.isDoDebug());
@@ -487,12 +484,12 @@ public class MatchboxEngineSupport {
 			new IPackageInstaller() {
 				// https://github.com/ahdis/matchbox/issues/67
 				@Override
-				public boolean packageExists(String id, String ver) throws IOException, FHIRException {
+				public boolean packageExists(String id, String ver) {
 					return false;
 				}
 
 				@Override
-				public void loadPackage(String id, String ver) throws IOException, FHIRException {
+				public void loadPackage(String id, String ver) {
 				}
 			});
 		validator.setFetcher(fetcher);
