@@ -15,12 +15,11 @@ see [matchbox-engine](/matchbox-engine) for using the validation functionality a
 
 For the $validate operation on the server see the OperationDefintion for validation support: [[server]/$validate](https://test.ahdis.ch/matchboxv3/fhir/OperationDefinition/-s-validate) for checking FHIR resources conforming to the loaded implementation guides.
 
-| Parameter IN | Card | Description                                                                                                                                                                                                                                 |
-| ------------ | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| resource     | 1..1 | The resource (or logical instance) to validate, needs to be provided in the HTTP Body, the HTTP Content-Type header needs to be indicated if it is application/fhir+json or application/fhir+xml                                            |
+| Parameter IN | Card | Description                                                                                                                                                                                                                                |
+|--------------|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| resource     | 1..1 | The resource (or logical instance) to validate, needs to be provided in the HTTP Body, the HTTP Content-Type header needs to be indicated if it is application/fhir+json or application/fhir+xml                                           |
 | profile      | 1..1 | profile to validate the resources against. Within the profile parameter, the targetProfile returns all profiles possible to use for validation, with the canonical url, and with the canonical url and the business version of the profile |
-| ig           | 0..1 | the Implementation Guide and version which should be used for validation, eg. ch.fhir.ig.ch-core#3.0.0                                                                                                                                      |
-| txServer     | 0..1 | txServer to use, n/a if none (default)                                                                                                                                                                                                      |
+| ig           | 0..1 | the Implementation Guide and version which should be used for validation, eg. ch.fhir.ig.ch-core#3.0.0                                                                                                                                     |
 
 The operation returns an array of OperationOutcome with severity defined as fatal, error, warning or information.
 
@@ -60,17 +59,43 @@ hapi:
 matchbox:
   fhir:
     context:
+      fhirVersion: 4.0.1
       txServer: n/a
-      igsPreloaded: ch.fhir.ig.cda-fhir-maps#0.3.0, ch.fhir.ig.ch-emed#3.0.0
-      onlyOneEngine: false
+      #      onlyOneEngine: true
+      #      igsPreloaded: ch.fhir.ig.ch-core#4.0.0-ballot
+      suppressWarnInfo:
+        hl7.fhir.r4.core#4.0.1:
+        #- "Constraint failed: dom-6:"
 ```
 
-| Parameter            | Card  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| -------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| implementationguides | 0..\* | the Implementation Guide and version which with which matchbox will be configured, you can provide by classpath, file, http address, if none is specified the FHIR package servers will be used (need to be online)                                                                                                                                                                                                                                                                |
-| txServer             | 0..1  | txServer to use, n/a if none (default)                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| igsPreloaded         | 0..\* | For each mentioned ImplementationGuide (comma separated) an engine will be created, which will be cached in memory as long the application is running. Other IG's will created on demand and will be cached for an hour for subsequent calls. Tradeoff between memory consumption and first response time (creating of engine might have duration of half a minute). Default no igs are preloaded.                                                                                  |
+| Parameter            | Card  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+|----------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| implementationguides | 0..\* | the Implementation Guide and version which with which matchbox will be configured, you can provide by classpath, file, http address, if none is specified the FHIR package servers will be used (need to be online)                                                                                                                                                                                                                                                               |
+| txServer             | 0..1  | txServer to use, n/a if none (default)                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| igsPreloaded         | 0..\* | For each mentioned ImplementationGuide (comma separated) an engine will be created, which will be cached in memory as long the application is running. Other IG's will created on demand and will be cached for an hour for subsequent calls. Tradeoff between memory consumption and first response time (creating of engine might have duration of half a minute). Default no igs are preloaded.                                                                                |
 | onlyOneEngine        | 0..1  | Implementation Guides can have multiple versions with different dependencies. Matchbox creates for transformation and validation an own engine for each Implementation Guide and its dependencies (default setting). You can switch this behavior, e.g. if you are using it in development and want to create and update resources or transform maps. Set the setting for onlyOneEngine to true. The changes are however not persisted and will be lost if matchbox is restarted. |
+| httpReadOnly         | 0..1  | Whether to allow creating, modifying or deleting resources on the server via the HTTP API or not. If `true`, IGs can only be loaded through the configuration.                                                                                                                                                                                                                                                                                                                    |
+| suppressWarnInfo     | 0..\* | A list of warning message to ignore while validating resources, per Implementation Guide and version.                                                                                                                                                                                                                                                                                                                                                                             |
+
+#### Suppress warning/information-level issues in validation
+
+The validation client can suppress warning/information-level issues that are not relevant for the validation.
+Validation issues to be suppressed are defined in the configuration file, per Implementation Guide and version.
+
+To match by exact substring, simply add the message to the list.
+To match by regex pattern, add the prefix `regex:` to the message.
+
+Example of configuration file:
+```yaml
+matchbox:
+  fhir:
+    context:
+      suppressWarnInfo:
+        hl7.fhir.r4.core#4.0.1:
+          - "Constraint failed: dom-6:"
+        ch.fhir.ig.ch-elm#1.0.0:
+          - "regex:Binding for path (.+).ofType\(Coding\) has no source, so can't be checked"
+```
 
 ## Terminology server
 
@@ -94,7 +119,7 @@ http://localhost:8080/fhir.
 Please be aware that by using the internal terminology server, the validation may be incomplete.
 Its use case is simple:
 
-- you use an IG that has only simple value sets, where all codes have been verified to exist in their code system;
+- all CodeSystems that are used are defined in the IG, or is a special CodeSystem supported by HAPI-FHIR;
 - in your resources, all important code/coding/codeableConcept are bound to a simple value set, with 'required' 
   strength.
 

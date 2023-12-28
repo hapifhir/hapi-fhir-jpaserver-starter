@@ -1,3 +1,18 @@
+2023/12/27 Release 3.5.2
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.2`
+- IG ballot versions are not considered "current" if the same version, non-balloted is also loaded [#168]
+  (https://github.com/ahdis/matchbox/issues/168)
+- Removed wrong warning about R5 specials not being loaded [#167](https://github.com/ahdis/matchbox/issues/167)
+- Fixed loading of hl7.terminology [#166](https://github.com/ahdis/matchbox/issues/166)
+- Added onlyOneEngine and httpReadOnly flags to the validation OperationOutcome [#164](https://github.com/ahdis/matchbox/issues/164)
+- Implemented feature to suppress warning/information-level issues from validation result [#163](https://github.com/ahdis/matchbox/issues/163)
+- Fixed configuration of the terminology server when onlyOneEngine mode is used [#160](https://github.com/ahdis/matchbox/issues/160)
+- Improved common error messages about engine malfunctions [#159](https://github.com/ahdis/matchbox/issues/159)
+- Improved waiting loop for the validation engine initialization (you should not get the "engine not ready" error 
+  message anymore)
+- Reworked exception handling and logging in the validation engine
+- Updated the validation OperationOutcome to include more information, the GUI was also updated
+
 2023/12/11 Release 3.5.1
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.1`
 - The terminology system advertises support for more code systems
