@@ -1,0 +1,24 @@
+# This workflow will test the Javadoc of a Java project with Maven
+name: Javadoc test
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the project
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        # https://github.com/actions/setup-java#usage
+        with:
+          java-version: 20
+          distribution: adopt
+          cache: maven
+
+      - name: Test the Javadoc
+        run: mvn --batch-mode --no-transfer-progress javadoc:aggregate -f pom.xml
