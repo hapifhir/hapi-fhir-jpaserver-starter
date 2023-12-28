@@ -171,9 +171,7 @@ public class MatchboxEngine extends ValidationEngine {
 		 * Returns a FHIR R4 engine configured with hl7 terminology
 		 * 
 		 * @return
-		 * @throws FHIRException
-		 * @throws IOException
-		 * @throws URISyntaxException
+		 * @throws MatchboxEngineCreationException
 		 */
 		public MatchboxEngine getEngineR4() throws MatchboxEngineCreationException {
 			log.info("Initializing Matchbox Engine (FHIR R4 with terminology provided in classpath)");
@@ -210,9 +208,7 @@ public class MatchboxEngine extends ValidationEngine {
 		 * Returns empty engine
 		 * 
 		 * @return
-		 * @throws FHIRException
-		 * @throws IOException
-		 * @throws URISyntaxException
+		 * @throws MatchboxEngineCreationException
 		 */
 		public MatchboxEngine getEngine() throws MatchboxEngineCreationException {
 			log.info("Initializing Matchbox Engine");
@@ -757,9 +753,10 @@ public class MatchboxEngine extends ValidationEngine {
 
 	/**
 	 * Adds a text to the list of suppressed validation warning/information-level issues.
+	 * <p>
+	 * Implementation note: The text is Regex-escaped before being added to the list.
 	 *
 	 * @param text The text to add.
-	 * @implNote The text is Regex-escaped before being added to the list.
 	 */
 	public void addSuppressedWarnInfo(final @NonNull String text) {
 		this.suppressedWarnInfoPatterns.add(Pattern.quote(Objects.requireNonNull(text)));
