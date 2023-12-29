@@ -1,7 +1,7 @@
 2023/12/27 Release 3.5.2
+
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.2`
-- IG ballot versions are not considered "current" if the same version, non-balloted is also loaded [#168]
-  (https://github.com/ahdis/matchbox/issues/168)
+- IG ballot versions are not considered "current" if the same version, non-balloted is also loaded [#168](https://github.com/ahdis/matchbox/issues/168)
 - Removed wrong warning about R5 specials not being loaded [#167](https://github.com/ahdis/matchbox/issues/167)
 - Fixed loading of hl7.terminology [#166](https://github.com/ahdis/matchbox/issues/166)
 - Added onlyOneEngine and httpReadOnly flags to the validation OperationOutcome [#164](https://github.com/ahdis/matchbox/issues/164)
@@ -14,10 +14,12 @@
 - Updated the validation OperationOutcome to include more information, the GUI was also updated
 
 2023/12/11 Release 3.5.1
+
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.1`
 - The terminology system advertises support for more code systems
 
 2023/12/08 Release 3.5.0
+
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.0`
 - Upgraded to HAPI FHIR 6.10.0 and Core 6.1.16
 - Implemented an HTTP read-only mode [#158](https://github.com/ahdis/matchbox/issues/158)
@@ -26,10 +28,12 @@
 - Fixed a bug in package loading on Windows filesystem
 
 2023/10/05 Release 3.4.5
+
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.5`
 - CDA Logical Model update for xsi-type ST [#145](https://github.com/ahdis/matchbox/issues/145)
 
 2023/10/03 Release 3.4.4
+
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.4`
 - CDA Logical Model update for xsi-type ST [#145](https://github.com/ahdis/matchbox/issues/145)
 - update hl7.terminology package from 5.1.0 to 5.3.0 [#146](https://github.com/ahdis/matchbox/issues/146)

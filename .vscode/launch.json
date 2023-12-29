@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
       "type": "java",
       "name": "Launch Current File",
@@ -58,31 +59,14 @@
     },
     {
       "type": "java",
-      "name": "Launch Matchbox-Server (ch-elm) & eprik",
+      "name": "Launch Matchbox-Server (ch)",
       "request": "launch",
       "mainClass": "ca.uhn.fhir.jpa.starter.Application",
       "projectName": "matchbox-server",
-      "vmArgs": "-Dspring.config.additional-location=file:with-eprik/application.yaml",
+      "vmArgs": "-Dspring.config.additional-location=file:with-ch/application.yaml",
       "cwd": "${workspaceFolder}/matchbox-server"
     },
     {
-      "type": "java",
-      "name": "Launch Matchbox-Server (it)",
-      "request": "launch",
-      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
-      "projectName": "matchbox-server",
-      "vmArgs": "-Dspring.config.additional-location=file:with-it/application.yaml",
-      "cwd": "${workspaceFolder}/matchbox-server"
-    },
-    {
-      "type": "java",
-      "name": "Launch Matchbox-Server (who)",
-      "request": "launch",
-      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
-      "projectName": "matchbox-server",
-      "vmArgs": "-Dspring.config.additional-location=file:with-who/application.yaml",
-      "cwd": "${workspaceFolder}/matchbox-server"
-    },    {
       "type": "java",
       "name": "Launch Matchbox-Server",
       "request": "launch",

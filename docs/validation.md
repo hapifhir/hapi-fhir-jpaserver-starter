@@ -3,7 +3,7 @@
 matchbox can validate FHIR resources if they are conform to the FHIR R4 specification
 and conform to the requirements of specific implementation guides.
 
-Validation is based on the official [HL7 Java reference validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator)in accordance with the provided terminologies. An external terminology server can also be configured, and you can validate your implementation through the $validate operation with the FHIR API or through a simple GUI.
+Validation is based on the official [HL7 Java reference validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator) in accordance with the provided terminologies. An external terminology server can also be configured, and you can validate your implementation through the $validate operation with the FHIR API or through a simple GUI.
 
 ## matchbox engine
 
@@ -55,7 +55,7 @@ hapi:
         url: https://fhir.ch/ig/cda-fhir-maps/package.tgz
       chemd:
         name: ch.fhir.ig.ch-emed
-        version: 3.0.0
+        version: 4.0.1
 matchbox:
   fhir:
     context:
@@ -71,7 +71,7 @@ matchbox:
 | Parameter            | Card  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 |----------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | implementationguides | 0..\* | the Implementation Guide and version which with which matchbox will be configured, you can provide by classpath, file, http address, if none is specified the FHIR package servers will be used (need to be online)                                                                                                                                                                                                                                                               |
-| txServer             | 0..1  | txServer to use, n/a if none (default)                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| txServer             | 0..1  | txServer to use, n/a if none (default), http://localhost:8080/fhir for internal (if server.port in application.yaml is 8080), http://tx.fhir.org for hl7 validator  |
 | igsPreloaded         | 0..\* | For each mentioned ImplementationGuide (comma separated) an engine will be created, which will be cached in memory as long the application is running. Other IG's will created on demand and will be cached for an hour for subsequent calls. Tradeoff between memory consumption and first response time (creating of engine might have duration of half a minute). Default no igs are preloaded.                                                                                |
 | onlyOneEngine        | 0..1  | Implementation Guides can have multiple versions with different dependencies. Matchbox creates for transformation and validation an own engine for each Implementation Guide and its dependencies (default setting). You can switch this behavior, e.g. if you are using it in development and want to create and update resources or transform maps. Set the setting for onlyOneEngine to true. The changes are however not persisted and will be lost if matchbox is restarted. |
 | httpReadOnly         | 0..1  | Whether to allow creating, modifying or deleting resources on the server via the HTTP API or not. If `true`, IGs can only be loaded through the configuration.                                                                                                                                                                                                                                                                                                                    |

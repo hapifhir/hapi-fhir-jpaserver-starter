@@ -99,4 +99,6 @@ If you want to prepare a container which does not need internet access during th
 build a new container image will do the download and installation packages already during the startup process (adding this line
 into the Dockerfile):
 
+```
 RUN java -Xmx1G -Xms1G -jar /matchbox.jar --hapi.fhir.only_install_packages=true
+```
