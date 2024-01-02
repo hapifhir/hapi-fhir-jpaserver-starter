@@ -1,0 +1,42 @@
+name: Build and Hapi Fhir Jpaserver Starter Server
+
+on:
+  push:
+    branches: [ "se/unit_test2" ]
+    paths:
+      - 'src/**'
+      - '.github/workflows/maven-build.yml'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout source repository 
+        uses: actions/checkout@v2
+        with:
+          repository: DigitalHealthIntegration/hapi-fhir-jpaserver-starter
+          ref: fhir-resources-helper
+          # submodules: 'recursive' 
+
+      # - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        # working-directory: submodules/hapi-fhir-jpaserver-starter
+        run: mvn -B package --f ./pom.xml 
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./target/site/jacoco/jacoco.xml
+          fail_ci_if_error: false
+          verbose: true

@@ -18,6 +18,7 @@ import com.iprd.report.model.definition.BarChartDefinition;
 import com.iprd.report.model.definition.LineChart;
 import com.iprd.report.model.definition.PieChartDefinition;
 import com.iprd.report.model.definition.TabularItem;
+import com.iprd.report.model.definition.ANCDailySummaryConfig;
 import org.hibernate.SessionFactory;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.model.*;
@@ -710,6 +711,27 @@ private Bundle createMockBundle() {
 		assertEquals(result.getId(), "6c20db8d-0a28-4a43-9f55-dd0ac0c4d625");
 	}
 
+	@Test
+	public void testGetCategoriesFromAncDailySummaryConfig() throws IOException, NoSuchFieldException, IllegalAccessException {
+		List<ANCDailySummaryConfig> mockIndicators = readJsonFile("DAILY_SUMMARY_DEFINITIONS.json", new TypeToken<List<ANCDailySummaryConfig>>(){}.getType());
+
+		// Create an instance of DashboardConfigContainer
+		DashboardConfigContainer container = new DashboardConfigContainer();
+
+		// Assign values to its fields
+		container.setAncDailySummaryConfig(mockIndicators);
+
+		// Set the private field in helperService
+		Field field = HelperService.class.getDeclaredField("dashboardEnvToConfigMap");
+		field.setAccessible(true);
+		Map<String, DashboardConfigContainer> mapToReturn = new HashMap<>();
+		mapToReturn.put("V2", container);
+		field.set(helperService, mapToReturn);
+
+		List<String> output = helperService.getCategoriesFromAncDailySummaryConfig("V2");
+		assertEquals(output.size(), 12);
+		assertEquals(output.get(0), "patient-bio-data");
+	}
 
 	private Pair<List<String>, LinkedHashMap<String, List<String>>> createMockResult() {
 		// Create a sample data for testing
