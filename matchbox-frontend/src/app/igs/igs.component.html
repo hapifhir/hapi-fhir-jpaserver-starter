@@ -1,79 +1,62 @@
-<mat-card class="card-igs">
-  <mat-card-content>
-    <mat-card-header>
-      <mat-card-title>FHIR ImplementationGuides installed on server</mat-card-title>
-    </mat-card-header>
-    <mat-table #table [dataSource]="dataSource">
-      <ng-container matColumnDef="packageId">
-        <mat-header-cell *matHeaderCellDef class="packageId">Package Id</mat-header-cell>
-        <mat-cell *matCellDef="let entry" class="packageId">{{ getPackageId(entry) }}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="version">
-        <mat-header-cell *matHeaderCellDef class="version">Version</mat-header-cell>
-        <mat-cell *matCellDef="let entry" class="version">{{ getVersion(entry) }}</mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="title" class="title">
-        <mat-header-cell *matHeaderCellDef class="packageId">Title</mat-header-cell>
-        <mat-cell *matCellDef="let entry">{{ getTitle(entry) }}</mat-cell>
-      </ng-container>
-      <mat-header-row *matHeaderRowDef="['packageId', 'version', 'title']"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: ['packageId', 'version', 'title']" (click)="selectRow(row)"> </mat-row>
-    </mat-table>
-    <mat-paginator
-      [pageIndex]="pageIndex"
-      [length]="length"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="pageSizeOptions"
-      (page)="goToPage($event)"></mat-paginator>
-  </mat-card-content>
-</mat-card>
+<div class="white-block card-igs">
+  <h2>ImplementationGuides installed on the server</h2>
 
-<mat-card class="Search card-igs">
-  <mat-card-content>
-    <mat-card-header>
-      <mat-card-title>Install an ImplementationGuide</mat-card-title>
-    </mat-card-header>
-    <mat-form-field>
-      <mat-label>PackageId</mat-label>
-      <input matInput [formControl]="addPackageId" />
-    </mat-form-field>
-    &nbsp;
-    <mat-form-field>
-      <mat-label>Version</mat-label>
-      <input matInput [formControl]="addVersion" />
-    </mat-form-field>
-    &nbsp;
-    <mat-form-field style="width: 50vw">
-      <mat-label
-        >Package url (optional, use only if not available through
-        <a href="https://packages.fhir.org">packages.fhir.org</a>)</mat-label
-      >
-      <input matInput [formControl]="addUrl" />
-    </mat-form-field>
+  <table>
+    <thead>
+    <tr>
+      <th>Package</th>
+      <th>Version</th>
+      <th>Title</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr (click)="selectRow(ig)" *ngFor="let ig of igs">
+      <td>{{ ig.packageId }}</td>
+      <td class="secondary">{{ ig.version }}</td>
+      <td class="secondary">{{ ig.title }}</td>
+    </tbody>
+  </table>
+</div>
 
-    <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">Upload</button>
-      <ng-container *ngIf="selection"
-        >&nbsp;
-        <button mat-button type="submit" (click)="onUpdate()">Update</button>
-      </ng-container>
-      <ng-container *ngIf="selection"
-        >&nbsp;
-        <button mat-button type="submit" (click)="onDelete()">Delete</button>
-      </ng-container>
-    </mat-card-actions>
-  </mat-card-content>
-</mat-card>
+<div class="white-block Search card-igs">
+  <h3>Install an ImplementationGuide</h3>
+
+  <mat-form-field>
+    <mat-label>PackageId</mat-label>
+    <input [formControl]="addPackageId" matInput/>
+  </mat-form-field>
+  &nbsp;
+  <mat-form-field>
+    <mat-label>Version</mat-label>
+    <input [formControl]="addVersion" matInput/>
+  </mat-form-field>
+  &nbsp;
+  <mat-form-field style="width: 50vw">
+    <mat-label
+    >Package url (optional, use only if not available through
+      <a href="https://packages.fhir.org">packages.fhir.org</a>)
+    </mat-label
+    >
+    <input [formControl]="addUrl" matInput/>
+  </mat-form-field>
+
+  <button (click)="onSubmit()" type="submit">Upload</button>
+  <ng-container *ngIf="selection"
+  >&nbsp;
+    <button (click)="onUpdate()" type="submit">Update</button>
+  </ng-container>
+  <ng-container *ngIf="selection"
+  >&nbsp;
+    <button (click)="onDelete()" type="submit">Delete</button>
+  </ng-container>
+</div>
 
 <ng-container *ngIf="update">
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </ng-container>
 
-<mat-card class="logs" *ngIf="errMsg">
-  <mat-card-content>
-    <mat-card-header>
-      <mat-card-title>Results of the last operation</mat-card-title>
-    </mat-card-header>
-    <app-operation-outcome [operationOutcome]="operationOutcome" [title]="errMsg"></app-operation-outcome>
-  </mat-card-content>
-</mat-card>
+<div *ngIf="errorMessage" class="white-block logs">
+  <h2>Result of the last operation</h2>
+
+  <app-operation-outcome [operationOutcome]="operationOutcome" [title]="errorMessage"></app-operation-outcome>
+</div>

@@ -35,22 +35,21 @@ export class TransformComponent implements OnInit {
   operationOutcome: fhir.r4.OperationOutcome;
   operationOutcomeTransformed: fhir.r4.OperationOutcome;
 
-  constructor(private data: FhirConfigService, private cd: ChangeDetectorRef) {
+  constructor(
+    private data: FhirConfigService,
+    private cd: ChangeDetectorRef
+  ) {
     this.client = data.getFhirClient();
-    this.client
-      .search({ resourceType: 'StructureMap', searchParams: this.query })
-      .then((response) => {
-        this.setMaps(<fhir.r4.Bundle>response);
-        return response;
-      });
+    this.client.search({ resourceType: 'StructureMap', searchParams: this.query }).then((response) => {
+      this.setMaps(<fhir.r4.Bundle>response);
+      return response;
+    });
 
     this.selectedMap = new UntypedFormControl();
-    this.selectedMap.valueChanges
-      .pipe(debounceTime(400), distinctUntilChanged())
-      .subscribe((term) => {
-        this.selectedUrl = term;
-        this.transform();
-      });
+    this.selectedMap.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((term) => {
+      this.selectedUrl = term;
+      this.transform();
+    });
   }
 
   transform() {
@@ -86,24 +85,17 @@ export class TransformComponent implements OnInit {
   }
 
   setMaps(response: fhir.r4.Bundle) {
-    this.structureMaps = response.entry.map(
-      (entry) => <fhir.r4.StructureMap>entry.resource
-    );
+    this.structureMaps = response.entry.map((entry) => <fhir.r4.StructureMap>entry.resource);
   }
+
   ngOnInit(): void {}
 
   addFile(droppedBlob: IDroppedBlob) {
     this.transformed = null;
-    if (
-      droppedBlob.contentType === 'application/json' ||
-      droppedBlob.name.endsWith('.json')
-    ) {
+    if (droppedBlob.contentType === 'application/json' || droppedBlob.name.endsWith('.json')) {
       this.mimeType = 'application/fhir+json';
     }
-    if (
-      droppedBlob.contentType === 'application/xml' ||
-      droppedBlob.name.endsWith('.xml')
-    ) {
+    if (droppedBlob.contentType === 'application/xml' || droppedBlob.name.endsWith('.xml')) {
       this.mimeType = 'application/fhir+xml';
     }
     const reader = new FileReader();

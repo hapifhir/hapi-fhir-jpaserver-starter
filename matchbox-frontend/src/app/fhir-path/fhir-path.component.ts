@@ -18,24 +18,19 @@ export class FhirPathComponent implements OnInit {
     private cd: ChangeDetectorRef
   ) {
     this.fhirPathExpression = new UntypedFormControl();
-    this.fhirPathExpression.valueChanges
-      .pipe(debounceTime(400), distinctUntilChanged())
-      .subscribe((term) => {
-        console.log('called with ' + term);
-        if (term) {
-          try {
-            this.fhirPathResult = this.fhirPathService.evaluate(
-              this.resource,
-              term
-            );
-          } catch (e) {
-            console.log(e);
-            this.fhirPathResult = undefined;
-          }
-        } else {
+    this.fhirPathExpression.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((term) => {
+      console.log('called with ' + term);
+      if (term) {
+        try {
+          this.fhirPathResult = this.fhirPathService.evaluate(this.resource, term);
+        } catch (e) {
+          console.log(e);
           this.fhirPathResult = undefined;
         }
-      });
+      } else {
+        this.fhirPathResult = undefined;
+      }
+    });
   }
 
   fileChange(event) {

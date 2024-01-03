@@ -6,7 +6,7 @@
 
     <div>Resource</div>
 
-    <app-upload (addFiles)="addFile($event)"> </app-upload>
+    <app-upload (addFiles)="addFile($event)"></app-upload>
 
     <pre><code [highlight]="getSource()" [lineNumbers]="true"></code></pre>
   </mat-card-content>
@@ -19,7 +19,8 @@
       <mat-option
         *ngFor="let structureMap of structureMaps"
         value="{{ structureMap.url }}"
-        >{{ structureMap.name }}</mat-option
+      >{{ structureMap.name }}
+      </mat-option
       >
     </mat-select>
   </mat-form-field>

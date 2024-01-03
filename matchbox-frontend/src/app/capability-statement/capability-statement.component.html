@@ -1,16 +1,20 @@
-<mat-card class="display">
-  <mat-card-content>
-    <mat-card-header>
-      <mat-card-title>{{ client.baseUrl }}</mat-card-title>
-    </mat-card-header>
-    <pre><code [highlight]="getJson()" [lineNumbers]="true"></code></pre>
+<div class="white-block" id="capability-statement">
+  <h2>CapabilityStatement</h2>
 
-    <mat-error *ngIf="operationOutcome">
-      <ul>
-        <li *ngFor="let issue of operationOutcome.issue">
-          {{ issue.diagnostics }}
-        </li>
-      </ul>
-    </mat-error>
-  </mat-card-content>
-</mat-card>
+  <p>
+    CapabilityStatement of the server: <code>{{ client.baseUrl }}</code>
+  </p>
+
+  <mat-spinner *ngIf="loading"></mat-spinner>
+
+  <div id="code"></div>
+
+  <!-- TODO: OperationOutcome display -->
+  <mat-error *ngIf="operationOutcome">
+    <ul>
+      <li *ngFor="let issue of operationOutcome.issue">
+        {{ issue.diagnostics }}
+      </li>
+    </ul>
+  </mat-error>
+</div>

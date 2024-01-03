@@ -6,13 +6,13 @@
     <mat-form-field class="fixtextarea">
       <mat-card-actions>
         <input
-          type="file"
           (change)="fileSource($event)"
-          placeholder="Upload source"
           accept=".json"
+          placeholder="Upload source"
+          type="file"
         />
       </mat-card-actions>
-      <textarea matNativeControl [formControl]="source" rows="15" cols="400">
+      <textarea [formControl]="source" cols="400" matNativeControl rows="15">
       </textarea>
     </mat-form-field>
   </mat-card-content>
@@ -26,13 +26,13 @@
     <mat-form-field class="fixtextarea">
       <mat-card-actions>
         <input
-          type="file"
           (change)="fileChange($event)"
-          placeholder="Upload map"
           accept=".map"
+          placeholder="Upload map"
+          type="file"
         />
       </mat-card-actions>
-      <textarea matNativeControl [formControl]="map" rows="20" cols="400">
+      <textarea [formControl]="map" cols="400" matNativeControl rows="20">
       </textarea>
     </mat-form-field>
     <mat-error *ngIf="operationOutcome">
@@ -43,7 +43,8 @@
       </ul>
     </mat-error>
     <mat-hint *ngIf="structureMap"
-      >Successfully created on server: {{ structureMap.url }}</mat-hint
+    >Successfully created on server: {{ structureMap.url }}
+    </mat-hint
     >
   </mat-card-content>
 </mat-card>

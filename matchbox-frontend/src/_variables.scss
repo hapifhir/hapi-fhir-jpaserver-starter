@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+
 $md-mcgpalette0: (
   50: #e8ebee,
   100: #c5ced5,
@@ -35,6 +36,14 @@ $md-mcgpalette0: (
 $my-primary: mat.define-palette($md-mcgpalette0, 500, 50, 300);
 $my-accent: mat.define-palette($md-mcgpalette0, A400);
 $my-warn: mat.define-palette(mat.$red-palette);
+
+$green-primary: #97d6ba;
+$green-dark: #3d5c73;
+$green-light: #d2eade;
+
+$issue-error: #d9534f;
+$issue-warning: #f0ad4e;
+$issue-info: #4ca8de;
 
 @function my-mat-light-theme-foreground($color) {
   @return (

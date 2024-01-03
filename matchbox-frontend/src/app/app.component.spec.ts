@@ -14,28 +14,23 @@ export const FHIR_JS_CONFIG: FhirConfig = {
 const routes: Routes = [];
 
 describe('AppComponent', () => {
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [AppComponent],
-        imports: [
-          MatMenuModule,
-          TranslateModule.forRoot(),
-          HttpClientTestingModule,
-          RouterModule.forRoot(routes, {
-    useHash: true
-}),
-        ],
-        schemas: [NO_ERRORS_SCHEMA],
-      }).compileComponents();
-    })
-  );
-  it(
-    'should create the app',
-    waitForAsync(() => {
-      const fixture = TestBed.createComponent(AppComponent);
-      const app = fixture.debugElement.componentInstance;
-      expect(app).toBeTruthy();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [AppComponent],
+      imports: [
+        MatMenuModule,
+        TranslateModule.forRoot(),
+        HttpClientTestingModule,
+        RouterModule.forRoot(routes, {
+          useHash: true,
+        }),
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
+  }));
+  it('should create the app', waitForAsync(() => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.debugElement.componentInstance;
+    expect(app).toBeTruthy();
+  }));
 });

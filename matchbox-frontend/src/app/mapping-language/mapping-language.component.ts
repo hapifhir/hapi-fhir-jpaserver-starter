@@ -11,47 +11,47 @@ import debug from 'debug';
   styleUrls: ['./mapping-language.component.scss'],
 })
 export class MappingLanguageComponent implements OnInit {
+  static log = debug('app:');
   public source: UntypedFormControl;
   public map: UntypedFormControl;
   public structureMap: any;
   public transformed: any;
-
   client: FhirClient;
-  static log = debug('app:');
   errMsg: string;
 
   operationOutcome: fhir.r4.OperationOutcome;
   operationOutcomeTransformed: fhir.r4.OperationOutcome;
 
-  constructor(private cd: ChangeDetectorRef, private data: FhirConfigService) {
+  constructor(
+    private cd: ChangeDetectorRef,
+    private data: FhirConfigService
+  ) {
     this.client = data.getFhirClient();
     this.source = new UntypedFormControl();
     this.map = new UntypedFormControl();
     this.structureMap = null;
-    this.map.valueChanges
-      .pipe(debounceTime(1000), distinctUntilChanged())
-      .subscribe((mapText) => {
-        MappingLanguageComponent.log('create StructureMap');
-        this.client
-          .create({
-            resourceType: 'StructureMap',
-            body: mapText,
-            headers: {
-              accept: 'application/fhir+json',
-              'content-type': 'text/fhir-mapping',
-            },
-          })
-          .then((response) => {
-            this.operationOutcome = null;
-            this.structureMap = response;
-            this.transform();
-          })
-          .catch((error) => {
-            // {"response":{"status":500,"data":{"resourceType":"OperationOutcome","issue":[{"severity":"error","code":"processing","diagnostics":"Error @1, 1: Found \"asdfasdf\" expecting \"map\""}]}},"config":{"method":"post","url":"https://test.ahdis.ch/r4/StructureMap","headers":{}}}
-            this.structureMap = null;
-            this.operationOutcome = error.response.data;
-          });
-      });
+    this.map.valueChanges.pipe(debounceTime(1000), distinctUntilChanged()).subscribe((mapText) => {
+      MappingLanguageComponent.log('create StructureMap');
+      this.client
+        .create({
+          resourceType: 'StructureMap',
+          body: mapText,
+          headers: {
+            accept: 'application/fhir+json',
+            'content-type': 'text/fhir-mapping',
+          },
+        })
+        .then((response) => {
+          this.operationOutcome = null;
+          this.structureMap = response;
+          this.transform();
+        })
+        .catch((error) => {
+          // {"response":{"status":500,"data":{"resourceType":"OperationOutcome","issue":[{"severity":"error","code":"processing","diagnostics":"Error @1, 1: Found \"asdfasdf\" expecting \"map\""}]}},"config":{"method":"post","url":"https://test.ahdis.ch/r4/StructureMap","headers":{}}}
+          this.structureMap = null;
+          this.operationOutcome = error.response.data;
+        });
+    });
 
     this.source.valueChanges
       .pipe(debounceTime(1000), distinctUntilChanged())

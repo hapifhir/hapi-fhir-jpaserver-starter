@@ -1,6 +1,22 @@
+@import '../../_variables';
+
 :host {
+  margin: 0 auto;
+  min-width: 1400px;
+  width: 100%;
+}
+
+.row {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-self: stretch;
+  margin: 1em auto;
+  min-width: 1400px;
+  width: 100%;
+  justify-content: space-evenly;
+  & > div {
+    width: 46%;
+  }
 }
 
 .mat-table {
@@ -44,11 +60,72 @@
   }
 }
 
+table {
+  width: 100%;
+
+  .selected {
+    background: #d8f1e6;
+  }
+
+  td.issues {
+    font-size: 12px;
+    line-height: 12px;
+    color: #818181;
+
+    mat-icon {
+      width: 12px;
+      height: 12px;
+      margin-right: 2px;
+      vertical-align: bottom;
+
+      &.error {
+        color: $issue-error;
+      }
+      &.warning {
+        color: $issue-warning;
+      }
+      &.info {
+        color: $issue-info;
+      }
+    }
+  }
+}
+
+.small-icon-button {
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+
+  & > * {
+    max-width: 24px !important;
+  }
+
+  & > *[role=img] {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .mat-mdc-button-touch-target {
+    width: 24px !important;
+    height: 24px !important;
+  }
+}
+
 .form-field-group {
   padding-left: 1rem;
   padding-right: 1rem;
   display: flex;
   flex-direction: row;
+
   mat-form-field {
     width: 100%;
   }

@@ -11,11 +11,7 @@ export class FhirPathService {
 
   public evaluateToString(fhir: any, fhirPath: string): string {
     const result = this.evaluate(fhir, fhirPath);
-    if (
-      result &&
-      result instanceof Array &&
-      (result as Array<string>).length === 1
-    ) {
+    if (result && result instanceof Array && (result as Array<string>).length === 1) {
       return (result as Array<string>)[0];
     }
     return null;

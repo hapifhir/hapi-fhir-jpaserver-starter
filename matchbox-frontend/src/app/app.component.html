@@ -1,51 +1,46 @@
-<mat-toolbar color="primary" role="header">
-  <div class="home-link" routerLink="/">
-    <div class="logo-container">
-      <img src="assets/matchbox_logo_color.png" />
-    </div>
+<header>
+  <div class="logo-container" routerLink="/">
+    <img alt="Matchbox logo" height="40" src="assets/matchbox_logo_color.png" width="95"/>
+    <span class="version">v{{ version }}</span>
   </div>
-  <!-- This fills the remaining space of the current row -->
-  <span class="example-fill-remaining-space"> </span>
-  <span>
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item routerLink="/">
-        <mat-icon>home</mat-icon>
-        <span>Home</span>
-      </button>
-      <button mat-menu-item routerLink="/CapabilityStatement">
-        <mat-icon>info</mat-icon>
-        <span>CapabilityStatement</span>
-      </button>
-      <button mat-menu-item routerLink="/igs">
-        <mat-icon>info</mat-icon>
-        <span>IGs ...</span>
-      </button>
-      <button mat-menu-item routerLink="/fhirpath">
-        <mat-icon>search</mat-icon>
-        <span>FHIRPath ...</span>
-      </button>
-      <button mat-menu-item routerLink="/mappinglanguage">
-        <mat-icon>search</mat-icon>
-        <span>FHIR mapping language ...</span>
-      </button>
-      <button mat-menu-item routerLink="/transform">
-        <mat-icon>search</mat-icon>
-        <span>Transform ...</span>
-      </button>
-      <button mat-menu-item routerLink="/validate">
-        <mat-icon>Validate</mat-icon>
-        <span>Validate ...</span>
-      </button>
-      <button mat-menu-item routerLink="/settings">
-        <mat-icon>settings</mat-icon>
-        <span>Settings</span>
-      </button>
-    </mat-menu>
-  </span>
-</mat-toolbar>
+
+  <nav>
+    <div routerLink="/">
+      <mat-icon>home</mat-icon>
+      <span>Home</span>
+    </div>
+    <div routerLink="/CapabilityStatement">
+      <mat-icon>info</mat-icon>
+      <span>CapabilityStatement</span>
+    </div>
+    <div routerLink="/igs">
+      <mat-icon>info</mat-icon>
+      <span>IGs</span>
+    </div>
+    <div routerLink="/fhirpath">
+      <mat-icon>search</mat-icon>
+      <span>FHIRPath</span>
+    </div>
+    <div routerLink="/mappinglanguage">
+      <mat-icon>search</mat-icon>
+      <span>FHIR mapping language</span>
+    </div>
+    <div routerLink="/transform">
+      <mat-icon>search</mat-icon>
+      <span>Transform</span>
+    </div>
+    <div routerLink="/validate">
+      <mat-icon>Validate</mat-icon>
+      <span>Validate</span>
+    </div>
+    <div routerLink="/settings">
+      <mat-icon>settings</mat-icon>
+      <span>Settings</span>
+    </div>
+  </nav>
+</header>
+
 <main class="mat-typography">
-  <router-outlet> </router-outlet>
+  <!-- Include the routed page here -->
+  <router-outlet></router-outlet>
 </main>

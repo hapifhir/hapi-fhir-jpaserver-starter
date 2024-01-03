@@ -1,3 +1,5 @@
+@import '../../_variables';
+
 .card-maps {
   margin-bottom: 10px;
 }
@@ -7,25 +9,53 @@
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
+ul {
+  list-style: none;
+  padding: 0;
+}
+.clickable .issue {
+  cursor: pointer;
+}
+
 .issue {
-  border: 2px solid #f8f9fa;
-  padding: 2px;
+  border: 1px solid #e1e1e1;
+  background: #fbfbfb;
+  border-radius: 5px;
+  padding: 5px 8px;
+  --color: #000;
+  border-left: 4px solid var(--color);
+  margin-bottom: 4px;
+
+  p {
+    margin: 2px 0 0 0;
+  }
+  .severity {
+    color: var(--color);
+    font-weight: 600;
+  }
+  &.fatal,
+  &.error {
+    --color: #{$issue-error};
+  }
+  &.warning {
+    --color: #{$issue-warning};
+  }
+  &.information {
+    --color: #{$issue-info};
+  }
 }
 
-.fatal {
-  background: #cc3300; /* color */
-}
-
-.error {
-  background: #ff9966; /* color */
-}
-
-.warning {
-  background: #ffe69e; /* color */
-}
-
-.information {
-  background: #cde8a5; /* color */
+:host ::ng-deep .issue {
+  .code {
+    font-size: 0.9em;
+    color: #636363;
+  }
+  & > span > code {
+    background: #e1e1e1;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-family: courier, monospace;
+  }
 }
 
 ::ng-deep .ace-highlight-fatal {

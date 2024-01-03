@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import packageJson from '../../../package.json';
 
 @Component({
@@ -6,10 +6,6 @@ import packageJson from '../../../package.json';
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent {
   public version: string = packageJson.version;
-
-  ngOnInit(): void {
-    // Nothing to do here
-  }
 }

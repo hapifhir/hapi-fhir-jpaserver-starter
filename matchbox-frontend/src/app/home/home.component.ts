@@ -15,7 +15,11 @@ export class HomeComponent implements OnInit {
 
   public version: string = packageJson.version;
 
-  constructor(fhirConfigService: FhirConfigService, private router: Router, private location: Location) {
+  constructor(
+    fhirConfigService: FhirConfigService,
+    private router: Router,
+    private location: Location
+  ) {
     this.client = fhirConfigService.getFhirClient();
   }
 

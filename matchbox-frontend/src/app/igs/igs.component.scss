@@ -1,7 +1,29 @@
-:host {
-  display: flex;
-  flex-direction: column;
+.secondary {
+  color: rgb(107, 114, 128);
 }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead th {
+    border-bottom: 1px solid rgb(209, 213, 219);
+    padding-bottom: 1rem;
+  }
+
+  tbody {
+    td {
+      border-bottom: 1px solid rgb(229, 231, 235);
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+
+      &:hover {
+        background: #eee;
+      }
+    }
+  }
+}
+
 
 .mat-form-field {
   &.url {

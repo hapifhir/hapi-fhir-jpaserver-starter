@@ -1,6 +1,6 @@
 /// <reference path=".,/../../../fhir.r4/index.d.ts" />
 
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 describe('Utilities', () => {
   beforeEach(() => {
@@ -15,8 +15,7 @@ describe('Utilities', () => {
         text: {
           status: 'generated',
           // tslint:disable-next-line:max-line-length
-          div:
-            '<div xmlns="http://www.w3.org/1999/xhtml"> Patient MINT_TEST, ID = MINT1234. Age = 56y, Size =\n      1.83m, Weight = 72.58kg </div>',
+          div: '<div xmlns="http://www.w3.org/1999/xhtml"> Patient MINT_TEST, ID = MINT1234. Age = 56y, Size =\n      1.83m, Weight = 72.58kg </div>',
         },
         extension: [
           {

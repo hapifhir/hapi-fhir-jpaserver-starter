@@ -14,7 +14,7 @@ import { IgsComponent } from './igs/igs.component';
 import { HIGHLIGHT_OPTIONS, HighlightModule } from 'ngx-highlightjs';
 import { TransformComponent } from './transform/transform.component';
 import { ValidateComponent } from './validate/validate.component';
-import { OperationOutcomeComponent } from './operation-outcome/operation-outcome.component';
+import { OperationResultComponent } from './operation-result/operation-result.component';
 import { UploadComponent } from './upload/upload.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 
@@ -68,7 +68,7 @@ export function createTranslateLoader(http: HttpClient) {
     IgsComponent,
     TransformComponent,
     ValidateComponent,
-    OperationOutcomeComponent,
+    OperationResultComponent,
     UploadComponent,
   ],
   imports: [
@@ -76,8 +76,8 @@ export function createTranslateLoader(http: HttpClient) {
     HttpClientModule,
     HighlightModule,
     RouterModule.forRoot(routes, {
-    useHash: true
-}),
+      useHash: true,
+    }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

@@ -31,9 +31,4 @@ mat-toolbar {
 main {
   width: 100%;
   margin: 0 auto;
-
-  @media screen and (min-width: 1020px) {
-    padding: 3rem 0;
-    width: 1000px;
-  }
 }

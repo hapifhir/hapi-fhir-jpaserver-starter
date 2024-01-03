@@ -1,162 +1,82 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { FhirConfigService } from '../fhirConfig.service';
 import FhirClient from 'fhir-kit-client';
-import { UntypedFormControl } from '@angular/forms';
 import pako from 'pako';
 import untar from 'js-untar';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { IDroppedBlob } from '../upload/upload.component';
+import ace, { Ace } from 'ace-builds';
+import { ValidationEntry } from './validation-entry';
+import { ValidationParameter } from './validation-parameter';
+import { ITarEntry } from './tar-entry';
+import { Issue, IssueSeverity } from '../util/operation-result';
 
-interface ITarEntry {
-  name: string; // "package/package.json",
-  mode: string; // "0100644 ",
-  uid: number; // 0,
-  gid: number; // 0,
-  size: number; // 647,
-  mtime: number; // 1641566058,
-  checksum: number; // 13500,
-  type: string; // "0",
-  linkname: string; // "",
-  ustarFormat: string; // "ustar",
-  version: string; // "00",
-  uname: string; // "",
-  gname: string; // "",
-  devmajor: number; //0,
-  devminor: number; //0,
-  namePrefix: string; // "",
-  buffer: ArrayBuffer; // {}
-  getBlobUrl: () => string; // ???
-  readAsJSON: () => any;
-  readAsString: () => string;
-}
+const INDENT_SPACES = 4;
 
-class ValidationParameter {
-  param: fhir.r4.OperationDefinitionParameter;
-  valueBoolean: boolean;
-  valueString;
-  String;
-  formControl: UntypedFormControl;
-
-  constructor(param: fhir.r4.OperationDefinitionParameter) {
-    this.param = param;
-    this.formControl = new UntypedFormControl();
-  }
-
-  isValueSet(): boolean {
-    return this.valueBoolean != null || this.valueString != null;
-  }
-}
-
-class ValidationEntry {
-  name: string; // "package/package.json",
-  json: string;
-  mimetype: string;
-  operationOutcome: fhir.r4.OperationOutcome;
-  profiles: string[];
-  public ig: string;
-  public fhirVersion: string;
-
-  constructor(
-    name: string,
-    json: string,
-    mimetype: string,
-    profiles: string[]
-  ) {
-    this.name = name;
-    this.json = json;
-    this.mimetype = mimetype;
-    this.profiles = profiles;
-  }
-
-  getErrors(): number {
-    if (this.operationOutcome) {
-      return this.operationOutcome?.issue?.filter(
-        (issue) =>
-          issue.code === 'processing' &&
-          (issue.severity === 'error' || issue.severity === 'fatal')
-      ).length;
-    }
-    return undefined;
-  }
-
-  getWarnings(): number {
-    if (this.operationOutcome) {
-      return this.operationOutcome?.issue?.filter(
-        (issue) => issue.code === 'processing' && issue.severity === 'warning'
-      ).length;
-    }
-    return undefined;
-  }
-
-  getInfos(): number {
-    if (this.operationOutcome) {
-      return this.operationOutcome?.issue?.filter(
-        (issue) =>
-          issue.code === 'processing' && issue.severity === 'information'
-      ).length;
-    }
-    return undefined;
-  }
-}
 @Component({
   selector: 'app-validate',
   templateUrl: './validate.component.html',
   styleUrls: ['./validate.component.scss'],
 })
-export class ValidateComponent implements OnInit {
-  json: string;
-  capabilitystatement: fhir.r4.CapabilityStatement;
+export class ValidateComponent implements AfterViewInit {
+
+  // Validation history
+  validationEntries: ValidationEntry[] = new Array<ValidationEntry>();
+  selectedEntry: ValidationEntry | null = null;
+
+  // About the server
   client: FhirClient;
-  errMsg: string;
-  operationOutcome: fhir.r4.OperationOutcome;
+  capabilityStatement: fhir.r4.CapabilityStatement | null = null;
+  installedIgs: string[] = new Array<string>();
+  validatorSettings: ValidationParameter[] = new Array<ValidationParameter>();
+
+  // Form
+  selectedIg: string = null;
+  selectedProfile: string;
+
+  // DOM
+  editor: Ace.Editor;
+  showSettings: boolean = false;
+
+
+
+
+  errorMessage: string | null = null;
   package: ArrayBuffer;
   resourceName: string;
   resourceId: string;
-  selectedProfile: string;
   validationInProgress: number;
-  selectedEntry: ValidationEntry;
-  profiles: string[];
-  igs: string[];
-  selectedIg: string = null;
-  validatorSettings: ValidationParameter[] = new Array<ValidationParameter>();
+  profiles: string[] = new Array<string>();
+  json: string;
 
-  dataSource = new MatTableDataSource<ValidationEntry>();
-  showSettings: boolean = false;
 
-  constructor(private data: FhirConfigService, private cd: ChangeDetectorRef) {
+  constructor(
+    data: FhirConfigService,
+    private cd: ChangeDetectorRef
+  ) {
     this.client = data.getFhirClient();
 
     this.client
       .capabilityStatement()
       .then((data: fhir.r4.CapabilityStatement) => {
-        this.capabilitystatement = data;
+        this.capabilityStatement = data;
         // TODO read operation definition id out of capability statement
         this.client
           .read({ resourceType: 'OperationDefinition', id: '-s-validate' })
           .then((od: fhir.r4.OperationDefinition) => {
-            od.parameter?.forEach(
-              (parameter: fhir.r4.OperationDefinitionParameter) => {
-                if (parameter.name == 'profile') {
-                  this.profiles = parameter.targetProfile;
-                }
+            od.parameter?.forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
+              if (parameter.name == 'profile') {
+                this.profiles.push(...parameter.targetProfile);
               }
-            );
+            });
             od.parameter
-              .filter(
-                (f) =>
-                  f.use == 'in' &&
-                  f.name != 'resource' &&
-                  f.name != 'profile' &&
-                  f.name != 'ig'
-              )
+              .filter((f) => f.use == 'in' && f.name != 'resource' && f.name != 'profile' && f.name != 'ig')
               .forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
                 this.validatorSettings.push(new ValidationParameter(parameter));
               });
           });
       })
       .catch((error) => {
-        this.errMsg = 'Error accessing FHIR server';
-        this.operationOutcome = error.response.data;
+        this.errorMessage = 'Error accessing FHIR server';
       });
 
     this.client
@@ -168,7 +88,7 @@ export class ValidateComponent implements OnInit {
         },
       })
       .then((bundle: fhir.r4.Bundle) => {
-        this.igs = bundle.entry
+        this.installedIgs = bundle.entry
           .map(
             (entry) =>
               (<fhir.r4.ImplementationGuide>entry.resource).packageId +
@@ -178,97 +98,55 @@ export class ValidateComponent implements OnInit {
           .sort();
       })
       .catch((error) => {
-        this.errMsg = 'Error accessing FHIR server';
-        this.operationOutcome = error.response.data;
+        this.errorMessage = 'Error accessing FHIR server';
       });
 
     this.validationInProgress = 0;
   }
 
-  getSelectedProfile(): string {
-    return this.selectedProfile;
+  ngAfterViewInit() {
+    this.editor = ace.edit('editor');
+    this.editor.setReadOnly(true);
+    //this.editor.setValue(JSON.stringify(data, null, INDENT_SPACES), -1);
+    this.editor.setTheme('ace/theme/textmate');
+    this.editor.setOptions({
+      maxLines: 10000,
+      tabSize: INDENT_SPACES,
+      wrap: true,
+      useWorker: false,
+      useSvgGutterIcons: false,
+    });
+    //this.editor.resize(true);
   }
 
-  setSelectedProfile(value: string) {
-    this.selectedProfile = value;
-  }
-
-  getSelectedIg(): string {
-    return this.selectedIg;
-  }
-
-  setSelectedIg(value: string) {
-    this.selectedIg = value;
-  }
-
-  getProfiles(): string[] {
-    return this.profiles;
-  }
-
-  addFile(droppedBlob: IDroppedBlob) {
-    this.validationInProgress += 1;
-    if (
-      droppedBlob.contentType === 'application/json' ||
-      droppedBlob.name.endsWith('.json')
-    ) {
-      this.addJson(droppedBlob.blob);
-    }
-    if (
-      droppedBlob.contentType === 'application/xml' ||
-      droppedBlob.name.endsWith('.xml')
-    ) {
-      this.addXml(droppedBlob.blob);
-    }
-    if (droppedBlob.name.endsWith('.tgz')) {
-      this.addPackage(droppedBlob.blob);
-    }
-    this.validationInProgress -= 1;
-  }
-
-  addXml(file) {
-    this.selectedProfile = null;
-    this.selectedIg = null;
-    const reader = new FileReader();
-    reader.readAsText(file);
-    const dataSource = this.dataSource;
-    reader.onload = () => {
-      // need to run CD since file load runs outside of zone
-      this.cd.markForCheck();
-      let entry = new ValidationEntry(
-        file.name,
-        <string>reader.result,
-        'application/fhir+xml',
-        null
-      );
-      this.selectRow(entry);
-      if (this.selectedProfile != null) {
-        entry.profiles = [this.selectedProfile];
+  addFile(droppedBlob: IDroppedBlob): void {
+    try {
+      this.validationInProgress += 1;
+      if (droppedBlob.name.endsWith('.tgz')) {
+        // Load an IG package
+        this.addPackage(droppedBlob.blob);
+      } else {
+        // We assume that the file is a FHIR resource
+        this.selectedProfile = null;
+        this.selectedIg = null;
+        const reader = new FileReader();
+        reader.readAsText(droppedBlob.blob);
+        reader.onload = () => {
+          // need to run CD since file load runs outside of zone
+          this.cd.markForCheck();
+          const entry = new ValidationEntry(droppedBlob.blob.name, <string>reader.result, droppedBlob.contentType, null);
+          if (entry.selectedProfile) {
+            this.selectedProfile = entry.selectedProfile;
+          }
+          this.validationEntries.push(entry);
+          this.show(entry);
+          this.validate(entry);
+        };
       }
-      this.validate(entry);
-    };
-  }
-
-  addJson(file) {
-    this.selectedProfile = null;
-    this.selectedIg = null;
-    const reader = new FileReader();
-    reader.readAsText(file);
-    const dataSource = this.dataSource;
-    reader.onload = () => {
-      // need to run CD since file load runs outside of zone
-      this.cd.markForCheck();
-      let entry = new ValidationEntry(
-        file.name,
-        <string>reader.result,
-        'application/fhir+json',
-        null
-      );
-      this.selectRow(entry);
-      if (this.selectedProfile != null) {
-        entry.profiles = [this.selectedProfile];
-      }
-      this.validate(entry);
-    };
+      this.validationInProgress -= 1;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   onValidateIg() {
@@ -292,7 +170,6 @@ export class ValidateComponent implements OnInit {
         Accept: 'application/gzip',
       },
     });
-    const contentType = res.headers.get('Content-Type');
     const blob = await res.blob();
     this.addPackage(blob);
   }
@@ -316,8 +193,6 @@ export class ValidateComponent implements OnInit {
           function (extractedFiles) {
             // onSuccess
             dataSource.forEach((entry) => {
-              entry.ig = ig;
-              entry.fhirVersion = fhirVersion;
               pointer.validate(entry);
             });
           },
@@ -332,10 +207,7 @@ export class ValidateComponent implements OnInit {
               fhirVersion = res['fhirVersions'][0];
               ig = res['name'] + '#' + res['version'];
             }
-            if (
-              extractedFile.name?.indexOf('example') >= 0 &&
-              extractedFile.name?.indexOf('.index.json') == -1
-            ) {
+            if (extractedFile.name?.indexOf('example') >= 0 && extractedFile.name?.indexOf('.index.json') == -1) {
               let name = extractedFile.name;
               if (name.startsWith('package/example/')) {
                 name = name.substring('package/example/'.length);
@@ -344,20 +216,13 @@ export class ValidateComponent implements OnInit {
                 name = name.substring('example/'.length);
               }
               let decoder = new TextDecoder('utf-8');
-              let res = JSON.parse(
-                decoder.decode(extractedFile.buffer)
-              ) as fhir.r4.Resource;
+              let res = JSON.parse(decoder.decode(extractedFile.buffer)) as fhir.r4.Resource;
               let profiles = res.meta?.profile;
               // maybe better add ig as a parmeter, we assume now that ig version is equal to canonical version
               for (let i = 0; i < profiles.length; i++) {
                 profiles[i] = profiles[i];
               }
-              let entry = new ValidationEntry(
-                name,
-                JSON.stringify(res, null, 2),
-                'application/fhir+json',
-                profiles
-              );
+              let entry = new ValidationEntry(name, JSON.stringify(res, null, 2), 'application/fhir+json', profiles);
               dataSource.push(entry);
             }
           }
@@ -369,181 +234,159 @@ export class ValidateComponent implements OnInit {
   onClear() {
     this.selectedProfile = null;
     this.selectedIg = null;
-    this.selectRow(undefined);
-    const len = this.dataSource.data.length;
-    this.dataSource.data.splice(0, len);
-    this.dataSource.data = this.dataSource.data; // https://stackoverflow.com/questions/46746598/angular-material-how-to-refresh-a-data-source-mat-table
+    this.show(undefined);
+    this.validationEntries.splice(0, this.validationEntries.length);
   }
 
-  validate(row: ValidationEntry) {
+  validate(entry: ValidationEntry) {
     if (this.selectedProfile != null) {
-      row.profiles = [this.selectedProfile];
+      if (!entry.profiles.includes(this.selectedProfile)) {
+        entry.profiles.push(this.selectedProfile);
+      }
+      entry.selectedProfile = this.selectedProfile;
     }
+
     if (this.selectedIg != null) {
       if (this.selectedIg.endsWith(' (current)')) {
-        row.ig = this.selectedIg.substring(0, this.selectedIg.length - 10);
+        entry.ig = this.selectedIg.substring(0, this.selectedIg.length - 10);
       } else {
-        row.ig = this.selectedIg;
+        entry.ig = this.selectedIg;
       }
     }
 
-    let valprofile = '';
-    try {
-      if (row.profiles?.length > 0) {
-        valprofile = '?profile=' + encodeURIComponent(row.profiles[0]);
-        if (row.ig != null) {
-          valprofile += '&ig=' + encodeURIComponent(row.ig);
-        }
-      } else {
-        return;
-      }
-    } catch (error) {}
-    // for each validatorSetting we add url paramter to valprofile
+    if (!entry.selectedProfile) {
+      console.error("No profile selected, won't run validation");
+      return;
+    }
+
+    const searchParams = new URLSearchParams();
+    searchParams.set('profile', entry.selectedProfile);
+    if (entry.ig) {
+      searchParams.set('ig', entry.ig);
+    }
+
+    // Validation options
     for (let i = 0; i < this.validatorSettings.length; i++) {
       if (
         this.validatorSettings[i].formControl.value != null &&
         this.validatorSettings[i].formControl.value.length > 0
       ) {
-        valprofile +=
-          '&' +
-          this.validatorSettings[i].param.name +
-          '=' +
-          encodeURIComponent(this.validatorSettings[i].formControl.value);
+        searchParams.set(this.validatorSettings[i].param.name, this.validatorSettings[i].formControl.value);
       }
     }
     this.validationInProgress += 1;
+    entry.loading = true;
     this.client
       .operation({
-        name: 'validate' + valprofile,
+        name: 'validate?' + searchParams.toString(),
         resourceType: undefined,
-        input: row.json,
+        input: entry.resource,
         options: {
           headers: {
             accept: 'application/fhir+json',
-            'content-type': row.mimetype,
+            'content-type': entry.mimetype,
           },
         },
       })
       .then((response) => {
         // see below
         this.validationInProgress -= 1;
-        row.operationOutcome = response;
-        this.dataSource.data.push(row);
-        this.dataSource.data = this.dataSource.data; // https://stackoverflow.com/questions/46746598/angular-material-how-to-refresh-a-data-source-mat-table
+        entry.loading = false;
+        entry.setOperationOutcome(response);
         if (this.validationInProgress == 0) {
-          this.selectRow(row);
+          this.show(entry);
+        } else {
+          this.updateEditorIssues();
         }
       })
       .catch((error) => {
         // fhir-kit-client throws an error when  return in not json
         this.validationInProgress -= 1;
+        entry.loading = false;
+        console.error(error);
       });
   }
 
-  selectRow(row: ValidationEntry) {
-    this.errMsg = '';
-    this.selectedEntry = row;
-    if (row) {
-      this.operationOutcome = row.operationOutcome;
-      this.json = row.json;
-      this.resourceName = '';
-      this.resourceId = '';
-      if (row.mimetype === 'application/fhir+json') {
-        try {
-          const res = <fhir.r4.Resource>JSON.parse(this.json);
-          if (res?.resourceType) {
-            this.resourceName = res.resourceType;
-            this.resourceId = res.id;
-          }
-          this.selectedProfile = res.meta?.profile?.[0];
-          if (this.selectedProfile == null && res?.resourceType) {
-            this.selectedProfile =
-              'http://hl7.org/fhir/StructureDefinition/' + res.resourceType;
-          }
-        } catch (error) {
-          this.errMsg = error.message;
-        }
-      }
-      if (row.mimetype === 'application/fhir+xml') {
-        let pos = this.json.indexOf('<?') + 1;
-        let posLeft = this.json.indexOf('<', pos);
-        let posRight = this.json.indexOf('>', posLeft);
-        if (posLeft < posRight) {
-          let tag = this.json.substring(posLeft + 1, posRight - 1);
-          let posTag = tag.indexOf(' xmlns');
-          if (posTag > 0) {
-            tag = tag.substring(0, posTag);
-          }
-          posTag = tag.indexOf(':');
-          if (posTag > 0) {
-            tag = tag.substring(posTag + 1);
-          }
-          this.resourceName = tag;
-
-          let posProfileLeft = this.json.indexOf('profile', posRight);
-          if (posProfileLeft > 0) {
-            let posProfileValue =
-              this.json.indexOf('value="', posProfileLeft) + 7;
-            let posProfileValueRight = this.json.indexOf('"', posProfileValue);
-            if (posProfileValue < posProfileValueRight) {
-              this.selectedProfile = this.json.substring(
-                posProfileValue,
-                posProfileValueRight
-              );
-            }
-          }
-
-          if (this.selectedProfile == null && this.resourceName != null) {
-            this.selectedProfile =
-              'http://hl7.org/fhir/StructureDefinition/' + this.resourceName;
-          }
-        }
-      }
-    } else {
-      this.operationOutcome = undefined;
-      this.json = undefined;
+  show(entry: ValidationEntry | null) {
+    this.errorMessage = null;
+    this.selectedEntry = entry;
+    if (!entry) {
+      this.json = null;
+      this.editor.setValue('', -1);
+      this.updateEditorIssues();
+      return;
     }
+
+    this.json = entry.resource;
+    this.resourceName = '';
+    this.resourceId = '';
+    this.editor.setValue(entry.resource, -1);
+    if (entry.mimetype === 'application/fhir+json') {
+      this.editor.getSession().setMode('ace/mode/json');
+    } else if (entry.mimetype === 'application/fhir+xml') {
+      this.editor.getSession().setMode('ace/mode/xml');
+    }
+    this.updateEditorIssues();
   }
 
-  remove(row: ValidationEntry) {
-    const index = this.dataSource.data.indexOf(row);
-    this.dataSource.data.splice(index, 1); //remove element from array
-    this.dataSource.data = this.dataSource.data; // https://stackoverflow.com/questions/46746598/angular-material-how-to-refresh-a-data-source-mat-table
-  }
-
-  validationOutcomeTitle(): string {
-    return `Details Validation Results ${this.resourceName} / ${this.resourceId}`;
+  removeEntryFromHistory(entry: ValidationEntry) {
+    if (entry === this.selectedEntry) {
+      this.show(null);
+    }
+    const index = this.validationEntries.indexOf(entry);
+    this.validationEntries.splice(index, 1); //remove element from array
   }
 
   onValidate() {
-    let entry = new ValidationEntry(
-      this.selectedEntry.name,
-      this.selectedEntry.json,
-      this.selectedEntry.mimetype,
-      [this.selectedProfile]
-    );
+    let entry = new ValidationEntry(this.selectedEntry.filename, this.selectedEntry.resource, this.selectedEntry.mimetype, [
+      this.selectedProfile,
+    ]);
+    this.validationEntries.push(entry);
     this.validate(entry);
   }
-
-  getJson(): String {
-    return this.json;
-  }
-  ngOnInit(): void {}
 
   toggleSettings() {
     this.showSettings = !this.showSettings;
   }
 
-  getLocalStorageItemOrDefault(key: string, def: string): string {
-    const val: string = localStorage.getItem(key);
-    if (val) {
-      return val;
+  updateEditorIssues(): void {
+    // Remove old markers
+    this.editor.session.clearAnnotations();
+
+    if (!this.selectedEntry || !this.selectedEntry.result) {
+      return;
     }
-    return def;
+    // Add new markers
+    const annotations = this.selectedEntry.result.issues
+      .filter(issue => issue.line)
+      .map(issue => {
+        let type;
+        switch (issue.severity) {
+          case IssueSeverity.Fatal:
+          case IssueSeverity.Error:
+            type = 'error';
+            break;
+          case IssueSeverity.Warning:
+            type = 'warning';
+            break;
+          case IssueSeverity.Information:
+            type = 'info';
+            break;
+        }
+        return {
+          row: issue.line - 1,
+          column: issue.col,
+          text: issue.text,
+          type
+        };
+      });
+    this.editor.session.setAnnotations(annotations);
   }
 
-  setLocaleStorageItem(key: string, value: string): string {
-    localStorage.setItem(key, value);
-    return value;
+  highlightIssue(issue: Issue) {
+    if (issue.line) {
+      this.editor.gotoLine(issue.line, issue.col, true);
+      this.editor.scrollToLine(issue.line, false, true, () => {});
+    }
   }
 }
