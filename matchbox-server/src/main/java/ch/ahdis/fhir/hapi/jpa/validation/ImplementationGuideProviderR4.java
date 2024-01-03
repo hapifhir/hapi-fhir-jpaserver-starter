@@ -230,6 +230,12 @@ public class ImplementationGuideProviderR4 extends ca.uhn.fhir.jpa.rp.r4.Impleme
 			}
 		}
 		log.info("Initializing packages finished " + VersionUtil.getMemory());
+
+		if (this.appProperties.getOnly_install_packages() != null && this.appProperties.getOnly_install_packages()) {
+			// In the 'only_install_packages' mode, we can stop after having installed the IGs in the database
+			return installOutcome;
+		}
+
 		log.info("Creating cached engines during startup  " + VersionUtil.getMemory());
 		// The matchboxEngineSupport will set the initialize flag after having reloaded
 		MatchboxEngine engine = matchboxEngineSupport.getMatchboxEngineNotSynchronized(null, this.cliContext, false,
