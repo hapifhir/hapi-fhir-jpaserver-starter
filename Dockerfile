@@ -6,7 +6,6 @@ RUN curl -LSsO https://github.com/open-telemetry/opentelemetry-java-instrumentat
 
 COPY pom.xml .
 COPY server.xml .
-RUN mvn -ntp dependency:go-offline
 
 COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
 RUN mvn clean install -DskipTests -Djdk.lang.Process.launchMechanism=vfork

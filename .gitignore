@@ -168,3 +168,6 @@ Temporary Items
 
 # Helm Chart dependencies
 **/charts/*.tgz
+
+#Postgres data
+postgres_data/
