@@ -161,11 +161,11 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 	public void loadIg(List<ImplementationGuide> igs, Map<String, ByteProvider> binaries, String src, boolean recursive)
 			throws IOException, FHIRException {
 		if (src.startsWith("hl7.terminology.")) {
-			log.debug("Ignoring package '{}': use 'hl7.terminology#5.3.0'", src);
+			log.debug("Ignoring package '{}': use 'hl7.terminology#5.4.0'", src);
 			return;
 		}
-		if (src.startsWith("hl7.terminology#") && !"hl7.terminology#5.3.0".equals(src)) {
-			final var replace = "hl7.terminology#5.3.0";
+		if (src.startsWith("hl7.terminology#") && !"hl7.terminology#5.4.0".equals(src)) {
+			final var replace = "hl7.terminology#5.4.0";
 			log.debug("Replacing '{}' with '{}'", src, replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;
@@ -296,7 +296,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 
 	/**
 	 * we overwrite this method to not provoke depend packages to be loaded,
-	 * otherwise we get cda-core-2.0.tgz .. load IG from hl7.terminology.r4#5.3.0
+	 * otherwise we get cda-core-2.0.tgz .. load IG from hl7.terminology.r4#5.4.0
 	 */
 	public Map<String, ByteProvider> loadPackage(NpmPackage pi, boolean loadInContext) throws FHIRException, IOException {
 		throw new RuntimeException(Msg.code(1305) + "Failed to load package, should not be her (loadpackage) " + pi);

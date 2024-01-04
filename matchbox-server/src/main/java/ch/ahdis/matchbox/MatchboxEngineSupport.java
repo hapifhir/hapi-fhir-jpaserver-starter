@@ -271,8 +271,8 @@ public class MatchboxEngineSupport {
 			if (cliContext.getFhirVersion().equals("4.0.1")) {
 				log.debug("Preconfigure FHIR R4");
 				try {
-					mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), "hl7.terminology#5.3.0", true);
-					mainEngine.loadPackage("hl7.terminology", "5.3.0");
+					mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), "hl7.terminology#5.4.0", true);
+					mainEngine.loadPackage("hl7.terminology", "5.4.0");
 					mainEngine.loadPackage("hl7.fhir.r4.core", "4.0.1");
 					log.debug("Load R5 Specials");
 					final var r5e = new R5ExtensionsLoader(mainEngine.getPcm(), mainEngine.getContext());
