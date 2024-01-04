@@ -5,6 +5,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.DashboardConfigContainer;
 import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
+import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
 import ca.uhn.fhir.jpa.starter.model.CategoryItem;
 import ca.uhn.fhir.jpa.starter.model.PatientIdentifierEntity;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
@@ -13,6 +14,7 @@ import ca.uhn.fhir.rest.gclient.IQuery;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.iprd.fhir.utils.KeycloakTemplateHelper;
+import com.iprd.report.DataResult;
 import com.iprd.report.model.FilterItem;
 import com.iprd.report.model.definition.BarChartDefinition;
 import com.iprd.report.model.definition.LineChart;
@@ -20,6 +22,7 @@ import com.iprd.report.model.definition.PieChartDefinition;
 import com.iprd.report.model.definition.TabularItem;
 import com.iprd.report.model.definition.ANCDailySummaryConfig;
 import org.hibernate.SessionFactory;
+import org.hibernate.engine.jdbc.ClobProxy;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.r4.model.Bundle.BundleType; // Import the correct BundleType
@@ -40,7 +43,9 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.sql.Clob;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,6 +61,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
+import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -733,6 +739,88 @@ private Bundle createMockBundle() {
 		assertEquals(output.get(0), "patient-bio-data");
 	}
 
+	@Test
+	void testSaveInAsyncTable() throws SQLException {
+		List<Map<String, String>> dailyResult = new ArrayList<>();
+		Map<String, String> data1 = new HashMap<>();
+		data1.put("Name", "KARTHIK233 OFFLINE");
+		data1.put("Card Number", "PCM/00000233");
+		data1.put("Date", "01-11-2023");
+		data1.put("Date of Birth", "23-03-1993");
+
+		dailyResult.add(data1);
+
+		DataResult dataResult = new DataResult(
+			"patient-bio-data",
+			"SomeRandomByteArray".getBytes(),
+			dailyResult
+		);
+
+
+		String sampleLongText = "This is a sample long text for the summary result. It can be a paragraph or more, containing multiple lines and details.";
+
+		// Create a Map for dailyResult
+		Map<String, String> dailyResultMap = new HashMap<>();
+		dailyResultMap.put("Name", "KARTHIK233 OFFLINE");
+		dailyResultMap.put("Card Number", "PCM/00000233");
+		dailyResultMap.put("Date", "01-11-2023");
+		dailyResultMap.put("Date of Birth", "23-03-1993");
+
+		// Create a List for dailyResult
+		List<Map<String, String>> dailyResultList = new ArrayList<>();
+		dailyResultList.add(dailyResultMap);
+		ApiAsyncTaskEntity mockPatient = PowerMockito.mock(ApiAsyncTaskEntity.class);
+		// Create an instance of ApiAsyncTaskEntity
+		ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(
+			"e15b899b-8d94-4279-8cb7-3eb90a14279b2023-11-012023-11-02patient-bio-dataV2",
+			"PROCESSING",
+			createClob(sampleLongText),
+			createClob(dailyResultList.toString()),
+			Date.valueOf(LocalDate.now())
+		);
+		mockPatient.setUuid("e15b899b-8d94-4279-8cb7-3eb90a14279b2023-11-012023-11-02patient-bio-dataV2");
+		mockPatient.setStatus("PROCESSING");
+		mockPatient.setSummaryResult(createClob(sampleLongText));
+		mockPatient.setDailyResult(createClob(dailyResultList.toString()));
+		mockPatient.setLastUpdated(Date.valueOf(LocalDate.now()));
+
+		// Create an ArrayList and add the ApiAsyncTaskEntity instance
+		ArrayList<ApiAsyncTaskEntity> apiAsyncTaskEntityList = new ArrayList<>();
+		apiAsyncTaskEntityList.add(apiAsyncTaskEntity);
+
+
+		NotificationDataSource notificationDataSourceMock = PowerMockito.mock(NotificationDataSource.class);
+
+		// Mock the behavior of NotificationDataSource
+		when(notificationDataSourceMock.fetchStatus(anyString()))
+			.thenReturn(apiAsyncTaskEntityList);
+
+		doNothing().when(notificationDataSourceMock).update(any());
+
+		// Replace the actual instance with the mock in NotificationDataSource
+		Whitebox.setInternalState(NotificationDataSource.class, notificationDataSourceMock);
+
+		helperService.saveInAsyncTable(dataResult,"68455");
+		verify(notificationDataSourceMock).update(any(ApiAsyncTaskEntity.class));
+		// Verify the update method was called with the captured argument
+		ArgumentCaptor<ApiAsyncTaskEntity> argumentCaptor = ArgumentCaptor.forClass(ApiAsyncTaskEntity.class);
+
+		verify(notificationDataSourceMock).update(argumentCaptor.capture());
+
+		// Get the captured value
+		ApiAsyncTaskEntity capturedAsyncTaskEntity = argumentCaptor.getValue();
+
+		// Now you can assert or inspect the capturedAsyncTaskEntity as needed
+		assertEquals("e15b899b-8d94-4279-8cb7-3eb90a14279b2023-11-012023-11-02patient-bio-dataV2", capturedAsyncTaskEntity.getUuid());
+		assertEquals("COMPLETED", capturedAsyncTaskEntity.getStatus());
+
+	}
+	private static java.sql.Clob createClob(String data) throws SQLException {
+		// Implement the logic to create a Clob from the given data
+		// This might involve database-specific operations
+		// For demonstration purposes, we'll use a simple string-based Clob
+		return new javax.sql.rowset.serial.SerialClob(data.toCharArray());
+	}
 	private Pair<List<String>, LinkedHashMap<String, List<String>>> createMockResult() {
 		// Create a sample data for testing
 		List<String> facilityOrgIdList = new ArrayList<>();

@@ -898,7 +898,7 @@ public class HelperService {
 //	}
 
 	public void saveInAsyncTable(DataResult dataResult, String id) {
-
+		notificationDataSource = NotificationDataSource.getInstance();
 		byte[] summaryResult = dataResult.getSummaryResult();
 		List<Map<String, String>> dailyResult = dataResult.getDailyResult();
 		String base64SummaryResult = Base64.getEncoder().encodeToString(summaryResult);
@@ -906,13 +906,13 @@ public class HelperService {
 																		// base64Encoded string.
 
 		try {
-			ArrayList asyncData = datasource.fetchStatus(id);
+			ArrayList asyncData = notificationDataSource.fetchStatus(id);
 			ApiAsyncTaskEntity asyncRecord = (ApiAsyncTaskEntity) asyncData.get(0);
 			asyncRecord.setStatus(ApiAsyncTaskEntity.Status.COMPLETED.name());
 			asyncRecord.setDailyResult(ClobProxy.generateProxy(dailyResultJsonString));
 			asyncRecord.setSummaryResult(ClobProxy.generateProxy(base64SummaryResult));
 			asyncRecord.setLastUpdated(Date.valueOf(LocalDate.now()));
-			datasource.update(asyncRecord);
+			notificationDataSource.update(asyncRecord);
 		} catch (Exception e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
@@ -926,7 +926,7 @@ public class HelperService {
 		return writer.toString();
 	}
 
-	private List<String> getCategoriesFromAncDailySummaryConfig(String env) {
+	List<String> getCategoriesFromAncDailySummaryConfig(String env) {
 		List<ANCDailySummaryConfig> ancDailySummaryConfig = getANCDailySummaryConfigFromFile(env);
 		return ancDailySummaryConfig.stream().map(ANCDailySummaryConfig::getCategoryId).collect(Collectors.toList());
 	}

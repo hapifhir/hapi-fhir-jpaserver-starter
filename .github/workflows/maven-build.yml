@@ -2,11 +2,15 @@ name: Build and Hapi Fhir Jpaserver Starter Server
 
 on:
   push:
-    branches: [ "se/unit_test2" ]
+    branches: [ "fhir-resources-helper" ]
     paths:
       - 'src/**'
       - '.github/workflows/maven-build.yml'
-
+  pull_request:
+    branches: [ "fhir-resources-helper" ]
+    paths:
+      - 'src/**'
+      - '.github/workflows/maven-build.yml'
 jobs:
   build:
 
@@ -19,9 +23,7 @@ jobs:
         with:
           repository: DigitalHealthIntegration/hapi-fhir-jpaserver-starter
           ref: fhir-resources-helper
-          # submodules: 'recursive' 
 
-      # - uses: actions/checkout@v3
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -30,7 +32,6 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        # working-directory: submodules/hapi-fhir-jpaserver-starter
         run: mvn -B package --f ./pom.xml 
 
       - name: Upload coverage to Codecov
