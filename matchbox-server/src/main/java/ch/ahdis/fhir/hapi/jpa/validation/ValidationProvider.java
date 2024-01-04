@@ -25,11 +25,9 @@ import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
-import ca.uhn.fhir.util.OperationOutcomeUtil;
 import ca.uhn.fhir.util.StopWatch;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
-import ca.uhn.fhir.validation.ValidationResult;
 import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
@@ -45,7 +43,6 @@ import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.model.OperationOutcome;
 import org.hl7.fhir.r5.model.StringType;
-import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
@@ -179,7 +176,7 @@ public class ValidationProvider {
 			final var stream = new ByteArrayInputStream(contentString.getBytes(StandardCharsets.UTF_8));
 			messages = engine.validate(format, stream, profile);
 
-		} catch (final IOException | EOperationOutcome e) {
+		} catch (final Exception e) {
 			sw.endCurrentTask();
 			log.debug("Validation time: {}", sw);
 			log.error("Error during validation", e);

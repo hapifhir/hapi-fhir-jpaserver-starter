@@ -1,11 +1,11 @@
 package ch.ahdis.matchbox.engine.exception;
 
 /**
- * Exception thrown when the terminology server is unreachable.
+ * Exception in relation to the terminology server.
  *
  * @author Quentin Ligier
  */
-public class TerminologyServerUnreachableException extends MatchboxEngineCreationException {
+public class TerminologyServerException extends MatchboxEngineCreationException {
 
 	/**
 	 * Constructs a new exception with the specified detail message. The cause is not initialized, and may
@@ -14,7 +14,7 @@ public class TerminologyServerUnreachableException extends MatchboxEngineCreatio
 	 * @param message the detail message. The detail message is saved for later retrieval by the {@link #getMessage()}
 	 *                method.
 	 */
-	public TerminologyServerUnreachableException(final String message) {
+	public TerminologyServerException(final String message) {
 		super(message);
 	}
 
@@ -27,7 +27,7 @@ public class TerminologyServerUnreachableException extends MatchboxEngineCreatio
 	 *                value is permitted, and indicates that the cause is nonexistent or unknown.)
 	 * @since 1.4
 	 */
-	public TerminologyServerUnreachableException(final String message, final Throwable cause) {
+	public TerminologyServerException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
@@ -41,7 +41,7 @@ public class TerminologyServerUnreachableException extends MatchboxEngineCreatio
 	 *              is permitted, and indicates that the cause is nonexistent or unknown.)
 	 * @since 1.4
 	 */
-	public TerminologyServerUnreachableException(final Throwable cause) {
-		super(cause);
+	public TerminologyServerException(final Throwable cause) {
+		super("Terminology server: " + cause.getMessage(), cause);
 	}
 }

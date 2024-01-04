@@ -1,16 +1,13 @@
 package ch.ahdis.matchbox;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.*;
 
 import ch.ahdis.matchbox.config.MatchboxFhirContextProperties;
 import ch.ahdis.matchbox.engine.exception.IgLoadException;
 import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
-import ch.ahdis.matchbox.engine.exception.TerminologyServerUnreachableException;
+import ch.ahdis.matchbox.engine.exception.TerminologyServerException;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.conformance.R5ExtensionsLoader;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
@@ -433,9 +430,9 @@ public class MatchboxEngineSupport {
 
 			try {
 				final String txver = validator.setTerminologyServer(cli.getTxServer(), null, FhirPublication.R4);
-				log.info("Version of the terminology server: {}", txver);
+				log.debug("Version of the terminology server: {}", txver);
 			} catch (final Exception e) {
-				throw new TerminologyServerUnreachableException(e);
+				throw new TerminologyServerException("Error while setting the terminology server: " + e.getMessage(), e);
 			}
 		}
 

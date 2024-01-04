@@ -23,7 +23,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
 
 import ch.ahdis.matchbox.engine.exception.IgLoadException;
 import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
-import ch.ahdis.matchbox.engine.exception.TerminologyServerUnreachableException;
+import ch.ahdis.matchbox.engine.exception.TerminologyServerException;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
@@ -196,7 +195,7 @@ public class MatchboxEngine extends ValidationEngine {
 				try {
 					engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
 				} catch (final Exception e) {
-					throw new TerminologyServerUnreachableException(e);
+					throw new TerminologyServerException(e);
 				}
 			}
 			engine.getContext().setPackageTracker(engine);
@@ -226,7 +225,7 @@ public class MatchboxEngine extends ValidationEngine {
 				try {
 					engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
 				} catch (final Exception e) {
-					throw new TerminologyServerUnreachableException(e);
+					throw new TerminologyServerException(e);
 				}
 			}
 			engine.getContext().setPackageTracker(engine);
@@ -493,7 +492,7 @@ public class MatchboxEngine extends ValidationEngine {
 	}
 
 	/**
-	 * internal use, checks if all profiles an be resolved
+	 * internal use, checks if all profiles can be resolved
 	 * 
 	 * @param profiles canonical url of profiles (StructureDefinition)
 	 * @return StructureDefintions
@@ -522,7 +521,7 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @return
 	 */
 	public org.hl7.fhir.r4.model.StructureDefinition getStructureDefinition(String profile) {
-		ArrayList<String> profiles = new ArrayList<String>();
+		ArrayList<String> profiles = new ArrayList<>();
 		profiles.add(profile);
 		try {
 			List<StructureDefinition> sds = asSdList(profiles);
