@@ -1,3 +1,11 @@
+2024/XX/XX Release 3.5.3
+
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.3`
+- Updated `hl7.terminology` from 5.3.0 to 5.4.0 [#174](https://github.com/ahdis/matchbox/issues/174)
+- Prevented initializing a matchbox engine in `only_load_packages` mode [#172](https://github.com/ahdis/matchbox/issues/172)
+- Fixed the issue count in validation results [#173](https://github.com/ahdis/matchbox/issues/173)
+- Improved the validation interface
+
 2023/12/27 Release 3.5.2
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.2`
