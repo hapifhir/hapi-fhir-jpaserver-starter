@@ -1,4 +1,4 @@
-2024/XX/XX Release 3.5.3
+2024/01/05 Release 3.5.3
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.3`
 - Updated `hl7.terminology` from 5.3.0 to 5.4.0 [#174](https://github.com/ahdis/matchbox/issues/174)
