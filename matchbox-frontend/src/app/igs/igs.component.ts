@@ -3,6 +3,7 @@ import { FhirConfigService } from '../fhirConfig.service';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import FhirClient from 'fhir-kit-client';
 import { FhirPathService } from '../fhirpath.service';
+import {OperationResult} from "../util/operation-result";
 
 @Component({
   selector: 'app-igs',
@@ -20,7 +21,7 @@ export class IgsComponent {
   client: FhirClient;
   igs: fhir.r4.ImplementationGuide[];
   errorMessage: string;
-  operationOutcome: fhir.r4.OperationOutcome;
+  operationResult: OperationResult | null = null;
 
   query = {
     _sort: 'title',
@@ -51,7 +52,11 @@ export class IgsComponent {
       })
       .catch((error) => {
         this.errorMessage = 'Error accessing FHIR server';
-        this.operationOutcome = error.response.data;
+        if (error.response?.data) {
+          this.operationResult = OperationResult.fromOperationOutcome(error.response.data);
+        } else {
+          this.operationResult = OperationResult.fromMatchboxError(error.message);
+        }
       });
     this.update = false;
   }
@@ -112,12 +117,16 @@ export class IgsComponent {
       })
       .then((response) => {
         this.errorMessage = 'Created Implementation Guide ' + this.addPackageId.value;
-        this.operationOutcome = response as fhir.r4.OperationOutcome;
+        this.operationResult = OperationResult.fromOperationOutcome(response as fhir.r4.OperationOutcome);
         this.search();
       })
       .catch((error) => {
         this.errorMessage = 'Error creating Implementation Guide ' + this.addPackageId.value;
-        this.operationOutcome = error.response.data;
+        if (error.response?.data) {
+          this.operationResult = OperationResult.fromOperationOutcome(error.response.data);
+        } else {
+          this.operationResult = OperationResult.fromMatchboxError(error.message);
+        }
         this.update = false;
       });
   }
@@ -144,12 +153,16 @@ export class IgsComponent {
       })
       .then((response) => {
         this.errorMessage = 'Updated Implementation Guide ' + this.selection.packageId;
-        this.operationOutcome = response as fhir.r4.OperationOutcome;
+        this.operationResult = OperationResult.fromOperationOutcome(response as fhir.r4.OperationOutcome);
         this.search();
       })
       .catch((error) => {
         this.errorMessage = 'Error updating Implementation Guide ' + this.selection.packageId;
-        this.operationOutcome = error.response.data;
+        if (error.response?.data) {
+          this.operationResult = OperationResult.fromOperationOutcome(error.response.data);
+        } else {
+          this.operationResult = OperationResult.fromMatchboxError(error.message);
+        }
         this.update = false;
       });
   }
@@ -171,12 +184,16 @@ export class IgsComponent {
       })
       .then((response) => {
         this.errorMessage = 'Deleted Implementation Guide Resource ' + this.selection.packageId;
-        this.operationOutcome = response as fhir.r4.OperationOutcome;
+        this.operationResult = OperationResult.fromOperationOutcome(response as fhir.r4.OperationOutcome);
         this.search();
       })
       .catch((error) => {
         this.errorMessage = 'Error deleting Implementation Guide ' + this.selection.packageId;
-        this.operationOutcome = error.response.data;
+        if (error.response?.data) {
+          this.operationResult = OperationResult.fromOperationOutcome(error.response.data);
+        } else {
+          this.operationResult = OperationResult.fromMatchboxError(error.message);
+        }
         this.update = false;
       });
   }

@@ -58,5 +58,5 @@
 <div *ngIf="errorMessage" class="white-block logs">
   <h2>Result of the last operation</h2>
 
-  <app-operation-outcome [operationOutcome]="operationOutcome" [title]="errorMessage"></app-operation-outcome>
+  <app-operation-result *ngIf="operationResult" [operationResult]="operationResult"></app-operation-result>
 </div>
