@@ -1,3 +1,5 @@
+@import '../_variables';
+
 .example-fill-remaining-space {
   /* This fills the remaining space, by using flexbox.
        Every toolbar row uses a flexbox row layout. */
@@ -28,7 +30,59 @@ mat-toolbar {
   }
 }
 
+header {
+  background: $green-primary;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 0 1 auto;
+  padding: 10px 2em;
+  justify-content: space-between;
+
+  .logo-container {
+    display: inline-block;
+
+    .version {
+      color: #2e7d73;
+      font-size: 0.9em;
+      display: inline-block;
+      margin: 4px 0 0 10px;
+      vertical-align: top;
+    }
+  }
+
+  nav {
+    display: flex;
+    margin-top: 10px;
+
+    div {
+      display: inline-block;
+      margin: 0 1rem;
+      cursor: pointer;
+      color: $green-dark;
+
+      mat-icon {
+        margin-right: 8px;
+        vertical-align: middle;
+        color: $green-light;
+      }
+    }
+  }
+}
+
 main {
   width: 100%;
   margin: 0 auto;
+}
+
+@media (max-width: 1140px) {
+  header nav div {
+    margin: 0 7px;
+    mat-icon {
+      margin-right: 4px;
+      $size: 18px;
+      font-size: $size;
+      width: $size;
+      height: $size;
+    }
+  }
 }

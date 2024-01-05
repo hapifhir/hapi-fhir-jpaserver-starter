@@ -71,7 +71,7 @@ $theme: map-merge(
       warn: $my-warn
     ),
     typography: mat.define-typography-config(),
-    density: 0,
+    density: -1, // https://material.angular.io/guide/theming#customizing-density
   )),
   (
     foreground: my-mat-light-theme-foreground(darken(#113549, 5%)),

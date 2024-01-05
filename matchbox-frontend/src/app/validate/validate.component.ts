@@ -8,7 +8,8 @@ import ace, { Ace } from 'ace-builds';
 import { ValidationEntry } from './validation-entry';
 import { ValidationParameter } from './validation-parameter';
 import { ITarEntry } from './tar-entry';
-import { Issue, IssueSeverity } from '../util/operation-result';
+import {Issue, IssueSeverity, OperationResult} from '../util/operation-result';
+import {FormControl, Validators} from "@angular/forms";
 
 const INDENT_SPACES = 4;
 
@@ -26,28 +27,24 @@ export class ValidateComponent implements AfterViewInit {
   // About the server
   client: FhirClient;
   capabilityStatement: fhir.r4.CapabilityStatement | null = null;
-  installedIgs: string[] = new Array<string>();
+  installedIgs: Set<string> = new Set<string>();
+  supportedProfiles: Set<string> = new Set<string>();
   validatorSettings: ValidationParameter[] = new Array<ValidationParameter>();
 
   // Form
+  filteredProfiles: Set<string> = new Set<string>();
+  profileFilter: string = '';
   selectedIg: string = null;
   selectedProfile: string;
+  profileControl: FormControl = new FormControl<string>(null, Validators.required);
 
   // DOM
   editor: Ace.Editor;
   showSettings: boolean = false;
-
-
-
-
+  currentResource: UploadedFile | null = null;
   errorMessage: string | null = null;
-  package: ArrayBuffer;
-  resourceName: string;
-  resourceId: string;
-  validationInProgress: number;
-  profiles: string[] = new Array<string>();
-  json: string;
 
+  package: ArrayBuffer;
 
   constructor(
     data: FhirConfigService,
@@ -65,7 +62,8 @@ export class ValidateComponent implements AfterViewInit {
           .then((od: fhir.r4.OperationDefinition) => {
             od.parameter?.forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
               if (parameter.name == 'profile') {
-                this.profiles.push(...parameter.targetProfile);
+                parameter.targetProfile.forEach(profile => this.supportedProfiles.add(profile));
+                this.updateProfileFilter();
               }
             });
             od.parameter
@@ -88,26 +86,19 @@ export class ValidateComponent implements AfterViewInit {
         },
       })
       .then((bundle: fhir.r4.Bundle) => {
-        this.installedIgs = bundle.entry
-          .map(
-            (entry) =>
-              (<fhir.r4.ImplementationGuide>entry.resource).packageId +
-              '#' +
-              (<fhir.r4.ImplementationGuide>entry.resource).version
-          )
-          .sort();
+        bundle.entry.map((entry: fhir.r4.BundleEntry) => entry.resource as fhir.r4.ImplementationGuide)
+          .map((ig: fhir.r4.ImplementationGuide) => `${ig.packageId}#${ig.version}`)
+          .sort()
+          .forEach(ig => this.installedIgs.add(ig));
       })
       .catch((error) => {
         this.errorMessage = 'Error accessing FHIR server';
       });
-
-    this.validationInProgress = 0;
   }
 
   ngAfterViewInit() {
     this.editor = ace.edit('editor');
     this.editor.setReadOnly(true);
-    //this.editor.setValue(JSON.stringify(data, null, INDENT_SPACES), -1);
     this.editor.setTheme('ace/theme/textmate');
     this.editor.setOptions({
       maxLines: 10000,
@@ -116,17 +107,20 @@ export class ValidateComponent implements AfterViewInit {
       useWorker: false,
       useSvgGutterIcons: false,
     });
-    //this.editor.resize(true);
   }
 
   addFile(droppedBlob: IDroppedBlob): void {
-    try {
-      this.validationInProgress += 1;
-      if (droppedBlob.name.endsWith('.tgz')) {
-        // Load an IG package
+    if (droppedBlob.name.endsWith('.tgz')) {
+      // Load an IG package
+      try {
         this.addPackage(droppedBlob.blob);
-      } else {
-        // We assume that the file is a FHIR resource
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      // We assume that the file is a FHIR resource
+      let entry: ValidationEntry = null;
+      try {
         this.selectedProfile = null;
         this.selectedIg = null;
         const reader = new FileReader();
@@ -134,18 +128,23 @@ export class ValidateComponent implements AfterViewInit {
         reader.onload = () => {
           // need to run CD since file load runs outside of zone
           this.cd.markForCheck();
-          const entry = new ValidationEntry(droppedBlob.blob.name, <string>reader.result, droppedBlob.contentType, null);
+          entry = new ValidationEntry(droppedBlob.blob.name, <string>reader.result, droppedBlob.contentType, null);
+          this.currentResource = new UploadedFile(droppedBlob.name, droppedBlob.contentType, <string>reader.result, entry.resourceType);
           if (entry.selectedProfile) {
+            // Auto-select the right profile in the form select
             this.selectedProfile = entry.selectedProfile;
           }
-          this.validationEntries.push(entry);
+          this.validationEntries.unshift(entry);
           this.show(entry);
           this.validate(entry);
         };
+      } catch (error) {
+        console.error(error);
+        if (entry) {
+          entry.result = OperationResult.fromMatchboxError("Error while processing the resource for" +
+            " validation: " + error.message);
+        }
       }
-      this.validationInProgress -= 1;
-    } catch (error) {
-      console.error(error);
     }
   }
 
@@ -193,6 +192,7 @@ export class ValidateComponent implements AfterViewInit {
           function (extractedFiles) {
             // onSuccess
             dataSource.forEach((entry) => {
+              pointer.validationEntries.unshift(entry);
               pointer.validate(entry);
             });
           },
@@ -219,9 +219,6 @@ export class ValidateComponent implements AfterViewInit {
               let res = JSON.parse(decoder.decode(extractedFile.buffer)) as fhir.r4.Resource;
               let profiles = res.meta?.profile;
               // maybe better add ig as a parmeter, we assume now that ig version is equal to canonical version
-              for (let i = 0; i < profiles.length; i++) {
-                profiles[i] = profiles[i];
-              }
               let entry = new ValidationEntry(name, JSON.stringify(res, null, 2), 'application/fhir+json', profiles);
               dataSource.push(entry);
             }
@@ -266,15 +263,11 @@ export class ValidateComponent implements AfterViewInit {
     }
 
     // Validation options
-    for (let i = 0; i < this.validatorSettings.length; i++) {
-      if (
-        this.validatorSettings[i].formControl.value != null &&
-        this.validatorSettings[i].formControl.value.length > 0
-      ) {
-        searchParams.set(this.validatorSettings[i].param.name, this.validatorSettings[i].formControl.value);
+    for (const setting of this.validatorSettings) {
+      if (setting.formControl.value != null && setting.formControl.value.length > 0) {
+        searchParams.set(setting.param.name, setting.formControl.value);
       }
     }
-    this.validationInProgress += 1;
     entry.loading = true;
     this.client
       .operation({
@@ -289,20 +282,17 @@ export class ValidateComponent implements AfterViewInit {
         },
       })
       .then((response) => {
-        // see below
-        this.validationInProgress -= 1;
+        // Got a response that should be an OperationOutcome
         entry.loading = false;
         entry.setOperationOutcome(response);
-        if (this.validationInProgress == 0) {
-          this.show(entry);
-        } else {
+        if (entry === this.selectedEntry) {
           this.updateEditorIssues();
         }
       })
       .catch((error) => {
-        // fhir-kit-client throws an error when  return in not json
-        this.validationInProgress -= 1;
+        // fhir-kit-client throws an error when return in not json
         entry.loading = false;
+        entry.result = OperationResult.fromMatchboxError("Error while sending the validation request: " +error.message);
         console.error(error);
       });
   }
@@ -311,15 +301,12 @@ export class ValidateComponent implements AfterViewInit {
     this.errorMessage = null;
     this.selectedEntry = entry;
     if (!entry) {
-      this.json = null;
       this.editor.setValue('', -1);
       this.updateEditorIssues();
       return;
     }
 
-    this.json = entry.resource;
-    this.resourceName = '';
-    this.resourceId = '';
+    this.currentResource = new UploadedFile(entry.filename, entry.mimetype, entry.resource, entry.resourceType);
     this.editor.setValue(entry.resource, -1);
     if (entry.mimetype === 'application/fhir+json') {
       this.editor.getSession().setMode('ace/mode/json');
@@ -338,10 +325,11 @@ export class ValidateComponent implements AfterViewInit {
   }
 
   onValidate() {
-    let entry = new ValidationEntry(this.selectedEntry.filename, this.selectedEntry.resource, this.selectedEntry.mimetype, [
+    let entry = new ValidationEntry(this.currentResource.filename, this.currentResource.content, this.currentResource.contentType, [
       this.selectedProfile,
     ]);
-    this.validationEntries.push(entry);
+    entry.ig = this.selectedIg;
+    this.validationEntries.unshift(entry);
     this.validate(entry);
   }
 
@@ -353,7 +341,7 @@ export class ValidateComponent implements AfterViewInit {
     // Remove old markers
     this.editor.session.clearAnnotations();
 
-    if (!this.selectedEntry || !this.selectedEntry.result) {
+    if (!this.selectedEntry?.result) {
       return;
     }
     // Add new markers
@@ -387,6 +375,15 @@ export class ValidateComponent implements AfterViewInit {
     if (issue.line) {
       this.editor.gotoLine(issue.line, issue.col, true);
       this.editor.scrollToLine(issue.line, false, true, () => {});
+      this.editor.resize(true);
     }
   }
+
+  updateProfileFilter() {
+    this.filteredProfiles = new Set<string>([...this.supportedProfiles].filter(profile => profile.includes(this.profileFilter)));
+  }
+}
+
+class UploadedFile {
+  constructor(public filename: string, public contentType: string, public content: string, public resourceType: string) {}
 }

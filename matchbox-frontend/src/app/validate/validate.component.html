@@ -1,35 +1,68 @@
 <div class="row">
   <div class="card-maps white-block">
+    <button (click)="toggleSettings()" mat-menu-item class="setting">
+      <mat-icon>settings</mat-icon>
+    </button>
     <h2>Validate FHIR Resource</h2>
 
-    <app-upload (addFiles)="addFile($event)"></app-upload>
+    <ng-container *ngIf="!showSettings">
+      <app-upload (addFiles)="addFile($event)"></app-upload>
 
-    <div class="form-field-group">
-      New validation for: {{ resourceName }} / {{ resourceId }}
-    </div>
+      <p class="current">
+        Current resource loaded:
+        <ng-container *ngIf="currentResource">
+          a <span>{{ currentResource.resourceType }}</span>, from <em>{{ currentResource.filename }}</em>
+        </ng-container>
+        <em *ngIf="!currentResource">None</em>
+      </p>
 
-    <div class="form-field-group">
-      <mat-form-field>
-        <mat-select [ngModel]="selectedProfile"
-                    name="selectProfile" placeholder="Validate against specific Profile">
-          <mat-option *ngFor="let profile of profiles" [value]="profile">
-            {{ profile }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+      <div class="form-field-group">
+        <mat-form-field>
+          <mat-label>Validation profile (required)</mat-label>
+          <mat-select [(ngModel)]="selectedProfile"
+                      name="selectProfile" placeholder="Validate against specific Profile">
+            <mat-option>
+              <ngx-mat-select-search placeholderLabel="Find a profile…"
+                                     noEntriesFoundLabel="'no matching profile found'"
+                                     [(ngModel)]="profileFilter"
+                                     (ngModelChange)="updateProfileFilter()"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let profile of filteredProfiles" [value]="profile">
+              {{ profile }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="profileControl.hasError('required')">Please choose a profile</mat-error>
+          <mat-hint>A profile is required to validate against.</mat-hint>
+        </mat-form-field>
+      </div>
 
-    <div class="form-field-group">
-      <mat-form-field>
-        <mat-select [ngModel]="selectedIg" name="selectIg" placeholder="Validate against specific Implementation Guide">
-          <mat-option *ngFor="let ig of installedIgs" [value]="ig">
-            {{ ig }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+      <div class="form-field-group">
+        <mat-form-field>
+          <mat-label>Validation IG</mat-label>
+          <mat-select [(ngModel)]="selectedIg" name="selectIg"
+                      placeholder="Validate against specific Implementation Guide">
+            <mat-option value=""><em>Automatic selection</em></mat-option>
+            <mat-option *ngFor="let ig of installedIgs" [value]="ig">
+              {{ ig }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>A specific IG version may be specified.</mat-hint>
+        </mat-form-field>
+      </div>
 
-    <button color="primary" mat-raised-button (click)="onValidate()">Validate</button>
+      <button color="primary" mat-raised-button (click)="onValidate()">Validate</button>
+
+      <p *ngIf="errorMessage" class="error"><mat-icon>report</mat-icon> Error: {{ errorMessage }}</p>
+    </ng-container>
+
+    <ng-container *ngIf="showSettings">
+      <div *ngFor="let setting of validatorSettings" class="form-field-group">
+        <mat-form-field class="column50">
+          <mat-label>{{ setting.param.name }}</mat-label>
+          <input [formControl]="setting.formControl" matInput/>
+        </mat-form-field>
+      </div>
+    </ng-container>
   </div>
 
   <div class="card-maps white-block">
@@ -48,16 +81,19 @@
           (click)="show(entry)">
         <td class="mat-cell">
           {{ entry.filename }}<br />
-          <time>{{ entry.date | date:'HH:mm:ss' }}</time>
+          <time>{{ entry.date | date:'HH:mm:ss' }}</time><at></at>
         </td>
         <td class="mat-cell">
           {{ entry.selectedProfile }}<br />
           {{ entry.ig }}
         </td>
         <td class="issues mat-cell">
-          <mat-icon inline class="error">error</mat-icon>{{ entry.result ? entry.getErrors() : '-' }}<br />
-          <mat-icon inline class="warning">warning</mat-icon>{{ entry.result ? entry.getWarnings() : '-' }}<br />
-          <mat-icon inline class="info">info</mat-icon>{{ entry.result ? entry.getInfos() : '-' }}
+          <mat-spinner *ngIf="entry.loading" diameter="30"></mat-spinner>
+          <ng-container *ngIf="!entry.loading">
+            <mat-icon inline class="error">error</mat-icon>{{ entry.result ? entry.getErrors() : '-' }}<br />
+            <mat-icon inline class="warning">warning</mat-icon>{{ entry.result ? entry.getWarnings() : '-' }}<br />
+            <mat-icon inline class="info">info</mat-icon>{{ entry.result ? entry.getInfos() : '-' }}
+          </ng-container>
         </td>
         <td class="actions mat-cell">
           <mat-icon (click)="removeEntryFromHistory(entry)" aria-label="Remove" title="Remove from history">delete</mat-icon>
@@ -94,24 +130,5 @@
     <h2>Document content</h2>
 
     <div id="editor"></div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="card-maps white-block">
-    <mat-card-content>
-      <button (click)="toggleSettings()" mat-menu-item>
-        <mat-icon>settings</mat-icon>
-      </button>
-
-      <ng-container *ngIf="showSettings">
-        <div *ngFor="let setting of validatorSettings" class="form-field-group">
-          <mat-form-field class="column50">
-            <mat-label>{{ setting.param.name }}</mat-label>
-            <input [formControl]="setting.formControl" matInput/>
-          </mat-form-field>
-        </div>
-      </ng-container>
-    </mat-card-content>
   </div>
 </div>

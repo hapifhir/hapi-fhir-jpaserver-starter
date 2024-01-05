@@ -5,7 +5,28 @@
   min-width: 1400px;
   width: 100%;
 }
-
+button.setting {
+  float: right;
+  mat-icon {
+    vertical-align: middle;
+  }
+}
+p.current {
+  margin: 10px 0;
+  span {
+    font-weight: 500;
+  }
+}
+mat-hint {
+  color: #7db99e;
+}
+p.error {
+  color: $issue-error;
+  margin-top: 20px;
+  mat-icon {
+    vertical-align: middle;
+  }
+}
 .row {
   display: flex;
   flex-direction: row;
@@ -20,43 +41,10 @@
 }
 
 .mat-table {
-  margin: 1rem;
-
-  .mat-row {
-    cursor: pointer;
-  }
-
   .mat-cell,
   .mat-header-cell {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-
-    &.name {
-      flex: 2;
-    }
-
-    &.profile {
-      flex: 4;
-    }
-
-    &.res {
-      flex: 0.5;
-      justify-content: flex-end;
-    }
-
-    &:first-child {
-      padding-left: 1rem;
-    }
-
-    &:last-child {
-      padding-right: 1rem;
-    }
-
-    .cell-content {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
   }
 }
 
@@ -66,7 +54,9 @@ table {
   .selected {
     background: #d8f1e6;
   }
-
+  .mat-row {
+    cursor: pointer;
+  }
   td.issues {
     font-size: 12px;
     line-height: 12px;
@@ -89,34 +79,11 @@ table {
       }
     }
   }
-}
-
-.small-icon-button {
-  width: 24px !important;
-  height: 24px !important;
-  padding: 0px !important;
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-
-  & > * {
-    max-width: 24px !important;
-  }
-
-  & > *[role=img] {
-    width: 16px;
-    height: 16px;
-    font-size: 16px;
-
-    svg {
-      width: 16px;
-      height: 16px;
+  td.actions {
+    mat-icon {
+      font-size: 24px;
+      color: $issue-error;
     }
-  }
-
-  .mat-mdc-button-touch-target {
-    width: 24px !important;
-    height: 24px !important;
   }
 }
 

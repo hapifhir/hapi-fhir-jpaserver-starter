@@ -5,7 +5,6 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppComponent } from './app.component';
 import { CapabilityStatementComponent } from './capability-statement/capability-statement.component';
-import { FhirPathComponent } from './fhir-path/fhir-path.component';
 import { HomeComponent } from './home/home.component';
 import { MappingLanguageComponent } from './mapping-language/mapping-language.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -17,15 +16,12 @@ import { ValidateComponent } from './validate/validate.component';
 import { OperationResultComponent } from './operation-result/operation-result.component';
 import { UploadComponent } from './upload/upload.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-  },
-  {
-    path: 'fhirpath',
-    component: FhirPathComponent,
   },
   {
     path: 'mappinglanguage',
@@ -63,7 +59,6 @@ export function createTranslateLoader(http: HttpClient) {
     CapabilityStatementComponent,
     SettingsComponent,
     HomeComponent,
-    FhirPathComponent,
     MappingLanguageComponent,
     IgsComponent,
     TransformComponent,
@@ -86,6 +81,7 @@ export function createTranslateLoader(http: HttpClient) {
       },
     }),
     OAuthModule.forRoot(),
+    NgxMatSelectSearchModule,
   ],
   providers: [
     {

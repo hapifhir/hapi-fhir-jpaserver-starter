@@ -35,6 +35,7 @@
     "highlightjs-line-numbers.js": "^2.8.0",
     "js-untar": "^2.0.0",
     "ngx-highlightjs": "^10.0.0",
+    "ngx-mat-select-search": "^7.0.5",
     "pako": "^2.1.0",
     "rxjs": "^7.8.1",
     "tslib": "^2.6.1",

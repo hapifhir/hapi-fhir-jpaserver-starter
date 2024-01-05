@@ -68,7 +68,7 @@ export class ValidationEntry {
   }
 
   setOperationOutcome(operationOutcome: fhir.r4.OperationOutcome): void {
-    this.result = new OperationResult(operationOutcome);
+    this.result = OperationResult.fromOperationOutcome(operationOutcome);
   }
 
   extractJsonInfo(): void {

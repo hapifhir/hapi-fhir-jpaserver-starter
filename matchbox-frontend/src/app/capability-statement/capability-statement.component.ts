@@ -4,6 +4,7 @@ import FhirClient from 'fhir-kit-client';
 import ace, { Ace } from 'ace-builds';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-textmate';
+import {OperationResult} from "../util/operation-result";
 
 const INDENT_SPACES = 4;
 
@@ -14,7 +15,7 @@ const INDENT_SPACES = 4;
 })
 export class CapabilityStatementComponent implements AfterViewInit {
   capabilityStatement: string | null = null;
-  operationOutcome: fhir.r4.OperationOutcome | null = null;
+  operationResult: OperationResult | null = null;
   client: FhirClient;
   editor: Ace.Editor;
   loading = true;
@@ -28,7 +29,7 @@ export class CapabilityStatementComponent implements AfterViewInit {
       .capabilityStatement()
       .then((data: fhir.r4.CapabilityStatement) => {
         this.loading = false;
-        this.operationOutcome = null;
+        this.operationResult = null;
         this.editor = ace.edit('code');
         this.editor.setReadOnly(true);
         this.editor.setValue(JSON.stringify(data, null, INDENT_SPACES), -1);
@@ -51,7 +52,11 @@ export class CapabilityStatementComponent implements AfterViewInit {
           this.editor.container.remove();
         }
         this.editor = null;
-        this.operationOutcome = error.response.data;
+        if (error.response?.data) {
+          this.operationResult = OperationResult.fromOperationOutcome(error.response.data);
+        } else {
+          this.operationResult = OperationResult.fromMatchboxError(error.message);
+        }
       });
   }
 }

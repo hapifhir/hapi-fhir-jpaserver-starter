@@ -1,11 +1,30 @@
 export class OperationResult {
 
   operationOutcome: fhir.r4.OperationOutcome;
-  issues: Issue[] = [];
+  issues: Issue[];
 
-  constructor(operationOutcome: fhir.r4.OperationOutcome) {
+  constructor(issues?: Issue[], operationOutcome?: fhir.r4.OperationOutcome) {
     this.operationOutcome = operationOutcome;
-    this.issues = this.operationOutcome.issue?.map(ooIssue => new Issue(ooIssue));
+    this.issues = issues ?? [];
+  }
+
+  static fromOperationOutcome(operationOutcome: fhir.r4.OperationOutcome): OperationResult {
+    const issues = operationOutcome.issue?.map(ooIssue => Issue.fromOoIssue(ooIssue));
+    return new OperationResult(issues, operationOutcome);
+  }
+
+  static fromMatchboxError(error: string): OperationResult {
+    const result = new OperationResult();
+    result.issues.push(new Issue(
+      IssueSeverity.Fatal,
+      'matchbox',
+      error,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    ));
+    return result;
   }
 }
 
@@ -18,24 +37,42 @@ export class Issue {
   col?: number;
   sliceInfo: string[] = [];
 
-  constructor(ooIssue: fhir.r4.OperationOutcomeIssue) {
-    this.severity = ooIssue.severity as IssueSeverity;
-    this.code = ooIssue.code;
+  constructor(severity: IssueSeverity, code: string, text: string, expression?: string, line?: number, col?: number, sliceInfo?: string[]) {
+    this.severity = severity;
+    this.code = code;
+    this.text = text;
+    this.expression = expression;
+    this.line = line;
+    this.col = col;
+    this.sliceInfo = sliceInfo ?? [];
+  }
+
+  static fromOoIssue(ooIssue: fhir.r4.OperationOutcomeIssue): Issue {
+    let expression: string;
     if (ooIssue.expression && ooIssue.expression.length) {
-      this.expression = ooIssue.expression[0];
+      expression = ooIssue.expression[0];
     } else if (ooIssue.location && ooIssue.location.length) {
-      this.expression = ooIssue.location[0];
+      expression = ooIssue.location[0];
     }
-    this.line = Issue.getLineNo(ooIssue);
-    this.col = Issue.getColNo(ooIssue);
 
     const sliceCutIndex = ooIssue.diagnostics?.indexOf('Slice info: 1.)');
+    let text: string;
+    let sliceInfo: string[] = null;
     if (sliceCutIndex >= 0) {
-      this.text = ooIssue.diagnostics.substring(0, sliceCutIndex).trimEnd();
-      this.sliceInfo = ooIssue.diagnostics.substring(sliceCutIndex + 15).trimStart().split(/\d+[.][)]/);
+      text = ooIssue.diagnostics.substring(0, sliceCutIndex).trimEnd();
+      sliceInfo = ooIssue.diagnostics.substring(sliceCutIndex + 15).trimStart().split(/\d+[.][)]/);
     } else {
-      this.text = ooIssue.diagnostics;
+      text = ooIssue.diagnostics;
     }
+    return new Issue(
+      ooIssue.severity as IssueSeverity,
+      ooIssue.code,
+      text,
+      expression,
+      Issue.getLineNo(ooIssue),
+      Issue.getColNo(ooIssue),
+      sliceInfo
+    );
   }
 
   static getLineNo(issue: fhir.r4.OperationOutcomeIssue): number | undefined {

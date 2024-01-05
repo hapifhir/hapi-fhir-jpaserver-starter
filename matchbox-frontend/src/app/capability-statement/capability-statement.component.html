@@ -9,12 +9,5 @@
 
   <div id="code"></div>
 
-  <!-- TODO: OperationOutcome display -->
-  <mat-error *ngIf="operationOutcome">
-    <ul>
-      <li *ngFor="let issue of operationOutcome.issue">
-        {{ issue.diagnostics }}
-      </li>
-    </ul>
-  </mat-error>
+  <app-operation-result *ngIf="operationResult" [operationResult]="operationResult"></app-operation-result>
 </div>

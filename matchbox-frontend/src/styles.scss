@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
 @import '_variables';
+@import '~highlight.js/styles/github.css';
 
 @include mat.core();
 @include mat.core-theme($theme);
@@ -70,45 +71,6 @@ $outer-space: 1.5rem;
 body {
   font-size: 14px;
   font-family: InterVariable, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-}
-
-header {
-  background: $green-primary;
-  display: flex;
-  flex-wrap: wrap;
-  flex: 0 1 auto;
-  padding: 10px 2em;
-  justify-content: space-between;
-
-  .logo-container {
-    display: inline-block;
-
-    .version {
-      color: #2e7d73;
-      font-size: 0.9em;
-      display: inline-block;
-      margin: 4px 0 0 10px;
-      vertical-align: top;
-    }
-  }
-
-  nav {
-    display: flex;
-    margin-top: 10px;
-
-    div {
-      display: inline-block;
-      margin: 0 1rem;
-      cursor: pointer;
-      color: $green-dark;
-
-      mat-icon {
-        margin-right: 8px;
-        vertical-align: middle;
-        color: $green-light;
-      }
-    }
-  }
 }
 
 .white-block {
