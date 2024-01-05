@@ -18,7 +18,7 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["zone.js"],
             "assets": ["src/assets", "src/examples", "src/CNAME"],
             "styles": ["src/styles.scss"]
           },
@@ -52,21 +52,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "matchbox-formfiller:build"
+            "buildTarget": "matchbox-formfiller:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "matchbox-formfiller:build:production"
+              "buildTarget": "matchbox-formfiller:build:production"
             },
             "development": {
-              "browserTarget": "matchbox-formfiller:build:development"
+              "buildTarget": "matchbox-formfiller:build:development"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "matchbox-formfiller:build"
+            "buildTarget": "matchbox-formfiller:build"
           }
         },
         "test": {
@@ -74,7 +74,7 @@
           "options": {
             "main": "src/test.ts",
             "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [],
             "styles": ["src/styles.scss"],

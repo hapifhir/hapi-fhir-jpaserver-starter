@@ -5,6 +5,7 @@
 - Prevented initializing a matchbox engine in `only_load_packages` mode [#172](https://github.com/ahdis/matchbox/issues/172)
 - Fixed the issue count in validation results [#173](https://github.com/ahdis/matchbox/issues/173)
 - Improved the validation interface
+- GUI: updated to Angular 17
 
 2023/12/27 Release 3.5.2
 

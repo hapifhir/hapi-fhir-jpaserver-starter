@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 
 export interface IDroppedBlob {
-  blob: Blob;
+  blob: File;
   name: string;
   contentType: string;
 }
@@ -47,7 +47,7 @@ export class UploadComponent {
   async fetchData(url: string) {
     const res = await fetch(url, { cache: 'no-store' });
     const contentType = res.headers.get('Content-Type');
-    const blob = await res.blob();
+    const blob = await res.blob() as File;
     this.addFiles.emit({ name: url, contentType, blob });
   }
 
