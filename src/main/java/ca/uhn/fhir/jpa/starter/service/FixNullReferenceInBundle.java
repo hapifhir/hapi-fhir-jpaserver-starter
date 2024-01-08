@@ -133,23 +133,31 @@ public class FixNullReferenceInBundle {
 					
 					//patient 5286c163-6e69-40e2-8299-3ebe9b39e023
 					//encounter b1731736-9f4a-4782-82a2-61c18c288d0d
+
+					//patient 5206a32e-f6da-4cdb-96aa-0399fc056776
+					//encounter 9602fe19-79e4-4e4b-bddb-e266fafe6d1f
 					if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.Encounter)) {
 						org.hl7.fhir.r4.model.Encounter encounter = (org.hl7.fhir.r4.model.Encounter) entry.getResource();
 						if (encounter.getSubject().getReference().equals("Patient/null")) {
 							String encounterId = encounter.getIdElement().getIdPart();
 							switch (encounterId) {
-							case "ebdac583-55d7-4643-8a19-0ab8e699d6b8":
-								modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+								case "ebdac583-55d7-4643-8a19-0ab8e699d6b8":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
 										+ "4390fdf6-ea03-4e5b-9c79-a27af6fe587a" + "\"");
-								specialTreatment = true;
-								break;
-							case "b1731736-9f4a-4782-82a2-61c18c288d0d":
-								modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+									specialTreatment = true;
+									break;
+								case "b1731736-9f4a-4782-82a2-61c18c288d0d":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
 										+ "5286c163-6e69-40e2-8299-3ebe9b39e023" + "\"");
-								specialTreatment = true;
-								break;	
-							default:
-								break;
+									specialTreatment = true;
+									break;
+								case "9602fe19-79e4-4e4b-bddb-e266fafe6d1f":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "5206a32e-f6da-4cdb-96aa-0399fc056776" + "\"");
+									specialTreatment = true;
+									break;
+								default:
+									break;
 							}
 						}
 					}
