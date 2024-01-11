@@ -2,8 +2,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: postgres-data-ips
-  name: postgres-data-ips
+    app: postgresql-ips-pvc
+  name: postgresql-ips-pvc
 spec:
   accessModes:
   - ReadWriteOnce

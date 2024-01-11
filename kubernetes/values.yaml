@@ -1,7 +1,7 @@
 auth:
   enablePostgresUser: true
   postgresPassword: <password> #This password will be used by postgres
-  username: <username> #This username will be used by hapi-fhir-jpaserver
+  username: admin #This username will be used by hapi-fhir-jpaserver
   password: <password> #This password will be used by hapi-fhir-jpaserver
   database: "fhir"
 
@@ -9,4 +9,4 @@ auth:
 primary:
   persistence:
     enabled: true
-    existingClaim: "postgres-data-ips"
+    existingClaim: "postgresql-ips-pvc"

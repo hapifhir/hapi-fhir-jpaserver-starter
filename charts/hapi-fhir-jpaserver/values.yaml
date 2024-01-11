@@ -159,7 +159,7 @@ livenessProbe:
 
 externalDatabase:
   # -- external database host used with `postgresql.enabled=false`
-  host: postgres-hapi-jpaserver-ips-postgresql
+  host: postgresql-fhir-ips
   # -- database port number
   port: 5432
   # -- username for the external database
@@ -167,17 +167,17 @@ externalDatabase:
   # -- database password
   password: ""
   # -- name of an existing secret resource containing the DB password in the `existingSecretKey` key
-  existingSecret: "postgres-hapi-jpaserver-ips-postgresql"
+  existingSecret: "postgresql-fhir-ips"
   # -- name of the key inside the `existingSecret`
   existingSecretKey: "postgres-password"
   # -- database name
   database: fhir
 
+
 # -- extra environment variables to set on the server container
 extraEnv:
-  []
-  # - name: SPRING_FLYWAY_BASELINE_ON_MIGRATE
-  #   value: "true"
+  - name: SERVER_SERVLET_CONTEXT_PATH 
+    value: "/ips/api"
 
 podDisruptionBudget:
   # -- Enable PodDisruptionBudget for the server pods.
