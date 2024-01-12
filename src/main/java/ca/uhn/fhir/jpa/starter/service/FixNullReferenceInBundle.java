@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 import javax.servlet.http.HttpServletRequest;
@@ -210,13 +212,32 @@ public class FixNullReferenceInBundle {
 							secondsDifference = diff;
 						}
 					}
-					modifiedBody = modifiedBody.replace("\"reference\":\"Patient/\"", "\"reference\":\"Patient/"
+
+					// If the closest encounter is not found in the db, i am looking in the same bundle with practitionerRole
+
+					if(closestEncounter == null) {
+						String finalPractitionerRole = practitionerRole;
+						List<org.hl7.fhir.r4.model.Encounter> encounterList = fhirBundle.getEntry().stream()
+							.map(Bundle.BundleEntryComponent::getResource)
+							.filter(resource -> resource instanceof org.hl7.fhir.r4.model.Encounter)
+							.map(resource -> (org.hl7.fhir.r4.model.Encounter) resource)
+							.filter(encounter -> encounter.hasParticipant() && encounter.getParticipant().get(0).hasIndividual() && encounter.getParticipant().get(0).getIndividual().getReference().equals(finalPractitionerRole))
+							.collect(Collectors.toList());
+
+						if(encounterList.size() == 1) {
+							closestEncounter = encounterList.get(0);
+						}
+					}
+
+					if(closestEncounter != null) {
+						modifiedBody = modifiedBody.replace("\"reference\":\"Patient/\"", "\"reference\":\"Patient/"
 							+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
-					modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+						modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
 							+ closestEncounter.getSubject().getReference().replace("Patient/", "") + "\"");
-					modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"",
+						modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"",
 							"\"reference\":\"Encounter/" + closestEncounter.getIdElement().getIdPart() + "\"");
-					logger.warn(modifiedBody);	
+					}
+					logger.warn("Modified Request body " +modifiedBody);
 				}
 			}
 
