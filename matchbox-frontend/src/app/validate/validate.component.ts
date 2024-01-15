@@ -101,7 +101,6 @@ export class ValidateComponent implements AfterViewInit {
     this.editor.setReadOnly(true);
     this.editor.setTheme('ace/theme/textmate');
     this.editor.setOptions({
-      maxLines: 10000,
       tabSize: INDENT_SPACES,
       wrap: true,
       useWorker: false,
@@ -375,7 +374,6 @@ export class ValidateComponent implements AfterViewInit {
     if (issue.line) {
       this.editor.gotoLine(issue.line, issue.col, true);
       this.editor.scrollToLine(issue.line, false, true, () => {});
-      this.editor.resize(true);
     }
   }
 

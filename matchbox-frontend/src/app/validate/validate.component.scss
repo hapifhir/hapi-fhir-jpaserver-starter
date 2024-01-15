@@ -99,7 +99,15 @@ table {
 }
 
 .card-maps {
-  margin-bottom: 10px;
+  padding: 8px 16px;
+}
+.row-full-height .card-maps {
+  height: 96vh;
+  max-height: 96vh;
+  overflow-y: auto;
+}
+#editor {
+  height: calc(100% - 50px);
 }
 
 .column50 {
