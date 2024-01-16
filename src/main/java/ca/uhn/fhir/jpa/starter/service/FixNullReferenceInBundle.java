@@ -158,6 +158,11 @@ public class FixNullReferenceInBundle {
 										+ "5206a32e-f6da-4cdb-96aa-0399fc056776" + "\"");
 									specialTreatment = true;
 									break;
+								case "6af137f5-6ac1-4508-aa5f-15062496a051":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "172e709c-9409-4f9f-9919-f54976a419f0" + "\"");
+									specialTreatment = true;
+									break;
 								default:
 									break;
 							}
