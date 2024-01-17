@@ -73,10 +73,10 @@
         xhr.send();
     }
 
-    // Replace content if replacement.txt exists
+    // Replace content if the replacement exists
     fileExists("content/custom/about.html", function(exists) {
         if (exists) {
-            loadFile("content/custom//about.html", function(content) {
+            loadFile("content/custom/about.html", function(content) {
                 var replacementContainer = document.getElementById("replacementAbout");
                 replacementContainer.innerHTML = content;
             });
