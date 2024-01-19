@@ -144,10 +144,6 @@ hapi:
       token_url: ${OAUTH_TOKEN_URL}
       manage_url: ${OAUTH_MANAGE_URL}
 
-    apikey:
-      enabled: ${APIKEY_ENABLED:false}
-      key: ${APIKEY}
-
     smart:
       issuer: ${SMART_ISSUER}
       jwks_url: ${SMART_JWKS_URL}

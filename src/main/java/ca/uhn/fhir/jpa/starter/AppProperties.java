@@ -67,7 +67,6 @@ public class AppProperties {
 
   private Validation validation = new Validation();
   private Map<String, Tester> tester = null;
-  private Apikey apikey = new Apikey();
   private Oauth oauth = new Oauth();
   private Smart smart = new Smart();
   private Logger logger = new Logger();
@@ -242,14 +241,6 @@ public class AppProperties {
 
   public void setSupported_resource_types(List<String> supported_resource_types) {
     this.supported_resource_types = supported_resource_types;
-  }
-
-  public Apikey getApikey() {
-    return apikey;
-  }
-
-  public void setApikey(Apikey apikey) {
-    this.apikey = apikey;
   }
 
   public Oauth getOauth() {
@@ -578,15 +569,15 @@ public class AppProperties {
 	public boolean getInstall_transitive_ig_dependencies() {
 		return install_transitive_ig_dependencies;
 	}
-	
+
 	public void setInstall_transitive_ig_dependencies(boolean install_transitive_ig_dependencies) {
 		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
 	}
-	
+
 	public boolean getReload_existing_implementationguides() {
 		return reload_existing_implementationguides;
 	}
-	
+
 	public void setReload_existing_implementationguides(boolean reload_existing_implementationguides) {
 		this.reload_existing_implementationguides = reload_existing_implementationguides;
 	}
@@ -632,27 +623,6 @@ public class AppProperties {
     }
 
 
-  }
-
-  public static class Apikey {
-    private Boolean enabled = false;
-    private String key;
-
-    public Boolean getEnabled() {
-      return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-      this.enabled = enabled;
-    }
-
-    public String getKey() {
-      return key;
-    }
-
-    public void setKey(String key) {
-      this.key = key;
-    }
   }
 
   public static class Oauth {

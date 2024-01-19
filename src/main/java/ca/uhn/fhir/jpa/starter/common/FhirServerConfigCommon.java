@@ -76,7 +76,6 @@ public class FhirServerConfigCommon {
         ourLog.info("Indexed on contained resource enabled");
     }
 
-    ourLog.info("Server configured to {} API Key authentication", appProperties.getApikey().getEnabled() ? "enable" : "disable");
     ourLog.info("Server configured to {} OAuth2 authentication", appProperties.getOauth().getEnabled() ? "enable" : "disable");
   }
 
