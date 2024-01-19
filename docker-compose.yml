@@ -1,11 +1,17 @@
 version: "3"
 services:
   hapi-fhir-jpaserver-start:
-    build: .
+    build:
+      context: .
+      target: tomcat
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
     ports:
       - "8080:8080"
+    environment:
+      - DEFAULT_SEARCH_LOCATIONS=classpath:/config/,file:/config/
+    volumes:
+      - ./src/main/resources/application.yaml:/config/application.yaml
   hapi-fhir-postgres:
     image: postgres:13-alpine
     container_name: hapi-fhir-postgres
@@ -18,3 +24,4 @@ services:
       - hapi-fhir-postgres:/var/lib/postgresql/data
 volumes:
   hapi-fhir-postgres:
+  
