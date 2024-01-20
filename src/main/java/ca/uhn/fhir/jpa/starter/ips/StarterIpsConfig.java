@@ -15,18 +15,18 @@ import ca.uhn.fhir.jpa.ips.generator.IpsGeneratorSvcImpl;
 @Conditional(IpsConfigCondition.class)
 public class StarterIpsConfig {
 	@Bean 
-	IIpsGenerationStrategy IpsGenerationStrategy()
+	IIpsGenerationStrategy ipsGenerationStrategy()
 	{
 		return new DefaultIpsGenerationStrategy();
 	}
 
 	@Bean
-	public IpsOperationProvider IpsOperationProvider(IIpsGeneratorSvc theIpsGeneratorSvc){
+	public IpsOperationProvider ipsOperationProvider(IIpsGeneratorSvc theIpsGeneratorSvc){
 		return new IpsOperationProvider(theIpsGeneratorSvc);
 	}
 
 	@Bean
-	public IIpsGeneratorSvc IpsGeneratorSvcImpl(FhirContext theFhirContext, IIpsGenerationStrategy theGenerationStrategy, DaoRegistry theDaoRegistry)
+	public IIpsGeneratorSvc ipsGeneratorSvcImpl(FhirContext theFhirContext, IIpsGenerationStrategy theGenerationStrategy, DaoRegistry theDaoRegistry)
 	{
 		return new IpsGeneratorSvcImpl(theFhirContext, theGenerationStrategy, theDaoRegistry);
 	}
