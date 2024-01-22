@@ -1,3 +1,7 @@
+2024/XX/YY Release 3.6.2
+
+- Implemented the new Gazelle validation API [#141](https://github.com/ahdis/matchbox/issues/141)
+
 2024/02/28 Release 3.6.1
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.6.1`

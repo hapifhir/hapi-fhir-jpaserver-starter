@@ -36,7 +36,7 @@ public class MatchboxEngineSupport {
 	
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxEngineSupport.class);
 
-	private static MatchboxEngine mainEngine = null;
+	public static MatchboxEngine mainEngine = null;
 	private EngineSessionCache sessionCache;
 	
 	private boolean initialized = false;

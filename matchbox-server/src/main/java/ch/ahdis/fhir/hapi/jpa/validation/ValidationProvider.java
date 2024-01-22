@@ -21,12 +21,10 @@ package ch.ahdis.fhir.hapi.jpa.validation;
  */
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.util.StopWatch;
-import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.MatchboxEngineSupport;
@@ -34,19 +32,16 @@ import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.IOUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
-import org.hl7.fhir.r5.model.DateTimeType;
-import org.hl7.fhir.r5.model.DateType;
 import org.hl7.fhir.r5.model.Duration;
 import org.hl7.fhir.r5.model.OperationOutcome;
 import org.hl7.fhir.r5.model.StringType;
-import org.hl7.fhir.r5.model.TimeType;
+import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
@@ -104,7 +99,7 @@ public class ValidationProvider {
 		log.debug("$validate");
 		final ArrayList<SingleValidationMessage> addedValidationMessages = new ArrayList<>();
 
-		final StopWatch sw = new StopWatch();
+		final var sw = new StopWatch();
 		sw.startTask("Total");
 
 		// we extract here all config
@@ -142,7 +137,13 @@ public class ValidationProvider {
 			reload = theRequest.getParameter("reload").equals("true");
 		}
 
-		final String contentString = this.getContentString(theRequest, addedValidationMessages);
+		String contentString = "";
+		try {
+			contentString = new String(theRequest.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+		} catch (final Exception e) {
+			log.error(e.getMessage(), e);
+		}
+
 		if (contentString.isEmpty()) {
 			return this.getOoForError("No content provided in HTTP body");
 		} else {
@@ -174,10 +175,7 @@ public class ValidationProvider {
 
 		final List<ValidationMessage> messages;
 		try {
-			final var format = encoding == EncodingEnum.XML ? FhirFormat.XML : FhirFormat.JSON;
-			final var stream = new ByteArrayInputStream(contentString.getBytes(StandardCharsets.UTF_8));
-			messages = engine.validate(format, stream, profile);
-
+			messages = doValidate(engine, contentString, encoding, profile);
 		} catch (final Exception e) {
 			sw.endCurrentTask();
 			log.debug("Validation time: {}", sw);
@@ -187,36 +185,10 @@ public class ValidationProvider {
 
 		long millis = sw.getMillis();
 		log.debug("Validation time: {}", sw);
-		
+
 		return this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
 	}
 
-	private String getContentString(final HttpServletRequest theRequest,
-											  final List<SingleValidationMessage> addedValidationMessages) {
-		byte[] bytes = null;
-		String contentString = "";
-		try {
-			bytes = IOUtils.toByteArray(theRequest.getInputStream());
-			if (bytes.length > 2 && bytes[0] == -17 && bytes[1] == -69 && bytes[2] == -65) {
-				byte[] dest = new byte[bytes.length - 3];
-				System.arraycopy(bytes, 3, dest, 0, bytes.length - 3);
-				bytes = dest;
-				if (addedValidationMessages != null) {
-					final var m = new SingleValidationMessage();
-					m.setSeverity(ResultSeverityEnum.WARNING);
-					m.setMessage(
-						"Resource content has a UTF-8 BOM marking, skipping BOM, see https://en.wikipedia.org/wiki/Byte_order_mark");
-					m.setLocationCol(0);
-					m.setLocationLine(0);
-					addedValidationMessages.add(m);
-				}
-			}
-			contentString = new String(bytes);
-		} catch (final IOException e) {
-			log.error(e.getMessage(), e);
-		}
-		return contentString;
-	}
 
 	private IBaseResource getOperationOutcome(final String id,
 															final List<ValidationMessage> messages,
@@ -234,7 +206,6 @@ public class ValidationProvider {
 			issue.setCode(OperationOutcome.IssueType.INFORMATIONAL);
 
 			final StructureDefinition structDef = engine.getStructureDefinition(profile);
-
 			final org.hl7.fhir.r5.model.StructureDefinition structDefR5 = (org.hl7.fhir.r5.model.StructureDefinition) VersionConvertorFactory_40_50.convertResource(structDef);
 
 			final var profileDate = (structDef.getDateElement() != null)
@@ -247,7 +218,7 @@ public class ValidationProvider {
 					structDef.getVersion(),
 					profileDate,
 					String.join(", ", engine.getContext().getLoadedPackages()),
-					"" + ms/1000.0+ "s",
+					ms/1000.0+ "s",
 					VersionUtil.getPoweredBy(),
 					cliContext.toString()
 				));
@@ -258,9 +229,7 @@ public class ValidationProvider {
 			ext.addExtension("profileDate", structDefR5.getDateElement());
 
 			ext.addExtension("total", new Duration().setUnit("ms").setValue(ms) );
-			if (matchboxEngineSupport.getSessionId(engine) != null) {
-				ext.addExtension("validatorVersion", new StringType(VersionUtil.getPoweredBy()));
-			}
+			ext.addExtension("validatorVersion", new StringType(VersionUtil.getPoweredBy()));
 			cliContext.addContextToExtension(ext);
 			if (matchboxEngineSupport.getSessionId(engine) != null) {
 				ext.addExtension("sessionId", new StringType(matchboxEngineSupport.getSessionId(engine)));
@@ -273,6 +242,10 @@ public class ValidationProvider {
 
 		// Map the SingleValidationMessages to OperationOutcomeIssue
 		for (final ValidationMessage message : messages) {
+			if (message.getType() == null) {
+				// TODO: this did not happen with other core versions
+				message.setType(ValidationMessage.IssueType.UNKNOWN);
+			}
 			final var issue = OperationOutcomeUtilities.convertToIssue(message, oo);
 
 			// Note: the message is mapped to details.text by HAPI, but we still need it in diagnostics for the EVSClient,
@@ -318,5 +291,28 @@ public class ValidationProvider {
 		issue.setDiagnostics(message);
 		issue.addExtension().setUrl(ToolingExtensions.EXT_ISSUE_SOURCE).setValue(new StringType("ValidationProvider"));
 		return VersionConvertorFactory_40_50.convertResource(oo);
+	}
+
+	public static List<ValidationMessage> doValidate(final MatchboxEngine engine,
+									 String content,
+									 final EncodingEnum encoding,
+									 final String profile) throws EOperationOutcome, IOException {
+		final List<ValidationMessage> messages = new ArrayList<>();
+
+		if (content.startsWith("\uFEFF")) {
+			content = content.replace("\uFEFF", "");
+			final var m = new ValidationMessage();
+			m.setLevel(ValidationMessage.IssueSeverity.WARNING);
+			m.setMessage(
+				"Resource content has a UTF-8 BOM marking, skipping BOM, see https://en.wikipedia.org/wiki/Byte_order_mark");
+			m.setCol(0);
+			m.setLine(0);
+			messages.add(m);
+		}
+
+		final var format = encoding == EncodingEnum.XML ? FhirFormat.XML : FhirFormat.JSON;
+		final var stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+		messages.addAll(engine.validate(format, stream, profile));
+		return messages;
 	}
 }

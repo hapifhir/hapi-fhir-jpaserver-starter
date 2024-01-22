@@ -30,6 +30,7 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
+import ch.ahdis.matchbox.util.MatchboxServerUtils;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_30_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
@@ -97,34 +98,6 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 		this.myTxManager = myTxManager;
 	}
 
-	/**
-	 * Helper method which will attempt to use the IBinaryStorageSvc to resolve the
-	 * binary blob if available. If the bean is unavailable, fallback to assuming we
-	 * are using an embedded base64 in the data element.
-	 * 
-	 * @param theBinary the Binary who's `data` blob you want to retrieve
-	 * @return a byte array containing the blob.
-	 *
-	 * @throws IOException
-	 */
-	private byte[] fetchBlobFromBinary(IBaseBinary theBinary) throws IOException {
-		if (myBinaryStorageSvc != null && !(myBinaryStorageSvc instanceof NullBinaryStorageSvcImpl)) {
-			return myBinaryStorageSvc.fetchDataBlobFromBinary(theBinary);
-		} else {
-			byte[] value = BinaryUtil.getOrCreateData(myCtx, theBinary).getValue();
-			if (value == null) {
-				throw new InternalErrorException(
-						Msg.code(1296) + "Failed to fetch blob from Binary/" + theBinary.getIdElement());
-			}
-			return value;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private IFhirResourceDao<IBaseBinary> getBinaryDao() {
-		return myDaoRegistry.getResourceDao("Binary");
-	}
-
 	@Nonnull
 	public FhirContext getFhirContext(FhirVersionEnum theFhirVersion) {
 		return myVersionToContext.computeIfAbsent(theFhirVersion, v -> new FhirContext(v));
@@ -132,10 +105,10 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 
 	private org.hl7.fhir.r5.model.Resource loadPackageEntity(NpmPackageVersionResourceEntity contents) {
 		try {
-			JpaPid binaryPid = JpaPid.fromId(contents.getResourceBinary().getId());
-			IBaseBinary binary = getBinaryDao().readByPid(binaryPid);
-			byte[] resourceContentsBytes = fetchBlobFromBinary(binary);
-			String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
+			final var binary = MatchboxServerUtils.getBinaryFromId(contents.getResourceBinary().getId(), myDaoRegistry);
+			final byte[] resourceContentsBytes = MatchboxServerUtils.fetchBlobFromBinary(binary, myBinaryStorageSvc,
+																												  myCtx);
+			final String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
 			switch (contents.getFhirVersion()) {
 			case DSTU3:
 				return VersionConvertorFactory_30_50
@@ -270,11 +243,9 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 	}
 
 	private IHapiPackageCacheManager.PackageContents loadPackageContents(NpmPackageVersionEntity thePackageVersion) {
-		IFhirResourceDao<? extends IBaseBinary> binaryDao = getBinaryDao();
-		JpaPid binaryPid = JpaPid.fromId(thePackageVersion.getPackageBinary().getId());
-		IBaseBinary binary = binaryDao.readByPid(binaryPid);
+		final var binary = MatchboxServerUtils.getBinaryFromId(thePackageVersion.getPackageBinary().getId(), myDaoRegistry);
 		try {
-			byte[] content = fetchBlobFromBinary(binary);
+			final byte[] content = MatchboxServerUtils.fetchBlobFromBinary(binary, myBinaryStorageSvc, myCtx);
 			PackageContents retVal = new PackageContents().setBytes(content).setPackageId(thePackageVersion.getPackageId())
 					.setVersion(thePackageVersion.getVersionId()).setLastModified(thePackageVersion.getUpdatedTime());
 			return retVal;

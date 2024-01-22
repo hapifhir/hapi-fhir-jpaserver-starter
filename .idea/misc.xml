@@ -21,7 +21,6 @@
         <option value="$PROJECT_DIR$/matchbox-terminology/pom.xml" />
       </set>
     </option>
-    <option name="workspaceImportForciblyTurnedOn" value="true" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_20" default="true" project-jdk-name="temurin-20" project-jdk-type="JavaSDK" />
   <component name="ProjectType">

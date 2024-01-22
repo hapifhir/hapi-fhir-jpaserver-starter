@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ch.ahdis.matchbox.spring.MatchboxEventListener;
+import ch.ahdis.matchbox.gazelle.GazelleValidationWs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -26,7 +27,8 @@ import ch.ahdis.matchbox.MatchboxJpaConfig;
 	MdmConfig.class,
 	MatchboxJpaConfig.class,
 	FhirServerConfigR4.class,
-	MatchboxEventListener.class})
+	MatchboxEventListener.class,
+	GazelleValidationWs.class})
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
@@ -48,8 +50,8 @@ public class Application extends SpringBootServletInitializer {
 
   @Bean
   @Conditional(OnEitherVersion.class)
-  public ServletRegistrationBean hapiServletRegistration(RestfulServer restfulServer) {
-    ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
+  public ServletRegistrationBean<RestfulServer> hapiServletRegistration(RestfulServer restfulServer) {
+    ServletRegistrationBean<RestfulServer> servletRegistrationBean = new ServletRegistrationBean<>();
     beanFactory.autowireBean(restfulServer);
     servletRegistrationBean.setServlet(restfulServer);
     servletRegistrationBean.addUrlMappings("/fhir/*");

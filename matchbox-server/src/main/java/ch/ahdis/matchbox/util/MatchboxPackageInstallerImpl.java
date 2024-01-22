@@ -4,18 +4,22 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
+import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
+import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
+import ca.uhn.fhir.jpa.model.dao.JpaPid;
+import ca.uhn.fhir.util.BinaryUtil;
+import ch.ahdis.matchbox.StructureDefinitionResourceProvider;
 import jakarta.annotation.PostConstruct;
 
-import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.instance.model.api.IPrimitiveType;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_30_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
+import org.hl7.fhir.instance.model.api.*;
 import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.utilities.json.model.JsonObject;
 import org.hl7.fhir.utilities.npm.IPackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
@@ -23,6 +27,7 @@ import org.hl7.fhir.utilities.npm.NpmPackage.NpmPackageFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -64,7 +69,7 @@ import ca.uhn.fhir.util.SearchParameterUtil;
  * following modifications: - Resources with status "draft" are also loaded -
  * examples are also loaded Modifications are marked in source code comments
  * with "MODIFIED"
- * 
+ *
  * @author alexander kreutz
  *
  */
@@ -89,7 +94,11 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 	@Autowired
 	private INpmPackageVersionDao myPackageVersionDao;
 	@Autowired
+	private INpmPackageVersionResourceDao myPackageVersionResourceDao;
+	@Autowired
 	private PartitionSettings myPartitionSettings;
+	@Autowired
+	private IBinaryStorageSvc myBinaryStorageSvc;
 
 	/**
 	 * Constructor
@@ -149,14 +158,14 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 	@SuppressWarnings("ConstantConditions")
 	public PackageInstallOutcomeJson install(PackageInstallationSpec theInstallationSpec)
 			throws ImplementationGuideInstallationException {
-		
+
 		// FIXME. Don't add hl7.terminology.r5
-		
+
 		theInstallationSpec.addDependencyExclude("hl7.terminology.r4");
 		theInstallationSpec.addDependencyExclude("hl7.terminology.r5");
 		theInstallationSpec.addDependencyExclude("hl7.fhir.cda");  // used as dev
-		
-		
+
+
 		PackageInstallOutcomeJson retVal = new PackageInstallOutcomeJson();
 		if (enabled) {
 			try {
@@ -191,21 +200,71 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 					throw new IOException("Package not found");
 				}
 				retVal.getMessage().addAll(JpaPackageCache.getProcessingMessages(npmPackage));
-				
+
 //				if (theInstallationSpec.isFetchDependencies()) {
 					fetchAndInstallDependencies(npmPackage, theInstallationSpec, retVal);
 //				}
 
-				
+
 			} catch (IOException e) {
 				throw new ImplementationGuideInstallationException(
 						"Could not load NPM package " + theInstallationSpec.getName() + "#" + theInstallationSpec.getVersion(), e);
 			}
+
+			// We have installed at least one new package, let's save the StructureDefinition titles in the database
+			ourLog.debug("Updating StructureDefinition titles...");
+			final var parserR4 = new org.hl7.fhir.r4.formats.JsonParser();
+			final var parserR5 = new org.hl7.fhir.r5.formats.JsonParser();
+			new TransactionTemplate(this.myTxManager).execute(tx -> {
+				final var page = PageRequest.of(0, 2147483646);
+				this.myPackageVersionResourceDao.findByResourceType(page, "StructureDefinition")
+					.forEach(npmPackageVersionResourceEntity -> {
+						try {
+							if (npmPackageVersionResourceEntity.getFilename() != null && !npmPackageVersionResourceEntity.getFilename().endsWith(".json")) {
+								// The filename has already been modified
+								return;
+							}
+							final var sdBinary = MatchboxServerUtils.getBinaryFromId(npmPackageVersionResourceEntity.getResourceBinary().getId(), myDaoRegistry);
+							final byte[] resourceContentsBytes;
+							resourceContentsBytes = MatchboxServerUtils.fetchBlobFromBinary(sdBinary, myBinaryStorageSvc,
+																												 myFhirContext);
+							final String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
+							final var title = switch (npmPackageVersionResourceEntity.getFhirVersion()) {
+								case R4 -> {
+									final var sd = (org.hl7.fhir.r4.model.StructureDefinition) parserR4.parse(resourceContents);
+									if (sd.getTitle() != null) {
+										yield sd.getTitle();
+									}
+									yield sd.getName();
+								}
+								case R5 -> {
+									final var sd = (org.hl7.fhir.r5.model.StructureDefinition) parserR5.parse(resourceContents);
+									if (sd.getTitle() != null) {
+										yield sd.getTitle();
+									}
+									yield sd.getName();
+								}
+								default -> {
+									ourLog.error("FHIR version not supported for parsing the StructureDefinition");
+									throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + resourceContents);
+								}
+							};
+
+							// Change the filename for the StructureDefinition title
+							npmPackageVersionResourceEntity.setFilename(title);
+							this.myPackageVersionResourceDao.save(npmPackageVersionResourceEntity);
+						} catch (final IOException e) {
+							ourLog.error("Unable to extract the StructureDefinition title", e);
+						}
+				});
+				return null;
+			});
+			ourLog.debug("Updating StructureDefinition titles... Done");
 		}
 
 		return retVal;
 	}
-	
+
 	private void fetchAndInstallDependencies(NpmPackage npmPackage, PackageInstallationSpec theInstallationSpec, PackageInstallOutcomeJson theOutcome) throws ImplementationGuideInstallationException {
 		if (npmPackage.getNpm().has("dependencies")) {
 			JsonObject dependencies = npmPackage.getNpm().get("dependencies").asJsonObject();
@@ -250,15 +309,15 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 		if (!pkg.getFolders().containsKey("package")) {
 			return Collections.emptyList();
 		}
-					
+
 		ArrayList<IBaseResource> resources = new ArrayList<>();
-		
+
 		addFolder(type, pkg.getFolders().get("package"), resources);
-		
+
 		NpmPackageFolder exampleFolder = pkg.getFolders().get("example");
-		if (exampleFolder != null) {			
+		if (exampleFolder != null) {
 			try {
-			  pkg.indexFolder("example", exampleFolder);			  
+			  pkg.indexFolder("example", exampleFolder);
 			  addFolder(type, exampleFolder, resources);
 			} catch (IOException e) {
 				throw new InternalErrorException("Cannot install resource of type " + type + ": Could not read example directory", e);

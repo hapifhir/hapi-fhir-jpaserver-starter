@@ -11,9 +11,9 @@
       <p class="current">
         Current resource loaded:
         <ng-container *ngIf="currentResource">
-          a <span>{{ currentResource.resourceType }}</span>, from <em>{{ currentResource.filename }}</em>
+          <span>{{ currentResource.resourceType }}</span> (from <em>{{ currentResource.filename }}</em>)
         </ng-container>
-        <em *ngIf="!currentResource">None</em>
+        <em *ngIf="!currentResource">none</em>
       </p>
 
       <div class="form-field-group">
@@ -27,8 +27,8 @@
                                      [(ngModel)]="profileFilter"
                                      (ngModelChange)="updateProfileFilter()"></ngx-mat-select-search>
             </mat-option>
-            <mat-option *ngFor="let profile of filteredProfiles" [value]="profile">
-              {{ profile }}
+            <mat-option *ngFor="let profile of filteredProfiles | keyvalue" [value]="profile.key">
+              {{ profile.value }}
             </mat-option>
           </mat-select>
           <mat-error *ngIf="profileControl.hasError('required')">Please choose a profile</mat-error>

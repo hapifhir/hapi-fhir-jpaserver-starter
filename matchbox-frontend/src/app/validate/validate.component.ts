@@ -28,11 +28,11 @@ export class ValidateComponent implements AfterViewInit {
   client: FhirClient;
   capabilityStatement: fhir.r4.CapabilityStatement | null = null;
   installedIgs: Set<string> = new Set<string>();
-  supportedProfiles: Set<string> = new Set<string>();
+  supportedProfiles: Map<string, string> = new Map<string, string>();
   validatorSettings: ValidationParameter[] = new Array<ValidationParameter>();
 
   // Form
-  filteredProfiles: Set<string> = new Set<string>();
+  filteredProfiles: Map<string, string> = new Map<string, string>();
   profileFilter: string = '';
   selectedIg: string = null;
   selectedProfile: string;
@@ -62,7 +62,20 @@ export class ValidateComponent implements AfterViewInit {
           .then((od: fhir.r4.OperationDefinition) => {
             od.parameter?.forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
               if (parameter.name == 'profile') {
-                parameter.targetProfile.forEach(profile => this.supportedProfiles.add(profile));
+                parameter._targetProfile.forEach(item => {
+                  let sdCanonical = this.getExtensionStringValue(item, 'sd-canonical');
+                  const sdTitle = this.getExtensionStringValue(item, 'sd-title');
+                  const igId = this.getExtensionStringValue(item, 'ig-id');
+                  const igVersion = this.getExtensionStringValue(item, 'ig-version');
+                  let current = '';
+                  if (this.getExtensionBoolValue(item, 'ig-current')) {
+                    current = ' (current)';
+                  } else {
+                    sdCanonical += `|${igVersion}`;
+                  }
+
+                  this.supportedProfiles.set(sdCanonical, `${sdTitle} — ${igId}#${igVersion}${current}`);
+                });
                 this.updateProfileFilter();
               }
             });
@@ -378,7 +391,26 @@ export class ValidateComponent implements AfterViewInit {
   }
 
   updateProfileFilter() {
-    this.filteredProfiles = new Set<string>([...this.supportedProfiles].filter(profile => profile.includes(this.profileFilter)));
+    this.filteredProfiles = new Map<string, string>(
+      [...this.supportedProfiles].filter(([_, title]) => title.includes(this.profileFilter))
+    );
+  }
+
+  getExtensionStringValue(element: fhir.r4.Element, url: string): string {
+    return this.getExtension(element, url)?.valueString ?? '';
+  }
+
+  getExtensionBoolValue(element: fhir.r4.Element, url: string): boolean {
+    return this.getExtension(element, url)?.valueBoolean ?? false;
+  }
+
+  getExtension(element: fhir.r4.Element, url: string): fhir.r4.Extension {
+    for (let i = 0; i < element.extension.length; i++) {
+      if (element.extension[i].url === url) {
+        return element.extension[i];
+      }
+    }
+    return null;
   }
 }
 

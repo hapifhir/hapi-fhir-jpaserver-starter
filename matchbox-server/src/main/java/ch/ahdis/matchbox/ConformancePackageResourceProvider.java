@@ -2,13 +2,10 @@ package ch.ahdis.matchbox;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import ch.ahdis.matchbox.util.MatchboxServerUtils;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
@@ -17,10 +14,7 @@ import org.hl7.fhir.instance.model.api.IBaseBinary;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IDomainResource;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r4.model.CanonicalType;
-import org.hl7.fhir.r4.model.MetadataResource;
-import org.hl7.fhir.r4.model.OperationOutcome;
-import org.hl7.fhir.r4.model.Resource;
+import org.hl7.fhir.r4.model.*;
 import org.quartz.DisallowConcurrentExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -194,9 +188,8 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 				} else {
 					resources.addAll(matchboxEngine.getContext().fetchResourcesByType(classR5));
 				}
-				SimpleBundleProvider bundleProvider = new SimpleBundleProvider(
-				resources.stream().map(t -> VersionConvertorFactory_40_50.convertResource(t)).collect(Collectors.toList()));
-				return bundleProvider;
+				return new SimpleBundleProvider(
+					resources.stream().map(VersionConvertorFactory_40_50::convertResource).collect(Collectors.toList()));
 			}
 		}
 		return null;
@@ -204,43 +197,49 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 
 	public List<CanonicalType> getCanonicals() {
 		return new TransactionTemplate(myTxManager).execute(tx -> {
-			Slice<NpmPackageVersionResourceEntity> outcome = myPackageVersionResourceDao
-					.findByResourceType(PageRequest.of(0, 2147483646), resourceType);
-			List<String> versioned = outcome.stream().filter(t -> !t.getPackageVersion().isCurrentVersion())
-					.map(t -> (t.getCanonicalUrl() + "|" + t.getCanonicalVersion())).collect(Collectors.toList());
-			Slice<NpmPackageVersionResourceEntity> current = myPackageVersionResourceDao
-					.findCurrentByResourceType(PageRequest.of(0, 2147483646), resourceType);
-			versioned.addAll(current.stream().map(t -> (t.getCanonicalUrl())).collect(Collectors.toList()));
-			return versioned.stream().sorted().map(t -> new CanonicalType(t)).collect(Collectors.toList());
+			final var page = PageRequest.of(0, 2147483646);
+			final var currentEntityIds =
+				this.myPackageVersionResourceDao.findCurrentByResourceType(page, this.resourceType)
+					.stream()
+					.map(NpmPackageVersionResourceEntity::getId)
+					.collect(Collectors.toUnmodifiableSet());
+
+			return this.myPackageVersionResourceDao.findByResourceType(page, this.resourceType)
+				.stream()
+				.sorted(Comparator
+							  .comparing(NpmPackageVersionResourceEntity::getCanonicalUrl)
+							  .thenComparing(NpmPackageVersionResourceEntity::getCanonicalVersion))
+				.map(entity -> {
+					final var canonical = new CanonicalType(entity.getCanonicalUrl());
+					canonical.addExtension().setUrl("ig-id").setValue(new StringType(entity.getPackageVersion().getPackageId()));
+					if (entity.getCanonicalVersion() != null) {
+						canonical.addExtension().setUrl("ig-version").setValue(new StringType(entity.getCanonicalVersion()));
+					}
+					canonical.addExtension().setUrl("ig-current").setValue(new BooleanType(currentEntityIds.contains(entity.getId())));
+					canonical.addExtension().setUrl("sd-canonical").setValue(new StringType(entity.getCanonicalUrl()));
+					if (entity.getFilename() != null && !entity.getFilename().isBlank()) {
+						canonical.addExtension().setUrl("sd-title").setValue(new StringType(entity.getFilename()));
+					} else {
+						canonical.addExtension().setUrl("sd-title").setValue(new StringType(entity.getCanonicalUrl()));
+					}
+					return canonical;
+				})
+				.toList();
 		});
 	}
 
-	/**
-	 * Helper method which will attempt to use the IBinaryStorageSvc to resolve the
-	 * binary blob if available. If the bean is unavailable, fallback to assuming we
-	 * are using an embedded base64 in the data element.
-	 * 
-	 * @param theBinary the Binary who's `data` blob you want to retrieve
-	 * @return a byte array containing the blob.
-	 *
-	 * @throws IOException
-	 */
-	private byte[] fetchBlobFromBinary(IBaseBinary theBinary) throws IOException {
-		if (myBinaryStorageSvc != null && !(myBinaryStorageSvc instanceof NullBinaryStorageSvcImpl)) {
-			return myBinaryStorageSvc.fetchDataBlobFromBinary(theBinary);
-		} else {
-			byte[] value = BinaryUtil.getOrCreateData(myCtx, theBinary).getValue();
-			if (value == null) {
-				throw new InternalErrorException(
-						Msg.code(1296) + "Failed to fetch blob from Binary/" + theBinary.getIdElement());
-			}
-			return value;
-		}
+	public List<NpmPackageVersionResourceEntity> getPackageResources() {
+		return new TransactionTemplate(this.myTxManager).execute(tx -> {
+			return myPackageVersionResourceDao
+				.findByResourceType(PageRequest.of(0, 2147483646), resourceType).stream().toList();
+		});
 	}
 
-	@SuppressWarnings("unchecked")
-	private IFhirResourceDao<IBaseBinary> getBinaryDao() {
-		return myDaoRegistry.getResourceDao("Binary");
+	public List<NpmPackageVersionResourceEntity> getCurrentPackageResources() {
+		return new TransactionTemplate(this.myTxManager).execute(tx -> {
+			return myPackageVersionResourceDao
+				.findCurrentByResourceType(PageRequest.of(0, 2147483646), resourceType).stream().toList();
+		});
 	}
 
 	private IBaseResource loadPackageEntityAdjustId(NpmPackageVersionResourceEntity contents) {
@@ -270,10 +269,10 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 
 	private IBaseResource loadPackageEntity(NpmPackageVersionResourceEntity contents) {
 		try {
-			JpaPid binaryPid = JpaPid.fromId(contents.getResourceBinary().getId());
-			IBaseBinary binary = getBinaryDao().readByPid(binaryPid);
-			byte[] resourceContentsBytes = fetchBlobFromBinary(binary);
-			String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
+			final var binary = MatchboxServerUtils.getBinaryFromId(contents.getResourceBinary().getId(), myDaoRegistry);
+			final byte[] resourceContentsBytes = MatchboxServerUtils.fetchBlobFromBinary(binary, myBinaryStorageSvc,
+																												  myCtx);
+			final String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
 			switch (contents.getFhirVersion()) {
 				case R4:
 					return new org.hl7.fhir.r4.formats.JsonParser().parse(resourceContents);
