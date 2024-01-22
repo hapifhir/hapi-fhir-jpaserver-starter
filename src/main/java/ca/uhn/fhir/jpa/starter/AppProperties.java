@@ -63,7 +63,7 @@ public class AppProperties {
   private List<String> supported_resource_types = new ArrayList<>();
   private List<Bundle.BundleType> allowed_bundle_types = null;
   private Boolean narrative_enabled = true;
-  private Integer history_count_mode = 0;
+  private String history_count_mode = "CACHED_ONLY_WITHOUT_OFFSET";
 
   private Validation validation = new Validation();
   private Map<String, Tester> tester = null;
@@ -515,12 +515,12 @@ public class AppProperties {
     this.narrative_enabled = narrative_enabled;
   }
 
-  public Integer getHistory_count_mode()
+  public String getHistory_count_mode()
   {
     return history_count_mode;
   }
 
-  public void setHistory_count_mode(Integer history_count_mode)
+  public void setHistory_count_mode(String history_count_mode)
   {
     this.history_count_mode = history_count_mode;
   }

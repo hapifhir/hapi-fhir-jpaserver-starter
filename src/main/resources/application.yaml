@@ -132,10 +132,10 @@ hapi:
       allowed_origin:
         - '*'
     # history_count_mode is an integer that represents the mode that the DAOConfig will use when getting the history count during a history request
-      # history_count_mode = 0 -> CACHED_ONLY_WITHOUT_OFFSET (default within hapi-fhir DAOConfig)
-      # history_count_mode = 1 -> COUNT_ACCURATE (ignores cache and always gets correct count)
-      # history_count_mode = 2 -> COUNT_DISABLED (does not return count at all)
-    history_count_mode: 1
+      # history_count_mode = CACHED_ONLY_WITHOUT_OFFSET (default within hapi-fhir DAOConfig)
+      # history_count_mode = COUNT_ACCURATE (ignores cache and always gets correct count)
+      # history_count_mode = COUNT_DISABLED (does not return count at all)
+    history_count_mode: CACHED_ONLY_WITHOUT_OFFSET
 
     # Search coordinator thread pool sizes
     search-coord-core-pool-size: 20
