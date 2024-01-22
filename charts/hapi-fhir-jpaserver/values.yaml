@@ -7,7 +7,7 @@ image:
   # -- the path inside the repository
   repository: hapiproject/hapi
   # -- the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image.
-  tag: "v6.2.2@sha256:9c4e8af94d81ac0049dbb589e4cd855bf78c9c13be6f6844e814c63d63545b44"
+  tag: "v6.6.0@sha256:c00367865ae5dad4e171cbb68bfc1c39818854079d1565bee4c86a45e78335d0"
   # -- image pullPolicy to use
   pullPolicy: IfNotPresent
 
@@ -131,24 +131,39 @@ postgresql:
       seccompProfile:
         type: RuntimeDefault
 
+# -- readiness probe
+# @ignored
 readinessProbe:
+  httpGet:
+    path: /readyz
+    port: http
   failureThreshold: 5
   initialDelaySeconds: 30
   periodSeconds: 20
   successThreshold: 1
   timeoutSeconds: 20
 
-startupProbe:
-  failureThreshold: 10
-  initialDelaySeconds: 30
-  periodSeconds: 30
-  successThreshold: 1
-  timeoutSeconds: 30
-
+# -- liveness probe
+# @ignored
 livenessProbe:
+  httpGet:
+    path: /livez
+    port: http
   failureThreshold: 5
   initialDelaySeconds: 30
   periodSeconds: 20
+  successThreshold: 1
+  timeoutSeconds: 30
+
+# -- startup probe
+# @ignored
+startupProbe:
+  httpGet:
+    path: /readyz
+    port: http
+  failureThreshold: 10
+  initialDelaySeconds: 30
+  periodSeconds: 30
   successThreshold: 1
   timeoutSeconds: 30
 
@@ -208,3 +223,32 @@ restrictedContainerSecurityContext:
   runAsGroup: 65534
   seccompProfile:
     type: RuntimeDefault
+
+# @ignored
+curl:
+  image:
+    registry: docker.io
+    repository: curlimages/curl
+    tag: 8.2.0@sha256:daf3f46a2639c1613b25e85c9ee4193af8a1d538f92483d67f9a3d7f21721827
+
+tests:
+  # -- configure the test pods resource requests and limits
+  resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- additional Spring Boot application config. Mounted as a file and automatically loaded by the application.
+extraConfig: ""
+  # # For example:
+  # |
+  # hapi:
+  #   fhir:
+  #     implementationguides:
+  #       gh_0_1_0:
+  #         url: https://build.fhir.org/ig/hl7-eu/gravitate-health/package.tgz
+  #         name: hl7.eu.fhir.gh
+  #         version: 0.1.0

@@ -21,7 +21,7 @@ import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 		"hapi.fhir.fhir_version=r4"
 })
 
-public class CustomInterceptorTest {
+class CustomInterceptorTest {
 
 	@LocalServerPort
 	private int port;
