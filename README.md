@@ -344,12 +344,12 @@ NOTE: MS SQL Server by default uses a case-insensitive codepage. This will cause
 It is recommended to deploy a case-sensitive database prior to running HAPI FHIR when using MS SQL Server to avoid these and potentially other issues.
 
 ## Adding custom interceptors
-Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server. 
-Interceptors will be discovered in one of two ways: 
+Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server.
+Interceptors will be discovered in one of two ways:
 
 1) discovered from the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
 
-or 
+or
 
 2) classes will be instantiated via reflection if no matching Bean is found
 
@@ -522,6 +522,32 @@ see the `-distroless` suffix in the image tags.
 To add a custom operation, refer to the documentation in the core hapi-fhir libraries [here](https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations_operations.html).
 
 Within `hapi-fhir-jpaserver-starter`, create a generic class (that does not extend or implement any classes or interfaces), add the `@Operation` as a method within the generic class, and then register the class as a provider using `RestfulServer.registerProvider()`.
+
+## Runtime package install
+
+It's possible to install a FHIR Implementation Guide package (`package.tgz`) either from a published package or from a local package with the `$install` operation, without having to restart the server. This is available for R4 and R5.
+
+This feature must be enabled in the application.yaml (or docker command line):
+
+```yaml
+hapi:
+  fhir:
+    ig_runtime_upload_enabled: true
+```
+
+The `$install` operation is triggered with a POST to `[server]/ImplementationGuide/$install`, with the payload below:
+
+```json
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "npmContent",
+      "valueBase64Binary": "[BASE64_ENCODED_NPM_PACKAGE_DATA]"
+    }
+  ]
+}
+```
 
 ## Enable OpenTelemetry auto-instrumentation
 

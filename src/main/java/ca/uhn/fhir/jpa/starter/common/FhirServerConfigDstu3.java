@@ -9,10 +9,5 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Conditional(OnDSTU3Condition.class)
-@Import({
-	JpaDstu3Config.class,
-	StarterJpaConfig.class,
-	StarterCrDstu3Config.class,
-	ElasticsearchConfig.class})
-public class FhirServerConfigDstu3 {
-}
+@Import({JpaDstu3Config.class, StarterJpaConfig.class, StarterCrDstu3Config.class, ElasticsearchConfig.class})
+public class FhirServerConfigDstu3 {}

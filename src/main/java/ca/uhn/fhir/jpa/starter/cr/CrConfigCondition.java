@@ -6,9 +6,9 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 public class CrConfigCondition implements Condition {
 
-  @Override
-  public boolean matches(ConditionContext theConditionContext, AnnotatedTypeMetadata theAnnotatedTypeMetadata) {
-    String property = theConditionContext.getEnvironment().getProperty("hapi.fhir.cr_enabled");
-	  return Boolean.parseBoolean(property);
-  }
+	@Override
+	public boolean matches(ConditionContext theConditionContext, AnnotatedTypeMetadata theAnnotatedTypeMetadata) {
+		String property = theConditionContext.getEnvironment().getProperty("hapi.fhir.cr.enabled");
+		return Boolean.parseBoolean(property);
+	}
 }

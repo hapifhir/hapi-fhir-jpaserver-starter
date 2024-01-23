@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.cr.config.RepositoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.File;
@@ -38,20 +40,27 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties =
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+	classes = {
+		Application.class,
+		JpaStarterWebsocketDispatcherConfig.class,
+		RepositoryConfig.class
+	}, properties =
   {
+	  "spring.profiles.include=storageSettingsTest",
      "spring.datasource.url=jdbc:h2:mem:dbr3",
-     "hapi.fhir.cr_enabled=true",
      "hapi.fhir.fhir_version=dstu3",
+	  "hapi.fhir.cr_enabled=true",
      "hapi.fhir.subscription.websocket_enabled=true",
      "hapi.fhir.allow_external_references=true",
      "hapi.fhir.allow_placeholder_references=true",
+	  "spring.main.allow-bean-definition-overriding=true"
   })
 
 
 class ExampleServerDstu3IT implements IServerSupport {
 
-  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
+  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu3IT.class);
   private IGenericClient ourClient;
   private FhirContext ourCtx;
 
@@ -86,21 +95,22 @@ class ExampleServerDstu3IT implements IServerSupport {
 
   // Currently fails with:
   // ca.uhn.fhir.rest.server.exceptions.InternalErrorException: HTTP 500 : Failed to call access method: java.lang.IllegalArgumentException: Could not load library source for libraries referenced in Measure/Measure/measure-EXM104-FHIR3-8.1.000/_history/1.
-  //@Test
+  //@Test Bad test data
   public void testCQLEvaluateMeasureEXM104() throws IOException {
     String measureId = "measure-EXM104-FHIR3-8.1.000";
 
-    int numFilesLoaded = loadDataFromDirectory("dstu3/EXM104/EXM104_FHIR3-8.1.000-files");
+    int numFilesLoaded = loadDataFromDirectory("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json");
     //assertEquals(numFilesLoaded, 3);
     ourLog.info("{} files imported successfully!", numFilesLoaded);
-    //loadBundle("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json", ourCtx, ourClient);
+   // loadBundle("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json", ourCtx, ourClient);
 
     // http://localhost:8080/fhir/Measure/measure-EXM104-FHIR3-8.1.000/$evaluate-measure?periodStart=2019-01-01&periodEnd=2019-12-31
     Parameters inParams = new Parameters();
 //    inParams.addParameter().setName("measure").setValue(new StringType("Measure/measure-EXM104-8.2.000"));
-//    inParams.addParameter().setName("patient").setValue(new StringType("Patient/numer-EXM104-FHIR3"));
-//    inParams.addParameter().setName("periodStart").setValue(new StringType("2019-01-01"));
-//    inParams.addParameter().setName("periodEnd").setValue(new StringType("2019-12-31"));
+    inParams.addParameter().setName("patient").setValue(new StringType("Patient/numer-EXM104-FHIR3"));
+    inParams.addParameter().setName("periodStart").setValue(new StringType("2019-01-01"));
+    inParams.addParameter().setName("periodEnd").setValue(new StringType("2019-12-31"));
+	  inParams.addParameter().setName("reportType").setValue(new StringType("individual"));
 
     Parameters outParams = ourClient
       .operation()
