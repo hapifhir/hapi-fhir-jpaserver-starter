@@ -21,6 +21,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      security-events: write
 
     steps:
       - name: Checkout
@@ -65,3 +66,19 @@ jobs:
             --platform=linux/arm64,linux/amd64 \
             -f matchbox-server/Dockerfile \
             matchbox-server
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.ref_name }}'
+          format: 'sarif'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
