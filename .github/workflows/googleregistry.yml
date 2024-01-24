@@ -25,10 +25,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
 
       - name: Build Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@main
         with:
           java-version: 20
           distribution: adopt
@@ -37,10 +37,10 @@ jobs:
       - run: mvn --batch-mode --update-snapshots package -DskipTests -P release
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@master
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@master
 
       # Configure Workload Identity Federation and generate an access token.
       - id: "auth"
@@ -78,7 +78,7 @@ jobs:
           output: 'trivy-results.sarif'
 
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@main
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
