@@ -103,6 +103,7 @@
         <stax2_api_version>3.1.4</stax2_api_version>
         <testcontainers_version>1.17.1</testcontainers_version>
         <thymeleaf-version>3.1.2.RELEASE</thymeleaf-version>
+        <tomcat_embed_version>9.0.85</tomcat_embed_version>
         <woodstox_core_asl_version>4.4.1</woodstox_core_asl_version>
         <jacoco_version>0.8.7</jacoco_version>
         <info_cqframework_version>1.5.1</info_cqframework_version>
@@ -372,6 +373,23 @@
                 <artifactId>javax.servlet-api</artifactId>
                 <version>4.0.1</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <!-- Upgrading Tomcat, the version we get from spring-boot-starter-tomcat is too old (almost a year) -->
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>${tomcat_embed_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-el</artifactId>
+                <version>${tomcat_embed_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-websocket</artifactId>
+                <version>${tomcat_embed_version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
