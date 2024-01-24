@@ -27,7 +27,7 @@ export function settings() {
   return {
     cpu: isLarge ? 2 * vCPU : 1 * vCPU,
     memoryLimitMiB: isLarge ? 4096 : 2048,
-    taskCountMin: isLarge ? 2 : 1,
+    taskCountMin: isLarge ? 4 : 1,
     taskCountMax: isLarge ? 10 : 5,
     minDBCap: isLarge ? 4 : 1,
     maxDBCap: isLarge ? 32 : 8,
@@ -365,7 +365,7 @@ export class FHIRServerStack extends Stack {
     createAlarm({
       metric: dbCluster.metricVolumeReadIOPs(),
       name: "VolumeReadIOPsAlarm",
-      threshold: 300_000, // IOPS
+      threshold: 1_000_000, // IOPS
       evaluationPeriods: 1,
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
     });
@@ -373,7 +373,7 @@ export class FHIRServerStack extends Stack {
     createAlarm({
       metric: dbCluster.metricVolumeWriteIOPs(),
       name: "VolumeWriteIOPsAlarm",
-      threshold: 300_000, // IOPS
+      threshold: 800_000, // IOPS
       evaluationPeriods: 1,
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
     });
