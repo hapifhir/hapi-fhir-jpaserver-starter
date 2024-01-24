@@ -4,8 +4,11 @@ import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
+import ca.uhn.fhir.jpa.starter.cdshooks.StarterCdsHooksConfig;
 import ca.uhn.fhir.jpa.starter.common.FhirTesterConfig;
 import ca.uhn.fhir.jpa.starter.controller.WellknownEndpointController;
+import ca.uhn.fhir.jpa.starter.cr.StarterCrDstu3Config;
+import ca.uhn.fhir.jpa.starter.cr.StarterCrR4Config;
 import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
@@ -42,14 +45,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.DispatcherServlet;
-
-import com.google.common.base.Strings;
 
 @ServletComponentScan(basePackageClasses = {RestfulServer.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class, ThymeleafAutoConfiguration.class})
 @Import({
+	StarterCrR4Config.class,
+	StarterCrDstu3Config.class,
+	StarterCdsHooksConfig.class,
 	SubscriptionSubmitterConfig.class,
 	SubscriptionProcessorConfig.class,
 	SubscriptionChannelConfig.class,
@@ -60,22 +63,21 @@ import com.google.common.base.Strings;
 })
 public class Application extends SpringBootServletInitializer {
 
-  public static void main(String[] args) {
+	public static void main(String[] args) {
 
-    SpringApplication.run(Application.class, args);
+		SpringApplication.run(Application.class, args);
 
-    //Server is now accessible at eg. http://localhost:8080/fhir/metadata
-    //UI is now accessible at http://localhost:8080/
-  }
+		// Server is now accessible at eg. http://localhost:8080/fhir/metadata
+		// UI is now accessible at http://localhost:8080/
+	}
 
-  @Override
-  protected SpringApplicationBuilder configure(
-    SpringApplicationBuilder builder) {
-    return builder.sources(Application.class);
-  }
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+		return builder.sources(Application.class);
+	}
 
-  @Autowired
-  AutowireCapableBeanFactory beanFactory;
+	@Autowired
+	AutowireCapableBeanFactory beanFactory;
 
   @Autowired
   AppProperties appProperties;
@@ -93,19 +95,19 @@ public class Application extends SpringBootServletInitializer {
     servletRegistrationBean.addUrlMappings(serverPath + "/*");
     servletRegistrationBean.setLoadOnStartup(1);
 
-    return servletRegistrationBean;
-  }
+		return servletRegistrationBean;
+	}
 
-  @Bean
-  public ServletRegistrationBean overlayRegistrationBean() {
+	@Bean
+	public ServletRegistrationBean overlayRegistrationBean() {
 
-    AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
-    annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
+		AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext =
+				new AnnotationConfigWebApplicationContext();
+		annotationConfigWebApplicationContext.register(FhirTesterConfig.class);
 
-    DispatcherServlet dispatcherServlet = new DispatcherServlet(
-      annotationConfigWebApplicationContext);
-    dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
-    dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
+		DispatcherServlet dispatcherServlet = new DispatcherServlet(annotationConfigWebApplicationContext);
+		dispatcherServlet.setContextClass(AnnotationConfigWebApplicationContext.class);
+		dispatcherServlet.setContextConfigLocation(FhirTesterConfig.class.getName());
 
     ServletRegistrationBean registrationBean = new ServletRegistrationBean();
     registrationBean.setName("tester");
@@ -114,6 +116,11 @@ public class Application extends SpringBootServletInitializer {
     registrationBean.setLoadOnStartup(1);
     return registrationBean;
   }
+
+	//	@Bean
+	//	IRepositoryFactory repositoryFactory(DaoRegistry theDaoRegistry, RestfulServer theRestfulServer) {
+	//		return rd -> new HapiFhirRepository(theDaoRegistry, rd, theRestfulServer);
+	//	}
 
   @Bean
   public ServletRegistrationBean smartConfigurationRegistrationBean() {
