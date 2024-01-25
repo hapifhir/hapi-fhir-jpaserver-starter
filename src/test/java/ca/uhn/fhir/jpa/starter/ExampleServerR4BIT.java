@@ -15,7 +15,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-	classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class},
+	classes = {Application.class},
 	properties = {
 	"spring.datasource.url=jdbc:h2:mem:dbr4b",
 	"hapi.fhir.enable_repository_validating_interceptor=true",

@@ -27,7 +27,6 @@ import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhir.r4.model.Subscription;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +52,6 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 	classes = {
 		Application.class,
-		JpaStarterWebsocketDispatcherConfig.class,
 		NicknameServiceConfig.class,
 		RepositoryConfig.class
 	}, properties = {
