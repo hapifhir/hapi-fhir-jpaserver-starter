@@ -12,5 +12,5 @@ Run these commands on the terminal from the `./infra` folder of this repository:
 
 ```shell
 $ cdk bootstrap -c env=<env> # only needs to be run once
-$ cdk deploy -c env=<env> FHIRServerStack
+$ ./deploy.sh
 ```
