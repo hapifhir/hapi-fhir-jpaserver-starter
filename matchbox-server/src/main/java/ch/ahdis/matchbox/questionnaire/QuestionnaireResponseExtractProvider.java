@@ -102,15 +102,14 @@ public class QuestionnaireResponseExtractProvider  {
     ServletOutputStream output = theServletResponse.getOutputStream();
     try {
       if (output != null) {
-        if (output != null && responseContentType.equals(Constants.CT_FHIR_JSON_NEW))
+        if (responseContentType.equals(Constants.CT_FHIR_JSON_NEW))
           new org.hl7.fhir.r5.elementmodel.JsonParser(matchboxEngine.getContext()).compose(r, output, OutputStyle.PRETTY, null);
         else
           new org.hl7.fhir.r5.elementmodel.XmlParser(matchboxEngine.getContext()).compose(r, output, OutputStyle.PRETTY, null);
       }
     } catch(org.hl7.fhir.exceptions.FHIRException e) {
       log.error("Transform exception", e);
-      output.write("Exception during Transform: ".getBytes());
-      output.write(e.getMessage().getBytes());
+      output.write("Exception during Transform".getBytes());
     }
     theServletResponse.getOutputStream().close();
   }
