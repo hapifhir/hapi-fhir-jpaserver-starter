@@ -174,10 +174,14 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setDeferIndexingForCodesystemsOfSize(
 				appProperties.getDefer_indexing_for_codesystems_of_size());
 
+		jpaStorageSettings.setResourceServerIdStrategy(appProperties.getId_strategy());
 		if (appProperties.getClient_id_strategy() == JpaStorageSettings.ClientIdStrategyEnum.ANY) {
 			jpaStorageSettings.setResourceServerIdStrategy(JpaStorageSettings.IdStrategyEnum.UUID);
 			jpaStorageSettings.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
 		}
+		ourLog.info("Server configured to use server id strategy of {}", jpaStorageSettings.getResourceServerIdStrategy());
+		ourLog.info("Server configured to use client id strategy of {}", jpaStorageSettings.getResourceClientIdStrategy());
+
 		// Parallel Batch GET execution settings
 		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
 		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());

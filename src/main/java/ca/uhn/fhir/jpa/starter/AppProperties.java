@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.IdStrategyEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
@@ -63,6 +64,7 @@ public class AppProperties {
   private String server_address = null;
   private EncodingEnum default_encoding = EncodingEnum.JSON;
   private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
+  private IdStrategyEnum id_strategy = IdStrategyEnum.SEQUENTIAL_NUMERIC;
   private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
   private List<String> supported_resource_types = new ArrayList<>();
   private List<Bundle.BundleType> allowed_bundle_types = null;
@@ -280,6 +282,14 @@ public class AppProperties {
 
   public void setLogger(Logger logger) {
     this.logger = logger;
+  }
+
+  public IdStrategyEnum getId_strategy() {
+    return id_strategy;
+  }
+
+  public void setId_strategy(IdStrategyEnum id_strategy) {
+    this.id_strategy = id_strategy;
   }
 
   public ClientIdStrategyEnum getClient_id_strategy() {
