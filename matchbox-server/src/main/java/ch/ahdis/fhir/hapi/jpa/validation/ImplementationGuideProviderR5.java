@@ -43,7 +43,7 @@ import java.util.*;
  */
 @DisallowConcurrentExecution
 public class ImplementationGuideProviderR5 extends ImplementationGuideResourceProvider
-		implements Job, ApplicationContextAware {
+		implements ApplicationContextAware, MatchboxImplementationGuideProvider {
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ImplementationGuideProviderR5.class);
 
@@ -208,16 +208,6 @@ public class ImplementationGuideProviderR5 extends ImplementationGuideResourcePr
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-	}
-
-	@Override
-	public void execute(JobExecutionContext context) throws JobExecutionException {
-		try {
-			context.getScheduler().unscheduleJob(context.getTrigger().getKey());
-			this.loadAll(false);
-		} catch (SchedulerException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override

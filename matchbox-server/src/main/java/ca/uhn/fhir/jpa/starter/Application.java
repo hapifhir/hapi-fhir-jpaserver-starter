@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ch.ahdis.matchbox.spring.MatchboxEventListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -24,7 +25,8 @@ import ch.ahdis.matchbox.MatchboxJpaConfig;
 @Import({
 	MdmConfig.class,
 	MatchboxJpaConfig.class,
-	FhirServerConfigR4.class})
+	FhirServerConfigR4.class,
+	MatchboxEventListener.class})
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {

@@ -178,14 +178,9 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 											  structureMapTransformProvider, codeSystemCodeValidationProvider,
 											  valueSetCodeValidationProvider);
 
-
-		ScheduledJobDefinition jobDefinition = new ScheduledJobDefinition();
-		jobDefinition.setId(this.getClass().getName());
-
 		switch (this.myFhirContext.getVersion().getVersion()) {
 			case R4 -> {
 				fhirServer.registerProviders(this.implementationGuideResourceProviderR4);
-				jobDefinition.setJobClass(ImplementationGuideProviderR4.class);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
 					&& appProperties.getImplementationGuides() != null) {
@@ -196,7 +191,6 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 			}
 			case R5 -> {
 				fhirServer.registerProviders(this.implementationGuideResourceProviderR5);
-				jobDefinition.setJobClass(ImplementationGuideProviderR5.class);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
 					&& appProperties.getImplementationGuides() != null) {
@@ -210,8 +204,6 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		}
 
 		fhirServer.setServerConformanceProvider(new MatchboxCapabilityStatementProvider(this.myFhirContext,fhirServer, structureDefinitionProvider, getCliContext()));
-
-		mySvc.scheduleLocalJob(DateUtils.MILLIS_PER_MINUTE, jobDefinition);
 
 		return fhirServer;
 	}

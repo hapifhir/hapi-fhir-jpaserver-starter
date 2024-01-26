@@ -1,3 +1,9 @@
+YYYY/MM/DD Release 3.5.4
+
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.4`
+- The application now stops if it fails to load an IG, instead of continuing running without an engine [#171](https://github.com/ahdis/matchbox/issues/171)
+- GUI: improved the validation interface [#177](https://github.com/ahdis/matchbox/issues/177)
+
 2024/01/05 Release 3.5.3
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.3`

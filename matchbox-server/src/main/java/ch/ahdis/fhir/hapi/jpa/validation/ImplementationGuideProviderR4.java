@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.ImplementationGuide;
 import org.hl7.fhir.r4.model.OperationOutcome;
@@ -69,8 +70,8 @@ import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
  *
  */
 @DisallowConcurrentExecution
-public class ImplementationGuideProviderR4 extends ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider
-		implements Job, ApplicationContextAware {
+public class ImplementationGuideProviderR4 extends ImplementationGuideResourceProvider
+		implements ApplicationContextAware, MatchboxImplementationGuideProvider {
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ImplementationGuideProviderR4.class);
 
@@ -262,16 +263,6 @@ public class ImplementationGuideProviderR4 extends ca.uhn.fhir.jpa.rp.r4.Impleme
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-	}
-
-	@Override
-	public void execute(JobExecutionContext context) throws JobExecutionException {
-		try {
-			context.getScheduler().unscheduleJob(context.getTrigger().getKey());
-			this.loadAll(false);
-		} catch (SchedulerException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
