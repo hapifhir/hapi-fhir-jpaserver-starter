@@ -10,6 +10,8 @@ services:
     image: postgres:13-alpine
     container_name: hapi-fhir-postgres
     restart: always
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: "hapi"
       POSTGRES_USER: "admin"
