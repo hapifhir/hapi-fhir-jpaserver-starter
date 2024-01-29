@@ -29,16 +29,11 @@ import org.hl7.fhir.r4.model.Questionnaire;
 import org.hl7.fhir.r4.model.Questionnaire.QuestionnaireItemComponent;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.ExpressionNode;
-import org.hl7.fhir.r5.model.Enumerations.FHIRVersion;
 import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
-import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
-import ca.uhn.fhir.rest.api.server.IBundleProvider;
-import ca.uhn.fhir.rest.param.UriParam;
 import ch.ahdis.matchbox.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 
@@ -84,7 +79,7 @@ import ch.ahdis.matchbox.engine.MatchboxEngine;
  * Questionnaire and 'outcome' containing an OperationOutcome with the warning
  * and/or information messages.
  */
-public class QuestionnaireAssembleProvider {
+public class QuestionnaireAssembleProviderR4 {
   
   
 	@Autowired

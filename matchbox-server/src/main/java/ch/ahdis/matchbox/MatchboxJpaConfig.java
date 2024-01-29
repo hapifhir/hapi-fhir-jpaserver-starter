@@ -15,7 +15,6 @@ import ch.ahdis.matchbox.interceptor.TerminologyCapabilitiesInterceptor;
 import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
 import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -51,7 +50,6 @@ import ca.uhn.fhir.jpa.dao.data.IBatch2WorkChunkRepository;
 import ca.uhn.fhir.jpa.dao.mdm.MdmExpansionCacheSvc;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
 import ca.uhn.fhir.jpa.model.sched.ISchedulerService;
-import ca.uhn.fhir.jpa.model.sched.ScheduledJobDefinition;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
@@ -72,7 +70,7 @@ import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.interceptor.ImplementationGuidePackageInterceptor;
 import ch.ahdis.matchbox.interceptor.MappingLanguageInterceptor;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import org.springframework.data.domain.Page;
 
@@ -91,7 +89,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	private Environment environment;
 
 	@Autowired
-	QuestionnaireAssembleProvider assembleProvider;
+	QuestionnaireAssembleProviderR4 assembleProvider;
 
 	@Autowired
 	QuestionnaireResourceProvider questionnaireProvider;

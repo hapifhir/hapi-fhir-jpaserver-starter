@@ -26,7 +26,7 @@ import ch.ahdis.matchbox.QuestionnaireResourceProvider;
 import ch.ahdis.matchbox.StructureDefinitionResourceProvider;
 import ch.ahdis.matchbox.ValueSetResourceProvider;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
@@ -65,8 +65,8 @@ public class FhirServerConfigR4 {
 
 
   @Bean
-  public QuestionnaireAssembleProvider assembleProvider() {
-    return new QuestionnaireAssembleProvider();
+  public QuestionnaireAssembleProviderR4 assembleProvider() {
+    return new QuestionnaireAssembleProviderR4();
   }
 
   @Bean
