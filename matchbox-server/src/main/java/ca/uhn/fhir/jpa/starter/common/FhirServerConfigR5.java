@@ -13,7 +13,7 @@ import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR5;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.*;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR5;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 import org.hl7.fhir.r5.model.ImplementationGuide;
@@ -51,8 +51,8 @@ public class FhirServerConfigR5 {
 
 
 	@Bean
-	public QuestionnaireAssembleProvider assembleProvider() {
-		return new QuestionnaireAssembleProvider();
+	public QuestionnaireAssembleProviderR5 assembleProvider() {
+		return new QuestionnaireAssembleProviderR5();
 	}
 
 	@Bean
