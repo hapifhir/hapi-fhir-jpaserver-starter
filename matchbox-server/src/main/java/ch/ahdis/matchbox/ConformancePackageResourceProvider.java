@@ -530,7 +530,12 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 
 	@Override
 	public Class<? extends IBaseResource> getResourceType() {
-		return classR4;
+		return switch (this.myCtx.getVersion().getVersion()) {
+			case R4 -> this.classR4;
+			case R4B -> this.classR4B;
+			case R5 -> this.classR5;
+			default -> throw new RuntimeException("Unsupported FHIR version: " + this.myCtx.getVersion().getVersion());
+		};
 	}
 
 }
