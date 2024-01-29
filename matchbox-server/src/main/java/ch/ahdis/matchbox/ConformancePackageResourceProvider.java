@@ -392,7 +392,7 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 					matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", cliContext, true, false);
 				}
 				if (matchboxEngine != null) {
-					Resource existing = matchboxEngine.getCanonicalResource(url);
+					Resource existing = matchboxEngine.getCanonicalResourceR4(url);
 					if (existing != null) {
 						theResource.setId(existing.getId());
 						matchboxEngine.dropResource(resourceType, existing.getId());
@@ -460,7 +460,7 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 					matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", cliContext, true, false);
 				}
 				if (matchboxEngine != null) {
-					Resource existing = matchboxEngine.getCanonicalResource(url);
+					Resource existing = matchboxEngine.getCanonicalResourceR4(url);
 					if (existing != null) {
 						theResource.setId(existing.getId());
 						matchboxEngine.dropResource(resourceType, existing.getId());

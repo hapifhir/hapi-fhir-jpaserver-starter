@@ -120,7 +120,7 @@ class FhirMappingLanguageTests {
 		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/conformstoneg.map"));
 		assertTrue(sm != null);
 		engine.addCanonicalResource(sm);
-		assertTrue(engine.getCanonicalResource(sm.getUrl())!= null);
+		assertTrue(engine.getCanonicalResourceR4(sm.getUrl())!= null);
 		assertTrue(engine.getContext().fetchResource( org.hl7.fhir.r5.model.StructureMap.class, sm.getUrl()) != null);
 
 
@@ -130,7 +130,7 @@ class FhirMappingLanguageTests {
         Questionnaire questionnaire = (Questionnaire) xml.parse(qr);
 
 		engine.addCanonicalResource(questionnaire);
-		assertTrue(engine.getCanonicalResource(questionnaire.getUrl())!= null);
+		assertTrue(engine.getCanonicalResourceR4(questionnaire.getUrl())!= null);
 		assertTrue(engine.getContext().fetchResource( org.hl7.fhir.r5.model.Questionnaire.class, questionnaire.getUrl()) != null);
 		assertTrue(engine.getCanonicalResourceById("Questionnaire", questionnaire.getId())!= null);
 	}

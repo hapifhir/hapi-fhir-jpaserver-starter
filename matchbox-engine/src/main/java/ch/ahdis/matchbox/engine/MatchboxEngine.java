@@ -543,7 +543,7 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @param canonical
 	 * @return
 	 */
-	public org.hl7.fhir.r4.model.Resource getCanonicalResource(String canonical) {
+	public org.hl7.fhir.r4.model.Resource getCanonicalResourceR4(String canonical) {
 		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical);
 		// allResourcesById is not package aware (???) so we need to fetch it again
 		if (fetched!=null) {
@@ -611,7 +611,7 @@ public class MatchboxEngine extends ValidationEngine {
 	public boolean fetchesCanonicalResource(IResourceValidator validator, String url) {
 		// don't use the fetcher, should we do this better in directly in StandAloneValidatorFetcher implmentation
 		// https://github.com/ahdis/matchbox/issues/67
-		return getCanonicalResource(url) != null;
+		return getCanonicalResourceR4(url) != null;
 	}
 
 	/**

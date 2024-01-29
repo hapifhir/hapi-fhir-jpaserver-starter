@@ -13,7 +13,6 @@ import org.hl7.fhir.r4.model.QuestionnaireResponse;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
-import org.hl7.fhir.r5.model.Enumerations.FHIRVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -78,7 +77,7 @@ public class QuestionnaireResponseExtractProvider  {
           "Could not get matcbox-enginge with questionnaire with canonical URL '" + questionnaireUri + "'");
 
    
-    Questionnaire questionnaire = (Questionnaire) matchboxEngine.getCanonicalResource(questionnaireUri);
+    Questionnaire questionnaire = (Questionnaire) matchboxEngine.getCanonicalResourceR4(questionnaireUri);
     if (questionnaire == null)
       throw new UnprocessableEntityException(
           "Could not fetch questionnaire with canonical URL '" + questionnaireUri + "'");

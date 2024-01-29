@@ -326,7 +326,7 @@ public class MatchboxEngineSupport {
 		}
 
 		if (cliContext.getIg() == null) {
-			if ("default".equals(canonical) || canonical == null || mainEngine.getCanonicalResource(canonical) != null) {
+			if ("default".equals(canonical) || canonical == null || mainEngine.getCanonicalResourceR4(canonical) != null) {
 				cliContext.setIg(this.getFhirCorePackage(cliContext));
 			} else {
 				NpmPackageVersionResourceEntity npm = loadPackageAssetByUrl(canonical,

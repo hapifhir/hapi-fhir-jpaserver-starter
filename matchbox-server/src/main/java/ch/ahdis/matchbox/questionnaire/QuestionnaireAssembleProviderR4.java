@@ -94,7 +94,7 @@ public class QuestionnaireAssembleProvider {
   	
     MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(canonical, null, true, false);
     if (matchboxEngine !=null) {
-	    return (Questionnaire) matchboxEngine.getCanonicalResource(canonical);
+	    return (Questionnaire) matchboxEngine.getCanonicalResourceR4(canonical);
     }
     return null;
   }
