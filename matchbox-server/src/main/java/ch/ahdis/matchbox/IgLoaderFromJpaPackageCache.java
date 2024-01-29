@@ -155,6 +155,12 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			loadIg(igs, binaries, replace, recursive);
 			return;
 		}
+		if ("hl7.fhir.uv.extensions#current".equals(src)) {
+			final var replace = "hl7.fhir.uv.extensions#1.0.0";
+			log.debug("Replacing 'hl7.fhir.uv.extensions#current' with '{}'", replace);
+			loadIg(igs, binaries, replace, recursive);
+			return;
+		}
 		if (getContext().getLoadedPackages().contains(src)) {
 			log.debug("Package '{}' already in context", src);
 			return;
