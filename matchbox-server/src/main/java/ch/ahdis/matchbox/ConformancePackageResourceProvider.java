@@ -228,6 +228,39 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 		});
 	}
 
+	public List<org.hl7.fhir.r5.model.CanonicalType> getCanonicalsR5() {
+		return new TransactionTemplate(myTxManager).execute(tx -> {
+			final var page = PageRequest.of(0, 2147483646);
+			final var currentEntityIds =
+				this.myPackageVersionResourceDao.findCurrentByResourceType(page, this.resourceType)
+					.stream()
+					.map(NpmPackageVersionResourceEntity::getId)
+					.collect(Collectors.toUnmodifiableSet());
+
+			return this.myPackageVersionResourceDao.findByResourceType(page, this.resourceType)
+				.stream()
+				.sorted(Comparator
+							  .comparing(NpmPackageVersionResourceEntity::getCanonicalUrl)
+							  .thenComparing(NpmPackageVersionResourceEntity::getCanonicalVersion))
+				.map(entity -> {
+					final var canonical = new org.hl7.fhir.r5.model.CanonicalType(entity.getCanonicalUrl());
+					canonical.addExtension().setUrl("ig-id").setValue(new StringType(entity.getPackageVersion().getPackageId()));
+					if (entity.getCanonicalVersion() != null) {
+						canonical.addExtension().setUrl("ig-version").setValue(new StringType(entity.getCanonicalVersion()));
+					}
+					canonical.addExtension().setUrl("ig-current").setValue(new BooleanType(currentEntityIds.contains(entity.getId())));
+					canonical.addExtension().setUrl("sd-canonical").setValue(new StringType(entity.getCanonicalUrl()));
+					if (entity.getFilename() != null && !entity.getFilename().isBlank()) {
+						canonical.addExtension().setUrl("sd-title").setValue(new StringType(entity.getFilename()));
+					} else {
+						canonical.addExtension().setUrl("sd-title").setValue(new StringType(entity.getCanonicalUrl()));
+					}
+					return canonical;
+				})
+				.toList();
+		});
+	}
+
 	public List<NpmPackageVersionResourceEntity> getPackageResources() {
 		return new TransactionTemplate(this.myTxManager).execute(tx -> {
 			return myPackageVersionResourceDao
