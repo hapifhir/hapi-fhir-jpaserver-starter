@@ -5,8 +5,10 @@ import ca.uhn.fhir.interceptor.api.Interceptor;
 import ca.uhn.fhir.interceptor.api.Pointcut;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.api.server.ResponseDetails;
-import org.hl7.fhir.r4.model.CapabilityStatement;
-import org.hl7.fhir.r4.model.TerminologyCapabilities;
+import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
+import org.hl7.fhir.r5.model.CapabilityStatement;
+import org.hl7.fhir.r5.model.TerminologyCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +31,16 @@ public class TerminologyCapabilitiesInterceptor {
 								 final ResponseDetails theResponseDetails) {
 		if (theRequestDetails.getParameters().containsKey("mode") && "terminology".equals(theRequestDetails.getParameters().get("mode")[0])) {
 			log.debug("Generating a TerminologyCapabilities");
-			final var cs = (CapabilityStatement) theResponseDetails.getResponseResource();
-			theResponseDetails.setResponseResource(this.getTerminologyCapabilities(cs));
+			final var baseResource = theResponseDetails.getResponseResource();
+			if (baseResource instanceof final CapabilityStatement csR5) {
+				theResponseDetails.setResponseResource(this.getTerminologyCapabilities(csR5));
+			} else if (baseResource instanceof final org.hl7.fhir.r4.model.CapabilityStatement csR4) {
+				final var csR5 = (CapabilityStatement) VersionConvertorFactory_40_50.convertResource(csR4);
+				theResponseDetails.setResponseResource(VersionConvertorFactory_40_50.convertResource(this.getTerminologyCapabilities(csR5)));
+			} else {
+				throw new MatchboxUnsupportedFhirVersionException(
+					"The server does not support the FHIR version of the CapabilityStatement");
+			}
 		}
 		return true;
 	}
