@@ -1,18 +1,5 @@
 package ch.ahdis.matchbox;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
-import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.instance.model.api.IBaseConformance;
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r4.model.StringType;
-import org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent;
-import org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteraction;
-import org.hl7.fhir.r4.model.OperationDefinition.OperationDefinitionParameterComponent;
-import org.hl7.fhir.r4.model.OperationDefinition.OperationParameterUse;
-
 import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
 import ca.uhn.fhir.context.BaseRuntimeElementDefinition;
 import ca.uhn.fhir.context.FhirContext;
@@ -24,18 +11,30 @@ import ca.uhn.fhir.rest.server.provider.ServerCapabilityStatementProvider;
 import ca.uhn.fhir.util.FhirTerser;
 import ca.uhn.fhir.util.TerserUtil;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
+import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersion;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
+import org.hl7.fhir.instance.model.api.IBase;
+import org.hl7.fhir.instance.model.api.IBaseConformance;
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.r4.model.Enumeration;
+import org.hl7.fhir.r5.model.CapabilityStatement;
+import org.hl7.fhir.r5.model.Enumerations;
+import org.hl7.fhir.r5.model.OperationDefinition;
+import org.hl7.fhir.r5.model.StringType;
+
+import java.lang.reflect.Field;
 
 public class MatchboxCapabilityStatementProvider extends ServerCapabilityStatementProvider {
-
-	
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(MatchboxCapabilityStatementProvider.class);
 	private StructureDefinitionResourceProvider structureDefinitionProvider;
-
 	protected CliContext cliContext;
 	protected FhirContext myFhirContext;
 
-
-	public MatchboxCapabilityStatementProvider(FhirContext fhirContext, RestfulServer theServerConfiguration, StructureDefinitionResourceProvider structureDefinitionProvider, CliContext cliContext) {
+	public MatchboxCapabilityStatementProvider(FhirContext fhirContext,
+															 RestfulServer theServerConfiguration,
+															 StructureDefinitionResourceProvider structureDefinitionProvider,
+															 CliContext cliContext) {
 		super(theServerConfiguration, null, null);
 		this.structureDefinitionProvider = structureDefinitionProvider;
 		this.cliContext = cliContext;
@@ -70,29 +69,45 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 	}
 
 	/**
-	 * We need to clean up the default capability statement, in development mode we allow update and create on all conformance resources
-	 * otherwise just read access
+	 * We need to clean up the default capability statement, in development mode we allow update and create on all
+	 * conformance resources otherwise just read access
 	 */
+	@Override
 	protected void postProcess(FhirTerser theTerser, IBaseConformance theCapabilityStatement) {
-		ResourceInteractionComponent interaction = new ResourceInteractionComponent();
-		ResourceInteractionComponent interactionSearch = new ResourceInteractionComponent();
-		interaction.setCode(TypeRestfulInteraction.READ);
-		interactionSearch.setCode(TypeRestfulInteraction.SEARCHTYPE);
-		List<IBase> resources = TerserUtil.getFieldByFhirPath(this.myFhirContext, "rest.resource", theCapabilityStatement);
-		for (IBase resource : resources) {
-			StringType stringType = (StringType) TerserUtil.getFirstFieldByFhirPath(this.myFhirContext, "type", resource);
-			if (stringType!=null && !"ImplementationGuide".equals(stringType.getValueNotNull())) {
-				if (cliContext.getOnlyOneEngine() == false) {
+		final var resources = TerserUtil.getFieldByFhirPath(this.myFhirContext, "rest.resource", theCapabilityStatement);
+		for (final IBase resource : resources) {
+			final var baseType = TerserUtil.getFirstFieldByFhirPath(this.myFhirContext, "type", resource);
+			final String type;
+			final IBase interaction;
+			final IBase interactionSearch;
+			if (baseType instanceof final StringType stringTypeR5) {
+				type = stringTypeR5.getValueNotNull();
+				interaction = new CapabilityStatement.ResourceInteractionComponent(CapabilityStatement.TypeRestfulInteraction.READ);
+				interactionSearch = new CapabilityStatement.ResourceInteractionComponent(CapabilityStatement.TypeRestfulInteraction.SEARCHTYPE);
+			} else if (baseType instanceof final org.hl7.fhir.r4.model.StringType stringTypeR4) {
+				type = stringTypeR4.getValueNotNull();
+				interaction =
+					new org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent(new Enumeration<>(new org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteractionEnumFactory(),
+																																				org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteraction.READ));
+				interactionSearch =
+					new org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent(new Enumeration<>(new org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteractionEnumFactory(),
+																																				org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteraction.SEARCHTYPE));
+			} else {
+				throw new MatchboxUnsupportedFhirVersion("Unsupported FHIR version");
+			}
+
+			if (!"ImplementationGuide".equals(type)) {
+				if (!cliContext.getOnlyOneEngine()) {
 					TerserUtil.clearField(myFhirContext, "interaction", resource);
-					if (stringType!=null && !"QuestionnaireResponse".equals(stringType.getValueNotNull())) {
-						setField(myFhirContext,theTerser, "interaction", resource, interaction, interactionSearch);
+					if (!"QuestionnaireResponse".equals(type)) {
+						setField(myFhirContext, theTerser, "interaction", resource, interaction, interactionSearch);
 					}
 				}
 				TerserUtil.clearField(myFhirContext, "searchRevInclude", resource);
 				TerserUtil.clearField(myFhirContext, "searchInclude", resource);
 				IBase value = TerserUtil.newElement(myFhirContext, "boolean", "false");
-				setField(myFhirContext,theTerser, "conditionalCreate", resource, value);
-				setField(myFhirContext,theTerser, "conditionalUpdate", resource, value);
+				setField(myFhirContext, theTerser, "conditionalCreate", resource, value);
+				setField(myFhirContext, theTerser, "conditionalUpdate", resource, value);
 			}
 		}
 	}
@@ -100,36 +115,57 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 	@Read(typeName = "OperationDefinition")
 	@Override
 	public IBaseResource readOperationDefinition(@IdParam IIdType theId, RequestDetails theRequestDetails) {
-		
-		org.hl7.fhir.r4.model.OperationDefinition operationDefintion = (org.hl7.fhir.r4.model.OperationDefinition) super.readOperationDefinition(theId, theRequestDetails);
-		if ("Validate".equals(operationDefintion.getName())) {
+		final var baseResource = super.readOperationDefinition(theId, theRequestDetails);
+		if (baseResource instanceof final OperationDefinition opDefR5 && "Validate".equals(opDefR5.getName())) {
 			ourLog.info("adding profiles to $validate");
-//	existing:	  "parameter": [
-//		                {
-//		                  "name": "return",
-//		                  "use": "out",
-//		                  "min": 1,
-//		                  "max": "1"
-//		                }
-//		              ]
-			OperationDefinitionParameterComponent parameter = operationDefintion.addParameter();
-			parameter.setName("resource").setUse(OperationParameterUse.IN).setMin(0).setMax("1").setType("Resource");
-			parameter = operationDefintion.addParameter();
-			parameter.setName("mode").setUse(OperationParameterUse.IN).setMin(0).setMax("1").setType("code");
-			parameter = operationDefintion.addParameter();
-			parameter.setName("profile").setUse(OperationParameterUse.IN).setMin(0).setMax("1").setType("canonical");
-			parameter.setTargetProfile(structureDefinitionProvider.getCanonicals());
-			parameter = operationDefintion.addParameter();
-			parameter.setName("reload").setUse(OperationParameterUse.IN).setMin(0).setMax("1").setType("boolean");
-
-			List<Field> cliContextProperties = cliContext.getValidateEngineParameters();
-			for (Field field : cliContextProperties) {
-				parameter = operationDefintion.addParameter();
-				parameter.setName(field.getName()).setUse(OperationParameterUse.IN).setMin(0).setMax("1").setType(field.getType().equals(boolean.class) ? "boolean" : "string");
-			}
+			updateOperationDefinition(opDefR5);
+			return baseResource;
+		} else if (baseResource instanceof final org.hl7.fhir.r4.model.OperationDefinition opDefR4 && "Validate".equals(
+			opDefR4.getName())) {
+			ourLog.info("adding profiles to $validate");
+			final var opDefR5 = (OperationDefinition) VersionConvertorFactory_40_50.convertResource(opDefR4);
+			updateOperationDefinition(opDefR5);
+			return VersionConvertorFactory_40_50.convertResource(opDefR5);
 		}
-		return operationDefintion;
+		throw new IllegalStateException("Unexpected OperationDefinition type: " + baseResource.getClass());
 	}
 
+	private void updateOperationDefinition(final OperationDefinition operationDefinition) {
+		operationDefinition.addParameter()
+			.setName("resource")
+			.setUse(Enumerations.OperationParameterUse.IN)
+			.setMin(0)
+			.setMax("1")
+			.setType(Enumerations.FHIRTypes.RESOURCE);
+		operationDefinition.addParameter()
+			.setName("mode")
+			.setUse(Enumerations.OperationParameterUse.IN)
+			.setMin(0)
+			.setMax("1")
+			.setType(Enumerations.FHIRTypes.CODE);
+		operationDefinition.addParameter()
+			.setName("profile")
+			.setUse(Enumerations.OperationParameterUse.IN)
+			.setMin(0)
+			.setMax("1")
+			.setType(Enumerations.FHIRTypes.CANONICAL)
+			.setTargetProfile(this.structureDefinitionProvider.getCanonicalsR5());
+		operationDefinition.addParameter()
+			.setName("reload")
+			.setUse(Enumerations.OperationParameterUse.IN)
+			.setMin(0)
+			.setMax("1")
+			.setType(Enumerations.FHIRTypes.BOOLEAN);
 
+
+		final var cliContextProperties = this.cliContext.getValidateEngineParameters();
+		for (final Field field : cliContextProperties) {
+			operationDefinition.addParameter()
+				.setName(field.getName())
+				.setUse(Enumerations.OperationParameterUse.IN)
+				.setMin(0)
+				.setMax("1")
+				.setType(field.getType().equals(boolean.class) ? Enumerations.FHIRTypes.BOOLEAN : Enumerations.FHIRTypes.STRING);
+		}
+	}
 }
