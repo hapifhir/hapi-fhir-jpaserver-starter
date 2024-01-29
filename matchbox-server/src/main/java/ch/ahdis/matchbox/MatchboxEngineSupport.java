@@ -255,7 +255,7 @@ public class MatchboxEngineSupport {
 		}
 		if (mainEngine == null) {
 			cliContext = new CliContext(this.cliContext);
-			mainEngine = new MatchboxEngineBuilder().getEngine();
+			mainEngine = new MatchboxEngineBuilder().withVersion(this.cliContext.getFhirVersion()).getEngine();
 			mainEngine.setIgLoader(new IgLoaderFromJpaPackageCache(mainEngine.getPcm(),
 																		 mainEngine.getContext(),
 																		 mainEngine.getVersion(),

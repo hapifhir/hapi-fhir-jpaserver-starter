@@ -123,7 +123,7 @@ public class MatchboxEngine extends ValidationEngine {
 		/**
 		 * The FHIR version to use.
 		 */
-		private final FhirPublication fhirVersion = FhirPublication.R4;
+		private FhirPublication fhirVersion = FhirPublication.R4;
 
 		/**
 		 * Creates an empty builder instance
@@ -178,7 +178,7 @@ public class MatchboxEngine extends ValidationEngine {
 			final MatchboxEngine engine;
 			try { engine = new MatchboxEngine(this.fromNothing()); }
 			catch (final IOException e) { throw new MatchboxEngineCreationException(e); }
-			engine.setVersion(this.fhirVersion.toCode());
+			engine.setVersion(FhirPublication.R4.toCode());
 			try {
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
@@ -194,6 +194,42 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.getContext().setNoTerminologyServer(false);
 				try {
 					engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
+				} catch (final Exception e) {
+					throw new TerminologyServerException(e);
+				}
+			}
+			engine.getContext().setPackageTracker(engine);
+			engine.setPcm(this.getFilesystemPackageCacheManager());
+			return engine;
+		}
+
+		/**
+		 * Returns a FHIR R5 engine configured with hl7 terminology
+		 *
+		 * @return
+		 * @throws MatchboxEngineCreationException
+		 */
+		public MatchboxEngine getEngineR5() throws MatchboxEngineCreationException {
+			log.info("Initializing Matchbox Engine (FHIR R5 with terminology provided in classpath)");
+			log.info(VersionUtil.getPoweredBy());
+			final MatchboxEngine engine;
+			try { engine = new MatchboxEngine(this.fromNothing()); }
+			catch (final IOException e) { throw new MatchboxEngineCreationException(e); }
+			engine.setVersion(FhirPublication.R5.toCode());
+			try {
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r5.core.tgz"));
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions#1.0.0.tgz"));
+			} catch (final IOException e) {
+				throw new IgLoadException(e);
+			}
+			if (this.txServer == null) {
+				engine.getContext().setCanRunWithoutTerminology(true);
+				engine.getContext().setNoTerminologyServer(true);
+			} else {
+				engine.getContext().setCanRunWithoutTerminology(false);
+				engine.getContext().setNoTerminologyServer(false);
+				try {
+					engine.setTerminologyServer(this.txServer, null, FhirPublication.R5);
 				} catch (final Exception e) {
 					throw new TerminologyServerException(e);
 				}
@@ -223,7 +259,7 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.getContext().setCanRunWithoutTerminology(false);
 				engine.getContext().setNoTerminologyServer(false);
 				try {
-					engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
+					engine.setTerminologyServer(this.txServer, null, this.fhirVersion);
 				} catch (final Exception e) {
 					throw new TerminologyServerException(e);
 				}
@@ -240,6 +276,12 @@ public class MatchboxEngine extends ValidationEngine {
 			} catch (final IOException e) {
 				throw new MatchboxEngineCreationException(e);
 			}
+		}
+
+		public MatchboxEngineBuilder withVersion(final String version) {
+			super.withVersion(version);
+			this.fhirVersion = FhirPublication.fromCode(version);
+			return this;
 		}
 
 		private FilesystemPackageCacheManager getFilesystemPackageCacheManager() throws MatchboxEngineCreationException {
