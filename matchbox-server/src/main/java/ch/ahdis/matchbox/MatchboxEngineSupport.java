@@ -284,6 +284,16 @@ public class MatchboxEngineSupport {
 				}
 				log.debug("Load R5 Specials types");
 				this.configureValidationEngine(mainEngine, cliContext);
+			} else if (cliContext.getFhirVersion().equals("5.0.0")) {
+				log.debug("Preconfigure FHIR R5");
+				try {
+					mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), "hl7.terminology#5.4.0", true);
+					mainEngine.loadPackage("hl7.terminology", "5.4.0");
+					mainEngine.loadPackage("hl7.fhir.r5.core", "5.0.0");
+				} catch (final Exception e) {
+					throw new IgLoadException("Failed to load R5", e);
+				}
+				this.configureValidationEngine(mainEngine, cliContext);
 			}
 			cliContext.setIg(this.getFhirCorePackage(cliContext));
 
