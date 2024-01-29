@@ -195,7 +195,7 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 		return null;
 	}
 
-	public List<CanonicalType> getCanonicals() {
+	public List<CanonicalType> getCanonicalsR4() {
 		return new TransactionTemplate(myTxManager).execute(tx -> {
 			final var page = PageRequest.of(0, 2147483646);
 			final var currentEntityIds =
