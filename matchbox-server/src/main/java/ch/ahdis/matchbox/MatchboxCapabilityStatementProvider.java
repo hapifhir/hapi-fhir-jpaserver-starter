@@ -11,7 +11,7 @@ import ca.uhn.fhir.rest.server.provider.ServerCapabilityStatementProvider;
 import ca.uhn.fhir.util.FhirTerser;
 import ca.uhn.fhir.util.TerserUtil;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
-import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersion;
+import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
@@ -93,7 +93,7 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 					new org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent(new Enumeration<>(new org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteractionEnumFactory(),
 																																				org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteraction.SEARCHTYPE));
 			} else {
-				throw new MatchboxUnsupportedFhirVersion("Unsupported FHIR version");
+				throw new MatchboxUnsupportedFhirVersionException("Unsupported FHIR version");
 			}
 
 			if (!"ImplementationGuide".equals(type)) {

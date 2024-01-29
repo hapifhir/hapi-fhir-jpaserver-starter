@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import ch.ahdis.matchbox.util.MatchboxServerUtils;
 import jakarta.servlet.http.HttpServletRequest;
 
+import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.instance.model.api.IBaseBinary;
@@ -534,7 +535,7 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 			case R4 -> this.classR4;
 			case R4B -> this.classR4B;
 			case R5 -> this.classR5;
-			default -> throw new RuntimeException("Unsupported FHIR version: " + this.myCtx.getVersion().getVersion());
+			default -> throw new MatchboxUnsupportedFhirVersionException("Unsupported FHIR version: " + this.myCtx.getVersion().getVersion());
 		};
 	}
 
