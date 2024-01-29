@@ -15,6 +15,8 @@ import ch.ahdis.matchbox.*;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR5;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
+import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
+import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 import org.hl7.fhir.r5.model.ImplementationGuide;
 import org.hl7.fhir.r5.model.StructureMap;
@@ -148,5 +150,15 @@ public class FhirServerConfigR5 {
 	@Primary
 	public MatchboxPackageInstallerImpl packageInstaller() {
 		return new MatchboxPackageInstallerImpl();
+	}
+
+	@Bean
+	public CodeSystemCodeValidationProvider codeSystemCodeValidationProvider() {
+		return new CodeSystemCodeValidationProvider();
+	}
+
+	@Bean
+	public ValueSetCodeValidationProvider valueSetCodeValidationProvider() {
+		return new ValueSetCodeValidationProvider();
 	}
 }
