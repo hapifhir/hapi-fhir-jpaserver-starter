@@ -133,12 +133,18 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 	@Override
 	public void loadIg(List<ImplementationGuide> igs, Map<String, ByteProvider> binaries, String src, boolean recursive)
 			throws IOException, FHIRException {
-		if (src.startsWith("hl7.terminology.")) {
-			log.debug("Ignoring package '{}': use 'hl7.terminology#5.4.0'", src);
+		if (src.startsWith("hl7.terminology.r4")) {
+			log.warn("Ignoring package '{}': use 'hl7.terminology#5.4.0'", src);
 			return;
 		}
 		if (src.startsWith("hl7.terminology#") && !"hl7.terminology#5.4.0".equals(src)) {
 			final var replace = "hl7.terminology#5.4.0";
+			log.debug("Replacing '{}' with '{}'", src, replace);
+			loadIg(igs, binaries, replace, recursive);
+			return;
+		}
+		if (src.startsWith("hl7.terminology.r5#") && !"hl7.terminology.r5#5.3.0".equals(src)) {
+			final var replace = "hl7.terminology.r5#5.3.0";
 			log.debug("Replacing '{}' with '{}'", src, replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;

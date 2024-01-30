@@ -289,6 +289,7 @@ public class MatchboxEngineSupport {
 				try {
 					mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), "hl7.fhir.r5.core#5.0.0", true);
 					mainEngine.loadPackage("hl7.fhir.r5.core", "5.0.0");
+					mainEngine.loadPackage("hl7.terminology.r5", "5.3.0");
 				} catch (final Exception e) {
 					throw new IgLoadException("Failed to load R5", e);
 				}
