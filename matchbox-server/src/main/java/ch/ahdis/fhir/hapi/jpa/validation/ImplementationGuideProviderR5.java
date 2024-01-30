@@ -15,6 +15,7 @@ import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.param.*;
 import ca.uhn.fhir.rest.server.SimpleBundleProvider;
+import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
@@ -49,6 +50,9 @@ public class ImplementationGuideProviderR5 extends ImplementationGuideResourcePr
 
 	@Autowired
 	protected MatchboxEngineSupport matchboxEngineSupport;
+
+	@Autowired
+	private CliContext cliContext;
 
 	@Override
 	public MethodOutcome delete(HttpServletRequest theRequest, IIdType theResource, String theConditional,
@@ -196,7 +200,7 @@ public class ImplementationGuideProviderR5 extends ImplementationGuideResourcePr
 		log.info("Initializing packages finished " + VersionUtil.getMemory());
 		log.info("Creating cached engines during startup  " + VersionUtil.getMemory());
 		// The matchboxEngineSupport will set the initialized flag to true when it has finished reloading
-		matchboxEngineSupport.getMatchboxEngineNotSynchronized(null, null, false, false);
+		matchboxEngineSupport.getMatchboxEngineNotSynchronized(null, this.cliContext, false, true);
 		log.info("Finished engines during startup  " + VersionUtil.getMemory());
 		return installOutcome;
 	}
