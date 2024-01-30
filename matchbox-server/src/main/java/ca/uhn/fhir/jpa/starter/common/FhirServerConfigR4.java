@@ -168,13 +168,13 @@ public class FhirServerConfigR4 {
   }
   
 	@Bean
-	public CodeSystemCodeValidationProvider codeSystemCodeValidationProvider() {
-		return new CodeSystemCodeValidationProvider();
+	public CodeSystemCodeValidationProvider codeSystemCodeValidationProvider(final FhirContext fhirContext) {
+		return new CodeSystemCodeValidationProvider(fhirContext);
 	}
 
 	@Bean
-	public ValueSetCodeValidationProvider valueSetCodeValidationProvider() {
-		return new ValueSetCodeValidationProvider();
+	public ValueSetCodeValidationProvider valueSetCodeValidationProvider(final FhirContext fhirContext) {
+		return new ValueSetCodeValidationProvider(fhirContext);
 	}
 
 }
