@@ -93,7 +93,8 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 					new org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent(new Enumeration<>(new org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteractionEnumFactory(),
 																																				org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteraction.SEARCHTYPE));
 			} else {
-				throw new MatchboxUnsupportedFhirVersionException("Unsupported FHIR version");
+				throw new MatchboxUnsupportedFhirVersionException("MatchboxCapabilityStatementProvider",
+																				  this.myFhirContext.getVersion().getVersion());
 			}
 
 			if (!"ImplementationGuide".equals(type)) {
@@ -127,7 +128,8 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			updateOperationDefinition(opDefR5);
 			return VersionConvertorFactory_40_50.convertResource(opDefR5);
 		}
-		throw new IllegalStateException("Unexpected OperationDefinition type: " + baseResource.getClass());
+		throw new MatchboxUnsupportedFhirVersionException("MatchboxCapabilityStatementProvider",
+																		  theRequestDetails.getFhirContext().getVersion().getVersion());
 	}
 
 	private void updateOperationDefinition(final OperationDefinition operationDefinition) {

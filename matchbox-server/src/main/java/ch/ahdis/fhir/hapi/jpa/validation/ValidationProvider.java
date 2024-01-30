@@ -282,8 +282,8 @@ public class ValidationProvider {
 		return switch (this.myContext.getVersion().getVersion()) {
 			case R4 -> VersionConvertorFactory_40_50.convertResource(oo);
 			case R5 -> oo;
-			default -> throw new MatchboxUnsupportedFhirVersionException(
-				"Unsupported FHIR version: %s".formatted(this.myContext.getVersion().getVersion()));
+			default -> throw new MatchboxUnsupportedFhirVersionException("ValidationProvider",
+																							 this.myContext.getVersion().getVersion());
 		};
 	}
 

@@ -535,7 +535,8 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 			case R4 -> this.classR4;
 			case R4B -> this.classR4B;
 			case R5 -> this.classR5;
-			default -> throw new MatchboxUnsupportedFhirVersionException("Unsupported FHIR version: " + this.myCtx.getVersion().getVersion());
+			default -> throw new MatchboxUnsupportedFhirVersionException("ConformancePackageResourceProvider",
+																							 this.myCtx.getVersion().getVersion());
 		};
 	}
 

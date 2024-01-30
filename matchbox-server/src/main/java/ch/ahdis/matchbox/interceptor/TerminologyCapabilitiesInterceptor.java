@@ -38,8 +38,8 @@ public class TerminologyCapabilitiesInterceptor {
 				final var csR5 = (CapabilityStatement) VersionConvertorFactory_40_50.convertResource(csR4);
 				theResponseDetails.setResponseResource(VersionConvertorFactory_40_50.convertResource(this.getTerminologyCapabilities(csR5)));
 			} else {
-				throw new MatchboxUnsupportedFhirVersionException(
-					"The server does not support the FHIR version of the CapabilityStatement");
+				throw new MatchboxUnsupportedFhirVersionException("TerminologyCapabilitiesInterceptor",
+																				  theRequestDetails.getFhirContext().getVersion().getVersion());
 			}
 		}
 		return true;
