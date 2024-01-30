@@ -30,6 +30,7 @@ import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
+import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -278,9 +279,12 @@ public class ValidationProvider {
 			issue.setDiagnostics("No fatal or error issues detected, the validation has passed");
 		}
 
-		final var ooR4 = VersionConvertorFactory_40_50.convertResource(oo);
-		log.trace(this.myContext.newXmlParser().encodeResourceToString(ooR4));
-		return ooR4;
+		return switch (this.myContext.getVersion().getVersion()) {
+			case R4 -> VersionConvertorFactory_40_50.convertResource(oo);
+			case R5 -> oo;
+			default -> throw new MatchboxUnsupportedFhirVersionException(
+				"Unsupported FHIR version: %s".formatted(this.myContext.getVersion().getVersion()));
+		};
 	}
 
 	private IBaseResource getOoForError(final @NonNull String message) {
