@@ -163,6 +163,46 @@ public class FixNullReferenceInBundle {
 										+ "172e709c-9409-4f9f-9919-f54976a419f0" + "\"");
 									specialTreatment = true;
 									break;
+								case "37ecb6b9-ced5-4ffc-82fb-3c82d60d7f6b":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "513bff7e-ee77-42af-8f0d-9a0f4adcae0d" + "\"");
+									specialTreatment = true;
+									break;
+								case "36f62697-18f6-499b-a110-f0fdade40434":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "ab03f715-bfd1-4555-b58d-f8e093ad014f" + "\"");
+									specialTreatment = true;
+									break;
+								case "3ac2935f-3323-4269-b846-7293dbc02789":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "fcefe9c9-3219-4ac9-8efe-e0de739bcbf6" + "\"");
+									specialTreatment = true;
+									break;
+								case "1130a294-eb90-4ee1-8070-6cfc916f4605":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "aeb8fa2d-58f4-4fff-ae7a-5516c4c9a7dd" + "\"");
+									specialTreatment = true;
+									break;
+								case "a2dcb7ea-e719-4687-b157-9bf8184985a3":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "ccb95362-c677-44d5-8bd9-9cc6dc3d64fc" + "\"");
+									specialTreatment = true;
+									break;
+								case "c4331ae3-12e1-4199-99c5-bcddf82800df":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "71029cab-0a17-4ced-bfd7-948d62238ae5" + "\"");
+									specialTreatment = true;
+									break;
+								case "a92f71ba-e8c4-46c0-9e75-4aa7c78907f3":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "00b563a5-be9a-49e3-a9d0-aab9dca20e43" + "\"");
+									specialTreatment = true;
+									break;
+								case "038a1586-fe61-4760-ada0-f86a49f8ba50":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "15817257-3c21-4fdb-8e5e-e21b81c31b14" + "\"");
+									specialTreatment = true;
+									break;
 								default:
 									break;
 							}
