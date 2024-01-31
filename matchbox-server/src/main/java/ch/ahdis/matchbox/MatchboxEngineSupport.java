@@ -289,7 +289,7 @@ public class MatchboxEngineSupport {
 				try {
 					mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), "hl7.fhir.r5.core#5.0.0", true);
 					mainEngine.loadPackage("hl7.fhir.r5.core", "5.0.0");
-					mainEngine.loadPackage("hl7.terminology.r5", "5.3.0");
+					mainEngine.loadPackage("hl7.terminology", "5.4.0");
 				} catch (final Exception e) {
 					throw new IgLoadException("Failed to load R5", e);
 				}
@@ -386,7 +386,7 @@ public class MatchboxEngineSupport {
 			return matchboxEngine;
 		}
 
-		// create a new validator and cache it temporarly
+		// create a new validator and cache it temporarily
 		if (create && cliContext.getIg() != null) {
 			log.debug("Creating new cached validate engine {} with parameters {}",
 						 (cliContext.getIg() != null ? "for " + cliContext.getIg() : ""),

@@ -190,7 +190,6 @@ public class ValidationProvider {
 		return this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
 	}
 
-
 	private IBaseResource getOperationOutcome(final String id,
 															final List<ValidationMessage> messages,
 															final String profile,

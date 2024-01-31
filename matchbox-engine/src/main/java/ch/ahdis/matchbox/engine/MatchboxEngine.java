@@ -218,7 +218,7 @@ public class MatchboxEngine extends ValidationEngine {
 			engine.setVersion(FhirPublication.R5.toCode());
 			try {
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r5.core.tgz"));
-				engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology.r5#5.3.0.tgz"));
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions#1.0.0.tgz"));
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
