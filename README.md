@@ -141,7 +141,8 @@ mvn -Dtest=CapabilityStatementTests test
    command in documentation, the changelog, etc.).
 2. Merge the pull request if all tests have succeeded.
 3. Wait for the [Angular workflow](https://github.com/ahdis/matchbox/blob/main/.github/workflows/angular_build.yml)
-   to complete. Since the package.json was modified, the Angular project is rebuilt.
+   to complete. Since the package.json was modified, the Angular project is rebuilt, unless you also have built the 
+   Angular project in your commit ; in that case, the Angular workflow won't commit anything.
 4. Create a [release](https://github.com/ahdis/matchbox/releases) with the changelog (e.g. "matchbox v3.4.1") and a
    [tag](https://github.com/ahdis/matchbox/tags) (e.g. `v.3.4.1`) in GitHub.
 5. It will trigger two workflows:

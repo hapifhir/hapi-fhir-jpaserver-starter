@@ -45,7 +45,7 @@ You can add the matchbox-engine dependency in your `pom.xml`:
 <dependency>
     <groupId>health.matchbox</groupId>
     <artifactId>matchbox-engine</artifactId>
-    <version>3.5.3</version>
+    <version>3.5.4</version>
 </dependency>
 ```
 
