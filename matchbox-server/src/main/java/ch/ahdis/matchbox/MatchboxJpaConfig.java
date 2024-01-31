@@ -12,6 +12,7 @@ import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR5;
 import ch.ahdis.matchbox.config.MatchboxFhirContextProperties;
 import ch.ahdis.matchbox.interceptor.HttpReadOnlyInterceptor;
 import ch.ahdis.matchbox.interceptor.TerminologyCapabilitiesInterceptor;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR5;
 import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
 import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
 import org.apache.commons.lang3.NotImplementedException;
@@ -88,14 +89,17 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Autowired
 	private Environment environment;
 
-	@Autowired
-	QuestionnaireAssembleProviderR4 assembleProvider;
+	@Autowired(required = false)
+	QuestionnaireAssembleProviderR4 assembleProviderR4;
+
+	@Autowired(required = false)
+	QuestionnaireAssembleProviderR5 assembleProviderR5;
 
 	@Autowired
 	QuestionnaireResourceProvider questionnaireProvider;
 
-	@Autowired
-	QuestionnaireResponseExtractProvider questionnaireResponseProvider;
+	@Autowired(required = false)
+	QuestionnaireResponseExtractProvider questionnaireResponseProviderR4;
 
 	@Autowired
 	private IHapiPackageCacheManager myPackageCacheManager;
@@ -171,14 +175,15 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		fhirServer.registerInterceptor(new ImplementationGuidePackageInterceptor(myPackageCacheManager, myFhirContext));
 		fhirServer.registerInterceptor(new MatchboxValidationInterceptor(this.myFhirContext,structureDefinitionProvider));
 		fhirServer.registerInterceptor(new TerminologyCapabilitiesInterceptor());
-		fhirServer.registerProviders(validationProvider, questionnaireProvider, questionnaireResponseProvider,
-				assembleProvider, conceptMapProvider, codeSystemProvider, valueSetProvider, structureDefinitionProvider,
+		fhirServer.registerProviders(validationProvider, questionnaireProvider,
+											  conceptMapProvider, codeSystemProvider, valueSetProvider, structureDefinitionProvider,
 											  structureMapTransformProvider, codeSystemCodeValidationProvider,
 											  valueSetCodeValidationProvider);
 
 		switch (this.myFhirContext.getVersion().getVersion()) {
 			case R4 -> {
-				fhirServer.registerProviders(this.implementationGuideResourceProviderR4);
+				fhirServer.registerProviders(this.implementationGuideResourceProviderR4, this.assembleProviderR4,
+													  this.questionnaireResponseProviderR4);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
 					&& appProperties.getImplementationGuides() != null) {
@@ -188,7 +193,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 				}
 			}
 			case R5 -> {
-				fhirServer.registerProviders(this.implementationGuideResourceProviderR5);
+				fhirServer.registerProviders(this.implementationGuideResourceProviderR5, this.assembleProviderR5);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
 					&& appProperties.getImplementationGuides() != null) {

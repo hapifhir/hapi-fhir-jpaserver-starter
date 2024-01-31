@@ -14,7 +14,6 @@ import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.*;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR5;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
 import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
@@ -51,15 +50,9 @@ public class FhirServerConfigR5 {
 		return new ValidationProvider();
 	}
 
-
 	@Bean
 	public QuestionnaireAssembleProviderR5 assembleProvider() {
 		return new QuestionnaireAssembleProviderR5();
-	}
-
-	@Bean
-	public QuestionnaireResponseExtractProvider questionnaireResponseProvider() {
-		return new QuestionnaireResponseExtractProvider();
 	}
 
 	@Bean(name = "myImplementationGuideDaoR5")
