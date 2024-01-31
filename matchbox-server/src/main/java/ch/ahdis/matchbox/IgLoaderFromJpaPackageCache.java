@@ -182,7 +182,13 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 				log.error("Package not found: " + id +" "+version );
 				return null;
 			}
-			for (String dependency : npm.dependencies()) {
+			for (final String dependency : npm.dependencies()) {
+
+				if ("hl7.terminology".equals(id)) {
+					// FHIR Core should be loaded manually, see MatchboxEngineSupport.getMatchboxEngineNotSynchronized()
+					log.trace("Ignoring FHIR Core dependency");
+					continue;
+				}
 				log.debug("Loading depending package " + dependency + " for "+src);
 				try {
 					loadIg(igs, binaries, dependency, recursive);

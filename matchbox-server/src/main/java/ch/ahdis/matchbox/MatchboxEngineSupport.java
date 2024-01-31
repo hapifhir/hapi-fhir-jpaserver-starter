@@ -200,7 +200,7 @@ public class MatchboxEngineSupport {
 			return "hl7.fhir.r4b.core#4.3.0";
 		}
 		if (cliContext.getFhirVersion().startsWith("5.0")) {
-			return "hl7.fhir.core#5.0.0";
+			return "hl7.fhir.r5.core#5.0.0";
 		}
 		return null;
 	}
