@@ -24,6 +24,11 @@ You can use the `docker-compose` to run the app and DB servers by executing the 
 $ docker-compose up --build
 ```
 
+To run the secondary app and Servers for testing run:
+```shell 
+$ docker-compose -p datamapper -f Docker-compose-data-mapper.yml up -d
+```
+
 Run the server from the docker image, on a specific Spring profile (in this case, `application-staging.yaml`), with environment variables being passed to the docker container:
 
 Update environment variables in the `docker-compose.yml` file accordingly.
