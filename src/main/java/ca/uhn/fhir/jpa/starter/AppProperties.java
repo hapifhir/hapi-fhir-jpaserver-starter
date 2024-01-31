@@ -57,7 +57,7 @@ public class AppProperties {
 	private String keycloak_client_Id = "fhir-hapi-realm";
 	private String keycloak_username = "managegroup";
 	private String keycloak_password = "12345";
-	private String sms_password = "password";
+	private String sms_password = null;
 	private String fhir_user = "nitin_sabale";
 	private String fhir_password = "xyz";
 	private String fhir_hapi_client_id = "fhir-hapi-server";
@@ -354,15 +354,15 @@ public class AppProperties {
 		return keycloak_password;
 	}
 
-	public String getSms_Password() {
-		return sms_password;
-	}
-
 	public void setKeycloak_Password(String keycloak_password) {
 		this.keycloak_password = keycloak_password;
 	}
 
-	public void setSms_Password(String keycloak_password) {
+	public String getSms_password() {
+		return sms_password;
+	}
+
+	public void setSms_password(String sms_password) {
 		this.sms_password = sms_password;
 	}
 

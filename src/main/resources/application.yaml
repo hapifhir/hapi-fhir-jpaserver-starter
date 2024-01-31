@@ -120,7 +120,7 @@ hapi:
       keycloak_username: managegroup
       keycloak_password: 123456
       aws_access_key:  
-      aws_secret_key: 
+      aws_secret_key:
       sms_password: password
       fhir_user: kjois@iprdgroup.com
       fhir_password: 12345

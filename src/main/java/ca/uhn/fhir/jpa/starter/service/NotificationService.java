@@ -7,6 +7,8 @@ import java.util.List;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.rest.server.exceptions.ResourceGoneException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.Patient;
 import org.slf4j.Logger;
@@ -29,6 +31,8 @@ public class NotificationService {
 	
 	@Autowired
 	FhirClientAuthenticatorService fhirClientAuthenticatorService;
+	@Autowired
+	AppProperties appProperties;
 	private static final long DELAY = 3 * 60000;
 	private static final long DELETE_WORK_DELAY = 24 * 3600000;
 
@@ -98,13 +102,13 @@ public class NotificationService {
 		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
 
 		// TODO: Can query parameters be assigned dynamically through app properties instead of hardcoding?
-		AppProperties appProperties = new AppProperties();
-		String smsPassword = appProperties.getSms_Password();
+		String smsPassword = appProperties.getSms_password();
 		String smsUrl = "https://portal.nigeriabulksms.com/api/?username=impacthealth@hacey.org" + "&password=" + smsPassword + "&message=" + message + "&sender=HACEY-IPRD&mobiles=" + mobileNumber;
 		Request smsRequest = new Request.Builder().url(smsUrl).build();
 		okhttp3.Response smsResponse = client.newCall(smsRequest).execute();
 		try {
-			if (smsResponse.isSuccessful()) {
+			String smsStatus = getSMSResponseStatus(smsResponse);
+			if (smsStatus != null && smsStatus.equals("OK")){
 				System.out.println(message);
 				comGeneratorEntity.setCommunicationStatus(MessageStatus.SENT.name());
 				dataSource.update(comGeneratorEntity);
@@ -116,5 +120,14 @@ public class NotificationService {
 		} finally {
 			if (smsResponse.body() != null) smsResponse.body().close();
 		}
+	}
+
+	private String getSMSResponseStatus(okhttp3.Response smsResponse) throws IOException {
+		if (smsResponse.body() != null){
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode smsResponseBody = objectMapper.readTree(smsResponse.body().string());
+			return smsResponseBody.get("status").asText();
+		}
+		return null;
 	}
 }
