@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/github/DigitalHealthIntegration/hapi-fhir-jpaserver-starter/graph/badge.svg?token=WhenY5ZxRH)](https://codecov.io/github/DigitalHealthIntegration/hapi-fhir-jpaserver-starter)
+
 # HAPI-FHIR Starter Project
 
 This project is a complete starter project you can use to deploy a FHIR server using HAPI FHIR JPA.
