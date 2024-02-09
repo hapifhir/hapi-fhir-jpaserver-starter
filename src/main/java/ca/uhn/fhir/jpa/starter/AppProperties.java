@@ -85,6 +85,7 @@ public class AppProperties {
 
   private Boolean lastn_enabled = false;
   private boolean store_resource_in_lucene_index_enabled = false;
+  private String elasticsearch_index_prefix = "";
   private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
 
   private Boolean use_apache_address_strategy = false;
@@ -558,6 +559,14 @@ public Cors getCors() {
 
 	public void setStore_resource_in_lucene_index_enabled(Boolean store_resource_in_lucene_index_enabled) {
 		this.store_resource_in_lucene_index_enabled = store_resource_in_lucene_index_enabled;
+	}
+
+	public String getElasticsearch_index_prefix() {
+		return elasticsearch_index_prefix;
+	}
+
+	public void setElasticsearch_index_prefix(String elasticsearch_index_prefix) {
+		this.elasticsearch_index_prefix = elasticsearch_index_prefix;
 	}
 
 	public NormalizedQuantitySearchLevel getNormalized_quantity_search_level() {

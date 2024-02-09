@@ -220,6 +220,7 @@ hapi:
 #        quitWait:
 #    lastn_enabled: true
 #    store_resource_in_lucene_index_enabled: true
+#    elasticsearch_index_prefix: "prefix"
 ###  This is configuration for normalized quantity search level default is 0
 ###   0: NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED - default
 ###   1: NORMALIZED_QUANTITY_STORAGE_SUPPORTED

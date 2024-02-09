@@ -160,6 +160,10 @@ public class FhirServerConfigCommon {
 			jpaStorageSettings.setInlineResourceTextBelowSize(appProperties.getInline_resource_storage_below_size());
 		}
 
+		if (appProperties.getElasticsearch_index_prefix() != null && !appProperties.getElasticsearch_index_prefix().isEmpty()) {
+			jpaStorageSettings.setHSearchIndexPrefix(appProperties.getElasticsearch_index_prefix());
+		}
+
 		jpaStorageSettings.setStoreResourceInHSearchIndex(appProperties.getStore_resource_in_lucene_index_enabled());
 		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 		jpaStorageSettings.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
