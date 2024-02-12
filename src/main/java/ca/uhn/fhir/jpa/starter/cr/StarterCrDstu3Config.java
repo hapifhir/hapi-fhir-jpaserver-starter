@@ -7,6 +7,7 @@ import ca.uhn.fhir.cr.config.dstu3.CrDstu3Config;
 import ca.uhn.fhir.cr.config.dstu3.ExtractOperationConfig;
 import ca.uhn.fhir.cr.config.dstu3.PackageOperationConfig;
 import ca.uhn.fhir.cr.config.dstu3.PopulateOperationConfig;
+import ca.uhn.fhir.cr.config.dstu3.QuestionnaireOperationConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.cache.IResourceChangeListenerRegistry;
 import ca.uhn.fhir.jpa.cache.ResourceChangeListenerRegistryInterceptor;
@@ -42,7 +43,8 @@ import java.util.concurrent.ConcurrentHashMap;
 	ApplyOperationConfig.class,
 	ExtractOperationConfig.class,
 	PackageOperationConfig.class,
-	PopulateOperationConfig.class
+	PopulateOperationConfig.class,
+	QuestionnaireOperationConfig.class
 })
 public class StarterCrDstu3Config {
 	private static final Logger ourLogger = LoggerFactory.getLogger(StarterCrDstu3Config.class);

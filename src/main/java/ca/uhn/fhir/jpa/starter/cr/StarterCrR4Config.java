@@ -8,6 +8,7 @@ import ca.uhn.fhir.cr.config.r4.CrR4Config;
 import ca.uhn.fhir.cr.config.r4.ExtractOperationConfig;
 import ca.uhn.fhir.cr.config.r4.PackageOperationConfig;
 import ca.uhn.fhir.cr.config.r4.PopulateOperationConfig;
+import ca.uhn.fhir.cr.config.r4.QuestionnaireOperationConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.cache.IResourceChangeListenerRegistry;
 import ca.uhn.fhir.jpa.cache.ResourceChangeListenerRegistryInterceptor;
@@ -50,7 +51,8 @@ import java.util.concurrent.Executors;
 	ApplyOperationConfig.class,
 	ExtractOperationConfig.class,
 	PackageOperationConfig.class,
-	PopulateOperationConfig.class
+	PopulateOperationConfig.class,
+	QuestionnaireOperationConfig.class
 })
 public class StarterCrR4Config {
 	private static final Logger ourLogger = LoggerFactory.getLogger(StarterCrR4Config.class);
