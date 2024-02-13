@@ -26,8 +26,9 @@ $ docker-compose up --build
 
 To run the secondary app and Servers for testing run:
 ```shell 
-$ docker-compose -p datamapper -f Docker-compose-data-mapper.yml up -d
+$ docker compose -p fhirconverter -f docker-compose-fhir-converter.yml up -d
 ```
+⚠️ **WARNING**: This secondary instance is used for testing purposes only. Data within this instance is constantly deleted as part of the normal testing workflow. Do not use it for any purposes that require data to persist for more than a few minutes.
 
 Run the server from the docker image, on a specific Spring profile (in this case, `application-staging.yaml`), with environment variables being passed to the docker container:
 
