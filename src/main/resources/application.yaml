@@ -140,6 +140,15 @@ hapi:
     mdm_rules_json_location: "mdm-rules.json"
     #    local_base_urls:
     #      - https://hapi.fhir.org/baseR4
+    logical_urls:
+      - http://terminology.hl7.org/*
+      - https://terminology.hl7.org/*
+      - http://snomed.info/*
+      - https://snomed.info/*
+      - http://unitsofmeasure.org/*
+      - https://unitsofmeasure.org/*
+      - http://loinc.org/*
+      - https://loinc.org/*
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
