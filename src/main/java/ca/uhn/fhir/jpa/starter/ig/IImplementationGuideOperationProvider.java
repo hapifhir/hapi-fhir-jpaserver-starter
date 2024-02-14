@@ -20,5 +20,9 @@ public interface IImplementationGuideOperationProvider {
 	// The following declaration is the one that counts but cannot be used across different versions as stating
 	// Base64BinaryType would bind to a separate version
 	// @Operation(name = "$install", typeName = "ImplementationGuide")
+
 	// Parameters install(@OperationParam(name = "npmContent",min = 1, max = 1) Base64BinaryType implementationGuide);
+
+	// Parameters uninstall(@OperationParam(name = "name", min = 1, max = 1) String name, @OperationParam(name = "version", min = 1, max = 1) String version) ;
+
 }
