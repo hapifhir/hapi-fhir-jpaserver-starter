@@ -4,6 +4,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.to.FhirTesterMvcConfig;
 import ca.uhn.fhir.to.TesterConfig;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -18,7 +19,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(FhirTesterMvcConfig.class)
-// @Conditional(FhirTesterConfigCondition.class)
+@Conditional(FhirTesterConfigCondition.class)
 public class FhirTesterConfig {
 
 	/**
