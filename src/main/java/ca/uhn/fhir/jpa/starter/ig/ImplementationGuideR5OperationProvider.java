@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter.ig;
 
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
+import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.annotations.OnR5Condition;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
@@ -13,7 +14,7 @@ import java.io.IOException;
 
 @Conditional({OnR5Condition.class, IgConfigCondition.class})
 @Service
-public class ImplementationGuideR5OperationProvider {
+public class ImplementationGuideR5OperationProvider implements IImplementationGuideOperationProvider {
 
 	IPackageInstallerSvc packageInstallerSvc;
 
@@ -33,4 +34,10 @@ public class ImplementationGuideR5OperationProvider {
 	}
 
 
+	@Operation(name = "$uninstall", typeName = "ImplementationGuide")
+	public org.hl7.fhir.r4.model.Parameters uninstall(@OperationParam(name = "name", min = 1, max = 1) String name, @OperationParam(name = "version", min = 1, max = 1) String version) {
+
+		packageInstallerSvc.uninstall(new PackageInstallationSpec().setName(name).setVersion(version));
+		return new org.hl7.fhir.r4.model.Parameters();
+	}
 }

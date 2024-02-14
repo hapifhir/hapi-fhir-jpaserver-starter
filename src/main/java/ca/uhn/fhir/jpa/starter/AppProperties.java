@@ -92,7 +92,8 @@ public class AppProperties {
   private Integer bundle_batch_pool_size = 20;
   private Integer bundle_batch_pool_max_size = 100;
   private final Set<String> local_base_urls = new HashSet<>();
-  
+  private final Set<String> logical_urls = new HashSet<>();
+
   private final List<String> custom_interceptor_classes = new ArrayList<>();
 
 
@@ -577,6 +578,10 @@ public Cors getCors() {
 
 	public Set<String> getLocal_base_urls() {
 		return local_base_urls;
+	}
+
+  public Set<String> getLogical_urls() {
+		return logical_urls;
 	}
 
 
