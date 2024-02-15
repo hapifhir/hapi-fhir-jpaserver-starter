@@ -79,9 +79,8 @@ public class AppProperties {
   private Boolean install_transitive_ig_dependencies = true;
   private Map<String, PackageInstallationSpec> implementationGuides = null;
 
-	private String staticLocation = null;
-
-	private String staticLocationPrefix = "/static";
+  private String custom_content_path = null;
+  private String app_content_path = null;
 
   private Boolean lastn_enabled = false;
   private boolean store_resource_in_lucene_index_enabled = false;
@@ -94,30 +93,15 @@ public class AppProperties {
   private Integer bundle_batch_pool_max_size = 100;
   private final Set<String> local_base_urls = new HashSet<>();
   private final Set<String> logical_urls = new HashSet<>();
-  
+
   private final List<String> custom_interceptor_classes = new ArrayList<>();
 
-	public String getStaticLocationPrefix() {
-		return staticLocationPrefix;
-	}
-
-	public void setStaticLocationPrefix(String staticLocationPrefix) {
-		this.staticLocationPrefix = staticLocationPrefix;
-	}
 
 
 	public List<String> getCustomInterceptorClasses() {
     return custom_interceptor_classes;
   }
 
-
-	public String getStaticLocation() {
-		return staticLocation;
-	}
-
-	public void setStaticLocation(String staticLocation) {
-		this.staticLocation = staticLocation;
-	}
 
 
 	public Boolean getOpenapi_enabled() {
@@ -575,7 +559,7 @@ public Cors getCors() {
 	public void setInstall_transitive_ig_dependencies(boolean install_transitive_ig_dependencies) {
 		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
 	}
-	
+
 	public Integer getBundle_batch_pool_size() {
 		return this.bundle_batch_pool_size;
 	}
@@ -600,12 +584,29 @@ public Cors getCors() {
 		return logical_urls;
 	}
 
+
 	public Boolean getIg_runtime_upload_enabled() {
 		return ig_runtime_upload_enabled;
 	}
 
 	public void setIg_runtime_upload_enabled(Boolean ig_runtime_upload_enabled) {
 		this.ig_runtime_upload_enabled = ig_runtime_upload_enabled;
+	}
+
+	public String getCustom_content_path() {
+		return custom_content_path;
+	}
+
+	public void setCustom_content_path(String custom_content_path) {
+		this.custom_content_path = custom_content_path;
+	}
+
+	public String getApp_content_path() {
+		return app_content_path;
+	}
+
+	public void setApp_content_path(String app_content_path) {
+		this.app_content_path = app_content_path;
 	}
 
 	public static class Cors {

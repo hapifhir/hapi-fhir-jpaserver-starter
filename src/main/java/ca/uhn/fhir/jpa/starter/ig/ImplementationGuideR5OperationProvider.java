@@ -23,21 +23,19 @@ public class ImplementationGuideR5OperationProvider implements IImplementationGu
 	}
 
 	@Operation(name = "$install", typeName = "ImplementationGuide")
-	public Parameters install(
-			@OperationParam(name = "npmContent", min = 1, max = 1) Base64BinaryType implementationGuide) {
+	public Parameters install(@OperationParam(name = "npmContent", min = 1, max = 1) Base64BinaryType implementationGuide) {
 		try {
 
-			packageInstallerSvc.install(
-					IImplementationGuideOperationProvider.toPackageInstallationSpec(implementationGuide.getValue()));
+			packageInstallerSvc.install(IImplementationGuideOperationProvider.toPackageInstallationSpec(implementationGuide.getValue()));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		return new Parameters();
 	}
 
+
 	@Operation(name = "$uninstall", typeName = "ImplementationGuide")
-	public org.hl7.fhir.r4.model.Parameters uninstall(
-		@OperationParam(name = "name", min = 1, max = 1) String name, @OperationParam(name = "version", min = 1, max = 1) String version) {
+	public org.hl7.fhir.r4.model.Parameters uninstall(@OperationParam(name = "name", min = 1, max = 1) String name, @OperationParam(name = "version", min = 1, max = 1) String version) {
 
 		packageInstallerSvc.uninstall(new PackageInstallationSpec().setName(name).setVersion(version));
 		return new org.hl7.fhir.r4.model.Parameters();
