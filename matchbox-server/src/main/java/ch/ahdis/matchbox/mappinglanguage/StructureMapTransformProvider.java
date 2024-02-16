@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletOutputStream;
+import jakarta.servlet.ServletOutputStream;
 /*
  * #%L
  * Matchbox Server
@@ -24,8 +24,8 @@ import javax.servlet.ServletOutputStream;
  * limitations under the License.
  * #L%
  */
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;

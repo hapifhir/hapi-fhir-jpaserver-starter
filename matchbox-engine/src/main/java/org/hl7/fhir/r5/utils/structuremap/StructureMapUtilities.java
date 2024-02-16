@@ -116,7 +116,7 @@ public class StructureMapUtilities {
 		this.services = services;
 		this.pkp = pkp;
 		fpe = new FHIRPathEngine(worker);
-		fpe.setHostServices(new FHIRPathHostServices(this));
+		fpe.setHostServices(new FFHIRPathHostServices(this));
 		profileUtilities = new ProfileUtilities(worker, null, null);
 	}
 
@@ -125,7 +125,7 @@ public class StructureMapUtilities {
 		this.worker = worker;
 		this.services = services;
 		fpe = new FHIRPathEngine(worker);
-		fpe.setHostServices(new FHIRPathHostServices(this));
+		fpe.setHostServices(new FFHIRPathHostServices(this));
 		profileUtilities = new ProfileUtilities(worker, null, null);
 	}
 
@@ -133,7 +133,7 @@ public class StructureMapUtilities {
 		super();
 		this.worker = worker;
 		fpe = new FHIRPathEngine(worker);
-		fpe.setHostServices(new FHIRPathHostServices(this));
+		fpe.setHostServices(new FFHIRPathHostServices(this));
 		profileUtilities = new ProfileUtilities(worker, null, null);
 
 	}

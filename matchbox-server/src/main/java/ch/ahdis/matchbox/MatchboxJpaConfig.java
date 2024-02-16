@@ -3,7 +3,7 @@ package ch.ahdis.matchbox;
 import java.util.*;
 
 import javax.annotation.Nullable;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import ca.uhn.fhir.jpa.dao.tx.IHapiTransactionService;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
@@ -336,8 +336,13 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	}
 
 	@Bean
-	public IJobPersistence batch2JobInstancePersister(IBatch2JobInstanceRepository theJobInstanceRepository, IBatch2WorkChunkRepository theWorkChunkRepository, IHapiTransactionService theTransactionService, EntityManager theEntityManager) {
-		return new JpaJobPersistenceImpl(theJobInstanceRepository, theWorkChunkRepository, theTransactionService, theEntityManager);
+	public IJobPersistence batch2JobInstancePersister(IBatch2JobInstanceRepository theJobInstanceRepository,
+																	  IBatch2WorkChunkRepository theWorkChunkRepository,
+																	  IHapiTransactionService theTransactionService,
+																	  EntityManager theEntityManager,
+																	  final IInterceptorBroadcaster theInterceptorBroadcaster) {
+		return new JpaJobPersistenceImpl(theJobInstanceRepository, theWorkChunkRepository, theTransactionService,
+													theEntityManager, theInterceptorBroadcaster);
 	}
 
 

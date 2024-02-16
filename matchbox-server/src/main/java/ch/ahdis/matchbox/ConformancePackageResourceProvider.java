@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
@@ -111,8 +111,8 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 	}
 
 	@Search(allowUnknownParams = true)
-	public ca.uhn.fhir.rest.api.server.IBundleProvider search(javax.servlet.http.HttpServletRequest theServletRequest,
-			javax.servlet.http.HttpServletResponse theServletResponse,
+	public ca.uhn.fhir.rest.api.server.IBundleProvider search(jakarta.servlet.http.HttpServletRequest theServletRequest,
+			jakarta.servlet.http.HttpServletResponse theServletResponse,
 
 			ca.uhn.fhir.rest.api.server.RequestDetails theRequestDetails,
 

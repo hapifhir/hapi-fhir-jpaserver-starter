@@ -23,8 +23,8 @@ package ca.uhn.fhir.jpa.validation;
 import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 public class JpaValidationSupportChain extends ValidationSupportChain {
 

@@ -1,32 +1,30 @@
 package org.hl7.fhir.r5.elementmodel;
 
-import java.io.ByteArrayInputStream;
-
 /*
   Copyright (c) 2011+, HL7, Inc.
   All rights reserved.
 
-  Redistribution and use in source and binary forms, with or without modification, 
+  Redistribution and use in source and binary forms, with or without modification,
   are permitted provided that the following conditions are met:
 
- * Redistributions of source code must retain the above copyright notice, this 
+ * Redistributions of source code must retain the above copyright notice, this
      list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice, 
-     this list of conditions and the following disclaimer in the documentation 
+ * Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimer in the documentation
      and/or other materials provided with the distribution.
- * Neither the name of HL7 nor the names of its contributors may be used to 
-     endorse or promote products derived from this software without specific 
+ * Neither the name of HL7 nor the names of its contributors may be used to
+     endorse or promote products derived from this software without specific
      prior written permission.
 
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
-  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+  IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
   POSSIBILITY OF SUCH DAMAGE.
 
  */
@@ -38,9 +36,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -57,11 +53,9 @@ import org.hl7.fhir.exceptions.FHIRFormatError;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element.SpecialElement;
-import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.formats.FormatUtilities;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.DateTimeType;
-import org.hl7.fhir.r5.model.ElementDefinition;
 import org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation;
 import org.hl7.fhir.r5.model.Enumeration;
 import org.hl7.fhir.r5.model.StructureDefinition;
@@ -70,7 +64,6 @@ import org.hl7.fhir.r5.utils.formats.XmlLocationAnnotator;
 import org.hl7.fhir.r5.utils.formats.XmlLocationData;
 import org.hl7.fhir.utilities.ElementDecoration;
 import org.hl7.fhir.utilities.StringPair;
-import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.i18n.I18nConstants;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
@@ -115,12 +108,8 @@ public class XmlParser extends ParserBase {
 		this.allowXsiLocation = allowXsiLocation;
 	}
 
-	public List<ValidatedFragment> parse(InputStream inStream) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
-
-		byte[] content = TextFile.streamToBytes(inStream);
-		ValidatedFragment focusFragment = new ValidatedFragment(ValidatedFragment.FOCUS_NAME, "xml", content, false);
-
-		ByteArrayInputStream stream = new ByteArrayInputStream(content);
+	public List<NamedElement> parse(InputStream stream) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
+		List<NamedElement> res = new ArrayList<>();
 		Document doc = null;
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -136,11 +125,11 @@ public class XmlParser extends ParserBase {
 			if (policy == ValidationPolicy.EVERYTHING) {
 				// The SAX interface appears to not work when reporting the correct version/encoding.
 				// if we can, we'll inspect the header/encoding ourselves
-
-				stream.mark(1024);
-				version = checkHeader(focusFragment.getErrors(), stream);
-				stream.reset();
-
+				if (stream.markSupported()) {
+					stream.mark(1024);
+					version = checkHeader(stream);
+					stream.reset();
+				}
 				// use a slower parser that keeps location data
 				TransformerFactory transformerFactory = TransformerFactory.newInstance();
 				Transformer nullTransformer = transformerFactory.newTransformer();
@@ -172,17 +161,18 @@ public class XmlParser extends ParserBase {
 			if (e.getMessage().contains("lineNumber:") && e.getMessage().contains("columnNumber:")) {
 				int line = Utilities.parseInt(extractVal(e.getMessage(), "lineNumber"), 0);
 				int col = Utilities.parseInt(extractVal(e.getMessage(), "columnNumber"), 0);
-				logError(focusFragment.getErrors(), ValidationMessage.NO_RULE_DATE, line, col, "(xml)", IssueType.INVALID, e.getMessage().substring(e.getMessage().lastIndexOf(";")+1).trim(), IssueSeverity.FATAL);
+				logError(ValidationMessage.NO_RULE_DATE, line, col, "(xml)", IssueType.INVALID, e.getMessage().substring(e.getMessage().lastIndexOf(";")+1).trim(), IssueSeverity.FATAL);
 			} else {
-				logError(focusFragment.getErrors(), ValidationMessage.NO_RULE_DATE, 0, 0, "(xml)", IssueType.INVALID, e.getMessage(), IssueSeverity.FATAL);
+				logError(ValidationMessage.NO_RULE_DATE, 0, 0, "(xml)", IssueType.INVALID, e.getMessage(), IssueSeverity.FATAL);
 			}
 			doc = null;
 		}
 		if (doc != null) {
-			focusFragment.setElement(parse(focusFragment.getErrors(), doc));
+			Element e = parse(doc);
+			if (e != null) {
+				res.add(new NamedElement(null, e));
+			}
 		}
-		List<ValidatedFragment> res = new ArrayList<>();
-		res.add(focusFragment);
 		return res;
 	}
 
@@ -192,12 +182,12 @@ public class XmlParser extends ParserBase {
 		src = src.substring(0, src.indexOf(";")).trim();
 		return src;
 	}
-	private void checkForProcessingInstruction(List<ValidationMessage> errors, Document document) throws FHIRFormatError {
+	private void checkForProcessingInstruction(Document document) throws FHIRFormatError {
 		if (policy == ValidationPolicy.EVERYTHING && FormatUtilities.FHIR_NS.equals(document.getDocumentElement().getNamespaceURI())) {
 			Node node = document.getFirstChild();
 			while (node != null) {
 				if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE)
-					logError(errors, ValidationMessage.NO_RULE_DATE, line(document, false), col(document, false), "(document)", IssueType.INVALID, context.formatMessage(
+					logError(ValidationMessage.NO_RULE_DATE, line(document, false), col(document, false), "(document)", IssueType.INVALID, context.formatMessage(
 						I18nConstants.NO_PROCESSING_INSTRUCTIONS_ALLOWED_IN_RESOURCES), IssueSeverity.ERROR);
 				node = node.getNextSibling();
 			}
@@ -215,27 +205,27 @@ public class XmlParser extends ParserBase {
 		return loc == null ? 0 : end ? loc.getEndColumn() : loc.getStartColumn();
 	}
 
-	public Element parse(List<ValidationMessage> errors, Document doc) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
-		checkForProcessingInstruction(errors, doc);
+	public Element parse(Document doc) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
+		checkForProcessingInstruction(doc);
 		org.w3c.dom.Element element = doc.getDocumentElement();
-		return parse(errors, element);
+		return parse(element);
 	}
 
-	public Element parse(List<ValidationMessage> errors, org.w3c.dom.Element element) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
+	public Element parse(org.w3c.dom.Element element) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
 		String ns = element.getNamespaceURI();
 		String name = element.getLocalName();
 		String path = "/"+pathPrefix(ns)+name;
 
-		StructureDefinition sd = getDefinition(errors, line(element, false), col(element, false), (ns == null ? "noNamespace" : ns), name);
+		StructureDefinition sd = getDefinition(line(element, false), col(element, false), (ns == null ? "noNamespace" : ns), name);
 		if (sd == null)
 			return null;
 
-		Element result = new Element(element.getLocalName(), new Property(context, sd.getSnapshot().getElement().get(0), sd)).setFormat(FhirFormat.XML);
+		Element result = new Element(element.getLocalName(), new Property(context, sd.getSnapshot().getElement().get(0), sd));
 		result.setPath(element.getLocalName());
-		checkElement(errors, element, path, result.getProperty(), false);
+		checkElement(element, path, result.getProperty());
 		result.markLocation(line(element, false), col(element, false));
 		result.setType(element.getLocalName());
-		parseChildren(errors, path, element, result);
+		parseChildren(path, element, result);
 		result.numberChildren();
 		return result;
 	}
@@ -253,10 +243,10 @@ public class XmlParser extends ParserBase {
 			return "sdtc:";
 		if (ns.equals("urn:ihe:pharm"))
 			return "pharm:";
-    if (ns.equals("urn:oid:1.3.6.1.4.1.19376.1.3.2")) {
-        // MATCHBOX
-          return "lab:";
-    }
+		if (ns.equals("urn:oid:1.3.6.1.4.1.19376.1.3.2")) {
+			// MATCHBOX
+			return "lab:";
+		}
 		return "?:";
 	}
 
@@ -278,52 +268,38 @@ public class XmlParser extends ParserBase {
 		return true;
 	}
 
-	private void checkElement(List<ValidationMessage> errors, org.w3c.dom.Element element, String path, Property prop, boolean xsiTypeChecked) throws FHIRFormatError {
+	private void checkElement(org.w3c.dom.Element element, String path, Property prop) throws FHIRFormatError {
 		if (policy == ValidationPolicy.EVERYTHING) {
 			if (empty(element) && FormatUtilities.FHIR_NS.equals(element.getNamespaceURI())) // this rule only applies to FHIR Content
-				logError(errors, ValidationMessage.NO_RULE_DATE, line(element, false), col(element, false), path, IssueType.INVALID, context.formatMessage(I18nConstants.ELEMENT_MUST_HAVE_SOME_CONTENT), IssueSeverity.ERROR);
+				logError(ValidationMessage.NO_RULE_DATE, line(element, false), col(element, false), path, IssueType.INVALID, context.formatMessage(I18nConstants.ELEMENT_MUST_HAVE_SOME_CONTENT), IssueSeverity.ERROR);
 			String ns = prop.getXmlNamespace();
 			String elementNs = element.getNamespaceURI();
 			if (elementNs == null) {
 				elementNs = "noNamespace";
 			}
-			if (!elementNs.equals(ns)) {
-				logError(errors, ValidationMessage.NO_RULE_DATE, line(element, false), col(element, false), path, IssueType.INVALID, context.formatMessage(I18nConstants.WRONG_NAMESPACE__EXPECTED_, ns), IssueSeverity.ERROR);
-			}
-			if (!xsiTypeChecked) {
-				String xsiType = element.getAttributeNS(FormatUtilities.NS_XSI, "type");
-				if (!Utilities.noString(xsiType)) {
-					String actualType = prop.getXmlTypeName();
-					if (!xsiType.equals(actualType)) {
-						logError(errors, "2023-10-12", line(element, false), col(element, false), path, IssueType.INVALID, context.formatMessage(I18nConstants.XSI_TYPE_WRONG, xsiType, actualType), IssueSeverity.ERROR);
-					} else {
-						logError(errors, "2023-10-12", line(element, false), col(element, false), path, IssueType.INVALID, context.formatMessage(I18nConstants.XSI_TYPE_UNNECESSARY), IssueSeverity.INFORMATION);
-					}
-				}
-			}
+			if (!elementNs.equals(ns))
+				logError(ValidationMessage.NO_RULE_DATE, line(element, false), col(element, false), path, IssueType.INVALID, context.formatMessage(I18nConstants.WRONG_NAMESPACE__EXPECTED_, ns), IssueSeverity.ERROR);
 		}
 	}
 
-	public Element parse(List<ValidationMessage> errors, org.w3c.dom.Element base, String type) throws Exception {
-		StructureDefinition sd = getDefinition(errors, 0, 0, FormatUtilities.FHIR_NS, type);
-		Element result = new Element(base.getLocalName(), new Property(context, sd.getSnapshot().getElement().get(0), sd)).setFormat(FhirFormat.XML).setNativeObject(base);
+	public Element parse(org.w3c.dom.Element base, String type) throws Exception {
+		StructureDefinition sd = getDefinition(0, 0, FormatUtilities.FHIR_NS, type);
+		Element result = new Element(base.getLocalName(), new Property(context, sd.getSnapshot().getElement().get(0), sd));
 		result.setPath(base.getLocalName());
 		String path = "/"+pathPrefix(base.getNamespaceURI())+base.getLocalName();
-		checkElement(errors, base, path, result.getProperty(), false);
+		checkElement(base, path, result.getProperty());
 		result.setType(base.getLocalName());
-		parseChildren(errors, path, base, result);
+		parseChildren(path, base, result);
 		result.numberChildren();
 		return result;
 	}
 
-	private void parseChildren(List<ValidationMessage> errors, String path, org.w3c.dom.Element node, Element element) throws FHIRFormatError, FHIRException, IOException, DefinitionException {
+	private void parseChildren(String path, org.w3c.dom.Element node, Element element) throws FHIRFormatError, FHIRException, IOException, DefinitionException {
 		// this parsing routine retains the original order in a the XML file, to support validation
 		reapComments(node, element);
 		List<Property> properties = element.getProperty().getChildProperties(element.getName(), XMLUtil.getXsiType(node));
-		Property cgProp = getChoiceGroupProp(properties);
-		Property mtProp = cgProp == null ? null : getTextProp(cgProp.getChildProperties(null, null));
 
-		String text = mtProp == null ? XMLUtil.getDirectText(node).trim() : null;
+		String text = XMLUtil.getDirectText(node).trim();
 		int line = line(node, false);
 		int col = col(node, false);
 		if (!Utilities.noString(text)) {
@@ -331,20 +307,21 @@ public class XmlParser extends ParserBase {
 			if (property != null) {
 				if ("ED.data[x]".equals(property.getDefinition().getId()) || (property.getDefinition()!=null && property.getDefinition().getBase()!=null && "ED.data[x]".equals(property.getDefinition().getBase().getPath()))) {
 					if ("B64".equals(node.getAttribute("representation"))) {
-						Element n = new Element("dataBase64Binary", property, "base64Binary", text).markLocation(line, col).setFormat(FhirFormat.XML);
+						Element n = new Element("dataBase64Binary", property, "base64Binary", text).markLocation(line, col);
 						n.setPath(element.getPath()+"."+property.getName());
 						element.getChildren().add(n);
 					} else {
-						Element n = new Element("dataString", property, "string", text).markLocation(line, col).setFormat(FhirFormat.XML);
+						Element n = new Element("dataString", property, "string", text).markLocation(line, col);
 						n.setPath(element.getPath()+"."+property.getName());
 						element.getChildren().add(n);
 					}
 				} else {
-					Element n = new Element(property.getName(), property, property.getType(), text).markLocation(line, col).setFormat(FhirFormat.XML);
+					Element n = new Element(property.getName(), property, property.getType(), text).markLocation(line, col);
 					n.setPath(element.getPath()+"."+property.getName());
 					element.getChildren().add(n);
 				}
-			} else {
+			}
+			else {
 				Node n = node.getFirstChild();
 				while (n != null) {
 					if (n.getNodeType() == Node.TEXT_NODE && !Utilities.noString(n.getTextContent().trim())) {
@@ -360,7 +337,7 @@ public class XmlParser extends ParserBase {
 						}
 						line = line(nt, end);
 						col = col(nt, end);
-						logError(errors, ValidationMessage.NO_RULE_DATE, line, col, path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.TEXT_SHOULD_NOT_BE_PRESENT, Utilities.makeSingleLine(n.getTextContent().trim())), IssueSeverity.ERROR);
+						logError(ValidationMessage.NO_RULE_DATE, line, col, path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.TEXT_SHOULD_NOT_BE_PRESENT, Utilities.makeSingleLine(n.getTextContent().trim())), IssueSeverity.ERROR);
 					}
 					n = n.getNextSibling();
 				}
@@ -371,32 +348,27 @@ public class XmlParser extends ParserBase {
 			Node attr = node.getAttributes().item(i);
 			String value = attr.getNodeValue();
 			if (!validAttrValue(value)) {
-				logError(errors, ValidationMessage.NO_RULE_DATE, line, col, path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.XML_ATTR_VALUE_INVALID, attr.getNodeName()), IssueSeverity.ERROR);
+				logError(ValidationMessage.NO_RULE_DATE, line, col, path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.XML_ATTR_VALUE_INVALID, attr.getNodeName()), IssueSeverity.ERROR);
 			}
 			if (!(attr.getNodeName().equals("xmlns") || attr.getNodeName().startsWith("xmlns:"))) {
 				Property property = getAttrProp(properties, attr.getLocalName(), attr.getNamespaceURI());
 				if (property != null) {
 					String av = attr.getNodeValue();
-                    // matchbox-engine: if we are parsing from CDA we need to collapse non string types https://www.w3.org/TR/xmlschema-2/#rf-whiteSpace 
-          // If the attribute type is not CDATA, then the XML processor must further process the normalized attribute value by discarding any leading and trailing space (#x20) characters
-          if ("urn:hl7-org:v3".equals(node.getNamespaceURI()) || "urn:hl7-org:sdtc".equals(node.getNamespaceURI()) || "urn:ihe:pharm".equals(node.getNamespaceURI()) || "urn:oid:1.3.6.1.4.1.19376.1.3.2".equals(node.getNamespaceURI())) {
-            av = av.trim();
-          }
+
+					// matchbox-engine: if we are parsing from CDA we need to collapse non string types https://www.w3.org/TR/xmlschema-2/#rf-whiteSpace
+					// If the attribute type is not CDATA, then the XML processor must further process the normalized attribute value by discarding any leading and trailing space (#x20) characters
+					if ("urn:hl7-org:v3".equals(node.getNamespaceURI()) || "urn:hl7-org:sdtc".equals(node.getNamespaceURI()) || "urn:ihe:pharm".equals(node.getNamespaceURI()) || "urn:oid:1.3.6.1.4.1.19376.1.3.2".equals(node.getNamespaceURI())) {
+						av = av.trim();
+					}
 
 					if (ToolingExtensions.hasExtension(property.getDefinition(), ToolingExtensions.EXT_DATE_FORMAT))
 						av = convertForDateFormatFromExternal(ToolingExtensions.readStringExtension(property.getDefinition(), ToolingExtensions.EXT_DATE_FORMAT), av);
 					if (property.getName().equals("value") && element.isPrimitive())
 						element.setValue(av);
 					else {
-						String[] vl = {av};
-						if (property.isList() && av.contains(" ")) {
-							vl = av.split(" ");
-						}
-						for (String v : vl) {
-							Element n = new Element(property.getName(), property, property.getType(), v).markLocation(line, col).setFormat(FhirFormat.XML);
-							n.setPath(element.getPath()+"."+property.getName());
-							element.getChildren().add(n);
-						}
+						Element n = new Element(property.getName(), property, property.getType(), av).markLocation(line, col);
+						n.setPath(element.getPath()+"."+property.getName());
+						element.getChildren().add(n);
 					}
 				} else {
 					boolean ok = false;
@@ -408,7 +380,7 @@ public class XmlParser extends ParserBase {
 						ok = ok || (attr.getLocalName().equals("schemaLocation")); // xsi:schemalocation allowed for non FHIR content
 					ok = ok || (hasTypeAttr(element) && attr.getLocalName().equals("type") && FormatUtilities.NS_XSI.equals(attr.getNamespaceURI())); // xsi:type allowed if element says so
 					if (!ok) {
-						logError(errors, ValidationMessage.NO_RULE_DATE, line(node, false), col(node, false), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.UNDEFINED_ATTRIBUTE__ON__FOR_TYPE__PROPERTIES__, attr.getNodeName(), node.getNodeName(), element.fhirType(), properties), IssueSeverity.ERROR);
+						logError(ValidationMessage.NO_RULE_DATE, line(node, false), col(node, false), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.UNDEFINED_ATTRIBUTE__ON__FOR_TYPE__PROPERTIES__, attr.getNodeName(), node.getNodeName(), element.fhirType(), properties), IssueSeverity.ERROR);
 					}
 				}
 			}
@@ -420,7 +392,6 @@ public class XmlParser extends ParserBase {
 		while (child != null) {
 			if (child.getNodeType() == Node.ELEMENT_NODE) {
 				Property property = getElementProp(properties, child.getLocalName(), child.getNamespaceURI());
-
 				if (property != null) {
 					if (property.getName().equals(lastName)) {
 						repeatCount++;
@@ -437,26 +408,22 @@ public class XmlParser extends ParserBase {
 							xhtml = xp.parseHtmlNode((org.w3c.dom.Element) child);
 							if (policy == ValidationPolicy.EVERYTHING) {
 								for (StringPair s : xp.getValidationIssues()) {
-									logError(errors, "2022-11-17", line(child, false), col(child, false), path, IssueType.INVALID, context.formatMessage(s.getName(), s.getValue()), IssueSeverity.ERROR);
+									logError("2022-11-17", line(child, false), col(child, false), path, IssueType.INVALID, context.formatMessage(s.getName(), s.getValue()), IssueSeverity.ERROR);
 								}
 							}
 						}
-						Element n = new Element(property.getName(), property, "xhtml", new XhtmlComposer(XhtmlComposer.XML, false).compose(xhtml)).setXhtml(xhtml).markLocation(line(child, false), col(child, false)).setFormat(FhirFormat.XML).setNativeObject(child);
+						Element n = new Element(property.getName(), property, "xhtml", new XhtmlComposer(XhtmlComposer.XML, false).compose(xhtml)).setXhtml(xhtml).markLocation(line(child, false), col(child, false));
 						n.setPath(element.getPath()+"."+property.getName());
 						element.getChildren().add(n);
 					} else {
 						String npath = path+"/"+pathPrefix(child.getNamespaceURI())+child.getLocalName();
-						String name = child.getLocalName();
-						if (!property.isChoice() && !name.equals(property.getName())) {
-							name = property.getName();
-						}
-						Element n = new Element(name, property).markLocation(line(child, false), col(child, false)).setFormat(FhirFormat.XML).setNativeObject(child);
+						Element n = new Element(child.getLocalName(), property).markLocation(line(child, false), col(child, false));
 						if (property.isList()) {
 							n.setPath(element.getPath()+"."+property.getName()+"["+repeatCount+"]");
 						} else {
 							n.setPath(element.getPath()+"."+property.getName());
 						}
-						boolean xsiTypeChecked = false;
+						checkElement((org.w3c.dom.Element) child, npath, n.getProperty());
 						boolean ok = true;
 						if (property.isChoice()) {
 							if (property.getDefinition().hasRepresentation(PropertyRepresentation.TYPEATTR)) {
@@ -466,7 +433,7 @@ public class XmlParser extends ParserBase {
 										xsiType = ToolingExtensions.readStringExtension(property.getDefinition(), "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype");
 										n.setType(xsiType);
 									} else {
-										logError(errors, ValidationMessage.NO_RULE_DATE, line(child, false), col(child, false), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.NO_TYPE_FOUND_ON_, child.getLocalName()), IssueSeverity.ERROR);
+										logError(ValidationMessage.NO_RULE_DATE, line(child, false), col(child, false), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.NO_TYPE_FOUND_ON_, child.getLocalName()), IssueSeverity.ERROR);
 										ok = false;
 									}
 								} else {
@@ -475,86 +442,27 @@ public class XmlParser extends ParserBase {
 									n.setType(xsiType);
 									n.setExplicitType(xsiType);
 								}
-								xsiTypeChecked = true;
 							} else
 								n.setType(n.getType());
 						}
-						checkElement(errors, (org.w3c.dom.Element) child, npath, n.getProperty(), xsiTypeChecked);
 						element.getChildren().add(n);
 						if (ok) {
 							if (property.isResource())
-								parseResource(errors, npath, (org.w3c.dom.Element) child, n, property);
+								parseResource(npath, (org.w3c.dom.Element) child, n, property);
 							else
-								parseChildren(errors, npath, (org.w3c.dom.Element) child, n);
+								parseChildren(npath, (org.w3c.dom.Element) child, n);
 						}
 					}
 				} else {
-					if (cgProp != null) {
-						property = getElementProp(cgProp.getChildProperties(null, null), child.getLocalName(), child.getNamespaceURI());
-						if (property != null) {
-							if (cgProp.getName().equals(lastName)) {
-								repeatCount++;
-							} else {
-								lastName = cgProp.getName();
-								repeatCount = 0;
-							}
-
-							String npath = path+"/"+pathPrefix(cgProp.getXmlNamespace())+cgProp.getName();
-							String name = cgProp.getName();
-							Element cgn = new Element(cgProp.getName(), cgProp).setFormat(FhirFormat.XML);
-							cgn.setPath(element.getPath()+"."+cgProp.getName()+"["+repeatCount+"]");
-							element.getChildren().add(cgn);
-
-							npath = npath+"/"+pathPrefix(child.getNamespaceURI())+child.getLocalName();
-							name = child.getLocalName();
-							Element n = new Element(name, property).markLocation(line(child, false), col(child, false)).setFormat(FhirFormat.XML).setNativeObject(child);
-							cgn.getChildren().add(n);
-							n.setPath(element.getPath()+"."+property.getName());
-							checkElement(errors, (org.w3c.dom.Element) child, npath, n.getProperty(), false);
-							parseChildren(errors, npath, (org.w3c.dom.Element) child, n);
-						}
-					}
-					if (property == null) {
-						logError(errors, ValidationMessage.NO_RULE_DATE, line(child, false), col(child, false), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.UNDEFINED_ELEMENT_, child.getLocalName(), path), IssueSeverity.ERROR);
-					}
+					logError(ValidationMessage.NO_RULE_DATE, line(child, false), col(child, false), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.UNDEFINED_ELEMENT_, child.getLocalName(), path), IssueSeverity.ERROR);
 				}
-			} else if (child.getNodeType() == Node.TEXT_NODE && !Utilities.noString(child.getTextContent().trim()) && mtProp != null) {
-				if (cgProp.getName().equals(lastName)) {
-					repeatCount++;
-				} else {
-					lastName = cgProp.getName();
-					repeatCount = 0;
-				}
-
-				String npath = path+"/"+pathPrefix(cgProp.getXmlNamespace())+cgProp.getName();
-				String name = cgProp.getName();
-				Element cgn = new Element(cgProp.getName(), cgProp).setFormat(FhirFormat.XML);
-				cgn.setPath(element.getPath()+"."+cgProp.getName()+"["+repeatCount+"]");
-				element.getChildren().add(cgn);
-
-				npath = npath+"/text()";
-				name = mtProp.getName();
-				Element n = new Element(name, mtProp, mtProp.getType(), child.getTextContent().trim()).markLocation(line(child, false), col(child, false)).setFormat(FhirFormat.XML).setNativeObject(child);
-				cgn.getChildren().add(n);
-				n.setPath(element.getPath()+"."+mtProp.getName());
-
-
-			} else if (child.getNodeType() == Node.CDATA_SECTION_NODE) {
-				logError(errors, ValidationMessage.NO_RULE_DATE, line(child, false), col(child, false), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.CDATA_IS_NOT_ALLOWED), IssueSeverity.ERROR);
+			} else if (child.getNodeType() == Node.CDATA_SECTION_NODE){
+				logError(ValidationMessage.NO_RULE_DATE, line(child, false), col(child, false), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.CDATA_IS_NOT_ALLOWED), IssueSeverity.ERROR);
 			} else if (!Utilities.existsInList(child.getNodeType(), 3, 8)) {
-				logError(errors, ValidationMessage.NO_RULE_DATE, line(child, false), col(child, false), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.NODE_TYPE__IS_NOT_ALLOWED, Integer.toString(child.getNodeType())), IssueSeverity.ERROR);
+				logError(ValidationMessage.NO_RULE_DATE, line(child, false), col(child, false), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.NODE_TYPE__IS_NOT_ALLOWED, Integer.toString(child.getNodeType())), IssueSeverity.ERROR);
 			}
 			child = child.getNextSibling();
 		}
-	}
-
-	private Property getChoiceGroupProp(List<Property> properties) {
-		for (Property p : properties) {
-			if (p.getDefinition().hasExtension(ToolingExtensions.EXT_ID_CHOICE_GROUP)) {
-				return p;
-			}
-		}
-		return null;
 	}
 
 	private boolean validAttrValue(String value) {
@@ -599,8 +507,6 @@ public class XmlParser extends ParserBase {
 					return p;
 			}
 		}
-
-
 		return null;
 	}
 
@@ -640,14 +546,14 @@ public class XmlParser extends ParserBase {
 	}
 
 	private String convertForDateFormatToExternal(String fmt, String av) throws FHIRException {
-		if ("v3".equals(fmt) || "YYYYMMDDHHMMSS.UUUU[+|-ZZzz]".equals(fmt)) {
+		if ("v3".equals(fmt)) {
 			DateTimeType d = new DateTimeType(av);
 			return d.getAsV3();
 		} else
 			throw new FHIRException(context.formatMessage(I18nConstants.UNKNOWN_DATE_FORMAT_, fmt));
 	}
 
-	private void parseResource(List<ValidationMessage> errors, String string, org.w3c.dom.Element container, Element parent, Property elementProperty) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
+	private void parseResource(String string, org.w3c.dom.Element container, Element parent, Property elementProperty) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
 		org.w3c.dom.Element res = XMLUtil.getFirstChild(container);
 		String name = res.getLocalName();
 		StructureDefinition sd = context.fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(name, null));
@@ -655,7 +561,7 @@ public class XmlParser extends ParserBase {
 			throw new FHIRFormatError(context.formatMessage(I18nConstants.CONTAINED_RESOURCE_DOES_NOT_APPEAR_TO_BE_A_FHIR_RESOURCE_UNKNOWN_NAME_, res.getLocalName()));
 		parent.updateProperty(new Property(context, sd.getSnapshot().getElement().get(0), sd), SpecialElement.fromProperty(parent.getProperty()), elementProperty);
 		parent.setType(name);
-		parseChildren(errors, res.getLocalName(), res, parent);
+		parseChildren(res.getLocalName(), res, parent);
 	}
 
 	private void reapComments(org.w3c.dom.Element element, Element context) {
@@ -838,33 +744,20 @@ public class XmlParser extends ParserBase {
 			}
 		} else {
 			setXsiTypeIfIsTypeAttr(xml, element);
-			Set<String> handled = new HashSet<>();
 			for (Element child : element.getChildren()) {
-				if (!handled.contains(child.getName()) && isAttr(child.getProperty()) && wantCompose(element.getPath(), child)) {
-					handled.add(child.getName());
-					String av = child.getValue();
-					if (child.getProperty().isList()) {
-						for (Element c2 : element.getChildren()) {
-							if (c2 != child && c2.getName().equals(child.getName())) {
-								av = av + " "+c2.getValue();
-							}
-						}
-					}
+				if (isAttr(child.getProperty()) && wantCompose(element.getPath(), child)) {
 					if (linkResolver != null)
 						xml.link(linkResolver.resolveType(child.getType()));
+					String av = child.getValue();
 					if (ToolingExtensions.hasExtension(child.getProperty().getDefinition(), ToolingExtensions.EXT_DATE_FORMAT))
 						av = convertForDateFormatToExternal(ToolingExtensions.readStringExtension(child.getProperty().getDefinition(), ToolingExtensions.EXT_DATE_FORMAT), av);
-          // MATCHBOX PATCH: adjusting it for pharm
+          		// MATCHBOX PATCH: adjusting it for pharm
 					xml.attribute(child.getProperty().getXmlName(), av);
-        }
-      }
+				}
+			}
 			if (linkResolver != null)
 				xml.link(linkResolver.resolveProperty(element.getProperty()));
-			if (!xml.namespaceDefined(element.getProperty().getXmlNamespace())) {
-				String abbrev = makeNamespaceAbbrev(element.getProperty(), xml);
-				xml.namespace(element.getProperty().getXmlNamespace(), abbrev);
-			}
-			xml.enter(element.getProperty().getXmlNamespace(), elementName);
+			xml.enter(element.getProperty().getXmlNamespace(),elementName);
 			if (!root && element.getSpecial() != null) {
 				if (linkResolver != null)
 					xml.link(linkResolver.resolveProperty(element.getProperty()));
@@ -886,38 +779,7 @@ public class XmlParser extends ParserBase {
 		}
 	}
 
-	private String makeNamespaceAbbrev(Property property, IXMLWriter xml) {
-		// it's a cosmetic thing, but we're going to try to come up with a nice namespace
-
-		ElementDefinition ed = property.getDefinition();
-		String ns = property.getXmlNamespace();
-		String n = property.getXmlName();
-
-		String diff = property.getName().toLowerCase().replace(n.toLowerCase(), "");
-		if (!Utilities.noString(diff) && diff.length() <= 5 && Utilities.isToken(diff) && !xml.abbreviationDefined(diff)) {
-			return diff;
-		}
-
-		int i = ns.length()-1;
-		while (i > 0) {
-			if (Character.isAlphabetic(ns.charAt(i)) || Character.isDigit(ns.charAt(i))) {
-				i--;
-			} else {
-				break;
-			}
-		}
-		String tail = ns.substring(i+1);
-		if (!Utilities.noString(tail) && tail.length() <= 5 && Utilities.isToken(tail) && !xml.abbreviationDefined(tail)) {
-			return tail;
-		}
-
-		i = 0;
-		while (xml.abbreviationDefined("ns"+i)) {
-			i++;
-		}
-		return "ns"+i;
-	}
-	private String checkHeader(List<ValidationMessage> errors, InputStream stream) throws IOException {
+	private String checkHeader(InputStream stream) throws IOException {
 		try {
 			// the stream will either start with the UTF-8 BOF or with <xml
 			int i0 = stream.read();
@@ -953,7 +815,7 @@ public class XmlParser extends ParserBase {
 				}
 			}
 			if (e != null && !"UTF-8".equalsIgnoreCase(e)) {
-				logError(errors, ValidationMessage.NO_RULE_DATE, 0, 0, "XML", IssueType.INVALID, context.formatMessage(I18nConstants.XML_ENCODING_INVALID), IssueSeverity.ERROR);
+				logError(ValidationMessage.NO_RULE_DATE, 0, 0, "XML", IssueType.INVALID, context.formatMessage(I18nConstants.XML_ENCODING_INVALID), IssueSeverity.ERROR);
 			}
 
 			i = header.indexOf("version=\"");
@@ -968,7 +830,7 @@ public class XmlParser extends ParserBase {
 			return "?xml-p1?";
 		} catch (Exception e) {
 			// suppress this error
-			logError(errors, ValidationMessage.NO_RULE_DATE, 0, 0, "XML", IssueType.INVALID, e.getMessage(), IssueSeverity.ERROR);
+			logError(ValidationMessage.NO_RULE_DATE, 0, 0, "XML", IssueType.INVALID, e.getMessage(), IssueSeverity.ERROR);
 		}
 		return "?xml-p2?";
 	}

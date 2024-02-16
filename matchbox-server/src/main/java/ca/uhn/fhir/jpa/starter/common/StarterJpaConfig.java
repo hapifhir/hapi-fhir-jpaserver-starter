@@ -3,7 +3,7 @@ package ca.uhn.fhir.jpa.starter.common;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import ca.uhn.fhir.batch2.jobs.export.BulkDataExportProvider;
@@ -130,8 +130,12 @@ public class StarterJpaConfig {
 
 	@Primary
 	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource myDataSource, ConfigurableListableBeanFactory myConfigurableListableBeanFactory, FhirContext theFhirContext) {
-		LocalContainerEntityManagerFactoryBean retVal = HapiEntityManagerFactoryUtil.newEntityManagerFactory(myConfigurableListableBeanFactory, theFhirContext);
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource myDataSource,
+																							 ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
+																							 FhirContext theFhirContext,
+																							 final JpaStorageSettings theStorageSettings) {
+		LocalContainerEntityManagerFactoryBean retVal =
+			HapiEntityManagerFactoryUtil.newEntityManagerFactory(myConfigurableListableBeanFactory, theFhirContext, theStorageSettings);
 		retVal.setPersistenceUnitName("HAPI_PU");
 
 		try {

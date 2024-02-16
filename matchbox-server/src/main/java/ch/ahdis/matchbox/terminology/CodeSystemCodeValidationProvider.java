@@ -9,7 +9,7 @@ import org.hl7.fhir.r4.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import static ch.ahdis.matchbox.terminology.TerminologyUtils.mapErrorToOperationOutcome;
 

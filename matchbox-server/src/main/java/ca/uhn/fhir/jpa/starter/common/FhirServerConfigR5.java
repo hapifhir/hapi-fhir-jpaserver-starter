@@ -44,7 +44,7 @@ public class FhirServerConfigR5 {
 	@Autowired
 	private ApplicationContext context;
 
-	@Bean(autowire = Autowire.BY_TYPE)
+	@Bean
 	public ValidationProvider validationProvider() {
 		return new ValidationProvider();
 	}

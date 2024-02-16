@@ -58,7 +58,7 @@ public class FhirServerConfigR4 {
 //    return new NullTermConceptMappingSvcImpl();
 //  }
 
-  @Bean(autowire = Autowire.BY_TYPE)
+  @Bean
   public ValidationProvider validationProvider() {
     return new ValidationProvider();
   }

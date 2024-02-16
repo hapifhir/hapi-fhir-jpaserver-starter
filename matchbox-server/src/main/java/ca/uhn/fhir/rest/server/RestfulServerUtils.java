@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
 import java.util.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import static org.apache.commons.lang3.StringUtils.*;
 

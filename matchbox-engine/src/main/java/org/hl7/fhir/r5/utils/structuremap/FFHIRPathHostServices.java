@@ -18,11 +18,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FHIRPathHostServices implements FHIRPathEngine.IEvaluationContext {
+public class FFHIRPathHostServices implements FHIRPathEngine.IEvaluationContext {
 
 	private final StructureMapUtilities structureMapUtilities;
 
-	public FHIRPathHostServices(StructureMapUtilities structureMapUtilities) {
+	public FFHIRPathHostServices(StructureMapUtilities structureMapUtilities) {
 		this.structureMapUtilities = structureMapUtilities;
 	}
 
@@ -85,15 +85,15 @@ public class FHIRPathHostServices implements FHIRPathEngine.IEvaluationContext {
 	@Override
 	public boolean conformsToProfile(Object appContext, Base item, String url) throws FHIRException {
 		//IResourceValidator val = structureMapUtilities.getWorker().newValidator();
-//    we need the same conformToProfile context as we have in the matchbox engine
-//    matchbox 3.1.0
-    IResourceValidator val = null;
-    try {
-      val = ((ch.ahdis.matchbox.mappinglanguage.MatchboxStructureMapUtilities) structureMapUtilities).getEngine().getValidator(
-			Manager.FhirFormat.JSON);
-    } catch (IOException e) {
-      throw new NotImplementedException("Not done yet (FFHIRPathHostServices.conformsToProfile), engine could not be created");
-    }
+		// we need the same conformToProfile context as we have in the matchbox engine
+		// matchbox 3.1.0
+		 IResourceValidator val = null;
+		 try {
+			val = ((ch.ahdis.matchbox.mappinglanguage.MatchboxStructureMapUtilities) structureMapUtilities).getEngine().getValidator(
+				Manager.FhirFormat.JSON);
+		 } catch (IOException e) {
+			throw new NotImplementedException("Not done yet (FFHIRPathHostServices.conformsToProfile), engine could not be created");
+		 }
 		List<ValidationMessage> valerrors = new ArrayList<ValidationMessage>();
 		if (item instanceof Resource) {
 			val.validate(appContext, valerrors, (Resource) item, url);
@@ -103,7 +103,7 @@ public class FHIRPathHostServices implements FHIRPathEngine.IEvaluationContext {
 			val.validate(appContext, valerrors, null, (Element) item, url);
 			return noErrorValidationMessages(valerrors);
 		}
-		throw new NotImplementedException("Not done yet (FHIRPathHostServices.conformsToProfile), when item is not element or not resource");
+		throw new NotImplementedException("Not done yet (FFHIRPathHostServices.conformsToProfile), when item is not element or not resource");
 	}
 
 	@Override
@@ -111,8 +111,4 @@ public class FHIRPathHostServices implements FHIRPathEngine.IEvaluationContext {
 		return structureMapUtilities.getWorker().fetchResource(ValueSet.class, url);
 	}
 
-	@Override
-	public boolean paramIsType(String name, int index) {
-		return false;
-	}
 }

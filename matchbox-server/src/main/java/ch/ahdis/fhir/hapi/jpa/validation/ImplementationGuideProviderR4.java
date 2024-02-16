@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider;
 import org.hl7.fhir.instance.model.api.IIdType;
@@ -268,8 +268,8 @@ public class ImplementationGuideProviderR4 extends ImplementationGuideResourcePr
 	@Override
 	@Search(allowUnknownParams = true)
 	public ca.uhn.fhir.rest.api.server.IBundleProvider search(
-			javax.servlet.http.HttpServletRequest theServletRequest,
-			javax.servlet.http.HttpServletResponse theServletResponse,
+			jakarta.servlet.http.HttpServletRequest theServletRequest,
+			jakarta.servlet.http.HttpServletResponse theServletResponse,
 
 			ca.uhn.fhir.rest.api.server.RequestDetails theRequestDetails,
 
