@@ -227,6 +227,12 @@ public class FixNullReferenceInBundle {
 							practitionerRole = questionnaireResponse.getAuthor().getReference().toString();
 							break;
 						}
+						if(questionnaireResponse.getSubject().getReference().equals("Patient/null") && questionnaireResponse.getIdElement().getIdPart().equals("0e569153-c3bd-4738-82a9-05ea092f29d3")) {
+							modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+								+ "aeb8fa2d-58f4-4fff-ae7a-5516c4c9a7dd" + "\"");
+							specialTreatment = true;
+							break;
+						}
 					}
 					else if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.Procedure)) {
 						Procedure procedure = (Procedure) entry.getResource();
