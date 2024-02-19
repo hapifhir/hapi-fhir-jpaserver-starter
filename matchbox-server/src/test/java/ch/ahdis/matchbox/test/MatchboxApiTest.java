@@ -217,10 +217,11 @@ public class MatchboxApiTest {
     assertEquals("n/a", this.getTxServer(contextR4, operationOutcome));
 
     // add new parameters should create a new validation engine for default validation
-    // operationOutcome = validationClient.validate(resource, profileCore);
-    // String sessionId3CoreTxNa = getSessionId(contextR4, operationOutcome);
-    // assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
-    // assertNotEquals(sessionIdCore, sessionId3CoreTxNa);
+    operationOutcome = validationClient.validate(resource, profileCore, parameters);
+    String sessionId3CoreTxNa = getSessionId(contextR4, operationOutcome);
+    assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
+    assertNotEquals(sessionIdCore, sessionId3CoreTxNa);
+    assertEquals("n/a", this.getTxServer(contextR4, operationOutcome));
   }
 
   @Test
