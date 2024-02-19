@@ -41,8 +41,13 @@ import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
+import org.hl7.fhir.r5.model.DateTimeType;
+import org.hl7.fhir.r5.model.DateType;
+import org.hl7.fhir.r5.model.Duration;
 import org.hl7.fhir.r5.model.OperationOutcome;
 import org.hl7.fhir.r5.model.StringType;
+import org.hl7.fhir.r5.model.TimeType;
+import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
@@ -72,9 +77,6 @@ public class ValidationProvider {
 
 	@Autowired
 	private FhirContext myContext;
-
-	@Autowired
-	private INpmPackageVersionDao myPackageVersionDao;
 
 //	@Operation(name = "$canonical", manualRequest = true, idempotent = true, returnParameters = {
 //			@OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
@@ -183,9 +185,10 @@ public class ValidationProvider {
 			return this.getOoForError("Error during validation: %s".formatted(e.getMessage()));
 		}
 
-		sw.endCurrentTask();
+		long millis = sw.getMillis();
 		log.debug("Validation time: {}", sw);
-		return this.getOperationOutcome(sha3Hex, messages, profile, engine, sw.formatTaskDurations(), cliContext);
+		
+		return this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
 	}
 
 	private String getContentString(final HttpServletRequest theRequest,
@@ -219,7 +222,7 @@ public class ValidationProvider {
 															final List<ValidationMessage> messages,
 															final String profile,
 															final MatchboxEngine engine,
-															final String taskDuration,
+															final long ms,
 															final CliContext cliContext) {
 		final var oo = new OperationOutcome();
 		oo.setId(id);
@@ -231,6 +234,9 @@ public class ValidationProvider {
 			issue.setCode(OperationOutcome.IssueType.INFORMATIONAL);
 
 			final StructureDefinition structDef = engine.getStructureDefinition(profile);
+
+			final org.hl7.fhir.r5.model.StructureDefinition structDefR5 = (org.hl7.fhir.r5.model.StructureDefinition) VersionConvertorFactory_40_50.convertResource(structDef);
+
 			final var profileDate = (structDef.getDateElement() != null)
 				? " (%s)".formatted(structDef.getDateElement().asStringValue())
 				: " ";
@@ -241,10 +247,28 @@ public class ValidationProvider {
 					structDef.getVersion(),
 					profileDate,
 					String.join(", ", engine.getContext().getLoadedPackages()),
-					taskDuration,
+					"" + ms/1000.0+ "s",
 					VersionUtil.getPoweredBy(),
 					cliContext.toString()
 				));
+
+			var ext = issue.addExtension().setUrl("http://matchbox.health/validiation");
+			ext.addExtension("profile", new UriType(structDef.getUrl()));
+			ext.addExtension("profileVersion", new UriType(structDef.getVersion()));
+			ext.addExtension("profileDate", structDefR5.getDateElement());
+
+			ext.addExtension("total", new Duration().setUnit("ms").setValue(ms) );
+			if (matchboxEngineSupport.getSessionId(engine) != null) {
+				ext.addExtension("validatorVersion", new StringType(VersionUtil.getPoweredBy()));
+			}
+			cliContext.addContextToExtension(ext);
+			if (matchboxEngineSupport.getSessionId(engine) != null) {
+				ext.addExtension("sessionId", new StringType(matchboxEngineSupport.getSessionId(engine)));
+			}
+			for(String pkg : engine.getContext().getLoadedPackages()) {
+				ext.addExtension("package", new StringType(pkg));
+			}
+
 		}
 
 		// Map the SingleValidationMessages to OperationOutcomeIssue

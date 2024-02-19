@@ -1,9 +1,9 @@
 server:
+  port: 8081
   servlet:
-    context-path: /matchbox
+    context-path: /matchboxv3
 hapi:
   fhir:
-    server_address: http://localhost:8080/matchbox/fhir
     implementationguides:
       fhir_r4_core:
         name: hl7.fhir.r4.core
@@ -17,13 +17,15 @@ hapi:
         name: hl7.fhir.uv.extensions.r4
         version: 1.0.0
         url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
-      cda:
-        name: hl7.cda.uv.core
-        version: 2.1.0-draft2-mb
-        url: classpath:/hl7.cda.uv.core#2.1.0-draft2-mb.tgz
-    staticLocation: file:/apps/
+      matchbox_health_test_ig_r4:
+        name: matchbox.health.test.ig.r4
+        version: 0.1.0
+        url: classpath:/matchbox.health.test.ig.r4-0.1.0.tgz
 matchbox:
   fhir:
     context:
-      fhirVersion: 4.0.1
-      txServer: http://tx.fhir.org
+      txServer: http://localhost:${server.port}/matchboxv3/fhir
+      suppressWarnInfo:
+        hl7.fhir.r4.core#4.0.1:
+          - "Constraint failed: dom-6:"
+          - "regex:Entry '(.+)' isn't reachable by traversing forwards from the Composition"

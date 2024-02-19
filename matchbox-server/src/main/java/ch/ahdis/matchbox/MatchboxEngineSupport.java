@@ -401,6 +401,10 @@ public class MatchboxEngineSupport {
 		return null;
 	}
 
+	public String getSessionId(final MatchboxEngine engine) {
+		return this.sessionCache.getSessionId(engine);
+	}
+
 	public boolean isInitialized() {
 		return initialized;
 	}

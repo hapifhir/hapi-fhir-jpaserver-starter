@@ -521,6 +521,10 @@
                 <filtering>false</filtering>
             </resource>
             <resource>
+                <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
                 <directory>${project.build.directory}/generated-sources/properties</directory>
                 <filtering>false</filtering>
             </resource>

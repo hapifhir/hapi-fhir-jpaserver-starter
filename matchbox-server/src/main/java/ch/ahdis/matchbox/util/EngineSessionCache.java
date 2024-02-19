@@ -21,10 +21,10 @@
 package ch.ahdis.matchbox.util;
 
 import java.util.Set;
-import java.util.UUID;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.hl7.fhir.validation.ValidationEngine;
 import org.hl7.fhir.validation.cli.services.SessionCache;
 
@@ -32,11 +32,17 @@ import org.hl7.fhir.validation.cli.services.SessionCache;
  * @author Oliver Egger
  * 
  *         We want to have a validation engines also that are not timed out as
- *         in the parent classe.
+ *         in the parent class.
  */
 public class EngineSessionCache extends SessionCache {
 
     private final Map<String, ValidationEngine> cachedSessionsNoTimeout = new java.util.HashMap<String, ValidationEngine>();
+    private final Map<ValidationEngine, String> cachedSessionIdsNoTimeout = new java.util.HashMap<ValidationEngine, String>();
+    private final PassiveExpiringMap<ValidationEngine, String> cachedSessionIds;
+
+    public EngineSessionCache() {
+        cachedSessionIds = new PassiveExpiringMap<>(TIME_TO_LIVE, TIME_UNIT);
+    }
 
     /**
      * Returns the stored {@link ValidationEngine} associated with the passed in
@@ -80,6 +86,13 @@ public class EngineSessionCache extends SessionCache {
      */
     public String cacheSessionForEver(String sessionId, ValidationEngine validationEngine) {
         cachedSessionsNoTimeout.put(sessionId, validationEngine);
+        cachedSessionIdsNoTimeout.put(validationEngine, sessionId);
+        return sessionId;
+    }
+
+    public String cacheSession(String sessionId, ValidationEngine validationEngine) {
+        String id = super.cacheSession(sessionId, validationEngine);
+        cachedSessionIds.put(validationEngine, id);
         return sessionId;
     }
 
@@ -87,5 +100,15 @@ public class EngineSessionCache extends SessionCache {
     public boolean sessionExists(String sessionId) {
         return super.sessionExists(sessionId) || cachedSessionsNoTimeout.containsKey(sessionId);
     }
+
+    public String getSessionId(ValidationEngine validationEngine) {
+        if (cachedSessionIdsNoTimeout.containsKey(validationEngine)) {
+            return cachedSessionIdsNoTimeout.get(validationEngine);
+        }
+        if (cachedSessionIds.containsKey(validationEngine)) {
+            return cachedSessionIds.get(validationEngine);
+        }
+        return null;
+   }
 
 }

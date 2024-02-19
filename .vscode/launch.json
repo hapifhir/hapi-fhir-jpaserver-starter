@@ -68,6 +68,14 @@
     },
     {
       "type": "java",
+      "name": "Launch Matchbox-Server (test)",
+      "request": "launch",
+      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+      "projectName": "matchbox-server",
+      "vmArgs": "-Dspring.config.additional-location=file:/Users/oegger/Documents/github/matchbox/matchbox-server/target/test-classes/application-test.yaml",
+      "cwd": "${workspaceFolder}/matchbox-server"
+    },    {
+      "type": "java",
       "name": "Launch Matchbox-Server",
       "request": "launch",
       "mainClass": "ca.uhn.fhir.jpa.starter.Application",
