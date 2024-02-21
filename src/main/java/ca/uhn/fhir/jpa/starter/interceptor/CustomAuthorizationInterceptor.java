@@ -40,7 +40,7 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 		}
 
 		try {
-			if (Constants.URL_TOKEN_METADATA.equals(theRequest.getRequestPath())) {
+			if (theRequest.getRequestPath().endsWith(Constants.URL_TOKEN_METADATA)) {
 				return unauthorizedRule();
 			}
 
