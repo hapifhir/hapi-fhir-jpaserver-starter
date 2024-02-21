@@ -84,7 +84,7 @@
         <maven_assembly_plugin_version>3.3.0</maven_assembly_plugin_version>
         <maven_license_plugin_version>1.8</maven_license_plugin_version>
         <maven_surefire_version>3.0.0</maven_surefire_version>
-        <okhttp_version>4.11.0</okhttp_version>
+        <okhttp_version>4.12.0</okhttp_version>
         <poi_version>4.1.2</poi_version>
         <poi_ooxml_schemas_version>1.4</poi_ooxml_schemas_version>
         <resteasy_version>6.2.5.Final</resteasy_version>
@@ -402,6 +402,12 @@
                 <groupId>org.apache.tomcat.embed</groupId>
                 <artifactId>tomcat-embed-websocket</artifactId>
                 <version>${tomcat_embed_version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp_version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
