@@ -163,6 +163,13 @@
                 <groupId>ca.uhn.hapi.fhir</groupId>
                 <artifactId>org.hl7.fhir.validation</artifactId>
                 <version>${fhir.core.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <!-- Remove JUnit 4, as we use JUnit 5 -->
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>ca.uhn.hapi.fhir</groupId>
@@ -269,12 +276,19 @@
                 <artifactId>commons-compress</artifactId>
                 <version>${commons_compress_version}</version>
             </dependency>
-            <!-- The following dependencies are only needed for automated unit tests, you do not neccesarily need them to run the example. -->
+            <!-- The following dependencies are only needed for automated unit tests, you do not necessarily need them to run the example. -->
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>testcontainers</artifactId>
                 <scope>test</scope>
                 <version>${testcontainers_version}</version>
+                <exclusions>
+                    <exclusion>
+                        <!-- Remove JUnit 4, as we use JUnit 5 -->
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.testcontainers</groupId>
