@@ -49,7 +49,7 @@
         <aries_spifly_version>1.2</aries_spifly_version>
         <caffeine_version>3.1.8</caffeine_version>
         <commons_codec_version>1.15</commons_codec_version>
-        <commons_compress_version>1.21</commons_compress_version>
+        <commons_compress_version>1.26.0</commons_compress_version>
         <commons_dbcp2_version>2.11.0</commons_dbcp2_version>
         <commons_text_version>1.10.0</commons_text_version>
         <commons_io_version>2.11.0</commons_io_version>
@@ -263,6 +263,11 @@
                     </exclusion>
                 </exclusions>
                 <version>${commons_dbcp2_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons_compress_version}</version>
             </dependency>
             <!-- The following dependencies are only needed for automated unit tests, you do not neccesarily need them to run the example. -->
             <dependency>
