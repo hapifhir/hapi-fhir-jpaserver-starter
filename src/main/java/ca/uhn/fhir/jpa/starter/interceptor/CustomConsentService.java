@@ -78,18 +78,25 @@ public class CustomConsentService implements IConsentService {
       return ConsentOutcome.PROCEED;
     }
 
-    switch (theRequestDetails.getRequestType()) {
-      case POST:
-        return startPostOperation(theRequestDetails, patientId);
-      case PUT:
-        return startPutOperation(theRequestDetails, patientId);
-      case PATCH:
-        return startPatchOperation(theRequestDetails, patientId);
-      case DELETE:
-        return startDeleteOperation(theRequestDetails, patientId);
-      default:
-        // The other types should be handled by canSeeResource
-        return ConsentOutcome.PROCEED;
+    try {
+      switch (theRequestDetails.getRequestType()) {
+        case POST:
+          return startPostOperation(theRequestDetails, patientId);
+        case PUT:
+          return startPutOperation(theRequestDetails, patientId);
+        case PATCH:
+          return startPatchOperation(theRequestDetails, patientId);
+        case DELETE:
+          return startDeleteOperation(theRequestDetails, patientId);
+        default:
+          // The other types should be handled by canSeeResource
+          return ConsentOutcome.PROCEED;
+      }
+    } catch (RuntimeException e) {
+      if (logger.isDebugEnabled()) {
+        logger.error("Unexpected error in startOperation: {}", e.getMessage());
+      }
+      throw e;
     }
   }
 
@@ -131,8 +138,7 @@ public class CustomConsentService implements IConsentService {
     boolean proceed = isResourceForPatient(getPersistentResource(theRequestDetails), patientId)
       && isResourceForPatient(theRequestDetails.getResource(), patientId);
     if (logger.isDebugEnabled()) {
-      String decision = proceed ? "Allowing" : "Denying";
-      logger.debug("{} PUT operation", decision);
+      logger.debug("{} PUT operation", proceed ? "Allowing" : "Denying");
     }
     return proceed ? ConsentOutcome.PROCEED : ConsentOutcome.REJECT;
   }
@@ -161,8 +167,16 @@ public class CustomConsentService implements IConsentService {
   }
 
   private IBaseResource getPersistentResource(RequestDetails theRequestDetails) {
-    String[] parts = theRequestDetails.getRequestPath().split("/");
-    return daoRegistry.getResourceDao(parts[0]).read(new IdType(parts[1]), theRequestDetails);
+    String resourceName = theRequestDetails.getResourceName();
+    try {
+      return daoRegistry.getResourceDao(resourceName)
+        .read(theRequestDetails.getId(), theRequestDetails);
+    } catch (RuntimeException e) {
+      if (logger.isDebugEnabled()) {
+        logger.error("Unexpected error getting persistent resource type '{}': {}", resourceName, e.getMessage());
+      }
+      throw e;
+    }
   }
 
   private boolean isResourceForPatient(IBaseResource theResource, String patientId) {
