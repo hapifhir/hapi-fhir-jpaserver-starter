@@ -10,7 +10,6 @@ spring:
     allow-circular-references: true
     #allow-bean-definition-overriding: true
     banner-mode: "log"
-  batch.job.enabled: false
   flyway:
     enabled: false
     check-location: false
@@ -29,6 +28,10 @@ spring:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
+
+      #Hibernate dialect is automatically detected except Postgres and H2.
+      #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
       hibernate.dialect: ${hibernate.dialect}
       hibernate.hbm2ddl.auto: update
       hibernate.jdbc.batch_size: 20
@@ -51,16 +54,24 @@ spring:
 
 hapi:
   fhir:
+    custom-interceptor-classes: ca.uhn.fhir.jpa.starter.interceptor.CustomLoggingInterceptor
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
     openapi_enabled: true
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: ${fhir_version}
+    ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
+    ### Flag is false by default, can be passed as command line argument to override.
+    cr_enabled: "${CR_ENABLED: false}"
     ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
     ### to determine the FHIR server address
     #   use_apache_address_strategy: false
     ### forces the use of the https:// protocol for the returned server address.
     ### alternatively, it may be set using the X-Forwarded-Proto header.
     #   use_apache_address_strategy_https: false
+    ### enables the server to host content like HTML, css, etc. under the url pattern of eg. /static/**
+    # staticLocationPrefix: /static
+    ### the deepest folder level will be used. E.g. - if you put file:/foo/bar/bazz as value then the files are resolved under /static/bazz/**
+    #staticLocation: file:/foo/bar/bazz
     ### enable to set the Server URL
     #    server_path: /baseR4
     #    server_address: http://hapi.fhir.org/baseR4
@@ -68,31 +79,39 @@ hapi:
     #    install_transitive_ig_dependencies: true
     ### tells the server whether to attempt to load IG resources that are already present
     #    reload_existing_implementationGuides : false
-    #    implementationguides:
+    #implementationguides:
     ###    example from registry (packages.fhir.org)
-    #      swiss:
-    #        name: swiss.mednet.fhir
-    #        version: 0.8.0
+    #  swiss:
+    #    name: swiss.mednet.fhir
+    #    version: 0.8.0
+    #    reloadExisting : false
     #      example not from registry
     #      ips_1_0_0:
-    #        url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
+    #        packageUrl: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
     #        name: hl7.fhir.uv.ips
     #        version: 1.0.0
     #    supported_resource_types:
     #      - Patient
     #      - Observation
+    ##################################################
+    # Allowed Bundle Types for persistence (defaults are: COLLECTION,DOCUMENT,MESSAGE)
+    ##################################################
+    #    allowed_bundle_types: COLLECTION,DOCUMENT,MESSAGE,TRANSACTION,TRANSACTIONRESPONSE,BATCH,BATCHRESPONSE,HISTORY,SEARCHSET
     allow_cascading_deletes: true
     allow_contains_searches: true
     allow_external_references: true
     allow_multiple_delete: true
     allow_override_default_search_params: true
     auto_create_placeholder_reference_targets: false
-    #    cql_enabled: true
+    ### tells the server to automatically append the current version of the target resource to references at these paths
+    #    auto_version_reference_at_paths: Device.patient, Device.location, Device.parent, DeviceMetric.parent, DeviceMetric.source, Observation.device, Observation.subject
+    #    cr_enabled: true
+    #    ips_enabled: false
     default_encoding: JSON
     #    default_pretty_print: true
     default_page_size: 20
     #    delete_expunge_enabled: true
-    #    enable_repository_validating_interceptor: false
+    #    enable_repository_validating_interceptor: true
     #    enable_index_missing_fields: false
     #    enable_index_of_type: true
     #    enable_index_contained_resource: false
@@ -105,15 +124,15 @@ hapi:
     enforce_referential_integrity_on_write: false
     etag_support_enabled: true
     expunge_enabled: true
-    #    daoconfig_client_id_strategy: null
+    #    id_strategy: SEQUENTIAL_NUMERIC
     #    client_id_strategy: ALPHANUMERIC
     #    fhirpath_interceptor_enabled: false
     filter_search_enabled: true
     graphql_enabled: true
     #    narrative_enabled: true
     #    mdm_enabled: true
-#    local_base_urls:
-#      - https://hapi.fhir.org/baseR4
+    #    local_base_urls:
+    #      - https://hapi.fhir.org/baseR4
     mdm_enabled: false
     #    partitioning:
     #      allow_references_across_partitions: false
@@ -129,9 +148,17 @@ hapi:
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
 
+    # comma-separated package names, will be @ComponentScan'ed by Spring to allow for creating custom Spring beans
+    #custom-bean-packages:
+
+    # comma-separated list of fully qualified interceptor classes.
+    # classes listed here will be fetched from the Spring context when combined with 'custom-bean-packages',
+    # or will be instantiated via reflection using an no-arg contructor; then registered with the server
+    #custom-interceptor-classes:
+
     # Threadpool size for BATCH'ed GETs in a bundle.
-#    bundle_batch_pool_size: 10
-#    bundle_batch_pool_max_size: 50
+    #    bundle_batch_pool_size: 10
+    #    bundle_batch_pool_max_size: 50
 
     oauth:
       enabled: ${OAUTH_ENABLED:false}
@@ -139,12 +166,9 @@ hapi:
       user_role: ${OAUTH_USER_ROLE}
       admin_role: ${OAUTH_ADMIN_ROLE}
       jwks_url: ${OAUTH_JWKS_URL}
+      authorize_url: ${OAUTH_AUTHORIZE_URL}
       token_url: ${OAUTH_TOKEN_URL}
       manage_url: ${OAUTH_MANAGE_URL}
-
-    apikey:
-      enabled: ${APIKEY_ENABLED:false}
-      key: ${APIKEY}
 
     smart:
       issuer: ${SMART_ISSUER}
@@ -168,7 +192,7 @@ hapi:
     max_binary_size: 104857600
     max_page_size: 200
     retain_cached_searches_mins: 60
-    reuse_cached_search_results_millis: ${reuse_cached_search_results_millis}
+    reuse_cached_search_results_millis: 0
     tester:
       home:
         name: Local Tester
@@ -179,15 +203,16 @@ hapi:
         name: Global Tester
         server_address: "http://hapi.fhir.org/baseR4"
         refuse_to_fetch_third_party_urls: false
-        fhir_version: ${fhir_version}
-  #  validation:
-  #    requests_enabled: true
-  #    responses_enabled: true
+        fhir_version: R4
+    #    validation:
+    #      requests_enabled: true
+    #      responses_enabled: true
     binary_storage_enabled: true
+    inline_resource_storage_below_size: 4000
     bulk_export_enabled: true
     subscription:
-      resthook_enabled: ${subscription.resthook.enabled}
-      websocket_enabled: ${subscription.websocket.enabled}
+      resthook_enabled: true
+      websocket_enabled: true
 #      email:
 #        from: some@test.com
 #        host: google.com

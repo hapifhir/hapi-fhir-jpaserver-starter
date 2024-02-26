@@ -13,7 +13,6 @@ import com.google.common.base.Strings;
 
 import ca.uhn.fhir.interceptor.api.Interceptor;
 import ca.uhn.fhir.jpa.starter.AppProperties;
-import ca.uhn.fhir.jpa.starter.util.ApiKeyHelper;
 import ca.uhn.fhir.jpa.starter.util.OAuth2Helper;
 import ca.uhn.fhir.rest.api.Constants;
 import ca.uhn.fhir.rest.api.RequestTypeEnum;
@@ -36,20 +35,17 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 
 	@Override
 	public List<IAuthRule> buildRuleList(RequestDetails theRequest) {
-		if (!isAnyEnabled()) {
+		if (!isOAuthEnabled()) {
 			return authorizedRule();
 		}
 
 		try {
-			if (Constants.URL_TOKEN_METADATA.equals(theRequest.getRequestPath())) {
+			if (theRequest.getRequestPath().endsWith(Constants.URL_TOKEN_METADATA)) {
 				return unauthorizedRule();
 			}
 
 			if (isUsingOAuth(theRequest)) {
 				return authorizeOAuth(theRequest);
-			}
-			if (isUsingApiKey(theRequest)) {
-				return authorizeApiKey(theRequest);
 			}
 			logger.warn("Authorization failed - no authorization supplied");
 		} catch (AuthenticationException e) {
@@ -61,16 +57,8 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 		throw new AuthenticationException("Missing or invalid authorization");
 	}
 
-	private boolean isAnyEnabled() {
-		return isOAuthEnabled() || isApiKeyEnabled();
-	}
-
 	private boolean isUsingOAuth(RequestDetails theRequest) {
 		return isOAuthEnabled() && OAuth2Helper.hasToken(theRequest);
-	}
-
-	private boolean isUsingApiKey(RequestDetails theRequest) {
-		return isApiKeyEnabled() && ApiKeyHelper.hasApiKey(theRequest);
 	}
 
 	private List<IAuthRule> authorizedRule() {
@@ -157,23 +145,5 @@ public class CustomAuthorizationInterceptor extends AuthorizationInterceptor {
 
 	private String getOAuthAdminRole() {
 		return config.getOauth().getAdmin_role();
-	}
-
-	private boolean isApiKeyEnabled() {
-		return config.getApikey().getEnabled();
-	}
-
-	private String getApiKey() {
-		return config.getApikey().getKey();
-	}
-
-	private List<IAuthRule> authorizeApiKey(RequestDetails theRequest) throws AuthenticationException {
-		logger.info("Authorizing via API Key");
-		if (ApiKeyHelper.isAuthorized(theRequest, getApiKey())) {
-			return authorizedRule();
-		}
-
-		logger.warn("API key authorization failure - invalid x-api-key specified");
-		throw new AuthenticationException("Invalid x-api-key");
 	}
 }

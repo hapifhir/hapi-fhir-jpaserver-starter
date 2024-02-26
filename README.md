@@ -235,7 +235,7 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 ```bash
 mvn clean package spring-boot:repackage -Pboot && java -jar target/ROOT.war
 ```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to eg.
 
 ```yaml
     tester:
@@ -250,7 +250,7 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 ```bash
 mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 distroless-hapi
 ```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to eg.
 
 ```yaml
     tester:
@@ -266,7 +266,7 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 ```bash
 ./build-docker-image.sh && docker run -p 8080:8080 hapi-fhir/hapi-fhir-jpaserver-starter:latest
 ```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to eg.
+Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to eg.
 
 ```yaml
     tester:
@@ -315,7 +315,7 @@ spring:
       # Then comment all hibernate.search.backend.*
 ```
 
-Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
+Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicitly skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
 
 ### Microsoft SQL Server configuration
 
@@ -330,26 +330,26 @@ spring:
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
 ```
 
-Also, make sure you are not setting the Hibernate dialect explicitly, in other words remove any lines similar to:
+Also, make sure you are not setting the Hibernate dialect explicitly, in other words, remove any lines similar to:
 
 ```
 hibernate.dialect: {some none Microsoft SQL dialect}
 ```
 
 
-Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicity skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
+Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicitly skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
 
 
 NOTE: MS SQL Server by default uses a case-insensitive codepage. This will cause errors with some operations - such as when expanding case-sensitive valuesets (UCUM) as there are unique indexes defined on the terminology tables for codes.
 It is recommended to deploy a case-sensitive database prior to running HAPI FHIR when using MS SQL Server to avoid these and potentially other issues.
 
 ## Adding custom interceptors
-Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server. 
-Interceptors will be discovered in one of two ways: 
+Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server.
+Interceptors will be discovered in one of two ways:
 
 1) discovered from the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
 
-or 
+or
 
 2) classes will be instantiated via reflection if no matching Bean is found
 
@@ -381,7 +381,7 @@ Again, browse to the following link to use the server (note that the port 8080 m
 
 [http://localhost:8080/](http://localhost:8080/)
 
-You will then be able access the JPA server e.g. using http://localhost:8080/fhir/metadata.
+You will then be able to access the JPA server e.g. using http://localhost:8080/fhir/metadata.
 
 If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localhost:8080/hapi-fhir-jpaserver/ or http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata - then rename the WAR file to ```hapi-fhir-jpaserver.war``` and adjust the overlay configuration accordingly e.g.
 
@@ -398,7 +398,7 @@ If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localho
 
 ## Deploy with docker compose
 
-Docker compose is a simple option to build and deploy container. To deploy with docker compose, you should build the project
+Docker compose is a simple option to build and deploy containers. To deploy with docker compose, you should build the project
 with `mvn clean install` and then bring up the containers with `docker-compose up -d --build`. The server can be
 reached at http://localhost:8080/.
 
@@ -522,6 +522,32 @@ see the `-distroless` suffix in the image tags.
 To add a custom operation, refer to the documentation in the core hapi-fhir libraries [here](https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations_operations.html).
 
 Within `hapi-fhir-jpaserver-starter`, create a generic class (that does not extend or implement any classes or interfaces), add the `@Operation` as a method within the generic class, and then register the class as a provider using `RestfulServer.registerProvider()`.
+
+## Runtime package install
+
+It's possible to install a FHIR Implementation Guide package (`package.tgz`) either from a published package or from a local package with the `$install` operation, without having to restart the server. This is available for R4 and R5.
+
+This feature must be enabled in the application.yaml (or docker command line):
+
+```yaml
+hapi:
+  fhir:
+    ig_runtime_upload_enabled: true
+```
+
+The `$install` operation is triggered with a POST to `[server]/ImplementationGuide/$install`, with the payload below:
+
+```json
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "npmContent",
+      "valueBase64Binary": "[BASE64_ENCODED_NPM_PACKAGE_DATA]"
+    }
+  ]
+}
+```
 
 ## Enable OpenTelemetry auto-instrumentation
 

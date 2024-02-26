@@ -8,22 +8,26 @@ services:
       - "8080:8080"
     environment:
       fhir_version: 'R4'
-      spring.datasource.url: 'jdbc:postgresql://hapi-fhir-postgres:5432/hapi'
       spring.datasource.username: admin
       spring.datasource.password: admin
-      spring.datasource.driverClassName: org.postgresql.Driver
-      spring.jpa.properties.hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
       spring.config.location: classpath:/application-custom.yaml
-      reuse_cached_search_results_millis: 0
-      subscription.resthook.enabled: true
-      subscription.websocket.enabled: true
-      APIKEY_ENABLED: false
-      APIKEY: abc123
+
+      # Enable these for MySQL
+      spring.datasource.url: 'jdbc:mysql://hapi-fhir-mysql:3306/hapi'
+      spring.datasource.driverClassName: com.mysql.jdbc.Driver
+      spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+      # Enable these for PostgreSQL
+      # spring.datasource.url: 'jdbc:postgresql://hapi-fhir-postgres:5432/hapi'
+      # spring.datasource.driverClassName: org.postgresql.Driver
+      # spring.jpa.properties.hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+
       OAUTH_ENABLED: true
       OAUTH_CLIENT_ID: fhir4-api
       OAUTH_USER_ROLE: fhir4-user
       OAUTH_ADMIN_ROLE: fhir4-admin
       OAUTH_JWKS_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/certs
+      OAUTH_AUTHORIZE_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/auth
       OAUTH_TOKEN_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/token
       OAUTH_MANAGE_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/account
       SMART_ISSUER: https://auth-internal.elimuinformatics.com/auth/realms/product
@@ -33,15 +37,30 @@ services:
       SMART_INTROSPECTION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/token/introspect
       SMART_REVOCATION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/revoke
       SMART_MANAGE_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/account
-  hapi-fhir-postgres:
-    image: postgres:13-alpine
-    container_name: hapi-fhir-postgres
+  hapi-fhir-mysql:
+    platform: linux/x86_64
+    image: mysql:5.7
+    container_name: hapi-fhir-mysql
     restart: always
     environment:
-      POSTGRES_DB: "hapi"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin"
+      MYSQL_DATABASE: "hapi"
+      MYSQL_USER: "admin"
+      MYSQL_PASSWORD: "admin"
+      MYSQL_ROOT_PASSWORD: "admin"
+    ports:
+      - '3306:3306'
     volumes:
-      - hapi-fhir-postgres:/var/lib/postgresql/data
+      - hapi-fhir-mysql:/var/lib/mysql
+  # hapi-fhir-postgres:
+  #   image: postgres:13-alpine
+  #   container_name: hapi-fhir-postgres
+  #   restart: always
+  #   environment:
+  #     POSTGRES_DB: "hapi"
+  #     POSTGRES_USER: "admin"
+  #     POSTGRES_PASSWORD: "admin"
+  #   volumes:
+  #     - hapi-fhir-postgres:/var/lib/postgresql/data
 volumes:
-  hapi-fhir-postgres:
+  hapi-fhir-mysql:
+  # hapi-fhir-postgres:

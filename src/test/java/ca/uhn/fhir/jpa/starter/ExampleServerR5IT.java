@@ -36,7 +36,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
   {
      "spring.datasource.url=jdbc:h2:mem:dbr5",
      "hapi.fhir.fhir_version=r5",
-     "hapi.fhir.subscription.websocket_enabled=true",
+	  "hapi.fhir.cr_enabled=false",
 	  "hapi.fhir.subscription.websocket_enabled=true"
   })
 public class ExampleServerR5IT {
@@ -45,15 +45,15 @@ public class ExampleServerR5IT {
   private IGenericClient ourClient;
   private FhirContext ourCtx;
 
-	public static final String SUBSCRIPTION_TOPIC_TEST_URL = "http://example.com/topic/test";
+  public static final String SUBSCRIPTION_TOPIC_TEST_URL = "http://example.com/topic/test";
 
 
-	@LocalServerPort
+  @LocalServerPort
   private int port;
 
 
   @Test
-  public void testCreateAndRead() {
+  void testCreateAndRead() {
 
     String methodName = "testCreateResourceConditional";
 
@@ -66,7 +66,7 @@ public class ExampleServerR5IT {
   }
 
   @Test
-  public void testWebsocketSubscription() throws Exception {
+  void testWebsocketSubscription() throws Exception {
 	  String endpoint = "ws://localhost:" + port + "/websocket";
     /*
      * Create topic

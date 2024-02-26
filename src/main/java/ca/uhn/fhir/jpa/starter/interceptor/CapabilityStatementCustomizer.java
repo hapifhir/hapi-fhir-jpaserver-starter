@@ -43,6 +43,8 @@ public class CapabilityStatementCustomizer {
 		
         List<Extension> extensions = new ArrayList<>();
 		extensions.add(new Extension(
+            "authorize", new UriType(config.getOauth().getAuthorize_url())));
+		extensions.add(new Extension(
             "token", new UriType(config.getOauth().getToken_url())));
 		extensions.add(new Extension(
             "manage", new UriType(config.getOauth().getManage_url())));

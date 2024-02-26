@@ -2,19 +2,22 @@ package ca.uhn.fhir.jpa.starter;
 
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.IdStrategyEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
+import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.rest.api.EncodingEnum;
-import com.google.common.collect.ImmutableList;
 import org.hl7.fhir.r4.model.Bundle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
@@ -33,6 +36,7 @@ public class AppProperties {
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
+  private final Set<String> auto_version_reference_at_paths = new HashSet<>();
   private Boolean dao_scheduling_enabled = true;
   private Boolean delete_expunge_enabled = false;
   private Boolean enable_index_missing_fields = false;
@@ -60,14 +64,16 @@ public class AppProperties {
   private String server_address = null;
   private EncodingEnum default_encoding = EncodingEnum.JSON;
   private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
+  private IdStrategyEnum id_strategy = IdStrategyEnum.SEQUENTIAL_NUMERIC;
   private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
   private List<String> supported_resource_types = new ArrayList<>();
   private List<Bundle.BundleType> allowed_bundle_types = null;
   private Boolean narrative_enabled = true;
 
+  private Boolean ig_runtime_upload_enabled = false;
+
   private Validation validation = new Validation();
   private Map<String, Tester> tester = null;
-  private Apikey apikey = new Apikey();
   private Oauth oauth = new Oauth();
   private Smart smart = new Smart();
   private Logger logger = new Logger();
@@ -75,10 +81,11 @@ public class AppProperties {
   private Cors cors = null;
   private Partitioning partitioning = null;
   private Boolean install_transitive_ig_dependencies = true;
-  private Boolean reload_existing_implementationguides = false;
-  private Map<String, ImplementationGuide> implementationGuides = null;
+  private Map<String, PackageInstallationSpec> implementationGuides = null;
 
 	private String staticLocation = null;
+
+	private String staticLocationPrefix = "/static";
 
   private Boolean lastn_enabled = false;
   private boolean store_resource_in_lucene_index_enabled = false;
@@ -89,11 +96,20 @@ public class AppProperties {
 
   private Integer bundle_batch_pool_size = 20;
   private Integer bundle_batch_pool_max_size = 100;
-  private final List<String> local_base_urls = new ArrayList<>();
+  private final Set<String> local_base_urls = new HashSet<>();
 
   private final List<String> custom_interceptor_classes = new ArrayList<>();
 
-  public List<String> getCustomInterceptorClasses() {
+	public String getStaticLocationPrefix() {
+		return staticLocationPrefix;
+	}
+
+	public void setStaticLocationPrefix(String staticLocationPrefix) {
+		this.staticLocationPrefix = staticLocationPrefix;
+	}
+
+
+	public List<String> getCustomInterceptorClasses() {
     return custom_interceptor_classes;
   }
 
@@ -139,11 +155,11 @@ public class AppProperties {
     this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
   }
 
-  public Map<String, ImplementationGuide> getImplementationGuides() {
+  public Map<String, PackageInstallationSpec> getImplementationGuides() {
     return implementationGuides;
   }
 
-  public void setImplementationGuides(Map<String, ImplementationGuide> implementationGuides) {
+  public void setImplementationGuides(Map<String, PackageInstallationSpec> implementationGuides) {
     this.implementationGuides = implementationGuides;
   }
 
@@ -244,14 +260,6 @@ public class AppProperties {
     this.supported_resource_types = supported_resource_types;
   }
 
-  public Apikey getApikey() {
-    return apikey;
-  }
-
-  public void setApikey(Apikey apikey) {
-    this.apikey = apikey;
-  }
-
   public Oauth getOauth() {
     return oauth;
   }
@@ -268,12 +276,20 @@ public class AppProperties {
     this.smart = smart;
   }
 
-	public Logger getLogger() {
+  public Logger getLogger() {
     return logger;
   }
 
   public void setLogger(Logger logger) {
     this.logger = logger;
+  }
+
+  public IdStrategyEnum getId_strategy() {
+    return id_strategy;
+  }
+
+  public void setId_strategy(IdStrategyEnum id_strategy) {
+    this.id_strategy = id_strategy;
   }
 
   public ClientIdStrategyEnum getClient_id_strategy() {
@@ -341,6 +357,10 @@ public class AppProperties {
   public void setAuto_create_placeholder_reference_targets(
     Boolean auto_create_placeholder_reference_targets) {
     this.auto_create_placeholder_reference_targets = auto_create_placeholder_reference_targets;
+  }
+
+  public Set<String> getAuto_version_reference_at_paths() {
+    return auto_version_reference_at_paths;
   }
 
   public Integer getDefault_page_size() {
@@ -578,17 +598,9 @@ public class AppProperties {
 	public boolean getInstall_transitive_ig_dependencies() {
 		return install_transitive_ig_dependencies;
 	}
-	
+
 	public void setInstall_transitive_ig_dependencies(boolean install_transitive_ig_dependencies) {
 		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
-	}
-	
-	public boolean getReload_existing_implementationguides() {
-		return reload_existing_implementationguides;
-	}
-	
-	public void setReload_existing_implementationguides(boolean reload_existing_implementationguides) {
-		this.reload_existing_implementationguides = reload_existing_implementationguides;
 	}
 
 	public Integer getBundle_batch_pool_size() {
@@ -607,13 +619,21 @@ public class AppProperties {
 		this.bundle_batch_pool_max_size = bundle_batch_pool_max_size;
 	}
 
-	public List<String> getLocal_base_urls() {
+	public Set<String> getLocal_base_urls() {
 		return local_base_urls;
+	}
+
+	public Boolean getIg_runtime_upload_enabled() {
+		return ig_runtime_upload_enabled;
+	}
+
+	public void setIg_runtime_upload_enabled(Boolean ig_runtime_upload_enabled) {
+		this.ig_runtime_upload_enabled = ig_runtime_upload_enabled;
 	}
 
 	public static class Cors {
     private Boolean allow_Credentials = true;
-    private List<String> allowed_origin = ImmutableList.of("*");
+    private List<String> allowed_origin = List.of("*");
 
     public List<String> getAllowed_origin() {
       return allowed_origin;
@@ -634,30 +654,10 @@ public class AppProperties {
 
   }
 
-  public static class Apikey {
-    private Boolean enabled = false;
-    private String key;
-
-    public Boolean getEnabled() {
-      return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-      this.enabled = enabled;
-    }
-
-    public String getKey() {
-      return key;
-    }
-
-    public void setKey(String key) {
-      this.key = key;
-    }
-  }
-
   public static class Oauth {
     private Boolean enabled = false;
     private String jwks_url;
+    private String authorize_url;
     private String token_url;
     private String manage_url;
     private String client_id;
@@ -678,6 +678,14 @@ public class AppProperties {
 
     public void setJwks_url(String jwks_url) {
       this.jwks_url = jwks_url;
+    }
+
+    public String getAuthorize_url() {
+      return authorize_url;
+    }
+
+    public void setAuthorize_url(String authorize_url) {
+      this.authorize_url = authorize_url;
     }
 
     public String getToken_url() {
@@ -877,36 +885,6 @@ public class AppProperties {
     }
   }
 
-  public static class ImplementationGuide
-  {
-    private String url;
-    private String name;
-    private String version;
-
-    public String getUrl() {
-      return url;
-    }
-
-    public void setUrl(String url) {
-      this.url = url;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
-    }
-
-    public String getVersion() {
-      return version;
-    }
-
-    public void setVersion(String version) {
-      this.version = version;
-    }
-  }
 
   public static class Validation {
 

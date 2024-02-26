@@ -1,6 +1,5 @@
 package ca.uhn.fhir.jpa.starter;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -14,27 +13,38 @@ import java.net.URI;
 @ConditionalOnProperty(prefix = "hapi.fhir", name = "staticLocation")
 public class ExtraStaticFilesConfigurer implements WebMvcConfigurer {
 
-    public static final String ROOT_CONTEXT_PATH = "/static";
-    @Autowired
-    AppProperties appProperties;
+	private String staticLocation;
+	private String rootContextPath;
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry theRegistry) {
-        theRegistry.addResourceHandler(ROOT_CONTEXT_PATH + "/**").addResourceLocations(appProperties.getStaticLocation());
-    }
+	public ExtraStaticFilesConfigurer(AppProperties appProperties) {
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        String path = URI.create(appProperties.getStaticLocation()).getPath();
-        String lastSegment = path.substring(path.lastIndexOf('/') + 1);
+		rootContextPath = appProperties.getStaticLocationPrefix();
+		if (rootContextPath.endsWith("/"))
+			rootContextPath = rootContextPath.substring(0, rootContextPath.lastIndexOf('/'));
 
-        registry.addViewController(ROOT_CONTEXT_PATH).setViewName("redirect:" + ROOT_CONTEXT_PATH + "/" + lastSegment + "/index.html");
+		staticLocation = appProperties.getStaticLocation();
+		if (staticLocation.endsWith("/")) staticLocation = staticLocation.substring(0, staticLocation.lastIndexOf('/'));
+	}
 
-        registry.addViewController(ROOT_CONTEXT_PATH + "/*").setViewName("redirect:" + ROOT_CONTEXT_PATH + "/" + lastSegment + "/index.html");
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry theRegistry) {
+		theRegistry.addResourceHandler(rootContextPath + "/**").addResourceLocations(staticLocation);
+	}
 
-        registry.addViewController(ROOT_CONTEXT_PATH + "/" + lastSegment + "/").setViewName("redirect:" + ROOT_CONTEXT_PATH + "/" + lastSegment + "/index.html");
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+		String path = URI.create(staticLocation).getPath();
+		String lastSegment = path.substring(path.lastIndexOf('/') + 1);
 
-        registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-    }
+		registry.addViewController(rootContextPath)
+				.setViewName("redirect:" + rootContextPath + "/" + lastSegment + "/index.html");
 
+		registry.addViewController(rootContextPath + "/*")
+				.setViewName("redirect:" + rootContextPath + "/" + lastSegment + "/index.html");
+
+		registry.addViewController(rootContextPath + "/" + lastSegment + "/")
+				.setViewName("redirect:" + rootContextPath + "/" + lastSegment + "/index.html");
+
+		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+	}
 }
