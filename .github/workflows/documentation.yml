@@ -6,7 +6,7 @@ on:
       - "*"
 
 jobs:
-  build:
+  build-docs-and-publish:
     name: Deploy docs
     runs-on: ubuntu-latest
     steps:

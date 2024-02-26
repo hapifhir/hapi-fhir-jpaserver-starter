@@ -9,7 +9,7 @@ on:
       - "matchbox-frontend/**"
 
 jobs:
-  build-and-commit:
+  build-angular-and-commit:
     runs-on: ubuntu-latest
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the

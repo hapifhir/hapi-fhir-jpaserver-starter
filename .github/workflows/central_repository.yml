@@ -7,7 +7,7 @@ on:
       - "*"
 
 jobs:
-  release:
+  build-and-publish-jar:
     name: Publish to Maven Central Repository
     runs-on: ubuntu-latest
 
