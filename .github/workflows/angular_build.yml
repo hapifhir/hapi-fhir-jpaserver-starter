@@ -30,11 +30,23 @@ jobs:
           cache: npm
           cache-dependency-path: matchbox-frontend/package-lock.json
 
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        # https://github.com/actions/setup-java#usage
+        with:
+          java-version: 20
+          distribution: adopt
+
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.6
+
       - name: Update the project version
         shell: bash
         run: |
           cd ..
-          VERSION=mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+          VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`
           echo "The project version is ${VERSION}"
           cd ./matchbox-frontend
           npm --no-git-tag-version --allow-same-version=true version "$VERSION"
