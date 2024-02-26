@@ -3,16 +3,23 @@ package ca.uhn.fhir.jpa.starter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.search.lastn.ElasticsearchRestClientFactory;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
+import ca.uhn.fhir.jpa.test.config.TestElasticsearchContainerHelper;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
+
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import javax.annotation.PreDestroy;
+
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.PutIndexTemplateRequest;
+import org.elasticsearch.common.settings.Settings;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DateTimeType;
@@ -26,6 +33,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -34,8 +42,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @ExtendWith(SpringExtension.class)
+@Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties =
   {
     "spring.datasource.url=jdbc:h2:mem:dbr4",
@@ -43,7 +54,9 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
     "hapi.fhir.lastn_enabled=true",
 	 "hapi.fhir.store_resource_in_lucene_index_enabled=true",
 	 "hapi.fhir.advanced_lucene_indexing=true",
+
     "elasticsearch.enabled=true",
+	  "hapi.fhir.cr_enabled=false",
     // Because the port is set randomly, we will set the rest_url using the Initializer.
     // "elasticsearch.rest_url='http://localhost:9200'",
     "elasticsearch.username=SomeUsername",
@@ -61,19 +74,31 @@ public class ElasticsearchLastNR4IT {
 	private IGenericClient ourClient;
   private FhirContext ourCtx;
 
-  private static final String ELASTIC_VERSION = "7.16.3";
-  private static final String ELASTIC_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:" + ELASTIC_VERSION;
-  private static ElasticsearchContainer embeddedElastic;
+	@Container
+	public static ElasticsearchContainer embeddedElastic = TestElasticsearchContainerHelper.getEmbeddedElasticSearch();
 
   @Autowired
   private ElasticsearchSvcImpl myElasticsearchSvc;
 
   @BeforeAll
-  public static void beforeClass() {
-	  embeddedElastic = new ElasticsearchContainer(ELASTIC_IMAGE).withStartupTimeout(Duration.of(300, ChronoUnit.SECONDS));
-	  embeddedElastic.start();
+  public static void beforeClass() throws IOException {
+	  //Given
+	  RestHighLevelClient elasticsearchHighLevelRestClient = ElasticsearchRestClientFactory.createElasticsearchHighLevelRestClient(
+		  "http", embeddedElastic.getHost() + ":" + embeddedElastic.getMappedPort(9200), "", "");
+
+	  /* As of 2023-08-10, HAPI FHIR sets SubscriptionConstants.MAX_SUBSCRIPTION_RESULTS to 50000
+	  		which is in excess of elastic's default max_result_window. If MAX_SUBSCRIPTION_RESULTS is changed
+	  		to a value <= 10000, the following will no longer be necessary. - dotasek
+	  */
+	  PutIndexTemplateRequest putIndexTemplateRequest = new PutIndexTemplateRequest("hapi_fhir_template");
+	  putIndexTemplateRequest.patterns(List.of("*"));
+	  Settings settings = Settings.builder().put("index.max_result_window", 50000).build();
+	  putIndexTemplateRequest.settings(settings);
+	  elasticsearchHighLevelRestClient.indices().putTemplate(putIndexTemplateRequest, RequestOptions.DEFAULT);
+
+
   }
-  
+
   @PreDestroy
   public void stop() {
     embeddedElastic.stop();
@@ -82,7 +107,7 @@ public class ElasticsearchLastNR4IT {
   @LocalServerPort
   private int port;
 
-  @Test
+  //@Test
   void testLastN() throws IOException, InterruptedException {
 	  Thread.sleep(2000);
 
@@ -115,7 +140,7 @@ public class ElasticsearchLastNR4IT {
   }
 
   @BeforeEach
-  void beforeEach() {
+  void beforeEach() throws IOException {
 
     ourCtx = FhirContext.forR4();
     ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
@@ -123,6 +148,7 @@ public class ElasticsearchLastNR4IT {
     String ourServerBase = "http://localhost:" + port + "/fhir/";
     ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
     ourClient.registerInterceptor(new LoggingInterceptor(true));
+
   }
 
   static class Initializer

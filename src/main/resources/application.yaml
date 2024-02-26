@@ -15,8 +15,8 @@ spring:
     check-location: false
     baselineOnMigrate: true
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
-    #url: jdbc:h2:mem:test_mem
+    #url: 'jdbc:h2:file:./target/database/h2'
+    url: jdbc:h2:mem:test_mem
     username: sa
     password: null
     driverClassName: org.h2.Driver
@@ -54,23 +54,35 @@ spring:
 #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
 hapi:
   fhir:
+    ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
+    ### Flag is false by default, can be passed as command line argument to override.
+    cr:
+      enabled: false
+
+    cdshooks:
+      enabled: true
+      clientIdHeaderName: client_id
 
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
     openapi_enabled: true
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
+    ### Flag is false by default. This flag enables runtime installation of IG's.
+    ig_runtime_upload_enabled: false
     ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
-    ### Flag is false by default, can be passed as command line argument to override.
-    cr_enabled: "${CR_ENABLED: false}"
+
     ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
     ### to determine the FHIR server address
     #   use_apache_address_strategy: false
     ### forces the use of the https:// protocol for the returned server address.
     ### alternatively, it may be set using the X-Forwarded-Proto header.
     #   use_apache_address_strategy_https: false
-    ### enables the server to host content like HTML, css, etc. under the url pattern of /static/**
-    ### the deepest folder level will be used. E.g. - if you put file:/foo/bar/bazz as value then the files are resolved under /static/bazz/**
-    #staticLocation: file:/foo/bar/bazz
+    ### enables the server to overwrite defaults on HTML, css, etc. under the url pattern of eg. /content/custom **
+    ### Folder with custom content MUST be named custom. If omitted then default content applies
+    #custom_content_path: ./custom
+    ### enables the server host custom content. If e.g. the value ./configs/app is supplied then the content
+    ### will be served under /web/app
+    #app_content_path: ./configs/app
     ### enable to set the Server URL
     #    server_address: http://hapi.fhir.org/baseR4
     #    defer_indexing_for_codesystems_of_size: 101
@@ -80,6 +92,7 @@ hapi:
         url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
         name: hl7.fhir.uv.ips
         version: 1.1.0
+
     #    supported_resource_types:
     #      - Patient
     #      - Observation
@@ -94,6 +107,7 @@ hapi:
     #    allow_override_default_search_params: true
     #    auto_create_placeholder_reference_targets: false
     #    cr_enabled: true
+    #    auto_version_reference_at_paths: Device.patient, Device.location, Device.parent, DeviceMetric.parent, DeviceMetric.source, Observation.device, Observation.subject
     ips_enabled: true
     #    default_encoding: JSON
     #    default_pretty_print: true
@@ -119,10 +133,19 @@ hapi:
     #    filter_search_enabled: true
     #    graphql_enabled: true
     narrative_enabled: false
-    #    mdm_enabled: true
+    mdm_enabled: false
+    mdm_rules_json_location: "mdm-rules.json"
     #    local_base_urls:
     #      - https://hapi.fhir.org/baseR4
-    mdm_enabled: false
+    logical_urls:
+      - http://terminology.hl7.org/*
+      - https://terminology.hl7.org/*
+      - http://snomed.info/*
+      - https://snomed.info/*
+      - http://unitsofmeasure.org/*
+      - https://unitsofmeasure.org/*
+      - http://loinc.org/*
+      - https://loinc.org/*
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false

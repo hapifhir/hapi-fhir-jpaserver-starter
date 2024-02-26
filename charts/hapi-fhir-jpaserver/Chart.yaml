@@ -7,17 +7,25 @@ sources:
   - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
 dependencies:
   - name: postgresql
-    version: 12.1.2
-    repository: https://charts.bitnami.com/bitnami
+    version: 13.2.27
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
-appVersion: 6.2.2
-version: 0.11.1
+appVersion: 6.10.1
+version: 0.15.0
 annotations:
   artifacthub.io/license: Apache-2.0
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/operator: "false"
+  artifacthub.io/prerelease: "false"
+  artifacthub.io/recommendations: |
+    - url: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
+    - url: https://artifacthub.io/packages/helm/bitnami/postgresql
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
-      description: updated HAPI FHIR JPA Server app image version to v6.2.2
+      description: updated starter image to 6.10.1
     - kind: changed
-      description: updated curl used by helm tests to version to v7.87.0
+      description: updated curlimages/curl to 8.5.0
+    - kind: changed
+      description: "updated postgresql sub-chart to 13.2.27. ⚠️: this updates the used PostgreSQL image from v15 to v16."

@@ -37,6 +37,7 @@ Usage
 
 Please refer to the official documentation of [HAPI FHIR](https://hapifhir.io/hapi-fhir/docs/).
 
+
 Known issues and limitations
 ----------------------------
 None are known at this time
@@ -53,7 +54,6 @@ To contribute, fork this repository and send a pull request with the changes squ
 
 License
 -------
-
 This project is distributed under the terms of the [Apache License, Version 2.0 (AL2)](http://www.apache.org/licenses/LICENSE-2.0).  The license applies to this file and other files in the [GitHub repository](https://github.com/Gravitate-Health/Gateway) hosting this file.
 
 ```

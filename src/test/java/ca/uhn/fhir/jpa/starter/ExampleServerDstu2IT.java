@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,8 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
   {
      "hapi.fhir.fhir_version=dstu2",
      "spring.datasource.url=jdbc:h2:mem:dbr2",
+	  "hapi.fhir.cr_enabled=false",
   })
-public class ExampleServerDstu2IT {
+class ExampleServerDstu2IT {
 
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
 	private IGenericClient ourClient;

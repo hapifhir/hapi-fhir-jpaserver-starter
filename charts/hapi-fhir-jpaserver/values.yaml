@@ -13,6 +13,7 @@ image:
   #tag: "v6.5-tracking"
   #tag: v6.4.0
   tag: v6.6.0
+
   # -- image pullPolicy to use
   pullPolicy: Always
 
@@ -126,19 +127,13 @@ postgresql:
     # picked from this secret in this case.
     # The value is evaluated as a template.
     existingSecret: ""
-  primary:
-    containerSecurityContext:
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop:
-          - ALL
-      runAsNonRoot: true
-      seccompProfile:
-        type: RuntimeDefault
 
+# -- readiness probe
+# @ignored
 readinessProbe:
   failureThreshold: 10
   initialDelaySeconds: 300
+
   periodSeconds: 20
   successThreshold: 1
   timeoutSeconds: 200
@@ -147,6 +142,7 @@ startupProbe:
   failureThreshold: 10
   initialDelaySeconds: 600
   periodSeconds: 30
+
   successThreshold: 1
   timeoutSeconds: 300
 
@@ -154,6 +150,7 @@ livenessProbe:
   failureThreshold: 10
   initialDelaySeconds: 300
   periodSeconds: 20
+
   successThreshold: 1
   timeoutSeconds: 300
 
@@ -188,6 +185,17 @@ podDisruptionBudget:
   # -- maximum unavailable instances
   maxUnavailable: ""
 
+serviceAccount:
+  # -- Specifies whether a service account should be created.
+  create: false
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automount: true
+
 metrics:
   serviceMonitor:
     # -- if enabled, creates a ServiceMonitor instance for Prometheus Operator-based monitoring
@@ -213,3 +221,33 @@ restrictedContainerSecurityContext:
   runAsGroup: 65534
   seccompProfile:
     type: RuntimeDefault
+
+# @ignored
+curl:
+  image:
+    registry: docker.io
+    repository: curlimages/curl
+    tag: 8.6.0@sha256:c3b8bee303c6c6beed656cfc921218c529d65aa61114eb9e27c62047a1271b9b
+
+tests:
+  # -- configure the test pods resource requests and limits
+  resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- additional Spring Boot application config. Mounted as a file and automatically loaded by the application.
+extraConfig:
+  ""
+  # # For example:
+  # |
+  # hapi:
+  #   fhir:
+  #     implementationguides:
+  #       gh_0_1_0:
+  #         url: https://build.fhir.org/ig/hl7-eu/gravitate-health/package.tgz
+  #         name: hl7.eu.fhir.gh
+  #         version: 0.1.0
