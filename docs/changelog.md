@@ -1,8 +1,8 @@
-2024/02/xx Release 3.6.0
+2024/02/27 Release 3.6.0
 
-- TODO: `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.6.0`
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.6.0`
 - Upgraded to HAPI FHIR 7.0.0 and org.hl7.fhir.core 6.1.2.2 [#191](https://github.com/ahdis/matchbox/issues/191)
-- added matchbox validation API tests [#193](https://github.com/ahdis/matchbox/issues/193)
+- Added matchbox validation API tests [#193](https://github.com/ahdis/matchbox/issues/193)
 
 2024/01/31 Release 3.5.4
 
