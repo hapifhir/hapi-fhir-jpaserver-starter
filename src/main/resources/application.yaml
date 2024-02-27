@@ -1,3 +1,5 @@
+#### For other configuration properties, check here: https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
+
 ### context-path for using inside the HAPI Server. Server address will not apply any.
 #server.servlet.context-path: <path>
 
