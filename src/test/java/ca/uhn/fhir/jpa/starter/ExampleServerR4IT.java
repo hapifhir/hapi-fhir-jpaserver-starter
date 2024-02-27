@@ -1,39 +1,50 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.cr.config.RepositoryConfig;
 import ca.uhn.fhir.jpa.searchparam.config.NicknameServiceConfig;
 import ca.uhn.fhir.jpa.starter.cr.CrProperties;
+import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
+import jakarta.websocket.ContainerProvider;
+import jakarta.websocket.Session;
+import jakarta.websocket.WebSocketContainer;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.DateType;
+import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Measure;
+import org.hl7.fhir.r4.model.MeasureReport;
+import org.hl7.fhir.r4.model.Observation;
+import org.hl7.fhir.r4.model.Parameters;
+import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Period;
+import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.Subscription;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-
+import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.opencds.cqf.fhir.utility.r4.Parameters.parameters;
 import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
@@ -41,32 +52,32 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 	classes = {
 		Application.class,
-		JpaStarterWebsocketDispatcherConfig.class,
 		NicknameServiceConfig.class,
 		RepositoryConfig.class
 	}, properties = {
 	"spring.profiles.include=storageSettingsTest",
-		"spring.datasource.url=jdbc:h2:mem:dbr4",
-		"hapi.fhir.enable_repository_validating_interceptor=true",
-		"hapi.fhir.fhir_version=r4",
-		//"hapi.fhir.subscription.websocket_enabled=true",
-		//"hapi.fhir.mdm_enabled=true",
-		"hapi.fhir.cr.enabled=true",
-		"hapi.fhir.cr.caregaps_section_author=Organization/alphora-author",
-		"hapi.fhir.cr.caregaps_reporter=Organization/alphora",
-		"hapi.fhir.implementationguides.dk-core.name=hl7.fhir.dk.core",
-		"hapi.fhir.implementationguides.dk-core.version=1.1.0",
-		"hapi.fhir.auto_create_placeholder_reference_targets=true",
-		// Override is currently required when using MDM as the construction of the MDM
-		// beans are ambiguous as they are constructed multiple places. This is evident
-		// when running in a spring boot environment
-		"spring.main.allow-bean-definition-overriding=true" })
-class ExampleServerR4IT implements IServerSupport{
+	"spring.datasource.url=jdbc:h2:mem:dbr4",
+	"hapi.fhir.enable_repository_validating_interceptor=true",
+	"hapi.fhir.fhir_version=r4",
+	//"hapi.fhir.subscription.websocket_enabled=true",
+	//"hapi.fhir.mdm_enabled=true",
+	"hapi.fhir.cr.enabled=true",
+	"hapi.fhir.cr.caregaps_section_author=Organization/alphora-author",
+	"hapi.fhir.cr.caregaps_reporter=Organization/alphora",
+	"hapi.fhir.implementationguides.dk-core.name=hl7.fhir.dk.core",
+	"hapi.fhir.implementationguides.dk-core.version=1.1.0",
+	"hapi.fhir.auto_create_placeholder_reference_targets=true",
+	// Override is currently required when using MDM as the construction of the MDM
+	// beans are ambiguous as they are constructed multiple places. This is evident
+	// when running in a spring boot environment
+	"spring.main.allow-bean-definition-overriding=true"})
+class ExampleServerR4IT implements IServerSupport {
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
 	private IGenericClient ourClient;
 	private FhirContext ourCtx;
 
-	@Autowired private CrProperties crProperties;
+	@Autowired
+	private CrProperties crProperties;
 
 	@LocalServerPort
 	private int port;
@@ -127,7 +138,7 @@ class ExampleServerR4IT implements IServerSupport{
 		return result;
 	}
 
-	public Parameters runCqlExecution(Parameters parameters){
+	public Parameters runCqlExecution(Parameters parameters) {
 
 		var results = ourClient.operation().onServer()
 			.named("$cql")
@@ -135,6 +146,7 @@ class ExampleServerR4IT implements IServerSupport{
 			.execute();
 		return results;
 	}
+
 	@Test
 	void testSimpleDateCqlExecutionProvider() {
 		Parameters params = parameters(stringPart("expression", "Interval[Today() - 2 years, Today())"));
@@ -148,61 +160,62 @@ class ExampleServerR4IT implements IServerSupport{
 		IBaseResource resource = (IBaseResource) theCtx.newJsonParser().parseResource(json);
 		resList.add(resource);
 		var result = theClient.transaction().withResources(resList).execute();
-			//.withResources(resource).execute();
+		//.withResources(resource).execute();
 		return result.get(0);
 	}
+
 	@Test
 	void testBatchPutWithIdenticalTags() {
 		String batchPuts = "{\n" +
-			"\t\"resourceType\": \"Bundle\",\n" +
-			"\t\"id\": \"patients\",\n" +
-			"\t\"type\": \"batch\",\n" +
-			"\t\"entry\": [\n" +
-			"\t\t{\n" +
-			"\t\t\t\"request\": {\n" +
-			"\t\t\t\t\"method\": \"PUT\",\n" +
-			"\t\t\t\t\"url\": \"Patient/pat-1\"\n" +
-			"\t\t\t},\n" +
-			"\t\t\t\"resource\": {\n" +
-			"\t\t\t\t\"resourceType\": \"Patient\",\n" +
-			"\t\t\t\t\"id\": \"pat-1\",\n" +
-			"\t\t\t\t\"meta\": {\n" +
-			"\t\t\t\t\t\"tag\": [\n" +
-			"\t\t\t\t\t\t{\n" +
-			"\t\t\t\t\t\t\t\"system\": \"http://mysystem.org\",\n" +
-			"\t\t\t\t\t\t\t\"code\": \"value2\"\n" +
-			"\t\t\t\t\t\t}\n" +
-			"\t\t\t\t\t]\n" +
-			"\t\t\t\t}\n" +
-			"\t\t\t},\n" +
-			"\t\t\t\"fullUrl\": \"/Patient/pat-1\"\n" +
-			"\t\t},\n" +
-			"\t\t{\n" +
-			"\t\t\t\"request\": {\n" +
-			"\t\t\t\t\"method\": \"PUT\",\n" +
-			"\t\t\t\t\"url\": \"Patient/pat-2\"\n" +
-			"\t\t\t},\n" +
-			"\t\t\t\"resource\": {\n" +
-			"\t\t\t\t\"resourceType\": \"Patient\",\n" +
-			"\t\t\t\t\"id\": \"pat-2\",\n" +
-			"\t\t\t\t\"meta\": {\n" +
-			"\t\t\t\t\t\"tag\": [\n" +
-			"\t\t\t\t\t\t{\n" +
-			"\t\t\t\t\t\t\t\"system\": \"http://mysystem.org\",\n" +
-			"\t\t\t\t\t\t\t\"code\": \"value2\"\n" +
-			"\t\t\t\t\t\t}\n" +
-			"\t\t\t\t\t]\n" +
-			"\t\t\t\t}\n" +
-			"\t\t\t},\n" +
-			"\t\t\t\"fullUrl\": \"/Patient/pat-2\"\n" +
-			"\t\t}\n" +
-			"\t]\n" +
-			"}";
+								 "\t\"resourceType\": \"Bundle\",\n" +
+								 "\t\"id\": \"patients\",\n" +
+								 "\t\"type\": \"batch\",\n" +
+								 "\t\"entry\": [\n" +
+								 "\t\t{\n" +
+								 "\t\t\t\"request\": {\n" +
+								 "\t\t\t\t\"method\": \"PUT\",\n" +
+								 "\t\t\t\t\"url\": \"Patient/pat-1\"\n" +
+								 "\t\t\t},\n" +
+								 "\t\t\t\"resource\": {\n" +
+								 "\t\t\t\t\"resourceType\": \"Patient\",\n" +
+								 "\t\t\t\t\"id\": \"pat-1\",\n" +
+								 "\t\t\t\t\"meta\": {\n" +
+								 "\t\t\t\t\t\"tag\": [\n" +
+								 "\t\t\t\t\t\t{\n" +
+								 "\t\t\t\t\t\t\t\"system\": \"http://mysystem.org\",\n" +
+								 "\t\t\t\t\t\t\t\"code\": \"value2\"\n" +
+								 "\t\t\t\t\t\t}\n" +
+								 "\t\t\t\t\t]\n" +
+								 "\t\t\t\t}\n" +
+								 "\t\t\t},\n" +
+								 "\t\t\t\"fullUrl\": \"/Patient/pat-1\"\n" +
+								 "\t\t},\n" +
+								 "\t\t{\n" +
+								 "\t\t\t\"request\": {\n" +
+								 "\t\t\t\t\"method\": \"PUT\",\n" +
+								 "\t\t\t\t\"url\": \"Patient/pat-2\"\n" +
+								 "\t\t\t},\n" +
+								 "\t\t\t\"resource\": {\n" +
+								 "\t\t\t\t\"resourceType\": \"Patient\",\n" +
+								 "\t\t\t\t\"id\": \"pat-2\",\n" +
+								 "\t\t\t\t\"meta\": {\n" +
+								 "\t\t\t\t\t\"tag\": [\n" +
+								 "\t\t\t\t\t\t{\n" +
+								 "\t\t\t\t\t\t\t\"system\": \"http://mysystem.org\",\n" +
+								 "\t\t\t\t\t\t\t\"code\": \"value2\"\n" +
+								 "\t\t\t\t\t\t}\n" +
+								 "\t\t\t\t\t]\n" +
+								 "\t\t\t\t}\n" +
+								 "\t\t\t},\n" +
+								 "\t\t\t\"fullUrl\": \"/Patient/pat-2\"\n" +
+								 "\t\t}\n" +
+								 "\t]\n" +
+								 "}";
 		Bundle bundle = FhirContext.forR4().newJsonParser().parseResource(Bundle.class, batchPuts);
 		ourClient.transaction().withBundle(bundle).execute();
 	}
 
-	//@Test
+	@Test
 	@Order(1)
 	void testWebsocketSubscription() throws Exception {
 		/*
@@ -218,27 +231,27 @@ class ExampleServerR4IT implements IServerSupport{
 		channel.setPayload("application/json");
 		subscription.setChannel(channel);
 
+		int initialActiveSubscriptionCount = activeSubscriptionCount();
+
 		MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
 		IIdType mySubscriptionId = methodOutcome.getId();
 
 		// Wait for the subscription to be activated
-		await().atMost(1, TimeUnit.MINUTES).until(() -> activeSubscriptionCount() == 3);
+		await().atMost(1, TimeUnit.MINUTES).until(()->activeSubscriptionCount(), equalTo(initialActiveSubscriptionCount + 1));
 
 		/*
 		 * Attach websocket
 		 */
 
-		WebSocketClient myWebSocketClient = new WebSocketClient();
 		SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(),
 			EncodingEnum.JSON);
 
-		myWebSocketClient.start();
 		URI echoUri = new URI("ws://localhost:" + port + "/websocket");
-		ClientUpgradeRequest request = new ClientUpgradeRequest();
-		ourLog.info("Connecting to : {}", echoUri);
-		Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
-		Session session = connection.get(2, TimeUnit.SECONDS);
 
+		WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+
+		ourLog.info("Connecting to : {}", echoUri);
+		Session session = container.connectToServer(mySocketImplementation, echoUri);
 		ourLog.info("Connected to WS: {}", session.isOpen());
 
 		/*
@@ -268,11 +281,11 @@ class ExampleServerR4IT implements IServerSupport{
 		assertTrue(reporter.equals("Organization/alphora"));
 		assertTrue(author.equals("Organization/alphora-author"));
 
-		 String periodStartValid = "2019-01-01";
-		 String periodEndValid = "2019-12-31";
-		 String subjectPatientValid = "Patient/numer-EXM125";
-		 String statusValid = "open-gap";
-		 String measureIdValid = "BreastCancerScreeningFHIR";
+		String periodStartValid = "2019-01-01";
+		String periodEndValid = "2019-12-31";
+		String subjectPatientValid = "Patient/numer-EXM125";
+		String statusValid = "open-gap";
+		String measureIdValid = "BreastCancerScreeningFHIR";
 
 		loadBundle("r4/CareGaps/authreporter-bundle.json", ourCtx, ourClient);
 		loadBundle("r4/CareGaps/BreastCancerScreeningFHIR-bundle.json", ourCtx, ourClient);
