@@ -25,7 +25,7 @@ jobs:
         with:
           images: ${{ env.IMAGES }}
           tags: |
-            type=match,pattern=images/(.*),group=1,enable=${{github.event_name != 'pull_request'}}
+            type=match,pattern=image/(.*),group=1,enable=${{github.event_name != 'pull_request'}}
            
 
       - name: Container meta for tomcat image
@@ -34,7 +34,7 @@ jobs:
         with:
           images: ${{ env.IMAGES }}
           tags: |
-            type=match,pattern=images/(.*),group=1,enable=${{github.event_name != 'pull_request'}}
+            type=match,pattern=image/(.*),group=1,enable=${{github.event_name != 'pull_request'}}
           flavor: |
             suffix=-tomcat,onlatest=true
 
