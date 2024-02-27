@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ch.ahdis in matchbox-server" type="JUnit" factoryName="JUnit">
+    <module name="matchbox-server" />
+    <shortenClasspath name="ARGS_FILE" />
+    <option name="PACKAGE_NAME" value="ch.ahdis" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="package" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
