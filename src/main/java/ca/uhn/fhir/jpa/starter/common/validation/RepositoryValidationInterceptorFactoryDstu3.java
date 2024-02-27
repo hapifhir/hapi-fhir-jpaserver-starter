@@ -47,7 +47,7 @@ public class RepositoryValidationInterceptorFactoryDstu3 implements IRepositoryV
 	public RepositoryValidatingInterceptor buildUsingStoredStructureDefinitions() {
 
 		IBundleProvider results = structureDefinitionResourceProvider.search(
-				new SearchParameterMap().add(StructureDefinition.SP_KIND, new TokenParam("resource")));
+				new SearchParameterMap().setLoadSynchronous(true).add(StructureDefinition.SP_KIND, new TokenParam("resource")));
 		Map<String, List<StructureDefinition>> structureDefinitions = results.getResources(0, results.size()).stream()
 				.map(StructureDefinition.class::cast)
 				.collect(Collectors.groupingBy(StructureDefinition::getType));
