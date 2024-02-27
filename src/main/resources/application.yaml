@@ -1,3 +1,6 @@
+### context-path for using inside the HAPI Server. Server address will not apply any.
+#server.servlet.context-path: <path>
+
 #Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
