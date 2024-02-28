@@ -1,3 +1,8 @@
+2024/XX/YY Release 3.6.1
+
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.6.1`
+- Fixed support for the date format `YYYYMMDDHHMMSS.UUUU[+|-ZZzz]` [#202](https://github.com/ahdis/matchbox/issues/202)
+
 2024/02/27 Release 3.6.0
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.6.0`

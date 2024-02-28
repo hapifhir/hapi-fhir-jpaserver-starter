@@ -534,6 +534,7 @@ public class XmlParser extends ParserBase {
 	}
 
 	private String convertForDateFormatFromExternal(String fmt, String av) throws FHIRException {
+		// MATCHBOX PATCH: support for the long date format
 		if ("v3".equals(fmt) || "YYYYMMDDHHMMSS.UUUU[+|-ZZzz]".equals(fmt)) {
 			try {
 				DateTimeType d = DateTimeType.parseV3(av);
@@ -546,7 +547,8 @@ public class XmlParser extends ParserBase {
 	}
 
 	private String convertForDateFormatToExternal(String fmt, String av) throws FHIRException {
-		if ("v3".equals(fmt)) {
+		// MATCHBOX PATCH: support for the long date format
+		if ("v3".equals(fmt) || "YYYYMMDDHHMMSS.UUUU[+|-ZZzz]".equals(fmt)) {
 			DateTimeType d = new DateTimeType(av);
 			return d.getAsV3();
 		} else
