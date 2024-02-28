@@ -137,9 +137,8 @@ class R4ValidationTests {
 	/**
 	 * Initialize a R4 matchbox engine for the tests
 	 */
-	private MatchboxEngine getEngine() throws IOException, URISyntaxException {
+	private MatchboxEngine getEngine() {
 		MatchboxEngine.MatchboxEngineBuilder builder = new MatchboxEngine.MatchboxEngineBuilder();
-		builder.setTxServer("http://tx.fhir.org/r4");
 		return builder.getEngineR4();
 	}
 
