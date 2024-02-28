@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
+import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.IdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -65,6 +66,7 @@ public class AppProperties {
   private EncodingEnum default_encoding = EncodingEnum.JSON;
   private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
   private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
+  private IdStrategyEnum server_id_strategy = null;
   private List<String> supported_resource_types = new ArrayList<>();
   private List<Bundle.BundleType> allowed_bundle_types = null;
   private Boolean narrative_enabled = true;
@@ -259,7 +261,15 @@ public Cors getCors() {
     this.client_id_strategy = client_id_strategy;
   }
 
-	public boolean getAdvanced_lucene_indexing() {
+  public IdStrategyEnum getServer_id_strategy() {
+    return server_id_strategy;
+  }
+
+  public void setServer_id_strategy(IdStrategyEnum server_id_strategy) {
+    this.server_id_strategy = server_id_strategy;
+  }
+
+  public boolean getAdvanced_lucene_indexing() {
 		return this.advanced_lucene_indexing;
 	}
 
