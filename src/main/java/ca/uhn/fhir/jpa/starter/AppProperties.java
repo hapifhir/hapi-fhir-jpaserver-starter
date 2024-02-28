@@ -37,6 +37,7 @@ public class AppProperties {
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
   private final Set<String> auto_version_reference_at_paths = new HashSet<>();
+  private Boolean language_search_parameter_enabled = false;
   private Boolean dao_scheduling_enabled = true;
   private Boolean delete_expunge_enabled = false;
   private Boolean enable_index_missing_fields = false;
@@ -607,6 +608,14 @@ public Cors getCors() {
 
 	public void setApp_content_path(String app_content_path) {
 		this.app_content_path = app_content_path;
+	}
+
+	public Boolean getLanguage_search_parameter_enabled() {
+		return language_search_parameter_enabled;
+	}
+
+	public void setLanguage_search_parameter_enabled(Boolean language_search_parameter_enabled) {
+		this.language_search_parameter_enabled = language_search_parameter_enabled;
 	}
 
 	public static class Cors {

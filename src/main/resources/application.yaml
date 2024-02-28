@@ -1,3 +1,7 @@
+#Uncomment the following lines to enable the fhir endpoint to be available at /example/path/fhir instead of /fhir
+#server:
+#  servlet:
+#    context-path: /example/path
 #Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
@@ -11,8 +15,8 @@ spring:
     #allow-bean-definition-overriding: true
   flyway:
     enabled: false
-    check-location: false
     baselineOnMigrate: true
+    fail-on-missing-locations: false
   datasource:
     #url: 'jdbc:h2:file:./target/database/h2'
     url: jdbc:h2:mem:test_mem
@@ -127,6 +131,7 @@ hapi:
     advanced_lucene_indexing: false
     bulk_export_enabled: false
     bulk_import_enabled: false
+    #    language_search_parameter_enabled: true
     #    enforce_referential_integrity_on_delete: false
     # This is an experimental feature, and does not fully support _total and other FHIR features.
     #    enforce_referential_integrity_on_delete: false
