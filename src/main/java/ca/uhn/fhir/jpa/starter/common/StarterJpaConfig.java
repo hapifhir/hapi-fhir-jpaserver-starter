@@ -455,6 +455,9 @@ public class StarterJpaConfig {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
 		}
 
+		// register custom providers
+		registerCustomProviders(fhirServer, appContext, appProperties.getCustomProviderClasses());
+
 		return fhirServer;
 	}
 
@@ -494,6 +497,45 @@ public class StarterJpaConfig {
 				}
 			}
 			fhirServer.registerInterceptor(interceptor);
+		}
+	}
+
+	/**
+	 * check the properties for custom provider classes and registers them.
+	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private void registerCustomProviders(
+		RestfulServer fhirServer, ApplicationContext theAppContext, List<String> customProviderClasses) {
+
+		if (customProviderClasses == null) {
+			return;
+		}
+
+		for (String className : customProviderClasses) {
+			Class clazz;
+			try {
+				clazz = Class.forName(className);
+			} catch (ClassNotFoundException e) {
+				throw new ConfigurationException("Provider class was not found on classpath: " + className, e);
+			}
+
+			// first check if the class a Bean in the app context
+			Object provider = null;
+			try {
+				provider = theAppContext.getBean(clazz);
+			} catch (NoSuchBeanDefinitionException ex) {
+				// no op - if it's not a bean we'll try to create it
+			}
+
+			// if not a bean, instantiate the interceptor via reflection
+			if (provider == null) {
+				try {
+					provider = clazz.getConstructor().newInstance();
+				} catch (Exception e) {
+					throw new ConfigurationException("Unable to instantiate provider class : " + className, e);
+				}
+			}
+			fhirServer.registerProvider(provider);
 		}
 	}
 
