@@ -345,6 +345,16 @@ or
 
 2) classes will be instantiated via reflection if no matching Bean is found
 
+## Adding custom operations(providers)
+Custom operations(providers) can be registered with the server by including the property `hapi.fhir.custom-provider-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server.
+Providers will be discovered in one of two ways:
+
+1) discovered from the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
+
+or
+
+2) classes will be instantiated via reflection if no matching Bean is found
+
 ## Customizing The Web Testpage UI
 
 The UI that comes with this server is an exact clone of the server available at [http://hapi.fhir.org](http://hapi.fhir.org). You may skin this UI if you'd like. For example, you might change the introductory text or replace the logo with your own.
