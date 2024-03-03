@@ -97,12 +97,16 @@ public class AppProperties {
 
   private final List<String> custom_interceptor_classes = new ArrayList<>();
 
+	private final List<String> custom_provider_classes = new ArrayList<>();
 
 
 	public List<String> getCustomInterceptorClasses() {
     return custom_interceptor_classes;
   }
 
+	public List<String> getCustomProviderClasses() {
+		return custom_provider_classes;
+	}
 
 
 	public Boolean getOpenapi_enabled() {
