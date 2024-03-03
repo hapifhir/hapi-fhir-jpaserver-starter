@@ -174,10 +174,27 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setDeferIndexingForCodesystemsOfSize(
 				appProperties.getDefer_indexing_for_codesystems_of_size());
 
+		jpaStorageSettings.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
+		ourLog.info("Server configured to use '" + appProperties.getClient_id_strategy() + "' Client ID Strategy");
+
+		// Set and/or recommend default Server ID Strategy of UUID when using the ANY Client ID Strategy
 		if (appProperties.getClient_id_strategy() == JpaStorageSettings.ClientIdStrategyEnum.ANY) {
-			jpaStorageSettings.setResourceServerIdStrategy(JpaStorageSettings.IdStrategyEnum.UUID);
-			jpaStorageSettings.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
+			if (appProperties.getServer_id_strategy() == null) {
+				ourLog.info("Defaulting server to use '" + JpaStorageSettings.IdStrategyEnum.UUID
+						+ "' Server ID Strategy when using the '" + JpaStorageSettings.ClientIdStrategyEnum.ANY
+						+ "' Client ID Strategy");
+				appProperties.setServer_id_strategy(JpaStorageSettings.IdStrategyEnum.UUID);
+			} else if (appProperties.getServer_id_strategy() != JpaStorageSettings.IdStrategyEnum.UUID) {
+				ourLog.warn("WARNING: '" + JpaStorageSettings.IdStrategyEnum.UUID
+						+ "' Server ID Strategy is highly recommended when using the '"
+						+ JpaStorageSettings.ClientIdStrategyEnum.ANY + "' Client ID Strategy");
+			}
 		}
+		if (appProperties.getServer_id_strategy() != null) {
+			jpaStorageSettings.setResourceServerIdStrategy(appProperties.getServer_id_strategy());
+			ourLog.info("Server configured to use '" + appProperties.getServer_id_strategy() + "' Server ID Strategy");
+		}
+
 		// Parallel Batch GET execution settings
 		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
 		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());
