@@ -105,7 +105,7 @@ public class FhirServerConfigCommon {
 				+ (maxFetchSize == Integer.MAX_VALUE ? "'unlimited'" : maxFetchSize));
 
 		Long reuseCachedSearchResultsMillis = appProperties.getReuse_cached_search_results_millis();
-		jpaStorageSettings.setReuseCachedSearchResultsForMillis(reuseCachedSearchResultsMillis);
+		jpaStorageSettings.setReuseCachedSearchResultsForMillis(null);
 		ourLog.info("Server configured to cache search results for {} milliseconds", reuseCachedSearchResultsMillis);
 
 		Long retainCachedSearchesMinutes = appProperties.getRetain_cached_searches_mins();
