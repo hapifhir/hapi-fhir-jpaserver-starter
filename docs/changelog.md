@@ -1,6 +1,7 @@
 2024/XX/YY Release 3.6.2
 
 - Implemented the new Gazelle validation API [#141](https://github.com/ahdis/matchbox/issues/141)
+- Fixed some validation GUI issues [#207](https://github.com/ahdis/matchbox/issues/207)
 
 2024/02/28 Release 3.6.1
 

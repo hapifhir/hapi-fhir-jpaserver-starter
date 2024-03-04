@@ -22,7 +22,7 @@
     </div>
     <div class="spacer">or</div>
     <button
-      (click)="fileInput.click()"
+      (click)="fileInput.value = null; fileInput.click()"
       color="primary"
       mat-raised-button
       type="button"
@@ -31,4 +31,4 @@
     </button>
   </div>
 </div>
-<input #fileInput (change)="onDrop($event)" hidden type="file"/>
+<input #fileInput (input)="onDrop($event)" hidden type="file"/>

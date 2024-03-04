@@ -342,6 +342,7 @@ export class ValidateComponent implements AfterViewInit {
     ]);
     entry.ig = this.selectedIg;
     this.validationEntries.unshift(entry);
+    this.show(entry);
     this.validate(entry);
   }
 
