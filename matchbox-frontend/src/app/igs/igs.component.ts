@@ -74,8 +74,8 @@ export class IgsComponent {
     this.addUrl.setValue(this.getPackageUrl(ig));
     let version: String = this.selection.version;
     if (version) {
-      if (version.endsWith(' (current)')) {
-        version = version.substring(0, version.length - 10);
+      if (version.endsWith(' (last)')) {
+        version = version.substring(0, version.length - 7);
       }
     }
     this.addVersion.setValue(version);

@@ -268,7 +268,7 @@ public class ImplementationGuideProviderR5 extends ImplementationGuideResourcePr
 				ig.setDate(npmPackage.getUpdatedTime());
 				ig.setPackageId(npmPackage.getPackageId());
 				if (npmPackage.isCurrentVersion()) {
-					ig.setVersion(npmPackage.getVersionId() + " (current)");
+					ig.setVersion(npmPackage.getVersionId() + " (last)");
 				} else {
 					ig.setVersion(npmPackage.getVersionId());
 				}

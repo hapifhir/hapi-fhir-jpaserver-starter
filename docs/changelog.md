@@ -2,6 +2,7 @@
 
 - Implemented the new Gazelle validation API [#141](https://github.com/ahdis/matchbox/issues/141)
 - Fixed some validation GUI issues [#207](https://github.com/ahdis/matchbox/issues/207)
+- Renamed the keyword "current" to "last" for Implementation Guide versions [#206](https://github.com/ahdis/matchbox/issues/206)
 
 2024/02/28 Release 3.6.1
 

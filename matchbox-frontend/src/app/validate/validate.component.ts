@@ -69,7 +69,7 @@ export class ValidateComponent implements AfterViewInit {
                   const igVersion = this.getExtensionStringValue(item, 'ig-version');
                   let current = '';
                   if (this.getExtensionBoolValue(item, 'ig-current')) {
-                    current = ' (current)';
+                    current = ' (last)';
                   } else {
                     sdCanonical += `|${igVersion}`;
                   }
@@ -164,8 +164,8 @@ export class ValidateComponent implements AfterViewInit {
     let igid: string = '';
 
     if (this.selectedIg != null) {
-      if (this.selectedIg.endsWith(' (current)')) {
-        igid = this.selectedIg.substring(0, this.selectedIg.length - 10);
+      if (this.selectedIg.endsWith(' (last)')) {
+        igid = this.selectedIg.substring(0, this.selectedIg.length - 7);
       } else {
         igid = this.selectedIg;
       }
@@ -256,8 +256,8 @@ export class ValidateComponent implements AfterViewInit {
     }
 
     if (this.selectedIg != null) {
-      if (this.selectedIg.endsWith(' (current)')) {
-        entry.ig = this.selectedIg.substring(0, this.selectedIg.length - 10);
+      if (this.selectedIg.endsWith(' (last)')) {
+        entry.ig = this.selectedIg.substring(0, this.selectedIg.length - 7);
       } else {
         entry.ig = this.selectedIg;
       }
