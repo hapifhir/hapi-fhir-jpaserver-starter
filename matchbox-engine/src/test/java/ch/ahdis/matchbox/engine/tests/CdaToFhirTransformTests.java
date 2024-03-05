@@ -185,6 +185,22 @@ class CdaToFhirTransformTests {
 	}
 
 	@Test
+	void TestObservationCs() throws FHIRException, IOException {
+		InputStream in = getResourceAsStream("cda-it-observation-cs.xml");
+
+		String cdaObservation = IOUtils.toString(in, StandardCharsets.UTF_8);
+		Resource resource = getEngine().transformToFhir(cdaObservation,
+				false,
+				"http://salute.gov.it/ig/cda-fhir-maps/StructureMap/TestObservation");
+		Observation obs = (Observation) resource;
+
+		assertEquals("completed", obs.getValueCodeableConcept().getCoding().get(0).getCode());
+
+		assertNotNull(resource);
+	}
+
+
+	@Test
 	void TestObservationCondition() throws FHIRException, IOException {
 		InputStream in = getResourceAsStream("cda-it-observation-condition.xml");
 

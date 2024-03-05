@@ -149,7 +149,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			return;
 		}
 		if (src.equals("hl7.fhir.cda#dev")) {
-			final var replace = "hl7.cda.uv.core#2.1.0-draft2-mb";
+			final var replace = "hl7.cda.uv.core#2.0.0-sd-ballot-patch-mb";
 			log.debug("Replacing 'hl7.fhir.cda#dev' with '{}'", replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;

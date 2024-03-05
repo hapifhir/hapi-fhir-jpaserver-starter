@@ -19,8 +19,8 @@ hapi:
         url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
       cda:
         name: hl7.cda.uv.core
-        version: 2.1.0-draft2-mb
-        url: classpath:/hl7.cda.uv.core#2.1.0-draft2-mb.tgz
+        version: 2.0.0-sd-ballot-patch-mb
+        url: classpath:/hl7.cda.uv.core#2.0.0-sd-ballot-patch-mb.tgz
     staticLocation: file:/apps/
 matchbox:
   fhir:
