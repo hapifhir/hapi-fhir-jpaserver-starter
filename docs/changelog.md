@@ -5,6 +5,7 @@
 - Renamed the keyword "current" to "last" for Implementation Guide versions [#206](https://github.com/ahdis/matchbox/issues/206)
 - Added support for R5 [#55](https://github.com/ahdis/matchbox/issues/55)
 - Fixed an XXE vulnerability in the XmlParser [#45](https://github.com/ahdis/matchbox/security/code-scanning/45)
+- Upgraded to HAPI FHIR 7.0.1
 
 2024/02/28 Release 3.6.1
 
