@@ -29,3 +29,6 @@ matchbox:
         hl7.fhir.r4.core#4.0.1:
           - "Constraint failed: dom-6:"
           - "regex:Entry '(.+)' isn't reachable by traversing forwards from the Composition"
+spring:
+  datasource:
+    url: "jdbc:h2:mem:test-r4"

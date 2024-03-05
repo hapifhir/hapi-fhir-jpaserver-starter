@@ -182,6 +182,8 @@ public class ImplementationGuideProviderR5 extends ImplementationGuideResourcePr
 		if (appProperties.getImplementationGuides() != null) {
 			Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
 			for (AppProperties.ImplementationGuide guide : guides.values()) {
+				log.debug("Loading package " + guide.getName() + "#" + guide.getVersion() + " from property hapi.fhir" +
+								 ".implementationGuides");
 				boolean exists = new TransactionTemplate(myTxManager).execute(tx -> {
 					Optional<NpmPackageVersionEntity> existing = myPackageVersionDao
 							.findByPackageIdAndVersion(guide.getName(), guide.getVersion());
@@ -199,7 +201,7 @@ public class ImplementationGuideProviderR5 extends ImplementationGuideResourcePr
 		}
 		log.info("Initializing packages finished " + VersionUtil.getMemory());
 		log.info("Creating cached engines during startup  " + VersionUtil.getMemory());
-		// The matchboxEngineSupport will set the initialized flag to true when it has finished reloading
+		// The matchboxEngineSupport will set the 'initialized' flag to true when it has finished reloading
 		matchboxEngineSupport.getMatchboxEngineNotSynchronized(null, this.cliContext, false, true);
 		log.info("Finished engines during startup  " + VersionUtil.getMemory());
 		return installOutcome;

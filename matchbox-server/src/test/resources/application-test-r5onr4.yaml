@@ -1,0 +1,17 @@
+server:
+  port: 8083
+  servlet:
+    context-path: /matchboxv3
+hapi:
+  fhir:
+    implementationguides:
+      fhir_r5_core:
+        name: hl7.fhir.r5.core
+        version: 5.0.0
+matchbox:
+  fhir:
+    context:
+      txServer: http://localhost:${server.port}/matchboxv3/fhir
+spring:
+  datasource:
+    url: "jdbc:h2:mem:test-r5onr4"

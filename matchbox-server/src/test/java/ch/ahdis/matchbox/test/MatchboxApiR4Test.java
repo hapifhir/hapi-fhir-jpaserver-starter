@@ -42,9 +42,9 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(classes = { Application.class })
-@ActiveProfiles("test")
+@ActiveProfiles("test-r4")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class MatchboxApiTest {
+public class MatchboxApiR4Test {
 
   static public int getValidationFailures(OperationOutcome outcome) {
     int fails = 0;
@@ -61,20 +61,12 @@ public class MatchboxApiTest {
     return fails;
   }
 
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxApiTest.class);
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxApiR4Test.class);
 
   private String targetServer = "http://localhost:8081/matchboxv3/fhir";
 
   @BeforeAll
   void waitUntilStartup() throws Exception {
-    Path dir = Paths.get("database");
-    if (Files.exists(dir)) {
-      for (Path file : Files.list(dir).collect(Collectors.toList())) {
-        if (Files.isRegularFile(file)) {
-          Files.delete(file);
-        }
-      }
-    }
     Thread.sleep(10000); // give the server some time to start up
     FhirContext contextR4 = FhirVersionEnum.R4.newContext();
     ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);
