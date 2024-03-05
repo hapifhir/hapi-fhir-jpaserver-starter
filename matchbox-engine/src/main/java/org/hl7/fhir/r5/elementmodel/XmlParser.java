@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
@@ -131,7 +132,12 @@ public class XmlParser extends ParserBase {
 					stream.reset();
 				}
 				// use a slower parser that keeps location data
-				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
+				// MATCHBOX PATCH: xxe protection: https://github.com/ahdis/matchbox/security/code-scanning/45
+				TransformerFactory transformerFactory = TransformerFactory.newDefaultInstance();
+				transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+				transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+
 				Transformer nullTransformer = transformerFactory.newTransformer();
 				DocumentBuilder docBuilder = factory.newDocumentBuilder();
 				doc = docBuilder.newDocument();
