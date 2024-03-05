@@ -2,6 +2,7 @@
 name: Javadoc test
 
 on:
+  workflow_dispatch:
   pull_request:
     branches: [main]
 

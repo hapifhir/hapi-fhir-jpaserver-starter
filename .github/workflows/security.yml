@@ -4,12 +4,13 @@
 name: Security checks
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '0 8 * * 1'
+    - cron: '0 8 * * *' # Every day at 8h00
 
 jobs:
   test-codeql:
