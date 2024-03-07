@@ -55,6 +55,7 @@ import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 
+import static ch.ahdis.matchbox.util.MatchboxServerUtils.addExtension;
 
 @DisallowConcurrentExecution
 public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B extends org.hl7.fhir.r4b.model.CanonicalResource, R5 extends org.hl7.fhir.r5.model.CanonicalResource> implements IResourceProvider {
@@ -218,16 +219,17 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 				.map(entity -> {
 					final var canonical = new org.hl7.fhir.r5.model.CanonicalType(entity.getCanonicalUrl());
 					// Add custom extensions to the CanonicalType to store additional information
-					canonical.addExtension().setUrl("ig-id").setValue(new org.hl7.fhir.r5.model.StringType(entity.getPackageVersion().getPackageId()));
-					if (entity.getCanonicalVersion() != null) {
-						canonical.addExtension().setUrl("ig-version").setValue(new org.hl7.fhir.r5.model.StringType(entity.getCanonicalVersion()));
-					}
-					canonical.addExtension().setUrl("ig-current").setValue(new org.hl7.fhir.r5.model.BooleanType(currentEntityIds.contains(entity.getId())));
-					canonical.addExtension().setUrl("sd-canonical").setValue(new org.hl7.fhir.r5.model.StringType(entity.getCanonicalUrl()));
+					addExtension(canonical, "ig-id",
+									 new org.hl7.fhir.r5.model.StringType(entity.getPackageVersion().getPackageId()));
+					addExtension(canonical, "ig-version",
+									 new org.hl7.fhir.r5.model.StringType(entity.getCanonicalVersion()));
+					addExtension(canonical, "ig-current",
+									 new org.hl7.fhir.r5.model.BooleanType(currentEntityIds.contains(entity.getId())));
+					addExtension(canonical, "sd-canonical", new org.hl7.fhir.r5.model.StringType(entity.getCanonicalUrl()));
 					if (entity.getFilename() != null && !entity.getFilename().isBlank()) {
-						canonical.addExtension().setUrl("sd-title").setValue(new org.hl7.fhir.r5.model.StringType(entity.getFilename()));
+						addExtension(canonical, "sd-title", new org.hl7.fhir.r5.model.StringType(entity.getFilename()));
 					} else {
-						canonical.addExtension().setUrl("sd-title").setValue(new org.hl7.fhir.r5.model.StringType(entity.getCanonicalUrl()));
+						addExtension(canonical, "sd-title", new org.hl7.fhir.r5.model.StringType(entity.getCanonicalUrl()));
 					}
 					return canonical;
 				})
@@ -280,17 +282,15 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 			final byte[] resourceContentsBytes = MatchboxServerUtils.fetchBlobFromBinary(binary, myBinaryStorageSvc,
 																												  myCtx);
 			final String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
-			switch (contents.getFhirVersion()) {
-				case R4:
-					return new org.hl7.fhir.r4.formats.JsonParser().parse(resourceContents);
-				case R4B:
-					return new org.hl7.fhir.r4b.formats.JsonParser().parse(resourceContents);
-				case R5:
-					return new org.hl7.fhir.r5.formats.JsonParser().parse(resourceContents);
-				default:
-					log.error("FHIR version not support for loading form matchbox case ");
-					throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + contents);
-			}
+            return switch (contents.getFhirVersion()) {
+                case R4 -> new org.hl7.fhir.r4.formats.JsonParser().parse(resourceContents);
+                case R4B -> new org.hl7.fhir.r4b.formats.JsonParser().parse(resourceContents);
+                case R5 -> new org.hl7.fhir.r5.formats.JsonParser().parse(resourceContents);
+                default -> {
+                    log.error("FHIR version not support for loading form matchbox case ");
+                    throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + contents);
+                }
+            };
 		} catch (Exception e) {
 			throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + contents, e);
 		}

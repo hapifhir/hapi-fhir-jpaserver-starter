@@ -80,7 +80,7 @@ public class MatchboxApiR5onR4Test {
     if (issue instanceof IBaseHasExtensions) {
       List<? extends IBaseExtension<?, ?>> extensions = ((IBaseHasExtensions) issue).getExtension();
       for (IBaseExtension<?, ?> nextSource : extensions) {
-        if (nextSource.getUrl().equals("http://matchbox.health/validiation")) {
+        if (nextSource.getUrl().equals("http://matchbox.health/validation")) {
           return nextSource;
         }
       }

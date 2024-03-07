@@ -1,6 +1,5 @@
 package ch.ahdis.matchbox;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -10,14 +9,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.jena.sparql.function.library.e;
-import org.hl7.fhir.r5.model.BooleanType;
-import org.hl7.fhir.r5.model.Extension;
-import org.hl7.fhir.r5.model.StringType;
-import org.hl7.fhir.r5.model.UriType;
+import org.hl7.fhir.r5.model.*;
 import org.hl7.fhir.r5.terminologies.JurisdictionUtilities;
-import org.hl7.fhir.r5.utils.validation.BundleValidationRule;
-import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.validation.cli.model.HtmlInMarkdownCheck;
 import org.hl7.fhir.validation.cli.utils.EngineMode;
 import org.hl7.fhir.validation.cli.utils.QuestionnaireMode;
@@ -31,10 +24,12 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import static ch.ahdis.matchbox.util.MatchboxServerUtils.addExtension;
+
 /**
  * A POJO for storing the flags/values for the CLI validator.
  * Needed to copy the class because the setters with CliContext as return type
- * are not accessible via reflection
+ * are not accessible via reflection.
  * In addition we have parameters from the CliContext which do not make sense to
  * expose for the Web APi
  */
@@ -673,50 +668,46 @@ public class CliContext {
         '}';
   }
 
-  public List<Field> getValidateEngineParameters() {
-    List<Field> cliContextProperties = Arrays.asList(this.getClass().getDeclaredFields()).stream()
-        .filter(f -> f.isAnnotationPresent(JsonProperty.class))
-        .filter(f -> f.getName() != "profile")
-        .filter(f -> f.getType() == String.class || f.getType() == boolean.class)
-        .collect(Collectors.toList());
-    return cliContextProperties;
-  }
+	public List<Field> getValidateEngineParameters() {
+		return Arrays.stream(this.getClass().getDeclaredFields())
+			.filter(f -> f.isAnnotationPresent(JsonProperty.class))
+			.filter(f -> !f.getName().equals("profile"))
+			.filter(f -> f.getType() == String.class || f.getType() == boolean.class)
+			.collect(Collectors.toList());
+	}
 
-  public void addContextToExtension(Extension ext) {
+  public void addContextToExtension(final Extension ext) {
+	addExtension(ext, "ig", new StringType(this.ig));
+	addExtension(ext, "hintAboutNonMustSupport", new BooleanType(this.hintAboutNonMustSupport));
+	addExtension(ext, "recursive", new BooleanType(this.recursive));
 
-    ext.addExtension("ig", new StringType(ig));
-    ext.addExtension("hintAboutNonMustSupport", new BooleanType(hintAboutNonMustSupport));
-    ext.addExtension("recursive", new BooleanType(recursive));
+	addExtension(ext, "showMessagesFromReferences", new BooleanType(this.showMessagesFromReferences));
+	addExtension(ext, "doDebug", new BooleanType(this.doDebug));
+	addExtension(ext, "assumeValidRestReferences", new BooleanType(this.assumeValidRestReferences));
+	addExtension(ext, "canDoNative", new BooleanType(this.canDoNative));
+	addExtension(ext, "noExtensibleBindingMessages", new BooleanType(this.noExtensibleBindingMessages));
+	addExtension(ext, "noUnicodeBiDiControlChars", new BooleanType(this.noUnicodeBiDiControlChars));
+	addExtension(ext, "noInvariants", new BooleanType(this.noInvariants));
+	addExtension(ext, "displayIssuesAreWarnings", new BooleanType(this.displayIssuesAreWarnings));
+	addExtension(ext, "wantInvariantsInMessages", new BooleanType(this.wantInvariantsInMessages));
+	addExtension(ext, "doImplicitFHIRPathStringConversion", new BooleanType(this.doImplicitFHIRPathStringConversion));
+	// addExtension(ext, "htmlInMarkdownCheck", new BooleanType(this.htmlInMarkdownCheck == HtmlInMarkdownCheck.ERROR));
 
-    ext.addExtension("showMessagesFromReferences", new BooleanType(showMessagesFromReferences));
-    ext.addExtension("doDebug", new BooleanType(doDebug));
-    ext.addExtension("assumeValidRestReferences", new BooleanType(assumeValidRestReferences));
-    ext.addExtension("canDoNative", new BooleanType(canDoNative));
-    ext.addExtension("noExtensibleBindingMessages", new BooleanType(noExtensibleBindingMessages));
-    ext.addExtension("noUnicodeBiDiControlChars", new BooleanType(noUnicodeBiDiControlChars));
-    ext.addExtension("noInvariants", new BooleanType(noInvariants));
-    ext.addExtension("displayIssuesAreWarnings", new BooleanType(displayIssuesAreWarnings));
-    ext.addExtension("wantInvariantsInMessages", new BooleanType(wantInvariantsInMessages));
-    ext.addExtension("doImplicitFHIRPathStringConversion", new BooleanType(doImplicitFHIRPathStringConversion));
-    // ext.addExtension("htmlInMarkdownCheck", new BooleanType(htmlInMarkdownCheck
-    // == HtmlInMarkdownCheck.ERROR));
-
-    ext.addExtension("securityChecks", new BooleanType(securityChecks));
-    ext.addExtension("crumbTrails", new BooleanType(crumbTrails));
-    ext.addExtension("forPublication", new BooleanType(forPublication));
-    ext.addExtension("httpReadOnly", new BooleanType(httpReadOnly));
-    ext.addExtension("allowExampleUrls", new BooleanType(allowExampleUrls));
-    ext.addExtension("txServer", new UriType(txServer));
-    ext.addExtension("lang", new StringType(lang));
-    ext.addExtension("snomedCT", new BooleanType(snomedCT));
-    ext.addExtension("fhirVersion", new StringType(fhirVersion));
-    ext.addExtension("ig", new StringType(ig));
-//    ext.addExtension("questionnaireMode", new BooleanType(questionnaireMode));
-//    ext.addExtension("level", new BooleanType(level));
- //   ext.addExtension("mode", new BooleanType(mode));
-    ext.addExtension("locale", new StringType(locale));
-//    ext.addExtension("locations", new StringType(locations));
-    ext.addExtension("jurisdiction", new StringType(jurisdiction));
-
+	addExtension(ext, "securityChecks", new BooleanType(this.securityChecks));
+	addExtension(ext, "crumbTrails", new BooleanType(this.crumbTrails));
+	addExtension(ext, "forPublication", new BooleanType(this.forPublication));
+	addExtension(ext, "httpReadOnly", new BooleanType(this.httpReadOnly));
+	addExtension(ext, "allowExampleUrls", new BooleanType(this.allowExampleUrls));
+	addExtension(ext, "txServer", new UriType(this.txServer));
+	addExtension(ext, "lang", new StringType(this.lang));
+	addExtension(ext, "snomedCT", new StringType(this.snomedCT));
+	addExtension(ext, "fhirVersion", new StringType(this.fhirVersion));
+	addExtension(ext, "ig", new StringType(this.ig));
+	// addExtension(ext, "questionnaireMode", new BooleanType(this.questionnaireMode));
+	// addExtension(ext, "level", new BooleanType(this.level));
+	// addExtension(ext, "mode", new BooleanType(this.mode));
+	addExtension(ext, "locale", new StringType(this.locale));
+	// addExtension(ext, "locations", new StringType(this.locations));
+	addExtension(ext, "jurisdiction", new StringType(this.jurisdiction));
   }
 }

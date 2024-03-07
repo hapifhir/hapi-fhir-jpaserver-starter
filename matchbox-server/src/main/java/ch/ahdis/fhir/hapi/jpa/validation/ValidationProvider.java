@@ -58,6 +58,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ch.ahdis.matchbox.util.MatchboxServerUtils.addExtension;
+
 /**
  * Operation $validate
  */
@@ -223,21 +225,20 @@ public class ValidationProvider {
 					cliContext.toString()
 				));
 
-			var ext = issue.addExtension().setUrl("http://matchbox.health/validiation");
-			ext.addExtension("profile", new UriType(structDef.getUrl()));
-			ext.addExtension("profileVersion", new UriType(structDef.getVersion()));
-			ext.addExtension("profileDate", structDefR5.getDateElement());
+			var ext = issue.addExtension().setUrl("http://matchbox.health/validation");
+			addExtension(ext, "profile", new UriType(structDef.getUrl()));
+			addExtension(ext, "profileVersion", new UriType(structDef.getVersion()));
+			addExtension(ext, "profileDate", structDefR5.getDateElement());
 
-			ext.addExtension("total", new Duration().setUnit("ms").setValue(ms) );
-			ext.addExtension("validatorVersion", new StringType(VersionUtil.getPoweredBy()));
+			ext.addExtension("total", new Duration().setUnit("ms").setValue(ms));
+			addExtension(ext, "validatorVersion", new StringType(VersionUtil.getPoweredBy()));
 			cliContext.addContextToExtension(ext);
 			if (matchboxEngineSupport.getSessionId(engine) != null) {
-				ext.addExtension("sessionId", new StringType(matchboxEngineSupport.getSessionId(engine)));
+				addExtension(ext, "sessionId", new StringType(matchboxEngineSupport.getSessionId(engine)));
 			}
-			for(String pkg : engine.getContext().getLoadedPackages()) {
-				ext.addExtension("package", new StringType(pkg));
+			for (final String pkg : engine.getContext().getLoadedPackages()) {
+				addExtension(ext, "package", new StringType(pkg));
 			}
-
 		}
 
 		// Map the SingleValidationMessages to OperationOutcomeIssue

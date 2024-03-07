@@ -10,6 +10,9 @@ import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.util.BinaryUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hl7.fhir.instance.model.api.IBaseBinary;
+import org.hl7.fhir.r5.model.Element;
+import org.hl7.fhir.r5.model.Extension;
+import org.hl7.fhir.r5.model.PrimitiveType;
 
 import java.io.IOException;
 
@@ -60,6 +63,17 @@ public class MatchboxServerUtils {
 					Msg.code(1296) + "Failed to fetch blob from Binary/" + theBinary.getIdElement());
 			}
 			return value;
+		}
+	}
+
+	/**
+	 * A helper to add an R5 extension to an element only if its value is non-null.
+	 */
+	public static void addExtension(final Element element,
+											  final String url,
+											  final @Nullable PrimitiveType<?> value) {
+		if (value != null && value.getValue() != null) {
+			element.addExtension(url, value);
 		}
 	}
 }
