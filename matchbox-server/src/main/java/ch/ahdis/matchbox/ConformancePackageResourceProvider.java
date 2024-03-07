@@ -1,6 +1,5 @@
 package ch.ahdis.matchbox;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
-import org.hl7.fhir.instance.model.api.IBaseBinary;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IDomainResource;
 import org.hl7.fhir.instance.model.api.IIdType;
@@ -26,11 +24,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.i18n.Msg;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
-import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
-import ca.uhn.fhir.jpa.binary.svc.NullBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
-import ca.uhn.fhir.jpa.model.dao.JpaPid;
 import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.model.api.Include;
@@ -54,10 +49,8 @@ import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.param.TokenAndListParam;
 import ca.uhn.fhir.rest.param.UriAndListParam;
 import ca.uhn.fhir.rest.server.SimpleBundleProvider;
-import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.MethodNotAllowedException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import ca.uhn.fhir.util.BinaryUtil;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.server.IResourceProvider;
@@ -196,42 +189,14 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 		return null;
 	}
 
-	public List<CanonicalType> getCanonicalsR4() {
-		return new TransactionTemplate(myTxManager).execute(tx -> {
-			final var page = PageRequest.of(0, 2147483646);
-			final var currentEntityIds =
-				this.myPackageVersionResourceDao.findCurrentByResourceType(page, this.resourceType)
-					.stream()
-					.map(NpmPackageVersionResourceEntity::getId)
-					.collect(Collectors.toUnmodifiableSet());
-
-			return this.myPackageVersionResourceDao.findByResourceType(page, this.resourceType)
-				.stream()
-				.sorted(Comparator
-							  .comparing(NpmPackageVersionResourceEntity::getCanonicalUrl)
-							  .thenComparing(NpmPackageVersionResourceEntity::getCanonicalVersion))
-				.map(entity -> {
-					final var canonical = new CanonicalType(entity.getCanonicalUrl());
-					canonical.addExtension().setUrl("ig-id").setValue(new StringType(entity.getPackageVersion().getPackageId()));
-					if (entity.getCanonicalVersion() != null) {
-						canonical.addExtension().setUrl("ig-version").setValue(new StringType(entity.getCanonicalVersion()));
-					}
-					canonical.addExtension().setUrl("ig-current").setValue(new BooleanType(currentEntityIds.contains(entity.getId())));
-					canonical.addExtension().setUrl("sd-canonical").setValue(new StringType(entity.getCanonicalUrl()));
-					if (entity.getFilename() != null && !entity.getFilename().isBlank()) {
-						canonical.addExtension().setUrl("sd-title").setValue(new StringType(entity.getFilename()));
-					} else {
-						canonical.addExtension().setUrl("sd-title").setValue(new StringType(entity.getCanonicalUrl()));
-					}
-					return canonical;
-				})
-				.toList();
-		});
-	}
-
+	/**
+	 * Returns the list of installed StructureDefinitions, as a list of R5 CanonicalTypes.
+	 */
 	public List<org.hl7.fhir.r5.model.CanonicalType> getCanonicalsR5() {
 		return new TransactionTemplate(myTxManager).execute(tx -> {
 			final var page = PageRequest.of(0, 2147483646);
+
+			// Find the IDs of the current StructureDefinitions.
 			final var currentEntityIds =
 				this.myPackageVersionResourceDao.findCurrentByResourceType(page, this.resourceType)
 					.stream()
@@ -240,21 +205,29 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 
 			return this.myPackageVersionResourceDao.findByResourceType(page, this.resourceType)
 				.stream()
+				.peek(entity -> {
+					// NB: getCanonicalVersion() may be null is rare cases, but getPackageVersion().getVersionId() should not
+					if (entity.getCanonicalVersion() == null) {
+						entity.setCanonicalVersion(entity.getPackageVersion().getVersionId());
+					}
+				})
+				// Sort the StructureDefinitions by canonical URL first, and then by version
 				.sorted(Comparator
 							  .comparing(NpmPackageVersionResourceEntity::getCanonicalUrl)
 							  .thenComparing(NpmPackageVersionResourceEntity::getCanonicalVersion))
 				.map(entity -> {
 					final var canonical = new org.hl7.fhir.r5.model.CanonicalType(entity.getCanonicalUrl());
-					canonical.addExtension().setUrl("ig-id").setValue(new StringType(entity.getPackageVersion().getPackageId()));
+					// Add custom extensions to the CanonicalType to store additional information
+					canonical.addExtension().setUrl("ig-id").setValue(new org.hl7.fhir.r5.model.StringType(entity.getPackageVersion().getPackageId()));
 					if (entity.getCanonicalVersion() != null) {
-						canonical.addExtension().setUrl("ig-version").setValue(new StringType(entity.getCanonicalVersion()));
+						canonical.addExtension().setUrl("ig-version").setValue(new org.hl7.fhir.r5.model.StringType(entity.getCanonicalVersion()));
 					}
-					canonical.addExtension().setUrl("ig-current").setValue(new BooleanType(currentEntityIds.contains(entity.getId())));
-					canonical.addExtension().setUrl("sd-canonical").setValue(new StringType(entity.getCanonicalUrl()));
+					canonical.addExtension().setUrl("ig-current").setValue(new org.hl7.fhir.r5.model.BooleanType(currentEntityIds.contains(entity.getId())));
+					canonical.addExtension().setUrl("sd-canonical").setValue(new org.hl7.fhir.r5.model.StringType(entity.getCanonicalUrl()));
 					if (entity.getFilename() != null && !entity.getFilename().isBlank()) {
-						canonical.addExtension().setUrl("sd-title").setValue(new StringType(entity.getFilename()));
+						canonical.addExtension().setUrl("sd-title").setValue(new org.hl7.fhir.r5.model.StringType(entity.getFilename()));
 					} else {
-						canonical.addExtension().setUrl("sd-title").setValue(new StringType(entity.getCanonicalUrl()));
+						canonical.addExtension().setUrl("sd-title").setValue(new org.hl7.fhir.r5.model.StringType(entity.getCanonicalUrl()));
 					}
 					return canonical;
 				})

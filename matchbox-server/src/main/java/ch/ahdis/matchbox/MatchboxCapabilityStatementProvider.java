@@ -25,16 +25,18 @@ import org.hl7.fhir.r5.model.StringType;
 
 import java.lang.reflect.Field;
 
+/**
+ * A provider of CapabilityStatement customized for Matchbox.
+ */
 public class MatchboxCapabilityStatementProvider extends ServerCapabilityStatementProvider {
-	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(MatchboxCapabilityStatementProvider.class);
-	private StructureDefinitionResourceProvider structureDefinitionProvider;
-	protected CliContext cliContext;
-	protected FhirContext myFhirContext;
+	private final StructureDefinitionResourceProvider structureDefinitionProvider;
+	protected final CliContext cliContext;
+	protected final FhirContext myFhirContext;
 
-	public MatchboxCapabilityStatementProvider(FhirContext fhirContext,
-															 RestfulServer theServerConfiguration,
-															 StructureDefinitionResourceProvider structureDefinitionProvider,
-															 CliContext cliContext) {
+	public MatchboxCapabilityStatementProvider(final FhirContext fhirContext,
+															 final RestfulServer theServerConfiguration,
+															 final StructureDefinitionResourceProvider structureDefinitionProvider,
+															 final CliContext cliContext) {
 		super(theServerConfiguration, null, null);
 		this.structureDefinitionProvider = structureDefinitionProvider;
 		this.cliContext = cliContext;
@@ -113,25 +115,32 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 		}
 	}
 
+	/**
+	 * A hook on the read operation definition method to update $validate with its parameters.
+	 */
 	@Read(typeName = "OperationDefinition")
 	@Override
 	public IBaseResource readOperationDefinition(@IdParam IIdType theId, RequestDetails theRequestDetails) {
 		final var baseResource = super.readOperationDefinition(theId, theRequestDetails);
 		if (baseResource instanceof final OperationDefinition opDefR5 && "Validate".equals(opDefR5.getName())) {
-			ourLog.info("adding profiles to $validate");
-			updateOperationDefinition(opDefR5);
+			// In R5 mode
+			this.updateOperationDefinition(opDefR5);
 			return baseResource;
 		} else if (baseResource instanceof final org.hl7.fhir.r4.model.OperationDefinition opDefR4 && "Validate".equals(
 			opDefR4.getName())) {
-			ourLog.info("adding profiles to $validate");
+			// In R4 mode: convert to R5, update, and convert back to R4
 			final var opDefR5 = (OperationDefinition) VersionConvertorFactory_40_50.convertResource(opDefR4);
-			updateOperationDefinition(opDefR5);
+			this.updateOperationDefinition(opDefR5);
 			return VersionConvertorFactory_40_50.convertResource(opDefR5);
 		}
 		throw new MatchboxUnsupportedFhirVersionException("MatchboxCapabilityStatementProvider",
 																		  theRequestDetails.getFhirContext().getVersion().getVersion());
 	}
 
+	/**
+	 * Updates an R5 OperationDefinition with the parameters required for the $validate operation, including the
+	 * parameters supported and the list of installed profiles.
+	 */
 	private void updateOperationDefinition(final OperationDefinition operationDefinition) {
 		operationDefinition.addParameter()
 			.setName("resource")
@@ -158,7 +167,6 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			.setMin(0)
 			.setMax("1")
 			.setType(Enumerations.FHIRTypes.BOOLEAN);
-
 
 		final var cliContextProperties = this.cliContext.getValidateEngineParameters();
 		for (final Field field : cliContextProperties) {
