@@ -3,7 +3,7 @@ run-name: build-artefact
 on:
   push:
     branches:
-      - main
+      - master
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
