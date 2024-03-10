@@ -21,6 +21,7 @@ package ch.ahdis.matchbox.engine;
  */
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -45,6 +46,7 @@ import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.formats.IParser;
+import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r5.model.StructureDefinition;
@@ -52,10 +54,10 @@ import org.hl7.fhir.r5.model.StructureMap;
 import org.hl7.fhir.r5.renderers.RendererFactory;
 import org.hl7.fhir.r5.renderers.utils.RenderingContext;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
-import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
+import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
 import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.utilities.json.model.JsonObject;
@@ -64,6 +66,7 @@ import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
+import org.hl7.fhir.validation.Content;
 import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
 import org.hl7.fhir.validation.instance.InstanceValidator;
@@ -89,7 +92,7 @@ public class MatchboxEngine extends ValidationEngine {
 		// Create a new IgLoader, otherwise the context is desynchronized between the loader and the engine
 		this.setIgLoader(new IgLoader(this.getPcm(), this.getContext(), this.getVersion(), this.isDebug()));
 		try {
-			this.setPcm(new FilesystemPackageCacheManager(FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER));
+			this.setPcm(new FilesystemPackageCacheManager.Builder().build());
 		} catch (final IOException e) {
 			throw new MatchboxEngineCreationException(e);
 		}
@@ -109,11 +112,6 @@ public class MatchboxEngine extends ValidationEngine {
 		 * The terminology server to use. {@code null} means no server will be used.
 		 */
 		private String txServer = null;
-
-		/**
-		 * The filesystem package cache mode.
-		 */
-		private FilesystemPackageCacheManager.FilesystemPackageCacheMode packageCacheMode = FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER;
 
 		/**
 		 * The filesystem package cache path if FilesystemPackageCacheMode.CUSTOM, or {@code null}.
@@ -138,32 +136,6 @@ public class MatchboxEngine extends ValidationEngine {
 		 */
 		public void setTxServer(final String txServer) {
 			this.txServer = txServer;
-		}
-
-		/**
-		 * Sets the mode of the filesystem package cache manager. It controls where the package will be stored on the
-		 * filesystem:
-		 * <ul>
-		 *    <li>{@code USER}: {USER HOME}/.fhir/packages</li>
-		 *    <li>{@code SYSTEM}: /var/lib/.fhir/packages</li>
-		 *    <li>{@code TESTING}: {TMP}/.fhir/packages</li>
-		 * </ul>
-		 *
-		 *
-		 * @see FilesystemPackageCacheManager#init(FilesystemPackageCacheManager.FilesystemPackageCacheMode) for details.
-		 * @param packageCacheMode The mode of the filesystem package cache manager.
-		 */
-		public void setPackageCacheMode(final FilesystemPackageCacheManager.FilesystemPackageCacheMode packageCacheMode) {
-			this.packageCacheMode = packageCacheMode;
-		}
-
-		/**
-		 * Sets the custom path of the package cache.
-		 * @param packageCachePath The package cache path.
-		 */
-		public void setPackageCachePath(final String packageCachePath) {
-			this.packageCacheMode = FilesystemPackageCacheManager.FilesystemPackageCacheMode.CUSTOM;
-			this.packageCachePath = packageCachePath;
 		}
 
 		/**
@@ -287,11 +259,13 @@ public class MatchboxEngine extends ValidationEngine {
 
 		private FilesystemPackageCacheManager getFilesystemPackageCacheManager() throws MatchboxEngineCreationException {
 			try {
-				if (this.packageCacheMode == FilesystemPackageCacheManager.FilesystemPackageCacheMode.CUSTOM) {
-					return new FilesystemPackageCacheManager(this.packageCachePath);
-				} else {
-					return new FilesystemPackageCacheManager(this.packageCacheMode);
-				}
+				// FIXME: need this to be fixed?
+				//if (this.packageCacheMode == FilesystemPackageCacheManager.FilesystemPackageCacheMode.CUSTOM) {
+				// 	return new FilesystemPackageCacheManager(this.packageCachePath);
+				//} else {
+				//  	return new FilesystemPackageCacheManager(this.packageCacheMode);
+				// }
+				return new FilesystemPackageCacheManager.Builder().build();
 			} catch (final IOException e) {
 				throw new MatchboxEngineCreationException(e);
 			}
@@ -756,6 +730,17 @@ public class MatchboxEngine extends ValidationEngine {
 		return fpe.evaluateToString(e, expression);
 		//return fpe.evaluateToString(new ValidatorHostContext(this.getContext(), e), e, e, e, exp);
 	}
+	
+
+	public String convert(final @NonNull String input, final boolean inputJson ) throws FHIRException, IOException {
+	    Element e = Manager.parseSingle(this.getContext(), new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)),
+	            (inputJson ? FhirFormat.JSON : FhirFormat.XML));
+	    ByteArrayOutputStream bs = new ByteArrayOutputStream();
+	    Manager.compose(this.getContext(), e, bs, (inputJson ? FhirFormat.XML : FhirFormat.JSON), OutputStyle.PRETTY, null);
+	    String result = new String(bs.toByteArray());
+	    bs.close();
+	    return result;
+    }
 
 	/**
 	 * Loads an IG in the engine from its NPM package as an {@link InputStream}, its ID and version. The

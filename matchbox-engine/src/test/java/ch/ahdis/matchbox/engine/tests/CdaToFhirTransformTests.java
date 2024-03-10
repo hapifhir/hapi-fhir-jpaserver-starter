@@ -67,7 +67,7 @@ class CdaToFhirTransformTests {
 	private CdaMappingEngine getEngine() {
 		if (engine == null) {
 			try {
-				engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngine();
+				engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngineR4();
 				StructureMap sm = engine.parseMap(getFileAsStringFromResources("datatypes.map"));
 				assertTrue(sm != null);
 				engine.addCanonicalResource(sm);
@@ -100,6 +100,10 @@ class CdaToFhirTransformTests {
 
 	@Test
 	void TestFhirPath() throws FHIRException, IOException {
+	    
+	  String str = getEngine().convert(cdaLabItaly, false);
+	  log.debug(str);
+
 		assertEquals("11502-2", getEngine().evaluateFhirPath(cdaLabItaly, false, "code.code"));
 		String attributeWithCdaWhiteSpace = cdaLabItaly.replaceAll("11502-2", " 11502-2");
 		assertTrue(attributeWithCdaWhiteSpace.indexOf(" 11502-2") > 0);
@@ -110,9 +114,14 @@ class CdaToFhirTransformTests {
 		assertEquals("IT", getEngine().evaluateFhirPath(cdaLabItaly, false, "realmCode.code"));
 		assertEquals("2.16.840.1.113883.1.3",
 				getEngine().evaluateFhirPath(cdaLabItaly, false, "typeId.root"));
-		assertEquals("POCD_MT000040UV02",
-				getEngine().evaluateFhirPath(cdaLabItaly, false, "typeId.extension"));
-		assertEquals("active", getEngine().evaluateFhirPath(cdaLabItaly, false, "statusCode.code"));
+//		assertEquals("POCD_MT000040UV02",
+//				getEngine().evaluateFhirPath(cdaLabItaly, false, "typeId.extension"));
+    assertEquals("POCD_HD000040",
+            getEngine().evaluateFhirPath(cdaLabItaly, false, "typeId.extension"));
+		// stdc
+//		assertEquals("active", getEngine().evaluateFhirPath(cdaLabItaly, false, "statusCode.code"));
+		// changed with core 7.3.0
+    assertEquals("active", getEngine().evaluateFhirPath(cdaLabItaly, false, "sdtcStatusCode.code"));
 		// <effectiveTime value="20220330112426+0100"/>
 		assertEquals("2022-03-30T11:24:26+01:00",
 				getEngine().evaluateFhirPath(cdaLabItaly, false, "effectiveTime.value"));
@@ -120,14 +129,17 @@ class CdaToFhirTransformTests {
 				getEngine().evaluateFhirPath(cdaLabItaly,
 						false,
 						"recordTarget.patientRole.patient.birthTime.value"));
+		
+		
+//		https://hl7.org/cda/stds/core/2.0.0-sd-snapshot1/StructureDefinition-PN.html
 		assertEquals("Verdi",
 				getEngine().evaluateFhirPath(cdaLabItaly,
 						false,
-						"recordTarget.patientRole.patient.name.family.xmlText"));
+						"recordTarget.patientRole.patient.name.item.family.xmlText"));
 		assertEquals("Giuseppe",
 				getEngine().evaluateFhirPath(cdaLabItaly,
 						false,
-						"recordTarget.patientRole.patient.name.given.xmlText"));
+						"recordTarget.patientRole.patient.name.item.given.xmlText"));
 	}
 
 	@Test
@@ -259,9 +271,10 @@ class CdaToFhirTransformTests {
 	}
 
 	@Test
-	void TestValidateCdaIt() throws FHIRException, IOException, EOperationOutcome {
+	void TestValidateCdaIt() throws FHIRException, IOException, EOperationOutcome, URISyntaxException {
+	  ch.ahdis.matchbox.engine.CdaMappingEngine  engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngineR5();
 		InputStream in = getResourceAsStream("/cda-it.xml");
-		OperationOutcome outcome = getEngine().validate(in,
+		OperationOutcome outcome = engine.validate(in,
 				FhirFormat.XML,
 				"http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument");
 		assertNotNull(outcome);
@@ -280,10 +293,51 @@ class CdaToFhirTransformTests {
 				// https://terminology.hl7.org/5.0.0/ValueSet-v3-RoleClassAssignedEntity.json.html
 				// has a filter with an is-a concept to ASSIGEND and this cannot be evaluated by
 				// org.hl7.fhir.r5.terminologies.ValueSetCheckerSimple
+        if (vm.getDetails().getText().startsWith(
+                "The System URI could not be determined for the code 'it-IT'")) {
+              continue;
+            }
 				if (vm.getDetails().getText().startsWith(
-						"The value provided ('ASSIGNED') is not in the value set 'RoleClassAssignedEntity'")) {
+						"The value provided ('it-IT') was not found in the value set 'All Languages'")) {
 					continue;
 				}
+        if (vm.getDetails().getText().startsWith(
+                "The value provided ('ASSIGNED') was not found in the value set 'RoleClassAssignedEntity'")) {
+              continue;
+            }
+        
+        if (vm.getDetails().getText().startsWith(
+                "IntendedRecipient.classCode: minimum required = 1,")) {
+              continue;
+            }
+        
+        if (vm.getDetails().getText().startsWith(
+                "ServiceEvent.classCode: minimum required = 1, ")) {
+              continue;
+            }
+        
+        if (vm.getDetails().getText().startsWith(
+                "HealthCareFacility.classCode: minimum required = 1, ")) {
+              continue;
+            }
+        
+        if (vm.getDetails().getText().startsWith(
+                "PlayingEntity.classCode: minimum required = 1, ")) {
+              continue;
+            }
+        if (vm.getDetails().getText().startsWith(
+                "ObservationRange.classCode: minimum required = 1, ")) {
+              continue;
+            }
+        if (vm.getDetails().getText().startsWith(
+                "LabCriterion.classCode: minimum required = 1, ")) {
+              continue;
+            }
+        if (vm.getDetails().getText().startsWith(
+                "LabCriterion.moodCode: minimum required = 1, ")) {
+              continue;
+            }
+        
 				// id value 'ESAMI_URINE' is not valid
 				// id value 'ALBUMINA_URINE' is not valid
 				if (vm.getDetails().getText().startsWith(

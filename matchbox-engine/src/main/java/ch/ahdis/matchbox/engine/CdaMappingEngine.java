@@ -73,16 +73,16 @@ public class CdaMappingEngine extends MatchboxEngine {
 		 * @throws IOException IO Exception
 		 * @throws URISyntaxException
 		 */
-		public CdaMappingEngine getEngine() throws FHIRException, IOException, URISyntaxException {
+		public CdaMappingEngine getEngineR5() throws FHIRException, IOException, URISyntaxException {
 			log.info("Initializing CDA Mapping Engine");
 			log.info(VersionUtil.getPoweredBy());
 			CdaMappingEngine engine = new CdaMappingEngine(super.fromNothing());
 			// if the version would have been set before (constructor) the package is loaded
 			// from the package cache, we don't want this
-			engine.setVersion("4.0.1");
-			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
+			engine.setVersion("5.0.0");
+			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r5.core.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
-			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
+			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions#1.0.0.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.0-sd-ballot-patch-mb.tgz"));
 			engine.getContext().setCanRunWithoutTerminology(true);
 			engine.getContext().setNoTerminologyServer(true);
@@ -90,6 +90,34 @@ public class CdaMappingEngine extends MatchboxEngine {
 
 			return engine;
 		}
+		
+		
+    /**
+     * Create a CDA mapping engine based on the forked CDA Model (see https://github.com/ahdis/cda-core-2.0/tree/lab)
+     * 
+     * @return MappingEngine which allows to convert between CDA and FHIR R4
+     * @throws FHIRException FHIR Exception
+     * @throws IOException IO Exception
+     * @throws URISyntaxException
+     */
+    public CdaMappingEngine getEngineR4() throws FHIRException, IOException, URISyntaxException {
+      log.info("Initializing CDA Mapping Engine");
+      log.info(VersionUtil.getPoweredBy());
+      CdaMappingEngine engine = new CdaMappingEngine(super.fromNothing());
+      // if the version would have been set before (constructor) the package is loaded
+      // from the package cache, we don't want this
+      engine.setVersion("5.0.0");
+      engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
+      engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
+      engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
+      engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.0-sd-ballot-patch-mb.tgz"));
+      engine.getContext().setCanRunWithoutTerminology(true);
+      engine.getContext().setNoTerminologyServer(true);
+      engine.getContext().setPackageTracker(engine);
+
+      return engine;
+    }
+
 	}
 
 	/**

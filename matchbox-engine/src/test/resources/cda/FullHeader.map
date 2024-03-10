@@ -74,10 +74,10 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
   src -> DocumentReference.status = 'current' "status";
   src -> DocumentReference.content = create('BackboneElement') as content then {
   src-> content.attachment = create('Attachment') as attachment,  attachment.title = 'string' "comp";
-  }"content";
+  } "content";
   src -> DocumentReference.context = create('BackboneElement') as context then {
     src -> context.related = create('Reference') as referenceComp,  referenceComp.reference = ('https://example/Composition/' + %tgt.id) "comp";
-   }"context";
+  } "context";
   src.id where src.setId.exists().not() -> tgt.identifier "identifier";
   src.setId -> tgt.identifier "identifier";
   src -> tgt.status = 'final' "status";

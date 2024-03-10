@@ -178,11 +178,13 @@ group CDCodeableConcept(source src : CD, target tgt : CodeableConcept) extends C
 }
 
 group ENHumanName(source src : EN, target tgt : HumanName) extends Any <<types>> {
-  src.family as v -> tgt.family = (v.xmlText);
-  src.given as v -> tgt.given = (v.xmlText);
-  src.prefix as v -> tgt.prefix = (v.xmlText);
-  src.suffix as v -> tgt.suffix = (v.xmlText);
-  // src.use as c -> tgt.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
+  src.item as item then {
+    item.family as v -> tgt.family = (v.xmlText);
+    item.given as v -> tgt.given = (v.xmlText);
+    item.prefix as v -> tgt.prefix = (v.xmlText);
+    item.suffix as v -> tgt.suffix = (v.xmlText);
+    // src.use as c -> tgt.use = translate(c, 'http://hl7.org/fhir/ConceptMap/cm-name-use-v3', 'code');
+  } "item";
   src.validTime -> tgt.period;
 }
 
@@ -190,25 +192,27 @@ group PNHumanName(source src : PN, target tgt : HumanName) extends ENHumanName <
 }
 
 group ADAddress(source src : AD, target tgt : Address) extends Any <<types>> {
-  src.country as v -> tgt.country = (v.xmlText);
-  src.state as v -> tgt.state = (v.xmlText);
-  src.county as v -> tgt.district = (v.xmlText);
-  src.city as v -> tgt.city = (v.xmlText);
-  src.postalCode as v -> tgt.postalCode = (v.xmlText);
-  src.streetAddressLine as v -> tgt.line=(v.xmlText);
-   
-  src   -> tgt.line  as line then { 
-   src where src.censusTract.exists() then {
-    src.censusTract as v -> line.extension as ext1 then CensusTract(v, ext1) "line";
-   }"sfgfdsg";
-  } "CensusTract";
+  src.item as item then {
+    item.country as v -> tgt.country = (v.xmlText);
+    item.state as v -> tgt.state = (v.xmlText);
+    item.county as v -> tgt.district = (v.xmlText);
+    item.city as v -> tgt.city = (v.xmlText);
+    item.postalCode as v -> tgt.postalCode = (v.xmlText);
+    item.streetAddressLine as v -> tgt.line=(v.xmlText);
+    
+    item   -> tgt.line  as line then { 
+    item where src.censusTract.exists() then {
+      item.censusTract as v -> line.extension as ext1 then CensusTract(v, ext1) "line";
+    }"sfgfdsg";
+    } "CensusTract";
 
-  //share firstline "streetAddress";
-  //as streetAddress then{
-    //src.censusTract as v->tgt.line as line, line.extension as ext1 then CensusTract(v, ext1) "line";
-  //src.censusTract as v ->tgt.line as line, line.extension as ext1 then CensusTract(v, ext1) "line";
-  src.streetName as v -> tgt.line = (v.xmlText);
-  src.houseNumber as v -> tgt.line = (v.xmlText);
+    //share firstline "streetAddress";
+    //as streetAddress then{
+      //src.censusTract as v->tgt.line as line, line.extension as ext1 then CensusTract(v, ext1) "line";
+    //src.censusTract as v ->tgt.line as line, line.extension as ext1 then CensusTract(v, ext1) "line";
+    item.streetName as v -> tgt.line = (v.xmlText);
+    item.houseNumber as v -> tgt.line = (v.xmlText);
+  } "item";
   src.use as c -> tgt.use = translate(c, '#addressUse', 'code') "addressUse";
   src.useablePeriod -> tgt.period;
 }
