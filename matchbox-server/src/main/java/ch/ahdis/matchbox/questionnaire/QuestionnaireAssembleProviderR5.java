@@ -5,8 +5,10 @@ import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ch.ahdis.matchbox.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
+
+import org.hl7.fhir.r5.fhirpath.ExpressionNode;
+import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
 import org.hl7.fhir.r5.model.*;
-import org.hl7.fhir.r5.utils.FHIRPathEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;

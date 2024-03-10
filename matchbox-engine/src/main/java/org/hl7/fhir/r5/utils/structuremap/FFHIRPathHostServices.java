@@ -7,12 +7,12 @@ import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.Resource;
-import org.hl7.fhir.r5.model.TypeDetails;
 import org.hl7.fhir.r5.model.ValueSet;
-import org.hl7.fhir.r5.utils.FHIRPathEngine;
-import org.hl7.fhir.r5.utils.FHIRPathUtilityClasses.FunctionDetails;
-import org.hl7.fhir.r5.utils.validation.IResourceValidator;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
+import org.hl7.fhir.validation.instance.InstanceValidator;
+import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
+import org.hl7.fhir.r5.fhirpath.FHIRPathUtilityClasses.FunctionDetails;
+import org.hl7.fhir.r5.fhirpath.TypeDetails;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,9 @@ public class FFHIRPathHostServices implements FHIRPathEngine.IEvaluationContext 
 		this.structureMapUtilities = structureMapUtilities;
 	}
 
-	public List<Base> resolveConstant(Object appContext, String name, boolean beforeContext) throws PathEngineException {
+	@Override
+	public List<Base> resolveConstant(FHIRPathEngine engine, Object appContext, String name, boolean beforeContext,
+			boolean explicitConstant) throws PathEngineException {
 		Variables vars = (Variables) appContext;
 		Base res = vars.get(VariableMode.INPUT, name);
 		if (res == null)
@@ -38,7 +40,8 @@ public class FFHIRPathHostServices implements FHIRPathEngine.IEvaluationContext 
 	}
 
 	@Override
-	public TypeDetails resolveConstantType(Object appContext, String name) throws PathEngineException {
+	public TypeDetails resolveConstantType(FHIRPathEngine engine, Object appContext, String name,
+			boolean explicitConstant) throws PathEngineException {
 		if (!(appContext instanceof VariablesForProfiling))
 			throw new Error("Internal Logic Error (wrong type '" + appContext.getClass().getName() + "' in resolveConstantType)");
 		VariablesForProfiling vars = (VariablesForProfiling) appContext;
@@ -54,22 +57,26 @@ public class FFHIRPathHostServices implements FHIRPathEngine.IEvaluationContext 
 	}
 
 	@Override
-	public FunctionDetails resolveFunction(String functionName) {
-		return null; // throw new Error("Not Implemented Yet");
+	public FunctionDetails resolveFunction(FHIRPathEngine engine, String functionName) {
+		throw new UnsupportedOperationException("Unimplemented method 'resolveFunction'");
 	}
 
 	@Override
-	public TypeDetails checkFunction(Object appContext, String functionName, List<TypeDetails> parameters) throws PathEngineException {
-		throw new Error("Not Implemented Yet");
+	public TypeDetails checkFunction(FHIRPathEngine engine, Object appContext, String functionName, TypeDetails focus,
+			List<TypeDetails> parameters) throws PathEngineException {
+		throw new UnsupportedOperationException("Unimplemented method 'checkFunction'");
 	}
 
 	@Override
-	public List<Base> executeFunction(Object appContext, List<Base> focus, String functionName, List<List<Base>> parameters) {
-		throw new Error("Not Implemented Yet");
+	public List<Base> executeFunction(FHIRPathEngine engine, Object appContext, List<Base> focus, String functionName,
+			List<List<Base>> parameters) {
+		throw new UnsupportedOperationException("Unimplemented method 'executeFunction'");
 	}
 
+	
 	@Override
-	public Base resolveReference(Object appContext, String url, Base refContext) throws FHIRException {
+	public Base resolveReference(FHIRPathEngine engine, Object appContext, String url, Base refContext)
+			throws FHIRException {
 		if (structureMapUtilities.getServices() == null)
 			return null;
 		return structureMapUtilities.getServices().resolveReference(appContext, url);
@@ -83,11 +90,12 @@ public class FFHIRPathHostServices implements FHIRPathEngine.IEvaluationContext 
 	}
 
 	@Override
-	public boolean conformsToProfile(Object appContext, Base item, String url) throws FHIRException {
+	public boolean conformsToProfile(FHIRPathEngine engine, Object appContext, Base item, String url)
+			throws FHIRException {
 		//IResourceValidator val = structureMapUtilities.getWorker().newValidator();
 		// we need the same conformToProfile context as we have in the matchbox engine
 		// matchbox 3.1.0
-		 IResourceValidator val = null;
+		 InstanceValidator val = null;
 		 try {
 			val = ((ch.ahdis.matchbox.mappinglanguage.MatchboxStructureMapUtilities) structureMapUtilities).getEngine().getValidator(
 				Manager.FhirFormat.JSON);
@@ -106,9 +114,17 @@ public class FFHIRPathHostServices implements FHIRPathEngine.IEvaluationContext 
 		throw new NotImplementedException("Not done yet (FFHIRPathHostServices.conformsToProfile), when item is not element or not resource");
 	}
 
+
 	@Override
-	public ValueSet resolveValueSet(Object appContext, String url) {
-		return structureMapUtilities.getWorker().fetchResource(ValueSet.class, url);
+	public ValueSet resolveValueSet(FHIRPathEngine engine, Object appContext, String url) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'resolveValueSet'");
+	}
+
+	@Override
+	public boolean paramIsType(String name, int index) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'paramIsType'");
 	}
 
 }

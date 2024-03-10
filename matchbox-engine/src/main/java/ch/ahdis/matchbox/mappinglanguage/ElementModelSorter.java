@@ -27,6 +27,7 @@ import java.util.List;
 import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.model.ElementDefinition;
 import org.hl7.fhir.r5.model.StructureDefinition;
+import org.hl7.fhir.utilities.NamedItemList;
 
 /**
  * sort function for elementmodel.Element that can deal with multiple instances
@@ -43,7 +44,7 @@ public class ElementModelSorter {
 			for (Element child : el.getChildren()) {
 				sort(child);
 			}
-			List<Element> ch = el.getChildren();
+			NamedItemList<Element> ch = el.getChildren();
 			ch.sort(new ElementSortComparator(el, el.getProperty()));
 		}
 	}

@@ -1,11 +1,11 @@
 package ch.ahdis.matchbox;
 
-import org.hl7.fhir.r5.context.IWorkerContext;
+import org.hl7.fhir.r5.context.ILoggingService;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class EngineLoggingService implements IWorkerContext.ILoggingService {
+public class EngineLoggingService implements ILoggingService {
 
   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EngineLoggingService.class);
 

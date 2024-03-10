@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.hl7.fhir.validation.ValidationEngine;
-import org.hl7.fhir.validation.cli.services.SessionCache;
+import org.hl7.fhir.validation.cli.services.PassiveExpiringSessionCache;
 
 /**
  * @author Oliver Egger
@@ -34,7 +34,7 @@ import org.hl7.fhir.validation.cli.services.SessionCache;
  *         We want to have a validation engines also that are not timed out as
  *         in the parent class.
  */
-public class EngineSessionCache extends SessionCache {
+public class EngineSessionCache extends PassiveExpiringSessionCache {
 
     private final Map<String, ValidationEngine> cachedSessionsNoTimeout = new java.util.HashMap<String, ValidationEngine>();
     private final Map<ValidationEngine, String> cachedSessionIdsNoTimeout = new java.util.HashMap<ValidationEngine, String>();

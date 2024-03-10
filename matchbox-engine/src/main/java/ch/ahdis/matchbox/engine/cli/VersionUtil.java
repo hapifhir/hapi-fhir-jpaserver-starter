@@ -68,7 +68,7 @@ public class VersionUtil {
   }
   
   public static String getPoweredBy() {
-    return "powered by matchbox "+ ch.ahdis.matchbox.engine.cli.VersionUtil.getVersion()+", hapi-fhir "+ ca.uhn.fhir.util.VersionUtil.getVersion()+" and org.hl7.fhir.core "+ org.hl7.fhir.validation.cli.utils.VersionUtil.getVersion();
+    return "powered by matchbox "+ ch.ahdis.matchbox.engine.cli.VersionUtil.getVersion()+", hapi-fhir "+ ca.uhn.fhir.util.VersionUtil.getVersion()+" and org.hl7.fhir.core "+ org.hl7.fhir.utilities.VersionUtil.getVersion();
   }
 
   public static String getMemory() {

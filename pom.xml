@@ -39,9 +39,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>17</java.version>
-        <fhir.core.version>6.1.2.2</fhir.core.version>
+        <fhir.core.version>6.3.0</fhir.core.version>
         <hapi.fhir.version>7.0.1</hapi.fhir.version>
-
         <!-- Dependency Versions -->
         <validator_test_case_version>1.4.28</validator_test_case_version>
         <activation_api_version>1.2.0</activation_api_version>
