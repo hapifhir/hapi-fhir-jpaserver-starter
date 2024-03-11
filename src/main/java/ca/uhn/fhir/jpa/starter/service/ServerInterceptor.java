@@ -124,12 +124,12 @@ public class ServerInterceptor {
 		ComGenerator secondReminder = new ComGenerator("Appointment", appointmentId, appointmentDate, messageStatus,
 			patientId, appointmentScheduledDateTime);
 
-		notificationDataSource.insert(comGen);
+		notificationDataSource.persist(comGen);
 		if (currentDate != previousDate) {
-			notificationDataSource.insert(firstReminder);
+			notificationDataSource.persist(firstReminder);
 		}
 		if (currentDate != appointmentDate) {
-			notificationDataSource.insert(secondReminder);
+			notificationDataSource.persist(secondReminder);
 		}
 	}
 	@Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_UPDATED)
