@@ -7,7 +7,7 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "ca.uhn.fhir.jpa.starter.Application",
             "projectName": "hapi-fhir-jpaserver-starter",
-            "args": "",
+            "args": "-Ddebug=true",
             "envFile": "${workspaceFolder}/.env"
         }
     ]

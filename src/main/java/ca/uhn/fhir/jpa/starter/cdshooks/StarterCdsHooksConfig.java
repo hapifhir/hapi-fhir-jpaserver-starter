@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter.cdshooks;
 
+import ca.uhn.fhir.jpa.starter.cr.CrCommonConfig;
 import ca.uhn.fhir.jpa.starter.cr.CrConfigCondition;
 import ca.uhn.fhir.jpa.starter.cr.CrProperties;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsHooksDaoAuthorizationSvc;
@@ -23,7 +24,7 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Conditional({CdsHooksConfigCondition.class, CrConfigCondition.class})
-@Import(CdsHooksConfig.class)
+@Import({CdsHooksConfig.class, CrCommonConfig.class})
 public class StarterCdsHooksConfig {
 
 	@Bean

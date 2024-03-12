@@ -2,15 +2,10 @@ package ca.uhn.fhir.jpa.starter.cdshooks;
 
 import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceRequestJson;
 import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.IdType;
-import org.hl7.fhir.r4.model.PlanDefinition;
 import org.hl7.fhir.r4.model.Resource;
 import org.opencds.cqf.fhir.api.Repository;
 import org.opencds.cqf.fhir.cql.engine.retrieve.RepositoryRetrieveProvider;
-import org.opencds.cqf.fhir.cql.engine.retrieve.RetrieveSettings;
 import org.opencds.cqf.fhir.cql.engine.terminology.RepositoryTerminologyProvider;
-import org.opencds.cqf.fhir.utility.repository.InMemoryFhirRepository;
-
 import java.util.HashMap;
 import java.util.Map;
 

@@ -275,8 +275,8 @@ class ExampleServerR4IT implements IServerSupport {
 	@Test
 	void testCareGaps() throws IOException {
 
-		var reporter = crProperties.getCareGapsReporter();
-		var author = crProperties.getCareGapsSectionAuthor();
+		var reporter = crProperties.getCareGaps().getReporter();
+		var author = crProperties.getCareGaps().getSection_author();
 
 		assertTrue(reporter.equals("Organization/alphora"));
 		assertTrue(author.equals("Organization/alphora-author"));
