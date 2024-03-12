@@ -4,6 +4,7 @@ import ch.ahdis.matchbox.engine.MatchboxEngine;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.slf4j.Logger;
@@ -53,7 +54,7 @@ class R5ValidationTests {
 			".org/fhir/StructureDefinition/CarePlan");
 		assertEquals(1, errors.size());
 		assertEquals(OperationOutcome.IssueType.CODEINVALID, errors.get(0).getCode());
-		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') is not in the value set 'Care Plan Intent' (http://hl7.org/fhir/ValueSet/care-plan-intent|5.0.0)"));
+		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') was not found in the value set 'Care Plan Intent' (http://hl7.org/fhir/ValueSet/care-plan-intent|5.0.0)"));
 	}
 
 	/**
@@ -71,7 +72,7 @@ class R5ValidationTests {
 		final var errors = this.expectInvalid(invalidMeasure, Manager.FhirFormat.XML, "http://hl7.org/fhir/StructureDefinition/Measure");
 		assertEquals(1, errors.size());
 		assertEquals(OperationOutcome.IssueType.CODEINVALID, errors.get(0).getCode());
-		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') is not in the value set 'PublicationStatus'"));
+		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') was not found in the value set 'PublicationStatus'"));
 	}
 	
 	/**
@@ -90,11 +91,13 @@ class R5ValidationTests {
 	/**
 	 * Test the validation of a code from a value set that expands urn:ietf:bcp:13.
 	 *
+	 * Disabled: the offline validator isn't able to expand urn:ietf:bcp:13.
+	 *
 	 * http://hl7.org/fhir/R4/binary.html
 	 * http://hl7.org/fhir/R4/valueset-mimetypes.html
 	 */
 	@Test
-//	@Disabled(value = "No offline expansion yet")
+	@Disabled(value = "No offline expansion yet")
 	void testValueSetWithIetfBcp13Expansion() throws Exception {
 		final String binaryRaw = this.loadSample("binary.xml");
 

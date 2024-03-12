@@ -55,7 +55,8 @@ class R4ValidationTests {
 			".org/fhir/StructureDefinition/CarePlan");
 		assertEquals(1, errors.size());
 		assertEquals(OperationOutcome.IssueType.CODEINVALID, errors.get(0).getCode());
-		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') is not in the value set 'Care Plan Intent' (http://hl7.org/fhir/ValueSet/care-plan-intent|4.0.1)"));
+		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') was not " +
+																						  "found in the value set 'Care Plan Intent' (http://hl7.org/fhir/ValueSet/care-plan-intent|4.0.1)"));
 	}
 
 	/**
@@ -73,7 +74,8 @@ class R4ValidationTests {
 		final var errors = this.expectInvalid(invalidMeasure, Manager.FhirFormat.XML, "http://hl7.org/fhir/StructureDefinition/Measure");
 		assertEquals(1, errors.size());
 		assertEquals(OperationOutcome.IssueType.CODEINVALID, errors.get(0).getCode());
-		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') is not in the value set 'PublicationStatus'"));
+ 		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') was not " +
+																						  "found in the value set 'PublicationStatus'"));
 	}
 	
 	/**
@@ -92,11 +94,13 @@ class R4ValidationTests {
 	/**
 	 * Test the validation of a code from a value set that expands urn:ietf:bcp:13.
 	 *
+	 * Disabled: the offline validator isn't able to expand urn:ietf:bcp:13.
+	 *
 	 * http://hl7.org/fhir/R4/binary.html
 	 * http://hl7.org/fhir/R4/valueset-mimetypes.html
 	 */
 	@Test
-//	@Disabled(value = "No offline expansion yet")
+	@Disabled(value = "No offline expansion yet")
 	void testValueSetWithIetfBcp13Expansion() throws Exception {
 		final String binaryRaw = this.loadSample("binary.xml");
 

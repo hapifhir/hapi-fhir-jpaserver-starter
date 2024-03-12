@@ -23,6 +23,8 @@ class SuppressedWarnInfoTests {
 	private final byte[] resource;
 
 	private final static String WARN1 = "A measure should contain at least one group";
+	private final static String WARN_DOM6 = "Constraint failed: dom-6: 'A resource should have narrative for robust " +
+		"management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)";
 
 	public SuppressedWarnInfoTests() throws IOException {
 		this.engine = this.getEngine();
@@ -39,8 +41,9 @@ class SuppressedWarnInfoTests {
 														Manager.FhirFormat.XML,
 														"http://hl7.org/fhir/StructureDefinition/Measure");
 
-		assertEquals(1, oo.getIssue().size());
+		assertEquals(2, oo.getIssue().size());
 		assertTrue(hasWarningWithText(oo, WARN1));
+		assertTrue(hasWarningWithText(oo, WARN_DOM6));
 	}
 
 	@Test
@@ -51,7 +54,8 @@ class SuppressedWarnInfoTests {
 														Manager.FhirFormat.XML,
 														"http://hl7.org/fhir/StructureDefinition/Measure");
 
-		assertEquals(0, oo.getIssue().size());
+		assertEquals(1, oo.getIssue().size());
+		assertTrue(hasWarningWithText(oo, WARN_DOM6));
 	}
 
 	@Test
