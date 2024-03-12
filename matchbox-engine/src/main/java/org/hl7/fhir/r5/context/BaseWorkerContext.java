@@ -3300,5 +3300,96 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     }
     return result;
   }
+
+	@Override
+	public <T extends Resource> List<T> fetchResourcesByUrl(Class<T> class_, String uri) {
+		List<T> res = new ArrayList<>();
+		if (uri != null && !uri.startsWith("#")) {
+			if (class_ == StructureDefinition.class) {
+				uri = ProfileUtilities.sdNs(uri, null);
+			}
+			assert !uri.contains("|");
+			if (uri.contains("#")) {
+				uri = uri.substring(0, uri.indexOf("#"));
+			}
+			synchronized (lock) {
+				if (class_ == Resource.class || class_ == null) {
+					for (Map<String, ResourceProxy> rt : allResourcesById.values()) {
+						for (ResourceProxy r : rt.values()) {
+							if (uri.equals(r.getUrl())) {
+								res.add((T) r.getResource());
+							}
+						}
+					}
+				}
+				if (class_ == ImplementationGuide.class || class_ == Resource.class || class_ == null) {
+					for (ImplementationGuide cr : guides.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == CapabilityStatement.class || class_ == Resource.class || class_ == null) {
+					for (CapabilityStatement cr : capstmts.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == Measure.class || class_ == Resource.class || class_ == null) {
+					for (Measure cr : measures.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == Library.class || class_ == Resource.class || class_ == null) {
+					for (Library cr : libraries.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == StructureDefinition.class || class_ == Resource.class || class_ == null) {
+					for (StructureDefinition cr : structures.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == StructureMap.class || class_ == Resource.class || class_ == null) {
+					for (StructureMap cr : transforms.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == NamingSystem.class || class_ == Resource.class || class_ == null) {
+					for (NamingSystem cr : systems.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == ValueSet.class || class_ == Resource.class || class_ == null) {
+					for (ValueSet cr : valueSets.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == CodeSystem.class || class_ == Resource.class || class_ == null) {
+					for (CodeSystem cr : codeSystems.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == ConceptMap.class || class_ == Resource.class || class_ == null) {
+					for (ConceptMap cr : maps.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == ActorDefinition.class || class_ == Resource.class || class_ == null) {
+					for (ActorDefinition cr : actors.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == Requirements.class || class_ == Resource.class || class_ == null) {
+					for (Requirements cr : requirements.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == PlanDefinition.class || class_ == Resource.class || class_ == null) {
+					for (PlanDefinition cr : plans.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == OperationDefinition.class || class_ == Resource.class || class_ == null) {
+					for (OperationDefinition cr : operations.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == Questionnaire.class || class_ == Resource.class || class_ == null) {
+					for (Questionnaire cr : questionnaires.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				} else if (class_ == SearchParameter.class || class_ == Resource.class || class_ == null) {
+					for (SearchParameter cr : searchParameters.getForUrl(uri)) {
+						res.add((T) cr);
+					}
+				}
+			}
+		}
+		return res;
+	}
   
 }
